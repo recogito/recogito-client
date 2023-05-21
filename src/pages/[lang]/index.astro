@@ -1,12 +1,7 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
-import { getLangFromUrl, useTranslations } from '@i18n';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+
+return supabase ? Astro.redirect('projects') : Astro.redirect('sign-in');
 ---
-<BaseLayout title={t('welcome')}>
-  <div>
-    {t('welcome')}
-  </div>
-</BaseLayout>

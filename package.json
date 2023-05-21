@@ -13,6 +13,8 @@
     "@astrojs/netlify": "^2.2.3",
     "@astrojs/react": "^2.2.0",
     "@phosphor-icons/react": "^2.0.9",
+    "@supabase/auth-helpers-shared": "^0.3.4",
+    "@supabase/supabase-js": "^2.22.0",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
     "astro": "^2.5.1",

@@ -1,0 +1,30 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { Login } from '@apps/auth-login';
+---
+<BaseLayout title="ViCo | Login">
+  <div class="container">
+    <div class="column">
+      <Login client:load />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .column {
+    max-width: 360px;
+    padding: 0 20px;
+    position: relative;
+    width: 100%;
+  }
+</style>
