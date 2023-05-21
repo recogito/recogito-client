@@ -1,0 +1,10 @@
+---
+import { getLangFromUrl, useTranslations } from '@i18n';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<div>
+  {t('welcome')}
+</div>
