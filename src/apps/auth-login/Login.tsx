@@ -4,7 +4,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
 import { StateChecking, StateLoginForm, StateMagicLink } from './states';
 
-import './SignIn.css';
+import './Login.css';
 
 const setCookies = (session: Session | null) => {
   if (!session)

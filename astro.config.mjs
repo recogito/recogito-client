@@ -7,5 +7,10 @@ import netlify from "@astrojs/netlify/functions";
 export default defineConfig({
   integrations: [react()],
   output: 'server',
-  adapter: netlify()
+  adapter: netlify(),
+  vite: {
+    ssr: {
+      noExternal: [ '@radix-ui/*', '@phosphor-icons/*' ]
+    }
+  }
 });
