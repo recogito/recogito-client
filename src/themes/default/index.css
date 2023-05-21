@@ -1,0 +1,168 @@
+@font-face {
+  font-family: Inter;
+  src: url('/fonts/inter/Inter.ttf');
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Regular.ttf');
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Italic.ttf');
+  font-style: italic;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Light.ttf');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-LightItalic.ttf');
+  font-style: italic;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Italic.ttf');
+  font-style: italic;
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-MediumItalic.ttf');
+  font-style: italic;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-SemiBold.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-SemiBoldItalic.ttf');
+  font-style: italic;
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-Bold.ttf');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: Poppins;
+  src: url('Poppins-BoldItalic.ttf');
+  font-style: italic;
+  font-weight: 700;
+}
+
+:root {
+  /** Colors **/
+  --dark-blue: #07498a;
+  --bright-blue: #07529a;
+  --mud-gray: #808073;
+  --orange: #e9b44a;
+
+  --gray-900: #2d333a;
+  --gray-500: #6f7780;
+  --gray-300: #c2c8d0;
+  --gray-200: #dfe2e7;
+  --gray-100: #f1f3f6;
+  --gray-50: #f6f7f9;
+
+  --red-500: #d00e17;
+
+  /** Global constants **/
+  --border-radius: 3px;
+  --link-color: var(--bright-blue);
+
+  /** Font styles **/
+  --font-dark: var(--gray-900);
+  --font-light: var(--gray-500);
+
+  --font-small: 0.875em;
+  --font-tiny: 13px;
+
+  /** Borders **/
+  --border-light-color: var(--gray-300);
+
+  /** Buttons **/
+  --button-background-color: #fff;
+  --button-border-color: var(--gray-300);
+  --button-border-radius: var(--border-radius);
+  --button-font-color: var(--font-dark);
+  --button-hover-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.1);
+  --button-primary-background: var(--bright-blue);
+
+  /** Inputs **/
+  --input-border-color: var(--gray-300);
+  --input-border-radius: var(--border-radius);
+  --input-error-color: var(--red-500);
+  --input-focus-border-color: var(--bright-blue);
+  --input-label-color: var(--font-light);
+  --input-text-color: var(--font-dark);
+}
+
+html, body {
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 160%;
+  margin: 0;
+  min-height: 100vh;
+  padding: 0;
+}
+
+a[href] {
+  color: var(--link-color);
+  text-decoration: none;
+  padding: 2px 2px;
+}
+
+a[href]:hover {
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  background-color:rgb(22, 97, 202, 0.15);
+  border-radius: var(--border-radius);
+  outline: none;
+}
+
+h1 {
+  font-family: Poppins;
+  font-size: 1.6em;
+  font-weight: 600;
+  margin: 1em 0;
+  padding: 0;
+}
+
+p {
+  margin: 0.8em 0;
+  padding: 0;
+}
+

@@ -1,0 +1,29 @@
+.breadcrumbs ol {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.breadcrumbs li {
+  display: inline-block;
+}
+
+.breadcrumbs li:not(:last-child)::after {
+  color: var(--font-light);
+  content: '/';
+  padding: 0 3px;
+}
+
+.breadcrumbs a {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  font-weight: 500;
+}
+
+.breadcrumbs a[href] {
+  color: var(--font-dark);
+}
+
+.breadcrumbs a, .breadcrumbs a[href]:hover {
+  text-decoration: none;
+}
