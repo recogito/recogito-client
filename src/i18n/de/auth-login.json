@@ -3,7 +3,8 @@
   "Log into your account": "Account Login",
   "Email": "Email",
   "Password": "Passwort",
-  "Please enter a valid email address": "Please enter a valid email address",
+  "Please enter a valid email address": "Ungültige Emailadresse",
+  "Invalid email or password": "Email oder Passwort ungültig",
   "Sign In": "Einloggen",
   "Forgot password?": "Password vergessen?",
   "OR": "ODER",
@@ -13,5 +14,7 @@
   "Sign up now.": "Jetzt registrieren.",
 
   "Your email address": "Email Adresse",
-  "Send Magic Link": "Magischen Link Senden"
+  "Send Magic Link": "Magischen Link Senden",
+  "Link Sent": "Link gesendet",
+  "Check your email for the Magic Link.": "Überprüfen Sie ihre Email."
 }

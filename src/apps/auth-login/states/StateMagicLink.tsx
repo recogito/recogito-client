@@ -46,11 +46,11 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
       <Button 
         disabled 
         className="lg w-full success">
-        <Check size={22} /> <span>Link Sent</span>
+        <Check size={22} /> <span>{i18n['Link Sent']}</span>
       </Button>
 
       <p>
-        Check your email for the Magic Link.
+        {i18n['Check your email for the Magic Link.']}
       </p>
     </div>
   ) : (
@@ -69,7 +69,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           <p className="error">
             <WarningOctagon 
               className="icon inline" 
-              size={18} weight="fill" /> Please enter a valid email address
+              size={18} weight="fill" /> {i18n['Please enter a valid email address']}
           </p>
         )}
 

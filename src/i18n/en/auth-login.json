@@ -4,6 +4,7 @@
   "Email": "Email",
   "Password": "Password",
   "Please enter a valid email address": "Please enter a valid email address",
+  "Invalid email or password": "Invalid email or password",
   "Sign In": "Sign In",
   "Forgot password?": "Forgot password?",
   "OR": "OR",
@@ -13,5 +14,7 @@
   "Sign up now.": "Sign up now.",
 
   "Your email address": "Your email address",
-  "Send Magic Link": "Send Magic Link"
+  "Send Magic Link": "Send Magic Link",
+  "Link Sent": "Link Sent",
+  "Check your email for the Magic Link.": "Check your email for the Magic Link."
 }

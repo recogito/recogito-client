@@ -28,7 +28,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
     evt.preventDefault();
 
     if (!isValidEmail(email)) {
-      setError('Please enter a valid email');
+      setError(i18n['Please enter a valid email address']);
     } else {
       setError('');
       
@@ -36,7 +36,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
         email, password
       }).then(({ error }) => {
         if (error)
-          setError('Invalid email or password');
+          setError(i18n['Invalid email or password']);
       });
     }
   }
