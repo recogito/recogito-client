@@ -24,7 +24,8 @@
   padding: 0;  
 }
 
-.project-card h1 a {
+.project-card h1 a,
+.project-card h1 a:hover {
   color: var(--font-dark);
   text-decoration: none;
 }
