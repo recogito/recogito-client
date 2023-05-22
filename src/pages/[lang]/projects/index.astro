@@ -1,9 +1,10 @@
 ---
 import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getTranslations } from '@i18n';
 import { getUser } from '@backend/auth';
-// import { listProjects } from '@backend/projects';
-// import { AllProjects } from '@components/dashboard/AllProjects';
+import { listMyProjects } from '@backend/projects';
+import { ProjectsHome } from '@apps/dashboard-projects';
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -12,8 +13,15 @@ if (!supabase)
 
 const user = await getUser(supabase);
 
-// const projects = (await listProjects(supabase)).data;
+const response = await listMyProjects(supabase);
 ---
 <DashboardLayout title="My Projects" active="projects" user={user}>
-  <!-- AllProjects client:load projects={projects} / -->
+  {response.error ? (
+    <div>Something went wrong</div>
+  ) : (
+    <ProjectsHome 
+      client:load
+      projects={response.data} 
+      i18n={getTranslations(Astro.request, 'dashboard-projects')} />
+  )}
 </DashboardLayout>
