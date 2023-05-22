@@ -1,0 +1,19 @@
+---
+import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getUser } from '@backend/auth';
+// import { listProjects } from '@backend/projects';
+// import { AllProjects } from '@components/dashboard/AllProjects';
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+
+if (!supabase)
+  return Astro.redirect('/sign-in');
+
+const user = await getUser(supabase);
+
+// const projects = (await listProjects(supabase)).data;
+---
+<DashboardLayout title="My Projects" active="projects" user={user}>
+  <!-- AllProjects client:load projects={projects} / -->
+</DashboardLayout>

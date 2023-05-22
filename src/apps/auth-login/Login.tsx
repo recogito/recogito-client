@@ -34,7 +34,7 @@ export const Login = (props: { i18n: Translations }) => {
         deleteCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
-        // window.location.href = './projects';
+        window.location.href = '../projects';
       }
     });
     
@@ -42,7 +42,7 @@ export const Login = (props: { i18n: Translations }) => {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
-          // window.location.href = './projects';
+          window.location.href = '../projects';
         })
       } else {
         setIsChecking(false);

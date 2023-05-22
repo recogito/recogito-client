@@ -1,4 +1,6 @@
 ---
+import { getLangFromUrl } from '@i18n';
+
 import '@themes/default/index.css';
 
 export interface Props {
@@ -8,7 +10,7 @@ export interface Props {
 const { title } = Astro.props;
 ---
 <!DOCTYPE html>
-<html lang="en">
+<html lang={getLangFromUrl(Astro.url)}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />

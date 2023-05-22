@@ -1,0 +1,26 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { DashboardSidebar } from './DashboardSidebar';
+---
+<BaseLayout title="Dashboard"}>	
+  <DashboardSidebar client:load />
+
+  <div class="container">
+    <slot />
+  </div>
+</BaseLayout>
+
+<style>
+  body {
+		display: flex;
+		flex-direction: row;
+		position: relative;
+	}
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 100%;
+  }
+</style>
