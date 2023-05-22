@@ -15,3 +15,5 @@ export interface Project {
   description: string;
 
 }
+
+export type Translations = { [key: string]: string };

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
+import type { Translations } from 'src/Types';
 import { StateChecking, StateLoginForm, StateMagicLink } from './states';
 
 import './Login.css';
@@ -21,19 +22,19 @@ const deleteCookies = () => {
   document.cookie = `refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 }
 
-export const Login = () => {
+export const Login = (props: { i18n: Translations }) => {
 
   const [isChecking, setIsChecking] = useState(true);
 
   const [sendLink, setSendLink] = useState(false);
-
+  
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         deleteCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
-        window.location.href = '/projects';
+        // window.location.href = './projects';
       }
     });
     
@@ -41,7 +42,7 @@ export const Login = () => {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
-          window.location.href = '/projects';
+          // window.location.href = './projects';
         })
       } else {
         setIsChecking(false);
@@ -55,11 +56,12 @@ export const Login = () => {
     )
   } else if (sendLink) {
     return (
-      <StateMagicLink />
+      <StateMagicLink i18n={props.i18n} />
     );
   } else {
     return (
       <StateLoginForm 
+        i18n={props.i18n}
         onSendLink={() => setSendLink(true)} />
     )
   }

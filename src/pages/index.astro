@@ -1,7 +1,11 @@
 ---
-// TODO detect language from request header
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl } from '@i18n';
 
-// TODO we can avoid the additional redirect by checking login status right here!
-return Astro.redirect('/en/');
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+
+const lang = getLangFromUrl(Astro.url);
+
+return supabase ? Astro.redirect(`/${lang}/projects`) : Astro.redirect(`/${lang}/sign-in`);
 ---
 

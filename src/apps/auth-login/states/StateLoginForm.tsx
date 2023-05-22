@@ -3,15 +3,20 @@ import { Lock, MagicWand, WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { TextInput } from '@components/TextInput';
 import { supabase } from '@backend/supabaseBrowserClient';
+import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
 
 export interface StateSignInFormProps {
+
+  i18n: Translations;
 
   onSendLink(): void;
 
 }
 
 export const StateLoginForm = (props: StateSignInFormProps) => {
+
+  const { i18n } = props;
 
   const [email, setEmail] = useState('');
 
@@ -39,9 +44,9 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
   return (
     <div className="login">
       <main>
-        <h1>Welcome Back</h1>
+        <h1>{i18n['Welcome Back']}</h1>
         <p>
-          Log into your account
+          {i18n['Log into your account']}
         </p>
     
         <div className="login-email">
@@ -50,14 +55,14 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
               autoComplete={false}
               error={Boolean(error)}
               name="email" 
-              label="Email" 
+              label={i18n['Email']} 
               className="lg w-full" 
               onChange={setEmail} />
 
             <TextInput 
               autoComplete={false}
               name="password" 
-              label="Password" 
+              label={i18n['Password']} 
               type="password"
               className="lg w-full" 
               onChange={setPassword} />
@@ -70,32 +75,32 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
             <Button   
               className="primary lg w-full"
-              onClick={onSignIn}>Sign In</Button>
+              onClick={onSignIn}>{i18n['Sign In']}</Button>
           </form>
 
           <div className="forgot-password">
-            <a href="#">Forgot password?  </a>
+            <a href="#">{i18n['Forgot password?']}</a>
           </div>
         </div>
 
         <div className="login-separator">
-          <span>OR</span>
+          <span>{i18n['OR']}</span>
         </div>
 
         <div className="login-providers">
           <button className="lg w-full" onClick={props.onSendLink}>
-            <MagicWand size={19} /> Continue with Magic Link
+            <MagicWand size={19} /> {i18n['Continue with Magic Link']}
           </button>
 
           <button className="lg w-full">
-            <Lock size={19} /> Continue with SSO
+            <Lock size={19} /> {i18n['Continue with SSO']}
           </button>
         </div>
       </main>
 
       <footer>
         <p>
-          Don't have an account? <a href="#">Sign up now.</a>  
+          {i18n['Don\'t have an account?']} <a href="#">{i18n['Sign up now.']}</a>  
         </p>
       </footer>
     </div>

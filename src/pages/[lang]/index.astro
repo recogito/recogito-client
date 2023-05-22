@@ -1,7 +1,10 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl } from '@i18n';
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
-return supabase ? Astro.redirect('projects') : Astro.redirect('sign-in');
+const lang = getLangFromUrl(Astro.url);
+
+return supabase ? Astro.redirect(`/${lang}/projects`) : Astro.redirect(`${lang}/sign-in`);
 ---

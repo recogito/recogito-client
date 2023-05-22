@@ -3,9 +3,12 @@ import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TextInput } from '@components/TextInput';
 import { Button } from '@components/Button';
+import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
 
-export const StateMagicLink = () => {
+export const StateMagicLink = (props: { i18n: Translations }) => {
+
+  const { i18n } = props;
 
   const [email, setEmail] = useState('');
 
@@ -54,10 +57,11 @@ export const StateMagicLink = () => {
     <div className="login-magic-link">
       <form>
         <TextInput 
+          autoComplete={false}
           error={isInvalid}
           className="lg w-full"
           name="email" 
-          label="Your email address" 
+          label={i18n['Your email address']}
           value={email}
           onChange={setEmail} />
 
@@ -77,7 +81,9 @@ export const StateMagicLink = () => {
           </p>
         )}
 
-        <Button type="submit" className="primary lg w-full" onClick={onSend}>Send Magic Link</Button>
+        <Button type="submit" className="primary lg w-full" onClick={onSend}>
+          {i18n['Send Magic Link']}
+        </Button>
       </form>
     </div>
   )
