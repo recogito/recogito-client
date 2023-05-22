@@ -17,10 +17,12 @@ export interface ProjectsHomeProps {
 
 export const ProjectsHome = (props: ProjectsHomeProps) => {
 
+  const { i18n } = props;
+
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
   const onCreateProject = () =>
-    createProject(supabase, 'Untitled Project').then(({ error, data }) => {
+    createProject(supabase, i18n['Untitled Project']).then(({ error, data }) => {
       if (error) {
         // TODO
         console.error('Error creating project', error);

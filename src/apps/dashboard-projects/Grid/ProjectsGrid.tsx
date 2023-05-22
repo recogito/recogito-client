@@ -30,7 +30,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
             </li>
 
             <li>
-              <a className="breadcrumb-current">Projects</a>
+              <a className="breadcrumb-current">{i18n['Projects']}</a>
             </li>
           </ol>
         </nav>
@@ -38,7 +38,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
 
       <main>
         <button className="primary" onClick={props.onCreateProject}>
-          <Plus size={20} /> Create New Project
+          <Plus size={20} /> {i18n['Create New Project']}
         </button>
 
         <div className="dashboard-projects-grid">
