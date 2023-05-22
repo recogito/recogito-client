@@ -1,0 +1,9 @@
+button.success {
+  border-color: #98ca9a;
+  background-color: #effaf0;
+  color: #1c8421;
+}
+
+button.success svg {
+  color: #1c8421;
+}

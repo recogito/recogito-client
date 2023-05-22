@@ -2,6 +2,8 @@ import { ChangeEvent, useState } from 'react';
 
 export interface TextInputProps {
 
+  autoComplete?: boolean;
+
   className?: string;
 
   error?: boolean;
@@ -32,6 +34,7 @@ export const TextInput = (props: TextInputProps) => {
     <div
       className={props.error ? "input-wrapper error" : "input-wrapper"}>
       <input 
+        autoComplete={props.autoComplete === false ? 'off' : undefined}
         type={props.type || 'text'}
         name={props.name} 
         id={props.name}

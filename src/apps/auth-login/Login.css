@@ -1,0 +1,64 @@
+.login-checking {
+  color: var(--font-light);
+  display: flex;
+  justify-content: center;
+}
+
+.login :is(button, a.button) + :is(button, a.button), 
+.login .input-wrapper + button, 
+.login .input-wrapper + .input-wrapper,
+.login-magic-link .input-wrapper + button  {
+  margin-left: 0;
+  margin-top: 1em;
+}
+
+.login .error,
+.login-magic-link .error {
+  font-size: var(--font-tiny);
+  color: var(--red-500);
+}
+
+.login .forgot-password {
+  display: block;
+  font-size: var(--font-tiny);
+  margin: 1em 0;
+  text-align: center;
+}
+
+.login-separator {
+  display: flex;
+  flex-direction: row;
+  font-size: var(--font-tiny);
+  padding: 0.5em 0;
+}
+
+.login-separator::before,
+.login-separator::after {
+  border-top: 1px solid var(--border-light-color);
+  content: '';
+  flex-grow: 1;
+}
+
+.login-separator > span {
+  color: var(--font-light);
+  padding: 0 5px;
+  position: relative;
+  top: -0.85em;
+}
+
+.login footer {
+  font-size: var(--font-tiny);
+  text-align: center;
+}
+
+.login-magic-link.sent {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-small);
+  justify-content: center;
+}
+
+.login-magic-link.sent button svg {
+  padding-top: 1px;
+}

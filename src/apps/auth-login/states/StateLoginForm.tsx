@@ -37,16 +37,17 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
   }
 
   return (
-    <div className="signin">
+    <div className="login">
       <main>
         <h1>Welcome Back</h1>
         <p>
           Log into your account
         </p>
     
-        <div className="signin-email">
+        <div className="login-email">
           <form>
             <TextInput
+              autoComplete={false}
               error={Boolean(error)}
               name="email" 
               label="Email" 
@@ -54,6 +55,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
               onChange={setEmail} />
 
             <TextInput 
+              autoComplete={false}
               name="password" 
               label="Password" 
               type="password"
@@ -76,11 +78,11 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           </div>
         </div>
 
-        <div className="signin-separator">
+        <div className="login-separator">
           <span>OR</span>
         </div>
 
-        <div className="signin-providers">
+        <div className="login-providers">
           <button className="lg w-full" onClick={props.onSendLink}>
             <MagicWand size={19} /> Continue with Magic Link
           </button>

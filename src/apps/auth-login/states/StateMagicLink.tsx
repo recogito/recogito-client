@@ -39,7 +39,7 @@ export const StateMagicLink = () => {
   }
 
   return sent ? (
-    <div className="signin-magic-link sent">
+    <div className="login-magic-link sent">
       <Button 
         disabled 
         className="lg w-full success">
@@ -51,7 +51,7 @@ export const StateMagicLink = () => {
       </p>
     </div>
   ) : (
-    <div className="signin-magic-link">
+    <div className="login-magic-link">
       <form>
         <TextInput 
           error={isInvalid}

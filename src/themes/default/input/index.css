@@ -1,0 +1,78 @@
+input {
+  border: 1px solid var(--input-border-color);
+  border-radius: var(--input-border-radius);
+  box-sizing: border-box;
+  color: var(--input-text-color);
+  outline: none;
+  transition: box-shadow .2s ease-in-out, border-color .2s ease-in-out;
+}
+
+input:focus {
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 0 0 1px var(--input-focus-border-color);
+}
+
+input.lg {
+  font-size: 1em;
+  height: 50px;
+  padding: 0 10px;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper label {
+  align-items: center;
+  color: var(--input-label-color);
+  display: flex;
+  font-size: 1em;
+  height: 100%;
+  left: 10px;
+  padding: 0 3px;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transition: all 0.1s ease-in-out;
+  z-index: 1;
+}
+
+.input-wrapper input[data-filled='true'] + label,
+.input-wrapper input:focus + label {
+  color: var(--input-focus-border-color);
+  display: block;
+  height: auto;
+  top: -11px;
+  font-size: 0.9em;
+}
+
+.input-wrapper .label-background {
+  background-color: #fff;
+  height: 3px;
+  width: 100%;
+  display: block;
+  opacity: 0;
+  position: absolute;
+  top: 9px;
+  left: 0;
+  z-index: -1;
+  transition: opacity 0.1 ease-in-out;
+}
+
+.input-wrapper input[data-filled='true'] + label .label-background,
+.input-wrapper input:focus + label .label-background {
+  opacity: 1;
+}
+
+.input-wrapper.error input {
+  border-color: var(--input-error-color);
+}
+
+.input-wrapper.error input:focus {
+  box-shadow: 0 0 0 1px var(--input-error-color);
+}
+
+.input-wrapper.error input[data-filled='true'] + label,
+.input-wrapper.error input:focus + label {
+  color: var(--input-error-color);
+}
