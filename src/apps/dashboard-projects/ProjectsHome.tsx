@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import * as Toast from '@radix-ui/react-toast';
+import { Hammer, X } from '@phosphor-icons/react';
 import type { Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { createProject, deleteProject } from '@backend/projects';
@@ -21,6 +23,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
+  const [error, setError] = useState<string | null>(null);
+
   const onCreateProject = () =>
     createProject(supabase, i18n['Untitled Project']).then(({ error, data }) => {
       if (error) {
@@ -35,6 +39,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onRenameProject = (project: Project) => {
     // TODO
+    console.log('renaming');
+    setError('Not yet implemented');
   }
     
   const onDeleteProject = (project: Project) =>
@@ -57,12 +63,37 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       i18n={props.i18n} 
       onCreateProject={onCreateProject} />
   ) : (
-    <ProjectsGrid 
-      i18n={props.i18n} 
-      projects={projects}
-      onCreateProject={onCreateProject} 
-      onDeleteProject={onDeleteProject} 
-      onRenameProject={onRenameProject} />
+    <Toast.Provider>
+      <ProjectsGrid 
+        i18n={props.i18n} 
+        projects={projects}
+        onCreateProject={onCreateProject} 
+        onDeleteProject={onDeleteProject} 
+        onRenameProject={onRenameProject} />
+
+        <Toast.Root 
+          className="toast" 
+          duration={100000}
+          open={Boolean(error)}
+          onOpenChange={open => !open && setError(null)}>
+
+          <Toast.Title className="toast-title">
+            <Hammer size={16} className="text-bottom" /> We're working on it!
+          </Toast.Title>
+
+          <Toast.Description className="toast-description">
+            This feature will become available soon.
+          </Toast.Description>
+
+          <Toast.Action className="toast-action" asChild altText="Close error message">
+            <button className="unstyled icon-only">
+              <X size={20} />
+            </button>
+          </Toast.Action>
+        </Toast.Root>
+
+        <Toast.Viewport className="toast-viewport" />
+    </Toast.Provider>
   )
   
 }

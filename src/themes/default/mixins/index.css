@@ -1,3 +1,7 @@
+.no-shadow {
+  box-shadow: none;
+}
+
 .text-bottom {
   vertical-align: text-bottom;
 }
