@@ -105,17 +105,19 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
       
       <div className="project-sidebar-spacer" />
 
-      <section className="project-sidebar-actions project-sidebar-row">
+      <section className="project-sidebar-actions">
         <ul>
-          <li className="project-sidebar-toggle">
+          <li className="project-sidebar-toggle project-sidebar-row">
             <button onClick={() => setOpen(!open)}>
-              <ArrowLineLeft size={20} />
+              <span className="project-sidebar-col fixed">
+                <ArrowLineLeft size={20} />
+              </span>
             </button>
           </li>
           <li className="project-sidebar-row">
             <button>
               <span className="project-sidebar-col fixed">
-                <UserCircle size={34} weight="light" />
+                <UserCircle size={28} weight="light" />
               </span>
 
               <span className="project-sidebar-col collapsible">

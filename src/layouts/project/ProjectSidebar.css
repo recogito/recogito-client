@@ -125,10 +125,6 @@
   box-shadow: none;
 }
 
-.project-sidebar-toggle button {
-  padding: 8px;
-}
-
 .project-sidebar-toggle button:focus {
   box-shadow: none;
 }
