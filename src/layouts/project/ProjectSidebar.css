@@ -9,6 +9,15 @@
   --light-blue: #cbd4e2;
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.1s;
+}
+
+.project-primary-nav {
+  view-transition-name: project-sidebar;
+}
+
 .project-sidebar ul {
   list-style-type: none;
   margin: 0;
