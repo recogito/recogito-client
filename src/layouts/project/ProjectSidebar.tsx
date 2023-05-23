@@ -1,6 +1,7 @@
 
-import { useState } from 'react'; 
+import { useEffect, useState } from 'react'; 
 import { 
+  ArrowLineLeft,
   GooglePodcastsLogo, 
   GraduationCap, 
   House, 
@@ -13,6 +14,16 @@ import type { Project, Translations } from 'src/Types';
 
 import './ProjectSidebar.css';
 
+const setCookie = () => {
+  const maxAge = 100 * 365 * 24 * 60 * 60; // 100 years, never expires
+  document.cookie = `x-project-sidebar-collapsed=true; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
+}
+
+const clearCookie = () => {
+  const expires = new Date(0).toUTCString();
+  document.cookie = `x-project-sidebar-collapsed=false; path=/; expires=${expires}; SameSite=Lax; secure`;
+}
+
 export interface ProjectSidebarProps {
 
   active: string;
@@ -21,22 +32,30 @@ export interface ProjectSidebarProps {
 
   lang: string;
 
+  collapsed: boolean;
+
   project?: Project
 
 }
 
 export const ProjectSidebar = (props: ProjectSidebarProps) => {
-
+  
   const { active, i18n } = props;
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(!props.collapsed);
+
+  useEffect(() => {
+    if (open)
+      clearCookie();
+    else 
+      setCookie();
+  }, [open]);
 
   const link = (segment: string = '') => props.project ? 
     `/${props.lang}/projects/${props.project.id}/${segment}` : undefined;
 
   return (
     <aside 
-      
       className={open ? 'project-sidebar open' : 'project-sidebar collapsed'}>
       <nav className="project-primary-nav">
         <ul>
@@ -88,6 +107,11 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
 
       <section className="project-sidebar-actions project-sidebar-row">
         <ul>
+          <li className="project-sidebar-toggle">
+            <button onClick={() => setOpen(!open)}>
+              <ArrowLineLeft size={20} />
+            </button>
+          </li>
           <li className="project-sidebar-row">
             <button>
               <span className="project-sidebar-col fixed">

@@ -6,12 +6,7 @@
   max-height: -webkit-fill-available;
   position: sticky;
   top: 0;
-  view-transition-name: project-sidebar;
-}
-
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation-duration: 0.1s;
+  --light-blue: #cbd4e2;
 }
 
 .project-sidebar ul {
@@ -34,7 +29,7 @@
 
 .project-sidebar-col {
   align-items: center;
-  color: #cbd4e2;
+  color: var(--light-blue);
   font-size: var(--font-tiny);
   display: inline-flex;
   height: 40px;
@@ -119,4 +114,26 @@
 .project-sidebar-actions button:hover {
   background-color: rgba(255, 255, 255, 0.25);
   box-shadow: none;
+}
+
+.project-sidebar-toggle button {
+  padding: 8px;
+}
+
+.project-sidebar-toggle button:focus {
+  box-shadow: none;
+}
+
+.project-sidebar-toggle button svg {
+  color: var(--light-blue);
+  margin: 0;
+  transition: transform 180ms ease-in-out;
+}
+
+.project-sidebar.open .project-sidebar-toggle button svg {
+  transform: rotateZ(0deg);
+}
+
+.project-sidebar.collapsed .project-sidebar-toggle button svg {
+  transform: rotateZ(180deg);
 }
