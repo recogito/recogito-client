@@ -9,13 +9,15 @@ import {
   UserCircle, 
   UsersThree } from '@phosphor-icons/react';
 import { NavItem } from './NavItem';
-import type { Project } from 'src/Types';
+import type { Project, Translations } from 'src/Types';
 
 import './ProjectSidebar.css';
 
 export interface ProjectSidebarProps {
 
   active: string;
+
+  i18n: Translations;
 
   lang: string;
 
@@ -25,7 +27,7 @@ export interface ProjectSidebarProps {
 
 export const ProjectSidebar = (props: ProjectSidebarProps) => {
 
-  const { active } = props;
+  const { active, i18n } = props;
 
   const [open, setOpen] = useState(true);
 
@@ -49,7 +51,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem 
                 active={active === 'home'}
                 icon={House}
-                label="Home"
+                label={i18n['Home']}
                 link={link()} />
             </ul>
 
@@ -57,25 +59,25 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem
                 active={active === 'collaboration'}
                 icon={UsersThree}
-                label="Collaboration"
+                label={i18n['Collaboration']}
                 link={link('collaboration')} />
 
               <NavItem
                 active={active === 'assignments'}
                 icon={GraduationCap}
-                label="Assignments"
+                label={i18n['Assignments']}
                 link={link('assignments')} />
 
               <NavItem
                 active={active === 'addons'}
                 icon={PuzzlePiece}
-                label="Add Ons"
+                label={i18n['Add Ons']}
                 link={link('addons')} />
 
               <NavItem
                 active={active === 'settings'}
                 icon={Sliders}
-                label="Settings"
+                label={i18n['Settings']}
                 link={link('settings')} />
             </ul>
           </li>

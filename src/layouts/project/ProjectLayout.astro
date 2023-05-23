@@ -1,17 +1,20 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { ProjectSidebar } from './ProjectSidebar';
-import { getLangFromUrl } from '@i18n';
+import { getLangFromUrl, getTranslations } from '@i18n';
 
 const { active, project } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
+
+const i18n = getTranslations(Astro.request, 'project-sidebar');
 ---
 <BaseLayout title={project.name}>	
   <ProjectSidebar 
     client:load 
     active={active} 
     lang={lang} 
+    i18n={i18n}
     project={project} />
 
   <div class="container">
