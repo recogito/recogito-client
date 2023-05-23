@@ -11,43 +11,43 @@ import './DashboardSidebar.css';
  */
 export const DashboardSidebar = (props: { i18n: Translations }) => {
 
-  const { i18n } = props;
+  const { t } = props.i18n;
 
   return (
     <aside className="dashboard-sidebar">
-      <h1>{i18n['Dashboard']}</h1>
+      <h1>{t['Dashboard']}</h1>
       <nav>
         <ul>
           <li>
-            <h2>{i18n['Projects']}</h2>
+            <h2>{t['Projects']}</h2>
             <ul>
               <li>
-                <a href="./projects">{i18n['All projects']}</a>
+                <a href="./projects">{t['All projects']}</a>
               </li>
             </ul>
           </li>
 
           <li>
-            <h2>{i18n['Account']}</h2>
+            <h2>{t['Account']}</h2>
             <ul>
               <li>
-                <a href="./account/me">{i18n['Preferences']}</a>
+                <a href="./account/me">{t['Preferences']}</a>
               </li>
             </ul>
           </li>
           
           <li>
-            <h2>{i18n['Documentation']}</h2>
+            <h2>{t['Documentation']}</h2>
             <ul>
               <li>
                 <a href="./help/tutorial">
-                  <ArrowUpRight className="text-bottom" size={17} /> {i18n['Tutorial']}
+                  <ArrowUpRight className="text-bottom" size={17} /> {t['Tutorial']}
                 </a>
               </li>
               
               <li>
                 <a href="./helo/faq">
-                  <ArrowUpRight className="text-bottom" size={17} /> {i18n['FAQ']}
+                  <ArrowUpRight className="text-bottom" size={17} /> {t['FAQ']}
                 </a>
               </li>
             </ul>
@@ -57,7 +57,7 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
             <ul className="pad">
               <li>
                 <a href="./sign-out">
-                  <SignOut className="text-bottom" size={19} /> {i18n['Logout']}
+                  <SignOut className="text-bottom" size={19} /> {t['Logout']}
                 </a>
               </li>
             </ul>

@@ -1,5 +1,15 @@
 import type { ReactNode } from 'react';
 
+export interface UserProfile {
+
+  id: string;
+
+  nickname?: string;
+
+  avatar_url?: string;
+
+}
+
 export interface Project {
 
   id: string;
@@ -18,7 +28,13 @@ export interface Project {
 
 }
 
-export type Translations = { [key: string]: string };
+export type Translations = { 
+ 
+  lang: string;
+
+  t: { [key: string]: string };
+
+}
 
 export interface UIAlert {
 

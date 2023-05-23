@@ -22,7 +22,10 @@ export const getTranslations = (request: Request, dictionary: keyof typeof defau
   const lang = getLangFromUrl(new URL(request.url));
 
   return {
-    ...defaultLabels[dictionary],
-    ...labels[lang][dictionary]
+    lang,
+    t: {
+      ...defaultLabels[dictionary],
+      ...labels[lang][dictionary]
+    }
   };
 }

@@ -2,8 +2,19 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { ProjectSidebar } from './ProjectSidebar';
 import { getLangFromUrl, getTranslations } from '@i18n';
+import type { Project, UserProfile } from 'src/Types';
 
-const { active, project } = Astro.props;
+export interface Props {
+
+	active: string;
+
+  project: Project;
+
+  user?: UserProfile;
+
+}
+
+const { active, project, user } = Astro.props;
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -16,8 +27,8 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
     client:load 
     active={active} 
     collapsed={cookie.value === 'true'}
-    lang={lang} 
     i18n={i18n}
+    user={user}
     project={project} />
 
   <div class="container">
@@ -25,7 +36,7 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
       <nav class="breadcrumbs">
         <ol>
           <li>
-            <a href="/projects">Unnamed Annotation Tool</a>
+            <a href=`/${lang}/projects`>ViCo</a>
           </li>
 
           <li>

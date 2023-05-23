@@ -18,19 +18,19 @@ export interface ProjectsGridProps {
 
 export const ProjectsGrid = (props: ProjectsGridProps) => {
 
-  const { i18n } = props;
-
+  const { t, lang } = props.i18n;
+  
   return (
     <div className="dashboard-projects-home">
       <header>
         <nav className="breadcrumbs">
           <ol>
             <li>
-              <a href="">Unnamed Annotation Tool</a>
+              <a href={`/${lang}/projects`}>ViCo</a>
             </li>
 
             <li>
-              <a className="breadcrumb-current">{i18n['Projects']}</a>
+              <a className="breadcrumb-current">{t['Projects']}</a>
             </li>
           </ol>
         </nav>
@@ -38,7 +38,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
 
       <main>
         <button className="primary" onClick={props.onCreateProject}>
-          <Plus size={20} /> {i18n['Create New Project']}
+          <Plus size={20} /> {t['Create New Project']}
         </button>
 
         <div className="dashboard-projects-grid">

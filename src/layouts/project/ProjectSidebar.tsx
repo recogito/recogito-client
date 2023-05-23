@@ -10,7 +10,7 @@ import {
   UserCircle, 
   UsersThree } from '@phosphor-icons/react';
 import { NavItem } from './NavItem';
-import type { Project, Translations } from 'src/Types';
+import type { Project, Translations, UserProfile } from 'src/Types';
 
 import './ProjectSidebar.css';
 
@@ -30,17 +30,19 @@ export interface ProjectSidebarProps {
 
   i18n: Translations;
 
-  lang: string;
-
   collapsed: boolean;
 
-  project?: Project
+  project?: Project;
+
+  user?: UserProfile;
 
 }
 
 export const ProjectSidebar = (props: ProjectSidebarProps) => {
   
-  const { active, i18n } = props;
+  const { active } = props;
+
+  const { lang, t } = props.i18n;
 
   const [open, setOpen] = useState(!props.collapsed);
 
@@ -52,7 +54,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
   }, [open]);
 
   const link = (segment: string = '') => props.project ? 
-    `/${props.lang}/projects/${props.project.id}/${segment}` : undefined;
+    `/${lang}/projects/${props.project.id}/${segment}` : undefined;
 
   return (
     <aside 
@@ -65,12 +67,12 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 className="no-hover"
                 icon={GooglePodcastsLogo}
                 label="ViCo"
-                link={`/${props.lang}/projects`} />
+                link={`/${lang}/projects`} />
 
               <NavItem 
                 active={active === 'home'}
                 icon={House}
-                label={i18n['Home']}
+                label={t['Home']}
                 link={link()} />
             </ul>
 
@@ -78,25 +80,25 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem
                 active={active === 'collaboration'}
                 icon={UsersThree}
-                label={i18n['Collaboration']}
+                label={t['Collaboration']}
                 link={link('collaboration')} />
 
               <NavItem
                 active={active === 'assignments'}
                 icon={GraduationCap}
-                label={i18n['Assignments']}
+                label={t['Assignments']}
                 link={link('assignments')} />
 
               <NavItem
                 active={active === 'addons'}
                 icon={PuzzlePiece}
-                label={i18n['Add Ons']}
+                label={t['Add Ons']}
                 link={link('addons')} />
 
               <NavItem
                 active={active === 'settings'}
                 icon={Sliders}
-                label={i18n['Settings']}
+                label={t['Settings']}
                 link={link('settings')} />
             </ul>
           </li>
@@ -121,7 +123,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               </span>
 
               <span className="project-sidebar-col collapsible">
-                Rainer Simon
+                {props.user?.nickname || props.user?.id}
               </span>
             </button>
           </li>

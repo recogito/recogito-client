@@ -16,7 +16,7 @@ export interface ProjectCardActionsMenuProps {
 
 export const ProjectCardActionsMenu = (props: ProjectCardActionsMenuProps) => {
 
-  const { i18n } = props;
+  const { t } = props.i18n;
 
   return (
     <Root>
@@ -29,11 +29,11 @@ export const ProjectCardActionsMenu = (props: ProjectCardActionsMenuProps) => {
       <Portal>
         <Content className="dropdown-content no-icons" sideOffset={5} align="start">
           <Item className="dropdown-item" onSelect={props.onDelete}>
-            <Trash size={16} /> <span>{i18n['Delete project']}</span>
+            <Trash size={16} /> <span>{t['Delete project']}</span>
           </Item>
 
           <Item className="dropdown-item" onSelect={props.onRename}>
-            <PencilSimple size={16} /> <span>{i18n['Rename project']}</span>
+            <PencilSimple size={16} /> <span>{t['Rename project']}</span>
           </Item>
         </Content>
       </Portal>

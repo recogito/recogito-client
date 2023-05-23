@@ -19,14 +19,14 @@ export interface ProjectsHomeProps {
 
 export const ProjectsHome = (props: ProjectsHomeProps) => {
 
-  const { i18n } = props;
+  const { t } = props.i18n;
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
   const [error, setError] = useState<UIAlert | null>(null);
 
   const onCreateProject = () =>
-    createProject(supabase, i18n['Untitled Project']).then(({ error, data }) => {
+    createProject(supabase, t['Untitled Project']).then(({ error, data }) => {
       if (error) {
         setError({ 
           title: 'Something went wrong', 
