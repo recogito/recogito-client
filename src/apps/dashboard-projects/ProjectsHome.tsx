@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import * as Toast from '@radix-ui/react-toast';
 import { Hammer, X } from '@phosphor-icons/react';
-import type { Project, Translations } from 'src/Types';
+import type { Project, Translations, UIAlert } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { createProject, deleteProject } from '@backend/projects';
+import { ToastProvider, Toast } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
@@ -23,37 +23,48 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<UIAlert | null>(null);
 
   const onCreateProject = () =>
     createProject(supabase, i18n['Untitled Project']).then(({ error, data }) => {
       if (error) {
-        // TODO
-        console.error('Error creating project', error);
+        setError({ 
+          title: 'Something went wrong', 
+          description: 'Could not create the project.', 
+          severity: 'error' 
+        });
       } else if (data) {
-        console.log(data);
         setProjects([...projects, ...data]);
         // window.location.href = `/projects/${data[0].id}`;
       }
     })
 
   const onRenameProject = (project: Project) => {
-    // TODO
-    console.log('renaming');
-    setError('Not yet implemented');
+    setError({
+      icon: <Hammer size={16} className="text-bottom" />,
+      title: 'We\'re working on it!',
+      description: 'This feature will become available soon.',
+      severity: 'info'
+    });
   }
     
   const onDeleteProject = (project: Project) =>
     deleteProject(supabase, project.id).then(({ error, data }) => {
       if (error) {
-        // TODO
-        console.error('Error deleting project', error);
+        setError({
+          title: 'Something went wrong',
+          description: 'Could not delete the project.',
+          severity: 'error'
+        });
       } else if (data) {
         if (data.length === 1 && data[0].id === project.id) {
           setProjects(projects.filter(p => p.id !== project.id));
         } else {
-          // TODO
-          console.error('Something went wrong when deleting project', project, data);
+          setError({
+            title: 'Something went wrong',
+            description: 'Could not delete the project.',
+            severity: 'error'
+          });
         }
       }
     });
@@ -63,7 +74,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       i18n={props.i18n} 
       onCreateProject={onCreateProject} />
   ) : (
-    <Toast.Provider>
+    <ToastProvider>
       <ProjectsGrid 
         i18n={props.i18n} 
         projects={projects}
@@ -71,29 +82,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         onDeleteProject={onDeleteProject} 
         onRenameProject={onRenameProject} />
 
-        <Toast.Root 
-          className="toast" 
-          duration={100000}
-          open={Boolean(error)}
-          onOpenChange={open => !open && setError(null)}>
-
-          <Toast.Title className="toast-title">
-            <Hammer size={16} className="text-bottom" /> We're working on it!
-          </Toast.Title>
-
-          <Toast.Description className="toast-description">
-            This feature will become available soon.
-          </Toast.Description>
-
-          <Toast.Action className="toast-action" asChild altText="Close error message">
-            <button className="unstyled icon-only">
-              <X size={20} />
-            </button>
-          </Toast.Action>
-        </Toast.Root>
-
-        <Toast.Viewport className="toast-viewport" />
-    </Toast.Provider>
+      <Toast
+        alert={error}
+        onOpenChange={open => !open && setError(null)} />
+    </ToastProvider>
   )
   
 }

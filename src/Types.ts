@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 export interface Project {
 
   id: string;
@@ -17,3 +19,15 @@ export interface Project {
 }
 
 export type Translations = { [key: string]: string };
+
+export interface UIAlert {
+
+  icon?: ReactNode;
+
+  title: string;
+
+  description?: string;
+
+  severity: 'info' | 'warning' | 'error';
+
+} 
