@@ -3,6 +3,12 @@ import type { Translations } from 'src/Types';
 
 import './DashboardSidebar.css';
 
+/**
+ * Note that we're using React to render this (otherwise static) component rather
+ * than Astro for convenience. This way, we only need to have the React version
+ * of Phosphor Icons as a depdency. (Plus: icons also look slightly different between
+ * React and Astro versions!)
+ */
 export const DashboardSidebar = (props: { i18n: Translations }) => {
 
   const { i18n } = props;
