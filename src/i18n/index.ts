@@ -1,3 +1,5 @@
+import type { Translations } from 'src/Types';
+
 import de from './de';
 import en from './en';
 
@@ -18,7 +20,7 @@ export const getLangFromUrl = (url: URL) => {
   return defaultLang;
 }
 
-export const getTranslations = (request: Request, dictionary: keyof typeof defaultLabels) => {
+export const getTranslations = (request: Request, dictionary: keyof typeof defaultLabels): Translations => {
   const lang = getLangFromUrl(new URL(request.url));
 
   return {

@@ -1,11 +1,14 @@
 ---
+import { getTranslations } from '@i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
+
+const { t } = getTranslations(Astro.request, 'error');
 ---
 <BaseLayout title="ViCo | Login">
   <div class="container">
     <div class="column">
       <h1>404 Not Found</h1>
-      <p>Nothing to see here.</p>
+      <p>{t['Nothing to see here.']}</p>
     </div>
   </div>
 </BaseLayout>
