@@ -19,6 +19,14 @@ export const deleteProject = (supabase: SupabaseClient, id: string) =>
     .match({ id })
     .select();
 
+export const getProject = (supabase: SupabaseClient, id: string): Response<Project> =>
+  supabase
+    .from('projects')
+    .select()
+    .eq('id', id)
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Project }));
+  
 export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
   getUser(supabase).then(user =>
     supabase

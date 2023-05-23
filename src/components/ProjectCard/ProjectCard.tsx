@@ -20,12 +20,12 @@ export const ProjectCard = (props: ProjectCardProps) => {
   const { id, name } = props.project;
 
   const onClick = () =>
-    window.location.href = `./${id}`;
+    window.location.href = `./projects/${id}`;
 
   return (
     <div className="card project-card">
       <div onClick={onClick}>
-        <h1><a href={`./${id}`}>{name}</a></h1>
+        <h1><a href={`./projects/${id}`}>{name}</a></h1>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 

@@ -1,0 +1,122 @@
+.project-sidebar {
+  background-color: var(--dark-blue);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  max-height: -webkit-fill-available;
+  position: sticky;
+  top: 0;
+  view-transition-name: project-sidebar;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.1s;
+}
+
+.project-sidebar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-sidebar button {
+  all: unset;
+}
+
+.project-sidebar-row {
+  white-space: nowrap;
+}
+
+.project-sidebar-row a[href]:hover {
+  text-decoration: none;
+}
+
+.project-sidebar-col {
+  align-items: center;
+  color: #cbd4e2;
+  font-size: var(--font-tiny);
+  display: inline-flex;
+  height: 40px;
+  position: relative;
+}
+
+.project-sidebar-col.fixed {
+  justify-content: center;
+  transition: color 100ms ease-in-out;
+  position: relative;
+  top: -1px;
+  width: 40px;
+}
+
+.project-sidebar-col.collapsible {
+  color: #fff;
+  justify-content: flex-start;
+  overflow: hidden;
+  transition: width 100ms ease-in-out;
+  width: 140px;
+}
+
+.project-sidebar.collapsed .project-sidebar-col.collapsible {
+  width: 0px;
+}
+
+/** nav section **/
+.project-sidebar nav > ul > li {
+  padding: 8px;
+}
+
+.project-sidebar nav ul ul li {
+  border-radius: var(--border-radius);
+  margin: 8px 0;
+  position: relative;
+  transition: background-color 180ms ease-in-out;
+}
+
+.project-sidebar nav li a {
+  display: flex;
+}
+
+.project-sidebar nav li.active {
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+.project-sidebar nav li.active .project-sidebar-col {
+  color: var(--bright-blue);
+}
+
+.project-sidebar nav ul ul li:not(.no-hover, .active):hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.project-sidebar nav ul ul li:not(.no-hover, .active):hover .project-sidebar-col {
+  color: #fff;
+}
+
+/** spacer section **/
+.project-sidebar-spacer {
+  display: flex;
+  flex-grow: 2;
+}
+
+/** actions section **/
+.project-sidebar-actions {
+  padding: 5px 0;
+}
+
+.project-sidebar-actions li {
+  padding: 4px 8px;
+}
+
+.project-sidebar-actions button {
+  align-items: center;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  display: flex;
+  transition: background-color 180ms ease-in-out;
+}
+
+.project-sidebar-actions button:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+  box-shadow: none;
+}

@@ -1,0 +1,66 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { ProjectSidebar } from './ProjectSidebar';
+import { getLangFromUrl } from '@i18n';
+
+const { active, project } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+---
+<BaseLayout title={project.name}>	
+  <ProjectSidebar 
+    client:load 
+    active={active} 
+    lang={lang} 
+    project={project} />
+
+  <div class="container">
+    <header>
+      <nav class="breadcrumbs">
+        <ol>
+          <li>
+            <a href="/projects">Unnamed Annotation Tool</a>
+          </li>
+
+          <li>
+            <a>{project.name}</a>
+          </li>
+        </ol>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </div>
+</BaseLayout>
+
+<style>
+  body {
+		display: flex;
+		flex-direction: row;
+		position: relative;
+	}
+
+  .container {
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 100%;
+  }
+
+  header {
+    border-bottom: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+  }
+
+  main {
+    box-sizing: border-box;
+    flex-grow: 1;
+    margin: 0 auto;
+    max-width: 80rem;
+    padding: 40px;
+}
+</style>
