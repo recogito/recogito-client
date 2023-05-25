@@ -1,0 +1,22 @@
+.document-card {
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  padding: 10px;
+  position: relative;
+  transition: all .25s ease-in-out;
+}
+
+.document-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.18),
+    0 2px 8px -2px rgba(0, 0, 0, 0.28);
+}
+
+.document-card h1 {
+  font-size: 1em;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;  
+}

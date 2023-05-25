@@ -4,6 +4,8 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { createDocument } from '@backend/documents';
 import { DocumentCard } from '@components/DocumentCard';
 
+import './ProjectHome.css';
+
 /**
  * Just a hack for testing
  */
@@ -51,6 +53,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <div className="project-home-grid">
         {DOCUMENTS.map(document => (
           <DocumentCard 
+            key={document.id}
             i18n={i18n} 
             document={document} 
             onDelete={() => onDeleteDocument(document)} />

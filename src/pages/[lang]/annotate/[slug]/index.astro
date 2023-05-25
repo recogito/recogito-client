@@ -1,0 +1,23 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { ImageAnnotationDesktop } from '@apps/annotation-image';
+
+const lang = getLangFromUrl(Astro.url);
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+if (!supabase)
+  return Astro.redirect(`/${lang}/sign-in`);
+
+// For now, we'll accept either 'image or 'text' as a dummy-slug
+const slug = Astro.params.slug;
+---
+<BaseLayout title="Annotation">
+  {slug === 'image' ? (
+    <ImageAnnotationDesktop 
+      i18n={getTranslations(Astro.request, 'annotation-image')}/>
+  ) : (
+    <div>Text Annotation</div>
+  )}
+</BaseLayout>

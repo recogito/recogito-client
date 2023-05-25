@@ -1,14 +1,15 @@
 ---
 import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getTranslations } from '@i18n';
+import { getLangFromUrl, getTranslations } from '@i18n';
 import { listMyProjects } from '@backend/projects';
 import { ProjectsHome } from '@apps/dashboard-projects';
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+const lang = getLangFromUrl(Astro.url);
 
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
-  return Astro.redirect('/sign-in');
+  return Astro.redirect(`/${lang}/sign-in`);
 
 const response = await listMyProjects(supabase);
 ---

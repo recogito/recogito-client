@@ -1,5 +1,7 @@
 import type { Document, Translations } from 'src/Types';
-import { DocumentCardActionsMenu } from "./DocumentCardActionsMenu";
+import { DocumentCardActionsMenu } from './DocumentCardActionsMenu';
+
+import './DocumentCard.css';
 
 export interface DocumentCardProps {
 
