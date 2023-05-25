@@ -1,5 +1,7 @@
 import { Plus } from '@phosphor-icons/react';
 import type { Project, Translations } from 'src/Types';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { createDocument } from '@backend/documents';
 
 export interface ProjectHomeProps {
 
@@ -14,7 +16,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { i18n, project } = props;
 
   const onAddDummyContent = () => {
-    
+    console.log('Inserting dummy documents');
+    createDocument(supabase, 'dummy-text-document');
+    createDocument(supabase, 'dummy-image-document');
   }
 
   return (

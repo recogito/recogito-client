@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import * as RadixToast from '@radix-ui/react-toast';
 import { X } from '@phosphor-icons/react';
-import type { UIAlert } from 'src/Types';
+import type { ToastContent } from './ToastContent';
 
 const { Root, Title, Description, Action, Viewport } = RadixToast;
 
 export interface ToastProps {
 
-  alert?: UIAlert | null;
+  content?: ToastContent | null;
 
   closeAltText?: string;
 
@@ -19,31 +19,31 @@ export interface ToastProps {
 
 export const Toast = (props: ToastProps) => {
 
-  const icon = props.alert?.icon;
+  const icon = props.content?.icon;
 
-  // Note that we need to keep the alert on screen,
+  // Note that we need to keep the content on screen,
   // even after the prop has gone null, for the exit anim.
-  const [alert, setAlert] = useState(props.alert);
+  const [content, setContent] = useState(props.content);
 
   useEffect(() => {
-    if (props.alert)
-      setAlert(props.alert);
-  }, [props.alert]);
+    if (props.content)
+      setContent(props.content);
+  }, [props.content]);
 
   return (
     <>
       <Root 
         className="toast" 
         duration={props.duration || 5000}
-        open={Boolean(props.alert)}
+        open={Boolean(props.content)}
         onOpenChange={props.onOpenChange}>
 
         <Title className="toast-title">
-          {icon} {alert?.title}
+          {icon} {content?.title}
         </Title>
 
         <Description className="toast-description">
-          {alert?.description}
+          {content?.description}
         </Description>
 
         <Action className="toast-action" asChild altText={props.closeAltText || 'Close alert'}>

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Hammer, X } from '@phosphor-icons/react';
-import type { Project, Translations, UIAlert } from 'src/Types';
+import { Hammer } from '@phosphor-icons/react';
+import type { Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { createProject, deleteProject } from '@backend/projects';
-import { ToastProvider, Toast } from '@components/Toast';
+import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
@@ -23,7 +23,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
-  const [error, setError] = useState<UIAlert | null>(null);
+  const [error, setError] = useState<ToastContent | null>(null);
 
   const onCreateProject = () =>
     createProject(supabase, t['Untitled Project']).then(({ error, data }) => {
@@ -34,7 +34,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           severity: 'error' 
         });
       } else if (data) {
-        setProjects([...projects, ...data]);
+        setProjects([...projects, data]);
         // window.location.href = `/projects/${data[0].id}`;
       }
     })
@@ -83,7 +83,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         onRenameProject={onRenameProject} />
 
       <Toast
-        alert={error}
+        content={error}
         onOpenChange={open => !open && setError(null)} />
     </ToastProvider>
   )

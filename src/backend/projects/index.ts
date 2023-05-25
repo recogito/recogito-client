@@ -3,14 +3,15 @@ import type { Project } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 
-export const createProject = (supabase: SupabaseClient, name: string, description: string | null = null): Response<Project[]> =>
+export const createProject = (supabase: SupabaseClient, name: string, description: string | null = null): Response<Project> =>
   supabase
     .from('projects')
     .insert({
       name, description
     })
     .select()
-    .then(({ error, data }) => ({ error, data: data as Project[] }));
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Project }));
 
 export const deleteProject = (supabase: SupabaseClient, id: string) =>
   supabase

@@ -24,6 +24,6 @@ const response = await getProject(supabase, projectId as string);
   {response.error ? (
     <div>Something went wrong</div>
   ) : (
-    <ProjectHome project={response.data} i18n={i18n} />
+    <ProjectHome project={response.data} i18n={i18n} client:load />
   )}
 </ProjectLayout>
