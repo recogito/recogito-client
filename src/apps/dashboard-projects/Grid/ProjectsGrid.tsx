@@ -26,7 +26,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
         <nav className="breadcrumbs">
           <ol>
             <li>
-              <a href={`/${lang}/projects`}>ViCo</a>
+              <a href={`/${lang}/projects`}>INeedAName</a>
             </li>
 
             <li>

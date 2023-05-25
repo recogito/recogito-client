@@ -3,7 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import { Login } from '@apps/auth-login';
 import { getTranslations } from '@i18n';
 ---
-<BaseLayout title="ViCo | Login">
+<BaseLayout title="INeedAName | Login">
   <div class="container">
     <div class="column">
       <Login i18n={getTranslations(Astro.request, 'auth-login')} client:load />

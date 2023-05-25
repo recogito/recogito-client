@@ -66,7 +66,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem 
                 className="no-hover"
                 icon={GooglePodcastsLogo}
-                label="ViCo"
+                label="INeedAName"
                 link={`/${lang}/projects`} />
 
               <NavItem 
