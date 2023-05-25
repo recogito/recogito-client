@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@annotorious/react": "^3.0.0-pre-alpha-10",
     "@astrojs/netlify": "^2.2.3",
     "@astrojs/react": "^2.2.0",
     "@phosphor-icons/react": "^2.0.9",
@@ -17,10 +18,14 @@
     "@radix-ui/react-toast": "^1.1.3",
     "@supabase/auth-helpers-shared": "^0.3.4",
     "@supabase/supabase-js": "^2.22.0",
-    "@types/react": "^18.2.6",
-    "@types/react-dom": "^18.2.4",
     "astro": "^2.5.1",
+    "openseadragon": "^3.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/openseadragon": "^3.0.6",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4"
   }
 }

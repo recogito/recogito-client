@@ -14,10 +14,24 @@ if (!supabase)
 const slug = Astro.params.slug;
 ---
 <BaseLayout title="Annotation">
-  {slug === 'image' ? (
-    <ImageAnnotationDesktop 
-      i18n={getTranslations(Astro.request, 'annotation-image')}/>
-  ) : (
-    <div>Text Annotation</div>
-  )}
+  <div class="container">
+    {slug === 'image' ? (
+      <ImageAnnotationDesktop 
+        client:only
+        i18n={getTranslations(Astro.request, 'annotation-image')}/>
+    ) : (
+      <div>Text Annotation</div>
+    )}
+  </div>
 </BaseLayout>
+
+<style>
+  .container {
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+</style>
