@@ -1,4 +1,4 @@
-import { Annotorious, OpenSeadragonViewer } from '@annotorious/react';
+import { Annotorious, OpenSeadragonViewer, OpenSeadragonAnnotator } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 const IIIF_SAMPLE = {
@@ -46,13 +46,15 @@ export interface ImageAnnotationDesktopProps {
 export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
   return (
-    <Annotorious>
-      <div className="ia-desktop">
-        <OpenSeadragonViewer
-          className="ia-osd-container"
-          options={OSD_OPTIONS} />
-      </div>
-    </Annotorious>
+    <div className="ia-desktop">
+      <Annotorious>
+        <OpenSeadragonAnnotator>
+          <OpenSeadragonViewer
+            className="ia-osd-container"
+            options={OSD_OPTIONS} />
+        </OpenSeadragonAnnotator>
+      </Annotorious>
+    </div>
   )
 
 }

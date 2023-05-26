@@ -1,5 +1,11 @@
+@import '@annotorious/react/dist/annotorious-react.css';
+
 .ia-desktop, .ia-osd-container {
   height: 100%;
   position: relative;
   width: 100%;
+}
+
+.openseadragon-canvas {
+  outline: none;
 }
