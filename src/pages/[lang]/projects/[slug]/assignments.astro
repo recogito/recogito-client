@@ -2,7 +2,7 @@
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getUserProfile } from '@backend/auth';
-import { getProject } fro@backend/crudcts';
+import { getProject } from '@backend/crud';
 import { getLangFromUrl } from '@i18n';
 
 const lang = getLangFromUrl(Astro.url);
