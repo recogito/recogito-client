@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
-import type { Document, Project, Translations } from 'src/Types';
+import type { Context, Document, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { createDocument } from '@backend/documents';
+import { initDocument } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
+import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 
 import './ProjectHome.css';
 
@@ -27,17 +29,31 @@ export interface ProjectHomeProps {
 
   project: Project;
 
+  defaultContext: Context;
+
 }
 
 export const ProjectHome = (props: ProjectHomeProps) => {
 
-  const { i18n, project } = props;
+  const { project, defaultContext } = props;
 
-  const onAddDummyContent = () => {
-    console.log('Inserting dummy documents');
-    createDocument(supabase, 'dummy-text-document');
-    createDocument(supabase, 'dummy-image-document');
-  }
+  const { t } = props.i18n;
+
+  const [error, setError] = useState<ToastContent | null>(null);
+
+  const onAddDummyContent = () =>
+    initDocument(supabase, 'dummy-document', defaultContext.id)
+      .then(({ document }) => {
+        console.log('Created document', document);
+      })
+      .catch(error => {
+        console.log(error);
+        setError({ 
+          title: t['Something went wrong'], 
+          description: t['Could not create the document.'], 
+          severity: 'error' 
+        });
+      });
 
   const onDeleteDocument = (document: Document) => {
     // TODO
@@ -45,20 +61,26 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   return (
     <div className="project-home">
-      <h1>{project.name}</h1>
-      <button className="primary" onClick={onAddDummyContent}>
-        <Plus size={20} /> Add Dummy Content
-      </button>
+      <ToastProvider>
+        <h1>{project.name}</h1>
+        <button className="primary" onClick={onAddDummyContent}>
+          <Plus size={20} /> <span>Add Dummy Content</span>
+        </button>
 
-      <div className="project-home-grid">
-        {DOCUMENTS.map(document => (
-          <DocumentCard 
-            key={document.id}
-            i18n={i18n} 
-            document={document} 
-            onDelete={() => onDeleteDocument(document)} />
-        ))}
-      </div>
+        <div className="project-home-grid">
+          {DOCUMENTS.map(document => (
+            <DocumentCard 
+              key={document.id}
+              i18n={props.i18n} 
+              document={document} 
+              onDelete={() => onDeleteDocument(document)} />
+          ))}
+        </div>
+
+        <Toast
+          content={error}
+          onOpenChange={open => !open && setError(null)} />
+      </ToastProvider>
     </div>
   )
 

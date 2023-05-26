@@ -2,7 +2,7 @@
 import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { listMyProjects } from '@backend/projects';
+import { listMyProjects } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 
 const lang = getLangFromUrl(Astro.url);

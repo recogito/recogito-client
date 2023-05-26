@@ -11,7 +11,6 @@
 
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the project.": "Das Projekt konnte nicht erstellt werden.",
-  "Could not create the project (context failed).": "Projekt konnte nicht erstellt werden (Kontextfehler).",
   "Could not delete the project.": "Das Projekt konnte nicht gelöscht werden.",
 
   "We're working on it!": "Wir arbeiten dran!", 

@@ -1,3 +1,6 @@
 {
-  "Delete document": "Dokument löschen"
+  "Delete document": "Dokument löschen",
+
+  "Something went wrong": "Etwas ist schiefgelaufen",
+  "Could not create the document.": "Das Dokument konnte nicht erstellt werden."
 }

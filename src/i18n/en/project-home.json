@@ -1,3 +1,6 @@
 {
-  "Delete document": "Delete document"
+  "Delete document": "Delete document",
+
+  "Something went wrong": "Something went wrong",
+  "Could not create the document.": "Could not create the document."
 }

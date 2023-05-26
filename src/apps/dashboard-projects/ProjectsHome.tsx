@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
-import type { Context, Project, Translations } from 'src/Types';
+import type { Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { createProject, deleteProject } from '@backend/projects';
-import { createContext } from '@backend/contexts';
+import { deleteProject } from '@backend/crud';
+import { initProject } from '@backend/helpers';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
@@ -26,48 +26,20 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const onCreateProject = () => {
-    // First promise: create the project
-    const a: Promise<Project> = 
-      new Promise((resolve, reject) => 
-        createProject(supabase, t['Untitled Project'])
-          .then(({ error, data }) => {
-            if (error) {
-              console.error(error);
-              reject(t['Could not create the project.']);
-            } else {
-              resolve(data);
-            }
-          }));
-
-    // Follow-on promise: create a new context
-    const b: Promise<Context> = a.then(project =>
-      new Promise((resolve, reject) => 
-        createContext(supabase, project.id)
-          .then(({ error, data }) => {
-            if (error) {
-              console.error(error);
-              reject(t['Could not create the project (context failed).']);
-            } else {
-              resolve(data);
-            }
-          })));
-
-    // TODO tag the context as default
-
-    Promise.all([a, b])
-      .then(([project, context]) => {
+  const onCreateProject = () =>
+    initProject(supabase, t['Untitled Project'])
+      .then(({ project }) => {
         setProjects([...projects, project]);
         // window.location.href = `/projects/${project.id}`;
       })
       .catch(error => {
+        console.error(error);
         setError({ 
           title: t['Something went wrong'], 
           description: t['Could not create the project.'], 
           severity: 'error' 
         });
       });
-  }
 
   const onRenameProject = (project: Project) => {
     setError({

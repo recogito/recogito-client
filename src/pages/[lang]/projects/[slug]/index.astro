@@ -2,9 +2,10 @@
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getUserProfile } from '@backend/auth';
-import { getProject } from '@backend/projects';
+import { getProject } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
+import { getProjectWithContexts } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -18,12 +19,12 @@ const projectId = Astro.params.slug;
 
 const i18n = getTranslations(Astro.request, 'project-home');
 
-const response = await getProject(supabase, projectId as string);
+const response = await getProjectWithContexts(supabase, projectId as string);
 ---
 <ProjectLayout active="home" user={user} project={response.data}>
   {response.error ? (
     <div>Something went wrong</div>
   ) : (
-    <ProjectHome project={response.data} i18n={i18n} client:load />
+    <ProjectHome project={response.data} defaultContext={response.data.contexts[0]} i18n={i18n} client:load />
   )}
 </ProjectLayout>

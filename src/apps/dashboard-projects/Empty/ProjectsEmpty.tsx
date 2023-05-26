@@ -22,7 +22,7 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
 
         <div className="dashboard-projects-empty-cta">
           <button className="primary" onClick={props.onCreateProject}>
-            <RocketLaunch size={20} /> {t['Start Your First Annotation Project']}
+            <RocketLaunch size={20} /> <span>{t['Start Your First Annotation Project']}</span>
           </button> 
 
           <a className="button" href="./help/tutorial">
