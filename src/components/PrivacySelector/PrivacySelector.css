@@ -1,0 +1,11 @@
+button.privacy-selector-trigger {
+  font-weight: 300;
+  font-size: var(--font-tiny);
+  height: 38px;
+  padding: 0 10px;
+  width: auto;
+}
+
+button.privacy-selector-trigger > span {
+  padding: 0 5px;
+}

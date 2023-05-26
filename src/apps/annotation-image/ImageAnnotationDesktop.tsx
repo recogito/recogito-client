@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Annotorious, OpenSeadragonViewer, OpenSeadragonAnnotator } from '@annotorious/react';
 import type { Translations } from 'src/Types';
+import { Toolbar } from './Toolbar';
 
 const IIIF_SAMPLE = {
   "@context" : "http://iiif.io/api/image/2/context.json",
@@ -45,13 +47,19 @@ export interface ImageAnnotationDesktopProps {
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
+  const [tool, setTool] = useState<string | null>(null);
+
   return (
-    <div className="ia-desktop">
+    <div className="anno-desktop ia-desktop">
       <Annotorious>
-        <OpenSeadragonAnnotator>
+        <OpenSeadragonAnnotator tool={tool} keepEnabled={true}>
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={OSD_OPTIONS} />
+
+          <div className="anno-desktop-bottom">
+            <Toolbar onChangeTool={setTool}/>
+          </div>
         </OpenSeadragonAnnotator>
       </Annotorious>
     </div>

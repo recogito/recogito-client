@@ -39,6 +39,13 @@
   padding: 5px 10px;
 }
 
+.dropdown-item p {
+  color: var(--gray-600);
+  line-height: 150%;
+  max-width: 300px;
+  padding: 5px 5px 5px 0;
+}
+
 .dropdown-item svg {
   color: var(--font-light);
   padding-right: 7px;
@@ -59,6 +66,12 @@
 .dropdown-radio-item[data-disabled],
 .dropdown-sub-trigger[data-disabled] {
   pointer-events: none;
+}
+
+.dropdown-indicator {
+  left: 9px;
+  top: 5px;
+  position: absolute;
 }
 
 @keyframes slideUpAndFade {

@@ -5,7 +5,7 @@ import type { ToastContent } from './ToastContent';
 
 const { Root, Title, Description, Action, Viewport } = RadixToast;
 
-export interface ToastProps {
+interface ToastProps {
 
   content?: ToastContent | null;
 

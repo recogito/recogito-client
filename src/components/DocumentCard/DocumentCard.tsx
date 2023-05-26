@@ -3,7 +3,7 @@ import { DocumentCardActionsMenu } from './DocumentCardActionsMenu';
 
 import './DocumentCard.css';
 
-export interface DocumentCardProps {
+interface DocumentCardProps {
 
   i18n: Translations;
 

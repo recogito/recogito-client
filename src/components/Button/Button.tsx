@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-export interface ButtonProps {
+interface ButtonProps {
 
   children: ReactNode;
 

@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from 'react';
 
-export interface TextInputProps {
+interface TextInputProps {
 
   autoComplete?: boolean;
 

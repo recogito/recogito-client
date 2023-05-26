@@ -16,7 +16,7 @@ export interface StateSignInFormProps {
 
 export const StateLoginForm = (props: StateSignInFormProps) => {
 
-  const { i18n } = props;
+  const { t } = props.i18n;
 
   const [email, setEmail] = useState('');
 
@@ -28,7 +28,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
     evt.preventDefault();
 
     if (!isValidEmail(email)) {
-      setError(i18n['Please enter a valid email address']);
+      setError(t['Please enter a valid email address']);
     } else {
       setError('');
       
@@ -36,7 +36,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
         email, password
       }).then(({ error }) => {
         if (error)
-          setError(i18n['Invalid email or password']);
+          setError(t['Invalid email or password']);
       });
     }
   }
@@ -44,9 +44,9 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
   return (
     <div className="login">
       <main>
-        <h1>{i18n['Welcome Back']}</h1>
+        <h1>{t['Welcome Back']}</h1>
         <p>
-          {i18n['Log into your account']}
+          {t['Log into your account']}
         </p>
     
         <div className="login-email">
@@ -55,14 +55,14 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
               autoComplete={false}
               error={Boolean(error)}
               name="email" 
-              label={i18n['Email']} 
+              label={t['Email']} 
               className="lg w-full" 
               onChange={setEmail} />
 
             <TextInput 
               autoComplete={false}
               name="password" 
-              label={i18n['Password']} 
+              label={t['Password']} 
               type="password"
               className="lg w-full" 
               onChange={setPassword} />
@@ -75,32 +75,32 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
             <Button   
               className="primary lg w-full"
-              onClick={onSignIn}>{i18n['Sign In']}</Button>
+              onClick={onSignIn}>{t['Sign In']}</Button>
           </form>
 
           <div className="forgot-password">
-            <a href="#">{i18n['Forgot password?']}</a>
+            <a href="#">{t['Forgot password?']}</a>
           </div>
         </div>
 
         <div className="login-separator">
-          <span>{i18n['OR']}</span>
+          <span>{t['OR']}</span>
         </div>
 
         <div className="login-providers">
           <button className="lg w-full" onClick={props.onSendLink}>
-            <MagicWand size={19} /> {i18n['Continue with Magic Link']}
+            <MagicWand size={19} /> {t['Continue with Magic Link']}
           </button>
 
           <button className="lg w-full">
-            <Lock size={19} /> {i18n['Continue with SSO']}
+            <Lock size={19} /> {t['Continue with SSO']}
           </button>
         </div>
       </main>
 
       <footer>
         <p>
-          {i18n['Don\'t have an account?']} <a href="#">{i18n['Sign up now.']}</a>  
+          {t['Don\'t have an account?']} <a href="#">{t['Sign up now.']}</a>  
         </p>
       </footer>
     </div>

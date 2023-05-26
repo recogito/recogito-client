@@ -1,6 +1,6 @@
 @import '@annotorious/react/dist/annotorious-react.css';
 
-.ia-desktop, .ia-osd-container {
+.ia-osd-container {
   height: 100%;
   position: relative;
   width: 100%;
@@ -8,4 +8,15 @@
 
 .openseadragon-canvas {
   outline: none;
+}
+
+.ia-toolbar {
+  align-items: center;
+  bottom: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.ia-toolbar section {
+  padding: 5px;
 }

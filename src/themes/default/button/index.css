@@ -12,7 +12,7 @@ button, a[href].button {
     0 2px 3px -2px rgba(0, 0, 0, 0.12);
   color: var(--button-font-color);
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   flex-direction: row;
   font-family: 'Inter', Arial, Helvetica, sans-serif;
   font-size: var(--font-small);
@@ -40,7 +40,7 @@ button:hover:not(:disabled), a.button:hover {
     0 2px 3px -2px rgba(0, 0, 0, 0.2);
 }
 
-button:focus {
+button:focus-visible {
   box-shadow: 0 0 0 4px rgb(22, 97, 202, 0.2);
 }
 
@@ -51,6 +51,10 @@ button > svg {
 
 button svg:first-child {
   margin-left: 0;
+}
+
+button svg:last-child {
+  margin-right: 0;
 }
 
 :is(button, a.button) + :is(button, a.button) {

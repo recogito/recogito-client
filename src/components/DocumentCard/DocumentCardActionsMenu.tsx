@@ -4,7 +4,7 @@ import type { Translations } from 'src/Types';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
-export interface DocumentCardActionsMenuProps {
+interface DocumentCardActionsMenuProps {
 
   i18n: Translations;
 

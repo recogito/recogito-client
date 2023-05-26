@@ -3,7 +3,7 @@ import { ProjectCardActionsMenu } from './ProjectCardActionsMenu';
 
 import './ProjectCard.css';
 
-export interface ProjectCardProps {
+interface ProjectCardProps {
 
   i18n: Translations;
 

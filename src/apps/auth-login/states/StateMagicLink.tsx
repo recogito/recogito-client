@@ -8,7 +8,7 @@ import { isValidEmail } from '../validation';
 
 export const StateMagicLink = (props: { i18n: Translations }) => {
 
-  const { i18n } = props;
+  const { t } = props.i18n;
 
   const [email, setEmail] = useState('');
 
@@ -46,11 +46,11 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
       <Button 
         disabled 
         className="lg w-full success">
-        <Check size={22} /> <span>{i18n['Link Sent']}</span>
+        <Check size={22} /> <span>{t['Link Sent']}</span>
       </Button>
 
       <p>
-        {i18n['Check your email for the Magic Link.']}
+        {t['Check your email for the Magic Link.']}
       </p>
     </div>
   ) : (
@@ -61,7 +61,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           error={isInvalid}
           className="lg w-full"
           name="email" 
-          label={i18n['Your email address']}
+          label={t['Your email address']}
           value={email}
           onChange={setEmail} />
 
@@ -69,7 +69,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           <p className="error">
             <WarningOctagon 
               className="icon inline" 
-              size={18} weight="fill" /> {i18n['Please enter a valid email address']}
+              size={18} weight="fill" /> {t['Please enter a valid email address']}
           </p>
         )}
 
@@ -82,7 +82,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
         )}
 
         <Button type="submit" className="primary lg w-full" onClick={onSend}>
-          {i18n['Send Magic Link']}
+          {t['Send Magic Link']}
         </Button>
       </form>
     </div>
