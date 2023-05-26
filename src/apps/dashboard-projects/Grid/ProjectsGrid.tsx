@@ -38,7 +38,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
 
       <main>
         <button className="primary" onClick={props.onCreateProject}>
-          <Plus size={20} /> {t['Create New Project']}
+          <Plus size={20} /> <span>{t['Create New Project']}</span>
         </button>
 
         <div className="dashboard-projects-grid">

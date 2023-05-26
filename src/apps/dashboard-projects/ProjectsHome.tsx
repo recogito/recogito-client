@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
-import type { Project, Translations } from 'src/Types';
+import type { Context, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { createProject, deleteProject } from '@backend/projects';
+import { createContext } from '@backend/contexts';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
@@ -25,25 +26,54 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const onCreateProject = () =>
-    createProject(supabase, t['Untitled Project']).then(({ error, data }) => {
-      if (error) {
+  const onCreateProject = () => {
+    // First promise: create the project
+    const a: Promise<Project> = 
+      new Promise((resolve, reject) => 
+        createProject(supabase, t['Untitled Project'])
+          .then(({ error, data }) => {
+            if (error) {
+              console.error(error);
+              reject(t['Could not create the project.']);
+            } else {
+              resolve(data);
+            }
+          }));
+
+    // Follow-on promise: create a new context
+    const b: Promise<Context> = a.then(project =>
+      new Promise((resolve, reject) => 
+        createContext(supabase, project.id)
+          .then(({ error, data }) => {
+            if (error) {
+              console.error(error);
+              reject(t['Could not create the project (context failed).']);
+            } else {
+              resolve(data);
+            }
+          })));
+
+    // TODO tag the context as default
+
+    Promise.all([a, b])
+      .then(([project, context]) => {
+        setProjects([...projects, project]);
+        // window.location.href = `/projects/${project.id}`;
+      })
+      .catch(error => {
         setError({ 
-          title: 'Something went wrong', 
-          description: 'Could not create the project.', 
+          title: t['Something went wrong'], 
+          description: t['Could not create the project.'], 
           severity: 'error' 
         });
-      } else if (data) {
-        setProjects([...projects, data]);
-        // window.location.href = `/projects/${data[0].id}`;
-      }
-    })
+      });
+  }
 
   const onRenameProject = (project: Project) => {
     setError({
       icon: <Hammer size={16} className="text-bottom" />,
-      title: 'We\'re working on it!',
-      description: 'This feature will become available soon.',
+      title: t['We\'re working on it!'],
+      description: t['This feature will become available soon.'],
       severity: 'info'
     });
   }
@@ -51,9 +81,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const onDeleteProject = (project: Project) =>
     deleteProject(supabase, project.id).then(({ error, data }) => {
       if (error) {
+        console.error(error);
         setError({
-          title: 'Something went wrong',
-          description: 'Could not delete the project.',
+          title: t['Something went wrong'],
+          description: t['Could not delete the project.'],
           severity: 'error'
         });
       } else if (data) {
@@ -61,8 +92,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           setProjects(projects.filter(p => p.id !== project.id));
         } else {
           setError({
-            title: 'Something went wrong',
-            description: 'Could not delete the project.',
+            title: t['Something went wrong'],
+            description: t['Could not delete the project.'],
             severity: 'error'
           });
         }

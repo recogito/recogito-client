@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
 import type { Context } from 'src/Types';
 
-export const createContext = (supabase: SupabaseClient, name: string, project_id: string): Response<Context> =>
+export const createContext = (supabase: SupabaseClient, project_id: string, name?: string): Response<Context> =>
   supabase
     .from('contexts')
     .insert({
