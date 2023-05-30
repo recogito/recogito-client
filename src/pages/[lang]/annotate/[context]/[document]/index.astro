@@ -1,11 +1,10 @@
 ---
+import crypto from 'crypto';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotationDesktop } from '@apps/annotation-image';
 import { getDocumentInContext } from '@backend/helpers';
-import type { Document, Layer } from 'src/Types';
-import crypto from 'crypto';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -16,32 +15,28 @@ if (!supabase)
 const contextId = Astro.params.context;
 const documentId = Astro.params.document;
 
-let document: Document;
-let layers: Layer[];
-let roomId: string;
-
-if (contextId && documentId) {
-  // Will return empty if this user has no access priviliges
-  const response = await getDocumentInContext(supabase, documentId, contextId);
-  if (response.data) {
-    document = response.data[0];
-    layers = response.data[1];
-
-    const secret = import.meta.env.PUBLIC_ROOM_SECRET || '';
-
-    const hash = crypto.createHash('sha256');
-    const data = hash.update(`${secret}.${contextId}.${documentId}`);
-    roomId = data.digest('hex');
-  } else {
-    // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
-    const error = await fetch(`${Astro.url}/404`);
-    return new Response(error.body, { headers: error.headers, status: 404 }); 
-  }
-} else {
+if (!contextId || !documentId) {
   // Should never happen
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
+
+// Will return empty if this user has no access priviliges
+const response = await getDocumentInContext(supabase, documentId, contextId);
+if (!response.data) {
+  // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
+  const error = await fetch(`${Astro.url}/404`);
+  return new Response(error.body, { headers: error.headers, status: 404 }); 
+}
+
+const [ document, layers ] = response.data;
+
+// Compute realtime channel key
+const secret = import.meta.env.PUBLIC_ROOM_SECRET || '';
+const hash = crypto.createHash('sha256');
+const data = hash.update(`${secret}.${contextId}.${documentId}`);
+
+const channelId = data.digest('hex');
 ---
 <BaseLayout title="Annotation">
   <div class="container">
@@ -51,7 +46,7 @@ if (contextId && documentId) {
         i18n={getTranslations(Astro.request, 'annotation-image')}
         document={document}
         layers={layers}
-        roomId={roomId} />
+        channelId={channelId} />
     ) : (
       <div>Text Annotation</div>
     )}

@@ -8,21 +8,6 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 
 import './ProjectHome.css';
 
-/**
- * Just a hack for testing
- */
-const DOCUMENTS: Document[] = [{
-  id: '85aa0e08-845f-4b9b-967d-25022cea27c4',
-  created_at: (new Date()).toISOString(),
-  created_by: '096fb42d-085f-480e-81db-6b66309ed5e8',
-  name: 'Sample Text File'
-}, {
-  id: 'c6eed3fa-b2b6-48e2-8321-32bac364c1dd',
-  created_at: (new Date()).toISOString(),
-  created_by: '096fb42d-085f-480e-81db-6b66309ed5e8',
-  name: 'Sample Image File'
-}];
-
 export interface ProjectHomeProps {
 
   i18n: Translations;
@@ -31,29 +16,34 @@ export interface ProjectHomeProps {
 
   defaultContext: Context;
 
+  documents: Document[];
+
 }
 
 export const ProjectHome = (props: ProjectHomeProps) => {
 
+  const { t } = props.i18n;
+
   const { project, defaultContext } = props;
 
-  const { t } = props.i18n;
+  const [documents, setDocuments] = useState<Document[]>(props.documents);
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const onAddDummyContent = () =>
+  const onAddDummyImage = () => {
     initDocument(supabase, 'dummy-document', defaultContext.id)
       .then(({ document }) => {
-        console.log('Created document', document);
+        setDocuments([...documents, document]);
       })
       .catch(error => {
-        console.log(error);
+        console.error(error);
         setError({ 
           title: t['Something went wrong'], 
           description: t['Could not create the document.'], 
           severity: 'error' 
         });
       });
+  }
 
   const onDeleteDocument = (document: Document) => {
     // TODO
@@ -63,15 +53,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     <div className="project-home">
       <ToastProvider>
         <h1>{project.name}</h1>
-        <button className="primary" onClick={onAddDummyContent}>
+        <button className="primary" onClick={onAddDummyImage}>
           <Plus size={20} /> <span>Add Dummy Content</span>
         </button>
 
         <div className="project-home-grid">
-          {DOCUMENTS.map(document => (
+          {documents.map(document => (
             <DocumentCard 
               key={document.id}
               i18n={props.i18n} 
+              context={defaultContext}
               document={document} 
               onDelete={() => onDeleteDocument(document)} />
           ))}

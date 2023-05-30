@@ -4,11 +4,11 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const { t } = getTranslations(Astro.request, 'error');
 ---
-<BaseLayout title="INeedAName | Not Found">
+<BaseLayout title="INeedAName | Error">
   <div class="container">
     <div class="column">
-      <h1>404 Not Found</h1>
-      <p>{t['Nothing to see here.']}</p>
+      <h1>500 Error</h1>
+      <p>{t['Something went wrong.']}</p>
     </div>
   </div>
 </BaseLayout>

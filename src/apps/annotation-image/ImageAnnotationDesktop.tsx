@@ -1,7 +1,15 @@
 import { useState } from 'react';
-import { Annotorious, OpenSeadragonViewer, OpenSeadragonAnnotator } from '@annotorious/react';
 import type { Document, Layer, Translations } from 'src/Types';
+import {
+  Annotorious, 
+  OpenSeadragonAnnotator,
+  OpenSeadragonViewer,
+  SupabasePlugin
+} from '@annotorious/react';
 import { Toolbar } from './Toolbar';
+
+const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
+const SUPABASE_API_KEY = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 const IIIF_SAMPLE = {
   "@context" : "http://iiif.io/api/image/2/context.json",
@@ -47,7 +55,7 @@ export interface ImageAnnotationDesktopProps {
 
   layers: Layer[];
 
-  roomId: string;
+  channelId: string;
 
 }
 
@@ -59,6 +67,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
     <div className="anno-desktop ia-desktop">
       <Annotorious>
         <OpenSeadragonAnnotator tool={tool} keepEnabled={true}>
+          <SupabasePlugin 
+            base={SUPABASE}
+            apiKey={SUPABASE_API_KEY} 
+            channel={props.channelId} />
+
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={OSD_OPTIONS} />

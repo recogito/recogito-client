@@ -25,7 +25,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
   return (
     <div className="project-card">
       <div onClick={onClick}>
-        <h1><a href={`./projects/${id}`}>{name}</a></h1>
+        <h1><a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a></h1>
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt 
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
