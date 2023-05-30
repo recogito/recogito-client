@@ -27,4 +27,12 @@ export const getContexts = (supabase: SupabaseClient, project_id: string): Respo
     `)
     .eq('project_id', project_id)
     .then(({ error, data }) => ({ error, data: data as Context[] }));
+
+export const deleteContext = (supabase: SupabaseClient, id: string) => 
+  supabase
+    .from('contexts')
+    .delete()
+    .match({ id })
+    .select();
+
     

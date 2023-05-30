@@ -1,7 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createContext, createProject } from '@backend/crud';
+import { createContext, createProject, deleteContext, deleteProject } from '@backend/crud';
 import type { Context, Project } from 'src/Types';
 import type { Response } from '@backend/Types';
+import { createSystemTag } from './tagHelper';
 
 /**
  * Initializes a new project.
@@ -27,18 +28,30 @@ export const initProject = (supabase: SupabaseClient, name: string) => {
     new Promise((resolve, reject) => 
       createContext(supabase, project.id)
         .then(({ error, data }) => {
-          if (error)
-            reject(error);
-          else
+          if (error) {
+            // If context creation failed, roll back the project
+            deleteProject(supabase, project.id).then(() => {
+              reject(error);
+            });
+          } else {
             resolve(data);
+          }
         })));
 
-  const c = Promise.all([a, b])
-    .then(([ project, defaultContext ]) => {
-
-      
-
-    });
+  // Wait for both promises to complete, tag the default context,
+  // and return project and context objects.
+  return Promise.all([a, b]).then(([ project, defaultContext]) => 
+    new Promise((resolve, reject) =>
+      createSystemTag(supabase, 'DEFAULT_CONTEXT', defaultContext.id)
+        .then(() => {
+          resolve({ project, defaultContext });
+        })
+        .catch(error => {
+          // Tag creation failed? Roll back context and project
+          deleteContext(supabase, defaultContext.id)
+            .then(() => deleteProject(supabase, project.id))
+            .then(() => reject(error));
+        })));
 }
 
 export const getProjectWithContexts = (
