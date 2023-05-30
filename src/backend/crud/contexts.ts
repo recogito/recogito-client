@@ -13,7 +13,15 @@ export const createContext = (supabase: SupabaseClient, project_id: string, name
     .then(({ error, data }) => 
       ({ error, data: data as Context }));
 
-export const getContexts = (supabase: SupabaseClient, project_id: string): Response<Context[]> => 
+export const getContext = (supabase: SupabaseClient, contextId: string): Response<Context> => 
+  supabase
+    .from('contexts')
+    .select()
+    .eq('id', contextId)
+    .single()
+    .then(({ error, data}) => ({ error, data: data as Context }));
+
+export const getContextsForProject = (supabase: SupabaseClient, project_id: string): Response<Context[]> => 
   supabase
     .from('contexts')
     .select(`

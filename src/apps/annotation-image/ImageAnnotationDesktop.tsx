@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Annotorious, OpenSeadragonViewer, OpenSeadragonAnnotator } from '@annotorious/react';
-import type { Translations } from 'src/Types';
+import type { Document, Layer, Translations } from 'src/Types';
 import { Toolbar } from './Toolbar';
 
 const IIIF_SAMPLE = {
@@ -42,6 +42,12 @@ import './ImageAnnotationDesktop.css';
 export interface ImageAnnotationDesktopProps {
 
   i18n: Translations;
+
+  document: Document;
+
+  layers: Layer[];
+
+  roomId: string;
 
 }
 
