@@ -42,3 +42,12 @@ export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
       `)
       .eq('created_by', user?.id)
       .then(({ error, data }) => ({ error, data: data as Project[] })));
+
+export const updateProject = (supabase: SupabaseClient, project: Project): Response<Project> =>
+  supabase 
+    .from('projects')
+    .update({...project })
+    .eq('id', project.id)
+    .select()
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Project }));

@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
 import type { Context, Document, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { updateProject } from '@backend/crud';
 import { initDocument } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
+import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 
 import './ProjectHome.css';
@@ -45,6 +47,14 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       });
   }
 
+  const onRenameProject = (name: string) => {
+    updateProject(supabase, {
+      ...props.project, name
+    }).then(response => {
+      console.log(response);
+    });
+  }
+
   const onDeleteDocument = (document: Document) => {
     // TODO
   }
@@ -52,7 +62,11 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   return (
     <div className="project-home">
       <ToastProvider>
-        <h1>{project.name}</h1>
+        <h1>
+          <EditableText 
+            value={project.name} 
+            onSubmit={onRenameProject} />
+        </h1>
         <button className="primary" onClick={onAddDummyImage}>
           <Plus size={20} /> <span>Add Dummy Content</span>
         </button>
