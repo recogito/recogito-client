@@ -39,7 +39,7 @@ export const initProject = (supabase: SupabaseClient, name: string) => {
         })));
 
   // Wait for both promises to complete, tag the default context,
-  /* and return project and context objects.
+  // and return project and context objects.
   return Promise.all([a, b]).then(([ project, defaultContext]) => 
     new Promise((resolve, reject) =>
       createSystemTag(supabase, 'DEFAULT_CONTEXT', defaultContext.id)
@@ -52,10 +52,6 @@ export const initProject = (supabase: SupabaseClient, name: string) => {
             .then(() => deleteProject(supabase, project.id))
             .then(() => reject(error));
         })));
-  */
-
-  // Temporary workaround, until `tags` table has been completed
-  return Promise.all([a, b]).then(([project, defaultContext]) => ({ project, defaultContext }));
 }
 
 export const getProjectWithContexts = (

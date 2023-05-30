@@ -70,7 +70,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
           <SupabasePlugin 
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
-            channel={props.channelId} />
+            channel={props.channelId}
+            layerId={props.layers[0].id} />
 
           <OpenSeadragonViewer
             className="ia-osd-container"
