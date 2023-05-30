@@ -82,6 +82,46 @@ export interface Layer {
 
 }
 
+export interface TagDefinition {
+
+  id: string;
+
+  created_at: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
+  name: string;
+
+  target_type: 'context' | 'document' | 'group' | 'layer' | 'profile' | 'project';
+
+  scope: 'organization' | 'project' | 'system';
+
+  scope_id?: string;
+ 
+}
+
+export interface Tag {
+
+  id: string;
+
+  created_at: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
+  tag_definition_id: string;
+
+  target_id: string;
+
+}
+
 export interface Translations { 
  
   lang: string;

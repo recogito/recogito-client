@@ -33,10 +33,12 @@ export const initProject = (supabase: SupabaseClient, name: string) => {
             resolve(data);
         })));
 
-  // TODO tag the context as default
+  const c = Promise.all([a, b])
+    .then(([ project, defaultContext ]) => {
 
-  return Promise.all([a, b]).then(([ project, defaultContext ]) => 
-    ({ project, defaultContext }));
+      
+
+    });
 }
 
 export const getProjectWithContexts = (
