@@ -1,5 +1,6 @@
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
+import { Avatar } from '@components/Avatar';
 
 import './PresenceStack.css';
 
@@ -25,7 +26,7 @@ export const PresenceStack = (props: PresenceStackProps) => {
       <ul>
         {transition((style, presentUser) => (
           <animated.li style={style} key={presentUser.presenceKey}>
-            {presentUser.user.email}
+            <Avatar user={{ id: presentUser.presenceKey }} />
           </animated.li>
         ))}
       </ul>

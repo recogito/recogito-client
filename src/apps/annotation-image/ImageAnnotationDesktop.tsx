@@ -87,7 +87,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
           <OpenSeadragonPopup
             popup ={props => <Popup {...props} />} />
 
-          <div className="ia-desktop-right">
+          <div className="anno-desktop-right">
             <PresenceStack present={present} />
           </div>
 
