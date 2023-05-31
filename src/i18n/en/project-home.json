@@ -4,5 +4,6 @@
   "Rename document": "Rename document",
 
   "Something went wrong": "Something went wrong",
-  "Could not create the document.": "Could not create the document."
+  "Could not create the document.": "Could not create the document.",
+  "Could not rename the document.": "Could not rename the document."
 }

@@ -1,7 +1,9 @@
 .document-card {
   background-color: #fff;
   border-radius: var(--border-radius);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 2px 4px -1px rgba(0, 0, 0, 0.12);
   cursor: pointer;
   position: relative;
   transition: all .25s ease-in-out;
@@ -15,6 +17,8 @@
 
 .document-card-body {
   align-items: center;
+  background-color: var(--gray-50);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
   color: var(--gray-300);
   display: flex;
   height: 160px;
@@ -31,12 +35,13 @@
 .document-card-container h1 {
   font-family: Inter;
   font-size: 1em;
-  font-weight: 500;
   margin: 0;
   padding: 0.6em 0;  
   text-align: center;
 }
 
-.document-card-container h1 a {
+.document-card-container h1 a,
+.document-card-container h1 span {
   color: var(--font-dark);
+  font-weight: 400;
 }

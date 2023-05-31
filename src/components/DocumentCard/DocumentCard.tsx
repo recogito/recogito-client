@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { ImageSquare } from '@phosphor-icons/react';
 import type { Context, Document, Translations } from 'src/Types';
+import { EditableText } from '@components/EditableText';
 import { DocumentCardActionsMenu } from './DocumentCardActionsMenu';
 
 import './DocumentCard.css';
@@ -14,7 +16,7 @@ interface DocumentCardProps {
 
   onDelete(): void;
 
-  onRename(): void;
+  onRename(name: string): void;
 
 }
 
@@ -23,6 +25,13 @@ export const DocumentCard = (props: DocumentCardProps) => {
   const { context, document } = props;
 
   const { lang } = props.i18n;
+
+  const [editable, setEditable] = useState(false);
+
+  const onRename = (name: string) => {
+    setEditable(false);
+    props.onRename(name);
+  }
 
   return (
     <article className="document-card-container">
@@ -35,12 +44,19 @@ export const DocumentCard = (props: DocumentCardProps) => {
           <DocumentCardActionsMenu 
             i18n={props.i18n} 
             onDelete={props.onDelete} 
-            onRename={props.onRename} />
+            onRename={() => setEditable(true)} />
         </div>
       </div>
 
       <h1>
-        <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
+        {editable ? (
+          <EditableText 
+            focus
+            value={document.name} 
+            onSubmit={onRename} />
+        ) : (
+          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
+        )}
       </h1>
     </article>
   )

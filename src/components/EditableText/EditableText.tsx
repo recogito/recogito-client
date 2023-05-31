@@ -1,7 +1,10 @@
+import { useEffect, useRef } from 'react';
 import type { FocusEvent, KeyboardEvent } from 'react';
 import ContentEditable from 'react-contenteditable';
 
 interface EditableTextProps {
+
+  focus?: boolean;
 
   value: string;
 
@@ -11,13 +14,22 @@ interface EditableTextProps {
 
 export const EditableText = (props: EditableTextProps) => {
 
-  const onFocus = (evt: FocusEvent) => {
-    const range = document.createRange();
-    range.selectNodeContents(evt.target as Element);
-    const sel = window.getSelection();
-    if (sel) {
-      sel.removeAllRanges();
-      sel.addRange(range);
+  const el = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (props.focus && el.current)
+      setTimeout(() => el.current?.focus(), 1);
+  }, []);
+
+  const onFocus = () => {
+    if (el.current) {
+      const range = document.createRange();
+      range.selectNodeContents(el.current);
+      const sel = window.getSelection();
+      if (sel) {
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
     }
   }
 
@@ -35,6 +47,7 @@ export const EditableText = (props: EditableTextProps) => {
 
   return (
     <ContentEditable
+      innerRef={el}
       spellCheck={false}
       html={props.value} 
       tagName="span"

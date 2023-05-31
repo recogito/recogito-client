@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
 import type { Context, Document, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { updateProject } from '@backend/crud';
+import { updateDocument, updateProject } from '@backend/crud';
 import { initDocument } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
@@ -59,8 +59,28 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     // TODO
   }
 
-  const onRenameDocument = (document: Document) => {
-    // TODO
+  const onRenameDocument = (document: Document, name: string) => {
+    // Optimistic update
+    setDocuments(documents.map(d => d.id === document.id ? ({
+      ...d, name
+    }) : d));
+
+    // Update on server
+    updateDocument(supabase, { ...document, name })
+      .then(({ error, data }) => {
+        if (error || !data) {
+          // Show error and roll back name change
+          setError({ 
+            title: t['Something went wrong'], 
+            description: t['Could not rename the document.'], 
+            severity: 'error' 
+          });
+
+          setDocuments(documents.map(d => d.id === document.id ? ({
+            ...d, name: document.name
+          }) : d));
+        }
+      });
   }
 
   return (
@@ -83,7 +103,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               context={defaultContext}
               document={document} 
               onDelete={() => onDeleteDocument(document)} 
-              onRename={() => onRenameDocument(document)} />
+              onRename={name => onRenameDocument(document, name)} />
           ))}
         </div>
 
