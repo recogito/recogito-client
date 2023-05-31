@@ -59,6 +59,10 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     // TODO
   }
 
+  const onRenameDocument = (document: Document) => {
+    // TODO
+  }
+
   return (
     <div className="project-home">
       <ToastProvider>
@@ -68,7 +72,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onSubmit={onRenameProject} />
         </h1>
         <button className="primary" onClick={onAddDummyImage}>
-          <Plus size={20} /> <span>Add Dummy Content</span>
+          <Plus size={20} /> <span>{t['Import Document']}</span>
         </button>
 
         <div className="project-home-grid">
@@ -78,7 +82,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               i18n={props.i18n} 
               context={defaultContext}
               document={document} 
-              onDelete={() => onDeleteDocument(document)} />
+              onDelete={() => onDeleteDocument(document)} 
+              onRename={() => onRenameDocument(document)} />
           ))}
         </div>
 

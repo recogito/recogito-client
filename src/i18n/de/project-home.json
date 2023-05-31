@@ -1,5 +1,7 @@
 {
+  "Import Document": "Dokument Importieren",
   "Delete document": "Dokument löschen",
+  "Rename document": "Dokument umbenennen",
 
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the document.": "Das Dokument konnte nicht erstellt werden."
