@@ -30,3 +30,7 @@
 .ia-toolbar section {
   padding: 5px;
 }
+
+.ia-desktop .presence-stack {
+  margin: 10px;
+}

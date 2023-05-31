@@ -1,0 +1,22 @@
+.avatar {
+  border-radius: 50%;
+  display: inline-block;
+  position:relative;
+  height: 34px;
+  width: 34px;
+}
+
+.avatar-image,
+.avatar-fallback {
+  align-items: center;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.avatar-image {
+  object-fit: cover;
+}
