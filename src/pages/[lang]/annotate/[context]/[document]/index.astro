@@ -32,7 +32,7 @@ if (!response.data) {
 const [ document, layers ] = response.data;
 
 // Compute realtime channel key
-const secret = import.meta.env.PUBLIC_ROOM_SECRET || '';
+const secret = import.meta.env.ROOM_SECRET || '';
 const hash = crypto.createHash('sha256');
 const data = hash.update(`${secret}.${contextId}.${documentId}`);
 
