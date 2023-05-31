@@ -2,14 +2,15 @@ import { useState } from 'react';
 import type { Document, Layer, Translations } from 'src/Types';
 import { Popup } from './Popup';
 import { Toolbar } from './Toolbar';
+import { PresenceStack } from '@components/PresenceStack';
 import {
   Annotorious, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,
+  PresentUser,
   SupabasePlugin
 } from '@annotorious/react';
-
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 const SUPABASE_API_KEY = import.meta.env.PUBLIC_SUPABASE_API_KEY;
@@ -66,6 +67,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
   const [tool, setTool] = useState<string | null>(null);
 
+  const [present, setPresent] = useState<PresentUser[]>([]);
+
   return (
     <div className="anno-desktop ia-desktop">
       <Annotorious>
@@ -74,7 +77,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
             channel={props.channelId}
-            layerId={props.layers[0].id} />
+            layerId={props.layers[0].id} 
+            onPresence={setPresent} />
 
           <OpenSeadragonViewer
             className="ia-osd-container"
@@ -82,6 +86,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
           <OpenSeadragonPopup
             popup ={props => <Popup {...props} />} />
+
+          <div className="ia-desktop-right">
+            <PresenceStack present={present} />
+          </div>
 
           <div className="anno-desktop-bottom">
             <Toolbar onChangeTool={setTool}/>

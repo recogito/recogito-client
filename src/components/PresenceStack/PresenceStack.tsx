@@ -1,0 +1,35 @@
+import type { PresentUser } from '@annotorious/react';
+import { animated, useTransition } from '@react-spring/web';
+
+import './PresenceStack.css';
+
+interface PresenceStackProps {
+
+  present: PresentUser[];
+
+}
+
+export const PresenceStack = (props: PresenceStackProps) => {
+
+  const transition = useTransition(props.present, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 }, 
+    config: {
+      duration: 250
+    }
+  });
+
+  return (
+    <div className="presence-stack">
+      <ul>
+        {transition((style, presentUser) => (
+          <animated.li style={style} key={presentUser.presenceKey}>
+            {presentUser.user.email}
+          </animated.li>
+        ))}
+      </ul>
+    </div>
+  )
+
+}
