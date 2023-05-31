@@ -1,0 +1,12 @@
+.ia-tool {
+  overflow: visible;
+  width: 22px;
+  height: 22px;
+}
+
+.ia-tool * {
+  fill: none;
+  stroke: currentColor;
+  stroke-linejoin: round;
+  stroke-width: 4px;
+}

@@ -13,8 +13,18 @@
 .ia-toolbar {
   align-items: center;
   bottom: 30px;
+  border-radius: 9999px;
   display: flex;
   flex-direction: row;
+}
+
+.ia-toolbar button {
+  border-radius: 50%;
+  vertical-align: bottom;
+}
+
+.ia-toolbar :is(button, a.button) + :is(button, a.button) {
+  margin-left: 3px;
 }
 
 .ia-toolbar section {

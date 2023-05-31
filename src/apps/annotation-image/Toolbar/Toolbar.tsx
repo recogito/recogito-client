@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import { PrivacySelector } from '@components/PrivacySelector';
-import { 
-  Cursor,
-  Rectangle,
-  Triangle
-} from '@phosphor-icons/react';
+import { Polygon, Rectangle } from './Icons';
+import { Cursor } from '@phosphor-icons/react';
 
 interface ToolbarProps {
 
@@ -43,27 +40,29 @@ export const Toolbar = (props: ToolbarProps) => {
         <button 
           className={tool === 'cursor' ? 'active' : undefined}
           onClick={() => onChangeTool('cursor')}>
-          <Cursor size={16} />
+          <Cursor size={18} />
         </button>
 
         <button 
           className={tool === 'box' ? 'active' : undefined}
           onClick={() => onChangeTool('box')}>
-          <Rectangle size={16} />
+          <Rectangle />
         </button>
 
         <button 
           className={tool === 'polygon' ? 'active' : undefined}
           onClick={() => onChangeTool('polygon')}>
-          <Triangle size={16} />
+          <Polygon />
         </button>
       </section>
 
       <div className="anno-desktop-overlay-divider anno-desktop-overlay-divider-v" />
 
-      <section className="privacy">
-        <PrivacySelector />
-      </section>
+      {/*
+        <section className="privacy">
+          <PrivacySelector />
+        </section>
+      */}
     </div>
   )
 

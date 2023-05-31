@@ -15,7 +15,7 @@ export const PrivacySelector = (props: PrivacySelectorProps) => {
     <Root>
       <Trigger asChild>
         <button className="privacy-selector-trigger">
-          <Detective size={16} />
+          <Detective size={18} />
           <span>Private</span>   
           <CaretDown size={14} />
         </button>
