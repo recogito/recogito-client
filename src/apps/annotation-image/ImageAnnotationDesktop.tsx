@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import type { Document, Layer, Translations } from 'src/Types';
+import { Popup } from './Popup';
+import { Toolbar } from './Toolbar';
 import {
   Annotorious, 
   OpenSeadragonAnnotator,
+  OpenSeadragonPopup,
   OpenSeadragonViewer,
   SupabasePlugin
 } from '@annotorious/react';
-import { Toolbar } from './Toolbar';
+
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 const SUPABASE_API_KEY = import.meta.env.PUBLIC_SUPABASE_API_KEY;
@@ -76,6 +79,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={OSD_OPTIONS} />
+
+          <OpenSeadragonPopup
+            popup ={props => <Popup {...props} />} />
 
           <div className="anno-desktop-bottom">
             <Toolbar onChangeTool={setTool}/>
