@@ -48,10 +48,10 @@
   border: none;
   border-radius: var(--border-radius);
   box-shadow: none;
-  height: 40px;
+  height: 38px;
   outline: none;
   padding: 0;
-  width: 40px;
+  width: 38px;
 }
 
 .anno-desktop-overlay button.active {

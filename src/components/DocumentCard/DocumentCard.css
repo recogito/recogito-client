@@ -1,9 +1,7 @@
 .document-card {
   background-color: #fff;
   border-radius: var(--border-radius);
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.08),
-    0 2px 4px -1px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   position: relative;
   transition: all .25s ease-in-out;
@@ -17,7 +15,6 @@
 
 .document-card-body {
   align-items: center;
-  background-color: var(--gray-50);
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   color: var(--gray-300);
   display: flex;
@@ -26,7 +23,6 @@
 }
 
 .document-card-footer {
-  border-top: 1px solid var(--gray-200);
   display: flex;
   justify-content: flex-end;
   padding: 8px;

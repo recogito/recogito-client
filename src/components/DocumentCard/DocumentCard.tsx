@@ -37,7 +37,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
     <article className="document-card-container">
       <div className="document-card">
         <div className="document-card-body">
-          <ImageSquare size={60} weight="thin" />
+          <ImageSquare size={44} weight="thin" />
         </div>
 
         <div className="document-card-footer">

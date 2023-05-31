@@ -24,11 +24,11 @@
 }
 
 .ia-toolbar :is(button, a.button) + :is(button, a.button) {
-  margin-left: 3px;
+  margin-left: 6px;
 }
 
 .ia-toolbar section {
-  padding: 5px;
+  padding: 7px;
 }
 
 .ia-desktop .presence-stack {
