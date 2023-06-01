@@ -84,13 +84,13 @@ export const ReplyForm = (props: ReplyFormProps) => {
         <div className="buttons">
           <button 
             disabled={submitDisabled}
-            className="primary mid" 
+            className="sm primary" 
             onClick={onSubmit}>
               Comment
           </button>
 
           <button 
-            className="mid" 
+            className="sm"
             onClick={onCancel}>
             Cancel
           </button>

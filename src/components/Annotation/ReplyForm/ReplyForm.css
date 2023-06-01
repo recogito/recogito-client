@@ -1,0 +1,29 @@
+.reply-form {
+  background-color: var(--gray-50);
+  border-top: 1px solid var(--gray-200);
+  padding: 8px;
+}
+
+.reply-form textarea {
+  background-color: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: calc(var(--border-radius) - 2px);
+  box-sizing: border-box;
+  margin: 0;
+  outline: none;
+  padding: 10px;
+  resize: none;
+  /* https://stackoverflow.com/questions/7144843/extra-space-under-textarea-differs-along-browsers */
+  vertical-align: top;
+  width: 100%;
+}
+
+.reply-form textarea:focus {
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 0 0 1px var(--input-focus-border-color);
+}
+
+.reply-form .buttons {
+  display: flex;
+  padding-top: 10px;
+}
