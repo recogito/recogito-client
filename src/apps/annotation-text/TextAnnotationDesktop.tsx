@@ -35,7 +35,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         <TextAnnotator 
           element="annotatable" 
           presence={{
-            font: "600 13px Inter, Arial, Helvetica, sans-serif"
+            font: "500 12px Inter, Arial, Helvetica, sans-serif"
           }} />
 
         <SupabasePlugin 
