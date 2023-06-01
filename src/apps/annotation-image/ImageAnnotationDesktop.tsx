@@ -50,6 +50,7 @@ const OSD_OPTIONS = {
 }
 
 import './ImageAnnotationDesktop.css';
+import { createAppearenceProvider } from '@components/PresenceStack/appearanceProvider';
 
 export interface ImageAnnotationDesktopProps {
 
@@ -78,6 +79,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             apiKey={SUPABASE_API_KEY} 
             channel={props.channelId}
             layerId={props.layers[0].id} 
+            appearanceProvider={createAppearenceProvider()}
             onPresence={setPresent} />
 
           <OpenSeadragonViewer

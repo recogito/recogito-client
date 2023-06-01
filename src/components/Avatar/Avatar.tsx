@@ -1,6 +1,4 @@
 import * as RadixAvatar from '@radix-ui/react-avatar';
-import type { UserProfile } from 'src/Types';
-import { ANONYMOUS_IDENTITIES } from '../PresenceStack/AnonymousIdentities';
 
 import './Avatar.css';
 
@@ -26,35 +24,35 @@ const getInitials = (name: string): string => {
 
 interface AvatarProps {
 
-  user: UserProfile;
+  id: string;
+
+  name: string;
 
   color?: string;
+
+  avatar?: string;
 
 }
 
 export const Avatar = (props: AvatarProps) => {
 
-  const { nickname, avatar_url} = props.user;
+  const { id, name, color, avatar } = props;
 
-  const hash = stringToHash(props.user.id);
-
-  const backgroundColor = props.color || `hsl(${hash % 360}, 35%, 78%)`;
-
-  const index = Math.abs(hash) % ANONYMOUS_IDENTITIES.length;
+  const backgroundColor = color || `hsl(${stringToHash(id) % 360}, 35%, 78%)`;
 
   return (
     <Root className="avatar">
-      {avatar_url ? (
+      {avatar ? (
         <Image
           className="avatar-image"
-          src={avatar_url}
-          alt={nickname || ANONYMOUS_IDENTITIES[index]} />
+          src={avatar}
+          alt={name} />
       ) : (
         <Fallback 
           className="avatar-fallback"
-          title={nickname || ANONYMOUS_IDENTITIES[index]} 
+          title={name} 
           style={{ backgroundColor }}>
-          {getInitials(ANONYMOUS_IDENTITIES[index])}
+          {getInitials(name)}
         </Fallback>
       )}
     </Root>

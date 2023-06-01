@@ -1,4 +1,4 @@
-export const ANONYMOUS_IDENTITIES = [
+[
   "Alchemist",
   "Antiquarian",
   "Archaeologist",
@@ -10,13 +10,13 @@ export const ANONYMOUS_IDENTITIES = [
   "Bookworm",
   "Brainstormer",
   "Cartosemiotician",
+  "Classicist",
   "Codicologist",
   "Conchologist",
   "Dendrologist",
   "Ethnomusicologist",
   "Epigrapher",
   "Epistemophile",
-  "Factfinder",
   "Folklorist",
   "Futurologist",
   "Genealogist",
@@ -27,6 +27,7 @@ export const ANONYMOUS_IDENTITIES = [
   "Imagineer",
   "Jargonist",
   "Lexicographer",
+  "Librarian",
   "Linguist",
   "Maven",
   "Manuscriptologist",
@@ -37,7 +38,6 @@ export const ANONYMOUS_IDENTITIES = [
   "Paleographer",
   "Papyrologist",
   "Philologist",
-  "Philosopher",
   "Quickthinker",
   "Rationalist",
   "Relic Hunter",
@@ -49,4 +49,4 @@ export const ANONYMOUS_IDENTITIES = [
   "Transcriber",
   "Unraveler",
   "Xenobotanist"
-].map(name => `Anonymous ${name}`);
+]
