@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Document, Layer, Translations } from 'src/Types';
 import { Popup } from './Popup';
 import { Toolbar } from './Toolbar';
-import { PresenceStack } from '@components/PresenceStack';
+import { PresenceStack } from '@components/Presence';
 import {
   Annotorious, 
   OpenSeadragonAnnotator,
@@ -50,7 +50,7 @@ const OSD_OPTIONS = {
 }
 
 import './ImageAnnotationDesktop.css';
-import { createAppearenceProvider } from '@components/PresenceStack/appearanceProvider';
+import { createAppearenceProvider } from '@components/Presence/appearanceProvider';
 
 export interface ImageAnnotationDesktopProps {
 
