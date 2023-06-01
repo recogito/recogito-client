@@ -3,7 +3,7 @@ import { Annotorious, SupabasePlugin } from '@annotorious/react';
 import type { PresentUser } from '@annotorious/react';
 import { TextAnnotator } from '@recogito/react-text-annotator';
 import type { Document, Layer, Translations } from 'src/Types';
-import { createAppearenceProvider } from '@components/Presence';
+import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 
 import './TextAnnotationDesktop.css';
 
@@ -32,7 +32,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   return (
     <div className="anno-desktop ta-desktop">
       <Annotorious>
-        <TextAnnotator element="annotatable" />
+        <TextAnnotator 
+          element="annotatable" 
+          presence={{
+            font: "600 13px Inter, Arial, Helvetica, sans-serif"
+          }} />
 
         <SupabasePlugin 
           base={SUPABASE}
@@ -41,6 +45,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           layerId={props.layers[0].id} 
           appearanceProvider={createAppearenceProvider()}
           onPresence={setPresent} />
+
+        <div className="anno-desktop-right">
+          <PresenceStack present={present} />
+        </div>
 
         <div className="anno-desktop-bottom">
           
