@@ -19,7 +19,7 @@ const documentId = Astro.params.document;
 
 if (!contextId || !documentId) {
   // Should never happen
-  const error = await fetch(`${Astro.url}/404`);
+  const error = await fetch(`/${lang}/${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
@@ -27,7 +27,7 @@ if (!contextId || !documentId) {
 const response = await getDocumentInContext(supabase, documentId, contextId);
 if (!response.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
-  const error = await fetch(`${Astro.url}/404`);
+  const error = await fetch(`/${lang}${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
@@ -35,7 +35,7 @@ const [ document, layers ] = response.data;
 
 if (!document || !layers) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
-  const error = await fetch(`${Astro.url}/500`);
+  const error = await fetch(`/${lang}${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
@@ -64,7 +64,10 @@ const channelId = data.digest('hex');
 
       <TextAnnotationDesktop 
         client:only
-        i18n={getTranslations(Astro.request, 'annotation-text')} />
+        i18n={getTranslations(Astro.request, 'annotation-text')} 
+        document={document}
+        layers={layers}
+        channelId={channelId} />
     </div>
   )}
 </BaseLayout>

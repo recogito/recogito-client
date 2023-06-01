@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import { PrivacySelector } from '@components/PrivacySelector';
 import { Polygon, Rectangle } from './Icons';
 import { Cursor } from '@phosphor-icons/react';
 
@@ -57,12 +56,6 @@ export const Toolbar = (props: ToolbarProps) => {
       </section>
 
       <div className="anno-desktop-overlay-divider anno-desktop-overlay-divider-v" />
-
-      {/*
-        <section className="privacy">
-          <PrivacySelector />
-        </section>
-      */}
     </div>
   )
 
