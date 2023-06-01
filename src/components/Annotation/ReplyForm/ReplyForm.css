@@ -10,6 +10,7 @@
   border: 1px solid var(--gray-200);
   border-radius: calc(var(--border-radius) - 2px);
   box-sizing: border-box;
+  font-size: var(--font-tiny);
   margin: 0;
   outline: none;
   overflow-y: hidden;

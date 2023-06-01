@@ -13,6 +13,8 @@
   pointer-events: all;
   top: 10px;
   width: 320px;
+  --emphasis-light: #ffe0a2;
+  --emphasis-dark: #e8c889;
 }
 
 .ia-annotation-popup > ul {
@@ -23,16 +25,27 @@
 
 .ia-annotation-popup > header,
 .ia-annotation-popup > ul li {
-  padding: 8px;
+  padding: 10px;
   position: relative;
 } 
 
-.ia-annotation-popup > ul li:not(.is-new) {
-  background-color: #fff;
+.ia-annotation-popup > ul li {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  transition: background-color 1500ms;
+} 
+
+.ia-annotation-popup > ul li:first-child {
+  border-top: none;
+}
+
+.ia-annotation-popup > ul li.is-new {
+  background-color: var(--emphasis-light);
+  border-color: var(--emphasis-dark);
 }
 
 .ia-annotation-popup > ul li p {
-  color: var(--font-light);
-  font-size: var(--font-small);
-  padding: 16px 5px 8px 5px;
+  font-size: var(--font-tiny);
+  line-height: 140%;
+  margin: 0;
+  padding: 14px 4px 4px 4px;
 }

@@ -2,7 +2,7 @@
   align-items: center;
   display: flex;
   flex-direction: row;
-  font-size: var(--font-small);
+  font-size: var(--font-tiny);
   line-height: 1.2em;
   white-space: nowrap;
   width: 100%;
@@ -10,12 +10,13 @@
 
 .annotation-body-header .avatar {
   margin-right: 0.6em;
+  margin-top: -2px;
 }
 
 .annotation-body-header address {
   font-size: 1em;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .annotation-body-header time {
