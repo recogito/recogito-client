@@ -4,7 +4,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotationDesktop } from '@apps/annotation-image';
+import { TextAnnotationDesktop } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
+import { Content as SampleText } from './dummy-text.md';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -31,6 +33,12 @@ if (!response.data) {
 
 const [ document, layers ] = response.data;
 
+if (!document || !layers) {
+  // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
+
 // Compute realtime channel key
 const secret = import.meta.env.ROOM_SECRET || '';
 const hash = crypto.createHash('sha256');
@@ -39,27 +47,56 @@ const data = hash.update(`${secret}.${contextId}.${documentId}`);
 const channelId = data.digest('hex');
 ---
 <BaseLayout title="Annotation">
-  <div class="container">
-    {(document && layers) ? (
+  {false ? (
+    <div class="container image">
       <ImageAnnotationDesktop 
         client:only
         i18n={getTranslations(Astro.request, 'annotation-image')}
         document={document}
         layers={layers}
         channelId={channelId} />
-    ) : (
-      <div>Text Annotation</div>
-    )}
-  </div>
+    </div>
+  ) : (
+    <div class="container text">
+      <main id="annotatable">
+        <SampleText />
+      </main>
+
+      <TextAnnotationDesktop 
+        client:only
+        i18n={getTranslations(Astro.request, 'annotation-text')} />
+    </div>
+  )}
 </BaseLayout>
 
 <style>
-  .container {
+  .container.image {
     bottom: 0;
     left: 0;
     overflow: hidden;
     position: absolute;
     right: 0;
     top: 0;
+  }
+
+  .container.text {
+    display: flex;
+    justify-content: center;
+  }
+
+  .container.text main {
+    background-color: #fff;
+    border-color: var(--gray-300);
+    border-style: solid;
+    border-width: 0 1px;
+    font-family: Lora;
+    font-size: 17px;
+    line-height: 190%;
+    padding: 70px 85px 90px 85px;
+    width: 70ch;
+  }
+
+  .container.text main :global(p) {
+    padding: 0.6em 0;
   }
 </style>
