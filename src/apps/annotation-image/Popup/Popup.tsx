@@ -47,7 +47,22 @@ export const Popup = (props: OpenSeadragonPopupProps) => {
         </header>
       ) : (
         <ul>
+          {comments.map((comment, index) => (
+            <li 
+              key={comment.id} 
+              className={dontEmphasise.current.has(comment.id) ? undefined : 'is-new'}>
 
+              <Annotation.BodyHeader  
+                creator={comment.creator} 
+                createdAt={comment.created} />
+
+              {/* comment.creator?.id === me.id && (
+                <CommentActionsMenu onDelete={index === 0 ? onDeleteAnnotation : onDeleteComment(comment)} />
+              ) */}
+
+              <p>{comment.value}</p>
+            </li>
+          ))}
         </ul>
       )}
 

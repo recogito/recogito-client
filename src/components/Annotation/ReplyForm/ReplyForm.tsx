@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import TextareaAutosize from 'react-textarea-autosize';
 import { useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation, AnnotationBody } from '@annotorious/react';
 
@@ -71,9 +72,10 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
   return (
     <form className="reply-form no-drag">
-      <textarea 
+      <TextareaAutosize 
         ref={textarea}
         rows={1} 
+        maxRows={6}
         placeholder="Reply or add others with @" 
         onChange={onChange} 
         onKeyDownCapture={onKeyDown} 

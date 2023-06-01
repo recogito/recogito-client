@@ -15,7 +15,24 @@
   width: 320px;
 }
 
-.ia-annotation-popup > header {
+.ia-annotation-popup > ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ia-annotation-popup > header,
+.ia-annotation-popup > ul li {
   padding: 8px;
   position: relative;
 } 
+
+.ia-annotation-popup > ul li:not(.is-new) {
+  background-color: #fff;
+}
+
+.ia-annotation-popup > ul li p {
+  color: var(--font-light);
+  font-size: var(--font-small);
+  padding: 16px 5px 8px 5px;
+}

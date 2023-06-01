@@ -25,6 +25,7 @@
     "react": "^18.2.0",
     "react-contenteditable": "^3.3.7",
     "react-dom": "^18.2.0",
+    "react-textarea-autosize": "^8.4.1",
     "timeago-react": "^3.0.6",
     "uuid": "^9.0.0"
   },
