@@ -1,0 +1,21 @@
+.ia-annotation-popup {
+  background-color: #fff;
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  box-shadow:
+    0px 0px 12px -8px rgba(0, 0, 0, 0.12),
+    0px 8px 32px -12px rgba(0, 0, 0, 0.28);
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+  position: absolute;
+  pointer-events: all;
+  top: 10px;
+  width: 320px;
+}
+
+.ia-annotation-popup > header {
+  padding: 8px;
+  position: relative;
+} 

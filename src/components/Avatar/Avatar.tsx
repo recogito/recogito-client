@@ -26,7 +26,7 @@ interface AvatarProps {
 
   id: string;
 
-  name: string;
+  name?: string;
 
   color?: string;
 
@@ -38,7 +38,8 @@ export const Avatar = (props: AvatarProps) => {
 
   const { id, name, color, avatar } = props;
 
-  const backgroundColor = color || `hsl(${stringToHash(id) % 360}, 35%, 78%)`;
+  const backgroundColor = color || `hsl(${stringToHash(id) % 360}, 35%, 68%)`;
+  const borderColor = color || `hsl(${stringToHash(id) % 360}, 35%, 58%)`
 
   return (
     <Root className="avatar">
@@ -51,8 +52,8 @@ export const Avatar = (props: AvatarProps) => {
         <Fallback 
           className="avatar-fallback"
           title={name} 
-          style={{ backgroundColor }}>
-          {getInitials(name)}
+          style={{ backgroundColor, borderColor }}>
+          {getInitials(name || id)}
         </Fallback>
       )}
     </Root>

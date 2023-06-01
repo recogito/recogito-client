@@ -6,7 +6,7 @@ import './BodyHeader.css';
 
 interface BodyHeaderProps {
 
-  creator: User;
+  creator?: User;
 
   createdAt?: Date;
 
@@ -16,20 +16,27 @@ export const BodyHeader = (props: BodyHeaderProps) => {
 
   const { creator, createdAt } = props;
 
+  const isGuest = !creator || creator.isGuest;
+
   return (
-    <div className="creator-label">
-      <Avatar user={creator} size={38} />
+    <div className="annotation-body-header">
+      {creator && (
+        <Avatar
+          id={creator.id}
+          name={creator.name}
+          avatar={creator.avatar} />
+      )}
 
       <div>
-        {creator.isGuest ? (
+        {isGuest ? (
           <div className="guest">Guest</div> 
         ) : (
           <address>
-            {creator.name || creator.email?.substring(0, creator.email.indexOf('@')) || creator.email}
+            {creator.name}
           </address>
         )}
 
-        <div className="created-at">
+        <div className="annotation-body-created-at">
           {createdAt && (
             <TimeAgo datetime={createdAt} />
           )}

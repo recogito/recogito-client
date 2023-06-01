@@ -1,3 +1,4 @@
+import { Annotation } from '@components/Annotation';
 import { 
   OpenSeadragonPopupProps,
   useAnnotationStore,
@@ -15,7 +16,7 @@ export const Popup = (props: OpenSeadragonPopupProps) => {
   // Popup only supports a single selected annotation for now
   const selected = props.selection[0];
 
-  const { creator } = selected.target;
+  const { creator, created } = selected.target;
 
   const comments = selected.bodies
     .filter(b => !b.purpose || b.purpose === 'commenting');
@@ -24,7 +25,7 @@ export const Popup = (props: OpenSeadragonPopupProps) => {
     <article className="annotation-popup ia-annotation-popup">
       {comments.length === 0 ? (
         <header>
-          
+          <Annotation.BodyHeader creator={creator} createdAt={created} />
         </header>
       ) : (
         <ul>
