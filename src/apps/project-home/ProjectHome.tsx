@@ -42,7 +42,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         setError({ 
           title: t['Something went wrong'], 
           description: t['Could not create the document.'], 
-          severity: 'error' 
+          type: 'error' 
         });
       });
   }
@@ -73,7 +73,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           setError({ 
             title: t['Something went wrong'], 
             description: t['Could not rename the document.'], 
-            severity: 'error' 
+            type: 'error' 
           });
 
           setDocuments(documents.map(d => d.id === document.id ? ({
@@ -98,6 +98,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         <div className="project-home-grid">
           {documents.map(document => (
             <DocumentCard 
+              // just a hack for now
+              isImage={document.name.toLowerCase().includes('image')}
               key={document.id}
               i18n={props.i18n} 
               context={defaultContext}

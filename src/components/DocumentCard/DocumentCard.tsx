@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ImageSquare } from '@phosphor-icons/react';
+import { ImageSquare, TextAlignLeft } from '@phosphor-icons/react';
 import type { Context, Document, Translations } from 'src/Types';
 import { EditableText } from '@components/EditableText';
 import { DocumentCardActionsMenu } from './DocumentCardActionsMenu';
@@ -7,6 +7,9 @@ import { DocumentCardActionsMenu } from './DocumentCardActionsMenu';
 import './DocumentCard.css';
 
 interface DocumentCardProps {
+
+  // For testing
+  isImage: boolean;
 
   i18n: Translations;
 
@@ -37,7 +40,11 @@ export const DocumentCard = (props: DocumentCardProps) => {
     <article className="document-card-container">
       <div className="document-card">
         <div className="document-card-body">
-          <ImageSquare size={44} weight="thin" />
+          {props.isImage ? (
+            <ImageSquare size={44} weight="thin" />
+          ) : (
+            <TextAlignLeft size={44} weight="thin" />
+          )}
         </div>
 
         <div className="document-card-footer">
@@ -55,7 +62,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
             value={document.name} 
             onSubmit={onRename} />
         ) : (
-          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
+          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}?type=${props.isImage ? 'img': 'txt'}`}>{document.name}</a>
         )}
       </h1>
     </article>

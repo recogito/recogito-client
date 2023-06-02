@@ -45,9 +45,11 @@ const hash = crypto.createHash('sha256');
 const data = hash.update(`${secret}.${contextId}.${documentId}`);
 
 const channelId = data.digest('hex');
+
+const type = Astro.url.searchParams.get('type') || '';
 ---
 <BaseLayout title="Annotation">
-  {false ? (
+  {type === 'img' ? (
     <div class="container image">
       <ImageAnnotationDesktop 
         client:only
