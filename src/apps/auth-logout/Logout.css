@@ -1,0 +1,9 @@
+.logout {
+  text-align: center;
+}
+
+.logout-error svg {
+  padding-right: 5px;
+  position: relative;
+  top: 1px;
+}

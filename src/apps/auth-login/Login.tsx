@@ -20,6 +20,7 @@ const clearCookies = () => {
   const expires = new Date(0).toUTCString();
   document.cookie = `access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 }
 
 export const Login = (props: { i18n: Translations }) => {
