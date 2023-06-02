@@ -11,7 +11,7 @@ import './DashboardSidebar.css';
  */
 export const DashboardSidebar = (props: { i18n: Translations }) => {
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   return (
     <aside className="dashboard-sidebar">
@@ -22,7 +22,7 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
             <h2>{t['Projects']}</h2>
             <ul>
               <li>
-                <a href="./projects">{t['All projects']}</a>
+                <a href={`/${lang}/projects`}>{t['All projects']}</a>
               </li>
             </ul>
           </li>
@@ -31,7 +31,7 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
             <h2>{t['Account']}</h2>
             <ul>
               <li>
-                <a href="./account/me">{t['Preferences']}</a>
+                <a href={`/${lang}/account/me`}>{t['Preferences']}</a>
               </li>
             </ul>
           </li>
@@ -46,7 +46,7 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
               </li>
               
               <li>
-                <a href="./helo/faq">
+                <a href="./help/faq">
                   <ArrowUpRight className="text-bottom" size={17} /> {t['FAQ']}
                 </a>
               </li>
@@ -56,7 +56,7 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
           <li>
             <ul className="pad">
               <li>
-                <a href="./sign-out">
+                <a href={`/${lang}/sign-out`}>
                   <SignOut className="text-bottom" size={19} /> {t['Logout']}
                 </a>
               </li>

@@ -1,0 +1,45 @@
+---
+import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl, getTranslations } from '@i18n';
+
+const { lang, t } = getTranslations(Astro.request, 'dashboard-account');
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+if (!supabase)
+  return Astro.redirect(`/${lang}/sign-in`);
+---
+<DashboardLayout>
+  <header>
+    <nav class="breadcrumbs">
+      <ol>
+        <li>
+          <a href={`/${lang}/projects`}>INeedAName</a>
+        </li>
+
+        <li>
+          <a class="breadcrumb-current">{t['Account Preferences']}</a>
+        </li>
+      </ol>
+    </nav>
+  </header>
+
+  <main>
+    <div>Account prefs</div>
+  </main>
+</DashboardLayout>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+  }
+
+  main {
+    padding: 30px 40px;
+  }
+</style>

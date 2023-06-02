@@ -68,7 +68,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
         {isInvalid && (
           <p className="error">
             <WarningOctagon 
-              className="icon inline" 
+              className="icon text-bottom" 
               size={18} weight="fill" /> {t['Please enter a valid email address']}
           </p>
         )}
