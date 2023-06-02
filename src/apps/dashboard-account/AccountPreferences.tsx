@@ -59,16 +59,14 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
         <h1>{t['Your User Profile']}</h1>
         <form onSubmit={formik.handleSubmit}>
           <fieldset>
-            <label>{t['E-Mail']}</label>
-            <input 
-              readOnly
-              id="email"
-              name="email"
-              type="text" 
-              value={profile.email} />
-
-            <div className="member-since">
-              {t['Registered']} <TimeAgo datetime={profile.created_at} />
+            <div className="field">
+              <label>{t['E-Mail']}</label>
+              <input 
+                readOnly
+                id="email"
+                name="email"
+                type="text" 
+                value={profile.email} />
             </div>
           </fieldset>
 
@@ -78,48 +76,56 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
           </span>
 
           <fieldset>
-            <label htmlFor="nickname">
-              {t['Nickname']}
-            </label>
-            <input 
-              id="nickname"
-              name="nickname"
-              type="text" 
-              onChange={formik.handleChange}
-              value={formik.values.nickname} />
+            <div className="field">
+              <label htmlFor="nickname">
+                {t['Nickname']}
+              </label>
+              <input 
+                id="nickname"
+                name="nickname"
+                type="text" 
+                onChange={formik.handleChange}
+                value={formik.values.nickname} />
+            </div>
 
-            <label htmlFor="first_name">
-              {t['First Name']}
-            </label>
-            <input
-              id="first_name"
-              name="first_name"
-              type="text"
-              onChange={formik.handleChange}
-              value={formik.values.first_name} />
+            <div className="field">
+              <label htmlFor="first_name">
+                {t['First Name']}
+              </label>
+              <input
+                id="first_name"
+                name="first_name"
+                type="text"
+                onChange={formik.handleChange}
+                value={formik.values.first_name} />
+            </div>
 
-            <label htmlFor="last_name">
-              {t['Last Name']}
-            </label>
-            <input
-              id="last_name"
-              name="last_name"          
-              type="text" 
-              onChange={formik.handleChange}
-              value={formik.values.last_name} />
+            <div className="field">
+              <label htmlFor="last_name">
+                {t['Last Name']}
+              </label>
+              <input
+                id="last_name"
+                name="last_name"          
+                type="text" 
+                onChange={formik.handleChange}
+                value={formik.values.last_name} />
+            </div>
 
-            <label htmlFor="avatar_url">
-              {t['Avatar URL']}
-            </label>
-            <input
-              id="avatar_url"
-              name="avatar_url"          
-              type="text" 
-              onChange={formik.handleChange}
-              value={formik.values.avatar_url} />
+            <div className="field">
+              <label htmlFor="avatar_url">
+                {t['Avatar URL']}
+              </label>
+              <input
+                id="avatar_url"
+                name="avatar_url"          
+                type="text" 
+                onChange={formik.handleChange}
+                value={formik.values.avatar_url} />
+            </div>
           </fieldset>
 
-          <button type="submit">Submit</button>
+          <button className="primary" type="submit">Submit</button>
         </form>
       </div>
 

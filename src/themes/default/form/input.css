@@ -4,6 +4,7 @@ input {
   box-sizing: border-box;
   color: var(--input-text-color);
   outline: none;
+  padding: 10px;
   transition: box-shadow .2s ease-in-out, border-color .2s ease-in-out;
 }
 
