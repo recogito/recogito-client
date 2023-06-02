@@ -12,15 +12,15 @@ const setCookies = (session: Session | null) => {
     throw 'SIGNED_IN event without session - should never happen';
   
   const maxAge = 100 * 365 * 24 * 60 * 60; // 100 years, never expires
-  document.cookie = `access-token=${session?.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
-  document.cookie = `refresh-token=${session?.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
+  document.cookie = `sb-access-token=${session?.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
+  document.cookie = `sb-refresh-token=${session?.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
 }
 
 const clearCookies = () => {
   const expires = new Date(0).toUTCString();
-  document.cookie = `access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-  document.cookie = `refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-  document.cookie = `auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `sb-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 }
 
 export const Login = (props: { i18n: Translations }) => {

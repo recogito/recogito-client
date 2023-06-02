@@ -7,9 +7,9 @@ import './Logout.css';
 
 const clearCookies = () => {
   const expires = new Date(0).toUTCString();
-  document.cookie = `access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-  document.cookie = `refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-  document.cookie = `auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `sb-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
+  document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 }
 
 export const Logout = (props: { i18n: Translations }) => {
@@ -17,12 +17,11 @@ export const Logout = (props: { i18n: Translations }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    clearCookies();
-
     supabase.auth.signOut().then(({ error }) => {
       if (error) {
         setError(true);
       } else {
+        clearCookies();
         window.location.href = `/${props.i18n.lang}/sign-in`;
       }
     });

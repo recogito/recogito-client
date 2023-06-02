@@ -25,7 +25,7 @@ export async function createSupabaseServerClient(
     supabaseKey: import.meta.env.PUBLIC_SUPABASE_API_KEY,
     //@ts-ignore
     cookieOptions: {
-      name: 'auth-token'
+      name: 'sb-auth-token'
     }
   }
 ) {
@@ -64,8 +64,8 @@ const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) =
   if (session)
     return true;
 
-  const refreshToken = cookies.get('refresh-token');
-  const accessToken = cookies.get('access-token');
+  const refreshToken = cookies.get('sb-refresh-token');
+  const accessToken = cookies.get('sb-access-token');
 
   if (refreshToken.value && accessToken.value) {
     return await supabase.auth.setSession({ 
