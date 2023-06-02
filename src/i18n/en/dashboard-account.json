@@ -1,3 +1,19 @@
 {
-  "Account Preferences": "Account Preferences"
+  "Account Preferences": "Account Preferences",
+
+  "Your User Profile": "Your User Profile",
+  "E-Mail": "E-Mail",
+  "Registered": "Registered",
+
+  "Public Information": "Public Information",
+  "Other users can see this information about you. All fields are optional.":
+    "Other users can see this information about you. All fields are optional.",
+  "Nickname": "Nickname",
+  "First Name": "First Name",
+  "Last Name": "Last Name",
+  "Avatar URL": "Avatar URL",
+
+  "Profile updated": "Profile updated",
+  "Something went wrong": "Something went wrong",
+  "Could not update your profile information.": "Could not update your profile information." 
 }

@@ -4,7 +4,21 @@ export interface UserProfile {
 
   nickname?: string;
 
+  first_name?: string;
+
+  last_name?: string;
+
   avatar_url?: string;
+
+}
+
+export type MyProfile = UserProfile & {
+
+  created_at: string;
+
+  email: string;
+
+  role: 'admin' | 'base_user' | 'teacher'
 
 }
 

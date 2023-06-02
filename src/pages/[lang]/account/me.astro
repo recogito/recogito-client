@@ -1,31 +1,43 @@
 ---
 import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getLangFromUrl, getTranslations } from '@i18n';
+import { getTranslations } from '@i18n';
+import { getMyProfile } from '@backend/crud/profiles';
+import { AccountPreferences } from '@apps/dashboard-account/AccountPreferences';
 
-const { lang, t } = getTranslations(Astro.request, 'dashboard-account');
+const i18n = getTranslations(Astro.request, 'dashboard-account');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+  return Astro.redirect(`/${i18n.lang}/sign-in`);
+
+const { error, data } = await getMyProfile(supabase);
+
+if (error) { 
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
 ---
 <DashboardLayout>
   <header>
     <nav class="breadcrumbs">
       <ol>
         <li>
-          <a href={`/${lang}/projects`}>INeedAName</a>
+          <a href={`/${i18n.lang}/projects`}>INeedAName</a>
         </li>
 
         <li>
-          <a class="breadcrumb-current">{t['Account Preferences']}</a>
+          <a class="breadcrumb-current">{i18n.t['Account Preferences']}</a>
         </li>
       </ol>
     </nav>
   </header>
 
   <main>
-    <div>Account prefs</div>
+    <AccountPreferences
+      client:load
+      i18n={i18n}
+      profile={data} />
   </main>
 </DashboardLayout>
 

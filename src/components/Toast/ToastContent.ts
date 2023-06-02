@@ -8,6 +8,6 @@ export interface ToastContent {
 
   description?: string;
 
-  severity: 'info' | 'warning' | 'error';
+  type: 'error' | 'info' | 'success' | 'warning';
 
 } 

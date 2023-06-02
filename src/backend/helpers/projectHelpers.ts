@@ -11,7 +11,10 @@ import { createSystemTag } from './tagHelper';
  * 2. creates a new Context.
  * 3. TODO: tags the Context as a 'DEFAULT' context.
  */
-export const initProject = (supabase: SupabaseClient, name: string) => {
+export const initProject = (
+  supabase: SupabaseClient, 
+  name: string
+): Promise<{ project: Project, defaultContext: Context }> => {
   // First promise: create the project
   const a: Promise<Project> =
     new Promise((resolve, reject) => 

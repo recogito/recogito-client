@@ -37,7 +37,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         setError({ 
           title: t['Something went wrong'], 
           description: t['Could not create the project.'], 
-          severity: 'error' 
+          type: 'error' 
         });
       });
 
@@ -46,7 +46,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       icon: <Hammer size={16} className="text-bottom" />,
       title: t['We\'re working on it!'],
       description: t['This feature will become available soon.'],
-      severity: 'info'
+      type: 'info'
     });
   }
     
@@ -57,7 +57,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         setError({
           title: t['Something went wrong'],
           description: t['Could not delete the project.'],
-          severity: 'error'
+          type: 'error'
         });
       } else if (data) {
         if (data.length === 1 && data[0].id === project.id) {
@@ -66,7 +66,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           setError({
             title: t['Something went wrong'],
             description: t['Could not delete the project.'],
-            severity: 'error'
+            type: 'error'
           });
         }
       }
