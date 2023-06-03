@@ -44,7 +44,7 @@ if (error) {
 ---
 <ProjectLayout active="home" user={user} project={response.data}>
   <ProjectHome 
-    client:load
+    client:only
     i18n={i18n} 
     project={project} 
     defaultContext={contexts[0]} 
