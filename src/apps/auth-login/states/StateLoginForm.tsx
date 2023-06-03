@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Lock, MagicWand, WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { TextInput } from '@components/TextInput';
@@ -41,6 +41,10 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
     }
   }
 
+  useEffect(() => {
+    document.getElementById('email')?.focus();
+  }, []);
+
   return (
     <div className="login">
       <main>
@@ -54,6 +58,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
             <TextInput
               autoComplete={false}
               error={Boolean(error)}
+              id="email"
               name="email" 
               label={t['Email']} 
               className="lg w-full" 
@@ -61,6 +66,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
             <TextInput 
               autoComplete={false}
+              id="password"
               name="password" 
               label={t['Password']} 
               type="password"

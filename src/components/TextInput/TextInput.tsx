@@ -10,6 +10,8 @@ interface TextInputProps {
   
   label: string;
 
+  id: string;
+
   name: string; 
 
   type?: 'text' | 'password';
@@ -37,7 +39,7 @@ export const TextInput = (props: TextInputProps) => {
         autoComplete={props.autoComplete === false ? 'off' : undefined}
         type={props.type || 'text'}
         name={props.name} 
-        id={props.name}
+        id={props.id}
         className={props.className} 
         data-filled={value !== ''}
         value={value}
