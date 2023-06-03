@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Check, WarningOctagon } from '@phosphor-icons/react';
+import { Check, CircleNotch, WarningOctagon } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TextInput } from '@components/TextInput';
 import { Button } from '@components/Button';
 import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
+
+type ButtonStatus = 'idle' | 'requesting' | 'sent';
 
 export const StateMagicLink = (props: { i18n: Translations }) => {
 
@@ -12,7 +14,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
 
   const [email, setEmail] = useState('');
 
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<ButtonStatus>('idle');
 
   const [isInvalid, setIsInvalid] = useState(false);
 
@@ -24,6 +26,8 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
     if (isValidEmail(email)) {
       setIsInvalid(false);
 
+      setStatus('requesting');
+
       supabase.auth.signInWithOtp({
         email,
         options: {
@@ -33,7 +37,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
         if (error) {
           setSendError(error.message);
         } else {
-          setSent(true);
+          setStatus('sent');
         }
       })
     } else {
@@ -41,7 +45,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
     }
   }
 
-  return sent ? (
+  return (status === 'sent') ? (
     <div className="login-magic-link sent">
       <Button 
         disabled 
@@ -81,8 +85,15 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           </p>
         )}
 
-        <Button type="submit" className="primary lg w-full" onClick={onSend}>
-          {t['Send Magic Link']}
+        <Button
+          type="submit" 
+          className="primary lg w-full" 
+          onClick={onSend}>
+          {status === 'requesting' ? (
+            <CircleNotch size={24} className="rotate" />
+          ) : (
+            t['Send Magic Link']
+          )}
         </Button>
       </form>
     </div>

@@ -1,9 +1,11 @@
-button.success {
+button.success,
+button.success:disabled {
   border-color: #98ca9a;
   background-color: #effaf0;
   color: #1c8421;
 }
 
-button.success svg {
+button.success svg,
+button.success:disabled svg {
   color: #1c8421;
 }
