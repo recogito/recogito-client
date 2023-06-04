@@ -21,6 +21,7 @@
     "@recogito/react-text-annotator": "^3.0.0-pre-alpha-12",
     "@supabase/auth-helpers-shared": "^0.3.4",
     "@supabase/supabase-js": "^2.22.0",
+    "accept-language-parser": "^1.5.0",
     "astro": "^2.5.1",
     "formik": "^2.4.1",
     "openseadragon": "^3.1.0",
@@ -32,6 +33,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
+    "@types/accept-language-parser": "^1.5.3",
     "@types/openseadragon": "^3.0.6",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
