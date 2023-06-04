@@ -24,6 +24,9 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
   const onSend = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
+    if (status !== 'idle') 
+      return;
+
     if (isValidEmail(email)) {
       setIsInvalid(false);
 

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { CircleNotch, SmileySad } from '@phosphor-icons/react';
+import { SmileySad } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Translations } from 'src/Types';
+import { Spinner } from '@components/Spinner';
 
 import './Logout.css';
 
@@ -33,7 +34,7 @@ export const Logout = (props: { i18n: Translations }) => {
     </div>
   ) : (
     <div className="logout logout-processing">
-      <CircleNotch size={24} className="rotate" />
+      <Spinner size={24} />
     </div>
   )
 

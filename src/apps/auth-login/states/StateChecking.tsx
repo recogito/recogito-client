@@ -1,10 +1,10 @@
-import { CircleNotch } from '@phosphor-icons/react';
+import { Spinner } from '@components/Spinner';
 
 export const StateChecking = () => {
 
   return (
     <div className="login-checking">
-      <CircleNotch size={24} className="rotate" />
+      <Spinner size={24} />
     </div>
   )
 
