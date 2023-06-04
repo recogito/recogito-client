@@ -7,16 +7,26 @@
 }
 
 .dashboard-projects-empty h1 {
-  font-size: 1em;
-  font-weight: 400;
+  font-size: 1.4em;
+  font-weight: 600;
   margin: 0;
-  padding: 0 0 20px 0;
+  padding: 1em 0 0 0;
+}
+
+.dashboard-projects-empty p {
+  max-width: 70ch;
+  padding: 0.7em 0 2em 0;
 }
 
 .dashboard-projects-empty .dashboard-projects-empty-cta {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.dashboard-projects-empty .dashboard-projects-empty-cta button {
+  min-height: 60px;
+  min-width: 370px;
 }
 
 .dashboard-projects-home header {

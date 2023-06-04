@@ -1,7 +1,8 @@
 {
   "Empty Dashboard? Infinite Possibilities!": "Empty Dashboard? Infinite Possibilities!",
   "Start Your First Annotation Project": "Start Your First Annotation Project",
-  "Read the Tutorial": "Read the Tutorial",
+  "You have no annotation projects.": "You don't have any annotation projects in your workspace yet. You can either start your own project or join an existing project using an invitation link.",
+  "Learn more.": "Learn more.",
   "Delete project": "Delete project",
   "Rename project": "Rename project",
 
