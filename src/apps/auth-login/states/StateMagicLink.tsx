@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Check, CircleNotch, WarningOctagon } from '@phosphor-icons/react';
+import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TextInput } from '@components/TextInput';
 import { Button } from '@components/Button';
+import { Spinner } from '@components/Spinner';
 import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
 
-type ButtonStatus = 'idle' | 'requesting' | 'sent';
+type ButtonStatus = 'idle' | 'fetching' | 'sent';
 
 export const StateMagicLink = (props: { i18n: Translations }) => {
 
@@ -26,7 +27,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
     if (isValidEmail(email)) {
       setIsInvalid(false);
 
-      setStatus('requesting');
+      setStatus('fetching');
 
       supabase.auth.signInWithOtp({
         email,
@@ -89,8 +90,8 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           type="submit" 
           className="primary lg w-full" 
           onClick={onSend}>
-          {status === 'requesting' ? (
-            <CircleNotch size={24} className="rotate" />
+          {status === 'fetching' ? (
+            <Spinner size={24} />
           ) : (
             t['Send Magic Link']
           )}
