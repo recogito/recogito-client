@@ -3,19 +3,22 @@
   display: flex;
   height: 100%; 
   justify-content: center;
+  padding: 30px;
   text-align: center;
 }
 
 .dashboard-projects-empty h1 {
-  font-size: 1.5em;
+  font-size: 1.4em;
   font-weight: 600;
   margin: 0;
   padding: 1em 0 0 0;
 }
 
 .dashboard-projects-empty p {
+  color: var(--gray-600); 
+  font-size: var(--font-small);
   max-width: 70ch;
-  padding: 0.6em 0 1em 0;
+  padding: 0em 0 2em 0;
 }
 
 .dashboard-projects-empty .dashboard-projects-empty-cta {
