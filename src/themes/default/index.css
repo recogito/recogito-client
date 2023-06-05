@@ -179,6 +179,7 @@ h1 {
   font-family: Poppins;
   font-size: 1.6em;
   font-weight: 600;
+  letter-spacing: -0.03ch;
   margin: 1em 0;
   padding: 0;
 }
