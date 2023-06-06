@@ -5,7 +5,6 @@ import type { Layer } from 'src/Types';
 export const createLayer = (
   supabase: SupabaseClient, 
   document_id: string, 
-  context_id: string,
   name?: string,
   description?: string
 ): Response<Layer> =>
@@ -13,7 +12,6 @@ export const createLayer = (
     .from('layers')
     .insert({
       document_id,
-      context_id,
       name,
       description
     })

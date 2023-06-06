@@ -85,9 +85,7 @@ export interface Layer {
   updated_at?: string;
 
   updated_by?: string;
-
-  context_id: string;
-
+  
   document_id: string;
 
   name?: string;
