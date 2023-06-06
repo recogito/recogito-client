@@ -8,12 +8,16 @@
   width: 100%;
 }
 
+.annotation-body-created {
+  margin-left: 3px;
+}
+
 .annotation-body-header .anonymous {
   color: var(--font-light);
 }
 
 .annotation-body-header .avatar {
-  margin-right: 0.6em;
+  margin-right: 10px;
   margin-top: -2px;
 }
 

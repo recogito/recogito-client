@@ -22,15 +22,21 @@ export const BodyHeader = (props: BodyHeaderProps) => {
     <div className="annotation-body-header">
       {isAnonymous ? (
         <>
-          {creator && 'appearance' in creator && (
+           {creator && 'appearance' in creator && (
             <Avatar
               id={creator.id}
               name={creator.appearance.label}
               avatar={creator.appearance.avatar} />
           )}
           
-          <div>
-            <div className="anonymous">Anonymous</div> 
+          <div className="annotation-body-created">
+            <div className="anonymous">
+              {creator && 'appearance' in creator ? (
+                creator.appearance.label
+              ) : (
+                'Anonymous'
+              )}
+            </div> 
 
             <div className="annotation-body-created-at">
               {createdAt && (
