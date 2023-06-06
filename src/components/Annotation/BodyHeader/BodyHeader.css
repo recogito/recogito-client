@@ -8,6 +8,10 @@
   width: 100%;
 }
 
+.annotation-body-header .anonymous {
+  color: var(--font-light);
+}
+
 .annotation-body-header .avatar {
   margin-right: 0.6em;
   margin-top: -2px;

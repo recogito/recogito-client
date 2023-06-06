@@ -2,14 +2,22 @@ import { useEffect, useRef } from 'react';
 import { Annotation } from '@components/Annotation';
 import { 
   AnnotationBody,
+  AnnotationTarget,
   OpenSeadragonPopupProps,
+  PresentUser,
   useAnnotationStore,
   useAnnotatorUser
 } from '@annotorious/react';
 
 import './Popup.css';
 
-export const Popup = (props: OpenSeadragonPopupProps) => {
+type PopupProps = OpenSeadragonPopupProps & {
+
+  present: PresentUser[];
+
+}
+
+export const Popup = (props: PopupProps) => {
 
   const me = useAnnotatorUser();
 
@@ -17,8 +25,6 @@ export const Popup = (props: OpenSeadragonPopupProps) => {
 
   // Popup only supports a single selected annotation for now
   const selected = props.selection[0];
-
-  const { creator, created } = selected.target;
 
   const comments = selected.bodies
     .filter(b => !b.purpose || b.purpose === 'commenting');
@@ -39,11 +45,21 @@ export const Popup = (props: OpenSeadragonPopupProps) => {
   const onBeforeReply = (b: AnnotationBody) =>
     dontEmphasise.current = new Set([...dontEmphasise.current, b.id]);
 
+  // We want to show full presence information if the creator
+  // of this body happens to be present (even if the creator 
+  // is anonymous).
+  const getCreator = (body: AnnotationBody | AnnotationTarget) => {
+    const present = props.present.find(p => p.id === body.creator?.id);
+    return present || body.creator;
+  }
+
   return (
     <article className="annotation-popup ia-annotation-popup">
       {comments.length === 0 ? (
         <header>
-          <Annotation.BodyHeader creator={creator} createdAt={created} />
+          <Annotation.BodyHeader 
+            creator={getCreator(selected.target)} 
+            createdAt={selected.target.created} />
         </header>
       ) : (
         <ul>
@@ -53,7 +69,7 @@ export const Popup = (props: OpenSeadragonPopupProps) => {
               className={dontEmphasise.current.has(comment.id) ? undefined : 'is-new'}>
 
               <Annotation.BodyHeader  
-                creator={comment.creator} 
+                creator={getCreator(comment)} 
                 createdAt={comment.created} />
 
               {/* comment.creator?.id === me.id && (

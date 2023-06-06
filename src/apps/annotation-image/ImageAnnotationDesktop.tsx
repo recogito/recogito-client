@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Document, Layer, Translations } from 'src/Types';
 import { Popup } from './Popup';
 import { Toolbar } from './Toolbar';
@@ -70,6 +70,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
+  const appearance = useMemo(() => createAppearenceProvider(), []);
+
   return (
     <div className="anno-desktop ia-desktop">
       <Annotorious>
@@ -79,7 +81,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             apiKey={SUPABASE_API_KEY} 
             channel={props.channelId}
             layerId={props.layers[0].id} 
-            appearanceProvider={createAppearenceProvider()}
+            appearanceProvider={appearance}
             onPresence={setPresent} />
 
           <OpenSeadragonViewer
@@ -87,7 +89,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             options={OSD_OPTIONS} />
 
           <OpenSeadragonPopup
-            popup ={props => <Popup {...props} />} />
+            popup ={props => <Popup {...props} present={present} />} />
 
           <div className="anno-desktop-right">
             <PresenceStack present={present} />

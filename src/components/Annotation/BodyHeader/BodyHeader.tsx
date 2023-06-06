@@ -1,12 +1,12 @@
 import TimeAgo from 'timeago-react';
-import type { User } from '@annotorious/react';
+import type { PresentUser, User } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 
 import './BodyHeader.css';
 
 interface BodyHeaderProps {
 
-  creator?: User;
+  creator?: User | PresentUser;
 
   createdAt?: Date;
 
@@ -16,32 +16,49 @@ export const BodyHeader = (props: BodyHeaderProps) => {
 
   const { creator, createdAt } = props;
 
-  const isGuest = !creator || creator.isGuest;
+  const isAnonymous = !creator?.name || creator.isGuest;
 
   return (
     <div className="annotation-body-header">
-      {creator && (
-        <Avatar
-          id={creator.id}
-          name={creator.name}
-          avatar={creator.avatar} />
-      )}
-
-      <div>
-        {isGuest ? (
-          <div className="guest">Guest</div> 
-        ) : (
-          <address>
-            {creator.name}
-          </address>
-        )}
-
-        <div className="annotation-body-created-at">
-          {createdAt && (
-            <TimeAgo datetime={createdAt} />
+      {isAnonymous ? (
+        <>
+          {creator && 'appearance' in creator && (
+            <Avatar
+              id={creator.id}
+              name={creator.appearance.label}
+              avatar={creator.appearance.avatar} />
           )}
-        </div>
-      </div>
+          
+          <div>
+            <div className="anonymous">Anonymous</div> 
+
+            <div className="annotation-body-created-at">
+              {createdAt && (
+                <TimeAgo datetime={createdAt} />
+              )}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <Avatar
+            id={creator.id}
+            name={creator.name}
+            avatar={creator.avatar} />
+
+          <div>
+            <address>
+              {creator.name}
+            </address>
+
+            <div className="annotation-body-created-at">
+              {createdAt && (
+                <TimeAgo datetime={createdAt} />
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 
