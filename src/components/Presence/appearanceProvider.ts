@@ -19,9 +19,9 @@ export const createAppearenceProvider = (): AppearanceProvider => {
   const addUser = (presenceKey: string, user: User): Appearance => {
     const color = colorProvider.assignRandomColor();
 
-    const index = Math.abs(stringToHash(presenceKey)) % IDENTITIES.length;
-
-    const label = IDENTITIES[index];
+    const label = user.name ? 
+      user.name : 
+      IDENTITIES[Math.abs(stringToHash(presenceKey)) % IDENTITIES.length];
 
     const avatar = user.avatar;
 

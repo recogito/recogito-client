@@ -35,7 +35,7 @@ export const Login = (props: { i18n: Translations }) => {
         clearCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
-        window.location.href = '../projects';
+        window.location.href = `/${props.i18n.lang}/projects`;
       }
     });
     
@@ -43,7 +43,7 @@ export const Login = (props: { i18n: Translations }) => {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
-          window.location.href = '../projects';
+          window.location.href = `/${props.i18n.lang}/projects`;
         })
       } else {
         setIsChecking(false);
