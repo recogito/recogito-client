@@ -36,8 +36,14 @@ export const Popup = (props: PopupProps) => {
   const dontEmphasise = useRef(new Set(comments.map(b => b.id))); 
 
   useEffect(() => {
-    // Update the ref after comments have rendered
+    // Update the ref after comments have rendered...
     dontEmphasise.current = new Set(comments.map(b => b.id));
+
+    // ...and remove is-new class instantly for fading effect
+    setTimeout(() => {
+      document.querySelectorAll('.is-new')
+        .forEach(el => el.removeAttribute('class'));
+    }, 1);
   }, [comments]);
 
   // When the user creates a reply, add the comment to the list,
