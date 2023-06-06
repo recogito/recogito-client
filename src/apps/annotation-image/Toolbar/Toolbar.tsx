@@ -1,15 +1,19 @@
 import { useEffect, useState } from 'react';
-import { useAnnotator } from '@annotorious/react';
+import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 import { Polygon, Rectangle } from './Icons';
-import { Cursor } from '@phosphor-icons/react';
+import { Cursor, Trash } from '@phosphor-icons/react';
 
 interface ToolbarProps {
 
-  onChangeTool: (tool: string | null) => void;
+  onChangeTool(tool: string | null): void;
 
 }
 
 export const Toolbar = (props: ToolbarProps) => {
+
+  const selection = useSelection();
+
+  const store = useAnnotationStore();
 
   const anno = useAnnotator();
 
@@ -18,6 +22,10 @@ export const Toolbar = (props: ToolbarProps) => {
   const onChangeTool = (tool: string) => {
     props.onChangeTool && props.onChangeTool(tool === 'cursor' ? null : tool);
     setTool(tool);
+  }
+
+  const onDeleteSelection = () => {
+    store.bulkDeleteAnnotation(selection);
   }
 
   useEffect(() => {
@@ -34,28 +42,44 @@ export const Toolbar = (props: ToolbarProps) => {
   }, [anno]);
 
   return (
-    <div className="anno-desktop-overlay ia-toolbar">
-      <section>
-        <button 
-          className={tool === 'cursor' ? 'active' : undefined}
-          onClick={() => onChangeTool('cursor')}>
-          <Cursor size={18} />
-        </button>
+    <div className="ia-toolbar-container">
+      <div className="ia-toolbar-context ia-toolbar-context-left">
+        
+      </div>
 
-        <button 
-          className={tool === 'box' ? 'active' : undefined}
-          onClick={() => onChangeTool('box')}>
-          <Rectangle />
-        </button>
+      <div className="anno-desktop-overlay ia-toolbar">
+        <section>
+          <button 
+            className={tool === 'cursor' ? 'active' : undefined}
+            onClick={() => onChangeTool('cursor')}>
+            <Cursor size={18} />
+          </button>
 
-        <button 
-          className={tool === 'polygon' ? 'active' : undefined}
-          onClick={() => onChangeTool('polygon')}>
-          <Polygon />
-        </button>
-      </section>
+          <button 
+            className={tool === 'box' ? 'active' : undefined}
+            onClick={() => onChangeTool('box')}>
+            <Rectangle />
+          </button>
 
-      <div className="anno-desktop-overlay-divider anno-desktop-overlay-divider-v" />
+          <button 
+            className={tool === 'polygon' ? 'active' : undefined}
+            onClick={() => onChangeTool('polygon')}>
+            <Polygon />
+          </button>
+        </section>
+
+        <div className="anno-desktop-overlay-divider anno-desktop-overlay-divider-v" />
+      </div>
+
+      <div 
+        className={selection.length > 0 ? 
+          "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay" :
+          "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden"
+        }>
+        <button onClick={onDeleteSelection}>
+          <Trash size={16} />
+        </button>
+      </div>
     </div>
   )
 

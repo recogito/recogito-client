@@ -4,6 +4,7 @@ import { Popup } from './Popup';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import {
+  Annotation,
   Annotorious, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,

@@ -4,9 +4,7 @@ import {
   AnnotationBody,
   AnnotationTarget,
   OpenSeadragonPopupProps,
-  PresentUser,
-  useAnnotationStore,
-  useAnnotatorUser
+  PresentUser
 } from '@annotorious/react';
 
 import './Popup.css';
@@ -18,10 +16,6 @@ type PopupProps = OpenSeadragonPopupProps & {
 }
 
 export const Popup = (props: PopupProps) => {
-
-  const me = useAnnotatorUser();
-
-  const store = useAnnotationStore();
 
   // Popup only supports a single selected annotation for now
   const selected = props.selection[0];
