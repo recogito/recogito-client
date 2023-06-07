@@ -13,12 +13,12 @@
   vertical-align: bottom;
 }
 
-.anno-desktop-overlay button.privacy-selector-trigger[data-mode='private']  {
+.anno-desktop-overlay button.privacy-selector-trigger[data-privacy='private']  {
   background-color: var(--bright-blue);
   color: #fff;
 }
 
-.anno-desktop-overlay button.privacy-selector-trigger[data-mode='private'] svg {
+.anno-desktop-overlay button.privacy-selector-trigger[data-privacy='private'] svg {
   color: #fff;
 }
 

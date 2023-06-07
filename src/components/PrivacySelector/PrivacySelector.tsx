@@ -30,7 +30,9 @@ export const PrivacySelector = (props: PrivacySelectorProps) => {
   return (
     <Root>
       <Trigger asChild>
-        <button className="privacy-selector-trigger">
+        <button
+          className="privacy-selector-trigger"
+          data-privacy={mode.toLowerCase()}>
           {mode === 'PRIVATE' ? (
             <Detective size={20} />
           ) : (            
