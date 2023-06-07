@@ -9,7 +9,11 @@ interface ToolbarProps {
 
   i18n: Translations;
 
+  privacy: PrivacyMode;
+
   onChangeTool(tool: string | null): void;
+
+  onChangePrivacy(mode: PrivacyMode): void;
 
 }
 
@@ -22,8 +26,6 @@ export const Toolbar = (props: ToolbarProps) => {
   const anno = useAnnotator();
 
   const [tool, setTool] = useState<string>('cursor');
-
-  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const onChangeTool = (tool: string) => {
     props.onChangeTool && props.onChangeTool(tool === 'cursor' ? null : tool);
@@ -78,9 +80,9 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <section className="privacy">
           <PrivacySelector 
-            mode={privacy}
+            mode={props.privacy}
             i18n={props.i18n} 
-            onChangeMode={setPrivacy}/>
+            onChangeMode={props.onChangePrivacy}/>
         </section>
       </div>
 
