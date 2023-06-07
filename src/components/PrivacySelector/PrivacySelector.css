@@ -1,11 +1,47 @@
-button.privacy-selector-trigger {
-  font-weight: 300;
+.anno-desktop-overlay button.privacy-selector-trigger {
+  border-radius: 9999px;
+  box-sizing: border-box;
   font-size: var(--font-tiny);
+  font-weight: 500;
   height: 38px;
-  padding: 0 10px;
+  padding: 0 12px;
   width: auto;
 }
 
-button.privacy-selector-trigger > span {
-  padding: 0 5px;
+.anno-desktop-overlay button.privacy-selector-trigger > span {
+  padding: 1px 0 0 3px;
+  vertical-align: bottom;
+}
+
+.anno-desktop-overlay button.privacy-selector-trigger[data-mode='private']  {
+  background-color: var(--bright-blue);
+  color: #fff;
+}
+
+.anno-desktop-overlay button.privacy-selector-trigger[data-mode='private'] svg {
+  color: #fff;
+}
+
+.privacy-selector .dropdown-indicator {
+  left: 7px;
+  top: 9px;
+}
+
+.privacy-selector .dropdown-item {
+  display: block;
+  padding: 10px 10px 10px 38px;
+  position: relative;
+}
+
+.privacy-selector .dropdown-item svg {
+  color: var(--font-dark);
+  vertical-align: middle;
+}
+
+.privacy-selector .dropdown-item strong {
+  font-weight: 600;
+}
+
+.privacy-selector .dropdown-item p {
+  padding-top: 0;
 }

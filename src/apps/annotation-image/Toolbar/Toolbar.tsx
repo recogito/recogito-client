@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
+import { useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 import { Polygon, Rectangle } from './Icons';
 import { Cursor, Trash } from '@phosphor-icons/react';
+import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
+import type { Translations } from 'src/Types';
 
 interface ToolbarProps {
+
+  i18n: Translations;
 
   onChangeTool(tool: string | null): void;
 
@@ -18,6 +22,8 @@ export const Toolbar = (props: ToolbarProps) => {
   const anno = useAnnotator();
 
   const [tool, setTool] = useState<string>('cursor');
+
+  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const onChangeTool = (tool: string) => {
     props.onChangeTool && props.onChangeTool(tool === 'cursor' ? null : tool);
@@ -68,7 +74,14 @@ export const Toolbar = (props: ToolbarProps) => {
           </button>
         </section>
 
-        <div className="anno-desktop-overlay-divider anno-desktop-overlay-divider-v" />
+        <div className="anno-desktop-overlay-divider" />
+
+        <section className="privacy">
+          <PrivacySelector 
+            mode={privacy}
+            i18n={props.i18n} 
+            onChangeMode={setPrivacy}/>
+        </section>
       </div>
 
       <div 

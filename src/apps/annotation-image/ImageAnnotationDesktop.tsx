@@ -14,6 +14,7 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
+import { PrivacyMode } from '@components/PrivacySelector';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -67,9 +68,9 @@ export interface ImageAnnotationDesktopProps {
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
-  const [tool, setTool] = useState<string | null>(null);
-
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [tool, setTool] = useState<string | null>(null);
 
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
@@ -97,7 +98,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
           </div>
 
           <div className="anno-desktop-bottom">
-            <Toolbar onChangeTool={setTool}/>
+            <Toolbar 
+              i18n={props.i18n}
+              onChangeTool={setTool} />
           </div>
         </OpenSeadragonAnnotator>
       </Annotorious>
