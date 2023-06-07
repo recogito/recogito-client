@@ -89,8 +89,8 @@ export const Toolbar = (props: ToolbarProps) => {
           "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay" :
           "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden"
         }>
-        <button onClick={onDeleteSelection}>
-          <Trash size={16} />
+        <button className="delete" onClick={onDeleteSelection}>
+          <Trash size={18} />
         </button>
       </div>
     </div>
