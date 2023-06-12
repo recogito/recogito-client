@@ -25,6 +25,7 @@ if (!contextId || !documentId) {
 
 // Will return empty if this user has no access priviliges
 const response = await getDocumentInContext(supabase, documentId, contextId);
+
 if (!response.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`/${lang}${Astro.url}/404`);

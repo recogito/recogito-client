@@ -3,6 +3,7 @@ import type { Document, Layer, Translations } from 'src/Types';
 import { Popup } from './Popup';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
+import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   Annotorious, 
   OpenSeadragonAnnotator,
@@ -66,9 +67,11 @@ export interface ImageAnnotationDesktopProps {
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
+  const [present, setPresent] = useState<PresentUser[]>([]);
+
   const [tool, setTool] = useState<string | null>(null);
 
-  const [present, setPresent] = useState<PresentUser[]>([]);
+  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
@@ -82,7 +85,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             channel={props.channelId}
             layerId={props.layers[0].id} 
             appearanceProvider={appearance}
-            onPresence={setPresent} />
+            onPresence={setPresent} 
+            privacyMode={privacy === 'PRIVATE'} />
 
           <OpenSeadragonViewer
             className="ia-osd-container"
@@ -96,7 +100,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
           </div>
 
           <div className="anno-desktop-bottom">
-            <Toolbar onChangeTool={setTool}/>
+            <Toolbar 
+              i18n={props.i18n}
+              privacy={privacy}
+              onChangeTool={setTool} 
+              onChangePrivacy={setPrivacy} />
           </div>
         </OpenSeadragonAnnotator>
       </Annotorious>

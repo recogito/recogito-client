@@ -6,7 +6,8 @@ export const createDocument = (supabase: SupabaseClient, name: string): Response
   supabase
     .from('documents')
     .insert({
-      name
+      name,
+      content_type: 'iiif'
     })
     .select()
     .single()

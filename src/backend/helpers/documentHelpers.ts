@@ -1,5 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createDocument, createLayer } from '@backend/crud';
+import { createDocument } from '@backend/crud';
+import { createLayerInContext } from './layerHelper';
 import type { Response } from '@backend/Types';
 import type { Document, Layer } from 'src/Types';
 
@@ -22,14 +23,7 @@ export const initDocument = (supabase: SupabaseClient, name: string, contextId: 
 
   // Second promise: create layer in the default context
   const b: Promise<Layer> = a.then(document => 
-    new Promise((resolve, reject) => 
-      createLayer(supabase, document.id, contextId)
-        .then(({ error, data }) => {
-          if (error)
-            reject(error);
-          else
-            resolve(data);
-        })));
+    createLayerInContext(supabase, document.id, contextId));
 
   return Promise.all([a, b]).then(([ document, defaultLayer ]) => 
     ({ document, defaultLayer }));
@@ -55,10 +49,12 @@ export const listDocumentsInContext = (
       layers!inner (
         id,
         document_id,
-        context_id
+        layer_contexts!inner (
+          context_id
+        )
       )
     `)
-    .eq('layers.context_id', contextId)
+    .eq('layers.layer_contexts.context_id', contextId)
     .then(({ error, data }) => {
       if (error) {
         return { error, data: [] };
@@ -72,7 +68,6 @@ export const listDocumentsInContext = (
       }
     });
     
-
 export const getDocumentInContext = (
   supabase: SupabaseClient,
   documentId: string, 
@@ -88,20 +83,22 @@ export const getDocumentInContext = (
       updated_by,
       name,
       bucket_id,
-      layers (
+      layers!inner (
         id,
         created_at,
         created_by,
         updated_at,
         updated_by,
         document_id,
-        context_id,
         name,
-        description
+        description,
+        layer_contexts!inner (
+          context_id
+        )
       )
     `)
     .eq('id', documentId)
-    .eq('layers.context_id', contextId)
+    .eq('layers.layer_contexts.context_id', contextId)
     .single()
     .then(({ error, data }) => {
       if (data) {
