@@ -59,6 +59,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           description: t['Could not delete the project.'],
           type: 'error'
         });
+
+        console.log('dasfasdfasdf');
       } else if (data) {
         if (data.length === 1 && data[0].id === project.id) {
           setProjects(projects.filter(p => p.id !== project.id));
@@ -72,18 +74,20 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       }
     });
 
-  return projects.length === 0 ? (
-    <ProjectsEmpty 
-      i18n={props.i18n} 
-      onCreateProject={onCreateProject} />
-  ) : (
+  return (
     <ToastProvider>
-      <ProjectsGrid 
-        i18n={props.i18n} 
-        projects={projects}
-        onCreateProject={onCreateProject} 
-        onDeleteProject={onDeleteProject} 
-        onRenameProject={onRenameProject} />
+      {projects.length === 0 ? (
+        <ProjectsEmpty 
+          i18n={props.i18n} 
+          onCreateProject={onCreateProject} />
+      ) : (
+        <ProjectsGrid 
+          i18n={props.i18n} 
+          projects={projects}
+          onCreateProject={onCreateProject} 
+          onDeleteProject={onDeleteProject} 
+          onRenameProject={onRenameProject} />  
+      )}
 
       <Toast
         content={error}
