@@ -5,13 +5,14 @@
 }
 
 .presence-stack ul {
+  display: flex;
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
 .presence-stack li {
-  display: inline;
+  display: inline-block;
 }
 
 .presence-stack li + li {

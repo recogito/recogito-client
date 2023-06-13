@@ -1,7 +1,5 @@
 import * as RadixAvatar from '@radix-ui/react-avatar';
 
-import './Avatar.css';
-
 const { Root, Image, Fallback } = RadixAvatar;
 
 const stringToHash = (str: string) => {
@@ -44,10 +42,14 @@ export const Avatar = (props: AvatarProps) => {
   return (
     <Root className="avatar">
       {avatar ? (
-        <Image
+        <span
           className="avatar-image"
-          src={avatar}
-          alt={name} />
+          title={name} 
+          style={{ 
+            backgroundColor, 
+            backgroundImage: `url('${avatar}')`,
+            borderColor
+          }} />
       ) : (
         <Fallback 
           className="avatar-fallback"
