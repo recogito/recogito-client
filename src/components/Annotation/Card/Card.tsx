@@ -1,4 +1,5 @@
-import { useAnnotatorUser, type Annotation, type AnnotationBody, type AnnotationTarget, type PresentUser } from '@annotorious/react';
+import { useAnnotatorUser } from '@annotorious/react';
+import type { Annotation, AnnotationTarget, PresentUser } from '@annotorious/react';
 import { Default, NewByMe, NewByOther } from './states';
 
 import './Card.css';
@@ -17,9 +18,9 @@ export const Card = (props: CardProps) => {
 
   const me = useAnnotatorUser();
 
-  const getCreator = (body: AnnotationBody | AnnotationTarget) => {
-    const present = props.present.find(p => p.id === body.creator?.id);
-    return present || body.creator;
+  const getCreator = (target: AnnotationTarget) => {
+    const present = props.present.find(p => p.id === target.creator?.id);
+    return present || target.creator;
   }
 
   const creator = getCreator(annotation.target);

@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight } from '@phosphor-icons/react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { useAnnotationStore } from '@annotorious/react';
+import { useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Avatar } from '../../Avatar';
 
@@ -12,7 +12,7 @@ export interface ReplyFormProps {
 
   annotation: Annotation;
 
-  me: PresentUser | User;
+  present: PresentUser[];
 
   beforeSubmit?(body: AnnotationBody): void;
 
@@ -20,7 +20,9 @@ export interface ReplyFormProps {
 
 export const ReplyForm = (props: ReplyFormProps) => {
 
-  const { me } = props;
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   const textarea = useRef<HTMLTextAreaElement>(null);
   
@@ -63,7 +65,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
       <Avatar 
         id={me.id} 
         name={me.name} 
-        avatar={me.avatar} />
+        avatar={me.avatar} 
+        color={'appearance' in me ? (me as PresentUser).appearance.color : undefined }/>
 
       <TextareaAutosize 
         ref={textarea}
