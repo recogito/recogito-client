@@ -102,6 +102,14 @@
   transition: background-color 1500ms;
 }
 
+.annotation-card-comment.padding-top {
+  padding-top: 1em;
+}
+
+.annotation-card-comment.padding-bottom {
+  padding-bottom: 1em;
+}
+
 .annotation-card-comment.no-border {
   border-bottom: none;
 }

@@ -14,9 +14,7 @@ interface CommentProps {
 
   comment: AnnotationBody;
 
-  isNew?: boolean;
-
-  noBorder?: boolean;
+  className?: string;
 
   present: PresentUser[];
 
@@ -24,23 +22,11 @@ interface CommentProps {
 
 const Comment = (props: CommentProps) => {
 
-  const { comment, isNew, noBorder, present } = props;
+  const { comment, className, present } = props;
 
-  const classes = ['annotation-card-comment'];
-  
-  if (isNew)
-    classes.push('is-new');
-
-  if (noBorder)
-    classes.push('no-border');
-
-  const className = `annotation-card-comment ${isNew ? 'is-new' : ''} ${noBorder ? 'no-border' : ''}`.trim();
-
-  console.log('applying classes:', className);
-  
   return (
     <li 
-      className={className}
+      className={className ? `annotation-card-comment ${className}` : 'annotation-card-comment'}
       key={comment.id}>
 
       <BodyHeader  
@@ -89,7 +75,7 @@ export const Default = (props: CardProps) => {
       {collapsed && comments.length > 3 ? (
         <ul className="annotation-card-comments-container">
           <Comment
-            noBorder
+            className="no-border padding-bottom"
             comment={comments[0]}
             present={props.present} />
 
@@ -98,7 +84,8 @@ export const Default = (props: CardProps) => {
             onClick={() => setCollapsed(false)} />
 
           <Comment
-            isNew={!dontEmphasise.current.has(comments[comments.length - 1].id)}
+            className={dontEmphasise.current.has(comments[comments.length - 1].id) ?
+              'padding-top' : 'padding-top is-new'}
             comment={comments[comments.length - 1]}
             present={props.present} />
         </ul>
@@ -107,7 +94,7 @@ export const Default = (props: CardProps) => {
           {comments.map(comment => (
             <Comment
               key={comment.id}
-              isNew={!dontEmphasise.current.has(comment.id)}
+              className={dontEmphasise.current.has(comments[comments.length - 1].id) ? undefined : 'is-new'}
               comment={comment}
               present={props.present} />
           ))}
