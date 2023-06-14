@@ -65,8 +65,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
       <Avatar 
         id={me.id} 
         name={me.name} 
-        avatar={me.avatar} 
-        color={'appearance' in me ? (me as PresentUser).appearance.color : undefined }/>
+        avatar={me.avatar} />
 
       <TextareaAutosize 
         ref={textarea}

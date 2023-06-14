@@ -37,7 +37,6 @@ export const Avatar = (props: AvatarProps) => {
   const { id, name, color, avatar } = props;
 
   const backgroundColor = color || `hsl(${stringToHash(id) % 360}, 35%, 68%)`;
-  const borderColor = color || `hsl(${stringToHash(id) % 360}, 35%, 58%)`
 
   return (
     <Root className="avatar">
@@ -45,15 +44,12 @@ export const Avatar = (props: AvatarProps) => {
         <span
           className="avatar-image"
           title={name} 
-          style={{ 
-            backgroundImage: `url('${avatar}')`,
-            borderColor: color
-          }} />
+          style={{ backgroundImage: `url('${avatar}')` }} />
       ) : (
         <Fallback 
           className="avatar-fallback"
           title={name} 
-          style={{ backgroundColor, borderColor }}>
+          style={{ backgroundColor }}>
           {getInitials(name || id)}
         </Fallback>
       )}

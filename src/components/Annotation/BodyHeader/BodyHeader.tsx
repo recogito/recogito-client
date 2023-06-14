@@ -26,8 +26,7 @@ export const BodyHeader = (props: BodyHeaderProps) => {
             <Avatar
               id={creator.id}
               name={creator.appearance.label}
-              avatar={creator.appearance.avatar} 
-              color={creator && 'appearance' in creator ? creator.appearance.color : undefined } />
+              avatar={creator.appearance.avatar} />
           )}
           
           <div className="annotation-body-created">
@@ -51,8 +50,7 @@ export const BodyHeader = (props: BodyHeaderProps) => {
           <Avatar
             id={creator.id}
             name={creator.name}
-            avatar={creator.avatar} 
-            color={creator && 'appearance' in creator ? creator.appearance.color : undefined } />
+            avatar={creator.avatar} />
 
           <div>
             <address>
