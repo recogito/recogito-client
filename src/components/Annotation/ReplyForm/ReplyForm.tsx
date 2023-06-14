@@ -64,8 +64,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
     <form className="annotation-reply-form no-drag">
       <Avatar 
         id={me.id} 
-        name={me.name} 
-        avatar={me.avatar} />
+        name={me.name || (me as PresentUser).appearance?.label}
+        avatar={me.avatar || (me as PresentUser).appearance?.avatar} />
 
       <TextareaAutosize 
         ref={textarea}

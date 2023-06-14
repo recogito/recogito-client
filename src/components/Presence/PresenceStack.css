@@ -20,9 +20,21 @@
 }
 
 .presence-stack .avatar {
-  border: 3px solid #fff;
+  border: 2px solid #fff;
   letter-spacing: 0.05ch;
   font-size: var(--font-tiny);
   font-weight: 500;
   pointer-events: all;
+  position: relative;
+}
+
+.presence-stack .avatar::after {
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px var(--presence-color);
+  content: '';
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }

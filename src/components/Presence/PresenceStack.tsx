@@ -25,7 +25,12 @@ export const PresenceStack = (props: PresenceStackProps) => {
     <div className="presence-stack">
       <ul>
         {transition((style, presentUser) => (
-          <animated.li style={style} key={presentUser.presenceKey}>
+          <animated.li 
+            style={{ 
+              ...style, 
+              ...{'--presence-color': presentUser.appearance.color }
+            }} 
+            key={presentUser.presenceKey}>
             <Avatar 
               id={presentUser.id}
               name={presentUser.appearance.label}

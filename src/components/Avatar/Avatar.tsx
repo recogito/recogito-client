@@ -41,10 +41,10 @@ export const Avatar = (props: AvatarProps) => {
   return (
     <Root className="avatar">
       {avatar ? (
-        <span
+        <Image
           className="avatar-image"
           title={name} 
-          style={{ backgroundImage: `url('${avatar}')` }} />
+          src={avatar} />
       ) : (
         <Fallback 
           className="avatar-fallback"
