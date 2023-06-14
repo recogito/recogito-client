@@ -18,14 +18,7 @@ export const Card = (props: CardProps) => {
 
   const me = useAnnotatorUser();
 
-  const getCreator = (target: AnnotationTarget) => {
-    const present = props.present.find(p => p.id === target.creator?.id);
-    return present || target.creator;
-  }
-
-  const creator = getCreator(annotation.target);
-
-  const isMine = creator?.id === me.id;
+  const isMine = annotation.target.creator?.id === me.id;
 
   const hasBodies = annotation.bodies.length > 0;
 

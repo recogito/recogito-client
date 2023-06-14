@@ -1,3 +1,4 @@
+import type { AnnotationTarget } from '@annotorious/react';
 import { BodyHeader } from '../../BodyHeader';
 import type { CardProps } from '../Card';
 
@@ -9,7 +10,14 @@ import type { CardProps } from '../Card';
  */
 export const NewByOther = (props: CardProps) => {
 
-  const { creator, created } = props.annotation.target;
+  const { created } = props.annotation.target;
+
+  const getCreator = (target: AnnotationTarget) => {
+    const present = props.present.find(p => p.id === target.creator?.id);
+    return present || target.creator;
+  }
+
+  const creator = getCreator(props.annotation.target);
 
   return (
     <div className="annotation-card-header new-by-other">

@@ -1,3 +1,8 @@
+.annotation-card {
+  --emphasis-light: #ffe0a2;
+  --emphasis-dark: #e8c889;
+}
+
 .annotation-card ul {
   list-style-type: none;
   margin: 0;
@@ -94,10 +99,16 @@
 .annotation-card-comment {
   border-bottom: 1px solid var(--gray-100);
   padding: 10px;
+  transition: background-color 1500ms;
 }
 
 .annotation-card-comment.no-border {
   border-bottom: none;
+}
+
+.annotation-card-comment.is-new {
+  background-color: var(--emphasis-light);
+  border-color: var(--emphasis-dark);
 }
 
 .annotation-card-comment p {
