@@ -116,7 +116,8 @@ export const Default = (props: CardProps) => {
 
       <ReplyForm 
         {...props}  
-        beforeSubmit={onBeforeReply} />
+        beforeSubmit={onBeforeReply}
+        onSubmit={props.onReply} />
     </>
   )
 

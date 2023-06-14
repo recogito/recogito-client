@@ -16,6 +16,8 @@ export interface ReplyFormProps {
 
   beforeSubmit?(body: AnnotationBody): void;
 
+  onSubmit?(body: AnnotationBody): void;
+
 }
 
 export const ReplyForm = (props: ReplyFormProps) => {
@@ -50,6 +52,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
       props.beforeSubmit && props.beforeSubmit(body);
 
       store.addBody(body);
+
+      props.onSubmit && props.onSubmit(body);
     }
   }
 

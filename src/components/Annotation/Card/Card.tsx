@@ -1,5 +1,5 @@
 import { useAnnotatorUser } from '@annotorious/react';
-import type { Annotation, AnnotationTarget, PresentUser } from '@annotorious/react';
+import type { Annotation, AnnotationBody, AnnotationTarget, PresentUser } from '@annotorious/react';
 import { Default, NewByMe, NewByOther } from './states';
 
 import './Card.css';
@@ -9,6 +9,8 @@ export interface CardProps {
   annotation: Annotation;
 
   present: PresentUser[];
+
+  onReply(comment: AnnotationBody): void;
 
 }
 

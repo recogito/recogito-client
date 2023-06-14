@@ -4,7 +4,9 @@ import type { CardProps } from '../Card';
 export const NewByMe = (props: CardProps) => {
 
   return (
-    <ReplyForm {...props} />
+    <ReplyForm 
+      {...props} 
+      onSubmit={props.onReply} />
   )
 
 }
