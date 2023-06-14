@@ -46,9 +46,8 @@ export const Avatar = (props: AvatarProps) => {
           className="avatar-image"
           title={name} 
           style={{ 
-            backgroundColor, 
             backgroundImage: `url('${avatar}')`,
-            borderColor
+            borderColor: color
           }} />
       ) : (
         <Fallback 

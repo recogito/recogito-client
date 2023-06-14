@@ -18,8 +18,6 @@ export const BodyHeader = (props: BodyHeaderProps) => {
 
   const isAnonymous = !creator?.name || creator.isGuest;
 
-  console.log(creator);
-
   return (
     <div className="annotation-body-header">
       {isAnonymous ? (
@@ -29,7 +27,7 @@ export const BodyHeader = (props: BodyHeaderProps) => {
               id={creator.id}
               name={creator.appearance.label}
               avatar={creator.appearance.avatar} 
-              color={creator && 'appearance' in creator ? creator.appearance.color : null } />
+              color={creator && 'appearance' in creator ? creator.appearance.color : undefined } />
           )}
           
           <div className="annotation-body-created">
@@ -54,7 +52,7 @@ export const BodyHeader = (props: BodyHeaderProps) => {
             id={creator.id}
             name={creator.name}
             avatar={creator.avatar} 
-            color={creator && 'appearance' in creator ? creator.appearance.color : null } />
+            color={creator && 'appearance' in creator ? creator.appearance.color : undefined } />
 
           <div>
             <address>

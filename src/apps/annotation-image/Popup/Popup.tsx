@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Annotation } from '@components/Annotation';
-import { 
+import type { 
   AnnotationBody,
   AnnotationTarget,
   OpenSeadragonPopupProps,
@@ -55,6 +55,13 @@ export const Popup = (props: PopupProps) => {
 
   return (
     <article className="annotation-popup ia-annotation-popup">
+      <Annotation.Card annotation={selected} />
+    </article>
+  )
+  
+  /*
+  return (
+    <article className="annotation-popup ia-annotation-popup">
       {comments.length === 0 ? (
         <header>
           <Annotation.BodyHeader 
@@ -72,9 +79,9 @@ export const Popup = (props: PopupProps) => {
                 creator={getCreator(comment)} 
                 createdAt={comment.created} />
 
-              {/* comment.creator?.id === me.id && (
+              {* comment.creator?.id === me.id && (
                 <CommentActionsMenu onDelete={index === 0 ? onDeleteAnnotation : onDeleteComment(comment)} />
-              ) */}
+              ) *}
 
               <p>{comment.value}</p>
             </li>
@@ -87,5 +94,6 @@ export const Popup = (props: PopupProps) => {
         beforeSubmit={onBeforeReply} />
     </article>
   )
+  */
 
 }
