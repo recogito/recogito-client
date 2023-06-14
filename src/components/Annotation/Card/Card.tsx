@@ -24,10 +24,16 @@ export const Card = (props: CardProps) => {
 
   const creator = getCreator(annotation.target);
 
+  const isMine = creator?.id === me.id;
+
+  const hasBodies = annotation.bodies.length > 0;
+
   return (
     <div className="annotation-card">
-      {creator?.id === me.id ? (
-        <NewByMe {...props} me={props.present.find(p => p.id === me.id) || me} />
+      {hasBodies ? (
+        <Default {...props} />
+      ) : isMine ? (
+        <NewByMe {...props} />
       ) : (
         <NewByOther {...props} />
       )}

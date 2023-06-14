@@ -1,22 +1,15 @@
-import type { PresentUser, User } from '@annotorious/react';
+import { useAnnotatorUser } from '@annotorious/react';
 import { ReplyForm } from '@components/Annotation/ReplyForm';
-import { BodyHeader } from '../../BodyHeader';
 import type { CardProps } from '../Card';
 
-type NewByMeProps = CardProps & { 
+export const NewByMe = (props: CardProps) => {
 
-  me: PresentUser | User
+  const user = useAnnotatorUser();
 
-}
-
-export const NewByMe = (props: NewByMeProps) => {
-
-  const { creator, created } = props.annotation.target;
+  const me = props.present.find(p => p.id === user.id) || user;
 
   return (
-    <>
-      <ReplyForm annotation={props.annotation} me={props.me} />
-    </>
+    <ReplyForm annotation={props.annotation} me={me} />
   )
 
 }
