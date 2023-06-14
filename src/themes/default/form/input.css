@@ -1,4 +1,4 @@
-input {
+input, textarea {
   border: 1px solid var(--input-border-color);
   border-radius: var(--input-border-radius);
   box-sizing: border-box;
@@ -8,7 +8,7 @@ input {
   transition: box-shadow .2s ease-in-out, border-color .2s ease-in-out;
 }
 
-input:focus {
+input:focus, textarea:focus {
   border-color: var(--input-focus-border-color);
   box-shadow: 0 0 0 1px var(--input-focus-border-color);
 }

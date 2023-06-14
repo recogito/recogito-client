@@ -1,32 +1,55 @@
-.reply-form {
-  background-color: var(--gray-50);
-  border-top: 1px solid var(--gray-200);
-  border-radius: 0 0 var(--border-radius) var(--border-radius);
-  padding: 8px;
+.annotation-reply-form {
+  min-height: 36px;
+  padding: 10px 57px 10px 52px;
+  position: relative;
 }
 
-.reply-form textarea {
-  background-color: #fff;
-  border: 1px solid var(--gray-200);
-  border-radius: calc(var(--border-radius) - 2px);
-  box-sizing: border-box;
-  font-size: var(--font-tiny);
-  margin: 0;
+.annotation-reply-form .avatar {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+}
+
+.annotation-reply-form button.send {
+  align-items: center;
+  background: var(--bright-blue);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  height: 32px;
+  justify-content: center;
   outline: none;
-  overflow-y: hidden;
-  padding: 10px;
+  padding: 0;
+  position: absolute;
+  right: 13px;
+  top: 13px;
+  width: 32px;
+}
+
+.annotation-reply-form button.send svg {
+  color: #fff;
+}
+
+.annotation-reply-form textarea {
+  background-color: transparent;
+  border: none;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-size: 13px;
+  height: 32px;
+  line-height: 140%;
+  margin: 2px 0;
+  outline: none;
+  padding: 8px 5px;
   resize: none;
-  /* https://stackoverflow.com/questions/7144843/extra-space-under-textarea-differs-along-browsers */
   vertical-align: top;
   width: 100%;
 }
 
-.reply-form textarea:focus {
-  border-color: var(--input-focus-border-color);
-  box-shadow: 0 0 0 1px var(--input-focus-border-color);
+.annotation-reply-form textarea::placeholder {
+  color: rgba(0, 0, 0, 0.3);
 }
 
-.reply-form .buttons {
-  display: flex;
-  padding-top: 10px;
+.annotation-reply-form textarea:focus-visible {
+  box-shadow: none;
 }

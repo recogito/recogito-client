@@ -55,7 +55,9 @@ export const Popup = (props: PopupProps) => {
 
   return (
     <article className="annotation-popup ia-annotation-popup">
-      <Annotation.Card annotation={selected} />
+      <Annotation.Card
+        annotation={selected} 
+        present={props.present} />
     </article>
   )
   

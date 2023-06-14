@@ -1,9 +1,9 @@
 .annotation-card-header {
   padding: 10px;
   position: relative;
-  --anim-dot-size: 4px;
+  --anim-dot-size: 3px;
   --anim-color: var(--font-light);
-  --anim-h-offset: 7px;
+  --anim-h-offset: 6px;
   --anim-v-offset: -5px;
 }
 
