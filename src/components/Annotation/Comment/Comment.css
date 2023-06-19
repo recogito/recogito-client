@@ -1,0 +1,31 @@
+.annotation-comment {
+  border-top: 1px solid var(--border-color);
+  padding: 15px 10px;
+  transition: background-color 1500ms;
+}
+
+li:first-child .annotation-comment {
+  border-top: none;
+}
+
+.annotation-comment.no-border {
+  border-bottom: none;
+}
+
+.annotation-comment.is-new {
+  background-color: var(--emphasis-light);
+  border-color: var(--emphasis-light);
+}
+
+.annotation-comment p {
+  font-size: var(--font-tiny);
+  line-height: 140%;
+  margin: 0;
+  padding: 14px 4px 0 4px;
+}
+
+.annotation-comment .comment-actions {
+  position: absolute;
+  right: 10px;
+  top: 12px;
+}

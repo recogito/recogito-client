@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
+import { useDropzone } from 'react-dropzone';
 import type { Context, Document, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocument, updateProject } from '@backend/crud';
@@ -7,6 +8,7 @@ import { initDocument } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { useUpload } from './useUpload';
 
 import './ProjectHome.css';
 
@@ -32,8 +34,23 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
+  const onDrop = useUpload(project, defaultContext, document => {
+    console.log('yay', document);
+    setDocuments([...documents, document]);
+  }, error => {
+    console.error(error);
+    setError({ 
+      title: t['Something went wrong'], 
+      description: t['Could not create the document.'], 
+      type: 'error' 
+    });
+  });
+
+  // Call open to open the file dialog
+  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({ onDrop, noClick: true })
+
   const onAddDummyImage = () => {
-    initDocument(supabase, 'dummy-document', defaultContext.id)
+    initDocument(supabase, 'dummy-document', project.id, defaultContext.id)
       .then(({ document }) => {
         setDocuments([...documents, document]);
       })
@@ -84,7 +101,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   }
 
   return (
-    <div className="project-home">
+    <div className="project-home" {...getRootProps()}>
       <ToastProvider>
         <h1>
           <EditableText 
@@ -113,6 +130,14 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           content={error}
           onOpenChange={open => !open && setError(null)} />
       </ToastProvider>
+
+      <input {...getInputProps()} />
+          
+      {isDragActive && (
+        <div className="project-home-filedrop">
+          <h1>Drop Files Here</h1>
+        </div>
+      )}
     </div>
   )
 

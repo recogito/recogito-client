@@ -1,4 +1,5 @@
 .annotation-reply-form {
+  border-top: 1px solid var(--border-color);
   min-height: 36px;
   padding: 10px 57px 10px 52px;
   position: relative;
@@ -52,4 +53,38 @@
 
 .annotation-reply-form textarea:focus-visible {
   box-shadow: none;
+}
+
+.private .annotation-reply-form {
+  padding: 10px 57px 10px 40px;
+}
+
+.private .annotation-reply-form .anonymous {
+  position: absolute;
+  left: 12px;
+  top: 18px;
+}
+
+.private .annotation-reply-form textarea {
+  color: var(--font-dark);
+}
+
+.private .annotation-reply-form textarea::placeholder {
+  color: var(--font-light);
+}
+
+.private .annotation-reply-form button.send {
+  background-color: var(--border-color)
+}
+
+.private .annotation-reply-form button.send:hover {
+  box-shadow: inset 0 0 0 150px rgba(255, 255, 255, 0.12);
+}
+
+.private .annotation-reply-form button.send > svg {
+  color: var(--font-light);
+}
+
+.private .annotation-reply-form button.send:hover > svg {
+  color: var(--font-dark);
 }

@@ -1,10 +1,10 @@
-import type { Response } from "@backend/Types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Layer } from "src/Types";
 
 export const createLayerInContext = (
   supabase: SupabaseClient, 
   document_id: string, 
+  project_id: string,
   context_id: string,
   name?: string,
   description?: string
@@ -14,6 +14,7 @@ export const createLayerInContext = (
       .from('layers')
       .insert({
         document_id,
+        // project_id,
         name,
         description
       })

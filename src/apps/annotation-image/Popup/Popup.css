@@ -14,8 +14,9 @@
   pointer-events: all;
   top: 10px;
   width: 340px;
-  --emphasis-light: #ffe0a2;
-  --emphasis-dark: #e8c889;
+}
+.annotation-card.private {
+  border-radius: 6px;
 }
 
 .ia-annotation-popup > ul {

@@ -67,6 +67,8 @@ export interface ImageAnnotationDesktopProps {
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
+  const { i18n } = props;
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [tool, setTool] = useState<string | null>(null);
@@ -74,6 +76,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const appearance = useMemo(() => createAppearenceProvider(), []);
+
+  const onConnectError = () =>
+    window.location.href = `/${props.i18n.lang}/sign-in`;
 
   return (
     <div className="anno-desktop ia-desktop">
@@ -86,6 +91,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             layerId={props.layers[0].id} 
             appearanceProvider={appearance}
             onPresence={setPresent} 
+            onConnectError={onConnectError}
             privacyMode={privacy === 'PRIVATE'} />
 
           <OpenSeadragonViewer
@@ -93,7 +99,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             options={OSD_OPTIONS} />
 
           <OpenSeadragonPopup
-            popup ={props => <Popup {...props} present={present} />} />
+            popup ={props => (
+              <Popup 
+                {...props} 
+                present={present} 
+                i18n={i18n} /> )} />
 
           <div className="anno-desktop-right">
             <PresenceStack present={present} />

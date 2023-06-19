@@ -1,10 +1,13 @@
 import TimeAgo from 'timeago-react';
 import type { PresentUser, User } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
+import type { Translations } from 'src/Types';
 
-import './BodyHeader.css';
+import './Creator.css';
 
-interface BodyHeaderProps {
+interface CreatorProps {
+
+  i18n: Translations;
 
   creator?: User | PresentUser;
 
@@ -12,33 +15,35 @@ interface BodyHeaderProps {
 
 }
 
-export const BodyHeader = (props: BodyHeaderProps) => {
+export const Creator = (props: CreatorProps) => {
 
   const { creator, createdAt } = props;
+
+  const { t } = props.i18n;
 
   const isAnonymous = !creator?.name || creator.isGuest;
 
   return (
-    <div className="annotation-body-header">
+    <div className="annotation-creator">
       {isAnonymous ? (
         <>
-           {creator && 'appearance' in creator && (
+          {creator && 'appearance' in creator && (
             <Avatar
               id={creator.id}
               name={creator.appearance.label}
               avatar={creator.appearance.avatar} />
           )}
           
-          <div className="annotation-body-created">
-            <div className="anonymous">
+          <div className="annotation-created-by">
+            <address className="anonymous">
               {creator && 'appearance' in creator ? (
                 creator.appearance.label
               ) : (
-                'Anonymous'
+                t['Anonymous']
               )}
-            </div> 
+            </address> 
 
-            <div className="annotation-body-created-at">
+            <div className="annotation-created-at">
               {createdAt && (
                 <TimeAgo datetime={createdAt} />
               )}
@@ -52,12 +57,12 @@ export const BodyHeader = (props: BodyHeaderProps) => {
             name={creator.name}
             avatar={creator.avatar} />
 
-          <div>
+          <div className="annotation-created-by">
             <address>
               {creator.name}
             </address>
 
-            <div className="annotation-body-created-at">
+            <div className="annotation-created-at">
               {createdAt && (
                 <TimeAgo datetime={createdAt} />
               )}

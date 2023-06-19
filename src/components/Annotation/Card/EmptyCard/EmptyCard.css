@@ -1,15 +1,4 @@
-.annotation-card {
-  --emphasis-light: #ffe0a2;
-  --emphasis-dark: #e8c889;
-}
-
-.annotation-card ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.annotation-card-header {
+.annotation-card.empty {
   padding: 10px;
   position: relative;
   --anim-dot-size: 3px;
@@ -18,13 +7,13 @@
   --anim-v-offset: -5px;
 }
 
-.other-typing {
+.typing {
   position: absolute;
   right: 35px;
   top: 26px;
 }
 
-.other-typing-animation {
+.typing-animation {
   position: relative;
   left: calc(-9999px + var(--anim-h-offset));
   width: var(--anim-dot-size);
@@ -89,39 +78,4 @@
       9999px 0 0 0 var(--anim-color), 
       calc(9999px + var(--anim-h-offset)) 0 0 0 var(--anim-color);
   }
-}
-
-.annotation-card-comments-container {
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.annotation-card-comment {
-  border-bottom: 1px solid var(--gray-100);
-  padding: 10px;
-  transition: background-color 1500ms;
-}
-
-.annotation-card-comment.padding-top {
-  padding-top: 1em;
-}
-
-.annotation-card-comment.padding-bottom {
-  padding-bottom: 1em;
-}
-
-.annotation-card-comment.no-border {
-  border-bottom: none;
-}
-
-.annotation-card-comment.is-new {
-  background-color: var(--emphasis-light);
-  border-color: var(--emphasis-dark);
-}
-
-.annotation-card-comment p {
-  font-size: var(--font-tiny);
-  line-height: 140%;
-  margin: 0;
-  padding: 14px 4px 0 4px;
 }

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument } from '@backend/crud';
-import { createLayerInContext } from './layerHelper';
+import { createLayerInContext } from './layerHelpers';
 import type { Response } from '@backend/Types';
 import type { Document, Layer } from 'src/Types';
 
@@ -10,10 +10,16 @@ import type { Document, Layer } from 'src/Types';
  * 1. creates the Document record.
  * 2. creates a default Layer on the document in the given Context.
  */
-export const initDocument = (supabase: SupabaseClient, name: string, contextId: string) => {
+export const initDocument = (
+  supabase: SupabaseClient, 
+  name: string, 
+  projectId: string, 
+  contextId: string,
+  file?: File
+) => {
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) => 
-    createDocument(supabase, name)
+    createDocument(supabase, name, file?.type)
       .then(({ error, data }) => {
         if (error)
           reject(error);
@@ -23,10 +29,25 @@ export const initDocument = (supabase: SupabaseClient, name: string, contextId: 
 
   // Second promise: create layer in the default context
   const b: Promise<Layer> = a.then(document => 
-    createLayerInContext(supabase, document.id, contextId));
+    createLayerInContext(supabase, document.id, projectId, contextId));
 
-  return Promise.all([a, b]).then(([ document, defaultLayer ]) => 
-    ({ document, defaultLayer }));
+  return Promise.all([a, b])
+    .then(([ document, defaultLayer ]) => {
+      if (file) {
+        return supabase
+          .storage
+          .from('documents')
+          .upload(document.id, file)
+          .then(({ data, error }) => {
+            if (error)
+              throw error;
+            else 
+              return { document, defaultLayer };
+          })
+      } else {
+        return { document, defaultLayer };
+      }
+    })
 }
 
 /**

@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { ArrowRight } from '@phosphor-icons/react';
+import { ArrowRight, Detective } from '@phosphor-icons/react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
+import { Visibility, useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Avatar } from '../../Avatar';
 
@@ -29,6 +29,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
   const textarea = useRef<HTMLTextAreaElement>(null);
   
   const store = useAnnotationStore();
+
+  const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();
@@ -66,10 +68,14 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
   return (
     <form className="annotation-reply-form no-drag">
-      <Avatar 
-        id={me.id} 
-        name={me.name || (me as PresentUser).appearance?.label}
-        avatar={me.avatar || (me as PresentUser).appearance?.avatar} />
+      {isPublic ? (
+        <Avatar 
+          id={me.id} 
+          name={me.name || (me as PresentUser).appearance?.label}
+          avatar={me.avatar || (me as PresentUser).appearance?.avatar} />
+      ) : (
+        <Detective className="anonymous" size={20} weight="light" />  
+      )}
 
       <TextareaAutosize 
         ref={textarea}

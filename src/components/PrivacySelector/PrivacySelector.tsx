@@ -1,5 +1,5 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { CaretDown, ChatCircleText, Check, Detective, UsersThree } from '@phosphor-icons/react';
+import { CaretDown, Check, Detective, UsersThree } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
 import './PrivacySelector.css';
