@@ -11,8 +11,6 @@ type PrivateCommentProps = CommentProps & {
 
   onMakePublic(): void;
 
-  onDeleteAnnotation(): void;
-
 }
 
 export const PrivateComment = (props: PrivateCommentProps) => {

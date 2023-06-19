@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ImageSquare, TextAlignLeft } from '@phosphor-icons/react';
 import type { Context, Document, Translations } from 'src/Types';
 import { EditableText } from '@components/EditableText';
-import { DocumentCardActionsMenu } from './DocumentCardActionsMenu';
+import { DocumentCardActions } from './DocumentCardActions';
 
 import './DocumentCard.css';
 
@@ -48,7 +48,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
         </div>
 
         <div className="document-card-footer">
-          <DocumentCardActionsMenu 
+          <DocumentCardActions
             i18n={props.i18n} 
             onDelete={props.onDelete} 
             onRename={() => setEditable(true)} />

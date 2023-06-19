@@ -14,5 +14,7 @@ export interface CommentProps {
   i18n: Translations;
 
   present: PresentUser[];
+
+  onDeleteAnnotation(): void;
   
 }

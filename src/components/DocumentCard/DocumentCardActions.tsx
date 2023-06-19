@@ -4,7 +4,7 @@ import type { Translations } from 'src/Types';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
-interface DocumentCardActionsMenuProps {
+interface DocumentCardActionsProps {
 
   i18n: Translations;
 
@@ -14,7 +14,7 @@ interface DocumentCardActionsMenuProps {
 
 }
 
-export const DocumentCardActionsMenu = (props: DocumentCardActionsMenuProps) => {
+export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
   const { t } = props.i18n;
 

@@ -1,5 +1,5 @@
 import type { Project, Translations } from 'src/Types';
-import { ProjectCardActionsMenu } from './ProjectCardActionsMenu';
+import { ProjectCardActions } from './ProjectCardActions';
 
 import './ProjectCard.css';
 
@@ -35,7 +35,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         </p>
       </div>
  
-      <ProjectCardActionsMenu
+      <ProjectCardActions
         i18n={props.i18n}
         onDelete={props.onDelete} 
         onRename={props.onRename}/>
