@@ -5,6 +5,10 @@
   position: relative;
 }
 
+.annotation-reply-form:first-child {
+  border-top: none;
+} 
+
 .annotation-reply-form .avatar {
   position: absolute;
   left: 10px;

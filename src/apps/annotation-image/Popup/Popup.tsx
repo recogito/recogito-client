@@ -41,12 +41,14 @@ export const Popup = (props: PopupProps) => {
           <Annotation.PrivateCard 
             {...props} 
             showReplyForm
-            annotation={selected} />
+            annotation={selected} 
+            onReply={onReply} />
         ) : (
           <Annotation.PublicCard
             {...props} 
             showReplyForm
-            annotation={selected} />
+            annotation={selected} 
+            onReply={onReply} />
         )
       ) : isMine ? (
         isPrivate ? (
