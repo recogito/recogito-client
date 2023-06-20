@@ -25,7 +25,7 @@
 }
 
 .dashboard-sidebar h2 {
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--font-semi);
   font-size: var(--font-tiny);
   font-weight: 400;
   margin: 0;
@@ -54,7 +54,7 @@
 }
 
 .dashboard-sidebar svg {
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--font-semi);
   transition: color 250ms ease-in-out;
 }
 

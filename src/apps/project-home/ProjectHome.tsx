@@ -152,7 +152,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             ))}
           </div>
 
-          {isDragActive && (
+          {true && (
             <div className="dropzone-hint-wrapper">
               <div className="dropzone-hint">
                 <div className="dropzone-hint-popup">

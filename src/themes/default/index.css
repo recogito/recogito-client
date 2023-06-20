@@ -124,6 +124,7 @@
   /** Font styles **/
   --font-dark: var(--gray-900);
   --font-light: var(--gray-600);
+  --font-semi: rgba(255, 255, 255, 0.65);
 
   --font-small: 0.875em;
   --font-tiny: 13px;

@@ -36,21 +36,23 @@
   border-radius: var(--border-radius);
   box-sizing: border-box;
   display: flex;
-  height: 100%;
+  height: calc(100% + 15px);
   justify-content: center;
-  padding: 15px;
-  width: 100%;
+  margin: 0 -15px;
+  width: calc(100% + 30px);
 }
 
 .dropzone-hint-popup {
   animation-duration: 0.5s;
   animation-name: pop-bottom;
-  animation-delay: 0;
   animation-fill-mode: backwards;
   background-color: var(--bright-blue);
   border-radius: var(--border-radius);
   color: #fff;
+  margin: 0 40px;
   padding: 10px 20px; 
+  position: fixed; 
+  bottom: 40px;
   text-align: center;
 }
 
@@ -66,18 +68,32 @@
 }
 
 .dropzone-hint-popup svg {
-  margin: 0.5em 0;
+  animation: upload-nudge 1.2s infinite;
+  margin: 1em 0 0.6em 0;
+}
+
+@keyframes upload-nudge {
+  0% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .dropzone-hint-popup h1 {
   font-family: Inter;
-  font-size: 0.9em;
+  font-size: var(--font-small);
   font-weight: 500;
   letter-spacing: 0.025ch;
   margin: 0;
 }
 
 .dropzone-hint-popup p {
+  color: var(--font-semi);
   font-size: var(--font-tiny);
   margin: 0;
   letter-spacing: 0.01ch;
