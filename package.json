@@ -10,7 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@annotorious/react": "../../annotorious/annotorious-v3/packages/annotorious-react",
+    "@annotorious/react": "3.0.0-pre-alpha-17",
     "@astrojs/netlify": "^2.2.3",
     "@astrojs/react": "^2.2.0",
     "@phosphor-icons/react": "^2.0.9",

@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { initDocument } from './documentHelpers';
 import type { Document, Layer } from 'src/Types';
-import { uploadFileUppy } from '@backend/storage';
+import { uploadFile } from '@backend/storage';
 import type { UploadResult as UppyResult } from '@uppy/core';
 
 interface UploadResult {
@@ -32,7 +32,7 @@ const uploadOneDocument = (
   contextId, 
   file
 ).then(({ document, defaultLayer }) =>
-  uploadFileUppy(supabase, file, document.id).then(result => ({
+  uploadFile(supabase, file, document.id).then(result => ({
     document, defaultLayer, result
   })));
 
