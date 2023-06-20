@@ -59,6 +59,7 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
 	}
 
   .container {
+    display: flex;
     flex-direction: column;
     flex-grow: 1;
     min-height: 100%;
@@ -80,5 +81,7 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
     margin: 0 auto;
     max-width: 80rem;
     padding: 40px;
+    position: relative;
+    width: 100%;
   }
 </style>

@@ -143,7 +143,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <input {...getInputProps()} />
           
       {isDragActive && (
-        <div className="project-home-filedrop">
+        <div className="dropzone">
           <h1>Drop Files Here</h1>
         </div>
       )}
