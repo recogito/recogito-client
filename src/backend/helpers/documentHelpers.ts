@@ -3,6 +3,7 @@ import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import type { Response } from '@backend/Types';
 import type { Document, Layer } from 'src/Types';
+import { uploadFile } from '@backend/storage';
 
 /**
  * Initializes a new Document in a Context.
@@ -17,6 +18,8 @@ export const initDocument = (
   contextId: string,
   file?: File
 ) => {
+  console.log('Uploading a file', file);
+
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) => 
     createDocument(supabase, name, file?.type)
@@ -34,16 +37,14 @@ export const initDocument = (
   return Promise.all([a, b])
     .then(([ document, defaultLayer ]) => {
       if (file) {
-        return supabase
-          .storage
-          .from('documents')
-          .upload(document.id, file)
-          .then(({ data, error }) => {
-            if (error)
-              throw error;
-            else 
-              return { document, defaultLayer };
-          })
+        /*
+        const onProgress = (a: number, b: number, c: number) => {
+          console.log('progress', a, b, c);
+        } 
+        */
+
+        return uploadFile(supabase, file, document.id)
+          .then(() => ({ document, defaultLayer }));
       } else {
         return { document, defaultLayer };
       }

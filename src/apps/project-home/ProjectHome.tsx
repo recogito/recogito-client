@@ -8,7 +8,7 @@ import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { ImportDocumentActions, ImportFormat } from './ImportDocumentActions';
-import { useUpload } from './useUpload';
+import { UploadProgress } from './UploadProgress';
 import type { Context, Document, Project, Translations } from 'src/Types';
 
 import './ProjectHome.css';
@@ -33,18 +33,31 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documents, setDocuments] = useState<Document[]>(props.documents);
 
+  const [uploading, setUploading] = useState<string | null>(null);
+
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const onDrop = useUpload(project, defaultContext, document => {
-    setDocuments([...documents, document]);
-  }, error => {
-    console.error(error);
-    setError({ 
-      title: t['Something went wrong'], 
-      description: t['Could not create the document.'], 
-      type: 'error' 
-    });
-  });
+  const onDrop = (files: File[]) => {
+    // TODO for now, throw error if multiple files!
+    const f = files[0];
+
+    setUploading(f.name);
+
+    initDocument(supabase, f.name, project.id, defaultContext.id, f)
+      .then(({ document, defaultLayer }) => {
+        setDocuments([...documents, document]);
+        setUploading(null);
+      })
+      .catch(error => {
+        console.error(error);
+        setUploading(null);
+        setError({ 
+          title: t['Something went wrong'], 
+          description: t['Could not create the document.'], 
+          type: 'error' 
+        });
+      })
+  }
 
   // Call open to open the file dialog
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({ onDrop, noClick: true });
@@ -153,6 +166,11 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             </div>
           )}
         </div>
+
+        <UploadProgress 
+          open={Boolean(uploading)}
+          filename={uploading || ''}
+          progress={10} />
 
         <Toast
           content={error}
