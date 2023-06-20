@@ -3,8 +3,6 @@ import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import type { Response } from '@backend/Types';
 import type { Document, Layer } from 'src/Types';
-import { uploadFile, uploadFileWithProgress, uploadFilesUppy } from '@backend/storage';
-import { r } from 'dist/_astro/index.2c942993';
 
 /**
  * Initializes a new Document in a Context.
@@ -35,19 +33,20 @@ export const initDocument = (
 
   return Promise.all([a, b])
     .then(([ document, defaultLayer ]) => {
+      /*
       if (file) {
         /*
         const onProgress = (a: number, b: number, c: number) => {
           console.log('progress', a, b, c);
         } 
-        */
+        
 
         // return uploadFileWithProgress(supabase, file, document.id)
-        return uploadFilesUppy(supabase, [{ file, name: document.id }])
+        return uploadFileUppy(supabase, file, document.id)
           .then(() => ({ document, defaultLayer }));
-      } else {
+      } else {*/
         return { document, defaultLayer };
-      }
+      //}
     })
 }
 

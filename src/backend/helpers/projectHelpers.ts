@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createContext, createProject, deleteContext, deleteProject } from '@backend/crud';
 import type { Context, Project } from 'src/Types';
 import type { Response } from '@backend/Types';
-import { createSystemTag } from './tagHelper';
+import { createSystemTag } from './tagHelpers';
 
 /**
  * Initializes a new project.

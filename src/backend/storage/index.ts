@@ -1,5 +1,5 @@
 // import * as tus from 'tus-js-client';
-import Uppy from '@uppy/core';
+import Uppy, { UploadResult } from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
@@ -117,11 +117,12 @@ export const uploadFileWithProgress = (
     });
 });
 
-export const uploadFilesUppy = (
+export const uploadFileUppy = (
   supabase: SupabaseClient, 
-  files: Array<{file: File, name: string}>,
+  file: File,
+  name: string,
   onProgress?: (file: File, progress: number) => void
-): Promise<void> => new Promise((resolve, reject) => {
+): Promise<UploadResult> => new Promise((resolve, reject) => {
   return supabase.auth.getSession().then(({ error, data }) => {
     if (error) {
       reject(error)
@@ -133,25 +134,25 @@ export const uploadFilesUppy = (
         const uppy = new Uppy({ autoProceed: true });
 
         uppy.use(XHR, {
-          endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${files[0].name}`,
+          endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${name}`,
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
 
-        files.forEach(({ file, name }) => uppy.addFile({
+        uppy.addFile({
           name,
           type: file.type,
           data: file
-        }));
+        });
 
         uppy.on('upload-progress', (file, progress) => {
           console.log('PROGRESS', file, progress);
         });
 
-        uppy.upload().then(response => {
-          console.log(response);
-          resolve();
+        uppy.upload().then(result => {
+          console.log(result);
+          resolve(result);
         });
       }
     }

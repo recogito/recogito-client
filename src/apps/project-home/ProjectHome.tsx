@@ -4,6 +4,7 @@ import { CloudArrowUp } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocument, updateProject } from '@backend/crud';
 import { initDocument } from '@backend/helpers';
+import { uploadDocuments } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
@@ -12,6 +13,7 @@ import { UploadProgress } from './UploadProgress';
 import type { Context, Document, Project, Translations } from 'src/Types';
 
 import './ProjectHome.css';
+
 
 export interface ProjectHomeProps {
 
@@ -38,8 +40,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [error, setError] = useState<ToastContent | null>(null);
 
   const onDrop = (files: File[]) => {
-    // TODO for now, throw error if multiple files!
-    const f = files[0];
+    uploadDocuments(supabase, files, project.id, defaultContext.id);
+
+    /*
 
     setUploading(f.name);
 
@@ -57,6 +60,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           type: 'error' 
         });
       })
+
+      */
   }
 
   // Call open to open the file dialog
@@ -152,7 +157,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             ))}
           </div>
 
-          {true && (
+          {isDragActive && (
             <div className="dropzone-hint-wrapper">
               <div className="dropzone-hint">
                 <div className="dropzone-hint-popup">
