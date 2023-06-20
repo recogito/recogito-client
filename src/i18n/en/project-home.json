@@ -3,6 +3,9 @@
   "Delete document": "Delete document",
   "Rename document": "Rename document",
 
+  "File upload": "File upload",
+  "From IIIF manifest": "From IIIF manifest",
+
   "Something went wrong": "Something went wrong",
   "Could not create the document.": "Could not create the document.",
   "Could not rename the document.": "Could not rename the document."

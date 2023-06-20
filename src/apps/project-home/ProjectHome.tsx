@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Plus } from '@phosphor-icons/react';
 import { useDropzone } from 'react-dropzone';
 import type { Context, Document, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -8,6 +7,7 @@ import { initDocument } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { ImportDocumentActions, ImportFormat } from './ImportDocumentActions';
 import { useUpload } from './useUpload';
 
 import './ProjectHome.css';
@@ -46,7 +46,15 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   });
 
   // Call open to open the file dialog
-  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({ onDrop, noClick: true })
+  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({ onDrop, noClick: true });
+
+  const onImportRemote = (format: ImportFormat) => {
+    setError({
+      title: 'Sorry',
+      description: 'Not supported yet',
+      type: 'info'
+    });
+  }
 
   const onAddDummyImage = () => {
     initDocument(supabase, 'dummy-document', project.id, defaultContext.id)
@@ -107,9 +115,11 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             value={project.name} 
             onSubmit={onRenameProject} />
         </h1>
-        <button className="primary" onClick={onAddDummyImage}>
-          <Plus size={20} /> <span>{t['Import Document']}</span>
-        </button>
+        
+        <ImportDocumentActions 
+          i18n={props.i18n} 
+          onUpload={open}
+          onImport={onImportRemote} />
 
         <div className="project-home-grid">
           {documents.map(document => (
