@@ -7,7 +7,8 @@ export const createDocument = (supabase: SupabaseClient, name: string, content_t
     .from('documents')
     .insert({
       name,
-      content_type
+      content_type,
+      bucket_id: content_type ? 'documents' : undefined
     })
     .select()
     .single()
