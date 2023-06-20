@@ -123,7 +123,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               </span>
 
               <span className="project-sidebar-col collapsible">
-                {props.user?.nickname || props.user?.id}
+                {props.user?.nickname || ''}
               </span>
             </button>
           </li>

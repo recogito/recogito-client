@@ -1,0 +1,17 @@
+button.busy * {
+  opacity: 0;
+}
+
+button.busy svg.button-busy-spinner, 
+button.busy svg.button-busy-spinner > * {
+  opacity: 1;
+}
+
+button > svg.button-busy-spinner {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

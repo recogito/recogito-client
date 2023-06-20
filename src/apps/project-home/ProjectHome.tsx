@@ -35,7 +35,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [error, setError] = useState<ToastContent | null>(null);
 
   const onDrop = useUpload(project, defaultContext, document => {
-    console.log('yay', document);
     setDocuments([...documents, document]);
   }, error => {
     console.error(error);

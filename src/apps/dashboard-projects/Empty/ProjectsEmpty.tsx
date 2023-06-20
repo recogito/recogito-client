@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { RocketLaunch } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
-import { Spinner } from '@components/Spinner';
+import { Button } from '@components/Button';
 
 export interface ProjectsEmptyProps {
 
@@ -37,15 +37,12 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
         </p>
 
         <div className="dashboard-projects-empty-cta">
-          <button className="primary lg" onClick={onCreateProject}>
-            {fetching ? (
-              <Spinner size={20} />
-            ) : (
-              <>
-                <RocketLaunch size={20} /> <span>{t['Start Your First Annotation Project']}</span>
-              </>
-            )}
-          </button> 
+          <Button 
+            className="primary lg" 
+            onClick={onCreateProject}
+            busy={fetching}>
+            <RocketLaunch size={20} /> <span>{t['Start Your First Annotation Project']}</span>
+          </Button> 
         </div>
       </div>
     </main>
