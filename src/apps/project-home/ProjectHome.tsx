@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import type { Context, Document, Project, Translations } from 'src/Types';
+import { CloudArrowUp } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocument, updateProject } from '@backend/crud';
 import { initDocument } from '@backend/helpers';
@@ -9,6 +9,7 @@ import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { ImportDocumentActions, ImportFormat } from './ImportDocumentActions';
 import { useUpload } from './useUpload';
+import type { Context, Document, Project, Translations } from 'src/Types';
 
 import './ProjectHome.css';
 
@@ -108,31 +109,49 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   }
 
   return (
-    <div className="project-home" {...getRootProps()}>
+    <div className="project-home">
       <ToastProvider>
-        <h1>
-          <EditableText 
-            value={project.name} 
-            onSubmit={onRenameProject} />
-        </h1>
-        
-        <ImportDocumentActions 
-          i18n={props.i18n} 
-          onUpload={open}
-          onImport={onImportRemote} />
+        <div>
+          <h1>
+            <EditableText 
+              value={project.name} 
+              onSubmit={onRenameProject} />
+          </h1>
+          
+          <ImportDocumentActions 
+            i18n={props.i18n} 
+            onUpload={open}
+            onImport={onImportRemote} />
+        </div>
 
-        <div className="project-home-grid">
-          {documents.map(document => (
-            <DocumentCard 
-              // just a hack for now
-              isImage={document.name.toLowerCase().includes('image')}
-              key={document.id}
-              i18n={props.i18n} 
-              context={defaultContext}
-              document={document} 
-              onDelete={() => onDeleteDocument(document)} 
-              onRename={name => onRenameDocument(document, name)} />
-          ))}
+        <div className="project-home-grid-wrapper" {...getRootProps()}>
+          <div className="project-home-grid">
+            {documents.map(document => (
+              <DocumentCard 
+                // just a hack for now
+                isImage={document.name.toLowerCase().includes('image')}
+                key={document.id}
+                i18n={props.i18n} 
+                context={defaultContext}
+                document={document} 
+                onDelete={() => onDeleteDocument(document)} 
+                onRename={name => onRenameDocument(document, name)} />
+            ))}
+          </div>
+
+          {isDragActive && (
+            <div className="dropzone-hint-wrapper">
+              <div className="dropzone-hint">
+                <div className="dropzone-hint-popup">
+                  <CloudArrowUp size={32} />
+                  <h1>Drop files or links to IIIF manifests to add them to your project.</h1>
+                  <p>
+                    Supported file formats: plaint text (UTF-8)
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         <Toast
@@ -141,12 +160,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       </ToastProvider>
 
       <input {...getInputProps()} />
-          
-      {isDragActive && (
-        <div className="dropzone">
-          <h1>Drop Files Here</h1>
-        </div>
-      )}
     </div>
   )
 

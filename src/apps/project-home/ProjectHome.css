@@ -1,6 +1,14 @@
 .project-home {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   padding: 40px;
+  position: relative;
+}
+
+.project-home-grid-wrapper {
+  flex-grow: 1;
+  position: relative;
 }
 
 .project-home-grid {
@@ -11,14 +19,67 @@
   padding: 70px 0 40px 0;
 }
 
-.project-home-filedrop {
-  align-items: center;
-  background-color: rgba(0, 0, 128, 0.5);
+.dropzone-hint-wrapper {
+  bottom: 0;
+  box-sizing: border-box;
+  height: 100%;
+  left: 0;
+  padding: 20px 0 0 0;
+  position: absolute;
+  width: 100%;
+}
+
+.dropzone-hint {
+  align-items: flex-end;
+  background-color: rgba(7, 82, 154, 0.2);
+  border: 1px solid var(--bright-blue);
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
   display: flex;
   height: 100%;
   justify-content: center;
-  left: 0;
-  position: absolute;
-  top: 0;
+  padding: 15px;
   width: 100%;
 }
+
+.dropzone-hint-popup {
+  animation-duration: 0.5s;
+  animation-name: pop-bottom;
+  animation-delay: 0;
+  animation-fill-mode: backwards;
+  background-color: var(--bright-blue);
+  border-radius: var(--border-radius);
+  color: #fff;
+  padding: 10px 20px; 
+  text-align: center;
+}
+
+@keyframes pop-bottom {
+  0% { 
+    opacity: 0; 
+    transform: translateY(30px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.dropzone-hint-popup svg {
+  margin: 0.5em 0;
+}
+
+.dropzone-hint-popup h1 {
+  font-family: Inter;
+  font-size: 0.9em;
+  font-weight: 500;
+  letter-spacing: 0.025ch;
+  margin: 0;
+}
+
+.dropzone-hint-popup p {
+  font-size: var(--font-tiny);
+  margin: 0;
+  letter-spacing: 0.01ch;
+}
+
