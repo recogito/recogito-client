@@ -3,7 +3,7 @@ import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import type { Response } from '@backend/Types';
 import type { Document, Layer } from 'src/Types';
-import { uploadFile } from '@backend/storage';
+import { uploadFile, uploadFileWithProgress } from '@backend/storage';
 
 /**
  * Initializes a new Document in a Context.
@@ -43,7 +43,7 @@ export const initDocument = (
         } 
         */
 
-        return uploadFile(supabase, file, document.id)
+        return uploadFileWithProgress(supabase, file, document.id)
           .then(() => ({ document, defaultLayer }));
       } else {
         return { document, defaultLayer };

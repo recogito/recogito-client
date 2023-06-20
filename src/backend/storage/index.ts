@@ -15,7 +15,7 @@ export const uploadFileResumable = (
     } else {
       const token = data.session?.access_token;
       if (!token) {
-        reject('No session token');
+        reject('Not authorized');
       } else {
         const upload = new tus.Upload(file, {
           endpoint: `${SUPABASE_URL}/storage/v1/upload/resumable`,
@@ -62,9 +62,53 @@ export const uploadFile = (
   supabase: SupabaseClient, 
   file: File, 
   filename: string
-) => {
-  return supabase
-    .storage
-    .from('documents')
-    .upload(filename, file);
-}
+) => supabase
+      .storage
+      .from('documents')
+      .upload(filename, file);
+
+export const uploadFileWithProgress = (  
+  supabase: SupabaseClient, 
+  file: File, 
+  filename: string,
+  onProgress?: (bytesTotal: number, bytesUploaded: number, percent: number) => void
+): Promise<void> => new Promise((resolve, reject) => {
+  return supabase.auth.getSession()
+    .then(({ error, data }) => {
+      if (error) {
+        reject(error)
+      } else {
+        const token = data.session?.access_token;      
+        if (!token) {
+          reject('Not authorized');
+        } else {
+          // Cf. https://github.com/supabase/storage-api/issues/23#issuecomment-973277262
+          const url = `${SUPABASE_URL}/storage/v1/object/documents/${filename}`;
+
+          const _onError = (evt: ProgressEvent) => 
+            reject(evt);
+
+          const _onSuccess = (evt: ProgressEvent) => 
+            resolve();
+
+          const _onProgress = (evt: ProgressEvent) => {
+            if (onProgress) {
+              const percent = (evt.loaded / evt.total) * 100;
+              onProgress(evt.total, evt.loaded, percent);
+            }
+          }
+          
+          const req = new XMLHttpRequest();
+          req.upload.onabort = _onError;
+          req.upload.onerror = _onError;
+          req.upload.onload = _onSuccess;
+          req.upload.onprogress = _onProgress;
+          req.upload.ontimeout = _onError;
+
+          req.open('POST', url);
+          req.setRequestHeader('authorization', `Bearer ${token}`);
+          req.send(file);
+        }
+      }
+    });
+});
