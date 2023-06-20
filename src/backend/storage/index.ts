@@ -1,10 +1,11 @@
-import * as tus from 'tus-js-client';
+// import * as tus from 'tus-js-client';
 import Uppy from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = `https://${import.meta.env.PUBLIC_SUPABASE}`;
 
+/*
 export const uploadFileResumable = (
   supabase: SupabaseClient, 
   file: File, 
@@ -59,6 +60,7 @@ export const uploadFileResumable = (
       }
     }})
   });
+*/
 
 export const uploadFile = (
   supabase: SupabaseClient, 

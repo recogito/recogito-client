@@ -34,7 +34,6 @@
     "react-dropzone": "^14.2.3",
     "react-textarea-autosize": "^8.4.1",
     "timeago-react": "^3.0.6",
-    "tus-js-client": "^3.1.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
