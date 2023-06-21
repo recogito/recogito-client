@@ -2,13 +2,19 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
 import type { Document } from 'src/Types';
 
-export const createDocument = (supabase: SupabaseClient, name: string, content_type?: string): Response<Document> =>
+export const createDocument = (
+  supabase: SupabaseClient, 
+  name: string, 
+  content_type?: string,
+  meta_data?: object
+): Response<Document> =>
   supabase
     .from('documents')
     .insert({
       name,
       content_type,
-      bucket_id: content_type ? 'documents' : undefined
+      bucket_id: content_type ? 'documents' : undefined,
+      meta_data
     })
     .select()
     .single()

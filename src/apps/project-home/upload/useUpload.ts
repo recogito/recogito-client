@@ -55,7 +55,8 @@ export const useUpload = (
       i.projectId, 
       i.contextId, 
       progress => onProgress(id, progress, 'uploading'),
-      i.file
+      i.file,
+      i.url
     ).then(({ document, defaultLayer }) => {
       onSuccess(id, document, defaultLayer);
     })).catch(error => {

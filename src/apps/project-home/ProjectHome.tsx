@@ -37,18 +37,23 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
 
   const onDrop = (dropped: File[] | string) => {
-    console.log('drop', dropped);
-
-    /*
     setShowUploads(true);
 
-    addUploads(files.map(file => ({
-      name: file.name,
-      projectId: project.id,
-      contextId: defaultContext.id,
-      file
-    })));
-    */
+    if (Array.isArray(dropped)) {
+      addUploads(dropped.map(file => ({
+        name: file.name,
+        projectId: project.id,
+        contextId: defaultContext.id,
+        file
+      })));
+    } else if (typeof dropped === 'string') {
+      addUploads([{
+        name: dropped, // TODO find a better solution
+        projectId: project.id,
+        contextId: defaultContext.id,
+        url: dropped
+      }]);
+    }
   }
 
   const { 

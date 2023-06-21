@@ -17,11 +17,12 @@ export const initDocument = (
   projectId: string, 
   contextId: string,
   onProgress?: (progress: number) => void,
-  file?: File
+  file?: File,
+  url?: string
 ) => {
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) => 
-    createDocument(supabase, name, file?.type)
+    createDocument(supabase, name, file?.type, { protocol: 'IIIF_IMAGE', url })
       .then(({ error, data }) => {
         if (error)
           reject(error);

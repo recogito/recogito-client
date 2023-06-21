@@ -5,17 +5,12 @@ export const useDragAndDrop = (onDrop: (arg: File[] | string) => void) => {
 
   const [isDragActive, setIsDragActive] = useState(false);
 
-  const _onDrop = (files: File[]) => {
-    // TODO
-    console.log('drop', files);
-  }
-
   const { 
     getRootProps, 
     getInputProps, 
     open, 
     rootRef 
-  } = useDropzone({ onDrop: _onDrop, noClick: true, noKeyboard: true });
+  } = useDropzone({ onDrop, noClick: true, noKeyboard: true });
 
   const handleDragOver = (evt: React.DragEvent) => { 
     evt.preventDefault();
@@ -34,7 +29,9 @@ export const useDragAndDrop = (onDrop: (arg: File[] | string) => void) => {
   const handleDrop = (evt: React.DragEvent) => {
     evt.preventDefault();
 
-    console.log('dropped items');
+    const url = evt.dataTransfer.getData('URL');
+    if (url)
+      onDrop(url);
 
     setIsDragActive(false);
   }
