@@ -1,0 +1,15 @@
+.progress-circle {
+  transform: rotate(-90deg);
+}
+
+.progress-circle circle {
+  fill: transparent;
+  stroke-width: 10px;
+}
+.progress-circle .progress-circle-track {
+  stroke: #d7d7d7;
+}
+
+.progress-circle .progress-circle-indicator {
+  stroke: currentColor;
+}

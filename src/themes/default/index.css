@@ -103,6 +103,7 @@
   /** Colors **/
   --dark-blue: #07498a;
   --bright-blue: #07529a;
+  --brighter-blue: #0167ff;
   --mud-gray: #808073;
   --orange: #e9b44a;
   
@@ -115,7 +116,9 @@
   --gray-100: #e9ecf1;
   --gray-50: #f6f7f9;
 
-  --red-500: #d00e17;
+  --red-500: #da1e26;
+
+  --green-500: #11a011;
 
   /** Global constants **/
   --border-radius: 3px;

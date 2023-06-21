@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
+import { uploadFile } from '@backend/storage';
 import type { Response } from '@backend/Types';
 import type { Document, Layer } from 'src/Types';
 
@@ -15,6 +16,7 @@ export const initDocument = (
   name: string, 
   projectId: string, 
   contextId: string,
+  onProgress?: (progress: number) => void,
   file?: File
 ) => {
   // First promise: create the document
@@ -33,20 +35,12 @@ export const initDocument = (
 
   return Promise.all([a, b])
     .then(([ document, defaultLayer ]) => {
-      /*
       if (file) {
-        /*
-        const onProgress = (a: number, b: number, c: number) => {
-          console.log('progress', a, b, c);
-        } 
-        
-
-        // return uploadFileWithProgress(supabase, file, document.id)
-        return uploadFileUppy(supabase, file, document.id)
+        return uploadFile(supabase, file, document.id, onProgress)
           .then(() => ({ document, defaultLayer }));
-      } else {*/
+      } else {
         return { document, defaultLayer };
-      //}
+      }
     })
 }
 

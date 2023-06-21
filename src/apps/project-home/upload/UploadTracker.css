@@ -1,0 +1,41 @@
+.upload-tracker .toast-title {
+  align-items: center;
+  background-color: var(--gray-50);
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 12px;
+}
+
+.upload-tracker ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.upload-tracker li {
+  align-items: center;
+  display: flex;
+  font-size: var(--font-tiny);
+  padding: 10px 12px;
+  position: relative;
+}
+
+.upload-tracker li .upload-progress {
+  color: var(--brighter-blue);
+  padding: 0;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+.upload-tracker li .upload-success {
+  right: 10px;
+  color: var(--green-500);
+}
+
+.upload-tracker li .upload-failed {
+  right: 10px;
+  color: var(--red-500);
+}

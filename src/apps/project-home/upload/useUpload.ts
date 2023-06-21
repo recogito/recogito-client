@@ -1,0 +1,77 @@
+import { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { initDocument } from '@backend/helpers';
+import type { Document, Layer } from 'src/Types';
+import type { Upload, UploadProgress, UploadStatus } from './Upload';
+
+let queue = Promise.resolve();
+
+export const useUpload = (
+  onImport: (document: Document, defaultLayer: Layer) => void
+) => {
+
+  const [uploads, setUploads] = useState<UploadProgress[]>([]);
+
+  const onProgress = (id: string, progress: number, status: UploadStatus) =>
+    setUploads(uploads.map(upload => upload.id === id ? {
+      ...upload,
+      progress,
+      status
+    } : upload));
+
+  const onSuccess = (id: string, document: Document, defaultLayer: Layer) => {
+    setUploads(uploads.map(upload => upload.id === id ? {
+      ...upload,
+      progress: 100,
+      status: 'success'
+    } : upload));
+
+    onImport(document, defaultLayer)
+  }
+    
+  const onError = (id: string, message: string) =>
+    setUploads(uploads.map(upload => upload.id === id ? {
+      ...upload,
+      progress: 100,
+      status: 'failed',
+      message
+    } : upload));
+
+  const addUpload = (i: Upload) => {
+    // A unique ID for tracking this import
+    const id = uuidv4();
+
+    setUploads([
+      ...uploads,
+      { id, name: i.name, progress: 0, status: 'preparing' }
+    ]);
+
+    queue = queue.then(() => initDocument(
+      supabase, 
+      i.name, 
+      i.projectId, 
+      i.contextId, 
+      progress => onProgress(id, progress, 'uploading'),
+      i.file
+    ).then(({ document, defaultLayer }) => {
+      onSuccess(id, document, defaultLayer);
+    })).catch(error => {
+      onError(id, error);
+    });
+
+    return id;
+  }
+
+  const addUploads = (uploads: Upload[]) => uploads.forEach(addUpload);
+
+  const isIdle = uploads.every(u => u.status === 'success' || u.status === 'failed');
+  
+  return {
+    addUpload,
+    addUploads,
+    isIdle,
+    uploads
+  };
+
+}

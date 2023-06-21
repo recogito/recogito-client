@@ -3,17 +3,13 @@ import { useDropzone } from 'react-dropzone';
 import { CloudArrowUp } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocument, updateProject } from '@backend/crud';
-import { initDocument } from '@backend/helpers';
-import { uploadDocuments } from '@backend/helpers';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
-import { ImportDocumentActions, ImportFormat } from './ImportDocumentActions';
-import { UploadProgress } from './UploadProgress';
+import { UploadActions, UploadFormat, UploadTracker, useUpload } from './upload';
 import type { Context, Document, Project, Translations } from 'src/Types';
 
 import './ProjectHome.css';
-
 
 export interface ProjectHomeProps {
 
@@ -35,39 +31,28 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documents, setDocuments] = useState<Document[]>(props.documents);
 
-  const [uploading, setUploading] = useState<string | null>(null);
-
   const [error, setError] = useState<ToastContent | null>(null);
 
+  const [showUploads, setShowUploads] = useState(false);
+
+  const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
+
   const onDrop = (files: File[]) => {
-    uploadDocuments(supabase, files, project.id, defaultContext.id);
+    setShowUploads(true);
 
-    /*
-
-    setUploading(f.name);
-
-    initDocument(supabase, f.name, project.id, defaultContext.id, f)
-      .then(({ document, defaultLayer }) => {
-        setDocuments([...documents, document]);
-        setUploading(null);
-      })
-      .catch(error => {
-        console.error(error);
-        setUploading(null);
-        setError({ 
-          title: t['Something went wrong'], 
-          description: t['Could not create the document.'], 
-          type: 'error' 
-        });
-      })
-
-      */
+    addUploads(files.map(file => ({
+      name: file.name,
+      projectId: project.id,
+      contextId: defaultContext.id,
+      file
+    })));
   }
 
-  // Call open to open the file dialog
   const { getRootProps, getInputProps, open, isDragActive } = useDropzone({ onDrop, noClick: true });
 
-  const onImportRemote = (format: ImportFormat) => {
+  const onImportRemote = (format: UploadFormat) => {
+    setShowUploads(true);
+
     setError({
       title: 'Sorry',
       description: 'Not supported yet',
@@ -75,6 +60,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   }
 
+  /*
   const onAddDummyImage = () => {
     initDocument(supabase, 'dummy-document', project.id, defaultContext.id)
       .then(({ document }) => {
@@ -89,6 +75,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         });
       });
   }
+  */
 
   const onRenameProject = (name: string) => {
     updateProject(supabase, {
@@ -136,7 +123,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               onSubmit={onRenameProject} />
           </h1>
           
-          <ImportDocumentActions 
+          <UploadActions 
             i18n={props.i18n} 
             onUpload={open}
             onImport={onImportRemote} />
@@ -172,10 +159,11 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           )}
         </div>
 
-        <UploadProgress 
-          open={Boolean(uploading)}
-          filename={uploading || ''}
-          progress={10} />
+        <UploadTracker 
+          show={showUploads}
+          closable={isIdle}
+          uploads={uploads} 
+          onClose={() => setShowUploads(false)} />
 
         <Toast
           content={error}

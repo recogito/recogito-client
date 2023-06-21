@@ -33,8 +33,8 @@ export const uploadFile = (
           data: file
         });
 
-        uppy.on('upload-progress', (file, progress) => {
-          console.log('PROGRESS', file, progress);
+        uppy.on('progress', progress => {
+          onProgress && onProgress(progress);
         });
 
         uppy.upload().then(result => {

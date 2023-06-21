@@ -6,19 +6,19 @@ import type { Translations } from 'src/Types';
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 // For future extension...
-export type ImportFormat = 'IIIF';
+export type UploadFormat = 'IIIF';
 
-interface ImportDocumentActionsProps {
+interface UploadActionsProps {
 
   i18n: Translations;
 
   onUpload(): void;
 
-  onImport(format: ImportFormat): void;
+  onImport(format: UploadFormat): void;
 
 }
 
-export const ImportDocumentActions = (props: ImportDocumentActionsProps) => {
+export const UploadActions = (props: UploadActionsProps) => {
 
   const { t } = props.i18n;
 
