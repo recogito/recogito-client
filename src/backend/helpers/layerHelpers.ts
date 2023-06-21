@@ -14,7 +14,7 @@ export const createLayerInContext = (
       .from('layers')
       .insert({
         document_id,
-        // project_id,
+        project_id,
         name,
         description
       })

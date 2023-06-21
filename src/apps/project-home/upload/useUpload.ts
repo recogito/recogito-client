@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { initDocument } from '@backend/helpers';
@@ -13,37 +13,39 @@ export const useUpload = (
 
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
 
-  const onProgress = (id: string, progress: number, status: UploadStatus) =>
-    setUploads(uploads.map(upload => upload.id === id ? {
+  const onProgress = (id: string, progress: number, status: UploadStatus) => {
+    setUploads(prev => prev.map(upload => upload.id === id ? {
       ...upload,
       progress,
       status
     } : upload));
+  };
 
   const onSuccess = (id: string, document: Document, defaultLayer: Layer) => {
-    setUploads(uploads.map(upload => upload.id === id ? {
+    setUploads(prev => prev.map(upload => upload.id === id ? {
       ...upload,
       progress: 100,
       status: 'success'
     } : upload));
 
     onImport(document, defaultLayer)
-  }
+  };
     
-  const onError = (id: string, message: string) =>
-    setUploads(uploads.map(upload => upload.id === id ? {
+  const onError = (id: string, message: string) => {
+    setUploads(prev => prev.map(upload => upload.id === id ? {
       ...upload,
       progress: 100,
       status: 'failed',
       message
     } : upload));
+  }
 
   const addUpload = (i: Upload) => {
     // A unique ID for tracking this import
     const id = uuidv4();
 
-    setUploads([
-      ...uploads,
+    setUploads(prev => [
+      ...prev,
       { id, name: i.name, progress: 0, status: 'preparing' }
     ]);
 
