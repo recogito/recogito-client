@@ -74,23 +74,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   }
 
-  /*
-  const onAddDummyImage = () => {
-    initDocument(supabase, 'dummy-document', project.id, defaultContext.id)
-      .then(({ document }) => {
-        setDocuments([...documents, document]);
-      })
-      .catch(error => {
-        console.error(error);
-        setError({ 
-          title: t['Something went wrong'], 
-          description: t['Could not create the document.'], 
-          type: 'error' 
-        });
-      });
-  }
-  */
-
   const onRenameProject = (name: string) => {
     updateProject(supabase, {
       ...props.project, name
