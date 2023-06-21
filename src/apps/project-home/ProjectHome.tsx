@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 import { CloudArrowUp } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { useDropzone } from 'react-dropzone';
 import { updateDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
@@ -37,7 +37,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
 
-  const onDrop = (files: File[]) => {
+  const [isDragActive, setIsDragActive] = useState(false);
+
+  const onDropFiles = (files: File[]) => {
+    console.log('drop', files);
+
+    /*
     setShowUploads(true);
 
     addUploads(files.map(file => ({
@@ -46,9 +51,35 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       contextId: defaultContext.id,
       file
     })));
+    */
   }
 
-  const { getRootProps, getInputProps, open, isDragActive } = useDropzone({ onDrop, noClick: true });
+  const { 
+    getRootProps, 
+    getInputProps, 
+    open,
+    rootRef
+  } = useDropzone({ onDrop: onDropFiles, noClick: true, noKeyboard: true });
+
+  const onDragOver = (evt: React.DragEvent) => { 
+    evt.preventDefault();
+
+    if (!isDragActive)
+      setIsDragActive(true);
+  }
+
+  const onDragLeave = (evt: React.DragEvent<HTMLDivElement>) => {
+    evt.preventDefault();
+
+    if (evt.target == rootRef.current)
+      setIsDragActive(false);
+  }
+
+  const onDrop = (evt: React.DragEvent) => {
+    evt.preventDefault();
+
+    setIsDragActive(false);
+  }
 
   const onImportRemote = (format: UploadFormat) => {
     setShowUploads(true);
@@ -129,8 +160,15 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onImport={onImportRemote} />
         </div>
 
-        <div className="project-home-grid-wrapper" {...getRootProps()}>
-          <div className="project-home-grid">
+        <div 
+          className="project-home-grid-wrapper"
+          {...getRootProps({
+            onDragOver,
+            onDragLeave,
+            onDrop
+          })}>
+
+          <div className="project-home-grid" style={isDragActive ? { pointerEvents: 'none'} : undefined}>
             {documents.map(document => (
               <DocumentCard 
                 // just a hack for now
@@ -170,7 +208,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           onOpenChange={open => !open && setError(null)} />
       </ToastProvider>
 
-      <input {...getInputProps()} />
+      <input {...getInputProps() } />
     </div>
   )
 
