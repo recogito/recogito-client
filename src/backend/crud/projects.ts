@@ -40,7 +40,6 @@ export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
         name,
         description
       `)
-      .eq('created_by', user?.id)
       .then(({ error, data }) => ({ error, data: data as Project[] })));
 
 export const updateProject = (supabase: SupabaseClient, project: Project): Response<Project> =>
