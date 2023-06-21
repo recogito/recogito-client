@@ -1,11 +1,18 @@
+.toast.upload-tracker {
+  display: block;
+  padding: 0;
+}
+
 .upload-tracker .toast-title {
   align-items: center;
   background-color: var(--gray-50);
   border-radius: var(--border-radius) var(--border-radius) 0 0;
   display: flex;
   flex-direction: row;
+  font-size: var(--font-tiny);
   justify-content: space-between;
-  padding: 10px 12px;
+  margin-bottom: 0;
+  padding: 6px 10px;
 }
 
 .upload-tracker ul {
@@ -18,7 +25,7 @@
   align-items: center;
   display: flex;
   font-size: var(--font-tiny);
-  padding: 10px 12px;
+  padding: 12px 12px;
   position: relative;
 }
 
@@ -26,7 +33,7 @@
   color: var(--brighter-blue);
   padding: 0;
   position: absolute;
-  right: 12px;
+  right: 15px;
   top: 12px;
 }
 

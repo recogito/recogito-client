@@ -39,6 +39,10 @@ export const UploadTracker = (props: UploadTrackerProps) => {
 
         <Description className="toast-description">
           <ul>
+            <li>
+              <span className="upload-name">test-1.jpg</span>
+              <ProgressCircle className="upload-progress" progress={60} />
+            </li>
             {props.uploads.map(u => (
               <li key={u.id}>
                 <span className="upload-name">{u.name}</span>
