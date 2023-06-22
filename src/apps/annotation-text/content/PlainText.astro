@@ -1,0 +1,31 @@
+---
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Document } from 'src/Types';
+
+export interface Props {
+
+  document: Document;
+
+  supabase: SupabaseClient;
+
+}
+
+const { document, supabase } = Astro.props;
+
+if (!document.bucket_id)
+  throw 'Internal server error';
+
+if (document.content_type !== 'text/plain')
+  throw 'Internal server error';
+
+const { data, error } = await supabase
+  .storage
+  .from(document.bucket_id)
+  .download(document.id);
+
+if (error)
+  throw 'Internal server error';
+    
+const content = await data.text();
+---
+{content}

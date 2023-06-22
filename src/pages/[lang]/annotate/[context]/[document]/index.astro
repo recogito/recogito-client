@@ -5,8 +5,8 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotationDesktop } from '@apps/annotation-image';
 import { TextAnnotationDesktop } from '@apps/annotation-text';
+import PlainText from '@apps/annotation-text/content/PlainText.astro';
 import { getDocumentInContext } from '@backend/helpers';
-import { Content as SampleText } from './dummy-text.md';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -72,7 +72,9 @@ if (document.content_type === 'text/plain') {
   ) : (
     <div class="container text">
       <main id="annotatable">
-        <SampleText />
+        <PlainText
+          document={document} 
+          supabase={supabase} />
       </main>
 
       <TextAnnotationDesktop 
