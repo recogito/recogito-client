@@ -38,7 +38,6 @@ export const uploadFile = (
         });
 
         uppy.upload().then(result => {
-          console.log(result);
           resolve(result);
         });
       }

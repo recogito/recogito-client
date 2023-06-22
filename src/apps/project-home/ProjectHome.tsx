@@ -9,6 +9,7 @@ import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop }
 import type { Context, Document, Project, Translations } from 'src/Types';
 
 import './ProjectHome.css';
+import type { FileRejection } from 'react-dropzone';
 
 export interface ProjectHomeProps {
 
@@ -36,23 +37,31 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
 
-  const onDrop = (dropped: File[] | string) => {
-    setShowUploads(true);
+  const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
+    if (rejected.length > 0) {
+      setError({
+        title: 'Sorry',
+        description: 'Unsupported file format.',
+        type: 'error'
+      });
+    } else {
+      setShowUploads(true);
 
-    if (Array.isArray(dropped)) {
-      addUploads(dropped.map(file => ({
-        name: file.name,
-        projectId: project.id,
-        contextId: defaultContext.id,
-        file
-      })));
-    } else if (typeof dropped === 'string') {
-      addUploads([{
-        name: dropped, // TODO find a better solution
-        projectId: project.id,
-        contextId: defaultContext.id,
-        url: dropped
-      }]);
+      if (Array.isArray(accepted)) {
+        addUploads(accepted.map(file => ({
+          name: file.name,
+          projectId: project.id,
+          contextId: defaultContext.id,
+          file
+        })));
+      } else if (typeof accepted === 'string') {
+        addUploads([{
+          name: accepted, // TODO find a better solution
+          projectId: project.id,
+          contextId: defaultContext.id,
+          url: accepted
+        }]);
+      }
     }
   }
 

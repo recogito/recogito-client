@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { FileRejection, useDropzone } from 'react-dropzone';
 
-export const useDragAndDrop = (onDrop: (arg: File[] | string) => void) => {
+export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: FileRejection[]) => void) => {
 
   const [isDragActive, setIsDragActive] = useState(false);
 
@@ -10,7 +10,14 @@ export const useDragAndDrop = (onDrop: (arg: File[] | string) => void) => {
     getInputProps, 
     open, 
     rootRef 
-  } = useDropzone({ onDrop, noClick: true, noKeyboard: true });
+  } = useDropzone({ 
+    accept: {
+      'text/plain': ['.txt']
+    },
+    noClick: true, 
+    noKeyboard: true,
+    onDrop 
+  });
 
   const handleDragOver = (evt: React.DragEvent) => { 
     evt.preventDefault();
@@ -31,7 +38,7 @@ export const useDragAndDrop = (onDrop: (arg: File[] | string) => void) => {
 
     const url = evt.dataTransfer.getData('URL');
     if (url)
-      onDrop(url);
+      onDrop(url, []);
 
     setIsDragActive(false);
   }
