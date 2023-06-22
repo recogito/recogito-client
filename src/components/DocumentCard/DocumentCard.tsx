@@ -55,7 +55,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
             value={document.name} 
             onSubmit={onRename} />
         ) : (
-          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}?type=${true ? 'img': 'txt'}`}>{document.name}</a>
+          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
         )}
       </h1>
     </article>

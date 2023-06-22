@@ -47,10 +47,20 @@ const data = hash.update(`${secret}.${contextId}.${documentId}`);
 
 const channelId = data.digest('hex');
 
-const type = Astro.url.searchParams.get('type') || '';
+let viewer;
+
+if (document.content_type === 'text/plain') {
+  viewer = 'TEXT';
+} else if (document.meta_data?.protocol === 'IIIF_IMAGE') {
+  viewer ='OPENSEADRAGON';
+} else {
+  // Should never happen
+  const error = await fetch(`/${lang}${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
 ---
 <BaseLayout title="Annotation">
-  {type === 'img' ? (
+  {viewer === 'OPENSEADRAGON' ? (
     <div class="container image">
       <ImageAnnotationDesktop 
         client:only
