@@ -54,7 +54,29 @@ export interface Document {
 
   name: string;
 
+  bucket_id?: string;
+
+  content_type?: ContentType;
+
+  meta_data?: { 
+
+    protocol: Protocol;
+
+    url: string;
+
+    meta?: object;
+
+  };
+
 }
+
+export const ContentTypes = ['text/plain', 'application/tei+xml'] as const;
+
+export type ContentType = typeof ContentTypes[number];
+
+export const Protocols = ['IIIF_IMAGE'] as const;
+
+export type Protocol = typeof Protocols[number];
 
 export interface Context {
 

@@ -38,11 +38,13 @@
 }
 
 .upload-tracker li .upload-success {
-  right: 10px;
   color: var(--green-500);
+  position: absolute;
+  right: 15px;
 }
 
 .upload-tracker li .upload-failed {
-  right: 10px;
   color: var(--red-500);
+  position: absolute;
+  right: 15px;
 }

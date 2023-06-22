@@ -132,9 +132,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
           <div className="project-home-grid" style={isDragActive ? { pointerEvents: 'none'} : undefined}>
             {documents.map(document => (
-              <DocumentCard 
-                // just a hack for now
-                isImage={document.name.toLowerCase().includes('image')}
+              <DocumentCard
                 key={document.id}
                 i18n={props.i18n} 
                 context={defaultContext}

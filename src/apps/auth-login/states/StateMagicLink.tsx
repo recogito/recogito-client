@@ -3,7 +3,6 @@ import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TextInput } from '@components/TextInput';
 import { Button } from '@components/Button';
-import { Spinner } from '@components/Spinner';
 import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
 
@@ -52,7 +51,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
   return (status === 'sent') ? (
     <div className="login-magic-link sent">
       <Button 
-        disabled 
+        disabled
         className="lg w-full success">
         <Check size={22} /> <span>{t['Link Sent']}</span>
       </Button>
@@ -90,14 +89,11 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
         )}
 
         <Button
+          busy={status === 'fetching'}
           type="submit" 
           className="primary lg w-full" 
           onClick={onSend}>
-          {status === 'fetching' ? (
-            <Spinner size={24} />
-          ) : (
-            t['Send Magic Link']
-          )}
+          <span>{t['Send Magic Link']}</span>
         </Button>
       </form>
     </div>

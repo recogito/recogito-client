@@ -62,6 +62,8 @@ export const listDocumentsInContext = (
       updated_by,
       name,
       bucket_id,
+      content_type,
+      meta_data,
       layers!inner (
         id,
         document_id,
