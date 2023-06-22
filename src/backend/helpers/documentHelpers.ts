@@ -101,6 +101,8 @@ export const getDocumentInContext = (
       updated_by,
       name,
       bucket_id,
+      content_type,
+      meta_data,
       layers!inner (
         id,
         created_at,
