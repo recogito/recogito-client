@@ -26,6 +26,9 @@ const { data, error } = await supabase
 if (error)
   throw 'Internal server error';
     
-const content = await data.text();
+// Regular expression to match single newlines
+const regex = /([^\r\n])\r?\n([^\r\n])/g;
+
+const content = (await data.text()).replace(regex, '$1 $2');;
 ---
-{content}
+{content.trim()}
