@@ -19,7 +19,7 @@ const documentId = Astro.params.document;
 
 if (!contextId || !documentId) {
   // Should never happen
-  const error = await fetch(`/${lang}/${Astro.url}/404`);
+  const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
@@ -28,7 +28,7 @@ const response = await getDocumentInContext(supabase, documentId, contextId);
 
 if (!response.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
-  const error = await fetch(`/${lang}${Astro.url}/404`);
+  const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
@@ -36,7 +36,7 @@ const [ document, layers ] = response.data;
 
 if (!document || !layers) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
-  const error = await fetch(`/${lang}${Astro.url}/500`);
+  const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
@@ -55,7 +55,7 @@ if (document.content_type === 'text/plain') {
   viewer ='OPENSEADRAGON';
 } else {
   // Should never happen
-  const error = await fetch(`/${lang}${Astro.url}/500`);
+  const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
