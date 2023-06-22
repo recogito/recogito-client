@@ -21,8 +21,8 @@ const i18n = getTranslations(Astro.request, 'project-home');
 const response = await getProjectWithContexts(supabase, projectId as string);
 
 if (response.error) { 
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  const error = await fetch(`${Astro.url}/404`);
+  return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
 if (!response.data) {
@@ -38,7 +38,8 @@ const defaultContext = contexts[0];
 const { data, error } = await listDocumentsInContext(supabase, defaultContext.id);
 
 if (error) { 
-  const error = await fetch(`${Astro.url}/500`);
+  const path = Astro.url.protocol + '//' + Astro.url.host;
+  const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
