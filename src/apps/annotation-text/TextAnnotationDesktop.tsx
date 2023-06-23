@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
 import type { PresentUser } from '@annotorious/react';
-import { TextAnnotator } from '@recogito/react-text-annotator';
+import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import type { Document, Layer, Translations } from 'src/Types';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
+import { Popup } from '@components/Annotation/Popup';
 
 import './TextAnnotationDesktop.css';
 
@@ -27,6 +28,8 @@ export interface TextAnnotationDesktopProps {
 
 export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
+  const { i18n } = props;
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   return (
@@ -45,6 +48,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           layerId={props.layers[0].id} 
           appearanceProvider={createAppearenceProvider()}
           onPresence={setPresent} />
+
+        <TextAnnotatorPopup
+          popup={props => (
+            <Popup 
+              {...props} 
+              present={present} 
+              i18n={i18n} />
+          )} />
 
         <div className="anno-desktop-right">
           <PresenceStack present={present} />

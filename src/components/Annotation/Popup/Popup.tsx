@@ -1,11 +1,13 @@
 import { Annotation } from '@components/Annotation';
 import { useAnnotator, useAnnotatorUser, Visibility } from '@annotorious/react';
-import type { OpenSeadragonPopupProps, PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 import './Popup.css';
 
-type PopupProps = OpenSeadragonPopupProps & {
+interface PopupProps {
+
+  selected: Anno;
 
   i18n: Translations;
 
@@ -20,7 +22,7 @@ export const Popup = (props: PopupProps) => {
   const me = useAnnotatorUser();
 
   // Popup only supports a single selected annotation for now
-  const selected = props.selection[0];
+  const selected = props.selected[0];
 
   const isPrivate = selected.visibility === Visibility.PRIVATE;
 
@@ -34,7 +36,7 @@ export const Popup = (props: PopupProps) => {
   return (
     <div 
       className={isPrivate ? 
-        'annotation-popup ia-annotation-popup private' : 'annotation-popup ia-annotation-popup'}>
+        'annotation-popup private' : 'annotation-popup'}>
     
       {hasBodies ? (
         isPrivate ? (

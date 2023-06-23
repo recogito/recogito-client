@@ -1,4 +1,4 @@
-.ia-annotation-popup {
+.annotation-popup {
   background-color: #fff;
   border-radius: 6px;
   box-shadow:
@@ -10,42 +10,45 @@
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-size: 16px;
   position: absolute;
   pointer-events: all;
   top: 10px;
   width: 340px;
 }
+
 .annotation-card.private {
   border-radius: 6px;
 }
 
-.ia-annotation-popup > ul {
+.annotation-popup > ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.ia-annotation-popup > header,
-.ia-annotation-popup > ul li {
+.annotation-popup > header,
+.annotation-popup > ul li {
   padding: 10px;
   position: relative;
 } 
 
-.ia-annotation-popup > ul li {
+.annotation-popup > ul li {
   border-top: 1px solid rgba(0, 0, 0, 0.08);
   transition: background-color 1500ms;
 } 
 
-.ia-annotation-popup > ul li:first-child {
+.annotation-popup > ul li:first-child {
   border-top: none;
 }
 
-.ia-annotation-popup > ul li.is-new {
+.annotation-popup > ul li.is-new {
   background-color: var(--emphasis-light);
   border-color: var(--emphasis-dark);
 }
 
-.ia-annotation-popup > ul li p {
+.annotation-popup > ul li p {
   font-size: var(--font-tiny);
   line-height: 140%;
   margin: 0;
