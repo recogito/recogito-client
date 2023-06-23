@@ -36,7 +36,7 @@ export const Popup = (props: PopupProps) => {
   return (
     <div 
       className={isPrivate ? 
-        'annotation-popup private' : 'annotation-popup'}>
+        'annotation-popup private not-annotatable' : 'annotation-popup not-annotatable'}>
     
       {hasBodies ? (
         isPrivate ? (
