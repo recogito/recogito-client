@@ -49,6 +49,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           appearanceProvider={createAppearenceProvider()}
           onPresence={setPresent} />
 
+        <Annotation.LifecycleLogger />
+
         <TextAnnotatorPopup
           popup={props => (
             <Annotation.Popup 
