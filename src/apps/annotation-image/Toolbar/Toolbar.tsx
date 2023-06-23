@@ -19,7 +19,7 @@ interface ToolbarProps {
 
 export const Toolbar = (props: ToolbarProps) => {
 
-  const selection = useSelection();
+  const { selected } = useSelection();
 
   const store = useAnnotationStore();
 
@@ -33,7 +33,7 @@ export const Toolbar = (props: ToolbarProps) => {
   }
 
   const onDeleteSelection = () => {
-    store.bulkDeleteAnnotation(selection);
+    store.bulkDeleteAnnotation(selected);
   }
 
   useEffect(() => {
@@ -87,7 +87,7 @@ export const Toolbar = (props: ToolbarProps) => {
       </div>
 
       <div 
-        className={selection.length > 0 ? 
+        className={selected.length > 0 ? 
           "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay" :
           "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden"
         }>
