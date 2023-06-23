@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { Document, Layer, Translations } from 'src/Types';
-import { Popup } from '@components/Annotation/Popup';
+import { Annotation } from '@components/Annotation';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -72,7 +72,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
           <OpenSeadragonPopup
             popup ={props => (
-              <Popup 
+              <Annotation.Popup 
                 {...props} 
                 present={present} 
                 i18n={i18n} /> )} />

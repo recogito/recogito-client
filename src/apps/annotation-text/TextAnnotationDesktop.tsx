@@ -4,7 +4,7 @@ import type { PresentUser } from '@annotorious/react';
 import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import type { Document, Layer, Translations } from 'src/Types';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
-import { Popup } from '@components/Annotation/Popup';
+import { Annotation } from '@components/Annotation';
 
 import './TextAnnotationDesktop.css';
 
@@ -51,7 +51,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
         <TextAnnotatorPopup
           popup={props => (
-            <Popup 
+            <Annotation.Popup 
               {...props} 
               present={present} 
               i18n={i18n} />

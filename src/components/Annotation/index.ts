@@ -1,5 +1,6 @@
 import { Creator } from './Creator';
 import { EmptyCard, PrivateCard, PublicCard } from './Card';
+import { Popup } from './Popup';
 import { ReplyForm } from './ReplyForm';
 
 export const Annotation = {
@@ -11,6 +12,8 @@ export const Annotation = {
   PrivateCard,
 
   PublicCard,
+
+  Popup,
 
   ReplyForm
 
