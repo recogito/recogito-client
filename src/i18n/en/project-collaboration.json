@@ -1,0 +1,14 @@
+{
+    "E-Mail": "E-Mail",
+    "Student": "Student",
+    "Professor": "Professor",
+    "TA": "TA",
+    "Auditor": "Auditor",
+    "Role": "Role",
+    "Invite": "Invite",
+    "Invite Users to Project": "Invite Users To Project",
+
+    "Something went wrong": "Something went wrong",
+    "Could not invite user": "Could not invite user",
+    "User invited": "User invited"
+}
