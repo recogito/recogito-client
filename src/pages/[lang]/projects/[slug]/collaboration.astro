@@ -3,9 +3,13 @@ import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getUserProfile } from '@backend/auth';
 import { getProject } from '@backend/crud';
-import { getLangFromUrl } from '@i18n';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { InviteUsersToProject } from '@apps/project-collaboration';
 
 const lang = getLangFromUrl(Astro.url);
+
+const i18n = getTranslations(Astro.request, 'project-collaboration');
+
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
@@ -16,11 +20,16 @@ const user = await getUserProfile(supabase);
 const projectId = Astro.params.slug;
 
 const response = await getProject(supabase, projectId as string);
+
 ---
 <ProjectLayout active="collaboration" user={user} project={response.data}>
   {response.error ? (
     <div>Something went wrong</div>
   ) : (
-    <div>Collaboration</div>
+    <InviteUsersToProject
+        client:load
+        i18n={i18n}
+        project={response.data}
+        />
   )}
 </ProjectLayout>

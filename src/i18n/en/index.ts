@@ -6,6 +6,7 @@ import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import dashboardSidebar from './dashboard-sidebar.json';
 import error from './error.json';
+import projectCollaboration from './project-collaboration.json';
 import projectHome from './project-home.json';
 import projectSidedbar from './project-sidebar.json';
 
@@ -17,6 +18,7 @@ export default {
   'dashboard-projects': dashboardProjects,
   'dashboard-sidebar': dashboardSidebar,
   'error': error,
+  'project-collaboration': projectCollaboration,
   'project-home': projectHome,
   'project-sidebar': projectSidedbar
 }

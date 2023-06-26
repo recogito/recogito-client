@@ -50,3 +50,24 @@ export const updateProject = (supabase: SupabaseClient, project: Project): Respo
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
+
+export const inviteUserToProject = (supabase: SupabaseClient, email: string, projectId: string, role: string) =>
+  supabase
+    .from('roles')
+    .select('id')
+    .eq('name', role)
+    .single()
+    .then(({ error, data }) => {
+      if (data) {
+      supabase
+        .from('project_groups')
+        .select('id')
+        .eq('role_id', data.id)
+        .eq('project_id', projectId)
+        .single()
+        .then(({ error, data }) => ({ error, data })); //insert statement would happen here: insert email and data.id into invites table
+        }
+      else {
+        return ({ error, data });
+      }
+      });
