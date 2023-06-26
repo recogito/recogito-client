@@ -37,6 +37,7 @@ export const Popup = (props: PopupProps) => {
 
   return (
     <div 
+      key={selected.id}
       className={isPrivate ? 
         'annotation-popup private not-annotatable' : 'annotation-popup not-annotatable'}>
     
