@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
 import type { Project, Translations } from 'src/Types';
+import { Button } from '@components/Button';
 import { ProjectCard } from '@components/ProjectCard';
 
 export interface ProjectsGridProps {
@@ -19,6 +21,20 @@ export interface ProjectsGridProps {
 export const ProjectsGrid = (props: ProjectsGridProps) => {
 
   const { t, lang } = props.i18n;
+
+  const [fetching, setFetching] = useState(false);
+
+  const onCreateProject = () => {
+    if (fetching)
+      return;
+
+    setFetching(true);
+    props.onCreateProject();
+  }
+
+  useEffect(() => {
+    setFetching(false);
+  }, [props.projects]);
   
   return (
     <div className="dashboard-projects-home">
@@ -37,9 +53,12 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
       </header>
 
       <main>
-        <button className="primary" onClick={props.onCreateProject}>
+        <Button 
+          className="primary" 
+          onClick={onCreateProject}
+          busy={fetching}>
           <Plus size={20} /> <span>{t['Create New Project']}</span>
-        </button>
+        </Button>
 
         <div className="dashboard-projects-grid">
           {props.projects.map(project => (
