@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -31,6 +31,12 @@ export const ReplyForm = (props: ReplyFormProps) => {
   const store = useAnnotationStore();
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
+
+  useEffect(() => {
+    if (textarea.current) {
+      textarea.current.focus({ preventScroll: true });
+    }
+  }, []);
 
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();
@@ -67,7 +73,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
   }
 
   return (
-    <form className="annotation-reply-form no-drag">
+    <form 
+      className="annotation-reply-form no-drag">
       {isPublic ? (
         <Avatar 
           id={me.id} 

@@ -31,7 +31,9 @@ export const Popup = (props: PopupProps) => {
   const hasBodies = selected.bodies.length > 0;
 
   // Close the popup after a reply
-  const onReply = () => { } //anno.selection.clear();
+  const onReply = () => { 
+    anno.selection.clear();
+  }
 
   return (
     <div 
