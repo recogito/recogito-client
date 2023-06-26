@@ -24,7 +24,7 @@ export const Toolbar = (props: ToolbarProps) => {
   }
 
   return (
-    <div className="ta-toolbar-container">
+    <div className="ta-toolbar-container not-annotatable">
       <div className="ta-toolbar-context ta-toolbar-context-left">
         
       </div>
