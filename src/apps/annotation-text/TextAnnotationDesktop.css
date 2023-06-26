@@ -1,3 +1,56 @@
 .ta-desktop .presence-stack {
   margin: 10px;
 }
+
+.ta-toolbar-container {
+  align-items: center;
+  display: flex;
+}
+
+.ta-toolbar-context {
+  border: none;
+  border-radius: 50%;
+  margin: 0 6px;
+  transition: opacity 250ms ease-in-out;
+}
+
+.ta-toolbar-context.hidden {
+  opacity: 0;
+}
+
+.ta-toolbar-context button {
+  border-radius: 50%;
+}
+
+.ta-toolbar-context button.delete {
+  background-color: var(--red-500);
+}
+
+.ta-toolbar-context button.delete svg {
+  color: #fff;
+}
+
+.ta-toolbar {
+  align-items: center;
+  bottom: 30px;
+  border-radius: 9999px;
+  display: flex;
+  flex-direction: row;
+}
+
+.ta-toolbar button {
+  border-radius: 50%;
+  vertical-align: bottom;
+}
+
+.ta-toolbar button svg {
+  color: var(--font-dark);
+}
+
+.ta-toolbar :is(button, a.button) + :is(button, a.button) {
+  margin-left: 6px;
+}
+
+.ta-toolbar section {
+  padding: 6px;
+}

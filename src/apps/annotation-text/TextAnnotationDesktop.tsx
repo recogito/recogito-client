@@ -5,6 +5,8 @@ import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotato
 import type { Document, Layer, Translations } from 'src/Types';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
+import type { PrivacyMode } from '@components/PrivacySelector';
+import { Toolbar } from './Toolbar';
 
 import './TextAnnotationDesktop.css';
 
@@ -32,6 +34,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
+  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
   return (
     <div className="anno-desktop ta-desktop">
       <Annotorious>
@@ -47,7 +51,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           channel={props.channelId}
           layerId={props.layers[0].id} 
           appearanceProvider={createAppearenceProvider()}
-          onPresence={setPresent} />
+          onPresence={setPresent} 
+          privacyMode={privacy === 'PRIVATE'}/>
 
         <Annotation.LifecycleLogger />
 
@@ -64,7 +69,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         </div>
 
         <div className="anno-desktop-bottom">
-          
+          <Toolbar 
+            i18n={props.i18n}
+            privacy={privacy}
+            onChangePrivacy={setPrivacy} />
         </div>
       </Annotorious>
     </div>

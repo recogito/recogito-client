@@ -7,7 +7,7 @@ import './Popup.css';
 
 interface PopupProps {
 
-  selected: Anno;
+  selected: Anno[];
 
   i18n: Translations;
 
