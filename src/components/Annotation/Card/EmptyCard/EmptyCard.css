@@ -7,7 +7,7 @@
   --anim-v-offset: -5px;
 }
 
-.typing {
+.annotation-card.empty .typing {
   position: absolute;
   right: 35px;
   top: 26px;
