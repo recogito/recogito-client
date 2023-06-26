@@ -45,6 +45,7 @@
   line-height: 140%;
   margin: 2px 0;
   outline: none;
+  overflow: hidden;
   padding: 8px 5px;
   resize: none;
   vertical-align: top;
