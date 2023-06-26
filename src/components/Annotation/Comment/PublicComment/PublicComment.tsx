@@ -36,6 +36,7 @@ export const PublicComment = (props: CommentProps) => {
 
       {isMine && (
         <PublicCommentActions 
+          i18n={props.i18n}
           isFirst={props.index === 0}
           onDeleteAnnotation={props.onDeleteAnnotation}
           onDeleteComment={onDeleteComment} />

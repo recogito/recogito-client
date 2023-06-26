@@ -1,0 +1,14 @@
+{
+  "Anonymous": "Anonymous",
+
+  "Public": "Public",
+  "Private": "Private",
+  "Public_Hint_01": "Public annotations are visible to anyone with access to this document. This may include",
+  "Public_Hint_02": "invited users or the general public.",
+  "Private_Hint_01": "Annotations you create in Private mode will be visible to",
+  "Private_Hint_02": "no-one except you.",
+
+  "Delete this annotation": "Delete this annotation",
+  "Delete this comment": "Delete this comment",
+  "Make this annotation public": "Make this annotation public"
+}

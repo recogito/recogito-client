@@ -1,9 +1,12 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { DotsThreeVertical, Trash, UsersThree } from '@phosphor-icons/react';
+import type { Translations } from 'src/Types';
 
 const { Content, Item, Root, Trigger } = Dropdown;
 
 interface PrivateCommentActionsProps {
+
+  i18n: Translations;
 
   isFirst?: boolean;
 
@@ -16,6 +19,8 @@ interface PrivateCommentActionsProps {
 }
 
 export const PrivateCommentActions = (props: PrivateCommentActionsProps) => {
+
+  const { t } = props.i18n;
 
   return (
     <Root>
@@ -30,17 +35,17 @@ export const PrivateCommentActions = (props: PrivateCommentActionsProps) => {
           {props.isFirst && (
             <>
               <Item className="dropdown-item" onSelect={props.onMakePublic}>
-                <UsersThree size={16} /> <span>Make this annotation public</span>
+                <UsersThree size={16} /> <span>{t['Make this annotation public']}</span>
               </Item>
 
               <Item className="dropdown-item" onSelect={props.onDeleteAnnotation}>
-                <Trash size={16} /> <span>Delete this annotation</span>
+                <Trash size={16} /> <span>{t['Delete this annotation']}</span>
               </Item>
             </>
           )}
 
           <Item className="dropdown-item" onSelect={props.onDeleteComment}>
-            <Trash size={16} /> <span>Delete this comment</span>
+            <Trash size={16} /> <span>{t['Delete this comment']}</span>
           </Item>
         </div>
       </Content>

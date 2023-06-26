@@ -35,6 +35,7 @@ export const PrivateComment = (props: PrivateCommentProps) => {
       </div>
 
       <PrivateCommentActions 
+        i18n={props.i18n}
         isFirst={props.index === 0}
         onMakePublic={props.onMakePublic}
         onDeleteAnnotation={props.onDeleteAnnotation}

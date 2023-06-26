@@ -39,7 +39,7 @@ export const PrivacySelector = (props: PrivacySelectorProps) => {
             <UsersThree size={20} />
           )}
           <span>
-            {mode === 'PRIVATE' ? 'Private' : 'Public'}
+            {mode === 'PRIVATE' ? t['Private'] : t['Public']}
           </span>   
           <CaretDown size={10} weight="bold" />
         </button>
@@ -52,10 +52,9 @@ export const PrivacySelector = (props: PrivacySelectorProps) => {
               <ItemIndicator className="dropdown-indicator">
                 <Check size={20} />
               </ItemIndicator>
-              <Detective size={20} /> <strong>Private</strong>
+              <Detective size={20} /> <strong>{t['Private']}</strong>
               <p>
-                Annotations you create in Private mode will be visible
-                to <strong>no-one except you</strong>.
+                {t['Private_Hint_01']} <strong>{t['Private_Hint_02']}</strong>
               </p>
             </RadioItem>
 
@@ -63,11 +62,9 @@ export const PrivacySelector = (props: PrivacySelectorProps) => {
               <ItemIndicator className="dropdown-indicator">
                 <Check size={20} />
               </ItemIndicator>
-              <UsersThree size={20} /> <strong>Public</strong>
+              <UsersThree size={20} /> <strong>{t['Public']}</strong>
               <p>
-                Public annotations are visible to anyone with
-                access to this document. This may include <strong>invited
-                users or the general public</strong>.
+                {t['Public_Hint_01']} <strong>{t['Public_Hint_02']}</strong>
               </p>
             </RadioItem>
           </RadioGroup>
