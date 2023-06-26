@@ -1,6 +1,6 @@
 import { Detective } from '@phosphor-icons/react';
-import TimeAgo from 'timeago-react';
 import { useAnnotationStore } from '@annotorious/react';
+import { TimeAgo } from '@components/TimeAgo';
 import { PrivateCommentActions } from './PrivateCommentActions';
 import type { CommentProps } from '../CommentProps';
 
@@ -29,7 +29,7 @@ export const PrivateComment = (props: PrivateCommentProps) => {
       
       <div className="comment-body">
         {comment.created && (
-          <TimeAgo datetime={comment.created} />
+          <TimeAgo datetime={comment.created} locale={props.i18n.lang} />
         )}
         <p>{comment.value}</p>
       </div>

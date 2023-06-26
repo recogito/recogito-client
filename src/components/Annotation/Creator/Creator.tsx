@@ -1,6 +1,6 @@
-import TimeAgo from 'timeago-react';
 import type { PresentUser, User } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
+import { TimeAgo } from '@components/TimeAgo';
 import type { Translations } from 'src/Types';
 
 import './Creator.css';
@@ -19,7 +19,9 @@ export const Creator = (props: CreatorProps) => {
 
   const { creator, createdAt } = props;
 
-  const { t } = props.i18n;
+  const { t, lang } = props.i18n;
+  
+  console.log(lang);
 
   const isAnonymous = !creator?.name || creator.isGuest;
 
@@ -45,7 +47,7 @@ export const Creator = (props: CreatorProps) => {
 
             <div className="annotation-created-at">
               {createdAt && (
-                <TimeAgo datetime={createdAt} />
+                <TimeAgo datetime={createdAt} locale={lang} />
               )}
             </div>
           </div>
@@ -64,7 +66,7 @@ export const Creator = (props: CreatorProps) => {
 
             <div className="annotation-created-at">
               {createdAt && (
-                <TimeAgo datetime={createdAt} />
+                <TimeAgo datetime={createdAt} locale={lang} />
               )}
             </div>
           </div>
