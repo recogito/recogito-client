@@ -68,5 +68,10 @@
 }
 
 .ia-desktop .presence-stack {
-  margin: 10px;
+  margin: 4px 8px;
+}
+
+.ia-desktop .presence-stack .avatar {
+  height: 36px;
+  width: 36px;
 }

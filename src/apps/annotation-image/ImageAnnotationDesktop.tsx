@@ -3,6 +3,7 @@ import type { Document, Layer, Translations } from 'src/Types';
 import { Annotation } from '@components/Annotation';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
+import { AnnotationDesktop } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   Annotorious, 
@@ -80,7 +81,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
                 i18n={i18n} /> )} />
 
           <div className="anno-desktop-right">
-            <PresenceStack present={present} />
+            <PresenceStack 
+              present={present} />
+
+            <AnnotationDesktop.ViewMenu 
+              i18n={i18n}
+              present={present} />
           </div>
 
           <div className="anno-desktop-bottom">

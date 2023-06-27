@@ -1,4 +1,4 @@
-import type { PresentUser } from '@annotorious/react';
+import { isMe, type PresentUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import { Avatar } from '@components/Avatar';
 
@@ -6,13 +6,18 @@ import './PresenceStack.css';
 
 interface PresenceStackProps {
 
+  showMe?: boolean;
+
   present: PresentUser[];
 
 }
 
 export const PresenceStack = (props: PresenceStackProps) => {
 
-  const transition = useTransition(props.present, {
+  const present = props.showMe ? 
+    props.present : props.present.filter(u => !isMe(u));
+
+  const transition = useTransition(present, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }, 
