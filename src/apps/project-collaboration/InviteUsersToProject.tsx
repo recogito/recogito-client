@@ -33,6 +33,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
         },
 
         onSubmit: values => {
+            console.log(values);
             inviteUserToProject(supabase, values.email, project.id, values.role).then((result) => {
                 if (result?.error) {
                   console.error(result.error);

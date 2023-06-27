@@ -51,7 +51,7 @@ export const updateProject = (supabase: SupabaseClient, project: Project): Respo
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
-export const inviteUserToProject = (supabase: SupabaseClient, email: string, projectId: string, role: string) =>
+export const inviteUserToProject = (supabase: SupabaseClient, email: string, project_id: string, role: string) =>
   supabase
     .from('roles')
     .select('id')
@@ -63,11 +63,29 @@ export const inviteUserToProject = (supabase: SupabaseClient, email: string, pro
         .from('project_groups')
         .select('id')
         .eq('role_id', data.id)
-        .eq('project_id', projectId)
+        .eq('project_id', project_id)
         .single()
-        .then(({ error, data }) => ({ error, data })); //insert statement would happen here: insert email and data.id into invites table
+        .then(({ error, data }) => {
+          if (data) {
+            const project_group_id = data.id;
+            supabase
+              .from('invites')
+              .insert({ email, project_id, project_group_id })
+              .select()
+              .single()
+              .then(({ error, data }) => ({ error, data }));
+          }
+        }); 
         }
       else {
         return ({ error, data });
       }
       });
+
+export const retrievePendingInvites = async (supabase: SupabaseClient) => {
+  const { count } = await supabase
+    .from('invites')
+    .select('*', { count: 'exact', head: true })
+    .eq('email', 'rebecca.ann.black@gmail.com')
+  return count;
+}

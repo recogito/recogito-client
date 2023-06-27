@@ -2,6 +2,12 @@ import { ArrowUpRight, SignOut } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
 import './DashboardSidebar.css';
+import { useEffect, useState } from 'react';
+import { retrievePendingInvites } from '@backend/crud';
+import { getMyProfile } from '@backend/crud/profiles';
+
+import { supabase } from '@backend/supabaseBrowserClient';
+import NotificationIcon from '@components/Notification/Notification';
 
 /**
  * Note that we're using React to render this (otherwise static) component rather
@@ -13,6 +19,16 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
 
   const { lang, t } = props.i18n;
 
+  const [ pending, setPending ] = useState(0);
+
+  useEffect(() => {
+    retrievePendingInvites(supabase).then((count) => {
+      if (count) {
+        setPending(count)
+      }
+    });
+  });
+
   return (
     <aside className="dashboard-sidebar">
       <h1>{t['Dashboard']}</h1>
@@ -20,6 +36,9 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
         <ul>
           <li>
             <h2>{t['Projects']}</h2>
+            { pending > 0 && (
+              <NotificationIcon count={pending} />
+            )}
             <ul>
               <li>
                 <a href={`/${lang}/projects`}>{t['All projects']}</a>
