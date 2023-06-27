@@ -74,3 +74,14 @@
 .dashboard-sidebar ul ul li {
   padding: 0 25px;
 }
+
+.dashboard-sidebar .section {
+  border-bottom: 1px solid var(--dashboard-section-border);
+  padding: 0 0 20px 0;
+}
+
+.dashboard-sidebar .flexrow {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+}
