@@ -20,6 +20,7 @@ if (error) {
 }
 
 // note we are passing the email in for now, but once RLS is set up on invites table that shouldn't actually be necessary I think?
+// also this should probably not be managed here, since many different components might want to see this number...
 const pending = await retrievePendingInvites(supabase, data.email)
 ---
 <BaseLayout title="Dashboard">	
