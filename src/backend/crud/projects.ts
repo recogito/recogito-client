@@ -82,10 +82,10 @@ export const inviteUserToProject = (supabase: SupabaseClient, email: string, pro
       }
       });
 
-export const retrievePendingInvites = async (supabase: SupabaseClient) => {
+export const retrievePendingInvites = async (supabase: SupabaseClient, email: string) => {
   const { count } = await supabase
     .from('invites')
     .select('*', { count: 'exact', head: true })
-    .eq('email', 'rebecca.ann.black@gmail.com')
+    .eq('email', email)
   return count;
 }

@@ -13,19 +13,9 @@ import NotificationIcon from '@components/NotificationIcon/NotificationIcon';
  * of Phosphor Icons as a depdency. (Plus: icons also look slightly different between
  * React and Astro versions!)
  */
-export const DashboardSidebar = (props: { i18n: Translations }) => {
+export const DashboardSidebar = (props: { i18n: Translations, pending: number }) => {
 
   const { lang, t } = props.i18n;
-
-  const [ pending, setPending ] = useState(0);
-
-  useEffect(() => {
-    retrievePendingInvites(supabase).then((count) => {
-      if (count) {
-        setPending(count)
-      }
-    });
-  });
 
   return (
     <aside className="dashboard-sidebar">
@@ -40,8 +30,8 @@ export const DashboardSidebar = (props: { i18n: Translations }) => {
           <li>
             <div className={`section flexrow`} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'baseline' }}>
               <h2><a href={`/${lang}/notifications`}>{t['Notifications']}</a></h2>
-              { pending > 0 && (
-                <NotificationIcon count={pending} />
+              { props.pending > 0 && (
+                <NotificationIcon count={props.pending} />
               )}
             </div>
           </li>
