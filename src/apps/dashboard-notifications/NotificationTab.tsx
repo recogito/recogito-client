@@ -2,50 +2,51 @@ import { getContext } from "@backend/crud";
 import { supabase } from "@backend/supabaseBrowserClient";
 import NotificationCard from "@components/NotificationCard/NotificationCard";
 import { useEffect, useState } from "react";
-import type { MyProfile, Translations } from "src/Types";
+import type { Invitation, MyProfile, Translations } from "src/Types";
 import './NotificationTab.css';
+import { processAcceptInvite, processIgnoreInvite } from "@backend/crud/notifications";
 
 
-interface NotificationTabProps {
+export interface NotificationTabProps {
     i18n: Translations,
-    notificationList?: any[] //type this better later
+    invitationList?: Invitation[] 
 }
 
 const NotificationTab = (props: NotificationTabProps) => {
     const { t } = props.i18n;
-    const [ invites, setInvites ] = useState([]);
+    const [ invites, setInvites ] = useState<any[]>([]);
 
-    const dummyData = [
-        {
-            invitedBy: 'Rebecca',
-            projectName: 'A cool project',
-            inviteID: '6443ba2d-5b2e-4dae-8fa0-67aee212ae7c',
-            onAccept: () => (console.log('accept 6443ba2d-5b2e-4dae-8fa0-67aee212ae7c')),
-            onIgnore: () => (console.log('ignore 6443ba2d-5b2e-4dae-8fa0-67aee212ae7c'))
-        },
-        {
-            invitedBy: 'Some random person',
-            projectName: 'A boring project',
-            inviteID: 'sdfsdfsdwer0',
-            onAccept: () => (console.log('accept sdfsdfsdwer0')),
-            onIgnore: () => (console.log('ignore sdfsdfsdwer0'))
-        }
-    ]
+    const removeInviteFromList = (id: string) => {
+        const updatedList = invites?.filter((i) => i.id == id);
+        setInvites(updatedList);
+    };
 
+    useEffect(() => {
+        const cardData = (props.invitationList && props.invitationList.length > 0) ? props.invitationList.map((i) => ({
+            ...i,
+            onAccept: () => processAcceptInvite(supabase, i.id).then(() => removeInviteFromList(i.id)),
+            onIgnore: () => processIgnoreInvite(supabase, i.id).then(() => removeInviteFromList(i.id))
+        })) : [];
+        setInvites(cardData);
+    }, []);
+
+    
     return (
         <div className="dashboard-notifications">
             <h1>Pending Invitations</h1>
             <div className="notification-grid">
-                {dummyData.map((i) => (
+                {invites.length > 0 ? invites.map((i) => (
                     <NotificationCard
-                        key={i.inviteID}
-                        inviteId={i.inviteID}
-                        invitedBy={i.invitedBy}
-                        projectName={i.projectName}
+                        key={i.id}
+                        inviteId={i.id}
+                        invitedBy={i.invited_by_name ? i.invited_by_name : 'a secret admirer'}
+                        projectName={i.project_name ? i.project_name : 'a secret project'}
                         onAccept={i.onAccept}
                         onIgnore={i.onIgnore}
                         />
-                ))}
+                )) : (
+                    <p>You have no invitations pending at the moment!</p>
+                )}
             </div>
         </div>
     )

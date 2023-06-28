@@ -2,8 +2,8 @@
 import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
-import { getMyProfile } from '@backend/crud/profiles';
 import NotificationTab from '@apps/dashboard-notifications/NotificationTab';
+import { listMyInvites } from '@backend/crud/notifications';
 
 const i18n = getTranslations(Astro.request, 'notifications');
 
@@ -11,7 +11,7 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${i18n.lang}/sign-in`);
 
-const { error, data } = await getMyProfile(supabase);
+const { error, data } = await listMyInvites(supabase);
 
 if (error) { 
   const error = await fetch(`${Astro.url}/500`);
@@ -37,7 +37,7 @@ if (error) {
     <NotificationTab
       client:load
       i18n={i18n}
-      profile={data} />
+      invitationList={data} />
   </main>
 </DashboardLayout>
 
