@@ -1,0 +1,57 @@
+---
+import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getTranslations } from '@i18n';
+import { getMyProfile } from '@backend/crud/profiles';
+import NotificationTab from '@apps/dashboard-notifications/NotificationTab';
+
+const i18n = getTranslations(Astro.request, 'notifications');
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+if (!supabase)
+  return Astro.redirect(`/${i18n.lang}/sign-in`);
+
+const { error, data } = await getMyProfile(supabase);
+
+if (error) { 
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
+---
+<DashboardLayout>
+  <header>
+    <nav class="breadcrumbs">
+      <ol>
+        <li>
+          <a href={`/${i18n.lang}/projects`}>INeedAName</a>
+        </li>
+
+        <li>
+          <a class="breadcrumb-current">{i18n.t['Notifications']}</a>
+        </li>
+      </ol>
+    </nav>
+  </header>
+
+  <main>
+    <NotificationTab
+      client:load
+      i18n={i18n}
+      profile={data} />
+  </main>
+</DashboardLayout>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+  }
+
+  main {
+    padding: 30px 40px;
+  }
+</style>
