@@ -163,3 +163,19 @@ export interface Translations {
   t: { [key: string]: string };
 
 }
+
+export interface Invitation {
+
+  id: string;
+
+  invited_by_name?: string;
+
+  project_name?: string;
+
+  project_id: string;
+
+  accepted?: boolean;
+
+  ignored?: boolean;
+
+}

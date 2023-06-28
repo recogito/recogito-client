@@ -87,5 +87,7 @@ export const retrievePendingInvites = async (supabase: SupabaseClient, email: st
     .from('invites')
     .select('*', { count: 'exact', head: true })
     .eq('email', email)
+    .is('accepted', false)
+    .is('ignored', false)
   return count;
 }
