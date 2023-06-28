@@ -6,6 +6,8 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud/profiles';
 import { retrievePendingInvites } from '@backend/crud';
 
+const i18n = getTranslations(Astro.request, 'dashboard-sidebar');
+
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${i18n.lang}/sign-in`);
@@ -21,7 +23,7 @@ if (error) {
 const pending = await retrievePendingInvites(supabase, data.email)
 ---
 <BaseLayout title="Dashboard">	
-  <DashboardSidebar client:load i18n={getTranslations(Astro.request, 'dashboard-sidebar')} pending={pending ? pending : 0}/>
+  <DashboardSidebar client:load i18n={i18n} pending={pending ? pending : 0}/>
 
   <div class="container">
     <slot />
