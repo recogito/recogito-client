@@ -1,23 +1,19 @@
 import { BaseCard } from '../BaseCard';
 import type { CardProps } from '../CardProps';
 import { PublicComment } from '../../Comment/PublicComment';
-import { useAnnotationStore } from '@annotorious/react';
 
 export const PublicCard = (props: CardProps) => {
 
-  const store = useAnnotationStore();
-
-  const onDeleteAnnotation = () => 
-    store.deleteAnnotation(props.annotation);
+  const cls = props.className;
 
   return (
-    <div className="annotation-card public">
+    <div 
+      className={cls ? `${cls} annotation-card public` : 'annotation-card public'}>
       <BaseCard 
         {...props} 
         comment={props => (
           <PublicComment 
-            {...props} 
-            onDeleteAnnotation={onDeleteAnnotation} />
+            {...props} />
         )}/>
     </div>
   )

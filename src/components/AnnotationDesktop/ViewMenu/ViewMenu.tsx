@@ -1,11 +1,12 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import { Chats, MagnifyingGlass, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
-import type { PresentUser } from '@annotorious/react';
-import { AnnotationList } from '../AnnotationList';
+import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Translations } from 'src/Types';
+import { AnnotationList } from '../AnnotationList';
+import { ViewMenuPanel } from './ViewMenuPanel';
 
 import './ViewMenu.css';
 
@@ -15,13 +16,17 @@ interface ViewMenuProps {
 
   present: PresentUser[];
 
+  onChangePanel(panel: ViewMenuPanel | undefined): void;
+
+  beforeSelectAnnotation(a?: Annotation): void;
+
 }
 
 export const ViewMenu = (props: ViewMenuProps) => {
 
   const me = props.present.find(isMe);
 
-  const [panel, setPanel] = useState<ReactNode | undefined>();
+  const [panel, _setPanel] = useState<ViewMenuPanel | undefined>();
 
   const headerTransition = useTransition([panel], {
     from: { opacity: 0, width: 0 },
@@ -41,11 +46,13 @@ export const ViewMenu = (props: ViewMenuProps) => {
     }
   });
 
-  const showAnnotationList = () => panel ? setPanel(undefined) : setPanel(
-    <AnnotationList
-      i18n={props.i18n} 
-      present={props.present} />
-  );
+  const setPanel = (p: ViewMenuPanel | undefined) => {
+    _setPanel(p);
+    props.onChangePanel(p);
+  }
+
+  const togglePanel = (p: ViewMenuPanel) =>
+    panel === p ? setPanel(undefined) : setPanel(p);
 
   return (
     <div 
@@ -54,7 +61,9 @@ export const ViewMenu = (props: ViewMenuProps) => {
       <div 
         className="anno-menubar anno-desktop-overlay view-menu">
         <section>
-          <button onClick={showAnnotationList}>
+          <button 
+            className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
+            onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
             <Chats />
           </button>
 
@@ -88,7 +97,12 @@ export const ViewMenu = (props: ViewMenuProps) => {
 
       {panelTransition((style, panel) => panel && (
         <animated.aside style={style}>
-          {panel}
+          {panel === ViewMenuPanel.ANNOTATIONS && (
+            <AnnotationList 
+              i18n={props.i18n}
+              present={props.present} 
+              beforeSelect={props.beforeSelectAnnotation} />
+          )}
         </animated.aside>
       ))}
     </div>

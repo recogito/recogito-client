@@ -3,9 +3,11 @@ import type { Translations } from 'src/Types';
 
 export interface CardProps {
 
-  i18n: Translations;
-  
   annotation: Annotation;
+
+  className?: string;
+
+  i18n: Translations;
   
   present: PresentUser[];
 

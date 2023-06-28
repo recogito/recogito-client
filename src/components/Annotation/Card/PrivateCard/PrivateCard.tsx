@@ -1,4 +1,4 @@
-import { useAnnotationStore, type Annotation } from '@annotorious/react';
+import { useAnnotationStore } from '@annotorious/react';
 import { BaseCard } from '../BaseCard';
 import type { CardProps } from '../CardProps';
 import { PrivateComment } from '../../Comment/PrivateComment/PrivateComment';
@@ -6,6 +6,8 @@ import { PrivateComment } from '../../Comment/PrivateComment/PrivateComment';
 import './PrivateCard.css';
 
 export const PrivateCard = (props: CardProps) => {
+
+  const cls = props.className;
 
   const store = useAnnotationStore();
 
@@ -15,18 +17,15 @@ export const PrivateCard = (props: CardProps) => {
       visibility: undefined
     });
 
-  const onDeleteAnnotation = () => 
-    store.deleteAnnotation(props.annotation);
-
   return (
-    <div className="annotation-card private">
+    <div
+      className={cls ? `${cls} annotation-card private` : 'annotation-card private'}> 
       <BaseCard 
         {...props} 
         comment={props => (
           <PrivateComment 
             {...props} 
-            onMakePublic={onMakePublic} 
-            onDeleteAnnotation={onDeleteAnnotation}/>
+            onMakePublic={onMakePublic} />
         )}/>
     </div>
   )

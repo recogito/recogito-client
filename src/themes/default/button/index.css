@@ -50,7 +50,7 @@ button:hover:not(:disabled), a.button:hover {
 }
 
 button:focus-visible {
-  box-shadow: 0 0 0 3px rgb(22, 97, 202, 0.2);
+  box-shadow: 0 0 0 3px var(--button-focus-outline-color);
 }
 
 button > svg {

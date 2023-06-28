@@ -4,7 +4,7 @@
   transition: background-color 1500ms;
 }
 
-li:first-child .annotation-comment {
+li:first-child > .annotation-comment {
   border-top: none;
 }
 
@@ -26,6 +26,6 @@ li:first-child .annotation-comment {
 
 .annotation-comment .comment-actions {
   position: absolute;
-  right: 10px;
+  right: 5px;
   top: 12px;
 }

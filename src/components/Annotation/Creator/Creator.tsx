@@ -21,8 +21,6 @@ export const Creator = (props: CreatorProps) => {
 
   const { t, lang } = props.i18n;
   
-  console.log(lang);
-
   const isAnonymous = !creator?.name || creator.isGuest;
 
   return (

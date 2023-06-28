@@ -59,8 +59,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           description: t['Could not delete the project.'],
           type: 'error'
         });
-
-        console.log('dasfasdfasdf');
       } else if (data) {
         if (data.length === 1 && data[0].id === project.id) {
           setProjects(projects.filter(p => p.id !== project.id));

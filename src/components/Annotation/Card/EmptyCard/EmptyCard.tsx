@@ -13,6 +13,8 @@ export interface EmptyCardProps {
   present: PresentUser[];
 
   typing?: boolean;
+  
+  private?: boolean;
 
   onReply?(comment: AnnotationBody): void;
 
@@ -26,7 +28,8 @@ export const EmptyCard = (props: EmptyCardProps) => {
     props.present.find(p => p.id === target.creator?.id) || target.creator;
 
   return (
-    <div className="annotation-card empty">
+    <div className={props.private ? 
+      'annotation-card empty private' : 'annotation-card empty'}>
       <Creator 
         i18n={props.i18n}
         creator={creator} 

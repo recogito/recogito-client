@@ -47,8 +47,6 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
             type: 'success' 
           });
         }
-        // TODO error handling
-        console.log('Updated', error, data);
       });
     }
   });

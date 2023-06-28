@@ -12,6 +12,8 @@ export interface ReplyFormProps {
 
   annotation: Annotation;
 
+  autofocus?: boolean;
+
   present: PresentUser[];
 
   beforeSubmit?(body: AnnotationBody): void;
@@ -33,10 +35,10 @@ export const ReplyForm = (props: ReplyFormProps) => {
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
   useEffect(() => {
-    if (textarea.current) {
+    if (textarea.current && props.autofocus) {
       textarea.current.focus({ preventScroll: true });
     }
-  }, []);
+  }, [props.autofocus]);
 
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();

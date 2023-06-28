@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
-import type { PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import type { Document, Layer, Translations } from 'src/Types';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
+import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { Toolbar } from './Toolbar';
 
@@ -34,7 +35,23 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
+  const [usePopup, setUsePopup] = useState(true);
+
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
+  const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
+    if (panel === ViewMenuPanel.ANNOTATIONS) {
+      // Don't use the popup if the annotation list is open
+      setUsePopup(false);
+    } else {
+      if (!usePopup)
+        setUsePopup(true)
+    }
+  }
+
+  const beforeSelectAnnotation = (a?: Anno) => {
+    // TODO scroll into view
+  }
 
   return (
     <div className="anno-desktop ta-desktop">
@@ -54,18 +71,27 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           onPresence={setPresent} 
           privacyMode={privacy === 'PRIVATE'}/>
 
-        <Annotation.LifecycleLogger />
+        {/* <Annotation.LifecycleLogger /> */}
 
-        <TextAnnotatorPopup
-          popup={props => (
-            <Annotation.Popup 
-              {...props} 
-              present={present} 
-              i18n={i18n} />
-          )} />
+        {usePopup && (
+          <TextAnnotatorPopup
+            popup={props => (
+              <Annotation.Popup 
+                {...props} 
+                present={present} 
+                i18n={i18n} />
+            )} />
+        )}
 
-        <div className="anno-desktop-right">
-          <PresenceStack present={present} />
+        <div className="anno-desktop-right not-annotatable">
+          <PresenceStack
+            present={present} />
+
+          <AnnotationDesktop.ViewMenu 
+            i18n={i18n}
+            present={present} 
+            onChangePanel={onChangeViewMenuPanel}
+            beforeSelectAnnotation={beforeSelectAnnotation} />
         </div>
 
         <div className="anno-desktop-bottom">

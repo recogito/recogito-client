@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTransition, animated } from '@react-spring/web';
-import { useAnnotatorUser, type AnnotationBody } from '@annotorious/react';
+import { useAnnotatorUser, type AnnotationBody, useAnnotationStore } from '@annotorious/react';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
 import { ReplyForm } from '../ReplyForm';
@@ -15,6 +15,8 @@ type BaseCardProps = CardProps & {
 }
 
 export const BaseCard = (props: BaseCardProps) => {
+
+  const store = useAnnotationStore();
 
   const { annotation } = props;
 
@@ -35,6 +37,9 @@ export const BaseCard = (props: BaseCardProps) => {
 
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
+
+  const onDeleteAnnotation = () => 
+    store.deleteAnnotation(props.annotation);
 
   const transition = useTransition(collapsed ? 
     [] : comments.slice(1, comments.length - 1), {
@@ -68,14 +73,16 @@ export const BaseCard = (props: BaseCardProps) => {
     <>
       {comments.length > 0 && (
         <ul className="annotation-card-comments-container">
-          <li style={{ zIndex: comments.length + 1 }}>
+          <li 
+            style={{ zIndex: comments.length + 1 }}>
             {props.comment({
               i18n: props.i18n,
               index: 0,
               comment: comments[0],
               present: props.present,
               emphasizeOnEntry: !dontEmphasise.current.has(comments[0].id),
-              editable: isMine(comments[0])
+              editable: isMine(comments[0]),
+              onDeleteAnnotation
             })}
           </li>
 
@@ -100,7 +107,8 @@ export const BaseCard = (props: BaseCardProps) => {
                 comment: item,
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(item.id),
-                editable: isMine(item)
+                editable: isMine(item),
+                onDeleteAnnotation
               })}
             </animated.li>
           ))}
@@ -113,7 +121,8 @@ export const BaseCard = (props: BaseCardProps) => {
                 comment: comments[comments.length - 1],
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(comments[comments.length - 1].id),
-                editable: isMine(comments[comments.length - 1])
+                editable: isMine(comments[comments.length - 1]),
+                onDeleteAnnotation
               })}
             </li>
           )}
@@ -122,6 +131,7 @@ export const BaseCard = (props: BaseCardProps) => {
 
       {props.showReplyForm && (
         <ReplyForm 
+          autofocus
           annotation={props.annotation}
           present={props.present}
           beforeSubmit={beforeReply} 

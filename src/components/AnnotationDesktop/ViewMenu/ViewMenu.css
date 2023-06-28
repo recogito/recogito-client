@@ -45,10 +45,16 @@
   padding-right: 0;
 }
 
+.anno-sidebar-container {
+  display: flex;
+  flex-direction: column;
+}
+
 .anno-sidebar-container aside {
-  background-color: var(--gray-100);  
+  background-color: var(--gray-50);  
   border-top: 1px solid var(--gray-200);
-  height: 100%;
+  flex-grow: 1;
+  overflow-y: auto;
   pointer-events: all;
 }
 

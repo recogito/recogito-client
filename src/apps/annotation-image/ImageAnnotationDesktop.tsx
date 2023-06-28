@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { Document, Layer, Translations } from 'src/Types';
 import { Annotation } from '@components/Annotation';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
-import { AnnotationDesktop } from '@components/AnnotationDesktop';
+import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
+  Annotation as Anno,
   Annotorious, 
+  ImageAnnotation,
+  OSDAnnotator, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,
@@ -36,9 +39,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
   const { i18n } = props;
 
+  const anno = useRef<OSDAnnotator>();
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [tool, setTool] = useState<string | null>(null);
+
+  const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -47,9 +54,32 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
+  const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
+    if (panel === ViewMenuPanel.ANNOTATIONS) {
+      // Don't use the popup if the annotation list is open
+      setUsePopup(false);
+    } else {
+      if (!usePopup)
+        setUsePopup(true)
+    }
+  }
+
+  const beforeSelectAnnotation = (a?: Anno) => {
+    if (a && !usePopup && anno.current) {
+      // Don't fit the view if the annotation is already selected
+      if (anno.current.selection.isSelected(a as ImageAnnotation))
+        return;
+
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+
+      anno.current.fitBounds(a, { padding: [vh / 2, vw / 2 + 600, vh / 2, (vw  - 600) / 2] });
+    }
+  }
+
   return (
     <div className="anno-desktop ia-desktop">
-      <Annotorious>
+      <Annotorious ref={anno}>
         <OpenSeadragonAnnotator tool={tool} keepEnabled={true}>
           <SupabasePlugin
             base={SUPABASE}
@@ -61,7 +91,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             onConnectError={onConnectError}
             privacyMode={privacy === 'PRIVATE'} />
 
-          <Annotation.LifecycleLogger />
+          {/* <Annotation.LifecycleLogger /> */}
 
           <OpenSeadragonViewer
             className="ia-osd-container"
@@ -69,16 +99,18 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               tileSources: props.document.meta_data?.url,
               gestureSettingsMouse: {
                 clickToZoom: false
-              }, 
+              },
               showNavigationControl: false
             }} />
 
-          <OpenSeadragonPopup
-            popup ={props => (
-              <Annotation.Popup 
-                {...props} 
-                present={present} 
-                i18n={i18n} /> )} />
+          {usePopup && (
+            <OpenSeadragonPopup
+              popup ={props => (
+                <Annotation.Popup 
+                  {...props} 
+                  present={present} 
+                  i18n={i18n} /> )} />
+          )}
 
           <div className="anno-desktop-right">
             <PresenceStack 
@@ -86,7 +118,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
             <AnnotationDesktop.ViewMenu 
               i18n={i18n}
-              present={present} />
+              present={present} 
+              onChangePanel={onChangeViewMenuPanel} 
+              beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
 
           <div className="anno-desktop-bottom">
