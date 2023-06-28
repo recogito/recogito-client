@@ -15,8 +15,8 @@ const NotificationCard = (props: NotificationCardProps) => {
                 <h1>{props.projectName}</h1>
                 <p>You have been invited to join this project by {props.invitedBy}</p>
                 <div className="notification-actions">
-                    <button className="primary" onClick={props.onAccept}>Accept</button>
-                    <button className="primary" onClick={props.onIgnore}>Ignore</button>
+                    <button className="success" onClick={props.onAccept}>Accept</button>
+                    <button onClick={props.onIgnore}>Ignore</button>
                 </div>
             </div>
         </div>
