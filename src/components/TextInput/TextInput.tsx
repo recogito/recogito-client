@@ -45,7 +45,7 @@ export const TextInput = (props: TextInputProps) => {
         value={value}
         onChange={onChange}/>
 
-        <label htmlFor="email">
+        <label htmlFor={props.name}>
           <span className="label-background" />
           {props.label}
         </label> 

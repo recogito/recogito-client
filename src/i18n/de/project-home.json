@@ -1,7 +1,16 @@
 {
+  "Ok": "Ok",
+  "Cancel": "Abbrechen",
+
   "Import Document": "Dokument Importieren",
   "Delete document": "Dokument löschen",
   "Rename document": "Dokument umbenennen",
+
+  "File upload": "Datei hochladen",
+  "From IIIF manifest": "IIIF Manifest importieren",
+  "Import IIIF": "IIIF Importieren",
+  "Paste URL to a IIIF image manifest": "URL zu einem IIIF Bild-Manifest",
+  "Please enter a valid IIIF manifest URL": "Bitte eine gültige IIIF Manifest URL eingeben",
 
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the document.": "Das Dokument konnte nicht erstellt werden.",

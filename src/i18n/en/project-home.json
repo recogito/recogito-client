@@ -1,10 +1,16 @@
 {
+  "Ok": "Ok",
+  "Cancel": "Cancel",
+  
   "Import Document": "Import Document",
   "Delete document": "Delete document",
   "Rename document": "Rename document",
 
   "File upload": "File upload",
   "From IIIF manifest": "From IIIF manifest",
+  "Import IIIF": "Import IIIF",
+  "Paste URL to a IIIF image manifest": "Paste URL to a IIIF image manifest",
+  "Please enter a valid IIIF manifest URL": "Please enter a valid IIIF manifest URL",
 
   "Something went wrong": "Something went wrong",
   "Could not create the document.": "Could not create the document.",
