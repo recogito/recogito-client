@@ -8,7 +8,6 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   Annotation as Anno,
   Annotorious, 
-  ImageAnnotation,
   OSDAnnotator, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
@@ -67,7 +66,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const beforeSelectAnnotation = (a?: Anno) => {
     if (a && !usePopup && anno.current) {
       // Don't fit the view if the annotation is already selected
-      if (anno.current.selection.isSelected(a as ImageAnnotation))
+      if (anno.current.selection.isSelected(a))
         return;
 
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
