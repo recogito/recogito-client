@@ -16,6 +16,7 @@ const NotificationTab = (props: NotificationTabProps) => {
     const [ invites, setInvites ] = useState<any[]>([]);
     const [ showIgnored, setShowIgnored ] = useState(false);
     const [ displayList, setDisplayList ] = useState<any[]>([]);
+    const [ ignoredCount, setIgnoredCount ] = useState(0);
 
     const removeInviteFromList = (id: string) => {
         setInvites((old) => old.filter((i) => i.id != id));
@@ -41,12 +42,16 @@ const NotificationTab = (props: NotificationTabProps) => {
         setDisplayList(invites.filter((i) => showIgnored || !i.ignored));
     }, [showIgnored, invites]);
 
+    useEffect(() => {
+        setIgnoredCount(invites.filter((i) => i.ignored).length);
+    }, [invites]);
+
     const toggleShowIgnored = () => setShowIgnored((current) => !current);
     
     return (
         <div className="dashboard-notifications">
             <h1>Pending Invitations</h1>
-            <button onClick={toggleShowIgnored}>{showIgnored ? 'Hide Ignored' : 'Show Ignored'}</button>
+            { ignoredCount > 0 && (<button onClick={toggleShowIgnored}>{showIgnored ? 'Hide Ignored' : 'Show Ignored'}</button>)}
             <div className="notification-grid">
                 {displayList.length > 0 ? displayList.map((i) => (
                     <NotificationCard
