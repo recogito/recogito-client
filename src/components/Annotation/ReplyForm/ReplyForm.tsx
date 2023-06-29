@@ -14,6 +14,8 @@ export interface ReplyFormProps {
 
   autofocus?: boolean;
 
+  placeholder: string;
+
   present: PresentUser[];
 
   beforeSubmit?(body: AnnotationBody): void;
@@ -90,7 +92,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
         ref={textarea}
         rows={1} 
         maxRows={10}
-        placeholder="Reply..." 
+        placeholder={props.placeholder}
         onKeyDownCapture={onKeyDown} />
 
       <button 

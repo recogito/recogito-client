@@ -71,8 +71,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           onPresence={setPresent} 
           privacyMode={privacy === 'PRIVATE'}/>
 
-        {/* <Annotation.LifecycleLogger /> */}
-
         {usePopup && (
           <TextAnnotatorPopup
             popup={props => (

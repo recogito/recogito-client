@@ -91,8 +91,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             onConnectError={onConnectError}
             privacyMode={privacy === 'PRIVATE'} />
 
-          {/* <Annotation.LifecycleLogger /> */}
-
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={{

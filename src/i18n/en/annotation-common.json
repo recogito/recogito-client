@@ -8,6 +8,9 @@
   "Private_Hint_01": "Annotations you create in Private mode will be visible to",
   "Private_Hint_02": "no-one except you.",
 
+  "Comment...": "Comment...",
+  "Reply...": "Reply...",
+
   "Delete this annotation": "Delete this annotation",
   "Delete this comment": "Delete this comment",
   "Make this annotation public": "Make this annotation public"

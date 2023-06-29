@@ -134,6 +134,7 @@ export const BaseCard = (props: BaseCardProps) => {
           autofocus
           annotation={props.annotation}
           present={props.present}
+          placeholder={props.i18n.t['Reply...']}
           beforeSubmit={beforeReply} 
           onSubmit={props.onReply} />
       )}

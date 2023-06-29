@@ -60,6 +60,7 @@ export const Popup = (props: PopupProps) => {
               {...props}
               autofocus
               annotation={selected}
+              placeholder={props.i18n.t['Comment...']}
               onSubmit={onReply} />
           </div>
         ) : (
@@ -68,6 +69,7 @@ export const Popup = (props: PopupProps) => {
               {...props}
               autofocus
               annotation={selected}
+              placeholder={props.i18n.t['Comment...']}
               onSubmit={onReply} />
           </div>
         )

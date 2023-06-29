@@ -78,6 +78,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                 <div className={getReplyFormClass(a)}>
                   <Annotation.ReplyForm
                     annotation={a} 
+                    placeholder={props.i18n.t['Comment...']}
                     present={props.present} />
                 </div>
               ) : (
@@ -95,7 +96,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                 present={props.present} />              
             )
           ) : (
-            a.visibility === Visibility.PRIVATE ? (
+            isPrivate(a) ? (
               <Annotation.PrivateCard 
                 className={isSelected(a) ? 'selected' : undefined}
                 showReplyForm={isSelected(a)}
