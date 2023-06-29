@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { retrievePendingInvites } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import NotificationIcon from '@components/NotificationIcon/NotificationIcon';
+import { getMyProfile } from '@backend/crud/profiles';
 
 /**
  * Note that we're using React to render this (otherwise static) component rather
@@ -13,7 +14,13 @@ import NotificationIcon from '@components/NotificationIcon/NotificationIcon';
  * of Phosphor Icons as a depdency. (Plus: icons also look slightly different between
  * React and Astro versions!)
  */
-export const DashboardSidebar = (props: { i18n: Translations, pending: number }) => {
+export const DashboardSidebar = (props: { i18n: Translations }) => {
+
+  const [ pending, setPending ] = useState(0);
+
+  useEffect(() => {
+    getMyProfile(supabase).then((user) => {retrievePendingInvites(supabase, user.data.email).then((count) => count && setPending(count));});
+  }, []);
 
   const { lang, t } = props.i18n;
 
@@ -30,8 +37,8 @@ export const DashboardSidebar = (props: { i18n: Translations, pending: number })
           <li>
             <div className={`section flexrow`} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'baseline' }}>
               <h2><a href={`/${lang}/notifications`}>{t['Notifications']}</a></h2>
-              { props.pending > 0 && (
-                <NotificationIcon count={props.pending} />
+              { pending > 0 && (
+                <NotificationIcon count={pending} />
               )}
             </div>
           </li>
