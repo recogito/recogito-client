@@ -75,7 +75,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
             {error && (
               <p className="error">
-                <WarningOctagon className="icon inline" size={18} weight="fill" /> {error}
+                <WarningOctagon className="icon text-bottom" size={18} weight="fill" /> {error}
               </p>
             )}
 

@@ -13,7 +13,7 @@ interface ButtonProps {
 
   disabled?: boolean;
 
-  type?: 'submit';
+  type?: 'submit' | 'button';
 
   onClick?(evt: React.MouseEvent): void;
 

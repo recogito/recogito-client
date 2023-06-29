@@ -7,9 +7,9 @@ import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
 import type { Context, Document, Project, Translations } from 'src/Types';
+import type { FileRejection } from 'react-dropzone';
 
 import './ProjectHome.css';
-import type { FileRejection } from 'react-dropzone';
 
 export interface ProjectHomeProps {
 
@@ -69,18 +69,18 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     getRootProps, 
     getInputProps, 
     isDragActive,
-    open,
-    rootRef
+    open
   } = useDragAndDrop(onDrop);
 
-  const onImportRemote = (format: UploadFormat) => {
+  const onImportRemote = (format: UploadFormat, url: string) => {
     setShowUploads(true);
 
-    setError({
-      title: 'Sorry',
-      description: 'Not supported yet',
-      type: 'info'
-    });
+    addUploads([{
+      name: url, // TODO find a better solution
+      projectId: project.id,
+      contextId: defaultContext.id,
+      url
+    }]);
   }
 
   const onRenameProject = (name: string) => {

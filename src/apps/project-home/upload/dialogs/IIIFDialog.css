@@ -1,0 +1,22 @@
+.import-iiif-dialog input {
+  margin-top: 1em;
+  width: 100%;
+}
+
+.import-iiif-dialog input.invalid {
+  border-color: var(--input-error-color);
+}
+
+.import-iiif-dialog input.invalid:focus {
+  box-shadow: 0 0 0 1px var(--input-error-color);
+}
+
+.import-iiif-dialog .invalid-message {
+  color: var(--red-500);
+  font-size: var(--font-tiny);
+}
+
+.import-iiif-dialog .buttons {
+  padding: 1em 0 0 0;
+  text-align: right;
+}
