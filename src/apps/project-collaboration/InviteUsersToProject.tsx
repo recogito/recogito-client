@@ -1,10 +1,10 @@
 import { Toast, ToastContent, ToastProvider } from "@components/Toast";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@backend/supabaseBrowserClient";
 import type { Project, Translations } from "src/Types";
 import './InviteUsersToProject.css';
-import { inviteUserToProject } from "@backend/crud";
+import { inviteUserToProject, listPendingInvites } from "@backend/crud";
 
 
 
@@ -24,6 +24,11 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
     const { project } = props;
 
     const [error, setError] = useState<ToastContent | null>(null);
+    const [pendingInvites, setPendingInvites] = useState<any[]>([]);
+
+    useEffect(() => {
+        listPendingInvites(supabase, project.id).then((data) => data && setPendingInvites(data.map((i) => i.email)));
+    }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -47,6 +52,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
                     title: t['User invited'], 
                     type: 'success' 
                   });
+                  setPendingInvites((old) => [...old, values.email]);
                 }
                 // TODO error handling
                 // if (result?.data) {
@@ -86,6 +92,16 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
                     </fieldset>
                     <button className="primary" type="submit">{t['Invite']}</button>
                 </form>
+            { pendingInvites.length > 0 && (
+                <div style={{ marginTop: 40 }}>
+                    <h2>Invited Users: Pending</h2>
+                    <ul>
+                        { pendingInvites.map((i) => (
+                            <li key={i}>{i}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
             </div>
             <Toast
                 content={error}

@@ -90,4 +90,16 @@ export const retrievePendingInvites = async (supabase: SupabaseClient, email: st
     .is('accepted', false)
     .is('ignored', false)
   return count;
+};
+
+export const listPendingInvites = async (supabase: SupabaseClient, projectId: string) => {
+  const { data } = await supabase
+    .from('invites')
+    .select(`
+      id,
+      email
+    `)
+    .eq('project_id', projectId)
+    .is('accepted', false);
+  return data;
 }
