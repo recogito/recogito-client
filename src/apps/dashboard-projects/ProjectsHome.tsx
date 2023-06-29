@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FileX, Hammer } from '@phosphor-icons/react';
 import type { Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { deleteProject } from '@backend/crud';
+import { deleteProject, retrievePendingInvites } from '@backend/crud';
 import { initProject } from '@backend/helpers';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
 import './ProjectsHome.css';
+import { getMyProfile } from '@backend/crud/profiles';
 
 export interface ProjectsHomeProps {
 
@@ -26,7 +27,11 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [pending, setPending] = useState(2); //hard coding this for right now just to see what it looks like; eventually will come from some sort of state management
+  const [pending, setPending] = useState(0);
+  
+  useEffect(() => {
+    getMyProfile(supabase).then((user) => {retrievePendingInvites(supabase, user.data.email).then((count) => count && setPending(count));});
+  }, []);
 
   const onCreateProject = () =>
     initProject(supabase, t['Untitled Project'])

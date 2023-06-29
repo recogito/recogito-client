@@ -8,10 +8,11 @@ export const listMyInvites = (supabase: SupabaseClient): Response<Invitation[]> 
         supabase
             .from('invites')
             .select(`
-                id
+                id,
+                ignored
             `)
             .is('accepted', false)
-            .is('ignored', false)
+            .eq('email', user?.email)
             .then(({ error, data }) => ({ error, data: data as Invitation[] })));
 
 
@@ -26,5 +27,12 @@ export const processIgnoreInvite = (supabase: SupabaseClient, id: string) =>
         supabase
             .from('invites')
             .update({ ignored: true })
+            .eq('id', id)
+            .then(({ error, data }) => ({ error, data }));
+
+export const processUnignoreInvite = (supabase: SupabaseClient, id: string) =>
+        supabase
+            .from('invites')
+            .update({ ignored: false })
             .eq('id', id)
             .then(({ error, data }) => ({ error, data }));
