@@ -51,7 +51,7 @@ export const updateProject = (supabase: SupabaseClient, project: Project): Respo
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
-export const inviteUserToProject = (supabase: SupabaseClient, email: string, project_id: string, role: string) =>
+export const inviteUserToProject = (supabase: SupabaseClient, email: string, project_id: string, role: string, invited_by_name?: string, project_name?: string) =>
   supabase
     .from('roles')
     .select('id')
@@ -70,7 +70,7 @@ export const inviteUserToProject = (supabase: SupabaseClient, email: string, pro
             const project_group_id = data.id;
             supabase
               .from('invites')
-              .insert({ email, project_id, project_group_id })
+              .insert({ email, project_id, project_group_id, invited_by_name, project_name })
               .select()
               .single()
               .then(({ error, data }) => ({ error, data }));

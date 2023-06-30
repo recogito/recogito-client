@@ -2,7 +2,7 @@ import { Toast, ToastContent, ToastProvider } from "@components/Toast";
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
 import { supabase } from "@backend/supabaseBrowserClient";
-import type { Project, Translations } from "src/Types";
+import type { Project, Translations, UserProfile } from "src/Types";
 import './InviteUsersToProject.css';
 import { inviteUserToProject, listPendingInvites } from "@backend/crud";
 
@@ -12,7 +12,9 @@ interface InviteUsersToProjectProps {
 
     i18n: Translations,
 
-    project: Project
+    project: Project,
+
+    user: UserProfile
 
 }
 
@@ -21,7 +23,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
     const { t } = props.i18n;
 
-    const { project } = props;
+    const { project, user } = props;
 
     const [error, setError] = useState<ToastContent | null>(null);
     const [pendingInvites, setPendingInvites] = useState<any[]>([]);
@@ -39,7 +41,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
         onSubmit: values => {
             console.log(values);
-            inviteUserToProject(supabase, values.email, project.id, values.role).then((result) => {
+            inviteUserToProject(supabase, values.email, project.id, values.role, `${user.first_name} ${user.last_name}`, project.name).then((result) => {
                 if (result?.error) {
                   console.error(result.error);
                   setError({ 
