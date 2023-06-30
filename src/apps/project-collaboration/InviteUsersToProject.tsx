@@ -41,7 +41,8 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
         onSubmit: values => {
             console.log(values);
-            inviteUserToProject(supabase, values.email, project.id, values.role, `${user.first_name} ${user.last_name}`, project.name).then((result) => {
+            const invited_by_name = user.nickname ? user.nickname : user.last_name ? (user.first_name ? user.first_name + ' ' : '') + user.last_name : undefined;
+            inviteUserToProject(supabase, values.email, project.id, values.role, invited_by_name, project.name).then((result) => {
                 if (result?.error) {
                   console.error(result.error);
                   setError({ 
