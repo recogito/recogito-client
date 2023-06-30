@@ -9,7 +9,9 @@ export const listMyInvites = (supabase: SupabaseClient): Response<Invitation[]> 
             .from('invites')
             .select(`
                 id,
-                ignored
+                ignored,
+                invited_by_name,
+                project_name
             `)
             .is('accepted', false)
             .eq('email', user?.email)
@@ -21,7 +23,7 @@ export const processAcceptInvite = (supabase: SupabaseClient, id: string) =>
             .from('invites')
             .update({ accepted: true })
             .eq('id', id)
-            .then(({ error, data }) => ({ error, data }));
+            .then(({ error, data }) => { error && console.log(error); return ({ error, data })});
 
 export const processIgnoreInvite = (supabase: SupabaseClient, id: string) =>
         supabase
