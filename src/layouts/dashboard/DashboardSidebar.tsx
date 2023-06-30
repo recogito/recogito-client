@@ -2,6 +2,11 @@ import { ArrowUpRight, SignOut } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
 import './DashboardSidebar.css';
+import { useEffect, useState } from 'react';
+import { retrievePendingInvites } from '@backend/crud';
+import { supabase } from '@backend/supabaseBrowserClient';
+import NotificationIcon from '@components/NotificationIcon/NotificationIcon';
+import { getMyProfile } from '@backend/crud/profiles';
 
 /**
  * Note that we're using React to render this (otherwise static) component rather
@@ -11,29 +16,36 @@ import './DashboardSidebar.css';
  */
 export const DashboardSidebar = (props: { i18n: Translations }) => {
 
+  const [ pending, setPending ] = useState(0);
+
+  useEffect(() => {
+    getMyProfile(supabase).then((user) => {retrievePendingInvites(supabase, user.data.email).then((count) => count && setPending(count));});
+  }, []);
+
   const { lang, t } = props.i18n;
 
   return (
     <aside className="dashboard-sidebar">
       <h1>{t['Dashboard']}</h1>
       <nav>
-        <ul>
+        <ul style={{ display: 'flex', flexDirection: 'column' }}>
           <li>
-            <h2>{t['Projects']}</h2>
-            <ul>
-              <li>
-                <a href={`/${lang}/projects`}>{t['All projects']}</a>
-              </li>
-            </ul>
+            <div className="section">
+              <h2><a href={`/${lang}/projects`}>{t['Projects']}</a></h2>
+            </div>
           </li>
-
           <li>
-            <h2>{t['Account']}</h2>
-            <ul>
-              <li>
-                <a href={`/${lang}/account/me`}>{t['Preferences']}</a>
-              </li>
-            </ul>
+            <div className={`section flexrow`} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'baseline' }}>
+              <h2><a href={`/${lang}/notifications`}>{t['Notifications']}</a></h2>
+              { pending > 0 && (
+                <NotificationIcon count={pending} />
+              )}
+            </div>
+          </li>
+          <li>
+            <div className='section'>
+              <h2><a href={`/${lang}/account/me`}>{t['Account Preferences']}</a></h2>
+            </div>
           </li>
           
           <li>

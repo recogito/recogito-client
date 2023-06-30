@@ -50,3 +50,56 @@ export const updateProject = (supabase: SupabaseClient, project: Project): Respo
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
+
+export const inviteUserToProject = (supabase: SupabaseClient, email: string, project_id: string, role: string, invited_by_name?: string, project_name?: string) =>
+  supabase
+    .from('roles')
+    .select('id')
+    .eq('name', role)
+    .single()
+    .then(({ error, data }) => {
+      if (data) {
+      supabase
+        .from('project_groups')
+        .select('id')
+        .eq('role_id', data.id)
+        .eq('project_id', project_id)
+        .single()
+        .then(({ error, data }) => {
+          if (data) {
+            const project_group_id = data.id;
+            supabase
+              .from('invites')
+              .insert({ email, project_id, project_group_id, invited_by_name, project_name })
+              .select()
+              .single()
+              .then(({ error, data }) => ({ error, data }));
+          }
+        }); 
+        }
+      else {
+        return ({ error, data });
+      }
+      });
+
+export const retrievePendingInvites = async (supabase: SupabaseClient, email: string) => {
+  const { count } = await supabase
+    .from('invites')
+    .select('*', { count: 'exact', head: true })
+    .eq('email', email)
+    .is('accepted', false)
+    .is('ignored', false)
+  return count;
+};
+
+export const listPendingInvites = async (supabase: SupabaseClient, projectId: string) => {
+  const { data } = await supabase
+    .from('invites')
+    .select(`
+      id,
+      email
+    `)
+    .eq('project_id', projectId)
+    .is('accepted', false);
+  return data;
+}

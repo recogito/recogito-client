@@ -2,9 +2,11 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { DashboardSidebar } from './DashboardSidebar';
 import { getTranslations } from '@i18n';
+
+const i18n = getTranslations(Astro.request, 'dashboard-sidebar');
 ---
-<BaseLayout title="Dashboard"}>	
-  <DashboardSidebar client:load i18n={getTranslations(Astro.request, 'dashboard-sidebar')} />
+<BaseLayout title="Dashboard">	
+  <DashboardSidebar client:load i18n={i18n}/>
 
   <div class="container">
     <slot />

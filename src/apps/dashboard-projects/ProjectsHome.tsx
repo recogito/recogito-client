@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { Hammer } from '@phosphor-icons/react';
+import { useEffect, useState } from 'react';
+import { FileX, Hammer } from '@phosphor-icons/react';
 import type { Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { deleteProject } from '@backend/crud';
+import { deleteProject, retrievePendingInvites } from '@backend/crud';
 import { initProject } from '@backend/helpers';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
 import './ProjectsHome.css';
+import { getMyProfile } from '@backend/crud/profiles';
 
 export interface ProjectsHomeProps {
 
@@ -20,11 +21,17 @@ export interface ProjectsHomeProps {
 
 export const ProjectsHome = (props: ProjectsHomeProps) => {
 
-  const { t } = props.i18n;
+  const { t, lang } = props.i18n;
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
   const [error, setError] = useState<ToastContent | null>(null);
+
+  const [pending, setPending] = useState(0);
+  
+  useEffect(() => {
+    getMyProfile(supabase).then((user) => {retrievePendingInvites(supabase, user.data.email).then((count) => count && setPending(count));});
+  }, []);
 
   const onCreateProject = () =>
     initProject(supabase, t['Untitled Project'])
@@ -74,6 +81,29 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   return (
     <ToastProvider>
+    <div className="dashboard-projects-home">
+      <header>
+        <nav className="breadcrumbs">
+          <ol>
+            <li>
+              <a href={`/${lang}/projects`}>INeedAName</a>
+            </li>
+
+            <li>
+              <a className="breadcrumb-current">{t['Projects']}</a>
+            </li>
+          </ol>
+        </nav>
+      </header>
+      {pending > 0 && (
+        <div className="dashboard-projects-notifications">
+          <a href={`/${lang}/notifications`}>
+            <button>
+              You have {pending} invitation{pending > 1 && 's'} pending.
+            </button>
+          </a>
+        </div>
+      )}
       {projects.length === 0 ? (
         <ProjectsEmpty 
           i18n={props.i18n} 
@@ -86,6 +116,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onDeleteProject={onDeleteProject} 
           onRenameProject={onRenameProject} />  
       )}
+      </div>
 
       <Toast
         content={error}
