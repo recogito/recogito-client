@@ -1,13 +1,17 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser } from '@annotorious/react';
-import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
-import type { Document, Layer, Translations } from 'src/Types';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
-import type { PrivacyMode } from '@components/PrivacySelector';
 import { Toolbar } from './Toolbar';
+import type { Document, Layer, Translations } from 'src/Types';
+import type { PrivacyMode } from '@components/PrivacySelector';
+import {
+  TextAnnotator, 
+  TextAnnotatorRef, 
+  TextAnnotatorPopup 
+} from '@recogito/react-text-annotator';
 
 import './TextAnnotationDesktop.css';
 
@@ -33,6 +37,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const { i18n } = props;
 
+  const anno = useRef<TextAnnotatorRef>();
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [usePopup, setUsePopup] = useState(true);
@@ -50,12 +56,18 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   }
 
   const beforeSelectAnnotation = (a?: Anno) => {
-    // TODO scroll into view
+    if (a && !usePopup && anno.current) {
+      // Don't fit the view if the annotation is already selected
+      if (anno.current.selection.isSelected(a))
+        return;
+
+      anno.current.scrollIntoView(a);
+    }
   }
 
   return (
     <div className="anno-desktop ta-desktop">
-      <Annotorious>
+      <Annotorious ref={anno}>
         <TextAnnotator 
           element="annotatable" 
           presence={{
