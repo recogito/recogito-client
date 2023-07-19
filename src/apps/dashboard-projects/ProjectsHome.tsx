@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { FileX, Hammer } from '@phosphor-icons/react';
+import { Hammer } from '@phosphor-icons/react';
 import type { Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { deleteProject, retrievePendingInvites } from '@backend/crud';
+import { deleteProject, retrievePendingInvites, getMyProfile } from '@backend/crud';
 import { initProject } from '@backend/helpers';
+import { DashboardHeader } from '@components/DashboardHeader';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
 import './ProjectsHome.css';
-import { getMyProfile } from '@backend/crud/profiles';
 
 export interface ProjectsHomeProps {
 
@@ -30,7 +30,13 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const [pending, setPending] = useState(0);
   
   useEffect(() => {
-    getMyProfile(supabase).then((user) => {retrievePendingInvites(supabase, user.data.email).then((count) => count && setPending(count));});
+    getMyProfile(supabase)
+      .then(({ error, data }) => {
+        if (error)
+          window.location.href = `/${props.i18n.lang}/sign-in`;
+        else 
+          retrievePendingInvites(supabase, data.email).then((count) => count && setPending(count));
+      })
   }, []);
 
   const onCreateProject = () =>
@@ -81,41 +87,31 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   return (
     <ToastProvider>
-    <div className="dashboard-projects-home">
-      <header>
-        <nav className="breadcrumbs">
-          <ol>
-            <li>
-              <a href={`/${lang}/projects`}>INeedAName</a>
-            </li>
+      <div className="dashboard-projects-home">
+        <DashboardHeader 
+          i18n={props.i18n} />
 
-            <li>
-              <a className="breadcrumb-current">{t['Projects']}</a>
-            </li>
-          </ol>
-        </nav>
-      </header>
-      {pending > 0 && (
-        <div className="dashboard-projects-notifications">
-          <a href={`/${lang}/notifications`}>
-            <button>
-              You have {pending} invitation{pending > 1 && 's'} pending.
-            </button>
-          </a>
-        </div>
-      )}
-      {projects.length === 0 ? (
-        <ProjectsEmpty 
-          i18n={props.i18n} 
-          onCreateProject={onCreateProject} />
-      ) : (
-        <ProjectsGrid 
-          i18n={props.i18n} 
-          projects={projects}
-          onCreateProject={onCreateProject} 
-          onDeleteProject={onDeleteProject} 
-          onRenameProject={onRenameProject} />  
-      )}
+        {pending > 0 && (
+          <div className="dashboard-projects-notifications">
+            <a href={`/${lang}/notifications`}>
+              <button>
+                You have {pending} invitation{pending > 1 && 's'} pending.
+              </button>
+            </a>
+          </div>
+        )}
+        {projects.length === 0 ? (
+          <ProjectsEmpty 
+            i18n={props.i18n} 
+            onCreateProject={onCreateProject} />
+        ) : (
+          <ProjectsGrid 
+            i18n={props.i18n} 
+            projects={projects}
+            onCreateProject={onCreateProject} 
+            onDeleteProject={onDeleteProject} 
+            onRenameProject={onRenameProject} />  
+        )}
       </div>
 
       <Toast

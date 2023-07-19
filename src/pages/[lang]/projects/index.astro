@@ -1,5 +1,5 @@
 ---
-import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { listMyProjects } from '@backend/crud';
@@ -13,13 +13,15 @@ if (!supabase)
 
 const response = await listMyProjects(supabase);
 ---
-<DashboardLayout>
-  {response.error ? (
-    <div>Something went wrong</div>
-  ) : (
-    <ProjectsHome 
-      client:load
-      projects={response.data} 
-      i18n={getTranslations(Astro.request, 'dashboard-projects')} />
-  )}
-</DashboardLayout>
+<BaseLayout title="Dashboard">
+  <div class="container">
+    {response.error ? (
+      <div>Something went wrong</div>
+    ) : (
+      <ProjectsHome 
+        client:load
+        projects={response.data} 
+        i18n={getTranslations(Astro.request, 'dashboard-projects')} />
+    )}
+  </div>
+</BaseLayout>

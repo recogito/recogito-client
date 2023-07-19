@@ -1,0 +1,35 @@
+header.dashboard-header {
+  align-items: center;
+  border-bottom: 1px solid var(--gray-300);
+  box-sizing: border-box;
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  padding: 0 40px;
+}
+
+header.dashboard-header .dashboard-header-actions {
+  align-items: center;
+  color: var(--font-dark);
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+header.dashboard-header .dashboard-header-actions button {
+  border: 1px solid var(--gray-400);
+}
+
+header.dashboard-header .dashboard-header-actions.loading button {
+  border: 1px solid var(--gray-300);
+}
+
+header.dashboard-header .dashboard-header-actions.loading svg {
+  color: var(--gray-400);
+}
+
+header.dashboard-header .avatar {
+  height: 34px;
+  width: 34px;
+}
+
