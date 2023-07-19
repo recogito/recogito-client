@@ -1,0 +1,22 @@
+.dropdown-content .account-info {
+  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 5px;
+  padding: 5px 10px 10px 10px;
+}
+
+.dropdown-content .account-info h1,
+.dropdown-content .account-info h2 {
+  margin: 0;
+  line-height: 160%;
+}
+
+.dropdown-content .account-info h1 {
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.dropdown-content .account-info h2 {
+  color: var(--font-light);
+  font-size: 0.675em;
+  font-weight: 400;
+}
