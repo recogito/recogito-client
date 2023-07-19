@@ -104,19 +104,40 @@ export const listPendingInvites = async (supabase: SupabaseClient, projectId: st
   return data;
 };
 
-export const listProjectUsers = async (supabase: SupabaseClient, projectId: string) => {
+export const listProjectUsers = async (supabase: SupabaseClient, typeIds: string[]) => {
   const { data } = await supabase
     .from('group_users')
     .select(`
+      type_id,
       profiles!group_users_user_id_fkey (
-        firstname,
-        lastname,
+        id,
+        first_name,
+        last_name,
         nickname
-      ),
-      project_groups!inner (
-        name
       )
     `)
-    .eq('project_groups.project_id', projectId);
+    .in('type_id', typeIds);
     return data;
+};
+
+export const getProjectGroups = async (supabase: SupabaseClient, projectId: string) => {
+  const { error, data } = await supabase
+    .from('project_groups')
+    .select(`
+      id,
+      name
+      `)
+    .eq('project_id', projectId);
+    return { error, data };
 }
+
+export const updateUserProjectGroup = async (supabase: SupabaseClient, userId: string, oldTypeId: string, newTypeId: string) => 
+  supabase 
+    .from('group_users')
+    .update({
+      type_id: newTypeId
+    })
+    .eq('user_id', userId)
+    .eq('type_id', oldTypeId)
+    .select()
+    .then(({ error, data }) => ({ error, data }));

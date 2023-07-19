@@ -6,10 +6,6 @@
 
 .manage-users table {
     border-collapse: collapse;
-    width: 50%;
-}
-
-.manage-users table {
     background-color: var(--gray-50);
 }
 
