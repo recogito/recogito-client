@@ -1,8 +1,9 @@
-import { listProjectUsers } from "@backend/crud";
+import { getProjectGroups, listProjectUsers, updateUserProjectGroup } from "@backend/crud";
 import { supabase } from "@backend/supabaseBrowserClient";
 import { useEffect, useState } from "react";
 import type { Project, Translations } from "src/Types";
 import './ManageUsers.css';
+import { ProjectUserRow } from "@components/ProjectUserRow";
 
 
 interface ManageUsersProps {
@@ -18,45 +19,59 @@ export const ManageUsers = (props: ManageUsersProps) => {
     const { project } = props;
 
     const [data, setData] = useState<any[]>();
+    const [projectGroups, setProjectGroups] = useState<any[]>([]);
 
-    const dummyData = [
-        {
-            profiles: {
-                firstname: 'bob',
-                lastname: 'smith',
-                nickname: 'tim'
-            },
-            project_groups: {
-                name: 'admin'
+    const handleRemoveUser = (id: string) => {
+        console.log('user ' + id + ' has been removed');
+    };
+
+    const handleUpdateUser = (userId: string, oldTypeId: string, newTypeId: string) => {
+        updateUserProjectGroup(supabase, userId, oldTypeId, newTypeId).then(({ error, data }) => {
+            if (data) {
+                setData((old) => old?.map((row) => (row.type_id == oldTypeId && row.profiles.id == userId) ? { type_id: newTypeId, profiles: row.profiles } : row));
             }
-        },
-        {
-            profiles: {
-                firstname: 'bob2',
-                lastname: 'smith2',
-                nickname: 'tim2'
-            },
-            project_groups: {
-                name: 'admin2'
+            else {
+                console.log(error);
             }
-        }
-    ];
+        });
+    };
 
     useEffect(() => {
-        listProjectUsers(supabase, project.id).then((data) => {
-            setData(data ? data : dummyData)
+        getProjectGroups(supabase, project.id).then(({ error, data }) => {
+            if (data) {
+                setProjectGroups(data);
+                listProjectUsers(supabase, data.map((i) => i.id)).then((data) => {console.log(data); setData(data ? data : [])});
+            }
+            else {
+                setData([]);
+            }
         })
     }, [])
 
-    return (
+    return data && data.length && (
         <div className="manage-users">
             <h1>Project Users</h1>
             <table>
+                <thead>
                 <tr>
                     <th>Name</th>
                     <th>Role</th>
                 </tr>
-                { data?.map((user) => (<tr><td>{user.profiles.nickname}</td><td>{user.project_groups.name}</td></tr>))}
+                </thead>
+                <tbody>
+                { data?.map((user) => (
+                    <ProjectUserRow
+                        key={user.profiles.id}
+                        i18n={props.i18n}
+                        user={user}
+                        projectId={project.id}
+                        typeId={user.type_id}
+                        projectGroups={projectGroups}
+                        onRemoveUser={() => handleRemoveUser(user.profiles.id)}
+                        onUpdateUser={(typeId: string) => handleUpdateUser(user.profiles.id, user.type_id, typeId)}
+                    />
+                ))}
+                </tbody>
             </table>
         </div>
     );
