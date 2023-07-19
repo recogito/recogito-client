@@ -11,15 +11,19 @@ interface DashboardHeaderProps {
 
   i18n: Translations;
 
+  breadcrumbs?: Array<{label: string, url?: string}>;
+
 }
 
 export const DashboardHeader = (props: DashboardHeaderProps) => {
 
-  const { lang } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const [profile, setProfile] = useState<MyProfile | undefined>();
 
   const [notifications, setNotifications] = useState<number>(0);
+
+  const breadcrumbs = props.breadcrumbs || [];
 
   useEffect(() => {
     getMyProfile(supabase)
@@ -36,6 +40,12 @@ export const DashboardHeader = (props: DashboardHeaderProps) => {
           <li>
             <a href={`/${lang}/projects`}>INeedAName</a>
           </li>
+
+          {breadcrumbs.map(({ label, url }) => (
+            <li>
+              <a href={url}>{t[label]}</a>
+            </li>
+          ))}
         </ol>
       </nav>
 

@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import TimeAgo from 'timeago-react';
 import { useFormik } from 'formik';
+import { ArrowLeft } from '@phosphor-icons/react';
 import { updateMyProfile } from '@backend/crud/profiles';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import type { Translations, MyProfile } from 'src/Types';
 
 import './AccountPreferences.css';
+import { DashboardHeader } from '@components/DashboardHeader';
 
 interface AccountPreferencesProps {
 
@@ -18,7 +19,7 @@ interface AccountPreferencesProps {
 
 export const AccountPreferences = (props: AccountPreferencesProps) => {
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const { profile } = props;
 
@@ -54,77 +55,86 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-account-preferences">
-        <h1>{t['Your User Profile']}</h1>
-        <form onSubmit={formik.handleSubmit}>
-          <fieldset>
-            <div className="field">
-              <label>{t['E-Mail']}</label>
-              <input 
-                readOnly
-                id="email"
-                name="email"
-                type="text" 
-                value={profile.email} />
-            </div>
-          </fieldset>
+        <DashboardHeader 
+          i18n={props.i18n} 
+          breadcrumbs={[{ label: 'Account Preferences' }]}/>
 
-          <h2>{t['Public Information']}</h2>
-          <span>
-            {t['Other users can see this information about you. All fields are optional.']}
-          </span>
+        <main>
+          <a href={`/${lang}/projects`}>
+            <ArrowLeft className="text-bottom" size={16} /><span>Back</span>
+          </a>
+          <h1>{t['Your User Profile']}</h1>
+          <form onSubmit={formik.handleSubmit}>
+            <fieldset>
+              <div className="field">
+                <label>{t['E-Mail']}</label>
+                <input 
+                  readOnly
+                  id="email"
+                  name="email"
+                  type="text" 
+                  value={profile.email} />
+              </div>
+            </fieldset>
 
-          <fieldset>
-            <div className="field">
-              <label htmlFor="nickname">
-                {t['Nickname']}
-              </label>
-              <input 
-                id="nickname"
-                name="nickname"
-                type="text" 
-                onChange={formik.handleChange}
-                value={formik.values.nickname} />
-            </div>
+            <h2>{t['Public Information']}</h2>
+            <span>
+              {t['Other users can see this information about you. All fields are optional.']}
+            </span>
 
-            <div className="field">
-              <label htmlFor="first_name">
-                {t['First Name']}
-              </label>
-              <input
-                id="first_name"
-                name="first_name"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.first_name} />
-            </div>
+            <fieldset>
+              <div className="field">
+                <label htmlFor="nickname">
+                  {t['Nickname']}
+                </label>
+                <input 
+                  id="nickname"
+                  name="nickname"
+                  type="text" 
+                  onChange={formik.handleChange}
+                  value={formik.values.nickname} />
+              </div>
 
-            <div className="field">
-              <label htmlFor="last_name">
-                {t['Last Name']}
-              </label>
-              <input
-                id="last_name"
-                name="last_name"          
-                type="text" 
-                onChange={formik.handleChange}
-                value={formik.values.last_name} />
-            </div>
+              <div className="field">
+                <label htmlFor="first_name">
+                  {t['First Name']}
+                </label>
+                <input
+                  id="first_name"
+                  name="first_name"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.first_name} />
+              </div>
 
-            <div className="field">
-              <label htmlFor="avatar_url">
-                {t['Avatar URL']}
-              </label>
-              <input
-                id="avatar_url"
-                name="avatar_url"          
-                type="text" 
-                onChange={formik.handleChange}
-                value={formik.values.avatar_url} />
-            </div>
-          </fieldset>
+              <div className="field">
+                <label htmlFor="last_name">
+                  {t['Last Name']}
+                </label>
+                <input
+                  id="last_name"
+                  name="last_name"          
+                  type="text" 
+                  onChange={formik.handleChange}
+                  value={formik.values.last_name} />
+              </div>
 
-          <button className="primary" type="submit">Submit</button>
-        </form>
+              <div className="field">
+                <label htmlFor="avatar_url">
+                  {t['Avatar URL']}
+                </label>
+                <input
+                  id="avatar_url"
+                  name="avatar_url"          
+                  type="text" 
+                  onChange={formik.handleChange}
+                  value={formik.values.avatar_url} />
+              </div>
+            </fieldset>
+
+            <button className="primary" type="submit">Submit</button>
+          </form>
+        </main>
       </div>
 
       <Toast

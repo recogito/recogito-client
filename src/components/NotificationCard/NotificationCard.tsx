@@ -10,7 +10,7 @@ export interface NotificationCardProps {
     onUnignore(): void,
 };
 
-const NotificationCard = (props: NotificationCardProps) => {
+export const NotificationCard = (props: NotificationCardProps) => {
     return (
         <div className="notification-card" style={{ backgroundColor: props.ignored ? '#eee' : '#fff' }}>
             <div>
@@ -23,6 +23,4 @@ const NotificationCard = (props: NotificationCardProps) => {
             </div>
         </div>
     )
-};
-
-export default NotificationCard
+}
