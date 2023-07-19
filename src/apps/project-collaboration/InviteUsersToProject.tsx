@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@backend/supabaseBrowserClient";
 import type { Project, Translations, UserProfile } from "src/Types";
 import './InviteUsersToProject.css';
-import { inviteUserToProject, listPendingInvites } from "@backend/crud";
+import { inviteUserToProject, listPendingInvites, listProjectUsers } from "@backend/crud";
 
 
 
@@ -31,6 +31,8 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
     useEffect(() => {
         listPendingInvites(supabase, project.id).then((data) => data && setPendingInvites(data.map((i) => i.email)));
     }, []);
+
+    useEffect(() => {listProjectUsers(supabase, project.id).then((data) => console.log(data))}, []);
 
     const formik = useFormik({
         initialValues: {

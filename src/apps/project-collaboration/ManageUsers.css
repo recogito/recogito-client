@@ -1,0 +1,35 @@
+.manage-users td, th {
+    border-bottom: 1px solid;
+    padding: 10px 15px;
+    text-align: left;
+}
+
+.manage-users table {
+    border-collapse: collapse;
+    width: 50%;
+}
+
+.manage-users table {
+    background-color: var(--gray-50);
+}
+
+.manage-users th {
+    background-color: var(--gray-50);
+}
+
+.manage-user tr:hover th {
+    background-color: var(--gray-50)!important;
+}
+
+.manage-users tr:hover {
+    background-color: var(--gray-100);
+}
+
+.manage-users tr:hover td {
+    background-color: transparent;
+}
+
+.manage-users {
+    font-size: var(--font-small);
+}
+

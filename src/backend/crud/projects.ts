@@ -102,4 +102,21 @@ export const listPendingInvites = async (supabase: SupabaseClient, projectId: st
     .eq('project_id', projectId)
     .is('accepted', false);
   return data;
+};
+
+export const listProjectUsers = async (supabase: SupabaseClient, projectId: string) => {
+  const { data } = await supabase
+    .from('group_users')
+    .select(`
+      profiles!group_users_user_id_fkey (
+        firstname,
+        lastname,
+        nickname
+      ),
+      project_groups!inner (
+        name
+      )
+    `)
+    .eq('project_groups.project_id', projectId);
+    return data;
 }
