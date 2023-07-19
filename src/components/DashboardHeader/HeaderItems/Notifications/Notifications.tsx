@@ -42,13 +42,13 @@ export const Notifications = (props: NotificationsProps) => {
             className={count ? 'notifications-info' : 'notifications-info no-pending'}>
             {Boolean(count) ? (
               <>
-                <div>You have {count} unread notifications</div>
-                <a href={`/${lang}/notifications`} className="button primary flat sm">View</a>
+                <div className="center">You have {count} unread notifications</div>
+                <a href={`/${lang}/notifications`} className="button primary flat sm">{t['View']}</a>
               </>
             ) : (
               <>
-                <div>{t['No unread notifications']}</div>
-                <a href={`/${lang}/notifications`} className="button flat sm">View all notifications</a>
+                <div className="center">{t['No unread notifications']}</div>
+                <a href={`/${lang}/notifications`} className="button flat sm">{t['View all']}</a>
               </>
             )}
           </section>

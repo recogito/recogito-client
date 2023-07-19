@@ -2,6 +2,13 @@
   font-size: var(--font-small);
 }
 
+.dashboard-account-preferences main {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 30px 40px;
+}
+
+
 .dashboard-account-preferences .field {
   margin: 0.6em 0;
 }

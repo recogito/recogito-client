@@ -13,7 +13,7 @@ export default {
   'annotation-image': {...annotationCommon, ...annotationImage},
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-login': authLogin,
-  'dashboard-account': dashboardAccount,
+  'dashboard-account': { ...dashboardAccount, ...dashboardSidebar },
   'dashboard-projects': { ...dashboardProjects, ...dashboardSidebar },
   'dashboard-sidebar': dashboardSidebar,
   'error': error,

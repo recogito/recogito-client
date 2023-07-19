@@ -19,26 +19,10 @@ if (error) {
 }
 ---
 <BaseLayout title={i18n.t['Account Preferences']}>
-  <header>
-    <nav class="breadcrumbs">
-      <ol>
-        <li>
-          <a href={`/${i18n.lang}/projects`}>INeedAName</a>
-        </li>
-
-        <li>
-          <a class="breadcrumb-current">{i18n.t['Account Preferences']}</a>
-        </li>
-      </ol>
-    </nav>
-  </header>
-
-  <main>
-    <AccountPreferences
-      client:load
-      i18n={i18n}
-      profile={data} />
-  </main>
+  <AccountPreferences
+    client:load
+    i18n={i18n}
+    profile={data} />
 </DashboardLayout>
 
 <style>

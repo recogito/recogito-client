@@ -91,27 +91,18 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         <DashboardHeader 
           i18n={props.i18n} />
 
-        {pending > 0 && (
-          <div className="dashboard-projects-notifications">
-            <a href={`/${lang}/notifications`}>
-              <button>
-                You have {pending} invitation{pending > 1 && 's'} pending.
-              </button>
-            </a>
-          </div>
-        )}
-        {projects.length === 0 ? (
-          <ProjectsEmpty 
-            i18n={props.i18n} 
-            onCreateProject={onCreateProject} />
-        ) : (
-          <ProjectsGrid 
-            i18n={props.i18n} 
-            projects={projects}
-            onCreateProject={onCreateProject} 
-            onDeleteProject={onDeleteProject} 
-            onRenameProject={onRenameProject} />  
-        )}
+          {projects.length === 0 ? (
+            <ProjectsEmpty 
+              i18n={props.i18n} 
+              onCreateProject={onCreateProject} />
+          ) : (
+            <ProjectsGrid 
+              i18n={props.i18n} 
+              projects={projects}
+              onCreateProject={onCreateProject} 
+              onDeleteProject={onDeleteProject} 
+              onRenameProject={onRenameProject} />  
+          )}
       </div>
 
       <Toast
