@@ -41,6 +41,14 @@
   padding: 5px 10px;
 }
 
+.dropdown-item a[href] {
+  color: var(--font-dark);
+}
+
+.dropdown-item a[href]:hover {
+  text-decoration: none;
+}
+
 .dropdown-item p {
   color: var(--font-light);
   line-height: 150%;

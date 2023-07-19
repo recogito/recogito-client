@@ -1,5 +1,5 @@
 ---
-import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
@@ -18,7 +18,7 @@ if (error) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
-<DashboardLayout>
+<BaseLayout title={i18n.t['Account Preferences']}>
   <header>
     <nav class="breadcrumbs">
       <ol>

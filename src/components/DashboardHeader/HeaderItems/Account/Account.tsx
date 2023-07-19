@@ -19,9 +19,11 @@ export const Account = (props: AccountProps) => {
 
   const { profile } = props;
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const realname = [profile.first_name, profile.last_name].filter(str => str).join(' ');
+
+  const goto = (url: string) => () => window.location.href = url;
 
   return (
     <Root>
@@ -35,7 +37,7 @@ export const Account = (props: AccountProps) => {
       </Trigger>
 
       <Portal>
-        <Content className="dropdown-content no-icons" alignOffset={-5} sideOffset={5} align="end">
+        <Content className="dropdown-content no-icons" alignOffset={-10} sideOffset={5} align="end">
           {(Boolean(profile.nickname) || Boolean(realname)) && (
             <section className="account-info">
               {profile.nickname && realname ? (
@@ -52,16 +54,19 @@ export const Account = (props: AccountProps) => {
           )}
           
           <section>
-            <Item className="dropdown-item">
-              <Sliders size={16} /> <span>Profile Settings</span>
+            <Item className="dropdown-item" onSelect={goto(`/${lang}/account/me`)}>
+              <Sliders size={16} /> 
+              <a href={`/${lang}/account/me`}>{t['Profile Settings']}</a>
             </Item>
 
-            <Item className="dropdown-item">
-              <Question size={16} /> <span>Help</span>
+            <Item className="dropdown-item" onSelect={goto(`/${lang}/help`)}>
+              <Question size={16} /> 
+              <a href={`/${lang}/help`}>{t['Help']}</a>
             </Item>
 
-            <Item className="dropdown-item">
-              <SignOut size={16} /> <span>Sign out</span>
+            <Item className="dropdown-item" onSelect={goto(`/${lang}/sign-out`)}>
+              <SignOut size={16} /> 
+              <a href={`/${lang}/sign-out`}>{t['Sign out']}</a>
             </Item>
           </section>
         </Content>
