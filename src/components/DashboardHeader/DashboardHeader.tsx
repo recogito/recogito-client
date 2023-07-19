@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { Bell, User } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
-import { Avatar } from '@components/Avatar';
-import { Button } from '@components/Button';
+import { Account, Notifications } from './HeaderItems';
 import type { MyProfile, Translations } from 'src/Types';
 
 import './DashboardHeader.css'; 
@@ -36,25 +35,18 @@ export const DashboardHeader = (props: DashboardHeaderProps) => {
 
       <div 
         className={profile ? 'dashboard-header-actions' : 'dashboard-header-actions loading'}>
-        <Button 
-          className="unstyled icon-only"
-          disabled={!profile}>
-          <Bell 
-            size={18} />
-        </Button>
+
+        <Notifications i18n={props.i18n} />
 
         {profile ? (
-          <Avatar 
-            id={profile.id} 
-            name={profile.nickname} 
-            avatar={profile.avatar_url} />
+          <Account i18n={props.i18n} profile={profile} />
         ) : (
-          <Button 
+          <button 
             className="unstyled icon-only avatar-placeholder"
             disabled>
             <User
               size={18} />
-          </Button>
+          </button>
         )}
       </div>
     </header>
