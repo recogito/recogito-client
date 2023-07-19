@@ -28,8 +28,17 @@ header.dashboard-header .dashboard-header-actions.loading svg {
   color: var(--gray-400);
 }
 
+header.dashboard-header :is(button.avatar-placeholder) {
+  margin-left: 0;
+}
+
 header.dashboard-header .avatar {
   height: 34px;
   width: 34px;
+}
+
+header.dashboard-header .dashboard-header-actions .actions-trigger {
+  border-radius: 50%;
+  margin-left: 0;
 }
 

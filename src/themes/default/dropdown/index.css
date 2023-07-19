@@ -27,6 +27,7 @@
 
 .dropdown-item {
   align-items: center;
+  border-radius: calc(var(--border-radius) - 1px);
   color: var(--font-dark);
   cursor: pointer;
   display: flex;
@@ -60,7 +61,6 @@
 .dropdown-radio-item[data-highlighted],
 .dropdown-sub-trigger[data-highlighted] {
   background-color: rgba(0, 0, 0, 0.08);  
-  border-radius: var(--border-radius);
 }
 
 .dropdown-item[data-disabled],
