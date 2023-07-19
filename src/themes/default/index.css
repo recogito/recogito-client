@@ -137,7 +137,7 @@
   --border-light-color: var(--gray-300);
 
   /** Buttons **/
-  --button-background-color: #fff;
+  --button-background-color: var(--gray-50);
   --button-border-color: var(--gray-300);
   --button-border-radius: var(--border-radius);
   --button-focus-outline-color: rgb(22, 97, 202, 0.2);

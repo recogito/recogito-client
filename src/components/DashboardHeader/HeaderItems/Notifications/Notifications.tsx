@@ -18,7 +18,7 @@ export const Notifications = (props: NotificationsProps) => {
 
   const { count } = props;
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   return (
     <Root>
@@ -41,19 +41,17 @@ export const Notifications = (props: NotificationsProps) => {
           <section 
             className={count ? 'notifications-info' : 'notifications-info no-pending'}>
             {Boolean(count) ? (
-              <span>You have {count} unread notifications</span>
+              <>
+                <div>You have {count} unread notifications</div>
+                <a href={`/${lang}/notifications`} className="button primary flat sm">View</a>
+              </>
             ) : (
-              <span>{t['No unread notifications']}</span>
+              <>
+                <div>{t['No unread notifications']}</div>
+                <a href={`/${lang}/notifications`} className="button flat sm">View all notifications</a>
+              </>
             )}
           </section>
-
-          {Boolean(count) && (
-            <section>
-              <Item className="dropdown-item">
-                <span>View all notifications</span>
-              </Item>
-            </section>
-          )}
         </Content>
       </Portal>
     </Root>
