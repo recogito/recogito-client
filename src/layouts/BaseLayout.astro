@@ -10,6 +10,7 @@ export interface Props {
 }
 
 const { title } = Astro.props;
+
 ---
 <!DOCTYPE html>
 <html lang={getLangFromUrl(Astro.url)}>
@@ -22,5 +23,15 @@ const { title } = Astro.props;
 	</head>
 	<body>
 		<slot />
+		<script>
+			window.onUsersnapLoad = function(api) {
+			  api.init();
+			  api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
+			}
+			var script = document.createElement('script');
+			script.defer = 1;
+			script.src = `https://widget.usersnap.com/global/load/${import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY}?onload=onUsersnapLoad`;
+			document.getElementsByTagName('head')[0].appendChild(script);
+		  </script>
 	</body>
 </html>
