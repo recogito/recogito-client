@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@backend/supabaseBrowserClient";
 import type { Project, Translations, UserProfile } from "src/Types";
 import './InviteUsersToProject.css';
-import { inviteUserToProject, listPendingInvites } from "@backend/crud";
+import { inviteUserToProject, listPendingInvites, listProjectUsers } from "@backend/crud";
 
 
 
@@ -14,7 +14,7 @@ interface InviteUsersToProjectProps {
 
     project: Project,
 
-    user: UserProfile
+    user: UserProfile | undefined
 
 }
 
@@ -32,6 +32,8 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
         listPendingInvites(supabase, project.id).then((data) => data && setPendingInvites(data.map((i) => i.email)));
     }, []);
 
+    useEffect(() => {listProjectUsers(supabase, project.id).then((data) => console.log(data))}, []);
+
     const formik = useFormik({
         initialValues: {
             email: '',
@@ -41,7 +43,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
         onSubmit: values => {
             console.log(values);
-            const invited_by_name = user.nickname ? user.nickname : user.last_name ? (user.first_name ? user.first_name + ' ' : '') + user.last_name : undefined;
+            const invited_by_name = user?.nickname ? user.nickname : user?.last_name ? (user.first_name ? user.first_name + ' ' : '') + user.last_name : undefined;
             inviteUserToProject(supabase, values.email, project.id, values.role, invited_by_name, project.name).then((result) => {
                 if (result?.error) {
                   console.error(result.error);

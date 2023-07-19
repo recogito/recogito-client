@@ -5,6 +5,8 @@ import { getUserProfile } from '@backend/auth';
 import { getProject } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { InviteUsersToProject } from '@apps/project-collaboration';
+import { ManageUsers } from '@apps/project-collaboration/ManageUsers';
+import type { loadTSConfig } from 'astro/dist/core/config';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -26,11 +28,18 @@ const response = await getProject(supabase, projectId as string);
   {response.error ? (
     <div>Something went wrong</div>
   ) : (
+    <div>
+    <ManageUsers
+      client:load
+      i18n={i18n}
+      project={response.data} 
+      /> 
     <InviteUsersToProject
         client:load
         i18n={i18n}
         project={response.data}
         user={user}
         />
+    </div>
   )}
 </ProjectLayout>
