@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { NotificationCard } from "@components/NotificationCard";
+import { NotificationCard } from '@components/NotificationCard';
+import { DashboardHeader } from '@components/DashboardHeader';
 import { processAcceptInvite, processIgnoreInvite, processUnignoreInvite } from '@backend/crud/notifications';
 import type { Invitation, Translations } from 'src/Types';
 
@@ -55,24 +56,30 @@ export const Notifications = (props: NotificationsProps) => {
 
   return (
     <div className="dashboard-notifications">
-      <h1>Pending Invitations</h1>
-      {ignoredCount > 0 && (<button onClick={toggleShowIgnored}>{showIgnored ? 'Hide Ignored' : 'Show Ignored'}</button>)}
-      <div className="notification-grid">
-        {displayList.length > 0 ? displayList.map((i) => (
-          <NotificationCard
-            key={i.id}
-            inviteId={i.id}
-            invitedBy={i.invited_by_name ? i.invited_by_name : 'a secret admirer'}
-            projectName={i.project_name ? i.project_name : 'a secret project'}
-            onAccept={i.onAccept}
-            onIgnore={i.onIgnore}
-            onUnignore={i.onUnignore}
-            ignored={i.ignored}
-          />
-        )) : (
-          <p>You have no invitations pending at the moment!</p>
-        )}
-      </div>
+      <DashboardHeader 
+        i18n={props.i18n} 
+        breadcrumbs={[{ label: 'Notifications' }]}/>
+        
+      <main>
+        <h1>Pending Invitations</h1>
+        {ignoredCount > 0 && (<button onClick={toggleShowIgnored}>{showIgnored ? 'Hide Ignored' : 'Show Ignored'}</button>)}
+        <div className="notification-grid">
+          {displayList.length > 0 ? displayList.map((i) => (
+            <NotificationCard
+              key={i.id}
+              inviteId={i.id}
+              invitedBy={i.invited_by_name ? i.invited_by_name : 'a secret admirer'}
+              projectName={i.project_name ? i.project_name : 'a secret project'}
+              onAccept={i.onAccept}
+              onIgnore={i.onIgnore}
+              onUnignore={i.onUnignore}
+              ignored={i.ignored}
+            />
+          )) : (
+            <p>You have no invitations pending at the moment!</p>
+          )}
+        </div>
+      </main>
     </div>
   )
 }

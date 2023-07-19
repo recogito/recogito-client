@@ -4,32 +4,16 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
 import { Notifications } from '@apps/dashboard-notifications';
 
-const i18n = getTranslations(Astro.request, 'notifications');
+const i18n = getTranslations(Astro.request, 'dashboard-notifications');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${i18n.lang}/sign-in`);
 ---
 <BaseLayout title="Notifications">
-  <header>
-    <nav class="breadcrumbs">
-      <ol>
-        <li>
-          <a href={`/${i18n.lang}/projects`}>INeedAName</a>
-        </li>
-
-        <li>
-          <a class="breadcrumb-current">{i18n.t['Notifications']}</a>
-        </li>
-      </ol>
-    </nav>
-  </header>
-
-  <main>
-    <Notifications
-      client:load
-      i18n={i18n} />
-  </main>
+  <Notifications
+    client:load
+    i18n={i18n} />
 </DashboardLayout>
 
 <style>
