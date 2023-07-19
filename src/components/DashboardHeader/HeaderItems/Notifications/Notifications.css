@@ -13,7 +13,10 @@
 }
 
 .dropdown-content .notifications-info {
+  display: flex;
+  flex-direction: column;
   font-size: var(--font-tiny);
+  gap: 6px;
   padding: 5px 10px;
 }
 

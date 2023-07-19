@@ -27,6 +27,10 @@ button, a[href].button {
     box-shadow .25s ease-in-out;
 }
 
+button.flat, a[href].button.flat {
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0);
+}
+
 a[href].button, a[href].button:hover {
   text-decoration: none;
 }
@@ -45,9 +49,10 @@ button:disabled svg {
 
 button:hover:not(:disabled), a.button:hover {
   box-shadow: 
-    inset 0 0 0 150px rgba(0, 0, 0, 0.12),
-    0 2px 3px -2px rgba(0, 0, 0, 0.2);
+    inset 0 0 0 150px rgba(0, 0, 0, 0.06);
+    /* 0 2px 3px -2px rgba(0, 0, 0, 0.2); */
 }
+
 
 button:focus-visible {
   box-shadow: 0 0 0 3px var(--button-focus-outline-color);
@@ -70,13 +75,15 @@ button svg:last-child {
   margin-left: 0.5em;
 }
 
-button.sm {
+button.sm,
+a[href].button.sm {
   font-size: var(--font-tiny);
   line-height: 120%;
   padding: 8px 16px;
 }
 
-button.lg {
+button.lg,
+a[href].button.lg {
   padding: 16px 32px;
 }
 

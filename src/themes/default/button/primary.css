@@ -1,4 +1,5 @@
-button.primary {
+button.primary,
+a[href].button.primary {
   background-color: var(--button-primary-background);
   border-color: var(--button-primary-background);
   box-shadow:
@@ -7,11 +8,15 @@ button.primary {
   color: #fff;
 }
 
-button.primary:not(:disabled):hover, a.button.primary:hover {
+button.primary:not(:disabled):hover, a[href].button.primary:hover {
   box-shadow:
     inset 0 0 0 150px rgba(0, 0, 0, 0.18),
     0 0 3px 1px rgba(0, 0, 0, 0.12), 
     0 4px 12px -6px rgba(0, 0, 0, 0.25);
+}
+
+button.primary:not(:disabled).flat:hover, a[href].button.primary.flat:hover {
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.18);
 }
 
 button.primary svg {
