@@ -16,11 +16,13 @@ interface NotificationsProps {
 
 export const Notifications = (props: NotificationsProps) => {
 
+  const { count } = props;
+
   const { t } = props.i18n;
 
   return (
     <Root>
-      <Trigger asChild>
+      <Trigger asChild >
         <button 
           className="unstyled icon-only notification-actions-trigger actions-trigger"
           disabled={false}>
@@ -28,17 +30,30 @@ export const Notifications = (props: NotificationsProps) => {
           <Bell 
             size={18} />
 
-          {Boolean(props.count) && ( 
-            <div className="pip">{props.count}</div>
+          {Boolean(count) && ( 
+            <div className="pip">{count}</div>
           )}
         </button>
       </Trigger>
 
       <Portal>
-        <Content className="dropdown-content no-icons" sideOffset={5} align="center">
-          <Item className="dropdown-item">
-            <span>View all notifications</span>
-          </Item>
+        <Content className="dropdown-content no-icons" alignOffset={-20} sideOffset={5} align="end">
+          <section 
+            className={count ? 'notifications-info' : 'notifications-info no-pending'}>
+            {Boolean(count) ? (
+              <span>You have {count} unread notifications</span>
+            ) : (
+              <span>{t['No unread notifications']}</span>
+            )}
+          </section>
+
+          {Boolean(count) && (
+            <section>
+              <Item className="dropdown-item">
+                <span>View all notifications</span>
+              </Item>
+            </section>
+          )}
         </Content>
       </Portal>
     </Root>

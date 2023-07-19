@@ -11,3 +11,12 @@
   top: -3px;
   width: 15px;
 }
+
+.dropdown-content .notifications-info {
+  font-size: var(--font-tiny);
+  padding: 5px 10px;
+}
+
+.dropdown-content .notifications-info.no-pending {
+  color: var(--font-light);
+}
