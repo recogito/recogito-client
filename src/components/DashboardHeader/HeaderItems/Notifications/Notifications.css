@@ -1,0 +1,13 @@
+.notification-actions-trigger .pip {
+  background-color: var(--bright-blue);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 9px;
+  font-weight: bold;
+  height: 1tpx; 
+  line-height: 15px;
+  position: absolute;
+  right: -4px;
+  top: -3px;
+  width: 15px;
+}
