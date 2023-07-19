@@ -17,6 +17,15 @@ const { title } = Astro.props;
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
+		<meta name="view-transition" content="same-origin" />
+		<script
+			async
+			src='https://widget.usersnap.com/load/%USERSNAP_API_KEY%?onload=onUsersnapCXLoad'></script>
+	  <script>
+			window.onUsersnapCXLoad = function(api) {
+		  	api.init();
+			}
+	  </script>
 		<title>{title}</title>
 	</head>
 	<body>
