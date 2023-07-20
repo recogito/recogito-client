@@ -11,7 +11,8 @@ export const listMyInvites = (supabase: SupabaseClient): Response<Invitation[]> 
                 id,
                 ignored,
                 invited_by_name,
-                project_name
+                project_name,
+                project_id
             `)
             .is('accepted', false)
             .eq('email', user?.email)

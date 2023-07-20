@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { listMyProjects } from '@backend/crud';
+import { listMyInvites, listMyProjects } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 
 const lang = getLangFromUrl(Astro.url);
@@ -11,16 +11,19 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
 
-const response = await listMyProjects(supabase);
+const projects = await listMyProjects(supabase);
+
+const invitations = await listMyInvites(supabase);
 ---
 <BaseLayout title="Dashboard">
   <div class="container">
-    {response.error ? (
+    {(projects.error || invitations.error) ? (
       <div>Something went wrong</div>
     ) : (
       <ProjectsHome 
         client:load
-        projects={response.data} 
+        projects={projects.data} 
+        invitations={invitations.data}
         i18n={getTranslations(Astro.request, 'dashboard-projects')} />
     )}
   </div>
