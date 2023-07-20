@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
-import type { Project, Translations } from 'src/Types';
+import type { Invitation, Project, Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { ProjectCard } from '@components/ProjectCard';
+import { InvitationCard } from '@components/InvitationCard';
 
 export interface ProjectsGridProps {
 
@@ -10,17 +11,25 @@ export interface ProjectsGridProps {
 
   projects: Project[];
 
+  invitations: Invitation[];
+
   onCreateProject(): void;
 
   onDeleteProject(project: Project): void;
 
   onRenameProject(project: Project): void;
 
+  onInvitationAccepted(invitation: Invitation, project: Project): void;
+
+  onInvitationDeclined(invitation: Invitation): void;
+
+  onError(error: string): void;
+
 }
 
 export const ProjectsGrid = (props: ProjectsGridProps) => {
 
-  const { t, lang } = props.i18n;
+  const { t } = props.i18n;
 
   const [fetching, setFetching] = useState(false);
 
@@ -44,6 +53,20 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
         busy={fetching}>
         <Plus size={20} /> <span>{t['Create New Project']}</span>
       </Button>
+
+      {props.invitations.length > 0 && (
+        <div className="dashboard-projects-invitations">
+          {props.invitations.map(invitation => (
+            <InvitationCard
+              key={invitation.id}
+              invitation={invitation}
+              i18n={props.i18n} 
+              onAccepted={project => props.onInvitationAccepted(invitation, project)} 
+              onDeclined={() => props.onInvitationDeclined(invitation)} 
+              onError={props.onError} />
+          ))}
+        </div>
+      )}
 
       <div className="dashboard-projects-grid">
         {props.projects.map(project => (

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
-import type { Project, Translations } from 'src/Types';
+import type { Invitation, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { deleteProject, retrievePendingInvites, getMyProfile } from '@backend/crud';
+import { deleteProject, getMyProfile } from '@backend/crud';
 import { initProject } from '@backend/helpers';
 import { DashboardHeader } from '@components/DashboardHeader';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
@@ -17,6 +17,8 @@ export interface ProjectsHomeProps {
 
   projects: Project[];
 
+  invitations: Invitation[]; 
+
 }
 
 export const ProjectsHome = (props: ProjectsHomeProps) => {
@@ -25,17 +27,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
+  const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
+
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [pending, setPending] = useState(0);
-  
   useEffect(() => {
     getMyProfile(supabase)
-      .then(({ error, data }) => {
+      .then(({ error }) => {
         if (error)
           window.location.href = `/${props.i18n.lang}/sign-in`;
-        else 
-          retrievePendingInvites(supabase, data.email).then((count) => count && setPending(count));
       })
   }, []);
 
@@ -43,7 +43,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     initProject(supabase, t['Untitled Project'])
       .then(({ project }) => {
         setProjects([...projects, project]);
-        // window.location.href = `/projects/${project.id}`;
       })
       .catch(error => {
         console.error(error);
@@ -85,13 +84,27 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       }
     });
 
+  const onError = (error: string) =>
+    setError({
+      title: t[error] || error,
+      type: 'error'
+    });
+
+  const onInvitationAccepted = (invitation: Invitation, project: Project) => {
+    setInvitations(invitations.filter(i => i.id !== invitation.id));
+    setProjects([ project, ...projects ]);
+  }
+
+  const onInvitationDeclined = (invitation: Invitation) =>
+    setInvitations(invitations.filter(i => i.id !== invitation.id));
+
   return (
     <ToastProvider>
       <div className="dashboard-projects-home">
         <DashboardHeader 
           i18n={props.i18n} />
 
-          {projects.length === 0 ? (
+          {(projects.length === 0 && invitations.length === 0) ? (
             <ProjectsEmpty 
               i18n={props.i18n} 
               onCreateProject={onCreateProject} />
@@ -99,9 +112,13 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             <ProjectsGrid 
               i18n={props.i18n} 
               projects={projects}
+              invitations={invitations}
               onCreateProject={onCreateProject} 
               onDeleteProject={onDeleteProject} 
-              onRenameProject={onRenameProject} />  
+              onRenameProject={onRenameProject} 
+              onInvitationAccepted={onInvitationAccepted}
+              onInvitationDeclined={onInvitationDeclined} 
+              onError={onError}/>  
           )}
       </div>
 
