@@ -37,7 +37,7 @@ export const Notifications = (props: NotificationsProps) => {
       </Trigger>
 
       <Portal>
-        <Content className="dropdown-content no-icons" alignOffset={-20} sideOffset={5} align="end">
+        <Content className="dropdown-content no-icons" alignOffset={-20} sideOffset={8} align="end">
           <section 
             className={count ? 'notifications-info' : 'notifications-info no-pending'}>
             {Boolean(count) ? (
