@@ -34,13 +34,8 @@ const response = await getProject(supabase, projectId as string);
       client:load
       i18n={i18n}
       project={response.data} 
+      user={user}
       /> 
-    <InviteUsersToProject
-        client:load
-        i18n={i18n}
-        project={response.data}
-        user={user}
-        />
     </div>
   )}
 </ProjectLayout>
