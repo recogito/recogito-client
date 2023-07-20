@@ -79,6 +79,20 @@ export const ManageUsers = (props: ManageUsersProps) => {
         }
     };
 
+    const handleToggleSelected = (id: string) => {
+        if (selected.includes(id)) {
+            setSelected((old) => old.filter((i) => i != id));
+        }
+        else setSelected((old) => [...old, id]);
+    };
+
+    const toggleSelectAll = () => {
+        if (data && data.length == selected.length) {
+            setSelected([]);
+        }
+        else setSelected(data ? data.map((i) => i.profiles.id) : []);
+    };
+
     const handleUpdateUser = (userId: string, oldTypeId: string, newTypeId: string) => {
         updateUserProjectGroup(supabase, userId, oldTypeId, newTypeId).then((response) => {
             if (!response) {
