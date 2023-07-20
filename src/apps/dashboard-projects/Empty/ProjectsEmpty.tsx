@@ -32,10 +32,6 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
           {t['Empty Dashboard? Infinite Possibilities!']}
         </h1>
 
-        <p>
-          {t['You have no annotation projects.']} <a href="./help/tutorial">{t['Learn more.']}</a>
-        </p>
-
         <div className="dashboard-projects-empty-cta">
           <Button 
             className="primary lg" 

@@ -84,7 +84,7 @@ a[href].button.sm {
 
 button.lg,
 a[href].button.lg {
-  padding: 16px 32px;
+  padding: 12px 28px;
 }
 
 button.lg > svg {
