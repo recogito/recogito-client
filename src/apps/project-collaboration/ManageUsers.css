@@ -29,3 +29,92 @@
     font-size: var(--font-small);
 }
 
+.users-table {
+    display: flex;
+    flex-direction: column;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+.users-table .row {
+    display: flex;
+    flex-direction: row;
+    border-bottom: solid 1px;
+}
+
+.users-table .row {
+    background-color: var(--gray-50);
+}
+
+.users-table .header {
+    border-bottom: solid 2px;
+    font-weight: 600;
+}
+
+.users-table .row > div {
+    padding: 10px 15px;
+}
+
+.users-table .row:hover :not(.header, .header > div) {
+    background-color: var(--gray-100);
+}
+
+.CheckboxRoot {
+    background-color: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 2px var(--mud-gray);
+    padding:0;
+  }
+  .CheckboxRoot:hover {
+    background-color: var(--mud-gray);
+  }
+  .CheckboxRoot:focus {
+    box-shadow: 0 0 0 1px var(--dark-blue);
+  }
+
+  .InviteDialogOverlay {
+    background-color: rgba(0,0,0,0.25);
+    position: fixed;
+    inset: 0;
+    animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .InviteDialogContent {
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 450px;
+    max-height: 85vh;
+    padding: 25px;
+    animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .InviteDialogContent:focus {
+    outline: none;
+  }
+
+  .InviteDialogClose {
+    font-family: inherit;
+    border-radius: 100%;
+    height: 25px;
+    width: 25px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  
+

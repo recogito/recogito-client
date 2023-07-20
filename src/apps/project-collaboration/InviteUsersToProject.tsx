@@ -68,9 +68,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
     return (
         <ToastProvider>
-            <div className="collaboration">
-                <h1>{t['Invite Users to Project']}</h1>
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} className="collaboration">
                     <fieldset>
                     <div className="field">
                         <label>{t['E-Mail']}</label>
@@ -95,17 +93,6 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
                     </fieldset>
                     <button className="primary" type="submit">{t['Invite']}</button>
                 </form>
-            { pendingInvites.length > 0 && (
-                <div style={{ marginTop: 40 }}>
-                    <h2>Invited Users: Pending</h2>
-                    <ul>
-                        { pendingInvites.map((i) => (
-                            <li key={i}>{i}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            </div>
             <Toast
                 content={error}
                 onOpenChange={open => !open && setError(null)} />
