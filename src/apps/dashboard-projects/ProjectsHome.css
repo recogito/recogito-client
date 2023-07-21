@@ -39,7 +39,10 @@
 
 .dashboard-projects-home .dashboard-banner {
   background-color: var(--sand);
+  box-sizing: border-box;
   color: #fff;
+  overflow: hidden;
+  padding: 20px 30px;
 }
 
 .dashboard-projects-home .dashboard-banner h1 {

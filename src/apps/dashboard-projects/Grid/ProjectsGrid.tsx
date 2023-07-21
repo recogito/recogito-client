@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
+import { animated, easings, useTransition} from '@react-spring/web';
 import type { Invitation, Project, Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { ProjectCard } from '@components/ProjectCard';
@@ -44,28 +45,42 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
   useEffect(() => {
     setFetching(false);
   }, [props.projects]);
+
+  const hasInvitations = props.invitations.length > 0;
+
+  const bannerTransition = useTransition([hasInvitations], {
+    from: { maxHeight: '0px' },
+    enter: { maxHeight: hasInvitations ? '100px': '0px' },
+    leave: { maxHeight: '0px' },
+    config: { 
+      duration: 300,
+      easing: easings.easeOutCubic
+    }
+  });
   
   return (
     <main>
-      {props.invitations.length > 0 && (
-        <section className="dashboard-banner info-banner">
-          {props.invitations.length === 1 ? (
-            <>
-              <h1>New Invitation</h1>
-              <p>
-                A new project is waiting for you to join!
-              </p>
-            </>
-          ) : (
-            <>
-              <h1>{props.invitations.length} Invitations</h1>
-              <p>
-                New projects are waiting for you to join!
-              </p>
-            </>
-          )} 
-        </section>
-      )}
+      {bannerTransition((style) => (
+        <animated.div style={{ overflow: 'hidden', ...style }}>
+          <section className="dashboard-banner info-banner">
+            {props.invitations.length === 1 ? (
+              <>
+                <h1>New Invitation</h1>
+                <p>
+                  A new project is waiting for you to join!
+                </p>
+              </>
+            ) : (
+              <>
+                <h1>{props.invitations.length} Invitations</h1>
+                <p>
+                  New projects are waiting for you to join!
+                </p>
+              </>
+            )} 
+          </section>
+        </animated.div>
+      ))}
 
       <section>
         <Button 
@@ -75,7 +90,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
           <Plus size={20} /> <span>{t['Create New Project']}</span>
         </Button>
 
-        {props.invitations.length > 0 && (
+        {hasInvitations && (
           <div className="dashboard-projects-grid invitations">
             {props.invitations.map(invitation => (
               <InvitationCard
