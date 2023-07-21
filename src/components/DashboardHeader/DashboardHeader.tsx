@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { User } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getMyProfile, listMyInvites } from '@backend/crud';
-import { Account, Notifications } from './HeaderItems';
+import { getMyProfile } from '@backend/crud';
+import { Account } from './HeaderItems';
 import type { MyProfile, Translations } from 'src/Types';
 
 import './DashboardHeader.css'; 
@@ -21,7 +21,7 @@ export const DashboardHeader = (props: DashboardHeaderProps) => {
 
   const [profile, setProfile] = useState<MyProfile | undefined>();
 
-  const [notifications, setNotifications] = useState<number>(0);
+  // const [notifications, setNotifications] = useState<number>(0);
 
   const breadcrumbs = props.breadcrumbs || [];
 
@@ -29,8 +29,8 @@ export const DashboardHeader = (props: DashboardHeaderProps) => {
     getMyProfile(supabase)
       .then(({ data }) => setProfile(data));
 
-    listMyInvites(supabase)
-      .then(({ data }) => setNotifications(data ? data.length : 0));
+    // listMyInvites(supabase)
+    //  .then(({ data }) => setNotifications(data ? data.length : 0));
   }, []);
 
   return (
@@ -52,9 +52,9 @@ export const DashboardHeader = (props: DashboardHeaderProps) => {
       <div 
         className={profile ? 'dashboard-header-actions' : 'dashboard-header-actions loading'}>
 
-        <Notifications 
+        {/* <Notifications 
           i18n={props.i18n} 
-          count={notifications} />
+          count={notifications} /> */}
 
         {profile ? (
           <Account i18n={props.i18n} profile={profile} />

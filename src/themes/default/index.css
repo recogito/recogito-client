@@ -105,6 +105,7 @@
   --dark-blue: #07498a;
   --bright-blue: #07529a;
   --brighter-blue: #0167ff;
+  --sand: #987116;
   --mud-gray: #808073;
   --orange: #e9b44a;
   
@@ -186,7 +187,7 @@ h1 {
   font-family: Poppins;
   font-size: 1.6em;
   font-weight: 600;
-  letter-spacing: -0.03ch;
+  letter-spacing: 0.02ch;
   margin: 1em 0;
   padding: 0;
 }
