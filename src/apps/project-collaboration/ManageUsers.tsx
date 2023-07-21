@@ -93,6 +93,25 @@ export const ManageUsers = (props: ManageUsersProps) => {
         else setSelected(data ? data.map((i) => i.profiles.id) : []);
     };
 
+    const handleOpenEditModal = (id: string, name: string, type_id: string) => {
+        setCurrentlyEditing({ id: id, name: name, type_id: type_id });
+        setEditModalOpen(true);
+    };
+
+    const handleOpenRemoveModal = (id: string, name: string, typeId: string) => {
+        setCurrentlyRemoving({ id: id, name: name, typeId: typeId });
+        setRemoveModalOpen(true);
+        setEditModalOpen(false);
+    };
+
+    const handleCloseRemoveModal = () => {
+        setRemoveModalOpen(false);
+        setCurrentlyRemoving(null);
+        if (currentlyEditing) {
+            setEditModalOpen(true);
+        }
+    };
+
     const handleUpdateUser = (userId: string, oldTypeId: string, newTypeId: string) => {
         updateUserProjectGroup(supabase, userId, oldTypeId, newTypeId).then((response) => {
             if (!response) {
