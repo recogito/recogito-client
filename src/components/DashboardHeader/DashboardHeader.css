@@ -1,5 +1,6 @@
 header.dashboard-header {
   align-items: center;
+  border-bottom: 1px solid var(--gray-300);
   box-sizing: border-box;
   display: flex;
   height: 50px;

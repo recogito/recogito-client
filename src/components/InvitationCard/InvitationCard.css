@@ -3,13 +3,21 @@
   border-radius: var(--border-radius);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  overflow: hidden;
   position: relative;
   text-align: center;
   transition: all .25s ease-in-out;
 }
 
 .invitation-card .card-decoration {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.invitation-card .card-decoration svg {
   color: rgba(0, 0, 0, 0.05);
   left: -20px;
   position: absolute;

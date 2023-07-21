@@ -1,5 +1,9 @@
-button.busy * {
+button.busy > * {
   opacity: 0;
+}
+
+button.busy .confetti {
+  opacity: 1;
 }
 
 button.busy svg.button-busy-spinner, 
