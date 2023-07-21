@@ -44,7 +44,7 @@
   -webkit-line-clamp: 2;
 }
 
-.project-card button {
+.project-card .project-card-actions {
   bottom: 9px;
   right: 9px;
   position: absolute;

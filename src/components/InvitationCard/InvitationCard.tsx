@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Envelope } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { joinProject, declineInvitation } from '@backend/helpers/invitationHelpers';
 import type { Invitation, Project, Translations } from 'src/Types';
@@ -55,19 +56,21 @@ export const InvitationCard = (props: InvitationCardProps) => {
   }
 
   return (
-    <div className="invitation-card">
+    <div className="project-card invitation-card">
+      <Envelope className="card-decoration" size={180} weight="thin" />
       {busy ? (
         <div>Please wait...</div>
       ) : (
         <div>
+          <p>{invitation.invited_by_name} invites you to join:</p>
           <h1>{invitation.project_name}</h1>
-          <p>You have been invited to join this project by {invitation.invited_by_name}</p>
-            <div className="notification-actions">
+            <div className="invitation-actions">
               <button 
-                className="success" 
+                className="primary md flat"
                 onClick={onAccept}>Accept</button>
 
               <button
+                className="md flat"
                 onClick={onDecline}>Decline</button>          
             </div>
         </div>
