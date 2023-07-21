@@ -47,12 +47,23 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
   
   return (
     <main>
-      {props.invitations.length === 0 && (
+      {props.invitations.length > 0 && (
         <section className="dashboard-banner info-banner">
-          <h1>2 Invitations</h1>
-          <p>
-            New projects are waiting for you to join!
-          </p>
+          {props.invitations.length === 1 ? (
+            <>
+              <h1>New Invitation</h1>
+              <p>
+                A new project is waiting for you to join!
+              </p>
+            </>
+          ) : (
+            <>
+              <h1>{props.invitations.length} Invitations</h1>
+              <p>
+                New projects are waiting for you to join!
+              </p>
+            </>
+          )} 
         </section>
       )}
 
@@ -65,7 +76,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
         </Button>
 
         {props.invitations.length > 0 && (
-          <div className="dashboard-projects-invitations">
+          <div className="dashboard-projects-grid invitations">
             {props.invitations.map(invitation => (
               <InvitationCard
                 key={invitation.id}
