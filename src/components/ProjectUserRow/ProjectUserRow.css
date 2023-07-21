@@ -7,23 +7,7 @@
     text-align: left;
 }
 
-.edit-role button {
-    padding: 8px;
-    margin: 0 8px;
-    float: right;
-}
 
-.edit-role {
-    display: inline-block;
-}
-
-.edit-role form {
-    display: inline-block;
-}
-
-.edit-role select.modified {
-    background-color: var(--orange)
-}
 
 
   
