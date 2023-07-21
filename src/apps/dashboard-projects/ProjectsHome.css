@@ -4,10 +4,6 @@
   min-height: 100vh;
 }
 
-.dashboard-projects-home main {
-  flex-grow: 1;
-}
-
 .dashboard-projects-empty {
   align-items: center;
   display: flex;
@@ -37,8 +33,27 @@
   min-width: 365px;
 }
 
+.dashboard-projects-home section {
+  padding: 20px 30px;
+}
+
+.dashboard-projects-home .dashboard-banner {
+  background-color: var(--sand);
+  color: #fff;
+}
+
+.dashboard-projects-home .dashboard-banner h1 {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.dashboard-projects-home .dashboard-banner p {
+  font-size: var(--font-small);
+  margin: 0;
+}
+
 .dashboard-projects-home main {
-  padding: 30px;
+  flex-grow: 1;
 }
 
 .dashboard-projects-home .dashboard-projects-grid  {
