@@ -135,17 +135,17 @@ export const ManageUsers = (props: ManageUsersProps) => {
             </InviteDialog.Root>
             <div className="users-table">
                 <div className="header row">
-                    <div style={{ width: '5%' }}>
+                    <div style={{ width: '3%' }}>
                         { data && data.length > 1 && (<Root onCheckedChange={toggleSelectAll} className="CheckboxRoot" checked={data.length == selected.length}>
                             <Indicator>
                                 <Check size={15} style={{ display: 'flex' }} />
                             </Indicator>
                         </Root>) }
                     </div>
-                    <div style={{ width: '20%' }}>Name</div>
-                    <div style={{ width: '30%' }}>Email</div>
+                    <div style={{ width: '22%' }}>Name</div>
+                    <div style={{ width: '32%' }}>Email</div>
                     <div style={{ width: '18%' }}>Role</div>
-                    <div style={{ width: '27%' }}>Actions</div>
+                    <div style={{ width: '25%' }}>Actions</div>
                 </div>
             { data?.map((user) => (
                 <ProjectUserRow
