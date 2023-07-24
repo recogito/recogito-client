@@ -24,7 +24,9 @@ interface NotificationsProps {
 
 export const Notifications = (props: NotificationsProps) => {
 
-  const count = props.invitations.length;
+  const unhandled = props.invitations.filter(i => !i.ignored);
+
+  const count = unhandled.length;
 
   return (
     <Root>
@@ -53,7 +55,7 @@ export const Notifications = (props: NotificationsProps) => {
               </Close>
             </header>
 
-            {props.invitations.length === 0 ? (
+            {count === 0 ? (
               <EmptyList i18n={props.i18n} />
             ) : (
               <ol>
