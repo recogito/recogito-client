@@ -9,7 +9,6 @@
     0 8px 24px -4px rgba(0, 0, 0, 0.08);
   line-height: 160%;
   min-width: 160px;
-  padding: 5px;
 }
 
 .dropdown-content[data-side='top'], .dropdown-subcontent[data-side='top'] {
@@ -33,6 +32,7 @@
   display: flex;
   font-size: var(--font-tiny);
   font-weight: 400;
+  padding: 5px;
   outline: none;
   user-select: none;
 }

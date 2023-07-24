@@ -116,8 +116,8 @@
   --gray-500: #93989f; 
   --gray-400: #cbd0d7;
   --gray-300: #dadee2;
-  --gray-200: #dfe2e7;
-  --gray-100: #e9ecf1;
+  --gray-200: #e2e5e9;
+  --gray-100: #f3f4f7;
   --gray-50: #f6f7f9;
 
   --red-500: #da1e26;
@@ -148,7 +148,6 @@
   --button-hover-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.1);
   --button-primary-background: var(--bright-blue);
 
-
   /** Inputs **/
   --input-border-color: var(--gray-300);
   --input-border-radius: var(--border-radius);
@@ -159,7 +158,7 @@
 }
 
 html, body {
-  background-color: var(--gray-50);
+  background-color: var(--gray-100);
   color: var(--gray-900);
   font-family: Inter, Arial, Helvetica, sans-serif;
   font-size: 16px;
