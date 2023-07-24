@@ -1,0 +1,11 @@
+.edit-user form, button {
+    display: inline-block;
+}
+
+.edit-user select {
+    padding: 10px 15px;
+}
+
+.edit-user button {
+    margin-left: 10px;
+}
