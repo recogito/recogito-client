@@ -15,11 +15,11 @@ interface HeaderProps {
 
   invitations: Invitation[];
 
+  onCreateProject(): void;
+
 }
 
 export const Header = (props: HeaderProps) => {
-
-  const { lang, t } = props.i18n;
 
   const [profile, setProfile] = useState<MyProfile | undefined>();
 
@@ -39,7 +39,9 @@ export const Header = (props: HeaderProps) => {
         <div
           className={profile ? 'dashboard-header-top-actions' : 'dashboard-header-top-actions loading'}>
 
-          <Button className="new-project primary sm flat">
+          <Button 
+            className="new-project primary sm flat"
+            onClick={props.onCreateProject}>
             <Plus size={16} weight="bold" /> <span>New Project</span>
           </Button>
 

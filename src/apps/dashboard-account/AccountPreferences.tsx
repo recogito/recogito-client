@@ -7,7 +7,6 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import type { Translations, MyProfile } from 'src/Types';
 
 import './AccountPreferences.css';
-import { DashboardHeader } from '@components/DashboardHeader';
 
 interface AccountPreferencesProps {
 
@@ -55,10 +54,6 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-account-preferences">
-        <DashboardHeader 
-          i18n={props.i18n} 
-          breadcrumbs={[{ label: 'Account Preferences' }]}/>
-
         <main>
           <a href={`/${lang}/projects`}>
             <ArrowLeft className="text-bottom" size={16} /><span>Back</span>

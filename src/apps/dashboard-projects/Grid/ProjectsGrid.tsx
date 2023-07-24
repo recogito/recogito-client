@@ -47,49 +47,10 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
   }, [props.projects]);
 
   const hasInvitations = props.invitations.length > 0;
-
-  const bannerTransition = useTransition([hasInvitations], {
-    from: { maxHeight: '0px' },
-    enter: { maxHeight: hasInvitations ? '100px': '0px' },
-    leave: { maxHeight: '0px' },
-    config: { 
-      duration: 300,
-      easing: easings.easeOutCubic
-    }
-  });
   
   return (
     <main>
-      {bannerTransition((style) => (
-        <animated.div style={{ overflow: 'hidden', ...style }}>
-          <section className="dashboard-banner info-banner">
-            {props.invitations.length === 1 ? (
-              <>
-                <h1>New Invitation</h1>
-                <p>
-                  A new project is waiting for you to join!
-                </p>
-              </>
-            ) : (
-              <>
-                <h1>{props.invitations.length} Invitations</h1>
-                <p>
-                  New projects are waiting for you to join!
-                </p>
-              </>
-            )} 
-          </section>
-        </animated.div>
-      ))}
-
       <section>
-        {/* <Button 
-          className="primary" 
-          onClick={onCreateProject}
-          busy={fetching}>
-          <Plus size={20} /> <span>{t['Create New Project']}</span>
-            </Button> */}
-
         {hasInvitations && (
           <div className="dashboard-projects-grid invitations">
             {props.invitations.map(invitation => (

@@ -103,7 +103,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       <div className="dashboard-projects-home">
         <Header 
           i18n={props.i18n} 
-          invitations={invitations} />
+          invitations={invitations} 
+          onCreateProject={onCreateProject} />
 
         {(projects.length === 0 && invitations.length === 0) ? (
           <ProjectsEmpty 
