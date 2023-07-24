@@ -3,7 +3,7 @@ import { Question, SignOut, Sliders } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import type { MyProfile, Translations } from 'src/Types';
 
-import './Account.css';
+import './AccountActions.css';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
@@ -15,7 +15,7 @@ interface AccountProps {
 
 }
 
-export const Account = (props: AccountProps) => {
+export const AccountActions = (props: AccountProps) => {
 
   const { profile } = props;
 
@@ -28,7 +28,7 @@ export const Account = (props: AccountProps) => {
   return (
     <Root>
       <Trigger asChild>
-        <button className="unstyled actions-trigger" style={{ border: 'none' }}>
+        <button className="unstyled account-actions-trigger" style={{ border: 'none' }}>
           <Avatar 
             id={profile.id} 
             name={profile.nickname} 
@@ -39,7 +39,7 @@ export const Account = (props: AccountProps) => {
       <Portal>
         <Content className="dropdown-content no-icons" alignOffset={-10} sideOffset={8} align="end">
           {(Boolean(profile.nickname) || Boolean(realname)) && (
-            <section className="account-info">
+            <section className="account-actions-meta">
               {profile.nickname && realname ? (
                 <>
                   <h1>{profile.nickname}</h1>

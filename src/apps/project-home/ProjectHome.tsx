@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CloudArrowUp } from '@phosphor-icons/react';
+import { Files, GraduationCap, PuzzlePiece, Sliders, UsersThree } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
@@ -121,6 +122,41 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   return (
     <div className="project-home">
+
+<nav aria-label="sub menu" aria-role="tablist">
+        <ol>
+          <li className="active">
+            <a href={`/projects/${project.id}`}>
+              <Files /> Content
+            </a>
+          </li>
+
+          <li>
+            <a href={`/projects/${project.id}/collaboration`}>
+              <UsersThree /> Collaboration
+            </a>
+          </li>
+
+          <li>
+            <a href={`/projects/${project.id}/assignments`}>
+              <GraduationCap /> Assignments
+            </a>
+          </li>
+          
+          <li>
+            <a href={`/projects/${project.id}/addons`}>
+              <PuzzlePiece /> Add Ons
+            </a>
+          </li>
+
+          <li>
+            <a href={`/projects/${project.id}/settings`}>
+              <Sliders /> Settings
+            </a>
+          </li>
+        </ol>
+      </nav>
+
       <ToastProvider>
         <div>
           <h1>

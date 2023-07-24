@@ -1,0 +1,95 @@
+.dashboard-header {
+  background-color: #fff;
+}
+
+.dashboard-header section {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.dashboard-header section.dashboard-header-top {
+  border-bottom: 1px solid var(--gray-100);
+  padding: 20px 30px;
+}
+
+.dashboard-header h1 {
+  font-size: 1.4em;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-header h1 svg {
+  color: var(--font-light);
+  padding-right: 10px;
+  vertical-align: text-bottom;
+}
+
+.dashboard-header .dashboard-header-top-actions {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.dashboard-header .dashboard-header-top-actions button {
+  border: 1px solid var(--gray-400);
+  height: 30px;
+  width: 30px;
+}
+
+.dashboard-header .dashboard-header-top-actions button.new-project {
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  height: auto;
+  margin-right: 3px;
+  padding: 6px 12px 6px 8px;
+  width: auto;
+}
+
+.dashboard-header section.dashboard-header-bottom {
+  padding: 6px 25px 0 30px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.dashboard-header-bottom ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-header-bottom li {
+  display: inline-block;
+}
+
+.dashboard-header-bottom li + li {
+  margin-left: 10px;
+}
+
+.dashboard-header-bottom li button {
+  background: none;
+  border-color: transparent;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 0 0 2px 0;
+  box-shadow: none;
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  font-weight: 500;
+  padding: 8px 4px;
+}
+
+.dashboard-header-bottom li.active button {
+  border-color: var(--brighter-blue);
+  color: var(--brighter-blue);
+  font-weight: 600;
+}
+
+.dashboard-header-bottom li button:hover {
+  background: none;
+  box-shadow: none;
+}
+
+

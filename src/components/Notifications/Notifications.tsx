@@ -4,7 +4,7 @@ import type { Translations } from 'src/Types';
 
 import './Notifications.css';
 
-const { Content, Item, Portal, Root, Trigger } = Dropdown;
+const { Content, Portal, Root, Trigger } = Dropdown;
 
 interface NotificationsProps {
   

@@ -4,8 +4,8 @@ import type { Invitation, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteProject, getMyProfile } from '@backend/crud';
 import { initProject } from '@backend/helpers';
-import { DashboardHeader } from '@components/DashboardHeader';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
+import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
@@ -101,25 +101,26 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-projects-home">
-        <DashboardHeader 
-          i18n={props.i18n} />
+        <Header 
+          i18n={props.i18n} 
+          invitations={invitations} />
 
-          {(projects.length === 0 && invitations.length === 0) ? (
-            <ProjectsEmpty 
-              i18n={props.i18n} 
-              onCreateProject={onCreateProject} />
-          ) : (
-            <ProjectsGrid 
-              i18n={props.i18n} 
-              projects={projects}
-              invitations={invitations}
-              onCreateProject={onCreateProject} 
-              onDeleteProject={onDeleteProject} 
-              onRenameProject={onRenameProject} 
-              onInvitationAccepted={onInvitationAccepted}
-              onInvitationDeclined={onInvitationDeclined} 
-              onError={onError}/>  
-          )}
+        {(projects.length === 0 && invitations.length === 0) ? (
+          <ProjectsEmpty 
+            i18n={props.i18n} 
+            onCreateProject={onCreateProject} />
+        ) : (
+          <ProjectsGrid 
+            i18n={props.i18n} 
+            projects={projects}
+            invitations={invitations}
+            onCreateProject={onCreateProject} 
+            onDeleteProject={onDeleteProject} 
+            onRenameProject={onRenameProject} 
+            onInvitationAccepted={onInvitationAccepted}
+            onInvitationDeclined={onInvitationDeclined} 
+            onError={onError}/>  
+        )}
       </div>
 
       <Toast

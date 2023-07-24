@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding: 40px;
   position: relative;
 }
 
@@ -99,4 +98,66 @@
   margin: 0;
   letter-spacing: 0.01ch;
 }
+
+
+/** HACK **/
+
+.project-home > div {
+  background-color: #fff;
+}
+
+.project-home nav ol {
+  list-style-type: none;
+  margin: 10px 0 0 0;
+  padding: 0 0 0 40px;
+}
+
+.project-home nav li {
+  display: inline-block;
+}
+
+.project-home nav a {
+  border-color: transparent transparent var(--gray-300) transparent;
+  border-style: solid;
+  border-width: 3px 1px 1px 1px;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  color: var(--gray-800);
+  display: inline-block;
+  font-size: var(--font-small);
+  line-height: 100%;
+  margin: 0;
+  padding: 9px 16px 10px 14px;
+  position: relative;
+  top: 1.5px;    
+  z-index: 0;
+}
+
+.project-home nav a:hover {
+  text-decoration: none;
+}
+
+.project-home nav li + li a {
+  margin-left: 4px;
+}
+
+.project-home nav svg {
+  color: var(--gray-500);
+  padding-right: 2px;
+  position: relative;
+  top: -0.5px;
+}
+
+.project-home nav li.active a {
+  background-color: #fff;
+  border-color: var(--bright-blue) var(--gray-400) #fff var(--gray-400);
+  z-index: 2;
+}
+
+.project-home nav li:not(.active):hover a {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-style: solid;
+  border-color: var(--gray-200);
+  border-width: 1px 1px 0 1px;
+}
+
 

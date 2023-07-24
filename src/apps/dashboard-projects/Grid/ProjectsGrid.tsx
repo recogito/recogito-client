@@ -83,12 +83,12 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
       ))}
 
       <section>
-        <Button 
+        {/* <Button 
           className="primary" 
           onClick={onCreateProject}
           busy={fetching}>
           <Plus size={20} /> <span>{t['Create New Project']}</span>
-        </Button>
+            </Button> */}
 
         {hasInvitations && (
           <div className="dashboard-projects-grid invitations">
