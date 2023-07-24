@@ -28,7 +28,7 @@ export interface Project {
 
   created_at: string;
 
-  created_by: string;
+  created_by: UserProfile;
 
   updated_at: string;
 

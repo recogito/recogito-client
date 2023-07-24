@@ -11,7 +11,7 @@
 .dropdown-content .account-actions-meta {
   border-bottom: 1px solid var(--gray-100);
   margin-bottom: 5px;
-  padding: 8px 10px;
+  padding: 3px 10px 8px 10px;
 }
 
 .dropdown-content .account-actions-meta h1,

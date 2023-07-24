@@ -35,13 +35,19 @@ export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
       .select(`
         id,
         created_at,
-        created_by,
+        created_by:profiles!projects_created_by_fkey(
+          id,
+          nickname,
+          first_name,
+          last_name,
+          avatar_url
+        ),
         updated_at,
         updated_by,
         name,
         description
       `)
-      .then(({ error, data }) => ({ error, data: data as Project[] })));
+      .then(({ error, data }) => ({ error, data: data as unknown as Project[] })));
 
 export const updateProject = (supabase: SupabaseClient, project: Project): Response<Project> =>
   supabase 

@@ -50,7 +50,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     filter === ProjectFilter.ALL ?
       projects : 
     filter === ProjectFilter.MINE ? 
-      projects.filter(p => p.created_by === props.me.id) : 
+      projects.filter(p => p.created_by.id === props.me.id) : 
     filter === ProjectFilter.SHARED ? 
       // TODO
       [] : [];
