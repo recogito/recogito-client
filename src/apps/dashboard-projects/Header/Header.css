@@ -80,13 +80,13 @@
   padding: 8px 4px;
 }
 
-.dashboard-header-bottom li:hover button {
-  border-color: var(--gray-500);
+.dashboard-header-bottom .dashboard-header-tabs li:hover button {
+  border-color: var(--gray-200);
 }
 
-.dashboard-header-bottom li.active button {
-  border-color: var(--brighter-blue);
-  color: var(--brighter-blue);
+.dashboard-header-bottom .dashboard-header-tabs li.active button {
+  border-color: var(--bright-blue);
+  color: var(--bright-blue);
   font-weight: 500;
 }
 
