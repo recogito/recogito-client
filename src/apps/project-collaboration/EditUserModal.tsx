@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { X } from '@phosphor-icons/react';
+import './EditUserModal.css';
 
 const { Root, Portal, Overlay, Content, Title, Description, Close } = Dialog;
 
@@ -39,7 +40,7 @@ const EditUserModal = (props: EditUserModalProps) => {
         <Root open={open}>
             <Portal>
                 <Overlay className='CollabDialogOverlay'>
-                    <Content className='CollabDialogContent'>
+                    <Content className='CollabDialogContent edit-user'>
                         <Title>Edit Project User {name}</Title>
                         <Description>Current role: {currentRole}</Description>
                         <form onSubmit={handleSubmit}>
