@@ -75,6 +75,13 @@ button svg:last-child {
   margin-left: 0.5em;
 }
 
+button.tiny,
+a[href].button.tiny {
+  font-size: 11.5px;
+  line-height: 120%;
+  padding: 6px 14px;
+}
+
 button.sm,
 a[href].button.sm {
   font-size: var(--font-tiny);

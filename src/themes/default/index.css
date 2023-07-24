@@ -6,6 +6,7 @@
 @import './dropdown/index.css';
 @import './form/index.css';
 @import './mixins/index.css';
+@import './popover/index.css';
 @import './toast/index.css';
 
 @font-face {

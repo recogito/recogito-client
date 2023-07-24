@@ -21,7 +21,7 @@
 }
 
 .dropdown-content .account-actions-meta h1 {
-  font-size: 0.875em;
+  font-size: var(--font-small);
   font-weight: 500;
 }
 

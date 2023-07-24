@@ -12,14 +12,36 @@
   width: 15px;
 }
 
-.dropdown-content .notifications-info {
+.notifications header {
+  align-items: center;
   display: flex;
-  flex-direction: column;
-  font-size: var(--font-tiny);
-  gap: 6px;
-  padding: 5px 10px;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px 5px 5px 15px;
 }
 
-.dropdown-content .notifications-info.no-pending {
-  color: var(--font-light);
+.notifications h1 {
+  font-size: var(--font-small);
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+}
+
+.notifications ol {
+  background-color: var(--gray-50);
+  border-top: 1px solid var(--gray-200);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.notification-item {
+  line-height: 140%;
+  padding: 15px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.notification-item:last-child {
+  border-bottom: none;
 }

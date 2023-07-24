@@ -42,13 +42,13 @@ export const Notifications = (props: NotificationsProps) => {
       </Trigger>
 
       <Portal>
-        <Content className="dropdown-content no-icons" alignOffset={-20} sideOffset={8} align="end">
+        <Content className="popover-content no-icons" alignOffset={-20} sideOffset={8} align="end">
           <section 
-            className={count ? 'notifications-info' : 'notifications-info no-pending'}>
+            className={count ? 'notifications' : 'notifications no-pending'}>
             <header>
               <h1>Notifications</h1>
-              <Close className="popover-close" aria-label="Close">
-                <X />
+              <Close className="unstyled icon-only popover-close" aria-label="Close">
+                <X size={16} />
               </Close>
             </header>
 

@@ -4,6 +4,8 @@ import { Button } from '@components/Button';
 import { declineInvitation, joinProject } from '@backend/helpers/invitationHelpers';
 import type { Invitation, Project, Translations } from 'src/Types';
 
+import './InvitationItem.css';
+
 interface InvitationItemProps {
   
   i18n: Translations;
@@ -65,22 +67,24 @@ export const InvitationItem = (props: InvitationItemProps) => {
   }
 
   return (
-    <li>
+    <li className="notification-item invitation-item">
       <p>
-        <strong>{i.invited_by_name}</strong> invites you to join
-        <strong>{i.project_name}</strong>.
+        <strong>{i.invited_by_name}</strong> invites you 
+        to join <strong>{i.project_name}</strong>.
       </p>
       
       <time>1 day ago</time>
       
-      <div className="notification-actions">
+      <div className="invitation-actions">
         <Button 
+          className="primary tiny flat"
           busy={accepted}
           onClick={onAccept}>
           <span>Accept</span>
         </Button>
 
         <Button
+          className="tiny flat"
           busy={declined}
           onClick={onDecline}>  
           <span>Ignore</span>
