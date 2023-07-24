@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import TimeAgo from 'timeago-react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { declineInvitation, joinProject } from '@backend/helpers/invitationHelpers';
@@ -31,7 +32,6 @@ export const InvitationItem = (props: InvitationItemProps) => {
   const onAccept = () => {
     setAccepted(true);
 
-    /*
     const minWait = new Promise(resolve => {
       setTimeout(() => resolve(null), 1000);
     });
@@ -44,7 +44,6 @@ export const InvitationItem = (props: InvitationItemProps) => {
     .catch(error => {
       props.onError(error);
     });
-    */
   }
 
   const onDecline = () => {
@@ -71,7 +70,7 @@ export const InvitationItem = (props: InvitationItemProps) => {
         to join <strong>{i.project_name}</strong>.
       </p>
       
-      <time>1 day ago</time>
+      <TimeAgo datetime={i.created_at} locale={props.i18n.lang} />
       
       <div className="invitation-actions">
         <Button 

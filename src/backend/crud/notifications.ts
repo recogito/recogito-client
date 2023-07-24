@@ -10,6 +10,7 @@ export const listMyInvites = (supabase: SupabaseClient): Response<Invitation[]> 
             .select(`
                 id,
                 ignored,
+                created_at,
                 invited_by_name,
                 project_name,
                 project_id

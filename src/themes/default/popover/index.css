@@ -8,8 +8,7 @@
     0 2px 12px -2px rgba(0, 0, 0, 0.12),
     0 8px 24px -4px rgba(0, 0, 0, 0.08);
   line-height: 160%;
-  max-width: 320px;
-  min-width: 160px;
+  width: 320px;
 }
 
 .popover-close {

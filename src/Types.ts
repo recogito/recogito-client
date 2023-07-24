@@ -168,6 +168,8 @@ export interface Invitation {
 
   id: string;
 
+  created_at: string;
+
   invited_by_name?: string;
 
   project_name?: string;
