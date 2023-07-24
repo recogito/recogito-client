@@ -50,7 +50,6 @@ export const InvitationItem = (props: InvitationItemProps) => {
   const onDecline = () => {
     setDeclined(true);
 
-    /*
     const minWait = new Promise(resolve => {
       setTimeout(() => resolve(null), 1000);
     });
@@ -63,7 +62,6 @@ export const InvitationItem = (props: InvitationItemProps) => {
       else
         props.onDeclined();
     });
-    */
   }
 
   return (
