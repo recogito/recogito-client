@@ -14,7 +14,9 @@ interface InviteUsersToProjectProps {
 
     project: Project,
 
-    user: UserProfile | undefined
+    user: UserProfile | undefined,
+
+    onUpdatePending(): void
 
 }
 
@@ -23,14 +25,9 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
     const { t } = props.i18n;
 
-    const { project, user } = props;
+    const { project, user, onUpdatePending } = props;
 
     const [error, setError] = useState<ToastContent | null>(null);
-    const [pendingInvites, setPendingInvites] = useState<any[]>([]);
-
-    useEffect(() => {
-        listPendingInvites(supabase, project.id).then((data) => data && setPendingInvites(data.map((i) => i.email)));
-    }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -55,7 +52,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
                     title: t['User invited'], 
                     type: 'success' 
                   });
-                  setPendingInvites((old) => [...old, values.email]);
+                  onUpdatePending();
                 }
                 // TODO error handling
                 // if (result?.data) {

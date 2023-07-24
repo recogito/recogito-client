@@ -104,7 +104,8 @@ export const listPendingInvites = async (supabase: SupabaseClient, projectId: st
     .from('invites')
     .select(`
       id,
-      email
+      email,
+      project_group_id
     `)
     .eq('project_id', projectId)
     .is('accepted', false);

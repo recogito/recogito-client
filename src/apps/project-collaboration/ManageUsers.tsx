@@ -1,4 +1,4 @@
-import { getProjectGroups, listProjectUsers, removeUserFromProject, updateUserProjectGroup } from "@backend/crud";
+import { getProjectGroups, listPendingInvites, listProjectUsers, removeUserFromProject, updateUserProjectGroup } from "@backend/crud";
 import { supabase } from "@backend/supabaseBrowserClient";
 import { useEffect, useState } from "react";
 import type { Project, Translations, UserProfile } from "src/Types";
@@ -28,6 +28,7 @@ export const ManageUsers = (props: ManageUsersProps) => {
     const { project } = props;
 
     const [data, setData] = useState<any[]>();
+    const [pendingList, setPendingList] = useState<any[]>();
     const [projectGroups, setProjectGroups] = useState<any[]>([]);
     const [selected, setSelected] = useState<string[]>([]);
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -92,6 +93,14 @@ export const ManageUsers = (props: ManageUsersProps) => {
         });
     };
 
+    const handleUpdatePending = () => {
+        listPendingInvites(supabase, project.id).then((data) => {
+            if (data) {
+                setPendingList(data.map((i) => ({ type_id: i.project_group_id, profiles: { id: i.id, email: i.email }})));
+            }
+        });
+    }
+
     useEffect(() => {
         getProjectGroups(supabase, project.id).then(({ error, data }) => {
             if (data) {
@@ -102,7 +111,11 @@ export const ManageUsers = (props: ManageUsersProps) => {
                 setData([]);
             }
         })
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        handleUpdatePending();
+    }, []);
 
     return data && data.length && (
         <div className="manage-users">
@@ -124,6 +137,7 @@ export const ManageUsers = (props: ManageUsersProps) => {
                                 i18n={props.i18n}
                                 project={props.project}
                                 user={props.user}
+                                onUpdatePending={handleUpdatePending}
                                 />
                         <InviteDialog.Close asChild>
                             <button className="CollabDialogClose" aria-label="Close">
@@ -159,6 +173,16 @@ export const ManageUsers = (props: ManageUsersProps) => {
                     selected={selected.includes(user.profiles.id)}
                     roleName={projectGroups.find((i) => i.id == user.type_id).name}
                     onOpenEditModal={() => handleOpenEditModal(user.profiles.id, (user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') +user.profiles.last_name : user.profiles.nickname, user.type_id)}
+                />
+            ))}
+            { pendingList?.map((user) => (
+                <ProjectUserRow
+                    key={user.profiles.id}
+                    i18n={props.i18n}
+                    user={user}
+                    typeId={user.type_id}
+                    roleName={projectGroups.find((i) => i.id == user.type_id).name}
+                    pending
                 />
             ))}
             </div>

@@ -33,7 +33,7 @@ export const ProjectUserRow = (props: ProjectUserRowProps) => {
                     </Root>) }
                 </div>
                 <div style={{ width: '22%' }}>
-                    {(user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') +user.profiles.last_name : user.profiles.nickname}
+                    {!pending && (user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') +user.profiles.last_name : user.profiles.nickname}
                 </div>
                 <div style={{ width: '32%', overflowX: 'hidden' }}>
                     {user.profiles.email}
@@ -42,8 +42,8 @@ export const ProjectUserRow = (props: ProjectUserRowProps) => {
                     {roleName}
                 </div>
                 <div style={{ width: '25%', display: 'flex' }}>
-                    <button style={{ display: 'flex', padding: '5px 8px' }} className="primary" onClick={onOpenEditModal}>Edit Role</button>
-                    <button style={{ display: 'flex', padding: '5px 8px' }} onClick={onRemoveUser}>Remove User</button>
+                   {pending ? '(pending)' : (<><button style={{ display: 'flex', padding: '5px 8px' }} className="primary" onClick={onOpenEditModal}>Edit Role</button>
+                    <button style={{ display: 'flex', padding: '5px 8px' }} onClick={onRemoveUser}>Remove User</button></>)}
                 </div>
             </div>
     )
