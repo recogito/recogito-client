@@ -38,7 +38,7 @@ export const Button = (props: ButtonProps) => {
         <Spinner className="button-busy-spinner" size={18} />
       )}
 
-      {props.busy && (
+      {props.busy && props.confetti && (
         <div className="confetti">
           <ConfettiExplosion
             force={0.4}

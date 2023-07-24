@@ -104,7 +104,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         <Header 
           i18n={props.i18n} 
           invitations={invitations} 
-          onCreateProject={onCreateProject} />
+          onCreateProject={onCreateProject} 
+          onInvitationAccepted={onInvitationAccepted}
+          onInvitationDeclined={onInvitationDeclined} 
+          onError={onError} />
 
         {(projects.length === 0 && invitations.length === 0) ? (
           <ProjectsEmpty 
@@ -114,13 +117,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           <ProjectsGrid 
             i18n={props.i18n} 
             projects={projects}
-            invitations={invitations}
             onCreateProject={onCreateProject} 
             onDeleteProject={onDeleteProject} 
-            onRenameProject={onRenameProject} 
-            onInvitationAccepted={onInvitationAccepted}
-            onInvitationDeclined={onInvitationDeclined} 
-            onError={onError}/>  
+            onRenameProject={onRenameProject} />  
         )}
       </div>
 

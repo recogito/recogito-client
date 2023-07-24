@@ -5,7 +5,7 @@ import { getMyProfile } from '@backend/crud';
 import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
-import type { Invitation, MyProfile, Translations } from 'src/Types';
+import type { Invitation, MyProfile, Project, Translations } from 'src/Types';
 
 import './Header.css';
 
@@ -16,6 +16,12 @@ interface HeaderProps {
   invitations: Invitation[];
 
   onCreateProject(): void;
+
+  onInvitationAccepted(invitation: Invitation, project: Project): void;
+
+  onInvitationDeclined(invitation: Invitation): void;
+
+  onError(error: string): void;
 
 }
 
@@ -47,7 +53,10 @@ export const Header = (props: HeaderProps) => {
 
           <Notifications 
             i18n={props.i18n} 
-            count={props.invitations.length} />
+            invitations={props.invitations} 
+            onInvitationAccepted={props.onInvitationAccepted}
+            onInvitationDeclined={props.onInvitationDeclined} 
+            onError={props.onError} />
 
           {profile ? (
             <AccountActions i18n={props.i18n} profile={profile} />

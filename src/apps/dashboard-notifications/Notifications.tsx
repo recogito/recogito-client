@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { NotificationCard } from '@components/NotificationCard';
-import { DashboardHeader } from '@components/DashboardHeader';
 import { processAcceptInvite, processIgnoreInvite, processUnignoreInvite } from '@backend/crud/notifications';
 import type { Invitation, Translations } from 'src/Types';
 
@@ -56,9 +55,6 @@ export const Notifications = (props: NotificationsProps) => {
 
   return (
     <div className="dashboard-notifications">
-      <DashboardHeader 
-        i18n={props.i18n} 
-        breadcrumbs={[{ label: 'Notifications' }]}/>
         
       <main>
         <h1>Pending Invitations</h1>
