@@ -1,0 +1,15 @@
+.notifications-empty {
+  background-color: var(--gray-50);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  border-top: 1px solid var(--gray-200);
+  line-height: 130%;
+  text-align: center;
+  padding: 20px 15px;
+}
+
+.notifications-empty p {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,17 @@
+.invitation-item {
+  font-size: var(--font-tiny);
+}
+
+.invitation-item p {
+  margin: 0;
+  padding: 0;
+}
+
+.invitation-item time {
+  color: var(--font-light);
+  font-size: 11px;
+}
+
+.invitation-item .invitation-actions {
+  padding-top: 1em;
+}

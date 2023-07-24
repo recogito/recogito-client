@@ -1,0 +1,32 @@
+.account-actions-trigger.unstyled {
+  border-radius: 50%;
+  margin-left: 0;
+}
+
+.account-actions-trigger.unstyled .avatar {
+  height: 30px;
+  width: 30px;
+}
+
+.dropdown-content .account-actions-meta {
+  border-bottom: 1px solid var(--gray-100);
+  margin-bottom: 5px;
+  padding: 8px 10px;
+}
+
+.dropdown-content .account-actions-meta h1,
+.dropdown-content .account-actions-meta h2 {
+  margin: 0;
+  line-height: 160%;
+}
+
+.dropdown-content .account-actions-meta h1 {
+  font-size: var(--font-small);
+  font-weight: 500;
+}
+
+.dropdown-content .account-actions-meta h2 {
+  color: var(--font-light);
+  font-size: 0.675em;
+  font-weight: 400;
+}

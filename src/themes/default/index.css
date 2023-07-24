@@ -6,6 +6,7 @@
 @import './dropdown/index.css';
 @import './form/index.css';
 @import './mixins/index.css';
+@import './popover/index.css';
 @import './toast/index.css';
 
 @font-face {
@@ -104,17 +105,19 @@
   /** Colors **/
   --dark-blue: #07498a;
   --bright-blue: #07529a;
-  --brighter-blue: #0167ff;
+  --brighter-blue: #0969c3;
+  --sand: #987116;
   --mud-gray: #808073;
   --orange: #e9b44a;
   
   --gray-900: #202125;
-  --gray-600: #6f747c; 
-  --gray-500: #818992;
+  --gray-700: #6f747c; 
+  --gray-600: #818992;
+  --gray-500: #93989f; 
   --gray-400: #cbd0d7;
-  --gray-300: #dce0e4;
-  --gray-200: #dfe2e7;
-  --gray-100: #e9ecf1;
+  --gray-300: #dadee2;
+  --gray-200: #e2e5e9;
+  --gray-100: #f3f4f7;
   --gray-50: #f6f7f9;
 
   --red-500: #da1e26;
@@ -127,7 +130,7 @@
 
   /** Font styles **/
   --font-dark: var(--gray-900);
-  --font-light: var(--gray-600);
+  --font-light: var(--gray-700);
   --font-semi: rgba(255, 255, 255, 0.65);
 
   --font-small: 0.875em;
@@ -137,14 +140,13 @@
   --border-light-color: var(--gray-300);
 
   /** Buttons **/
-  --button-background-color: #fff;
+  --button-background-color: var(--gray-50);
   --button-border-color: var(--gray-300);
   --button-border-radius: var(--border-radius);
   --button-focus-outline-color: rgb(22, 97, 202, 0.2);
   --button-font-color: var(--font-dark);
   --button-hover-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.1);
   --button-primary-background: var(--bright-blue);
-
 
   /** Inputs **/
   --input-border-color: var(--gray-300);
@@ -186,7 +188,7 @@ h1 {
   font-family: Poppins;
   font-size: 1.6em;
   font-weight: 600;
-  letter-spacing: -0.03ch;
+  letter-spacing: 0.02ch;
   margin: 1em 0;
   padding: 0;
 }

@@ -1,44 +1,19 @@
 ---
-import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
-import NotificationTab from '@apps/dashboard-notifications/NotificationTab';
-import { listMyInvites } from '@backend/crud/notifications';
+import { Notifications } from '@apps/dashboard-notifications';
 
-const i18n = getTranslations(Astro.request, 'notifications');
+const i18n = getTranslations(Astro.request, 'dashboard-notifications');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${i18n.lang}/sign-in`);
-
-const { error, data } = await listMyInvites(supabase);
-
-if (error) { 
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
-}
 ---
-<DashboardLayout>
-  <header>
-    <nav class="breadcrumbs">
-      <ol>
-        <li>
-          <a href={`/${i18n.lang}/projects`}>INeedAName</a>
-        </li>
-
-        <li>
-          <a class="breadcrumb-current">{i18n.t['Notifications']}</a>
-        </li>
-      </ol>
-    </nav>
-  </header>
-
-  <main>
-    <NotificationTab
-      client:load
-      i18n={i18n}
-      invitationList={data} />
-  </main>
+<BaseLayout title="Notifications">
+  <Notifications
+    client:load
+    i18n={i18n} />
 </DashboardLayout>
 
 <style>

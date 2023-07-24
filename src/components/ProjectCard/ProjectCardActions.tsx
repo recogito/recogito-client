@@ -21,7 +21,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   return (
     <Root>
       <Trigger asChild>
-        <button className="unstyled icon-only">
+        <button className="unstyled icon-only project-card-actions">
           <DotsThreeVertical weight="bold" size={20}/>
         </button>
       </Trigger>

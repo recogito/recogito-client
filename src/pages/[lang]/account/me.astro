@@ -1,5 +1,5 @@
 ---
-import DashboardLayout from '@layouts/dashboard/DashboardLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
@@ -18,27 +18,11 @@ if (error) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
-<DashboardLayout>
-  <header>
-    <nav class="breadcrumbs">
-      <ol>
-        <li>
-          <a href={`/${i18n.lang}/projects`}>INeedAName</a>
-        </li>
-
-        <li>
-          <a class="breadcrumb-current">{i18n.t['Account Preferences']}</a>
-        </li>
-      </ol>
-    </nav>
-  </header>
-
-  <main>
-    <AccountPreferences
-      client:load
-      i18n={i18n}
-      profile={data} />
-  </main>
+<BaseLayout title={i18n.t['Account Preferences']}>
+  <AccountPreferences
+    client:load
+    i18n={i18n}
+    profile={data} />
 </DashboardLayout>
 
 <style>

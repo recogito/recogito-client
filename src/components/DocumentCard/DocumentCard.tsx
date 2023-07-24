@@ -2,9 +2,9 @@ import { useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
 import { EditableText } from '@components/EditableText';
 import { DocumentCardActions } from './DocumentCardActions';
+import { ContentTypeIcon } from './ContentTypeIcon';
 
 import './DocumentCard.css';
-import { ContentTypeIcon } from './ContentTypeIcon';
 
 interface DocumentCardProps {
 

@@ -1,3 +1,7 @@
+.anno-sidebar-container {
+  max-width: 324px;
+}
+
 .anno-sidebar-container:not([data-collapsed]) {
   box-shadow:
     0px 0px 16px -1px rgba(0, 0, 0, 0.15),

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CloudArrowUp } from '@phosphor-icons/react';
+import { Files, GraduationCap, PuzzlePiece, Sliders, UsersThree } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';

@@ -4,10 +4,15 @@
   "All projects": "All projects",
   "Account": "Account",
   "Preferences": "Preferences",
-  "Account Preferences": "Account Preferences",
+  "Profile Settings": "Profile Settings",
   "Notifications": "Notifications",
   "Documentation": "Documentation",
+  "Help": "Help",
+  "Sign out": "Sign out",
   "Tutorial": "Tutorial",
   "FAQ": "FAQ",
-  "Logout": "Logout"
+  "Logout": "Logout",
+  "No unread notifications": "No unread notifications",
+  "View": "View",
+  "View all": "View all"
 }

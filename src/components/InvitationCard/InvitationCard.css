@@ -1,0 +1,46 @@
+.invitation-card {
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+  transition: all .25s ease-in-out;
+}
+
+.invitation-card .card-decoration {
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.invitation-card .card-decoration svg {
+  color: rgba(0, 0, 0, 0.05);
+  left: -20px;
+  position: absolute;
+  top: -30px;
+  transform: rotateZ(-20deg);
+}
+
+.invitation-card > div {
+  padding: 20px;
+  position: relative;
+}
+
+.invitation-card p {
+  margin: 0;
+  padding: 0;
+}
+
+.invitation-card h1 {
+  margin: 0.5em 0 1em 0;
+}
+
+.invitation-card .invitation-actions {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}

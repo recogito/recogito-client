@@ -1,0 +1,13 @@
+.dashboard-notifications main {
+  margin: 0 auto;
+  max-width: 900px;
+  padding: 30px 40px;
+}
+
+.dashboard-notifications .notification-grid {
+  display: grid;
+  gap: 1rem;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  padding: 30px 0 40px 0;
+}

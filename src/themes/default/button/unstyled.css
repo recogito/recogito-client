@@ -11,6 +11,10 @@ button.unstyled {
   padding: 0;
 }
 
+button.unstyled:disabled {
+  background: none;
+}
+
 button.unstyled:not(:disabled):hover {
   box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.08);
 }
