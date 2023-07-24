@@ -91,12 +91,12 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     });
 
   const onInvitationAccepted = (invitation: Invitation, project: Project) => {
-    setInvitations(invitations.filter(i => i.id !== invitation.id));
-    setProjects([ project, ...projects ]);
+    setInvitations(invitations => invitations.filter(i => i.id !== invitation.id));
+    setProjects(projects => ([ project, ...projects ]));
   }
 
   const onInvitationDeclined = (invitation: Invitation) =>
-    setInvitations(invitations.filter(i => i.id !== invitation.id));
+    setInvitations(invitations => invitations.filter(i => i.id !== invitation.id));
 
   return (
     <ToastProvider>

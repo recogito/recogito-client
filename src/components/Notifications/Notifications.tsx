@@ -1,6 +1,7 @@
 import * as Popover from '@radix-ui/react-popover';
 import { Bell, X } from '@phosphor-icons/react';
 import type { Invitation, Project, Translations } from 'src/Types';
+import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
 
 import './Notifications.css';
@@ -52,17 +53,21 @@ export const Notifications = (props: NotificationsProps) => {
               </Close>
             </header>
 
-            <ol>
-              {props.invitations.map(invitation => (
-                <InvitationItem 
-                  key={invitation.id}
-                  i18n={props.i18n}
-                  invitation={invitation} 
-                  onAccepted={project => props.onInvitationAccepted(invitation, project)} 
-                  onDeclined={() => props.onInvitationDeclined(invitation)} 
-                  onError={props.onError} />
-              ))}
-            </ol>
+            {props.invitations.length === 0 ? (
+              <EmptyList i18n={props.i18n} />
+            ) : (
+              <ol>
+                {props.invitations.map(invitation => (
+                  <InvitationItem 
+                    key={invitation.id}
+                    i18n={props.i18n}
+                    invitation={invitation} 
+                    onAccepted={project => props.onInvitationAccepted(invitation, project)} 
+                    onDeclined={() => props.onInvitationDeclined(invitation)} 
+                    onError={props.onError} />
+                ))}
+              </ol>
+            )}
           </section>
         </Content>
       </Portal>
