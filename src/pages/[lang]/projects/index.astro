@@ -4,12 +4,15 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { listMyInvites, listMyProjects } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
+import { getUser } from '@backend/auth';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
+
+const me = await getUser(supabase);
 
 const projects = await listMyProjects(supabase);
 
@@ -22,6 +25,7 @@ const invitations = await listMyInvites(supabase);
     ) : (
       <ProjectsHome 
         client:load
+        me={me}
         projects={projects.data} 
         invitations={invitations.data}
         i18n={getTranslations(Astro.request, 'dashboard-projects')} />

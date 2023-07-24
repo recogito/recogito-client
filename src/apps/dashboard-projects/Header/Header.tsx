@@ -6,6 +6,7 @@ import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
 import type { Invitation, MyProfile, Project, Translations } from 'src/Types';
+import { ProjectFilter } from '../ProjectsHome';
 
 import './Header.css';
 
@@ -14,6 +15,10 @@ interface HeaderProps {
   i18n: Translations;
 
   invitations: Invitation[];
+
+  filter: ProjectFilter;
+
+  onChangeFilter(f: ProjectFilter): void;
 
   onCreateProject(): void;
 
@@ -26,6 +31,8 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
+  
+  const { filter, onChangeFilter } = props;
 
   const [profile, setProfile] = useState<MyProfile | undefined>();
 
@@ -73,15 +80,21 @@ export const Header = (props: HeaderProps) => {
 
       <section className="dashboard-header-bottom">
         <ul className="dashboard-header-tabs">
-          <li className="active">
+          <li
+            className={filter === ProjectFilter.ALL ? 'active' : undefined}
+            onClick={() => onChangeFilter(ProjectFilter.ALL)}>
             <button>All</button>
           </li>
 
-          <li>
+          <li
+            className={filter === ProjectFilter.MINE ? 'active' : undefined}
+            onClick={() => onChangeFilter(ProjectFilter.MINE)}>
             <button>My Projects</button>
           </li>
 
-          <li>
+          <li
+            className={filter === ProjectFilter.SHARED ? 'active' : undefined}
+            onClick={() => onChangeFilter(ProjectFilter.SHARED)}>
             <button>Shared with me</button>
           </li>
         </ul>

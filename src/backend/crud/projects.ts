@@ -35,6 +35,7 @@ export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
       .select(`
         id,
         created_at,
+        created_by,
         updated_at,
         updated_by,
         name,

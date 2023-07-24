@@ -37,24 +37,6 @@
   padding: 0 30px;
 }
 
-.dashboard-projects-home .dashboard-banner {
-  background-color: var(--sand);
-  box-sizing: border-box;
-  color: #fff;
-  overflow: hidden;
-  padding: 20px 30px;
-}
-
-.dashboard-projects-home .dashboard-banner h1 {
-  font-size: 1.2em;
-  margin: 0;
-}
-
-.dashboard-projects-home .dashboard-banner p {
-  font-size: var(--font-small);
-  margin: 0;
-}
-
 .dashboard-projects-home main {
   flex-grow: 1;
 }
@@ -65,22 +47,4 @@
   grid-auto-rows: 1fr;  
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   padding: 30px 0 40px 0;
-}
-
-.dashboard-projects-notifications {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-top: 40px;
-}
-
-.dashboard-projects-notifications button {
-  display: flex;
-  padding: 16px 32px;
-}
-
-.dashboard-projects-notifications a,
-.dashboard-projects-notifications a:hover {
-  text-decoration: none;
 }

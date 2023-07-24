@@ -8,6 +8,7 @@ import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
+import type { User } from '@supabase/supabase-js';
 
 import './ProjectsHome.css';
 
@@ -15,21 +16,27 @@ export interface ProjectsHomeProps {
 
   i18n: Translations;
 
+  me: User;
+
   projects: Project[];
 
   invitations: Invitation[]; 
 
 }
 
+export enum ProjectFilter { ALL, MINE, SHARED };
+
 export const ProjectsHome = (props: ProjectsHomeProps) => {
 
-  const { t, lang } = props.i18n;
+  const { t } = props.i18n;
 
   const [projects, setProjects] = useState<Project[]>(props.projects);
 
   const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
 
   const [error, setError] = useState<ToastContent | null>(null);
+
+  const [filter, setFilter] = useState(ProjectFilter.ALL);
 
   useEffect(() => {
     getMyProfile(supabase)
@@ -38,6 +45,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           window.location.href = `/${props.i18n.lang}/sign-in`;
       })
   }, []);
+
+  const filteredProjects = 
+    filter === ProjectFilter.ALL ?
+      projects : 
+    filter === ProjectFilter.MINE ? 
+      projects.filter(p => p.created_by === props.me.id) : 
+    filter === ProjectFilter.SHARED ? 
+      // TODO
+      [] : [];
 
   const onCreateProject = () =>
     initProject(supabase, t['Untitled Project'])
@@ -102,8 +118,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     <ToastProvider>
       <div className="dashboard-projects-home">
         <Header 
+          filter={filter}
           i18n={props.i18n} 
           invitations={invitations} 
+          onChangeFilter={setFilter}
           onCreateProject={onCreateProject} 
           onInvitationAccepted={onInvitationAccepted}
           onInvitationDeclined={onInvitationDeclined} 
@@ -116,7 +134,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         ) : (
           <ProjectsGrid 
             i18n={props.i18n} 
-            projects={projects}
+            projects={filteredProjects}
             onCreateProject={onCreateProject} 
             onDeleteProject={onDeleteProject} 
             onRenameProject={onRenameProject} />  
