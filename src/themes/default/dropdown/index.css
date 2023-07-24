@@ -33,13 +33,9 @@
   display: flex;
   font-size: var(--font-tiny);
   font-weight: 400;
-  padding: 5px;
+  padding: 2px 10px;
   outline: none;
   user-select: none;
-}
-
-.no-icons .dropdown-item {
-  padding: 1px 10px;
 }
 
 .dropdown-item a[href] {

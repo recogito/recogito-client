@@ -127,7 +127,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onInvitationDeclined={onInvitationDeclined} 
           onError={onError} />
 
-        {(projects.length === 0 && invitations.length === 0) ? (
+        {projects.length === 0 ? (
           <ProjectsEmpty 
             i18n={props.i18n} 
             onCreateProject={onCreateProject} />

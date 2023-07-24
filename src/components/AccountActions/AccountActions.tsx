@@ -37,7 +37,7 @@ export const AccountActions = (props: AccountProps) => {
       </Trigger>
 
       <Portal>
-        <Content className="dropdown-content no-icons" alignOffset={-10} sideOffset={8} align="end">
+        <Content className="dropdown-content" alignOffset={-10} sideOffset={8} align="end">
           {(Boolean(profile.nickname) || Boolean(realname)) && (
             <section className="account-actions-meta">
               {profile.nickname && realname ? (
