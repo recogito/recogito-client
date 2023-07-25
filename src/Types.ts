@@ -40,6 +40,73 @@ export interface Project {
 
 }
 
+/** 
+ * Project with additional context data, as used
+ * in the project cards.
+ */
+export interface ExtendedProjectData {
+
+  id: string;
+
+  created_at: string;
+
+  created_by: UserProfile;
+
+  updated_at: string;
+
+  updated_by: string;
+
+  name: string;
+
+  description: string;
+
+  contexts: [{
+
+    id: string;
+
+    name: string;
+
+  }];
+
+  layers: [{
+
+    id: string;
+  
+    name: string;
+
+    description: string;
+
+    document: {
+
+      id: string;
+
+      name: string;
+
+      content_type?: ContentType;
+
+      meta_data: {
+
+        protocol: Protocol;
+
+        url: string;
+    
+        meta?: object;
+
+      }
+    }
+
+  }];
+
+  groups: [{
+
+    id: string;
+
+    name: string;
+
+  }]
+
+}
+
 export interface Document {
 
   id: string; 

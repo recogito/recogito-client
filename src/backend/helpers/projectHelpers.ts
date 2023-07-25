@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createContext, createProject, deleteContext, deleteProject } from '@backend/crud';
-import type { Context, Project } from 'src/Types';
+import type { Context, ExtendedProjectData, Project } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { createSystemTag } from './tagHelpers';
 
@@ -83,3 +83,60 @@ export const getProjectWithContexts = (
   .eq('id', projectId)
   .single()
   .then(({ error, data }) => ({ error, data: data as Project & { contexts: Context[] } }));
+
+export const listProjectsExtended = (supabase: SupabaseClient): Response<ExtendedProjectData[]> =>
+  supabase
+    .from('projects')
+    .select(`
+      id,
+      created_at,
+      created_by:profiles!projects_created_by_fkey(
+        id,
+        nickname,
+        first_name,
+        last_name,
+        avatar_url
+      ),
+      updated_at,
+      updated_by,
+      name,
+      description,
+      contexts (
+        id,
+        name
+      ),
+      layers (
+        id,
+        name,
+        description,
+        document:documents (
+          id,
+          name,
+          content_type,
+          meta_data
+        )
+      ),
+      groups:project_groups (
+        id,
+        name
+      )
+    `)
+    .then(({ error, data }) => ({ error, data: data as unknown as ExtendedProjectData[] }));
+
+export const listProjectMembers = (supabase: SupabaseClient, groupIds: string[]) =>
+  supabase
+    .from('group_users')
+    .select(`
+      user:profiles!group_users_user_id_fkey (
+        id,
+        nickname,
+        first_name,
+        last_name,
+        avatar_url
+      )
+    `)
+    .eq('group_type', 'project')
+    .in('type_id', groupIds)
+    .then(({ error, data }) => {
+      console.log(error, data);
+    });
