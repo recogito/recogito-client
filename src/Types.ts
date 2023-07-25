@@ -97,13 +97,23 @@ export interface ExtendedProjectData {
 
   }];
 
-  groups: [{
+  groups: {
 
     id: string;
 
     name: string;
 
-  }]
+    members: UserProfile[];
+
+  }[]
+
+}
+
+export interface ProjectMember {
+
+  user: UserProfile;
+
+  in_group: string;
 
 }
 
