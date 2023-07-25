@@ -20,12 +20,16 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
   const [email, setEmail] = useState('');
 
+  const [loading, setLoading] = useState(false);
+
   const [password, setPassword] = useState('');
 
   const [error, setError] = useState('');
 
   const onSignIn = (evt: React.MouseEvent) => {
     evt.preventDefault();
+
+    setLoading(true);
 
     if (!isValidEmail(email)) {
       setError(t['Please enter a valid email address']);
@@ -81,7 +85,10 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
             <Button   
               className="primary lg w-full"
-              onClick={onSignIn}>{t['Sign In']}</Button>
+              busy={loading}
+              onClick={onSignIn}>
+              <span>{t['Sign In']}</span>
+            </Button>
           </form>
 
           <div className="forgot-password">
