@@ -104,7 +104,8 @@ export const listPendingInvites = async (supabase: SupabaseClient, projectId: st
     .from('invites')
     .select(`
       id,
-      email
+      email,
+      project_group_id
     `)
     .eq('project_id', projectId)
     .is('accepted', false);
@@ -120,7 +121,8 @@ export const listProjectUsers = async (supabase: SupabaseClient, typeIds: string
         id,
         first_name,
         last_name,
-        nickname
+        nickname,
+        email
       )
     `)
     .in('type_id', typeIds);
@@ -138,13 +140,22 @@ export const getProjectGroups = async (supabase: SupabaseClient, projectId: stri
     return { error, data };
 }
 
-export const updateUserProjectGroup = async (supabase: SupabaseClient, userId: string, oldTypeId: string, newTypeId: string) => 
-  supabase 
+export const updateUserProjectGroup = async (supabase: SupabaseClient, userId: string, oldTypeId: string, newTypeId: string) => {
+  const { error } = await supabase 
     .from('group_users')
     .update({
       type_id: newTypeId
     })
     .eq('user_id', userId)
-    .eq('type_id', oldTypeId)
-    .select()
-    .then(({ error, data }) => ({ error, data }));
+    .eq('type_id', oldTypeId);
+  return error;
+  };
+
+  export const removeUserFromProject = async (supabase: SupabaseClient, userId: string, typeId: string) => {
+    const { error } = await supabase
+      .from('group_users')
+      .delete()
+      .eq('user_id', userId)
+      .eq('type_id', typeId);
+    return error;
+  }

@@ -1,47 +1,51 @@
-import { useFormik } from "formik";
 import type { Translations, UserProfile } from "src/Types";
+import * as Checkbox from '@radix-ui/react-checkbox';
+import { Check } from '@phosphor-icons/react';
 import './ProjectUserRow.css';
 
+const { Root, Indicator } = Checkbox;
 
 interface ProjectUserRowProps {
     i18n: Translations
     user: any
-    projectId: string
-    typeId: string
-    projectGroups: { id: string, name: string }[]
-    onRemoveUser(): void
-    onUpdateUser: (typeId: string) => void
+    typeId?: string
+    email?: string
+    roleName: string
+    onRemoveUser?: () => void
+    onUpdateUser?: (typeId: string) => void
+    onSelectRow?: () => void
+    onOpenEditModal?: () => void
+    selected?: boolean
+    pending?: boolean
 }
 
 export const ProjectUserRow = (props: ProjectUserRowProps) => {
     const { t } = props.i18n;
-    const { user, projectId, typeId, projectGroups, onRemoveUser, onUpdateUser } = props;
-
-    const formik = useFormik({
-        initialValues: {
-            user_id: user.profiles.id,
-            type_id: typeId
-        },
-
-        onSubmit: values => {
-            onUpdateUser(values.type_id);
-        }
-    });
+    const { user, typeId, onRemoveUser, onUpdateUser, roleName, onSelectRow, selected, onOpenEditModal, pending } = props;
 
     return (
-        <tr>
-            <td>{(user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') +user.profiles.last_name : user.profiles.nickname}</td>
-        <td className="edit-role"><form onSubmit={formik.handleSubmit}>
-        <select id="type_id" name="type_id" onChange={formik.handleChange} value={formik.values.type_id} className={formik.values.type_id != typeId ? 'modified' : ''}>
-            { projectGroups.map((group) => (
-                <option key={group.id} value={group.id}>{group.name}</option>
-            ))}
-        </select>
-        <button className="primary" type="submit" disabled={formik.values.type_id == typeId}>Update</button>
-        </form>
-        <button onClick={onRemoveUser} className="warning">Remove</button>
-        </td>
-        </tr>
+        <div className="row">
+                <div style={{ width: '3%' }}>
+                    { !pending && (<Root onCheckedChange={onSelectRow} className="CheckboxRoot" checked={selected}>
+                        <Indicator>
+                            <Check size={15} style={{ display: 'flex' }} />
+                        </Indicator>
+                    </Root>) }
+                </div>
+                <div style={{ width: '22%' }}>
+                    {!pending && (user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') +user.profiles.last_name : user.profiles.nickname}
+                </div>
+                <div style={{ width: '32%', overflowX: 'hidden' }}>
+                    {user.profiles.email}
+                </div>
+                <div style={{ width: '18%' }}>
+                    {roleName}
+                </div>
+                <div style={{ width: '25%', display: 'flex' }}>
+                   {pending ? '(pending)' : (<><button style={{ display: 'flex', padding: '5px 8px' }} className="primary" onClick={onOpenEditModal}>Edit Role</button>
+                    <button style={{ display: 'flex', padding: '5px 8px' }} onClick={onRemoveUser}>Remove User</button></>)}
+                </div>
+            </div>
     )
 
 

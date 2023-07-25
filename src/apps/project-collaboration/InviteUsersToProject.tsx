@@ -14,7 +14,9 @@ interface InviteUsersToProjectProps {
 
     project: Project,
 
-    user: UserProfile | undefined
+    user: UserProfile | undefined,
+
+    onUpdatePending(): void
 
 }
 
@@ -23,14 +25,9 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
     const { t } = props.i18n;
 
-    const { project, user } = props;
+    const { project, user, onUpdatePending } = props;
 
     const [error, setError] = useState<ToastContent | null>(null);
-    const [pendingInvites, setPendingInvites] = useState<any[]>([]);
-
-    useEffect(() => {
-        listPendingInvites(supabase, project.id).then((data) => data && setPendingInvites(data.map((i) => i.email)));
-    }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -55,7 +52,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
                     title: t['User invited'], 
                     type: 'success' 
                   });
-                  setPendingInvites((old) => [...old, values.email]);
+                  onUpdatePending();
                 }
                 // TODO error handling
                 // if (result?.data) {
@@ -68,9 +65,7 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
 
     return (
         <ToastProvider>
-            <div className="collaboration">
-                <h1>{t['Invite Users to Project']}</h1>
-                <form onSubmit={formik.handleSubmit}>
+                <form onSubmit={formik.handleSubmit} className="collaboration">
                     <fieldset>
                     <div className="field">
                         <label>{t['E-Mail']}</label>
@@ -95,17 +90,6 @@ export const InviteUsersToProject = (props: InviteUsersToProjectProps) => {
                     </fieldset>
                     <button className="primary" type="submit">{t['Invite']}</button>
                 </form>
-            { pendingInvites.length > 0 && (
-                <div style={{ marginTop: 40 }}>
-                    <h2>Invited Users: Pending</h2>
-                    <ul>
-                        { pendingInvites.map((i) => (
-                            <li key={i}>{i}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
-            </div>
             <Toast
                 content={error}
                 onOpenChange={open => !open && setError(null)} />
