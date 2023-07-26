@@ -3,15 +3,13 @@ import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getUserProfile } from '@backend/auth';
 import { getProject } from '@backend/crud';
+import { getProjectExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { InviteUsersToProject } from '@apps/project-collaboration';
 import { ManageUsers } from '@apps/project-collaboration/ManageUsers';
-import type { loadTSConfig } from 'astro/dist/core/config';
 
 const lang = getLangFromUrl(Astro.url);
 
 const i18n = getTranslations(Astro.request, 'project-collaboration');
-
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
@@ -21,21 +19,18 @@ const user = await getUserProfile(supabase);
 
 const projectId = Astro.params.slug;
 
-const response = await getProject(supabase, projectId as string);
+const { data, error } = await getProjectExtended(supabase, projectId as string);
 
-
+if (error) { 
+  const path = Astro.url.protocol + '//' + Astro.url.host;
+  const error = await fetch(`${path}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
 ---
-<ProjectLayout active="collaboration" user={user} project={response.data}>
-  {response.error ? (
-    <div>Something went wrong</div>
-  ) : (
-    <div>
-    <ManageUsers
-      client:load
-      i18n={i18n}
-      project={response.data} 
-      user={user}
-      /> 
-    </div>
-  )}
+<ProjectLayout active="collaboration" user={user} project={data}>
+  <ManageUsers
+    client:load
+    i18n={i18n}
+    project={data} 
+    user={user} /> 
 </ProjectLayout>

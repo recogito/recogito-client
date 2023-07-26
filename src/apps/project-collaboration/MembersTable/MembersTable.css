@@ -1,0 +1,87 @@
+.project-members-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-tiny);
+  margin-top: 2em;
+  max-width: 520px;
+  width: 100%;
+}
+
+.project-members-table :is(td, th) {
+  background-color: #fff;
+}
+
+.project-members-table tr:hover :is(td, th) {
+  background-color: var(--gray-50);
+}
+
+.project-members-table thead th {
+  border-color: var(--gray-200);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  color: var(--font-light);
+  font-weight: 400;
+  padding: 0.6em 0.3em;
+  text-align: left;
+}
+
+.project-members-table .actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.project-members-table tbody td {
+  border-color: var(--gray-200);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  color: var(--font-dark);
+}
+
+.project-members-table thead th:first-child {
+  border-radius: var(--border-radius) 0 0 0;
+  border-width: 1px 0 0 1px;
+}
+
+.project-members-table thead th:last-child {
+  border-radius: 0 var(--border-radius) 0 0;
+  border-width: 1px 1px 0 0;
+}
+
+.project-members-table tbody td:first-child {
+  border-width: 1px 0 0 1px;
+}
+
+.project-members-table tbody td:last-child {
+  border-width: 1px 1px 0 0;
+}
+
+.project-members-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.project-members-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 var(--border-radius);
+}
+  
+.project-members-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 var(--border-radius) 0;
+}
+
+.SelectItem[data-disabled] {
+  color: var(--mauve-8);
+  pointer-events: none;
+}
+.SelectItem[data-highlighted] {
+  outline: none;
+  background-color: var(--violet-9);
+  color: var(--violet-1);
+}
+
+.SelectItemIndicator {
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
