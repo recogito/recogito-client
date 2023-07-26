@@ -40,6 +40,7 @@
   border-width: 1px 0 0 0;
   color: var(--font-dark);
   height: 40px;
+  white-space: nowrap;
 }
 
 .project-members-table thead th:first-child {
@@ -59,7 +60,9 @@
 .project-members-table tbody td:last-child {
   border-width: 1px 1px 0 0;
 }
-
+.project-members-table tbody td:nth-child(2) {
+  width: 50%;
+}
 .project-members-table tbody tr:last-child td {
   border-bottom: 1px solid var(--gray-200);
 }
