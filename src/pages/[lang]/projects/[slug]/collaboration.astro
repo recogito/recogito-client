@@ -2,7 +2,7 @@
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getUserProfile } from '@backend/auth';
-import { getProject } from '@backend/crud';
+import { listPendingInvitations } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ManageUsers } from '@apps/project-collaboration/ManageUsers';
@@ -19,18 +19,21 @@ const user = await getUserProfile(supabase);
 
 const projectId = Astro.params.slug;
 
-const { data, error } = await getProjectExtended(supabase, projectId as string);
+const project = await getProjectExtended(supabase, projectId as string);
 
-if (error) { 
+const invitations = await listPendingInvitations(supabase, projectId as string);
+
+if (project.error || invitations.error || !user) { 
   const path = Astro.url.protocol + '//' + Astro.url.host;
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
-<ProjectLayout active="collaboration" user={user} project={data}>
+<ProjectLayout active="collaboration" user={user} project={project.data}>
   <ManageUsers
     client:load
     i18n={i18n}
-    project={data} 
-    user={user} /> 
+    me={user}
+    project={project.data}
+    invitations={invitations.data} /> 
 </ProjectLayout>

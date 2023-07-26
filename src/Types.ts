@@ -257,6 +257,8 @@ export interface Invitation {
 
   created_at: string;
 
+  email: string;
+
   invited_by_name?: string;
 
   project_name?: string;

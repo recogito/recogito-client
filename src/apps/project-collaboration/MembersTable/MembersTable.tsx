@@ -1,7 +1,7 @@
 import { Trash } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { GroupSelector } from './GroupSelector';
-import type { ProjectGroup, Translations } from 'src/Types';
+import type { Invitation, ProjectGroup, Translations } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
 
 import './MembersTable.css';
@@ -11,6 +11,12 @@ interface MembersTableProps {
   i18n: Translations;
 
   groups: ProjectGroup[];
+
+  invitations: Invitation[];
+
+  onChangeGroup(member: TeamMember, group: ProjectGroup): void;
+
+  onDeleteMember(member: TeamMember): void;
 
 }
 
@@ -31,10 +37,6 @@ export const MembersTable = (props: MembersTableProps) => {
       return `${first_name} ${last_name}`.trim();
 
     return ''; // TODO what to do for fallback?
-  }
-
-  const onChangeGroup = (member: TeamMember, group: ProjectGroup) => {
-    //
   }
 
   return (
@@ -60,15 +62,28 @@ export const MembersTable = (props: MembersTableProps) => {
                 i18n={props.i18n}
                 member={member} 
                 availableGroups={props.groups} 
-                onChangeGroup={group => onChangeGroup(member, group)} />
+                onChangeGroup={group => props.onChangeGroup(member, group)} />
             </td>
 
             <td className="actions">
               <Button
+                onClick={() => props.onDeleteMember(member)}
                 className="unstyled icon-only">
                 <Trash size={16} />
               </Button>
             </td>            
+          </tr>
+        ))}
+
+        {props.invitations.map(invitation => (
+          <tr key={invitation.id}>
+            <td></td>
+
+            <td>{invitation.email}</td>
+
+            <td>Invitation sent</td>
+
+            <td></td>
           </tr>
         ))}
       </tbody>

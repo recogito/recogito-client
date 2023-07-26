@@ -6,7 +6,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { ProjectUserRow } from '@components/ProjectUserRow';
 import {
   getProjectGroups, 
-  listPendingInvites, 
+  listPendingInvitations, 
   listProjectUsers, 
   removeUserFromProject, 
   updateUserProjectGroup
@@ -14,10 +14,11 @@ import {
 import InviteUsersToProject from './InviteUsersToProject';
 import EditUserModal from './EditUserModal';
 import RemoveUserModal from './RemoveUserModal';
-import type { ExtendedProjectData, Project, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Project, ProjectGroup, Translations, UserProfile } from 'src/Types';
 
 import './ManageUsers.css';
 import { MembersTable } from './MembersTable/MembersTable';
+import type { TeamMember } from './TeamMember';
 
 const { Root, Indicator } = Checkbox;
 
@@ -27,7 +28,9 @@ interface ManageUsersProps {
 
   project: ExtendedProjectData;
 
-  user: UserProfile | undefined;
+  invitations: Invitation[];
+
+  me: UserProfile;
 
 };
 
@@ -45,17 +48,6 @@ export const ManageUsers = (props: ManageUsersProps) => {
   const [currentlyEditing, setCurrentlyEditing] = useState<{ id: string, name: string, type_id: string } | null>(null);
   const [currentlyRemoving, setCurrentlyRemoving] = useState<{ id: string, name: string, typeId: string } | null>(null);
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
-
-  const handleRemoveUser = (id: string, typeId: string) => {
-    removeUserFromProject(supabase, id, typeId).then((response) => {
-      if (!response) {
-        setData((old) => old?.filter((i) => i.profiles.id != id));
-        setCurrentlyRemoving(null);
-        setRemoveModalOpen(false);
-      }
-      else console.log(response);
-    });
-  };
 
   const handleToggleSelected = (id: string) => {
     if (selected.includes(id)) {
@@ -103,13 +95,21 @@ export const ManageUsers = (props: ManageUsersProps) => {
     });
   };
 
-  const handleUpdatePending = () => {
-    listPendingInvites(supabase, project.id).then((data) => {
-      if (data) {
-        setPendingList(data.map((i) => ({ type_id: i.project_group_id, profiles: { id: i.id, email: i.email } })));
-      }
-    });
+  const onChangeGroup = (member: TeamMember, group: ProjectGroup) => {
+    // Optimistic update
   }
+
+  const onDeleteMember = (member: TeamMember) =>
+    removeUserFromProject(supabase, member.user.id, member.inGroup.id)
+      .then(({ error, data }) => {
+        if (data) {
+          // setData((old) => old?.filter((i) => i.profiles.id != id));
+          // setCurrentlyRemoving(null);
+          // setRemoveModalOpen(false);
+        } else {
+          console.error(error);
+        }
+      });
 
   useEffect(() => {
     /*
@@ -124,11 +124,6 @@ export const ManageUsers = (props: ManageUsersProps) => {
     })
     */
   }, []);
-
-  useEffect(() => {
-    handleUpdatePending();
-  }, []);
-
 
   return (
     <div className="manage-users">
@@ -148,12 +143,14 @@ export const ManageUsers = (props: ManageUsersProps) => {
             <InviteDialog.Description>
               Enter the email and role below.
             </InviteDialog.Description>
+
             <InviteUsersToProject
               i18n={props.i18n}
               project={props.project}
-              user={props.user}
-              onUpdatePending={handleUpdatePending}
+              user={props.me}
+              onUpdatePending={() => console.log('')}
             />
+
             <InviteDialog.Close asChild>
               <button className="CollabDialogClose" aria-label="Close">
                 <X />
@@ -165,7 +162,10 @@ export const ManageUsers = (props: ManageUsersProps) => {
 
       <MembersTable 
         i18n={props.i18n}
-        groups={props.project.groups} />
+        groups={props.project.groups} 
+        invitations={props.invitations}
+        onChangeGroup={onChangeGroup } 
+        onDeleteMember={onDeleteMember} />
 
       {/**  
 
@@ -220,12 +220,7 @@ export const ManageUsers = (props: ManageUsersProps) => {
         onDelete={() => currentlyEditing && handleOpenRemoveModal(currentlyEditing.id, currentlyEditing.name, currentlyEditing.type_id)}
         onClose={() => { setEditModalOpen(false); setCurrentlyEditing(null) }}
       />
-      <RemoveUserModal
-        open={removeModalOpen}
-        name={currentlyRemoving ? currentlyRemoving.name : undefined}
-        onConfirm={() => currentlyRemoving && handleRemoveUser(currentlyRemoving.id, currentlyRemoving.typeId)}
-        onClose={handleCloseRemoveModal}
-      />
+
     </div>
   );
 }
