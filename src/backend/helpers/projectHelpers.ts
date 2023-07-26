@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createContext, createProject, deleteContext, deleteProject } from '@backend/crud';
-import type { Context, ExtendedProjectData, Project } from 'src/Types';
+import type { Context, ExtendedProjectData, Project, ProjectMember } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { createSystemTag } from './tagHelpers';
 
@@ -84,7 +84,7 @@ export const getProjectWithContexts = (
   .single()
   .then(({ error, data }) => ({ error, data: data as Project & { contexts: Context[] } }));
 
-export const listProjectsExtended = (supabase: SupabaseClient): Response<ExtendedProjectData[]> =>
+export const listMyProjectsExtended = (supabase: SupabaseClient): Response<ExtendedProjectData[]> => 
   supabase
     .from('projects')
     .select(`
@@ -121,9 +121,38 @@ export const listProjectsExtended = (supabase: SupabaseClient): Response<Extende
         name
       )
     `)
-    .then(({ error, data }) => ({ error, data: data as unknown as ExtendedProjectData[] }));
+    .then(({ error, data }) => { 
+      if (error) {
+        return { error, data: [] as ExtendedProjectData[] };
+      } else {
+        const projects = data;
+        // All group IDs of all projects in `data`
+        const groupIds = projects.reduce((ids, project) => 
+          ([...ids, ...project.groups.map(g => g.id)]), [] as string[]);
 
-export const listProjectMembers = (supabase: SupabaseClient, groupIds: string[]) =>
+        return getProjectMembers(supabase, groupIds)
+          .then(({ error, data }) => {
+            if (error) {
+              return { error, data: [] as ExtendedProjectData[] };
+            } else {
+              // Re-assign group members to projects
+              const projectsExtended = projects.map(p => ({
+                ...p,
+                groups: p.groups.map(g => ({
+                  ...g,
+                  members: data
+                    .filter(m => m.in_group === g.id)
+                    .map(m => m.user)
+                }))
+              } as unknown as ExtendedProjectData));
+
+              return { error, data: projectsExtended };
+            } 
+          });
+      }
+    })
+
+export const getProjectMembers = (supabase: SupabaseClient, groupIds: string[]): Response<ProjectMember[]> =>
   supabase
     .from('group_users')
     .select(`
@@ -133,10 +162,9 @@ export const listProjectMembers = (supabase: SupabaseClient, groupIds: string[])
         first_name,
         last_name,
         avatar_url
-      )
+      ),
+      in_group:type_id
     `)
     .eq('group_type', 'project')
     .in('type_id', groupIds)
-    .then(({ error, data }) => {
-      console.log(error, data);
-    });
+    .then(({ error, data }) => ({ error, data: data as unknown as ProjectMember[] }));
