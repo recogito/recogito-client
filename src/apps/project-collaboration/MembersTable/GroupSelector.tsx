@@ -1,6 +1,7 @@
-import { ReactNode, forwardRef } from 'react';
+import { ReactNode, forwardRef, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
+import { TinySaveIndicator, SaveState } from '@components/TinySaveIndicator';
 import type { TeamMember } from '../TeamMember';
 import type { ProjectGroup, Translations } from 'src/Types';
 
@@ -37,10 +38,19 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, forwarded
 
 export const GroupSelector = (props: GroupSelectorProps) => {
 
+  const [state, setState] = useState<SaveState>('idle');
+
   const onValueChange = (value: string) => {
     const group = props.availableGroups.find(g => g.id === value);
-    if (group)
-      props.onChangeGroup(group);
+    if (group) {
+      // Optimistic update to upwards component state
+      // props.onChangeGroup(group);
+
+      setState('saving');
+      // TODO update group membership
+      setTimeout(() => setState('success'), 1500);
+
+    }
   }
 
   return (
@@ -51,6 +61,11 @@ export const GroupSelector = (props: GroupSelectorProps) => {
           <CaretDown />
         </Select.Icon>
       </Select.Trigger>
+
+      <TinySaveIndicator 
+        state={state} 
+        fadeOut={5000} />
+
       <Select.Portal>
         <Select.Content className="select-content">
           <Select.Viewport className="select-viewport">

@@ -1,6 +1,5 @@
 import { Trash } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import { TinySaveIndicator } from '@components/TinySaveIndicator';
 import { GroupSelector } from './GroupSelector';
 import type { Invitation, ProjectGroup, Translations } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
@@ -64,8 +63,6 @@ export const MembersTable = (props: MembersTableProps) => {
                 member={member} 
                 availableGroups={props.groups} 
                 onChangeGroup={group => props.onChangeGroup(member, group)} />
-
-              <TinySaveIndicator />
             </td>
 
             <td className="actions">

@@ -5,6 +5,7 @@
   padding-left: 8px;
   position: relative;
   top: 2px;
+  transition: opacity 500ms;
 }
 .tiny-save-indicator.idle > div {
   width: 16px;
