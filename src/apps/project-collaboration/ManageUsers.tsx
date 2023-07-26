@@ -152,8 +152,8 @@ export const ManageUsers = (props: ManageUsersProps) => {
             />
 
             <InviteDialog.Close asChild>
-              <button className="CollabDialogClose" aria-label="Close">
-                <X />
+              <button className="CollabDialogClose icon-only unstyled" aria-label="Close">
+                <X size={20} />
               </button>
             </InviteDialog.Close>
           </InviteDialog.Content>
