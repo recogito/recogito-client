@@ -1,0 +1,20 @@
+.tiny-save-indicator {
+  color: var(--gray-500);
+  display: inline-block;
+  vertical-align: bottom;
+  padding-left: 8px;
+  position: relative;
+  top: 2px;
+}
+.tiny-save-indicator.idle > div {
+  width: 16px;
+  height: 16px
+}
+
+.tiny-save-indicator.success {
+  color: var(--green-500);
+}
+
+.tiny-save-indicator.failed {
+  color: var(--red-500);
+}
