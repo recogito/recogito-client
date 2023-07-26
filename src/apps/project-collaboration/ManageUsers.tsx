@@ -22,6 +22,8 @@ import type { TeamMember } from './TeamMember';
 
 const { Root, Indicator } = Checkbox;
 
+
+
 interface ManageUsersProps {
 
   i18n: Translations;
@@ -38,7 +40,7 @@ export const ManageUsers = (props: ManageUsersProps) => {
 
   const { t } = props.i18n;
 
-  const { project } = props;
+  const [project, setProject] = useState(props.project);
 
   const [data, setData] = useState<any[]>();
   const [pendingList, setPendingList] = useState<any[]>();
@@ -95,8 +97,24 @@ export const ManageUsers = (props: ManageUsersProps) => {
     });
   };
 
-  const onChangeGroup = (member: TeamMember, group: ProjectGroup) => {
-    // Optimistic update
+  const onChangeGroup = (member: TeamMember, from: ProjectGroup, to: ProjectGroup) => {
+    // Update the member
+    const updated = {
+      ...member,
+      inGroup: to
+    };
+
+    // Update project groups
+    setProject({
+      ...project,
+      groups: project.groups.map(group => group.id === from.id ? (
+        // Remove user from this group
+        { ...group, members: group.members.filter(m => m.user.id !== member.user.id) }
+      ) : group.id === to.id ? (
+        // Add user to this group
+        { ...group, members: [...group.members, updated ]}
+      ) : group)
+    });
   }
 
   const onDeleteMember = (member: TeamMember) =>
@@ -164,9 +182,9 @@ export const ManageUsers = (props: ManageUsersProps) => {
 
       <MembersTable 
         i18n={props.i18n}
-        groups={props.project.groups} 
+        groups={project.groups} 
         invitations={props.invitations}
-        onChangeGroup={onChangeGroup } 
+        onChangeGroup={onChangeGroup} 
         onDeleteMember={onDeleteMember} />
 
       {/**  

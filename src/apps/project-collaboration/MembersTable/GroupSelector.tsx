@@ -1,6 +1,8 @@
 import { ReactNode, forwardRef, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
+import { updateUserProjectGroup } from '@backend/crud';
+import { supabase } from '@backend/supabaseBrowserClient';
 import { TinySaveIndicator, SaveState } from '@components/TinySaveIndicator';
 import type { TeamMember } from '../TeamMember';
 import type { ProjectGroup, Translations } from 'src/Types';
@@ -13,7 +15,7 @@ interface GroupSelectorProps {
 
   availableGroups: ProjectGroup[];
 
-  onChangeGroup(group: ProjectGroup): void;
+  onChangeGroup(from: ProjectGroup, to: ProjectGroup): void;
 
 }
 
@@ -38,18 +40,36 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, forwarded
 
 export const GroupSelector = (props: GroupSelectorProps) => {
 
+  const { member } = props;
+
   const [state, setState] = useState<SaveState>('idle');
 
   const onValueChange = (value: string) => {
     const group = props.availableGroups.find(g => g.id === value);
     if (group) {
       // Optimistic update to upwards component state
-      // props.onChangeGroup(group);
+      props.onChangeGroup(member.inGroup, group);
 
       setState('saving');
       // TODO update group membership
-      setTimeout(() => setState('success'), 1500);
+      // setTimeout(() => setState('success'), 1500);
 
+      updateUserProjectGroup(
+        supabase, 
+        member.user.id, 
+        member.inGroup.id,
+        value
+      ).then(({ error }) => {
+        if (error) {
+          console.error(error);
+
+          // Rollback optimistic update
+          setState('failed');
+          props.onChangeGroup(group, member.inGroup);
+        } else {
+          setState('success');
+        }
+      });
     }
   }
 

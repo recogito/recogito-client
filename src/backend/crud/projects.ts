@@ -148,16 +148,20 @@ export const getProjectGroups = async (supabase: SupabaseClient, projectId: stri
     return { error, data };
 }
 
-export const updateUserProjectGroup = async (supabase: SupabaseClient, userId: string, oldTypeId: string, newTypeId: string) => {
-  const { error } = await supabase 
+export const updateUserProjectGroup = (
+  supabase: SupabaseClient, 
+  userId: string, 
+  oldTypeId: string, 
+  newTypeId: string
+): Response<Boolean> =>
+  supabase 
     .from('group_users')
     .update({
       type_id: newTypeId
     })
     .eq('user_id', userId)
-    .eq('type_id', oldTypeId);
-  return error;
-  };
+    .eq('type_id', oldTypeId)
+    .then(({ error }) => ({ error, data: !error }));
 
 export const removeUserFromProject = (
   supabase: SupabaseClient, 

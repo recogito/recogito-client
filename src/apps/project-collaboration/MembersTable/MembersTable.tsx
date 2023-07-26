@@ -6,6 +6,17 @@ import type { TeamMember } from '../TeamMember';
 
 import './MembersTable.css';
 
+// Helper to flatten the list of groups to the list of users
+// TODO sort by 'member since'
+const getMembers = (groups: ProjectGroup[]): TeamMember[] => 
+  groups.reduce((members, group) => (
+    [
+      ...members, 
+      ...group.members.map(({ user, since }) => 
+        ({ user, inGroup: group, since }))
+    ]
+  ), [] as TeamMember[]);
+
 interface MembersTableProps {
 
   i18n: Translations;
@@ -14,7 +25,7 @@ interface MembersTableProps {
 
   invitations: Invitation[];
 
-  onChangeGroup(member: TeamMember, group: ProjectGroup): void;
+  onChangeGroup(member: TeamMember, from: ProjectGroup, to: ProjectGroup): void;
 
   onDeleteMember(member: TeamMember): void;
 
@@ -22,11 +33,7 @@ interface MembersTableProps {
 
 export const MembersTable = (props: MembersTableProps) => {
 
-  // Unfold the groups list to a flat list of users, sorted
-  // by their time of becoming a member
-  const members = props.groups.reduce((members, group) =>
-    ([...members, ...group.members.map(({ user, since }) => ({ user, inGroup: group, since }))])
-  , [] as TeamMember[]);
+  const members = getMembers(props.groups);
 
   const formatName = (member: TeamMember) => {
     const { nickname, first_name, last_name } = member.user;
@@ -62,7 +69,7 @@ export const MembersTable = (props: MembersTableProps) => {
                 i18n={props.i18n}
                 member={member} 
                 availableGroups={props.groups} 
-                onChangeGroup={group => props.onChangeGroup(member, group)} />
+                onChangeGroup={(from, to) => props.onChangeGroup(member, from, to)} />
             </td>
 
             <td className="actions">
