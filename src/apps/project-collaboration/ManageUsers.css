@@ -3,6 +3,10 @@
   width: 100%;
 }
 
+.manage-users button.invite-user svg {
+  padding-right: 0.5em;
+}
+
 /*
 .CheckboxRoot {
   background-color: white;

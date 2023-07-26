@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as InviteDialog from '@radix-ui/react-dialog';
-import { Check, X } from '@phosphor-icons/react';
+import { Check, UserCirclePlus, UserPlus, X } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { ProjectUserRow } from '@components/ProjectUserRow';
 import {
@@ -131,7 +131,9 @@ export const ManageUsers = (props: ManageUsersProps) => {
 
       <InviteDialog.Root>
         <InviteDialog.Trigger asChild>
-          <button className="primary">{t["Invite"]}</button>
+          <button className="primary invite-user">
+            <UserPlus size={20} /> <span>Add a user</span>
+          </button>
         </InviteDialog.Trigger>
 
         <InviteDialog.Portal>
