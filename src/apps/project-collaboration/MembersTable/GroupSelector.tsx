@@ -51,8 +51,6 @@ export const GroupSelector = (props: GroupSelectorProps) => {
       props.onChangeGroup(member.inGroup, group);
 
       setState('saving');
-      // TODO update group membership
-      // setTimeout(() => setState('success'), 1500);
 
       updateUserProjectGroup(
         supabase, 
@@ -84,7 +82,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
 
       <TinySaveIndicator 
         state={state} 
-        fadeOut={5000} />
+        fadeOut={2500} />
 
       <Select.Portal>
         <Select.Content className="select-content">
