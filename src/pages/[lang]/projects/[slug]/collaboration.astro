@@ -5,7 +5,7 @@ import { getUserProfile } from '@backend/auth';
 import { listPendingInvitations } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { ManageUsers } from '@apps/project-collaboration/ManageUsers';
+import { ProjectCollaboration } from '@apps/project-collaboration/ProjectCollaboration';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -29,7 +29,7 @@ if (project.error || invitations.error || !user) {
 }
 ---
 <ProjectLayout active="collaboration" user={user} project={project.data}>
-  <ManageUsers
+  <ProjectCollaboration
     client:load
     i18n={i18n}
     me={user}

@@ -5,7 +5,7 @@ import { MembersTable } from './MembersTable';
 import type { TeamMember } from './TeamMember';
 import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
 
-import './ManageUsers.css';
+import './ProjectCollaboration.css';
 
 interface ManageUsersProps {
 
@@ -19,7 +19,7 @@ interface ManageUsersProps {
 
 };
 
-export const ManageUsers = (props: ManageUsersProps) => {
+export const ProjectCollaboration = (props: ManageUsersProps) => {
 
   const { t } = props.i18n;
 
