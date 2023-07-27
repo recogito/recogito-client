@@ -1,0 +1,11 @@
+button.danger,
+button.danger:disabled {
+  border-color: var(--red-500);
+  background-color: var(--red-500);
+  color: #fff;
+}
+
+button.danger svg,
+button.danger:disabled svg {
+  color: #fff;
+}

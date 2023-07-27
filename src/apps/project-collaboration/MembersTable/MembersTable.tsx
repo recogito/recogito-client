@@ -1,8 +1,8 @@
-import { Trash } from '@phosphor-icons/react';
-import { Button } from '@components/Button';
 import { GroupSelector } from './GroupSelector';
+import type { PostgrestError } from '@supabase/supabase-js';
 import type { Invitation, ProjectGroup, Translations } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
+import { DeleteMember } from './DeleteMember';
 
 import './MembersTable.css';
 
@@ -28,6 +28,8 @@ interface MembersTableProps {
   onChangeGroup(member: TeamMember, from: ProjectGroup, to: ProjectGroup): void;
 
   onDeleteMember(member: TeamMember): void;
+
+  onDeleteMemberError(error: PostgrestError): void;
 
 }
 
@@ -73,11 +75,10 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td className="actions">
-              <Button
-                onClick={() => props.onDeleteMember(member)}
-                className="unstyled icon-only">
-                <Trash size={16} />
-              </Button>
+              <DeleteMember 
+                member={member} 
+                onDeleteMember={props.onDeleteMember} 
+                onDeleteError={props.onDeleteMemberError}/>
             </td>            
           </tr>
         ))}
@@ -88,41 +89,14 @@ export const MembersTable = (props: MembersTableProps) => {
 
             <td>{invitation.email}</td>
 
-            <td>Invitation sent</td>
+            <td>
+              <span className="invitation-sent">Invitation sent</span>
+            </td>
 
             <td></td>
           </tr>
         ))}
       </tbody>
-
-      {/*
-
-      {data?.map((user) => (
-        <ProjectUserRow
-          key={user.profiles.id}
-          i18n={props.i18n}
-          user={user}
-          typeId={user.type_id}
-          onRemoveUser={() => handleOpenRemoveModal(user.profiles.id, (user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') + user.profiles.last_name : user.profiles.nickname, user.type_id)}
-          onUpdateUser={(NewTypeId: string) => handleUpdateUser(user.profiles.id, user.type_id, NewTypeId)}
-          onSelectRow={() => handleToggleSelected(user.profiles.id)}
-          selected={selected.includes(user.profiles.id)}
-          roleName={projectGroups.find((i) => i.id == user.type_id).name}
-          onOpenEditModal={() => handleOpenEditModal(user.profiles.id, (user.profiles.first_name || user.profiles.last_name) ? (user.profiles.first_name ? `${user.profiles.first_name} ` : '') + user.profiles.last_name : user.profiles.nickname, user.type_id)}
-        />
-      ))}
-      {pendingList?.map((user) => (
-        <ProjectUserRow
-          key={user.profiles.id}
-          i18n={props.i18n}
-          user={user}
-          typeId={user.type_id}
-          roleName={projectGroups.find((i) => i.id == user.type_id).name}
-          pending
-        />
-      ))}
-    </div>
-      */}
     </table>
   )
 
