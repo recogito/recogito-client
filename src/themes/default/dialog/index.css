@@ -36,9 +36,21 @@
 }
 
 .dialog-title {
+  font-size: 1.2em;
   margin: 0;
 }
 
 .dialog-description {
-  font-size: var(--font-small);
+  margin: 1.5em 0;
+  font-size: var(--font-tiny);
+}
+
+.dialog-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.dialog-footer {
+  display: flex;
 }

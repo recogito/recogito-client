@@ -33,10 +33,6 @@ export const Button = (props: ButtonProps) => {
       disabled={props.disabled}
       type={props.type} 
       onClick={props.onClick}>
-      
-      {props.busy && (
-        <Spinner className="button-busy-spinner" size={16} />
-      )}
 
       {props.busy && props.confetti && (
         <div className="confetti">
@@ -50,6 +46,10 @@ export const Button = (props: ButtonProps) => {
       )}
       
       {props.children}
+
+      {props.busy && (
+        <Spinner className="button-busy-spinner" size={16} />
+      )}
     </button>
   )
 

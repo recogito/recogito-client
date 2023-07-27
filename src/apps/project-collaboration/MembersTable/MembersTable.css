@@ -1,0 +1,94 @@
+.project-members-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-tiny);
+  margin-top: 2em;
+  max-width: 520px;
+  width: 100%;
+}
+
+.project-members-table :is(td, th) {
+  background-color: #fff;
+}
+
+.project-members-table tr:hover :is(td, th) {
+  background-color: var(--gray-50);
+}
+
+.project-members-table thead th {
+  border-color: var(--gray-200);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  box-sizing: border-box;
+  color: var(--font-light);
+  font-weight: 400;
+  height: 40px;
+  padding: 0.2em 0.5em;
+  text-align: left;
+}
+
+.project-members-table .actions {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0.5em;
+}
+
+.project-members-table tbody td {
+  border-color: var(--gray-200);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  color: var(--font-dark);
+  height: 40px;
+  padding: 0 0.5em;
+  white-space: nowrap;
+}
+
+.project-members-table thead th:first-child {
+  border-radius: var(--border-radius) 0 0 0;
+  border-width: 1px 0 0 1px;
+  padding-left: 0.8em;
+}
+
+.project-members-table thead th:last-child {
+  border-radius: 0 var(--border-radius) 0 0;
+  border-width: 1px 1px 0 0;
+}
+
+.project-members-table thead th:first-child,
+.project-members-table tbody td:first-child  {
+  border-width: 1px 0 0 1px;
+  color: var(--font-light);
+  padding-left: 0.8em;
+}
+
+.project-members-table thead th:first-child [data-state='checked'] ,
+.project-members-table tbody td:first-child [data-state='checked'] {
+  color: var(--font-dark);
+}
+
+.project-members-table tbody td:last-child {
+  border-width: 1px 1px 0 0;
+}
+
+.project-members-table tbody td:nth-child(2) {
+  width: 50%;
+}
+
+.project-members-table tbody tr:last-child td {
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.project-members-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 var(--border-radius);
+}
+  
+.project-members-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 var(--border-radius) 0;
+}
+
+.project-members-table td .invitation-sent {
+  color: var(--font-light);
+  display: inline-block;
+  padding: 0 0.9em;
+}

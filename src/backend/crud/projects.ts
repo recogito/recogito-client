@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Project } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Project } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 
@@ -58,36 +58,25 @@ export const updateProject = (supabase: SupabaseClient, project: Project): Respo
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
-export const inviteUserToProject = (supabase: SupabaseClient, email: string, project_id: string, role: string, invited_by_name?: string, project_name?: string) =>
+export const inviteUserToProject = (
+  supabase: SupabaseClient, 
+  email: string, 
+  project: Project | ExtendedProjectData, 
+  groupId: string, 
+  invitedBy?: string
+): Response<Invitation> =>
   supabase
-    .from('roles')
-    .select('id')
-    .eq('name', role)
+    .from('invites')
+    .insert({ 
+      email, 
+      project_id: project.id, 
+      project_name: project.name,
+      project_group_id: groupId, 
+      invited_by_name: invitedBy 
+    })
+    .select()
     .single()
-    .then(({ error, data }) => {
-      if (data) {
-      supabase
-        .from('project_groups')
-        .select('id')
-        .eq('role_id', data.id)
-        .eq('project_id', project_id)
-        .single()
-        .then(({ error, data }) => {
-          if (data) {
-            const project_group_id = data.id;
-            supabase
-              .from('invites')
-              .insert({ email, project_id, project_group_id, invited_by_name, project_name })
-              .select()
-              .single()
-              .then(({ error, data }) => ({ error, data }));
-          }
-        }); 
-        }
-      else {
-        return ({ error, data });
-      }
-      });
+    .then(({ error, data }) => ({ error, data: data as Invitation }));
 
 export const retrievePendingInvites = async (supabase: SupabaseClient, email: string) => {
   const { count } = await supabase
@@ -99,18 +88,26 @@ export const retrievePendingInvites = async (supabase: SupabaseClient, email: st
   return count;
 };
 
-export const listPendingInvites = async (supabase: SupabaseClient, projectId: string) => {
-  const { data } = await supabase
+export const listPendingInvitations = (
+  supabase: SupabaseClient, 
+  projectId: string
+): Response<Invitation[]> => 
+  supabase
     .from('invites')
     .select(`
       id,
+      created_at,
       email,
-      project_group_id
+      invited_by_name,
+      project_id,
+      project_name,
+      project_group_id,
+      accepted,
+      ignored
     `)
     .eq('project_id', projectId)
-    .is('accepted', false);
-  return data;
-};
+    .is('accepted', false)
+    .then(({ error, data }) => ({ error, data: data as Invitation[] }));
 
 export const listProjectUsers = async (supabase: SupabaseClient, typeIds: string[]) => {
   const { data } = await supabase
@@ -140,22 +137,29 @@ export const getProjectGroups = async (supabase: SupabaseClient, projectId: stri
     return { error, data };
 }
 
-export const updateUserProjectGroup = async (supabase: SupabaseClient, userId: string, oldTypeId: string, newTypeId: string) => {
-  const { error } = await supabase 
+export const updateUserProjectGroup = (
+  supabase: SupabaseClient, 
+  userId: string, 
+  oldTypeId: string, 
+  newTypeId: string
+): Response<Boolean> =>
+  supabase 
     .from('group_users')
     .update({
       type_id: newTypeId
     })
     .eq('user_id', userId)
-    .eq('type_id', oldTypeId);
-  return error;
-  };
+    .eq('type_id', oldTypeId)
+    .then(({ error }) => ({ error, data: !error }));
 
-  export const removeUserFromProject = async (supabase: SupabaseClient, userId: string, typeId: string) => {
-    const { error } = await supabase
-      .from('group_users')
-      .delete()
-      .eq('user_id', userId)
-      .eq('type_id', typeId);
-    return error;
-  }
+export const removeUserFromProject = (
+  supabase: SupabaseClient, 
+  userId: string, 
+  typeId: string
+): Response<Boolean> =>
+  supabase
+    .from('group_users')
+    .delete()
+    .eq('user_id', userId)
+    .eq('type_id', typeId)
+    .then(({ error }) => ({ error, data: !error }));

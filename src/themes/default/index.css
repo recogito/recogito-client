@@ -2,11 +2,13 @@
 @import './avatar/index.css';
 @import './breadcrumbs/index.css';
 @import './button/index.css';
+@import './checkbox/index.css';
 @import './dialog/index.css';
 @import './dropdown/index.css';
 @import './form/index.css';
 @import './mixins/index.css';
 @import './popover/index.css';
+@import './select/index.css';
 @import './toast/index.css';
 
 @font-face {
@@ -125,7 +127,7 @@
   --green-500: #11a011;
 
   /** Global constants **/
-  --border-radius: 3px;
+  --border-radius: 3px; 
   --link-color: var(--bright-blue);
 
   /** Font styles **/

@@ -1,1 +1,1 @@
-export * from './InviteUsersToProject';
+export * from './ProjectCollaboration';

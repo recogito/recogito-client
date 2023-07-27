@@ -130,7 +130,7 @@ export const listMyProjectsExtended = (supabase: SupabaseClient): Response<Exten
         const groupIds = projects.reduce((ids, project) => 
           ([...ids, ...project.groups.map(g => g.id)]), [] as string[]);
 
-        return getProjectMembers(supabase, groupIds)
+        return getGroupMembers(supabase, groupIds)
           .then(({ error, data }) => {
             if (error) {
               return { error, data: [] as ExtendedProjectData[] };
@@ -142,7 +142,7 @@ export const listMyProjectsExtended = (supabase: SupabaseClient): Response<Exten
                   ...g,
                   members: data
                     .filter(m => m.in_group === g.id)
-                    .map(m => m.user)
+                    .map(({ user, since }) => ({ user, since }))
                 }))
               } as unknown as ExtendedProjectData));
 
@@ -150,9 +150,80 @@ export const listMyProjectsExtended = (supabase: SupabaseClient): Response<Exten
             } 
           });
       }
-    })
+    });
 
-export const getProjectMembers = (supabase: SupabaseClient, groupIds: string[]): Response<ProjectMember[]> =>
+// TODO redundancy needs cleaning up!
+export const getProjectExtended = (supabase: SupabaseClient, projectId: string): Response<ExtendedProjectData> => 
+  supabase
+    .from('projects')
+    .select(`
+      id,
+      created_at,
+      created_by:profiles!projects_created_by_fkey(
+        id,
+        nickname,
+        first_name,
+        last_name,
+        avatar_url
+      ),
+      updated_at,
+      updated_by,
+      name,
+      description,
+      contexts (
+        id,
+        name
+      ),
+      layers (
+        id,
+        name,
+        description,
+        document:documents (
+          id,
+          name,
+          content_type,
+          meta_data
+        )
+      ),
+      groups:project_groups (
+        id,
+        name
+      )
+    `)
+    .eq('id', projectId)
+    .single()
+    .then(({ error, data }) => { 
+      if (error) {
+        return { error, data: undefined as unknown as ExtendedProjectData };
+      } else {
+        const project = data;
+
+        const groupIds = project.groups.map(g => g.id);
+
+        return getGroupMembers(supabase, groupIds)
+          .then(({ error, data }) => {
+            if (error) {
+              return { error, data: undefined as unknown as ExtendedProjectData };
+            } else {
+              // Re-assign group members to groups
+              const projectExtended = {
+                ...project,
+                groups: project.groups.map(g => ({
+                  ...g,
+                  members: data
+                    .filter(m => m.in_group === g.id)
+                    .map(({ user, since }) => ({ user, since }))
+                }))
+              } as unknown as ExtendedProjectData;
+
+              return { error, data: projectExtended };
+            } 
+          });
+      }
+    });
+  
+
+export const getGroupMembers = (supabase: SupabaseClient, groupIds: string[]): Response<ProjectMember[]> =>
   supabase
     .from('group_users')
     .select(`
@@ -163,7 +234,8 @@ export const getProjectMembers = (supabase: SupabaseClient, groupIds: string[]):
         last_name,
         avatar_url
       ),
-      in_group:type_id
+      in_group:type_id,
+      since:created_at
     `)
     .eq('group_type', 'project')
     .in('type_id', groupIds)

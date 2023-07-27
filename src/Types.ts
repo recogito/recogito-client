@@ -97,15 +97,23 @@ export interface ExtendedProjectData {
 
   }];
 
-  groups: {
+  groups: ProjectGroup[];
 
-    id: string;
+}
 
-    name: string;
+export interface ProjectGroup {
 
-    members: UserProfile[];
+  id: string;
 
-  }[]
+  name: string;
+
+  members: Array<{ 
+
+    user: UserProfile; 
+
+    since: string;
+
+  }>;
 
 }
 
@@ -114,6 +122,8 @@ export interface ProjectMember {
   user: UserProfile;
 
   in_group: string;
+
+  since: string;
 
 }
 
@@ -246,6 +256,8 @@ export interface Invitation {
   id: string;
 
   created_at: string;
+
+  email: string;
 
   invited_by_name?: string;
 
