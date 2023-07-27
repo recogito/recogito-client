@@ -87,7 +87,7 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
   return (
     <div className="manage-users">
       <ToastProvider>
-        <h1>Project Team</h1>
+        <h1>{t['Project Team']}</h1>
 
         <InviteUser 
           i18n={props.i18n} 

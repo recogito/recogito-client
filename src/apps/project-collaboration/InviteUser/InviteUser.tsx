@@ -84,7 +84,8 @@ export const InviteUser = (props: InviteUserProps) => {
   return (
     <>
       <button className="primary" onClick={() => setOpen(true)}>
-        <UserPlus size={20} /> <span>Add a user</span>
+        <UserPlus size={20} /> 
+        <span>{t['Add a user']}</span>
       </button>
 
       <Dialog.Root open={open} onOpenChange={setOpen}>
@@ -93,11 +94,11 @@ export const InviteUser = (props: InviteUserProps) => {
 
           <Dialog.Content className="invite-users dialog-content">
             <Dialog.Title className="dialog-title">
-              Invite User to Project
+              {t['Invite User to Project']}
             </Dialog.Title>
 
             <Dialog.Description className="dialog-description">
-              Enter the email and role below.
+              {t['Enter e-mail and access level.']}
             </Dialog.Description>
 
             <form onSubmit={formik.handleSubmit}>
@@ -114,7 +115,7 @@ export const InviteUser = (props: InviteUserProps) => {
                 </div>
 
                 <div className="field">
-                  <label>{t['Role']}</label>
+                  <label>{t['Access Level']}</label>
 
                   <select
                     id="group" 
@@ -125,7 +126,7 @@ export const InviteUser = (props: InviteUserProps) => {
                     {props.project.groups.map(group => (
                       <option 
                         key={group.id}
-                        value={group.id}>{group.name}</option>
+                        value={group.id}>{t[group.name]}</option>
                     ))}
                   </select>
                 </div>
@@ -137,7 +138,9 @@ export const InviteUser = (props: InviteUserProps) => {
                 className="primary" 
                 type="submit">
                 <Envelope size={20} />
-                <span>Send Invitation</span>
+                <span>
+                  {t['Send invitation']}
+                </span>
               </Button>
             </form>
 

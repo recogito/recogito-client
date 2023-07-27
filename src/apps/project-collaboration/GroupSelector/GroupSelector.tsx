@@ -40,6 +40,8 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, forwarded
 
 export const GroupSelector = (props: GroupSelectorProps) => {
 
+  const { t } = props.i18n;
+
   const { member } = props;
 
   const [state, setState] = useState<SaveState>('idle');
@@ -88,7 +90,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
         <Select.Content className="select-content">
           <Select.Viewport className="select-viewport">
             {props.availableGroups.map(group => (
-              <SelectItem key={group.id} value={group.id}>{group.name}</SelectItem>
+              <SelectItem key={group.id} value={group.id}>{t[group.name]}</SelectItem>
             ))}
           </Select.Viewport>
         </Select.Content>

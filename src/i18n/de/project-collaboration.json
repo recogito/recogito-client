@@ -1,14 +1,16 @@
 {
-    "E-Mail": "E-Mail",
-    "Student": "Student",
-    "Professor": "Professor",
-    "TA": "TA",
-    "Auditor": "Auditor",
-    "Role": "Role",
-    "Invite": "Invite",
-    "Invite Users to Project": "Invite Users To Project",
-
-    "Something went wrong": "Something went wrong",
-    "Could not invite user": "Could not invite user",
-    "User invited": "User invited"
+  "Project Team": "Projektteam",
+  "Add a user": "Benutzer einladen",
+  "Name": "Name",
+  "Access Level": "Berechtigung",
+  "Project Admins": "Administrator",
+  "Project Students": "Student",
+  "Invite User to Project": "Benutzer Einladen",
+  "Enter e-mail and access level.": "Bitte gib die E-mail Adresse und Berechtigungsstufe an.",
+  "Send invitation": "Einladung abschicken",
+  "Confirm Remove User": "Bist Du sicher?",
+  "Remove_name": "Bist Du sicher dass Du <strong>${name}</strong> aus dem Projekt entfernen willst?",
+  "Remove_anonymous": "Sind sie sicher dass sie diesen Benutzer aus dem Projekt entfernen wollen?",
+  "Remove": "Löschen",
+  "Cancel": "Abbrechen"
 }

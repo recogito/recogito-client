@@ -6,8 +6,11 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import type { TeamMember } from '../TeamMember';
 import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
+import type { Translations } from 'src/Types';
 
 interface DeleteMemberProps {
+
+  i18n: Translations;
 
   member: TeamMember;
 
@@ -18,6 +21,8 @@ interface DeleteMemberProps {
 }
 
 export const DeleteMember = (props: DeleteMemberProps) => {
+
+  const { t } = props.i18n;
 
   const { member } = props;
 
@@ -57,11 +62,15 @@ export const DeleteMember = (props: DeleteMemberProps) => {
         <Dialog.Overlay className="dialog-overlay">
           <Dialog.Content className="dialog-content">
             <Dialog.Title className="dialog-title">
-              Confirm Remove User
+              {t['Confirm Remove User']}
             </Dialog.Title>
 
             <Dialog.Description className="dialog-description">
-              Are you sure you want to remove {name ? (<strong>{name}</strong>) : ('this user')} from the project?
+              {name ? (
+                <span dangerouslySetInnerHTML={{__html: t['Remove_name'].replace('${name}', name)}} />
+              ) : (
+                t['Remove_anonymous']
+              )}
             </Dialog.Description>
 
             <footer className="dialog-footer">
@@ -69,11 +78,12 @@ export const DeleteMember = (props: DeleteMemberProps) => {
                 busy={busy}
                 className="danger" 
                 onClick={onDelete}>
-                <Trash size={16} /> <span>Remove</span>
+                <Trash size={16} /> 
+                <span>{t['Remove']}</span>
               </Button>
 
               <Dialog.Close asChild>
-                <button>Cancel</button>
+                <button>{t['Cancel']}</button>
               </Dialog.Close>
             </footer>
 

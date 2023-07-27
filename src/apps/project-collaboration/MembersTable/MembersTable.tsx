@@ -39,6 +39,8 @@ interface MembersTableProps {
 
 export const MembersTable = (props: MembersTableProps) => {
 
+  const { t } = props.i18n;
+
   // Selected member IDs
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -91,8 +93,8 @@ export const MembersTable = (props: MembersTableProps) => {
             </Checkbox.Root>
           </th>
 
-          <th>Name</th>
-          <th>Access Level</th>
+          <th>{t['Name']}</th>
+          <th>{t['Access Level']}</th>
           <th></th>
         </tr>
       </thead>
@@ -128,6 +130,7 @@ export const MembersTable = (props: MembersTableProps) => {
 
             <td className="actions">
               <DeleteMember 
+                i18n={props.i18n}
                 member={member} 
                 onDeleteMember={props.onDeleteMember} 
                 onDeleteError={props.onDeleteMemberError}/>
