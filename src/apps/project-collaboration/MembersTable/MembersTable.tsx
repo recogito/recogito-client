@@ -11,14 +11,15 @@ import './MembersTable.css';
 
 // Helper to flatten the list of groups to the list of users
 // TODO sort by 'member since'
-const getMembers = (groups: ProjectGroup[]): TeamMember[] => 
-  groups.reduce((members, group) => (
+const getMembers = (groups: ProjectGroup[]): TeamMember[] => groups
+.reduce((members, group) => (
     [
       ...members, 
       ...group.members.map(({ user, since }) => 
         ({ user, inGroup: group, since }))
     ]
-  ), [] as TeamMember[]);
+  ), [] as TeamMember[])
+.sort((a, b) => (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0);
 
 interface MembersTableProps {
 
