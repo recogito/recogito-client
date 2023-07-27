@@ -1,9 +1,7 @@
 import { useState } from 'react';
-import * as InviteDialog from '@radix-ui/react-dialog';
-import { UserPlus, X } from '@phosphor-icons/react';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
-import InviteUsersToProject from './InviteUsersToProject';
-import { MembersTable } from './MembersTable/MembersTable';
+import { InviteUser } from './InviteUser';
+import { MembersTable } from './MembersTable';
 import type { TeamMember } from './TeamMember';
 import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
 
@@ -29,10 +27,9 @@ export const ManageUsers = (props: ManageUsersProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [data, setData] = useState<any[]>();
+  // const [selected, setSelected] = useState<string[]>([]);
 
-  const [selected, setSelected] = useState<string[]>([]);
-
+  /*
   const handleToggleSelected = (id: string) => {
     if (selected.includes(id)) {
       setSelected((old) => old.filter((i) => i != id));
@@ -46,6 +43,7 @@ export const ManageUsers = (props: ManageUsersProps) => {
     }
     else setSelected(data ? data.map((i) => i.profiles.id) : []);
   };
+  */
 
   const onChangeGroup = (member: TeamMember, from: ProjectGroup, to: ProjectGroup) => {
     // Update the member
@@ -85,43 +83,25 @@ export const ManageUsers = (props: ManageUsersProps) => {
       type: 'error' 
     });
 
+  const onInvitationSent = (email: string) => {
+
+  }
+
+  const onInvitationError = () => {
+
+  }
+
   return (
     <div className="manage-users">
       <ToastProvider>
         <h1>Project Team</h1>
 
-        <InviteDialog.Root>
-          <InviteDialog.Trigger asChild>
-            <button className="primary invite-user">
-              <UserPlus size={20} /> <span>Add a user</span>
-            </button>
-          </InviteDialog.Trigger>
-
-          <InviteDialog.Portal>
-            <InviteDialog.Overlay className="CollabDialogOverlay" />
-            <InviteDialog.Content className="CollabDialogContent">
-              <InviteDialog.Title>
-                Invite User to Project
-              </InviteDialog.Title>
-              <InviteDialog.Description>
-                Enter the email and role below.
-              </InviteDialog.Description>
-
-              <InviteUsersToProject
-                i18n={props.i18n}
-                project={props.project}
-                user={props.me}
-                onUpdatePending={() => console.log('')}
-              />
-
-              <InviteDialog.Close asChild>
-                <button className="CollabDialogClose icon-only unstyled" aria-label="Close">
-                  <X size={20} />
-                </button>
-              </InviteDialog.Close>
-            </InviteDialog.Content>
-          </InviteDialog.Portal>
-        </InviteDialog.Root>
+        <InviteUser 
+          i18n={props.i18n} 
+          me={props.me}
+          project={project} 
+          onInvitiationSent={onInvitationSent} 
+          onInvitiationError={onInvitationError} />
 
         <MembersTable 
           i18n={props.i18n}

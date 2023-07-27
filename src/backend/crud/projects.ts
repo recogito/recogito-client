@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Invitation, Project } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Project } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 
@@ -58,36 +58,25 @@ export const updateProject = (supabase: SupabaseClient, project: Project): Respo
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
-export const inviteUserToProject = (supabase: SupabaseClient, email: string, project_id: string, role: string, invited_by_name?: string, project_name?: string) =>
+export const inviteUserToProject = (
+  supabase: SupabaseClient, 
+  email: string, 
+  project: Project | ExtendedProjectData, 
+  groupId: string, 
+  invitedBy?: string
+): Response<Boolean> =>
   supabase
-    .from('roles')
-    .select('id')
-    .eq('name', role)
+    .from('invites')
+    .insert({ 
+      email, 
+      project_id: project.id, 
+      project_name: project.name,
+      project_group_id: groupId, 
+      invited_by_name: invitedBy 
+    })
+    .select()
     .single()
-    .then(({ error, data }) => {
-      if (data) {
-      supabase
-        .from('project_groups')
-        .select('id')
-        .eq('role_id', data.id)
-        .eq('project_id', project_id)
-        .single()
-        .then(({ error, data }) => {
-          if (data) {
-            const project_group_id = data.id;
-            supabase
-              .from('invites')
-              .insert({ email, project_id, project_group_id, invited_by_name, project_name })
-              .select()
-              .single()
-              .then(({ error, data }) => ({ error, data }));
-          }
-        }); 
-        }
-      else {
-        return ({ error, data });
-      }
-      });
+    .then(({ error }) => ({ error, data: !error }));
 
 export const retrievePendingInvites = async (supabase: SupabaseClient, email: string) => {
   const { count } = await supabase

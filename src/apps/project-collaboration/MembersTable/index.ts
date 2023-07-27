@@ -1,1 +1,1 @@
-export * from './MembersTable.css';
+export * from './MembersTable';

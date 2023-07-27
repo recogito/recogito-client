@@ -41,8 +41,8 @@
 }
 
 .dialog-description {
-  font-size: var(--font-tiny);
   margin: 1.5em 0;
+  font-size: var(--font-tiny);
 }
 
 .dialog-close {
