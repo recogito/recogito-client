@@ -1,3 +1,4 @@
+import accountMenu from './account-menu.json';
 import annotationCommon from './annotation-common.json';
 import annotationImage from './annotation-image.json';
 import annotationText from './annotation-text.json';
@@ -15,7 +16,7 @@ export default {
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-login': authLogin,
   'dashboard-account': { ...dashboardAccount },
-  'dashboard-projects': { ...dashboardProjects, ...notifications },
+  'dashboard-projects': { ...dashboardProjects, ...notifications, ...accountMenu },
   'error': error,
   'project-collaboration': projectCollaboration,
   'project-home': projectHome,
