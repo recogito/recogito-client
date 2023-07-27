@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import { RocketLaunch } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import type { Project, Translations } from 'src/Types';
 import { Button } from '@components/Button';
+import { initProject } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 export interface ProjectsEmptyProps {
 
   i18n: Translations;
 
-  onCreateProject(): void;
+  onProjectCreated(project: Project): void;
+
+  onError(error: string): void;
 
 }
 
@@ -22,7 +26,17 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
       return;
 
     setFetching(true);
-    props.onCreateProject();
+
+    initProject(supabase, t['Untitled Project'])
+      .then(({ project }) => {
+        props.onProjectCreated(project);
+        setFetching(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setFetching(false);
+        props.onError('Something went wrong');
+      });
   }
   
   return (

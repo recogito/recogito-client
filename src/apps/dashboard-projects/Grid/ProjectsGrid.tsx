@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import type { Project, Translations } from 'src/Types';
 import { ProjectCard } from '@components/ProjectCard';
 
@@ -8,8 +7,6 @@ export interface ProjectsGridProps {
 
   projects: Project[];
 
-  onCreateProject(): void;
-
   onDeleteProject(project: Project): void;
 
   onRenameProject(project: Project): void;
@@ -17,20 +14,6 @@ export interface ProjectsGridProps {
 }
 
 export const ProjectsGrid = (props: ProjectsGridProps) => {
-
-  const [fetching, setFetching] = useState(false);
-
-  const onCreateProject = () => {
-    if (fetching)
-      return;
-
-    setFetching(true);
-    props.onCreateProject();
-  }
-
-  useEffect(() => {
-    setFetching(false);
-  }, [props.projects]);
 
   return (
     <main>

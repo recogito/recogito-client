@@ -55,19 +55,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       // TODO
       [] : [];
 
-  const onCreateProject = () =>
-    initProject(supabase, t['Untitled Project'])
-      .then(({ project }) => {
-        setProjects([...projects, project]);
-      })
-      .catch(error => {
-        console.error(error);
-        setError({ 
-          title: t['Something went wrong'], 
-          description: t['Could not create the project.'], 
-          type: 'error' 
-        });
-      });
+  const onProjectCreated = (project: Project) =>
+    setProjects([...projects, project]);
 
   const onRenameProject = (project: Project) => {
     setError({
@@ -122,7 +111,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           i18n={props.i18n} 
           invitations={invitations} 
           onChangeFilter={setFilter}
-          onCreateProject={onCreateProject} 
+          onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}
           onInvitationDeclined={onInvitationDeclined} 
           onError={onError} />
@@ -130,12 +119,12 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         {projects.length === 0 ? (
           <ProjectsEmpty 
             i18n={props.i18n} 
-            onCreateProject={onCreateProject} />
+            onProjectCreated={onProjectCreated} 
+            onError={onError} />
         ) : (
           <ProjectsGrid 
             i18n={props.i18n} 
-            projects={filteredProjects}
-            onCreateProject={onCreateProject} 
+            projects={filteredProjects} 
             onDeleteProject={onDeleteProject} 
             onRenameProject={onRenameProject} />  
         )}

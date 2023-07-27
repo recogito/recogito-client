@@ -9,6 +9,7 @@ import type { Invitation, MyProfile, Project, Translations } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
 
 import './Header.css';
+import { initProject } from '@backend/helpers';
 
 interface HeaderProps {
 
@@ -20,7 +21,7 @@ interface HeaderProps {
 
   onChangeFilter(f: ProjectFilter): void;
 
-  onCreateProject(): void;
+  onProjectCreated(project: Project): void;
 
   onInvitationAccepted(invitation: Invitation, project: Project): void;
 
@@ -31,10 +32,33 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
+
+  const { t } = props.i18n;
   
   const { filter, onChangeFilter } = props;
 
   const [profile, setProfile] = useState<MyProfile | undefined>();
+
+  // 'Create new project' button state
+  const [creating, setCreating] = useState(false);
+
+  const onCreateProject = () => {
+    if (creating)
+      return;
+
+    setCreating(true);
+
+    initProject(supabase, t['Untitled Project'])
+      .then(({ project }) => {
+        props.onProjectCreated(project);
+        setCreating(false);
+      })
+      .catch(error => {
+        console.error(error);
+        setCreating(false);
+        props.onError('Something went wrong');
+      });
+  }
 
   useEffect(() => {
     getMyProfile(supabase)
@@ -53,8 +77,9 @@ export const Header = (props: HeaderProps) => {
           className={profile ? 'dashboard-header-top-actions' : 'dashboard-header-top-actions loading'}>
 
           <Button 
+            busy={creating}
             className="new-project primary sm flat"
-            onClick={props.onCreateProject}>
+            onClick={onCreateProject}>
             <Plus size={16} weight="bold" /> <span>New Project</span>
           </Button>
 
