@@ -23,33 +23,14 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
 
   const { t } = props.i18n;
 
-
   const [project, setProject] = useState(props.project);
 
   const [invitations, setInvitations] = useState(props.invitations);
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  // const [selected, setSelected] = useState<string[]>([]);
-
-  /*
-  const handleToggleSelected = (id: string) => {
-    if (selected.includes(id)) {
-      setSelected((old) => old.filter((i) => i != id));
-    }
-    else setSelected((old) => [...old, id]);
-  };
-
-  const toggleSelectAll = () => {
-    if (data && data.length == selected.length) {
-      setSelected([]);
-    }
-    else setSelected(data ? data.map((i) => i.profiles.id) : []);
-  };
-  */
-
   const onChangeGroup = (member: TeamMember, from: ProjectGroup, to: ProjectGroup) => {
-    // Update the member
+    // Update member
     const updated = {
       ...member,
       inGroup: to
@@ -69,7 +50,7 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
   }
 
   const onDeleteMember = (member: TeamMember) => {
-    // Remove the user from this project
+    // Remove user from this project
     setProject(project => ({
       ...project,
       groups: project.groups.map(group => ({

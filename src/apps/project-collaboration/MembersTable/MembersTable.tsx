@@ -1,5 +1,8 @@
-import { GroupSelector } from '../GroupSelector/GroupSelector';
+import { useState } from 'react';
+import * as Checkbox from '@radix-ui/react-checkbox';
 import type { PostgrestError } from '@supabase/supabase-js';
+import { CheckSquare, Square } from '@phosphor-icons/react';
+import { GroupSelector } from '../GroupSelector/GroupSelector';
 import type { Invitation, ProjectGroup, Translations } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
 import { DeleteMember } from '../DeleteMember';
@@ -37,6 +40,9 @@ export const MembersTable = (props: MembersTableProps) => {
 
   const members = getMembers(props.groups);
 
+  // Selected member IDs
+  const [selected, setSelected] = useState<string[]>([]);
+
   const formatName = (member: TeamMember) => {
     const { nickname, first_name, last_name } = member.user;
     if (nickname)
@@ -47,6 +53,22 @@ export const MembersTable = (props: MembersTableProps) => {
 
     return ''; // TODO what to do for fallback?
   }
+
+  const onSelectRow = (member: TeamMember, checked: Checkbox.CheckedState) => {
+    if (checked)
+      setSelected(selected => [...selected, member.user.id])
+    else 
+      setSelected(selected => selected.filter(id => id !== member.user.id));
+  }
+
+  /*
+  const toggleSelectAll = () => {
+    if (data && data.length == selected.length) {
+      setSelected([]);
+    }
+    else setSelected(data ? data.map((i) => i.profiles.id) : []);
+  };
+  */
 
   return (
     <table className="project-members-table">
@@ -62,7 +84,21 @@ export const MembersTable = (props: MembersTableProps) => {
       <tbody>
         {members.map(member => (
           <tr key={member.user.id}>
-            <td></td>
+            <td>
+              <Checkbox.Root 
+                className="checkbox-root"
+                checked={selected.includes(member.user.id)}
+                onCheckedChange={checked => onSelectRow(member, checked)}>
+                
+                <Checkbox.Indicator>
+                  <CheckSquare size={20} /> 
+                </Checkbox.Indicator>
+
+                {!selected.includes(member.user.id) && (
+                  <Square size={20} />
+                )}
+              </Checkbox.Root>
+            </td>
 
             <td>{formatName(member)}</td>
 
