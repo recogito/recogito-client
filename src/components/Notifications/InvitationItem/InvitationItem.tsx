@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import TimeAgo from 'timeago-react';
+import { TimeAgo } from '@components/TimeAgo';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { declineInvitation, joinProject } from '@backend/helpers/invitationHelpers';
@@ -22,6 +22,8 @@ interface InvitationItemProps {
 }
 
 export const InvitationItem = (props: InvitationItemProps) => {
+
+  const { t } = props.i18n;
 
   const i = props.invitation;
 
@@ -65,10 +67,11 @@ export const InvitationItem = (props: InvitationItemProps) => {
 
   return (
     <li className="notification-item invitation-item">
-      <p>
-        <strong>{i.invited_by_name}</strong> invites you 
-        to join <strong>{i.project_name}</strong>.
-      </p>
+      <p dangerouslySetInnerHTML={{__html: 
+        t['Invitation']
+          .replace('${sender}', i.invited_by_name as string)
+          .replace('${project}', i.project_name as string)
+        }} />
       
       <TimeAgo datetime={i.created_at} locale={props.i18n.lang} />
       
@@ -77,14 +80,14 @@ export const InvitationItem = (props: InvitationItemProps) => {
           className="primary tiny flat"
           busy={accepted}
           onClick={onAccept}>
-          <span>Accept</span>
+          <span>{t['Accept']}</span>
         </Button>
 
         <Button
           className="tiny flat"
           busy={declined}
           onClick={onDecline}>  
-          <span>Ignore</span>
+          <span>{t['Ignore']}</span>
         </Button>
       </div>
     </li>

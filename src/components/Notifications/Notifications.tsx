@@ -24,6 +24,8 @@ interface NotificationsProps {
 
 export const Notifications = (props: NotificationsProps) => {
 
+  const { t } = props.i18n;
+
   const unhandled = props.invitations.filter(i => !i.ignored);
 
   const count = unhandled.length;
@@ -49,7 +51,7 @@ export const Notifications = (props: NotificationsProps) => {
           <section 
             className={count ? 'notifications' : 'notifications no-pending'}>
             <header>
-              <h1>Notifications</h1>
+              <h1>{t['Notifications']}</h1>
               <Close className="unstyled icon-only popover-close" aria-label="Close">
                 <X size={16} />
               </Close>

@@ -1,0 +1,10 @@
+{
+  "Notifications": "Benachrichtigungen",
+  "You're up to date!": "Alles erledigt!",
+  "No notifications": "Keine Benachrichtigungen",
+
+  "Invitation": "${sender} lädt dich zum Projekt <strong>${project}</strong> ein.",
+
+  "Accept": "Annehmen",
+  "Ignore": "Ignorieren"
+}

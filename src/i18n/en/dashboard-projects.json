@@ -1,13 +1,20 @@
 {
   "Empty Dashboard? Infinite Possibilities!": "Empty Dashboard? Infinite Possibilities!",
   "Start Your First Annotation Project": "Start Your First Annotation Project",
-  "You have no annotation projects.": "You don't have any annotation projects in your workspace yet. You can either start your own project or join an existing project using an invitation link.",
-  "Learn more.": "Learn more.",
+
+  "Projects": "Projects",
+  "New Project": "New Project",
+  "Untitled Project": "Untitled Project",
+
+  "All": "All",
+  "My Projects": "My Projects",
+  "Shared with me": "Shared with me",
+
+  "Search": "Search",
+  "Sort": "Sort",
+
   "Delete project": "Delete project",
   "Rename project": "Rename project",
-
-  "Create New Project": "Create New Project",
-  "Untitled Project": "Untitled Project",
 
   "Something went wrong": "Something went wrong",
   "Could not create the project.": "Could not create the project.",

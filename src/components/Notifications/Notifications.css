@@ -37,7 +37,7 @@
 }
 
 .notification-item {
-  line-height: 150%;
+  line-height: 160%;
   padding: 15px;
   border-bottom: 1px solid var(--gray-200);
 }

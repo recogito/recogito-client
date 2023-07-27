@@ -70,7 +70,7 @@ export const Header = (props: HeaderProps) => {
       <section className="dashboard-header-top">
         <h1>
           <Kanban size={32} weight="thin" />
-          <span>Projects</span>
+          <span>{t['Projects']}</span>
         </h1>
 
         <div
@@ -80,7 +80,8 @@ export const Header = (props: HeaderProps) => {
             busy={creating}
             className="new-project primary sm flat"
             onClick={onCreateProject}>
-            <Plus size={16} weight="bold" /> <span>New Project</span>
+            <Plus size={16} weight="bold" /> 
+            <span>{t['New Project']}</span>
           </Button>
 
           <Notifications 
@@ -108,32 +109,32 @@ export const Header = (props: HeaderProps) => {
           <li
             className={filter === ProjectFilter.ALL ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.ALL)}>
-            <button>All</button>
+            <button>{t['All']}</button>
           </li>
 
           <li
             className={filter === ProjectFilter.MINE ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.MINE)}>
-            <button>My Projects</button>
+            <button>{t['My Projects']}</button>
           </li>
 
           <li
             className={filter === ProjectFilter.SHARED ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.SHARED)}>
-            <button>Shared with me</button>
+            <button>{t['Shared with me']}</button>
           </li>
         </ul>
 
         <ul className="dashboard-header-bottom-actions">
           <li>
             <button>
-              <MagnifyingGlass size={16} /> <span>Search</span>
+              <MagnifyingGlass size={16} /> <span>{t['Search']}</span>
             </button>
           </li>
 
           <li>
             <button>
-              <FunnelSimple size={16} /> <span>Sort</span>
+              <FunnelSimple size={16} /> <span>{t['Sort']}</span>
             </button>
           </li>
         </ul>

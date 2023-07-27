@@ -1,0 +1,10 @@
+{
+  "Notifications": "Notifications",
+  "You're up to date!": "You're up to date!",
+  "No notifications": "No notifications",
+
+  "Invitation": "${sender} invites you to join <strong>${project}</strong>.",
+
+  "Accept": "Accept",
+  "Ignore": "Ignore"
+}
