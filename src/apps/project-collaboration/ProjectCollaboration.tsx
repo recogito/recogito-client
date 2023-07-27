@@ -23,9 +23,12 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
 
   const { t } = props.i18n;
 
+
   const [project, setProject] = useState(props.project);
 
-  const [error, setError] = useState<ToastContent | null>(null);
+  const [invitations, setInvitations] = useState(props.invitations);
+
+  const [toast, setToast] = useState<ToastContent | null>(null);
 
   // const [selected, setSelected] = useState<string[]>([]);
 
@@ -77,20 +80,29 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
   }
 
   const onDeleteError = () => 
-    setError({ 
+    setToast({ 
       title: t['Something went wrong'], 
       description: t['Could not delete user.'], 
       type: 'error' 
     });
 
-  const onInvitationSent = (email: string) => {
+  const onInvitationSent = (invitation: Invitation) => {
+    setToast({ 
+      title: 'Invitation Sent', 
+      description: `Invitation was sent to ${invitation.email}`, 
+      type: 'success'
+    });
 
+    setInvitations(invitations => ([...invitations, invitation ]));
   }
 
-  const onInvitationError = () => {
-
-  }
-
+  const onInvitationError = () =>
+    setToast({ 
+      title: t['Something went wrong'], 
+      description: t['Could not sent invitation.'], 
+      type: 'error' 
+    });
+    
   return (
     <div className="manage-users">
       <ToastProvider>
@@ -106,14 +118,14 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
         <MembersTable 
           i18n={props.i18n}
           groups={project.groups} 
-          invitations={props.invitations}
+          invitations={invitations}
           onChangeGroup={onChangeGroup} 
           onDeleteMember={onDeleteMember} 
           onDeleteMemberError={onDeleteError} />
 
         <Toast
-          content={error}
-          onOpenChange={open => !open && setError(null)} />
+          content={toast}
+          onOpenChange={open => !open && setToast(null)} />
       </ToastProvider>
     </div>
   )

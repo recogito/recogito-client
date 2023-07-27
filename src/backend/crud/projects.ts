@@ -64,7 +64,7 @@ export const inviteUserToProject = (
   project: Project | ExtendedProjectData, 
   groupId: string, 
   invitedBy?: string
-): Response<Boolean> =>
+): Response<Invitation> =>
   supabase
     .from('invites')
     .insert({ 
@@ -76,7 +76,7 @@ export const inviteUserToProject = (
     })
     .select()
     .single()
-    .then(({ error }) => ({ error, data: !error }));
+    .then(({ error, data }) => ({ error, data: data as Invitation }));
 
 export const retrievePendingInvites = async (supabase: SupabaseClient, email: string) => {
   const { count } = await supabase

@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { inviteUserToProject } from '@backend/crud';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Translations, UserProfile } from 'src/Types';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 import './InviteUser.css';
@@ -18,7 +18,7 @@ interface InviteUserProps {
 
   project: ExtendedProjectData;
 
-  onInvitiationSent(email: string): void;
+  onInvitiationSent(invitation: Invitation): void;
 
   onInvitiationError(error: PostgrestError): void;
 
@@ -30,6 +30,8 @@ export const InviteUser = (props: InviteUserProps) => {
 
   const { me, project } = props;
 
+  const [open, setOpen] = useState(false);
+
   const [busy, setBusy] = useState(false);
 
   const onSubmit = (values: { email: string, group: string }) => {
@@ -40,14 +42,33 @@ export const InviteUser = (props: InviteUserProps) => {
 
     setBusy(true);
 
-    inviteUserToProject(supabase, values.email, project, values.group, invitedBy)
-      .then(({ error }) => {
-        if (error) {
-          props.onInvitiationError(error);
-        } else {
-          props.onInvitiationSent(values.email);
-        }
-      });
+    // Waits until the invite was processed in the backend
+    const a = new Promise(resolve => {
+      inviteUserToProject(supabase, values.email, project, values.group, invitedBy)
+        .then(({ error, data }) => {
+          if (error) {
+            props.onInvitiationError(error);
+          } else {
+            props.onInvitiationSent(data);
+          }
+
+          resolve(null);
+        });
+
+      resolve(null);
+    });
+
+    // Waits for fixed amount of time, so that confetti can complete
+    const b = new Promise(resolve => {
+      setTimeout(() => resolve(null), 1500);
+    });
+
+    // Waits for whatever is takes longer and closes the dialog
+    Promise.all([a, b]).then(() => { 
+      setBusy(false);
+      setOpen(false);
+      formik.resetForm();
+    });
   }
 
   const formik = useFormik({
@@ -61,73 +82,73 @@ export const InviteUser = (props: InviteUserProps) => {
   });
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button className="primary">
-          <UserPlus size={20} /> <span>Add a user</span>
-        </button>
-      </Dialog.Trigger>
+    <>
+      <button className="primary" onClick={() => setOpen(true)}>
+        <UserPlus size={20} /> <span>Add a user</span>
+      </button>
 
-      <Dialog.Portal>
-        <Dialog.Overlay className="dialog-overlay" />
+      <Dialog.Root open={open} onOpenChange={setOpen}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="dialog-overlay" />
 
-        <Dialog.Content className="invite-users dialog-content">
-          <Dialog.Title className="dialog-title">
-            Invite User to Project
-          </Dialog.Title>
+          <Dialog.Content className="invite-users dialog-content">
+            <Dialog.Title className="dialog-title">
+              Invite User to Project
+            </Dialog.Title>
 
-          <Dialog.Description className="dialog-description">
-            Enter the email and role below.
-          </Dialog.Description>
+            <Dialog.Description className="dialog-description">
+              Enter the email and role below.
+            </Dialog.Description>
 
-          <form onSubmit={formik.handleSubmit}>
-            <fieldset>
-              <div className="field">
-                <label>{t['E-Mail']}</label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  onChange={formik.handleChange}
-                  value={formik.values.email}
-                  required />
-              </div>
+            <form onSubmit={formik.handleSubmit}>
+              <fieldset>
+                <div className="field">
+                  <label>{t['E-Mail']}</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    onChange={formik.handleChange}
+                    value={formik.values.email}
+                    required />
+                </div>
 
-              <div className="field">
-                <label>{t['Role']}</label>
+                <div className="field">
+                  <label>{t['Role']}</label>
 
-                <select
-                  id="group" 
-                  name="group" 
-                  onChange={formik.handleChange} 
-                  value={formik.values.group}>
-                  
-                  {props.project.groups.map(group => (
-                    <option 
-                      key={group.id}
-                      value={group.id}>{group.name}</option>
-                  ))}
-                </select>
-              </div>
-            </fieldset>
+                  <select
+                    id="group" 
+                    name="group" 
+                    onChange={formik.handleChange} 
+                    value={formik.values.group}>
+                    
+                    {props.project.groups.map(group => (
+                      <option 
+                        key={group.id}
+                        value={group.id}>{group.name}</option>
+                    ))}
+                  </select>
+                </div>
+              </fieldset>
 
-            <Button 
-              busy={busy}
-              confetti
-              className="primary" 
-              type="submit">
-              <Envelope size={20} />
-              <span>Send Invitation</span>
-            </Button>
-          </form>
+              <Button 
+                busy={busy}
+                confetti
+                className="primary" 
+                type="submit">
+                <Envelope size={20} />
+                <span>Send Invitation</span>
+              </Button>
+            </form>
 
-          <Dialog.Close asChild>
-            <button className="dialog-close icon-only unstyled" aria-label="Close">
-              <X size={16} />
-            </button>
-          </Dialog.Close>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+            <Dialog.Close asChild>
+              <button className="dialog-close icon-only unstyled" aria-label="Close">
+                <X size={16} />
+              </button>
+            </Dialog.Close>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+    </>
   )
 }
