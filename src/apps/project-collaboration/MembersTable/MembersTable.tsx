@@ -38,10 +38,12 @@ interface MembersTableProps {
 
 export const MembersTable = (props: MembersTableProps) => {
 
-  const members = getMembers(props.groups);
-
   // Selected member IDs
   const [selected, setSelected] = useState<string[]>([]);
+
+  const members = getMembers(props.groups);
+
+  const isAllSelected = selected.length === members.length;
 
   const formatName = (member: TeamMember) => {
     const { nickname, first_name, last_name } = member.user;
@@ -61,20 +63,33 @@ export const MembersTable = (props: MembersTableProps) => {
       setSelected(selected => selected.filter(id => id !== member.user.id));
   }
 
-  /*
-  const toggleSelectAll = () => {
-    if (data && data.length == selected.length) {
-      setSelected([]);
-    }
-    else setSelected(data ? data.map((i) => i.profiles.id) : []);
-  };
-  */
+  const onSelectAll = (checked: Checkbox.CheckedState) => {
+    if (checked)
+      setSelected(members.map(m => m.user.id));
+    else
+      setSelected([]);    
+  }
 
   return (
     <table className="project-members-table">
       <thead>
         <tr>
-          <th></th>
+          <th>
+            <Checkbox.Root 
+              className="checkbox-root"
+              checked={isAllSelected}
+              onCheckedChange={onSelectAll}>
+              
+              <Checkbox.Indicator>
+                <CheckSquare size={20} weight="fill" /> 
+              </Checkbox.Indicator>
+
+              {!isAllSelected && (
+                <span><Square size={20} /></span>
+              )}
+            </Checkbox.Root>
+          </th>
+
           <th>Name</th>
           <th>Access Level</th>
           <th></th>
@@ -91,11 +106,11 @@ export const MembersTable = (props: MembersTableProps) => {
                 onCheckedChange={checked => onSelectRow(member, checked)}>
                 
                 <Checkbox.Indicator>
-                  <CheckSquare size={20} /> 
+                  <CheckSquare size={20} weight="fill" /> 
                 </Checkbox.Indicator>
 
                 {!selected.includes(member.user.id) && (
-                  <Square size={20} />
+                  <span><Square size={20} /></span>
                 )}
               </Checkbox.Root>
             </td>

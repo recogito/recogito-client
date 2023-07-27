@@ -23,7 +23,7 @@
   color: var(--font-light);
   font-weight: 400;
   height: 40px;
-  padding: 0.2em 0.3em;
+  padding: 0.2em 0.5em;
   text-align: left;
 }
 
@@ -40,12 +40,14 @@
   border-width: 1px 0 0 0;
   color: var(--font-dark);
   height: 40px;
+  padding: 0 0.5em;
   white-space: nowrap;
 }
 
 .project-members-table thead th:first-child {
   border-radius: var(--border-radius) 0 0 0;
   border-width: 1px 0 0 1px;
+  padding-left: 0.8em;
 }
 
 .project-members-table thead th:last-child {
@@ -53,8 +55,16 @@
   border-width: 1px 1px 0 0;
 }
 
-.project-members-table tbody td:first-child {
+.project-members-table thead th:first-child,
+.project-members-table tbody td:first-child  {
   border-width: 1px 0 0 1px;
+  color: var(--font-light);
+  padding-left: 0.8em;
+}
+
+.project-members-table thead th:first-child [data-state='checked'] ,
+.project-members-table tbody td:first-child [data-state='checked'] {
+  color: var(--font-dark);
 }
 
 .project-members-table tbody td:last-child {
