@@ -1,5 +1,5 @@
-import type { Project, Translations } from 'src/Types';
 import { ProjectCard } from '@components/ProjectCard';
+import type { Project, Translations } from 'src/Types';
 
 export interface ProjectsGridProps {
 

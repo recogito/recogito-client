@@ -3,7 +3,6 @@ import { Hammer } from '@phosphor-icons/react';
 import type { Invitation, Project, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteProject, getMyProfile } from '@backend/crud';
-import { initProject } from '@backend/helpers';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
