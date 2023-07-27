@@ -21,9 +21,12 @@ export const DeleteMember = (props: DeleteMemberProps) => {
 
   const { member } = props;
 
+  const { nickname, first_name, last_name } = member.user;
+
   const [busy, setBusy] = useState(false);
 
-  const name = 'foo';
+  const name = nickname ? nickname : 
+    (first_name || last_name) ? [first_name, last_name].join(' ') : undefined;
 
   const onDelete = () => {
     setBusy(true);
@@ -58,7 +61,7 @@ export const DeleteMember = (props: DeleteMemberProps) => {
             </Dialog.Title>
 
             <Dialog.Description className="dialog-description">
-              Are you sure you wish to remove the user {name ? name + ' ' : ''}from the project?
+              Are you sure you want to remove {name ? (<strong>{name}</strong>) : ('this user')} from the project?
             </Dialog.Description>
 
             <footer className="dialog-footer">

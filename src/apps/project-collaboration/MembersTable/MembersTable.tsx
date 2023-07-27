@@ -1,8 +1,8 @@
-import { GroupSelector } from './GroupSelector';
+import { GroupSelector } from '../GroupSelector/GroupSelector';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Invitation, ProjectGroup, Translations } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
-import { DeleteMember } from './DeleteMember';
+import { DeleteMember } from '../DeleteMember';
 
 import './MembersTable.css';
 
