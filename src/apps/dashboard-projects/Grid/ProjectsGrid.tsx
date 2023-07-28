@@ -1,15 +1,15 @@
 import { ProjectCard } from '@components/ProjectCard';
-import type { Project, Translations } from 'src/Types';
+import type { ExtendedProjectData, Translations } from 'src/Types';
 
 export interface ProjectsGridProps {
 
   i18n: Translations;
 
-  projects: Project[];
+  projects: ExtendedProjectData[];
 
-  onDeleteProject(project: Project): void;
+  onDeleteProject(project: ExtendedProjectData): void;
 
-  onRenameProject(project: Project): void;
+  onRenameProject(project: ExtendedProjectData): void;
 
 }
 

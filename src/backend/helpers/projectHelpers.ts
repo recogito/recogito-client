@@ -14,7 +14,7 @@ import { createSystemTag } from './tagHelpers';
 export const initProject = (
   supabase: SupabaseClient, 
   name: string
-): Promise<{ project: Project, defaultContext: Context }> => {
+): Promise<ExtendedProjectData> => {
   // First promise: create the project
   const a: Promise<Project> =
     new Promise((resolve, reject) => 
@@ -42,12 +42,18 @@ export const initProject = (
         })));
 
   // Wait for both promises to complete, tag the default context,
-  // and return project and context objects.
+  // and return the extended project data.
   return Promise.all([a, b]).then(([ project, defaultContext]) => 
     new Promise((resolve, reject) =>
       createSystemTag(supabase, 'DEFAULT_CONTEXT', defaultContext.id)
         .then(() => {
-          resolve({ project, defaultContext });
+          getProjectExtended(supabase, project.id)
+            .then(({ error, data }) => {
+              if (error)
+                reject(error)
+              else 
+                resolve(data);
+            });
         })
         .catch(error => {
           // Tag creation failed? Roll back context and project

@@ -1,6 +1,6 @@
 import * as Popover from '@radix-ui/react-popover';
 import { Bell, X } from '@phosphor-icons/react';
-import type { Invitation, Project, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
 import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
 
@@ -14,7 +14,7 @@ interface NotificationsProps {
 
   invitations: Invitation[];
 
-  onInvitationAccepted(invitation: Invitation, project: Project): void;
+  onInvitationAccepted(invitation: Invitation, project: ExtendedProjectData): void;
 
   onInvitationDeclined(invitation: Invitation): void;
 

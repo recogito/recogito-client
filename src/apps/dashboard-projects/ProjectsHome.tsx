@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
-import type { Invitation, Project, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteProject, getMyProfile } from '@backend/crud';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
@@ -17,7 +17,7 @@ export interface ProjectsHomeProps {
 
   me: User;
 
-  projects: Project[];
+  projects: ExtendedProjectData[];
 
   invitations: Invitation[]; 
 
@@ -29,7 +29,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const { t } = props.i18n;
 
-  const [projects, setProjects] = useState<Project[]>(props.projects);
+  const { me } = props;
+
+  const [projects, setProjects] = useState<ExtendedProjectData[]>(props.projects);
 
   const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
 
@@ -46,18 +48,22 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   }, []);
 
   const filteredProjects = 
+    // All projects
     filter === ProjectFilter.ALL ?
       projects : 
+    // Am I the creator?
     filter === ProjectFilter.MINE ? 
-      projects.filter(p => p.created_by.id === props.me.id) : 
+      projects.filter(p => p.created_by.id === me.id) : 
+    // Am I one of the users in the groups?
     filter === ProjectFilter.SHARED ? 
-      // TODO
-      [] : [];
+      projects.filter(({ created_by, groups }) => 
+        groups.find(({ members }) => members.find(m => m.user.id === me.id) && me.id !== created_by.id)) : 
+    [];
 
-  const onProjectCreated = (project: Project) =>
+  const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
 
-  const onRenameProject = (project: Project) => {
+  const onRenameProject = (project: ExtendedProjectData) => {
     setError({
       icon: <Hammer size={16} className="text-bottom" />,
       title: t['We\'re working on it!'],
@@ -66,7 +72,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     });
   }
     
-  const onDeleteProject = (project: Project) =>
+  const onDeleteProject = (project: ExtendedProjectData) =>
     deleteProject(supabase, project.id).then(({ error, data }) => {
       if (error) {
         console.error(error);
@@ -94,7 +100,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       type: 'error'
     });
 
-  const onInvitationAccepted = (invitation: Invitation, project: Project) => {
+  const onInvitationAccepted = (invitation: Invitation, project: ExtendedProjectData) => {
     setInvitations(invitations => invitations.filter(i => i.id !== invitation.id));
     setProjects(projects => ([ project, ...projects ]));
   }

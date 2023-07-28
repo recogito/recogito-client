@@ -1,10 +1,11 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Invitation, Project } from 'src/Types';
+import type { ExtendedProjectData, Invitation } from 'src/Types';
+import { getProjectExtended } from './projectHelpers';
 
 export const joinProject = (
   supabase: SupabaseClient, 
   invitation: Invitation
-): Promise<Project> => new Promise((resolve, reject) => {
+): Promise<ExtendedProjectData> => new Promise((resolve, reject) => {
   supabase
     .from('invites')
     .update({ accepted: true })
@@ -13,23 +14,12 @@ export const joinProject = (
       if (error) {
         reject(error);
       } else {
-        supabase
-          .from('projects')
-          .select(`
-            id,
-            created_at,
-            updated_at,
-            updated_by,
-            name,
-            description
-          `)
-          .eq('id', invitation.project_id)
-          .maybeSingle()
+        getProjectExtended(supabase, invitation.project_id)
           .then(({ error, data }) => {
             if (error || !data)
               reject(error);
             else 
-              resolve(data as Project);
+              resolve(data);
           });
       }
     });

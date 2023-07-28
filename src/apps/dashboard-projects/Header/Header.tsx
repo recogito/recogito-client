@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { FunnelSimple, Kanban, MagnifyingGlass, Plus, User } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
+import { initProject } from '@backend/helpers';
 import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
-import type { Invitation, MyProfile, Project, Translations } from 'src/Types';
+import type { Invitation, MyProfile, ExtendedProjectData, Translations } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
 
 import './Header.css';
-import { initProject } from '@backend/helpers';
 
 interface HeaderProps {
 
@@ -21,9 +21,9 @@ interface HeaderProps {
 
   onChangeFilter(f: ProjectFilter): void;
 
-  onProjectCreated(project: Project): void;
+  onProjectCreated(project: ExtendedProjectData): void;
 
-  onInvitationAccepted(invitation: Invitation, project: Project): void;
+  onInvitationAccepted(invitation: Invitation, project: ExtendedProjectData): void;
 
   onInvitationDeclined(invitation: Invitation): void;
 
@@ -49,7 +49,7 @@ export const Header = (props: HeaderProps) => {
     setCreating(true);
 
     initProject(supabase, t['Untitled Project'])
-      .then(({ project }) => {
+      .then(project => {
         props.onProjectCreated(project);
         setCreating(false);
       })
