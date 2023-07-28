@@ -226,7 +226,6 @@ export const getProjectExtended = (supabase: SupabaseClient, projectId: string):
       }
     });
   
-
 export const getGroupMembers = (supabase: SupabaseClient, groupIds: string[]): Response<ProjectMember[]> =>
   supabase
     .from('group_users')

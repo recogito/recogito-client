@@ -32,7 +32,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documents, setDocuments] = useState<DocumentInProject[]>(props.documents);
 
-  const [error, setError] = useState<ToastContent | null>(null);
+  const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showUploads, setShowUploads] = useState(false);
 
@@ -40,7 +40,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
-      setError({
+      setToast({
         title: 'Sorry',
         description: 'Unsupported file format.',
         type: 'error'
@@ -97,11 +97,32 @@ export const ProjectHome = (props: ProjectHomeProps) => {
    * all the layers on this document in this project!
    */
   const onDeleteDocument = (document: DocumentInProject) => {
+    // Optimistic update: remove document from the list
+    setDocuments(documents => documents.filter(d => d.id !== document.id));
+
     // Note this will get easier when (if) we get a single RPC call
     // to archive a list of records
-    document.layers.reduce((p, nextLayer) => 
+    const chained = document.layers.reduce((p, nextLayer) => 
       p.then(() => archiveLayer(supabase, nextLayer.id)
     ), Promise.resolve());
+
+    chained
+      .then(() => {
+        setToast({
+          title: 'Deleted',
+          description: 'Document deleted successfully.',
+          type: 'success'
+        });
+      })
+      .catch(() => {
+        // Roll back optimistic update in case of failure
+        setDocuments(documents => ([...documents, document]));
+        setToast({
+          title: 'Something went wrong',
+          description: 'Could not delete the document.',
+          type: 'error'
+        });
+      });
   }
 
   const onRenameDocument = (document: DocumentInProject, name: string) => {
@@ -115,7 +136,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       .then(({ error, data }) => {
         if (error || !data) {
           // Show error and roll back name change
-          setError({ 
+          setToast({ 
             title: t['Something went wrong'], 
             description: t['Could not rename the document.'], 
             type: 'error' 
@@ -182,8 +203,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           onClose={() => setShowUploads(false)} />
 
         <Toast
-          content={error}
-          onOpenChange={open => !open && setError(null)} />
+          content={toast}
+          onOpenChange={open => !open && setToast(null)} />
       </ToastProvider>
 
       <input {...getInputProps() } />
