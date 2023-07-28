@@ -1,14 +1,14 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { initDocument } from '@backend/helpers';
-import type { Document, Layer } from 'src/Types';
+import type { DocumentInProject } from 'src/Types';
 import type { Upload, UploadProgress, UploadStatus } from './Upload';
 
 let queue = Promise.resolve();
 
 export const useUpload = (
-  onImport: (document: Document, defaultLayer: Layer) => void
+  onImport: (document: DocumentInProject) => void
 ) => {
 
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
@@ -21,14 +21,14 @@ export const useUpload = (
     } : upload));
   };
 
-  const onSuccess = (id: string, document: Document, defaultLayer: Layer) => {
+  const onSuccess = (id: string, document: DocumentInProject) => {
     setUploads(prev => prev.map(upload => upload.id === id ? {
       ...upload,
       progress: 100,
       status: 'success'
     } : upload));
 
-    onImport(document, defaultLayer)
+    onImport(document);
   };
     
   const onError = (id: string, message: string) => {
@@ -57,8 +57,8 @@ export const useUpload = (
       progress => onProgress(id, progress, 'uploading'),
       i.file,
       i.url
-    ).then(({ document, defaultLayer }) => {
-      onSuccess(id, document, defaultLayer);
+    ).then(document => {
+      onSuccess(id, document);
     })).catch(error => {
       onError(id, error);
     });

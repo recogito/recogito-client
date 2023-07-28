@@ -20,3 +20,18 @@ export const createLayer = (
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Layer }));
+
+export const archiveLayer = (supabase: SupabaseClient, id: string): Promise<void> =>
+  new Promise((resolve, reject) => {
+    supabase
+      .rpc('archive_record_rpc', {
+        _table_name: 'layers',
+        _id: id
+      })
+      .then(({ error }) => {
+        if (error)
+          reject(error);
+        else
+          resolve();
+      })
+  });

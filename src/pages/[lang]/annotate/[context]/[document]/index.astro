@@ -24,21 +24,12 @@ if (!contextId || !documentId) {
 }
 
 // Will return empty if this user has no access priviliges
-const response = await getDocumentInContext(supabase, documentId, contextId);
+const document = await getDocumentInContext(supabase, documentId, contextId);
 
-if (!response.data) {
+if (document.error || !document.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
-}
-
-const [ document, layers ] = response.data;
-
-if (!document || !layers) {
-  // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
-  const path = Astro.url.protocol + '//' + Astro.url.host;
-  const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
 // Compute realtime channel key
@@ -50,9 +41,9 @@ const channelId = data.digest('hex');
 
 let viewer;
 
-if (document.content_type === 'text/plain') {
+if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
-} else if (document.meta_data?.protocol === 'IIIF_IMAGE') {
+} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE') {
   viewer ='OPENSEADRAGON';
 } else {
   // Should never happen
@@ -66,23 +57,21 @@ if (document.content_type === 'text/plain') {
       <ImageAnnotationDesktop 
         client:only
         i18n={getTranslations(Astro.request, 'annotation-image')}
-        document={document}
-        layers={layers}
+        document={document.data}
         channelId={channelId} />
     </div>
   ) : (
     <div class="container text">
       <main id="annotatable">
         <PlainText
-          document={document} 
+          document={document.data} 
           supabase={supabase} />
       </main>
 
       <TextAnnotationDesktop 
         client:only
         i18n={getTranslations(Astro.request, 'annotation-text')} 
-        document={document}
-        layers={layers}
+        document={document.data}
         channelId={channelId} />
     </div>
   )}

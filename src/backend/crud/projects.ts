@@ -13,12 +13,33 @@ export const createProject = (supabase: SupabaseClient, name: string, descriptio
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
+// Note: users cannot normally delete projects, as soon as there are 
+// other entities linked to them (projet -> context -> document etc.).
+// This method is only needed in case of error handling, when creating
+// of the default context fails, and the project can *actually* be safely
+// deleted from the DB. All other user actions will archive rather than 
+// delete.
 export const deleteProject = (supabase: SupabaseClient, id: string) =>
   supabase
     .from('projects')
     .delete()
     .match({ id })
     .select();
+
+export const archiveProject = (supabase: SupabaseClient, id: string): Promise<void> =>
+  new Promise((resolve, reject) => {
+    supabase
+      .rpc('archive_record_rpc', {
+        _table_name: 'projects',
+        _id: id
+      })
+      .then(({ error }) => {
+        if (error)
+          reject(error);
+        else
+          resolve();
+      })
+  });
 
 export const getProject = (supabase: SupabaseClient, id: string): Response<Project> =>
   supabase

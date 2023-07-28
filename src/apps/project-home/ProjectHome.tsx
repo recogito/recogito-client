@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { CloudArrowUp } from '@phosphor-icons/react';
-import { Files, GraduationCap, PuzzlePiece, Sliders, UsersThree } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { updateDocument, updateProject } from '@backend/crud';
+import { archiveLayer, renameDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
-import type { Context, Document, Project, Translations } from 'src/Types';
+import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 import type { FileRejection } from 'react-dropzone';
 
 import './ProjectHome.css';
@@ -16,11 +15,9 @@ export interface ProjectHomeProps {
 
   i18n: Translations;
 
-  project: Project;
+  project: ExtendedProjectData;
 
-  defaultContext: Context;
-
-  documents: Document[];
+  documents: DocumentInProject[];
 
 }
 
@@ -28,11 +25,14 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { t } = props.i18n;
 
-  const { project, defaultContext } = props;
+  const { project } = props;
 
-  const [documents, setDocuments] = useState<Document[]>(props.documents);
+  // Temporary hack!
+  const defaultContext = project.contexts[0];
 
-  const [error, setError] = useState<ToastContent | null>(null);
+  const [documents, setDocuments] = useState<DocumentInProject[]>(props.documents);
+
+  const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showUploads, setShowUploads] = useState(false);
 
@@ -40,7 +40,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
-      setError({
+      setToast({
         title: 'Sorry',
         description: 'Unsupported file format.',
         type: 'error'
@@ -92,22 +92,51 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   }
 
-  const onDeleteDocument = (document: Document) => {
-    // TODO
+  /**
+   * When 'deleting a document' we're actually just archiving
+   * all the layers on this document in this project!
+   */
+  const onDeleteDocument = (document: DocumentInProject) => {
+    // Optimistic update: remove document from the list
+    setDocuments(documents => documents.filter(d => d.id !== document.id));
+
+    // Note this will get easier when (if) we get a single RPC call
+    // to archive a list of records
+    const chained = document.layers.reduce((p, nextLayer) => 
+      p.then(() => archiveLayer(supabase, nextLayer.id)
+    ), Promise.resolve());
+
+    chained
+      .then(() => {
+        setToast({
+          title: 'Deleted',
+          description: 'Document deleted successfully.',
+          type: 'success'
+        });
+      })
+      .catch(() => {
+        // Roll back optimistic update in case of failure
+        setDocuments(documents => ([...documents, document]));
+        setToast({
+          title: 'Something went wrong',
+          description: 'Could not delete the document.',
+          type: 'error'
+        });
+      });
   }
 
-  const onRenameDocument = (document: Document, name: string) => {
+  const onRenameDocument = (document: DocumentInProject, name: string) => {
     // Optimistic update
     setDocuments(documents.map(d => d.id === document.id ? ({
       ...d, name
     }) : d));
 
     // Update on server
-    updateDocument(supabase, { ...document, name })
+    renameDocument(supabase, document.id, name)
       .then(({ error, data }) => {
         if (error || !data) {
           // Show error and roll back name change
-          setError({ 
+          setToast({ 
             title: t['Something went wrong'], 
             description: t['Could not rename the document.'], 
             type: 'error' 
@@ -145,8 +174,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               <DocumentCard
                 key={document.id}
                 i18n={props.i18n} 
-                context={defaultContext}
                 document={document} 
+                context={defaultContext}
                 onDelete={() => onDeleteDocument(document)} 
                 onRename={name => onRenameDocument(document, name)} />
             ))}
@@ -174,8 +203,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           onClose={() => setShowUploads(false)} />
 
         <Toast
-          content={error}
-          onOpenChange={open => !open && setError(null)} />
+          content={toast}
+          onOpenChange={open => !open && setToast(null)} />
       </ToastProvider>
 
       <input {...getInputProps() } />

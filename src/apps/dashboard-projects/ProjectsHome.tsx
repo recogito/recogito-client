@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { deleteProject, getMyProfile } from '@backend/crud';
+import { archiveProject, getMyProfile } from '@backend/crud';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
@@ -73,26 +73,18 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   }
     
   const onDeleteProject = (project: ExtendedProjectData) =>
-    deleteProject(supabase, project.id).then(({ error, data }) => {
-      if (error) {
+    archiveProject(supabase, project.id)
+      .then(() => {
+        setProjects(projects => projects.filter(p => p.id !== project.id));
+      })
+      .catch(error => {
         console.error(error);
         setError({
           title: t['Something went wrong'],
           description: t['Could not delete the project.'],
           type: 'error'
         });
-      } else if (data) {
-        if (data.length === 1 && data[0].id === project.id) {
-          setProjects(projects.filter(p => p.id !== project.id));
-        } else {
-          setError({
-            title: t['Something went wrong'],
-            description: t['Could not delete the project.'],
-            type: 'error'
-          });
-        }
-      }
-    });
+      });
 
   const onError = (error: string) =>
     setError({

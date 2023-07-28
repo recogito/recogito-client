@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import type { Document, Layer, Translations } from 'src/Types';
+import type { DocumentInProject, Translations } from 'src/Types';
 import { Annotation } from '@components/Annotation';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
@@ -26,9 +26,7 @@ export interface ImageAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: Document;
-
-  layers: Layer[];
+  document: DocumentInProject;
 
   channelId: string;
 
@@ -84,7 +82,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
             channel={props.channelId}
-            layerId={props.layers[0].id} 
+            layerId={props.document.layers[0].id} 
             appearanceProvider={appearance}
             onPresence={setPresent} 
             onConnectError={onConnectError}
