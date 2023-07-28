@@ -2,9 +2,9 @@
 import { useEffect, useState } from 'react'; 
 import { 
   ArrowLineLeft,
+  Folders,
   GooglePodcastsLogo, 
   GraduationCap, 
-  House, 
   PuzzlePiece, 
   Sliders, 
   UserCircle, 
@@ -66,13 +66,13 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem 
                 className="no-hover"
                 icon={GooglePodcastsLogo}
-                label="INeedAName"
+                label="Recogito"
                 link={`/${lang}/projects`} />
 
               <NavItem 
-                active={active === 'home'}
-                icon={House}
-                label={t['Home']}
+                active={active === 'documents'}
+                icon={Folders}
+                label={t['Documents']}
                 link={link()} />
             </ul>
 

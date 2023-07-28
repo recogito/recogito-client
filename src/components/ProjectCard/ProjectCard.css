@@ -79,8 +79,16 @@
   padding: 5px 5px 5px 8px;
 }
 
+.project-card-footer .avatar-stack {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
 .project-card-footer .avatar-stack .avatar {
   border: 2px solid var(--gray-50); 
   height: 26px;
   width: 26px;
+}
+.project-card-footer .avatar-stack .avatar + .avatar {
+  margin-right: -10px;
 }
