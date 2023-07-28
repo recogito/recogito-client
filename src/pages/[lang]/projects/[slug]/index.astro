@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getUserProfile } from '@backend/auth';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
-import { getProjectWithContexts, listDocumentsInContext } from '@backend/helpers';
+import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -18,36 +18,25 @@ const projectId = Astro.params.slug;
 
 const i18n = getTranslations(Astro.request, 'project-home');
 
-const response = await getProjectWithContexts(supabase, projectId as string);
+const project = await getProjectExtended(supabase, projectId as string);
 
-if (response.error) { 
+if (project.error || !project.data) { 
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
-if (!response.data) {
-  const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { headers: error.headers, status: 404 }); 
-}
+const documents = await listDocumentsInProject(supabase, projectId as string);
 
-const { contexts, ...project} = response.data || { contexts: undefined };
-
-// Temporary hack
-const defaultContext = contexts[0];
-
-const { data, error } = await listDocumentsInContext(supabase, defaultContext.id);
-
-if (error) { 
+if (documents.error) { 
   const path = Astro.url.protocol + '//' + Astro.url.host;
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
-<ProjectLayout active="home" user={user} project={response.data}>
+<ProjectLayout active="home" user={user} project={project.data}>
   <ProjectHome 
     client:only
-    i18n={i18n} 
-    project={project} 
-    defaultContext={contexts[0]} 
-    documents={data} />
+    i18n={i18n}
+    project={project.data} 
+    documents={documents.data} />
 </ProjectLayout>

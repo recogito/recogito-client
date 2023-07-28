@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { CloudArrowUp } from '@phosphor-icons/react';
-import { Files, GraduationCap, PuzzlePiece, Sliders, UsersThree } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { updateDocument, updateProject } from '@backend/crud';
+import { archiveLayer, renameDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
-import type { Context, Document, Project, Translations } from 'src/Types';
+import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 import type { FileRejection } from 'react-dropzone';
 
 import './ProjectHome.css';
@@ -16,11 +15,9 @@ export interface ProjectHomeProps {
 
   i18n: Translations;
 
-  project: Project;
+  project: ExtendedProjectData;
 
-  defaultContext: Context;
-
-  documents: Document[];
+  documents: DocumentInProject[];
 
 }
 
@@ -28,9 +25,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { t } = props.i18n;
 
-  const { project, defaultContext } = props;
+  const { project } = props;
 
-  const [documents, setDocuments] = useState<Document[]>(props.documents);
+  // Temporary hack!
+  const defaultContext = project.contexts[0];
+
+  const [documents, setDocuments] = useState<DocumentInProject[]>(props.documents);
 
   const [error, setError] = useState<ToastContent | null>(null);
 
@@ -92,18 +92,26 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   }
 
-  const onDeleteDocument = (document: Document) => {
-    // TODO
+  /**
+   * When 'deleting a document' we're actually just archiving
+   * all the layers on this document in this project!
+   */
+  const onDeleteDocument = (document: DocumentInProject) => {
+    // Note this will get easier when (if) we get a single RPC call
+    // to archive a list of records
+    document.layers.reduce((p, nextLayer) => 
+      p.then(() => archiveLayer(supabase, nextLayer.id)
+    ), Promise.resolve());
   }
 
-  const onRenameDocument = (document: Document, name: string) => {
+  const onRenameDocument = (document: DocumentInProject, name: string) => {
     // Optimistic update
     setDocuments(documents.map(d => d.id === document.id ? ({
       ...d, name
     }) : d));
 
     // Update on server
-    updateDocument(supabase, { ...document, name })
+    renameDocument(supabase, document.id, name)
       .then(({ error, data }) => {
         if (error || !data) {
           // Show error and roll back name change
@@ -145,8 +153,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               <DocumentCard
                 key={document.id}
                 i18n={props.i18n} 
-                context={defaultContext}
                 document={document} 
+                context={defaultContext}
                 onDelete={() => onDeleteDocument(document)} 
                 onRename={name => onRenameDocument(document, name)} />
             ))}

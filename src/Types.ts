@@ -60,13 +60,7 @@ export interface ExtendedProjectData {
 
   description: string;
 
-  contexts: [{
-
-    id: string;
-
-    name: string;
-
-  }];
+  contexts: Context[];
 
   layers: [{
 
@@ -157,6 +151,12 @@ export interface Document {
 
 }
 
+export interface DocumentInProject extends Document {
+
+  layers: Layer[];
+
+}
+
 export const ContentTypes = ['text/plain', 'application/tei+xml'] as const;
 
 export type ContentType = typeof ContentTypes[number];
@@ -169,14 +169,6 @@ export interface Context {
 
   id: string;
 
-  created_at: string;
-
-  created_by: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
-
   name: string;
 
   project_id: string;
@@ -186,16 +178,10 @@ export interface Context {
 export interface Layer {
 
   id: string;
-
-  created_at: string;
-
-  created_by: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
   
   document_id: string;
+
+  project_id: string;
 
   name?: string;
 

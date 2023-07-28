@@ -79,10 +79,6 @@ export const getProjectWithContexts = (
     contexts (
       id,
       project_id,
-      created_at,  
-      created_by,
-      updated_at,
-      updated_by,  
       name
     )
   `)
@@ -109,6 +105,7 @@ export const listMyProjectsExtended = (supabase: SupabaseClient): Response<Exten
       description,
       contexts (
         id,
+        project_id,
         name
       ),
       layers (
@@ -178,6 +175,7 @@ export const getProjectExtended = (supabase: SupabaseClient, projectId: string):
       description,
       contexts (
         id,
+        project_id,
         name
       ),
       layers (

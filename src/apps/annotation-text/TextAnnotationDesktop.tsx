@@ -5,7 +5,7 @@ import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { Document, Layer, Translations } from 'src/Types';
+import type { DocumentInProject, Layer, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   TextAnnotator, 
@@ -25,9 +25,7 @@ export interface TextAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: Document;
-
-  layers: Layer[];
+  document: DocumentInProject;
 
   channelId: string;
 
@@ -78,7 +76,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
           base={SUPABASE}
           apiKey={SUPABASE_API_KEY} 
           channel={props.channelId}
-          layerId={props.layers[0].id} 
+          layerId={props.document.layers[0].id} 
           appearanceProvider={createAppearenceProvider()}
           onPresence={setPresent} 
           privacyMode={privacy === 'PRIVATE'}/>
