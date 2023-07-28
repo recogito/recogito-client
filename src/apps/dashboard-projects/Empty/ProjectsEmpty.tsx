@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { RocketLaunch } from '@phosphor-icons/react';
-import type { Project, Translations } from 'src/Types';
+import type { ExtendedProjectData, Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { initProject } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -9,7 +9,7 @@ export interface ProjectsEmptyProps {
 
   i18n: Translations;
 
-  onProjectCreated(project: Project): void;
+  onProjectCreated(project: ExtendedProjectData): void;
 
   onError(error: string): void;
 
@@ -28,7 +28,7 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
     setFetching(true);
 
     initProject(supabase, t['Untitled Project'])
-      .then(({ project }) => {
+      .then(project => {
         props.onProjectCreated(project);
         setFetching(false);
       })

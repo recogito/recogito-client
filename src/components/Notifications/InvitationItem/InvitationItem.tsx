@@ -3,7 +3,7 @@ import { TimeAgo } from '@components/TimeAgo';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { declineInvitation, joinProject } from '@backend/helpers/invitationHelpers';
-import type { Invitation, Project, Translations } from 'src/Types';
+import type { Invitation, ExtendedProjectData, Translations } from 'src/Types';
 
 import './InvitationItem.css';
 
@@ -13,7 +13,7 @@ interface InvitationItemProps {
 
   invitation: Invitation;
 
-  onAccepted(project: Project): void;
+  onAccepted(project: ExtendedProjectData): void;
 
   onDeclined(): void;
 

@@ -2,11 +2,10 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { listMyInvites, listMyProjects } from '@backend/crud';
+import { listMyInvites } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 import { getUser } from '@backend/auth';
 import { listMyProjectsExtended } from '@backend/helpers';
-import type { ExtendedProjectData } from 'src/Types';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -16,8 +15,7 @@ if (!supabase)
 
 const me = await getUser(supabase);
 
-// const projects = await listMyProjectsExtended(supabase);
-const projects = await listMyProjects(supabase);
+const projects = await listMyProjectsExtended(supabase);
 
 const invitations = await listMyInvites(supabase);
 
