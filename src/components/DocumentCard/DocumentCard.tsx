@@ -28,6 +28,10 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const [editable, setEditable] = useState(false);
 
+  const onOpen = (tab: boolean) => tab ?
+    window.open(`/${lang}/annotate/${context.id}/${document.id}`, '_blank') :
+    window.location.href = `/${lang}/annotate/${context.id}/${document.id}`;
+
   const onRename = (name: string) => {
     setEditable(false);
     props.onRename(name);
@@ -35,7 +39,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   return (
     <article className="document-card-container">
-      <div className="document-card">
+      <div className="document-card" onClick={() => onOpen(true)}>
         <div className="document-card-body">
           <ContentTypeIcon document={document} />
         </div>
@@ -43,6 +47,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
         <div className="document-card-footer">
           <DocumentCardActions
             i18n={props.i18n} 
+            onOpen={onOpen}
             onDelete={props.onDelete} 
             onRename={() => setEditable(true)} />
         </div>
