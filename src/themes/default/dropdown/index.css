@@ -34,6 +34,7 @@
   font-size: var(--font-tiny);
   font-weight: 400;
   padding: 2px 10px;
+  margin: 0 5px;
   outline: none;
   user-select: none;
 }
