@@ -23,7 +23,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
 
   const members = groups.reduce((members, group) => (
     [...members, ...group.members]
-  ), [] as Array<{ user: UserProfile, since: string }>);
+  ), [] as Array<{ user: UserProfile, since: string }>).reverse();
 
   // TODO needs more robustness for new content types 
   // in the future
@@ -73,6 +73,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         <div className="avatar-stack">
           {members.slice(0, 5).map(({ user }) => (
             <Avatar
+              key={user.id}
               id={user.id}
               name={user.nickname ? 
                   user.nickname : 
