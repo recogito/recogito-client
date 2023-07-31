@@ -8,6 +8,8 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   Annotation as Anno,
   Annotorious, 
+  Formatter,
+  ImageAnnotation,
   OSDAnnotator, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
@@ -40,7 +42,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [tool, setTool] = useState<string | null>(null);
+  const [tool, setTool] = useState<string | undefined>(undefined);
+
+  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -64,7 +68,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const beforeSelectAnnotation = (a?: Anno) => {
     if (a && !usePopup && anno.current) {
       // Don't fit the view if the annotation is already selected
-      if (anno.current.selection.isSelected(a))
+      if (anno.current.selection.isSelected(a as ImageAnnotation))
         return;
 
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -77,7 +81,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   return (
     <div className="anno-desktop ia-desktop">
       <Annotorious ref={anno}>
-        <OpenSeadragonAnnotator tool={tool} keepEnabled={true}>
+        <OpenSeadragonAnnotator 
+          tool={tool} 
+          keepEnabled={true}
+          formatter={formatter}>
+
           <SupabasePlugin
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
@@ -115,7 +123,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               i18n={i18n}
               present={present} 
               onChangePanel={onChangeViewMenuPanel} 
-              beforeSelectAnnotation={beforeSelectAnnotation} />
+              beforeSelectAnnotation={beforeSelectAnnotation} 
+              onChangeStyleConfig={formatter => setFormatter(() => formatter)} />
           </div>
 
           <div className="anno-desktop-bottom">

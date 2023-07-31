@@ -11,7 +11,7 @@ interface ToolbarProps {
 
   privacy: PrivacyMode;
 
-  onChangeTool(tool: string | null): void;
+  onChangeTool(tool?: string): void;
 
   onChangePrivacy(mode: PrivacyMode): void;
 
@@ -28,7 +28,7 @@ export const Toolbar = (props: ToolbarProps) => {
   const [tool, setTool] = useState<string>('cursor');
 
   const onChangeTool = (tool: string) => {
-    props.onChangeTool && props.onChangeTool(tool === 'cursor' ? null : tool);
+    props.onChangeTool && props.onChangeTool(tool === 'cursor' ? undefined : tool);
     setTool(tool);
   }
 

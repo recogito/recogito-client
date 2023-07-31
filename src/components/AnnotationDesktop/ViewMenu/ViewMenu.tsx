@@ -3,7 +3,7 @@ import { Chats, MagnifyingGlass, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
-import type { Annotation, PresentUser } from '@annotorious/react';
+import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
@@ -17,9 +17,11 @@ interface ViewMenuProps {
 
   present: PresentUser[];
 
-  onChangePanel(panel: ViewMenuPanel | undefined): void;
-
   beforeSelectAnnotation(a?: Annotation): void;
+
+  onChangePanel(panel?: ViewMenuPanel): void;
+
+  onChangeStyleConfig(formatter?: Formatter): void;
 
 }
 
@@ -106,7 +108,9 @@ export const ViewMenu = (props: ViewMenuProps) => {
               present={props.present} 
               beforeSelect={props.beforeSelectAnnotation} />
           ) : panel === ViewMenuPanel.STYLE ? (
-            <StyleConfiguration />
+            <StyleConfiguration 
+              i18n={props.i18n}
+              onChange={props.onChangeStyleConfig} />
           ) : undefined}
         </aside>
       )}
