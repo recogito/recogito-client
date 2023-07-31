@@ -60,5 +60,11 @@
   flex-grow: 1;
   overflow-y: auto;
   pointer-events: all;
+  position: relative;
+}
+
+.anno-sidebar-container aside > div {
+  position: absolute;
+  top: 0;
 }
 

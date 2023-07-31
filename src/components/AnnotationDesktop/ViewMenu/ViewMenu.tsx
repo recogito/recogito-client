@@ -7,6 +7,7 @@ import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
+import { StyleConfiguration } from '../StyleConfiguration';
 
 import './ViewMenu.css';
 
@@ -33,7 +34,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
     enter: { opacity: 1, width: 140 },
     leave: { opacity: 0, width: 0 }, 
     config: {
-      duration: 125
+      duration: 0
     }
   });
 
@@ -67,7 +68,9 @@ export const ViewMenu = (props: ViewMenuProps) => {
             <Chats />
           </button>
 
-          <button>
+          <button
+            className={panel === ViewMenuPanel.STYLE ? 'active' : undefined}
+            onClick={() => togglePanel(ViewMenuPanel.STYLE)}>
             <StackSimple />
           </button>
 
@@ -95,16 +98,18 @@ export const ViewMenu = (props: ViewMenuProps) => {
         ))}
       </div>
 
-      {panelTransition((style, panel) => panel && (
-        <animated.aside style={style}>
-          {panel === ViewMenuPanel.ANNOTATIONS && (
+      {panel && (
+          <aside>
+          {panel === ViewMenuPanel.ANNOTATIONS ? (
             <AnnotationList 
               i18n={props.i18n}
               present={props.present} 
               beforeSelect={props.beforeSelectAnnotation} />
-          )}
-        </animated.aside>
-      ))}
+          ) : panel === ViewMenuPanel.STYLE ? (
+            <StyleConfiguration />
+          ) : undefined}
+        </aside>
+      )}
     </div>
   )
 

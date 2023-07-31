@@ -2,7 +2,7 @@ export enum ViewMenuPanel {
 
   ANNOTATIONS = 'ANNOTATIONS', 
   
-  LAYERS = 'LAYERS', 
+  STYLE = 'STYLE', 
   
   SEARCH = 'SEARCH'
 

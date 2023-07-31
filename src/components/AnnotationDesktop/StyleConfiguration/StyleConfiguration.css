@@ -1,0 +1,9 @@
+.anno-sidepanel.style-configuration {
+  font-size: var(--font-small);
+  padding: 15px;
+}
+
+.anno-sidepanel.style-configuration label {
+  display: inline-block;
+  margin-right: 10px;
+}
