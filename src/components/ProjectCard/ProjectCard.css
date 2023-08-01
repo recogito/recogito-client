@@ -38,6 +38,7 @@
   display: block;
   display: -webkit-box;
   font-size: var(--font-tiny);
+  height: 3.2em;
   line-clamp: 2;
   line-height: 160%;
   overflow: hidden;

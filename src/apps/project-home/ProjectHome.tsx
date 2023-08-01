@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import { CloudArrowUp } from '@phosphor-icons/react';
+import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveLayer, renameDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
+import { ProjectDescription } from './ProjectDescription';
 import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
-import type { FileRejection } from 'react-dropzone';
 
 import './ProjectHome.css';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 export interface ProjectHomeProps {
 
@@ -25,7 +27,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { t } = props.i18n;
 
-  const { project } = props;
+  const [project, setProject] = useState(props.project);
 
   // Temporary hack!
   const defaultContext = project.contexts[0];
@@ -85,11 +87,10 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   }
 
   const onRenameProject = (name: string) => {
-    updateProject(supabase, {
-      ...props.project, name
-    }).then(response => {
-      console.log(response);
-    });
+    updateProject(supabase, { id: project.id, name })
+      .then(response => {
+        console.log(response);
+      });
   }
 
   /**
@@ -149,6 +150,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       });
   }
 
+  const onError = (error: PostgrestError, message: string) => {
+    console.error(error);
+
+    setToast({ 
+      title: t['Something went wrong'], 
+      description: t[message] || message, 
+      type: 'error' 
+    });
+  }
+
   return (
     <div className="project-home">
       <ToastProvider>
@@ -158,6 +169,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               value={project.name} 
               onSubmit={onRenameProject} />
           </h1>
+
+          <ProjectDescription 
+            i18n={props.i18n}
+            project={project} 
+            onChanged={setProject} 
+            onError={error => onError(error, 'Error updating project description.')} />
           
           <UploadActions 
             i18n={props.i18n} 
