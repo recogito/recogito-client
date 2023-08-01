@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CloudArrowUp } from '@phosphor-icons/react';
+import { CloudArrowUp, PlusCircle } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveLayer, renameDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
@@ -158,6 +158,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               value={project.name} 
               onSubmit={onRenameProject} />
           </h1>
+
+          <div className="project-description">
+            <button className="minimal">
+              <PlusCircle size={16} /> <span>Add Project Description</span>
+            </button>
+          </div>
           
           <UploadActions 
             i18n={props.i18n} 
