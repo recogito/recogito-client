@@ -16,7 +16,9 @@ interface TinySaveIndicatorProps {
 
 export const TinySaveIndicator = (props: TinySaveIndicatorProps) => {
 
-  const { fadeOut, state } = props;
+  const { state } = props;
+
+  const fadeOut = props.fadeOut || 5000;
 
   const [opacity, setOpacity] = useState(1);
 

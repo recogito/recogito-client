@@ -1,0 +1,10 @@
+button.minimal, a[href].button.minimal {
+  background-color: transparent;
+  border-color: var(--gray-500);
+  border-radius: 99999px;
+  border-style: dashed;
+  color: var(--font-light);
+  font-size: 11px;
+  line-height: 100%;
+  padding: 3px 9px 3px 4px;
+}
