@@ -6,6 +6,10 @@
   position: relative;
 }
 
+.project-description {
+  padding: 0 0 1.5em 0;
+}
+
 .project-home-grid-wrapper {
   flex-grow: 1;
   position: relative;
