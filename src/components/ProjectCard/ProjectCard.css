@@ -3,6 +3,8 @@
   border-radius: var(--border-radius);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.07);
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
   position: relative;
   transition: all .25s ease-in-out;
 }
@@ -14,6 +16,7 @@
 }
 
 .project-card-body {
+  flex-grow: 1;
   padding: 15px 20px 5px 20px;
 }
 
