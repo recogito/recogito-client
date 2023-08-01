@@ -70,7 +70,7 @@ export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
       `)
       .then(({ error, data }) => ({ error, data: data as unknown as Project[] })));
 
-export const updateProject = (supabase: SupabaseClient, partial: { id: string, [key: string]: string }): Response<Project> =>
+export const updateProject = (supabase: SupabaseClient, partial: { id: string, [key: string]: string | null }): Response<Project> =>
   supabase 
     .from('projects')
     .update({...partial })

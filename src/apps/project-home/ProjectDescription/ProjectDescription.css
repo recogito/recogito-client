@@ -29,6 +29,27 @@
   width: 60ch;
 }
 
+.project-description .buttons button {
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  padding: 0.3em 0.5em 0.2em 0.3em;
+}
+
+.project-description .buttons button:hover:not(:disabled) {
+  box-shadow: none;
+  color: var(--font-dark);
+  text-decoration: underline;
+}
+
+.project-description .buttons button:hover svg {
+  color: var(--font-dark);
+}
+
+.project-description .buttons button:disabled,
+.project-description .buttons button:disabled svg {
+  color: var(--gray-400);
+}
+
 .project-description .tiny-save-indicator {
   padding-left: 5px;
 } 

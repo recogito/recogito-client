@@ -36,7 +36,7 @@ export interface Project {
 
   name: string;
 
-  description: string;
+  description?: string;
 
 }
 
@@ -58,7 +58,7 @@ export interface ExtendedProjectData {
 
   name: string;
 
-  description: string;
+  description?: string;
 
   contexts: Context[];
 
