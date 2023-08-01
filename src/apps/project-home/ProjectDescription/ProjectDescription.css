@@ -1,0 +1,35 @@
+.project-description {
+  margin-bottom: 3em;
+}
+
+.project-description p,
+.project-description textarea {
+  border: 1px dashed transparent;
+  border-radius: var(--border-radius);
+  font-size: var(--font-small);
+  line-height: 160%;
+  margin: 0 0 0 -8px;
+  padding: 5px 8px;
+}
+
+.project-description p {
+  color: var(--font-light);
+  cursor: pointer;
+  max-width: 60ch;
+  transition: all 250ms;
+}
+
+.project-description p:hover {
+  background-color: #e6eaf1;
+  border-color: var(--gray-400);
+}
+
+.project-description textarea {
+  resize: none;
+  width: 60ch;
+}
+
+.project-description .tiny-save-indicator {
+  padding-left: 5px;
+} 
+
