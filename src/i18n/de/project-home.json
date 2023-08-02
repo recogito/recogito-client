@@ -1,6 +1,11 @@
 {
   "Ok": "Ok",
   "Cancel": "Abbrechen",
+  "Save": "Speichern",
+  "Clear": "Löschen",
+
+  "Add a project description": "Projektbeschreibung hinzufügen",
+  "Add a project description...": "Projektbeschreibung hinzufügen...",
 
   "Import Document": "Dokument Importieren",
 

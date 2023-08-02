@@ -1,4 +1,5 @@
 import * as RadixAvatar from '@radix-ui/react-avatar';
+import { User } from '@phosphor-icons/react';
 
 const { Root, Image, Fallback } = RadixAvatar;
 
@@ -50,7 +51,9 @@ export const Avatar = (props: AvatarProps) => {
           className="avatar-fallback"
           title={name} 
           style={{ backgroundColor }}>
-          {getInitials(name || id)}
+          {name ? getInitials(name) : (
+            <User size={16} />
+          )}
         </Fallback>
       )}
     </Root>

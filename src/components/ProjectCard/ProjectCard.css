@@ -17,7 +17,7 @@
 
 .project-card-body {
   flex-grow: 1;
-  padding: 15px 20px 5px 20px;
+  padding: 15px 20px 5px 15px;
 }
 
 .project-card-body h1 {
@@ -42,7 +42,7 @@
   line-clamp: 2;
   line-height: 160%;
   overflow: hidden;
-  padding: 0;
+  padding: 0 2px;
   text-overflow: ellipsis;
   word-wrap: break-word;
   -webkit-box-orient: vertical;  
@@ -80,7 +80,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 5px 5px 5px 8px;
+  padding: 5px 5px 5px 10px;
 }
 
 .project-card-footer .avatar-stack {

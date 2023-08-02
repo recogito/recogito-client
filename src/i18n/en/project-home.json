@@ -1,7 +1,12 @@
 {
   "Ok": "Ok",
   "Cancel": "Cancel",
-  
+  "Save": "Save",
+  "Clear": "Clear",
+
+  "Add a project description": "Add a project description",
+  "Add a project description...": "Add a project description...",
+ 
   "Import Document": "Import Document",
   
   "Open document": "Open document",
