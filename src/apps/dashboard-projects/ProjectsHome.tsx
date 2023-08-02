@@ -4,6 +4,7 @@ import type { ExtendedProjectData, Invitation, Policies, Translations } from 'sr
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
 import { getOrganizationPolicies } from '@backend/helpers';
+import { AlertBanner } from '@components/AlertBanner';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
@@ -112,6 +113,13 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-projects-home">
+        <AlertBanner id="welcome-to-the-beta">
+          <h1>Welcome to our Beta Test</h1>
+          <p>
+            Lorem ipsum.
+          </p>
+        </AlertBanner>
+
         <Header 
           i18n={props.i18n} 
           policies={policies}
