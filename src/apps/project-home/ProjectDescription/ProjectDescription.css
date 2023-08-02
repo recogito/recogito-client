@@ -14,14 +14,14 @@
 
 .project-description p {
   color: var(--font-light);
-  cursor: pointer;
   max-width: 60ch;
   transition: all 250ms;
 }
 
-.project-description p:hover {
+.project-description p.editable:hover {
   background-color: #e6eaf1;
   border-color: var(--gray-400);
+  cursor: pointer;
 }
 
 .project-description textarea {

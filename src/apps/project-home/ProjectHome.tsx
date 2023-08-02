@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CloudArrowUp } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { getProjectPolicies } from '@backend/helpers';
 import { archiveLayer, renameDocument, updateProject } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
 import { ProjectDescription } from './ProjectDescription';
-import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
+import type { Policies, DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 
 import './ProjectHome.css';
-import type { PostgrestError } from '@supabase/supabase-js';
 
 export interface ProjectHomeProps {
 
@@ -34,11 +35,21 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documents, setDocuments] = useState<DocumentInProject[]>(props.documents);
 
+  const [policies, setPolicies] = useState<Policies | undefined>(undefined);
+
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showUploads, setShowUploads] = useState(false);
 
   const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
+
+  useEffect(() => {
+    getProjectPolicies(supabase, props.project.id)
+      .then(({ error, data }) => {
+        if (!error)
+          setPolicies(data);
+      });
+  }, []);
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
@@ -173,6 +184,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           <ProjectDescription 
             i18n={props.i18n}
             project={project} 
+            policies={policies}
             onChanged={setProject} 
             onError={error => onError(error, 'Error updating project description.')} />
           
