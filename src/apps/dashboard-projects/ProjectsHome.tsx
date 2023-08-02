@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Policies, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
+import { getOrganizationPolicies } from '@backend/helpers';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
@@ -33,6 +34,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<ExtendedProjectData[]>(props.projects);
 
+  const [policies, setPolicies] = useState<Policies | undefined>(undefined);
+
   const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
 
   const [error, setError] = useState<ToastContent | null>(null);
@@ -42,9 +45,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   useEffect(() => {
     getMyProfile(supabase)
       .then(({ error }) => {
-        if (error)
+        if (error) {
           window.location.href = `/${props.i18n.lang}/sign-in`;
-      })
+        } else { 
+          getOrganizationPolicies(supabase).then(({ error, data }) => {
+            if (!error)
+              setPolicies(data);
+          });
+        }
+      });
   }, []);
 
   const filteredProjects = 
@@ -104,18 +113,21 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     <ToastProvider>
       <div className="dashboard-projects-home">
         <Header 
-          filter={filter}
           i18n={props.i18n} 
+          policies={policies}
           invitations={invitations} 
+          filter={filter}
           onChangeFilter={setFilter}
           onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}
           onInvitationDeclined={onInvitationDeclined} 
           onError={onError} />
 
-        {projects.length === 0 ? (
+        {projects.length === 0 ? policies && (
           <ProjectsEmpty 
             i18n={props.i18n} 
+            canCreateProjects={policies.get('projects').has('INSERT')}
+            invitations={invitations.length}
             onProjectCreated={onProjectCreated} 
             onError={onError} />
         ) : (

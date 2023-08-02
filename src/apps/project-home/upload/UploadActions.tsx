@@ -2,7 +2,7 @@
 import { ReactNode, useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { File, LinkSimple, Plus } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import type { Policies, Translations } from 'src/Types';
 import { IIIFDialog } from './dialogs';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;

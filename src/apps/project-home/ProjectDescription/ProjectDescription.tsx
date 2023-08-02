@@ -5,7 +5,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { updateProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData, Policies, Translations } from 'src/Types';
 
 import './ProjectDescription.css';
 
@@ -14,6 +14,8 @@ interface ProjectDescriptionProps {
   i18n: Translations;
 
   project: ExtendedProjectData;
+
+  policies?: Policies;
 
   onChanged(project: ExtendedProjectData): void;
 
@@ -24,6 +26,8 @@ interface ProjectDescriptionProps {
 export const ProjectDescription = (props: ProjectDescriptionProps) => {
 
   const { t } = props.i18n;
+
+  const canEdit = props.policies?.get('projects').has('UPDATE');
 
   const el = useRef<HTMLTextAreaElement>(null);
 
@@ -110,7 +114,9 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
           </div>
         </>
       ) : description ? (
-        <p onClick={() => setEditable(true)}>
+        <p 
+          className={canEdit ? 'editable' : undefined}
+          onClick={canEdit ? () => setEditable(true) : undefined}>
           {description}
           {saveState !== 'idle' && (
             <TinySaveIndicator 
@@ -118,7 +124,7 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
               fadeOut={1500} />
           )}
         </p>
-      ) : (
+      ) : canEdit && (
         <button className="minimal" onClick={() => setEditable(true)}>
           <PlusCircle size={16} /> <span>{t['Add a project description']}</span>
         </button>

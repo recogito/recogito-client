@@ -128,7 +128,7 @@
 
   /** Global constants **/
   --border-radius: 3px; 
-  --link-color: var(--bright-blue);
+  --link-color: var(--brighter-blue);
 
   /** Font styles **/
   --font-dark: var(--gray-900);

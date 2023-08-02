@@ -256,3 +256,13 @@ export interface Invitation {
   ignored?: boolean;
 
 }
+
+export type TableName = 'projects' | 'documents'; 
+
+export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
+
+export type Policies = {
+
+  get(t: TableName): { has: (operation: OperationType) => boolean }
+
+}
