@@ -113,7 +113,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-projects-home">
-        <AlertBanner>
+        <AlertBanner id="welcome-to-the-beta">
           <h1>Welcome to our Beta Test</h1>
           <p>
             Lorem ipsum.

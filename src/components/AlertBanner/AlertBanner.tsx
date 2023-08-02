@@ -7,13 +7,17 @@ import './AlertBanner.css';
 
 interface AlertBannerProps {
 
+  id: string;
+
   children: ReactNode;
 
 }
 
 export const AlertBanner = (props: AlertBannerProps) => {
 
-  const [open, setOpen] = useState(true);
+  const key = `r6o-alert-${props.id}`;
+
+  const [open, setOpen] = useState(!localStorage.getItem(key));
 
   const bannerTransition = useTransition([open], {
     from: { maxHeight: '0px' },
@@ -25,6 +29,11 @@ export const AlertBanner = (props: AlertBannerProps) => {
     }
   });
 
+  const onHide = () => {
+    setOpen(false);
+    localStorage.setItem(key, 'hidden');
+  }
+
   return bannerTransition((style, open) => open && (
     <animated.div style={style} className="alert-banner-wrapper">
       <div className="alert-banner">
@@ -32,7 +41,7 @@ export const AlertBanner = (props: AlertBannerProps) => {
 
         <button 
           className="alert-banner-close unstyled icon-only"
-          onClick={(() => setOpen(false))}>
+          onClick={onHide}>
           <X size={16} />
         </button>
       </div>
