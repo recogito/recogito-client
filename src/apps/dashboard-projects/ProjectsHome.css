@@ -33,6 +33,41 @@
   min-width: 365px;
 }
 
+.dashboard-projects-empty .no-creator-rights {
+  color: var(--font-light);
+  font-size: var(--font-small);
+  line-height: 180%;
+  margin: 0;
+  max-width: 62ch;
+}
+
+.dashboard-projects-empty .no-creator-rights svg {
+  animation: swing 4s infinite;
+  animation-delay: 1s;
+  color: var(--font-dark);
+  position: relative;
+  transform-origin: top center;
+  vertical-align: text-bottom;
+}
+
+@keyframes swing {
+  0%, 12.5% {
+    transform: rotate(0deg);
+  }
+  2.5% {
+    transform: rotate(16deg);
+  }
+  5% {
+    transform: rotate(-16deg);
+  }
+  7.5% {
+    transform: rotate(8deg);
+  }
+  10% {
+    transform: rotate(-8deg);
+  }
+}
+
 .dashboard-projects-home section {
   padding: 0 30px;
 }

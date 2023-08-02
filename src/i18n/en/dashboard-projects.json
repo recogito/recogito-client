@@ -1,6 +1,11 @@
 {
-  "Empty Dashboard? Infinite Possibilities!": "Empty Dashboard? Infinite Possibilities!",
+  "Empty Dashboard? Infinite possibilities!": "Empty Dashboard? Infinite possibilities!",
   "Start Your First Annotation Project": "Start Your First Annotation Project",
+  "Empty Dashboard? Bear with us!": "Empty Dashboard? Bear with us!",
+  "You don't have creator rights": "You have insufficent privileges to create your own projects.",
+  "Read the tutorial": "Why not visit our <a href=\"./help\">tutorial resources</a> while you wait for your first project invitation?",
+  "Fret not one": "But fret not! A project invitation is already waiting. Check your ${icon} notifications to get started.",
+  "Fret not more": "But fret not! ${count} project invitations are already waiting. Check your ${icon} notifications to get started.",
 
   "Projects": "Projects",
   "New Project": "New Project",

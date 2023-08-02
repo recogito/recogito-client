@@ -1,6 +1,11 @@
 {
-  "Empty Dashboard? Infinite Possibilities!": "Leeres Dashboard? Unbegrenzte Möglichkeiten!",
+  "Empty Dashboard? Infinite possibilities!": "Leeres Dashboard? Unbegrenzte Möglichkeiten!",
   "Start Your First Annotation Project": "Starte Dein Erstes Annotationsprojekt",
+  "Empty Dashboard? Bear with us!": "Leeres Dashboard? Fast geschafft!",
+  "You don't have creator rights": "Du hast nicht die Berechtigung um eigene Projekte zu erstellen.",
+  "Read the tutorial": "Nutze die Wartezeit auf deine erste Projekteinladung doch, um unsere <a href=\"./help\">Tutorial-Ressourcen</a> zu erkunden.",
+  "Fret not one": "Aber keine Panik! Eine Projekteinladung wartet schon auf Dich. Schau in Deinen ${icon} Benachrichtigungen nach, um loszulegen.",
+  "Fret not more": "Aber keine Panik! ${count} Projekteinladungen warten schon auf Dich. Schau in Deinen ${icon} Benachrichtigungen nach, um loszulegen.",
 
   "Projects": "Projekte",
   "New Project": "Neues Projekt",
