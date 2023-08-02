@@ -1,0 +1,25 @@
+.alert-banner {
+  background-color: orange;
+  padding: 20px 60px 20px 30px;
+}
+
+.alert-banner-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.alert-banner-close svg {
+  color: var(--font-dark);
+}
+
+.alert-banner h1 {
+  font-size: 1.15em;
+  margin: 0.1em 0;
+}
+
+.alert-banner p {
+  color: rgba(0, 0, 0, .7);
+  font-size: var(--font-small);
+  margin: 0.1em 0;
+}
