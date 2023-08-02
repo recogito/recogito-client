@@ -23,6 +23,8 @@ interface ProjectDescriptionProps {
 
 export const ProjectDescription = (props: ProjectDescriptionProps) => {
 
+  const { t } = props.i18n;
+
   const el = useRef<HTMLTextAreaElement>(null);
 
   const [description, setDescription] = useState<string | undefined>(props.project.description);
@@ -82,28 +84,28 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
             maxRows={20}
             value={value}
             onChange={evt => setValue(evt.target.value)}
-            placeholder="Add a project description..." />
+            placeholder={t['Add a project description...']} />
 
           <div className="buttons">
             <button 
               className="unstyled flat tiny"
               disabled={saveState === 'saving'}
               onClick={onSave}>
-              <Check size={16} weight="bold" /> <span>Save</span>
+              <Check size={16} weight="bold" /> <span>{t['Save']}</span>
             </button>
 
             <button 
               className="unstyled flat tiny"
               disabled={saveState === 'saving'}
               onClick={onCancel}>
-              <X size={16} weight="bold" /> <span>Cancel</span>
+              <X size={16} weight="bold" /> <span>{t['Cancel']}</span>
             </button>
 
             <button 
               className="unstyled flat tiny"
               disabled={saveState === 'saving' || !value}
               onClick={onClear}>
-              <TrashSimple size={16} weight="bold" /> <span>Clear</span>
+              <TrashSimple size={16} weight="bold" /> <span>{t['Clear']}</span>
             </button>
           </div>
         </>
@@ -118,7 +120,7 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
         </p>
       ) : (
         <button className="minimal" onClick={() => setEditable(true)}>
-          <PlusCircle size={16} /> <span>Add a project description</span>
+          <PlusCircle size={16} /> <span>{t['Add a project description']}</span>
         </button>
       )}
     </div>
