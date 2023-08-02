@@ -11,9 +11,11 @@ interface ProjectCardProps {
 
   project: ExtendedProjectData;
 
-  onDelete(): void;
+  onDeleted(): void;
 
-  onRename(): void;
+  onDetailsChanged(updated: ExtendedProjectData): void;
+
+  onError(error: string): void;
 
 }
 
@@ -82,10 +84,13 @@ export const ProjectCard = (props: ProjectCardProps) => {
               avatar={user.avatar_url} />
           ))}
         </div>
+
         <ProjectCardActions
           i18n={props.i18n}
-          onDelete={props.onDelete} 
-          onRename={props.onRename}/>
+          project={props.project}
+          onDeleted={props.onDeleted} 
+          onDetailsChanged={props.onDetailsChanged}
+          onError={props.onError} />
       </div>
     </div>
   )

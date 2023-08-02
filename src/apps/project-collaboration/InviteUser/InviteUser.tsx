@@ -8,8 +8,6 @@ import { Button } from '@components/Button';
 import type { ExtendedProjectData, Invitation, Translations, UserProfile } from 'src/Types';
 import type { PostgrestError } from '@supabase/supabase-js';
 
-import './InviteUser.css';
-
 interface InviteUserProps {
 
   i18n: Translations;
