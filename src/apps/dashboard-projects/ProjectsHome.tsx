@@ -3,6 +3,7 @@ import { Hammer } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
+import { getOrganizationPolicies } from '@backend/helpers';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
@@ -45,6 +46,11 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         if (error)
           window.location.href = `/${props.i18n.lang}/sign-in`;
       })
+
+    getOrganizationPolicies(supabase).then(({ error, data }) => {
+      // Check for ability to insert projects
+      console.log('Can create projects?', data.get('projects').has('INSERT'));
+    });
   }, []);
 
   const filteredProjects = 
