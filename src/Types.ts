@@ -257,7 +257,7 @@ export interface Invitation {
 
 }
 
-export type TableName = 'projects'; 
+export type TableName = 'projects' | 'documents'; 
 
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
 

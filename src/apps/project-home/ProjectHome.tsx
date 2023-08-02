@@ -43,6 +43,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
 
+  const canUpload = policies?.get('documents').has('INSERT');
+
   useEffect(() => {
     getProjectPolicies(supabase, props.project.id)
       .then(({ error, data }) => {
@@ -188,15 +190,17 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onChanged={setProject} 
             onError={error => onError(error, 'Error updating project description.')} />
           
-          <UploadActions 
-            i18n={props.i18n} 
-            onUpload={open}
-            onImport={onImportRemote} />
+          {canUpload && (
+            <UploadActions 
+              i18n={props.i18n} 
+              onUpload={open}
+              onImport={onImportRemote} />
+          )}
         </div>
 
         <div 
           className="project-home-grid-wrapper"
-          {...getRootProps()}>
+          {...(canUpload ? getRootProps() : {})}>
 
           <div className="project-home-grid" style={isDragActive ? { pointerEvents: 'none'} : undefined}>
             {documents.map(document => (
