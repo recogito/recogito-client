@@ -6,7 +6,7 @@ import { initProject } from '@backend/helpers';
 import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
-import type { Invitation, MyProfile, ExtendedProjectData, Translations } from 'src/Types';
+import type { Invitation, MyProfile, ExtendedProjectData, Translations, Policies } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
 
 import './Header.css';
@@ -14,6 +14,8 @@ import './Header.css';
 interface HeaderProps {
 
   i18n: Translations;
+
+  policies?: Policies;
 
   invitations: Invitation[];
 
@@ -76,13 +78,15 @@ export const Header = (props: HeaderProps) => {
         <div
           className={profile ? 'dashboard-header-top-actions' : 'dashboard-header-top-actions loading'}>
 
-          <Button 
-            busy={creating}
-            className="new-project primary sm flat"
-            onClick={onCreateProject}>
-            <Plus size={16} weight="bold" /> 
-            <span>{t['New Project']}</span>
-          </Button>
+          {props.policies?.get('projects').has('INSERT') && (
+            <Button 
+              busy={creating}
+              className="new-project primary sm flat"
+              onClick={onCreateProject}>
+              <Plus size={16} weight="bold" /> 
+              <span>{t['New Project']}</span>
+            </Button>
+          )}
 
           <Notifications 
             i18n={props.i18n} 

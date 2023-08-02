@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Hammer } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Policies, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
 import { getOrganizationPolicies } from '@backend/helpers';
@@ -34,6 +34,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<ExtendedProjectData[]>(props.projects);
 
+  const [policies, setPolicies] = useState<Policies | undefined>(undefined);
+
   const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
 
   const [error, setError] = useState<ToastContent | null>(null);
@@ -43,14 +45,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   useEffect(() => {
     getMyProfile(supabase)
       .then(({ error }) => {
-        if (error)
+        if (error) {
           window.location.href = `/${props.i18n.lang}/sign-in`;
-      })
-
-    getOrganizationPolicies(supabase).then(({ error, data }) => {
-      // Check for ability to insert projects
-      console.log('Can create projects?', data.get('projects').has('INSERT'));
-    });
+        } else { 
+          getOrganizationPolicies(supabase).then(({ error, data }) => {
+            if (!error)
+              setPolicies(data);
+          });
+        }
+      });
   }, []);
 
   const filteredProjects = 
@@ -110,9 +113,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     <ToastProvider>
       <div className="dashboard-projects-home">
         <Header 
-          filter={filter}
           i18n={props.i18n} 
+          policies={policies}
           invitations={invitations} 
+          filter={filter}
           onChangeFilter={setFilter}
           onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}

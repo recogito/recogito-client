@@ -1,5 +1,6 @@
 import type { Response } from '@backend/Types';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { OperationType, Policies, TableName } from 'src/Types';
 
 interface OrganizationPolicy {
 
@@ -20,17 +21,6 @@ interface ProjectPolicy extends OrganizationPolicy {
 interface LayerPolicy extends OrganizationPolicy {
 
   layer_id: string;
-
-}
-
-// For future extension
-type TableName = 'projects'; 
-
-type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
-
-export type Policies = {
-
-  get(t: TableName): { has: (operation: OperationType) => boolean }
 
 }
 
