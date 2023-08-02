@@ -28,9 +28,19 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const [editable, setEditable] = useState(false);
 
-  const onOpen = (tab: boolean) => tab ?
-    window.open(`/${lang}/annotate/${context.id}/${document.id}`, '_blank') :
-    window.location.href = `/${lang}/annotate/${context.id}/${document.id}`;
+  const onOpen = (tab: boolean) => {
+    if (tab)
+      window.open(`/${lang}/annotate/${context.id}/${document.id}`, '_blank');
+    else
+      window.location.href = `/${lang}/annotate/${context.id}/${document.id}`;
+  }
+  
+  const onClick = (evt: React.MouseEvent) => {
+    const isClickOnMenu = (evt.target as Element).closest('.dropdown-content');
+    
+    if (!isClickOnMenu)
+      onOpen(true)
+  }
 
   const onRename = (name: string) => {
     setEditable(false);
@@ -39,7 +49,10 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   return (
     <article className="document-card-container">
-      <div className="document-card" onClick={() => onOpen(true)}>
+      <div 
+        className="document-card" 
+        onClick={onClick}>
+
         <div className="document-card-body">
           <ContentTypeIcon document={document} />
         </div>
