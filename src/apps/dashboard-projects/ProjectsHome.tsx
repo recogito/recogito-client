@@ -63,14 +63,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
 
-  const onRenameProject = (project: ExtendedProjectData) => {
-    setError({
-      icon: <Hammer size={16} className="text-bottom" />,
-      title: t['We\'re working on it!'],
-      description: t['This feature will become available soon.'],
-      type: 'info'
-    });
-  }
+  const onDetailsChanged = (project: ExtendedProjectData) =>
+    setProjects(projects => projects.map(p => p.id === project.id ? project : p));
     
   const onDeleteProject = (project: ExtendedProjectData) =>
     archiveProject(supabase, project.id)
@@ -122,8 +116,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           <ProjectsGrid 
             i18n={props.i18n} 
             projects={filteredProjects} 
-            onDeleteProject={onDeleteProject} 
-            onRenameProject={onRenameProject} />  
+            onProjectDeleted={onDeleteProject} 
+            onDetailsChanged={onDetailsChanged} 
+            onError={onError} />  
         )}
       </div>
 

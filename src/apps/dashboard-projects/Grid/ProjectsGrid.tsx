@@ -7,9 +7,11 @@ export interface ProjectsGridProps {
 
   projects: ExtendedProjectData[];
 
-  onDeleteProject(project: ExtendedProjectData): void;
+  onProjectDeleted(project: ExtendedProjectData): void;
 
-  onRenameProject(project: ExtendedProjectData): void;
+  onDetailsChanged(project: ExtendedProjectData): void;
+
+  onError(error: string): void;
 
 }
 
@@ -24,8 +26,9 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
               key={project.id} 
               i18n={props.i18n}
               project={project} 
-              onDelete={() => props.onDeleteProject(project)} 
-              onRename={() => props.onRenameProject(project)}/>
+              onDeleted={() => props.onProjectDeleted(project)} 
+              onDetailsChanged={props.onDetailsChanged} 
+              onError={props.onError} />
           ))}
         </div>
       </section>

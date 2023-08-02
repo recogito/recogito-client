@@ -2,12 +2,15 @@
 
 fieldset {
   border: none;
-  margin: 1.5em 0 2.5em 0;
+  margin: 2.5em 0 1.5em 0;
   padding: 0;
 }
 
 form .field {
-  margin: 1em 0;
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  margin: 0.5em 0 1.5em 0;
 }
 
 form .field label {
@@ -15,8 +18,13 @@ form .field label {
   width: 100px;
 }
 
-form .field input {
+form .field input,
+form .field textarea {
   width: 320px;
+}
+
+form .field textarea {
+  resize: none;
 }
 
 form select {
