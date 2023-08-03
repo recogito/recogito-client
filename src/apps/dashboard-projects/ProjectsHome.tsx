@@ -98,7 +98,13 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onInvitationAccepted = (invitation: Invitation, project: ExtendedProjectData) => {
     setInvitations(invitations => invitations.filter(i => i.id !== invitation.id));
-    setProjects(projects => ([ project, ...projects ]));
+
+    // Make sure we're not creating a duplicate in the list by joining a 
+    // project we're already a member of!
+    setProjects(projects => ([ 
+      ...projects.filter(p => p.id !== project.id), 
+      project
+    ]));
   }
 
   const onInvitationDeclined = (invitation: Invitation) =>
