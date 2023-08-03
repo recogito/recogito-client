@@ -7,13 +7,18 @@
   "Owner": "Owner",
   "Project Admins": "Administrator",
   "Project Students": "Student",
+
   "Invite User to Project": "Invite User to Project",
   "Enter e-mail and access level.": "Enter e-mail and access level.",
   "E-Mail": "E-Mail",
   "Send invitation": "Send invitation",
+
   "Confirm Remove User": "Confirm Remove User",
+  "Leave Project?": "Leave Project?",
+  "You are about to leave": "This action is permanent. If you want to join again in the future, the project administrators need to re-invite you. Are you sure you want to leave?",
   "Remove_name": "Are you sure you want to remove ${name} from the project?",
   "Remove_anonymous": "Are you sure you want to remove this user from the project?",
   "Remove": "Remove",
+  "Yes, I want to leave": "Yes, I want to leave",
   "Cancel": "Cancel"
 }

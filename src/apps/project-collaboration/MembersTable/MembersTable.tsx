@@ -153,6 +153,7 @@ export const MembersTable = (props: MembersTableProps) => {
                 <DeleteMember 
                   i18n={props.i18n}
                   member={member} 
+                  me={props.me}
                   onDeleteMember={props.onDeleteMember} 
                   onDeleteError={props.onDeleteMemberError}/>
               )}

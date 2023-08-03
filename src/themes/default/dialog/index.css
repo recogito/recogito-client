@@ -45,7 +45,8 @@
 }
 
 .dialog-description {
-  margin: 1.5em 0;
+  line-height: 160%;
+  margin: 2.5em 0;
   font-size: var(--font-tiny);
 }
 
@@ -57,4 +58,5 @@
 
 .dialog-footer {
   display: flex;
+  margin-top: 2.5em;
 }

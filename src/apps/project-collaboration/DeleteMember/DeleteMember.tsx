@@ -6,11 +6,13 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import type { TeamMember } from '../TeamMember';
 import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { Translations } from 'src/Types';
+import type { Translations, UserProfile } from 'src/Types';
 
 interface DeleteMemberProps {
 
   i18n: Translations;
+
+  me: UserProfile;
 
   member: TeamMember;
 
@@ -27,6 +29,8 @@ export const DeleteMember = (props: DeleteMemberProps) => {
   const { member } = props;
 
   const { nickname, first_name, last_name } = member.user;
+
+  const isMe = props.me.id === member.user.id;
 
   const [busy, setBusy] = useState(false);
 
@@ -62,11 +66,13 @@ export const DeleteMember = (props: DeleteMemberProps) => {
         <Dialog.Overlay className="dialog-overlay">
           <Dialog.Content className="dialog-content">
             <Dialog.Title className="dialog-title">
-              {t['Confirm Remove User']}
+              {isMe ? t['Leave Project?'] : t['Confirm Remove User']}
             </Dialog.Title>
 
             <Dialog.Description className="dialog-description">
-              {name ? (
+              {isMe ? (
+                t['You are about to leave']
+              ) : name ? (
                 <span dangerouslySetInnerHTML={{__html: t['Remove_name'].replace('${name}', name)}} />
               ) : (
                 t['Remove_anonymous']
@@ -78,8 +84,14 @@ export const DeleteMember = (props: DeleteMemberProps) => {
                 busy={busy}
                 className="danger" 
                 onClick={onDelete}>
-                <Trash size={16} /> 
-                <span>{t['Remove']}</span>
+                {isMe ? (
+                  t['Yes, I want to leave'] 
+                ) : (
+                  <>
+                    <Trash size={16} /> 
+                    <span>{t['Remove']}</span>
+                  </>
+                )}
               </Button>
 
               <Dialog.Close asChild>
