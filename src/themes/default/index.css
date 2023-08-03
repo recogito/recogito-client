@@ -11,6 +11,7 @@
 @import './popover/index.css';
 @import './select/index.css';
 @import './toast/index.css';
+@import './tooltip/index.css';
 
 @font-face {
   font-family: Inter;

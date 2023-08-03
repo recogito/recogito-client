@@ -103,6 +103,28 @@
   font-weight: 500;
 }
 
+.project-members-table td .anonymous-member {
+  color: var(--font-light);
+}
+
+.project-members-table td .anonymous-member button {
+  height: 24px;
+  margin-left: 2px;
+  padding: 0;
+  vertical-align: sub;
+  width: 24px;
+}
+
+.project-members-table td .anonymous-member button svg {
+  left: 0;
+  position: relative;
+  top: 0;
+}
+
+.project-members-table td .anonymous-member button:hover svg {
+  color: var(--font-dark);
+}
+
 .project-members-table td .invitation-sent {
   color: var(--font-light);
   display: inline-block;

@@ -4,10 +4,12 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { CheckSquare, Square } from '@phosphor-icons/react';
 import { GroupSelector } from '../GroupSelector/GroupSelector';
 import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
+import { AnonymousTooltip } from './AnonymousTooltip';
 import type { TeamMember } from '../TeamMember';
 import { DeleteMember } from '../DeleteMember';
 
 import './MembersTable.css';
+
 
 interface MembersTableProps {
 
@@ -64,7 +66,8 @@ export const MembersTable = (props: MembersTableProps) => {
     if (first_name || last_name)
       return `${first_name} ${last_name}`.trim();
 
-    return ''; // TODO what to do for fallback?
+    // Note this method will return undefined here, 
+    // if the user has no (nick)name set.
   }
 
   const onSelectRow = (member: TeamMember, checked: Checkbox.CheckedState) => {
@@ -127,7 +130,11 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td>
-              {formatName(member)}
+              {formatName(member) || (
+                <span className="anonymous-member">
+                  {t['Anonymous team member']} <AnonymousTooltip i18n={props.i18n} />
+                </span>
+              )}
               {isMe(member) && (
                 <span className="badge">
                   {t['You']}

@@ -7,6 +7,8 @@
   "Owner": "Owner",
   "Project Admins": "Administrator",
   "Project Students": "Student",
+  "Anonymous team member": "Anonymous team member",
+  "This user has not provided a name in his profile.": "This user has not provided a name in his profile.",
 
   "Invite User to Project": "Invite User to Project",
   "Enter e-mail and access level.": "Enter e-mail and access level.",
