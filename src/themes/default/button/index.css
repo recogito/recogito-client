@@ -38,8 +38,8 @@ a[href].button, a[href].button:hover {
 }
 
 button:disabled {
-  background-color: var(--gray-400);
-  border-color: var(--gray-400);
+  background-color: var(--gray-200);
+  border-color: var(--gray-200);
   box-shadow: none;
   color: var(--gray-500);
   cursor: auto;

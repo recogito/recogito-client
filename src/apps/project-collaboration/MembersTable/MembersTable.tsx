@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { CheckSquare, Square, User } from '@phosphor-icons/react';
+import { CheckSquare, Square } from '@phosphor-icons/react';
 import { GroupSelector } from '../GroupSelector/GroupSelector';
 import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
