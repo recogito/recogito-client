@@ -89,7 +89,7 @@ export const InviteUser = (props: InviteUserProps) => {
       props.invitations.some(i => i.email.toLowerCase() === email.toLowerCase());
 
     if (toMyself) {
-      setError(t['You cannot send an invitation to yorself.']);
+      setError(t['You cannot send an invitation to yourself.']);
     } else if (hasInvitation) {
       setError(t['This user already has an invitation waiting.']);
     } else {
