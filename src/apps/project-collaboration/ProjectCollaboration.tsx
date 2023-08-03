@@ -3,7 +3,7 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { InviteUser } from './InviteUser';
 import { MembersTable } from './MembersTable';
 import type { TeamMember } from './TeamMember';
-import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Invitation, MyProfile, ProjectGroup, Translations } from 'src/Types';
 
 import './ProjectCollaboration.css';
 
@@ -15,7 +15,7 @@ interface ManageUsersProps {
 
   invitations: Invitation[];
 
-  me: UserProfile;
+  me: MyProfile;
 
 };
 

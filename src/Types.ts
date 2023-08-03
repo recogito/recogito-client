@@ -18,8 +18,6 @@ export type MyProfile = UserProfile & {
 
   email: string;
 
-  role: 'admin' | 'base_user' | 'teacher'
-
 }
 
 export interface Project {

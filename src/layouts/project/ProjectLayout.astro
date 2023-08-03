@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { ProjectSidebar } from './ProjectSidebar';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import type { Project, UserProfile } from 'src/Types';
+import type { MyProfile, Project } from 'src/Types';
 
 export interface Props {
 
@@ -10,7 +10,7 @@ export interface Props {
 
   project: Project;
 
-  user?: UserProfile;
+  user?: MyProfile;
 
 }
 

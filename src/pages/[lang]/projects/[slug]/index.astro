@@ -1,7 +1,7 @@
 ---
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getUserProfile } from '@backend/auth';
+import { getMyProfile } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
@@ -12,7 +12,12 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
 
-const user = await getUserProfile(supabase);
+const user = await getMyProfile(supabase);
+
+if (user.error || !user.data) { 
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
 
 const projectId = Astro.params.slug;
 
@@ -33,7 +38,7 @@ if (documents.error) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
-<ProjectLayout active="documents" user={user} project={project.data}>
+<ProjectLayout active="documents" user={user.data} project={project.data}>
   <ProjectHome 
     client:only
     i18n={i18n}

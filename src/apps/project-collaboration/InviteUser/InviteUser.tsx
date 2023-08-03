@@ -5,14 +5,14 @@ import { useFormik } from 'formik';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { inviteUserToProject } from '@backend/crud';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, Invitation, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Invitation, MyProfile, Translations, UserProfile } from 'src/Types';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 interface InviteUserProps {
 
   i18n: Translations;
 
-  me: UserProfile;
+  me: MyProfile;
 
   project: ExtendedProjectData;
 
@@ -81,11 +81,17 @@ export const InviteUser = (props: InviteUserProps) => {
   const onSubmit = (values: { email: string, group: string }) => {
     const { email, group } = values;
 
+    // Because you never know what users do...
+    const toMyself = 
+      props.me.email === email;
+
     const hasInvitation = 
       props.invitations.some(i => i.email.toLowerCase() === email.toLowerCase());
 
-    if (hasInvitation) {
-      setError('This user already has an invitation waiting.')
+    if (toMyself) {
+      setError('You cannot send an invitation to yorself.');
+    } else if (hasInvitation) {
+      setError('This user already has an invitation waiting.');
     } else {
       sendInvitation(email, group).then(() =>
         formik.resetForm());

@@ -1,8 +1,7 @@
 ---
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getUserProfile } from '@backend/auth';
-import { listPendingInvitations } from '@backend/crud';
+import { listPendingInvitations, getMyProfile } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectCollaboration } from '@apps/project-collaboration/ProjectCollaboration';
@@ -15,7 +14,12 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
 
-const user = await getUserProfile(supabase);
+const user = await getMyProfile(supabase);
+
+if (user.error || !user.data) { 
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
 
 const projectId = Astro.params.slug;
 
@@ -28,11 +32,11 @@ if (project.error || invitations.error || !user) {
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 ---
-<ProjectLayout active="collaboration" user={user} project={project.data}>
+<ProjectLayout active="collaboration" user={user.data} project={project.data}>
   <ProjectCollaboration
     client:load
     i18n={i18n}
-    me={user}
+    me={user.data}
     project={project.data}
     invitations={invitations.data} /> 
 </ProjectLayout>
