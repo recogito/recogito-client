@@ -5,9 +5,9 @@
   border-radius: var(--border-radius);
   color: #fff;
   font-size: var(--font-tiny);
-  line-height: 150%;
-  max-width: 240px;
-  padding: 8px 5px;
+  line-height: 160%;
+  max-width: 200px;
+  padding: 8px 10px;
   text-align: center;
 }
 

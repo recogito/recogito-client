@@ -26,7 +26,7 @@ export const AnonymousTooltip = (props: AnonymousTooltipProps) => {
         <Content 
           className="popover-tooltip-content" 
           side="top">
-          {props.i18n.t['This user has not provided a name in his profile.']}
+          {props.i18n.t['This user has not provided a profile name.']}
 
           <Arrow className="popover-tooltip-arrow" />
         </Content>
