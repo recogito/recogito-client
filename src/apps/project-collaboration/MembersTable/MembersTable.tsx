@@ -30,14 +30,14 @@ interface MembersTableProps {
 // Helper to flatten the list of groups to the list of users
 // TODO sort by 'member since'
 const getMembers = (groups: ProjectGroup[]): TeamMember[] => groups
-.reduce((members, group) => (
-    [
-      ...members, 
-      ...group.members.map(({ user, since }) => 
-        ({ user, inGroup: group, since }))
-    ]
-  ), [] as TeamMember[])
-.sort((a, b) => (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0);
+  .reduce((members, group) => (
+      [
+        ...members, 
+        ...group.members.map(({ user, since }) => 
+          ({ user, inGroup: group, since }))
+      ]
+    ), [] as TeamMember[])
+  .sort((a, b) => (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0);
 
 export const MembersTable = (props: MembersTableProps) => {
 
@@ -135,7 +135,7 @@ export const MembersTable = (props: MembersTableProps) => {
               )}
             </td>
 
-            <td>{isMe(member) ? (
+            <td>{isOwner(member) ? (
               <button 
                 disabled
                 className="owner">{t['Owner']}</button>
