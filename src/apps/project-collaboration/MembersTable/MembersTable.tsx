@@ -130,7 +130,7 @@ export const MembersTable = (props: MembersTableProps) => {
               {formatName(member)}
               {isMe(member) && (
                 <span className="badge">
-                  You
+                  {t['You']}
                 </span>
               )}
             </td>
@@ -138,7 +138,7 @@ export const MembersTable = (props: MembersTableProps) => {
             <td>{isMe(member) ? (
               <button 
                 disabled
-                className="owner">Owner</button>
+                className="owner">{t['Owner']}</button>
             ) : (
               <GroupSelector 
                 i18n={props.i18n}
