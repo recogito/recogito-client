@@ -15,7 +15,7 @@
 }
 
 .annotation-card-comments-container {
-  max-height: 80vh;
+  max-height: 50vh;
   overflow-y: auto;
 }
 
