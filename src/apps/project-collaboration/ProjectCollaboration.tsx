@@ -93,6 +93,7 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
           i18n={props.i18n} 
           me={props.me}
           project={project} 
+          invitations={invitations}
           onInvitiationSent={onInvitationSent} 
           onInvitiationError={onInvitationError} />
 

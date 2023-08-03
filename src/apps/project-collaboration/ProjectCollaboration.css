@@ -6,3 +6,9 @@
 .manage-users button.select-trigger {
   justify-content: space-between;
 }
+
+.invite-users.dialog-content .error {
+  color: var(--red-500);
+  font-size: var(--font-tiny);
+  padding: 10px 0;
+}

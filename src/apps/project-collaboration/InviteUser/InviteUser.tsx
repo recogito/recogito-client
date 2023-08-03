@@ -16,6 +16,8 @@ interface InviteUserProps {
 
   project: ExtendedProjectData;
 
+  invitations: Invitation[];
+
   onInvitiationSent(invitation: Invitation): void;
 
   onInvitiationError(error: PostgrestError): void;
@@ -28,11 +30,19 @@ export const InviteUser = (props: InviteUserProps) => {
 
   const { me, project } = props;
 
-  const [open, setOpen] = useState(false);
+  const [open, _setOpen] = useState(false);
 
   const [busy, setBusy] = useState(false);
 
-  const onSubmit = (values: { email: string, group: string }) => {
+  const [error, setError] = useState<string | undefined>(undefined);
+
+  const setOpen = (open: boolean) => {
+    formik.resetForm();
+    setError(undefined);
+    _setOpen(open);
+  }
+
+  const sendInvitation = (email: string, group: string) => {
     const invitedBy = me.nickname ? 
       me.nickname : (me.first_name || me.last_name) ?
       [me.first_name, me.last_name].join(' ') :
@@ -42,7 +52,7 @@ export const InviteUser = (props: InviteUserProps) => {
 
     // Waits until the invite was processed in the backend
     const a = new Promise(resolve => {
-      inviteUserToProject(supabase, values.email, project, values.group, invitedBy)
+      inviteUserToProject(supabase, email, project, group, invitedBy)
         .then(({ error, data }) => {
           if (error) {
             props.onInvitiationError(error);
@@ -62,11 +72,24 @@ export const InviteUser = (props: InviteUserProps) => {
     });
 
     // Waits for whatever is takes longer and closes the dialog
-    Promise.all([a, b]).then(() => { 
+    return Promise.all([a, b]).then(() => { 
       setBusy(false);
       setOpen(false);
-      formik.resetForm();
     });
+  }
+
+  const onSubmit = (values: { email: string, group: string }) => {
+    const { email, group } = values;
+
+    const hasInvitation = 
+      props.invitations.some(i => i.email.toLowerCase() === email.toLowerCase());
+
+    if (hasInvitation) {
+      setError('This user already has an invitation waiting.')
+    } else {
+      sendInvitation(email, group).then(() =>
+        formik.resetForm());
+    }
   }
 
   const formik = useFormik({
@@ -128,6 +151,10 @@ export const InviteUser = (props: InviteUserProps) => {
                     ))}
                   </select>
                 </div>
+
+                {error && (
+                  <div className="error">{error}</div>
+                )}
               </fieldset>
 
               <Button 
