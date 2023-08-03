@@ -22,6 +22,15 @@
   "Delete project": "Projekt löschen",
   "Edit project details": "Projektinformationen bearbeiten",
 
+  "Project Details": "Projektinformationen",
+  "Name": "Name",
+  "Description": "Beschreibung",
+  "Project name...": "Projektname...",
+  "Project description...": "Beschreibung...",
+
+  "Ok": "Ok",
+  "Cancel": "Abbrechen",
+
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the project.": "Das Projekt konnte nicht erstellt werden.",
   "Could not delete the project.": "Das Projekt konnte nicht gelöscht werden.",

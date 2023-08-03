@@ -22,6 +22,15 @@
   "Delete project": "Delete project",
   "Edit project details": "Edit project details",
 
+  "Project Details": "Project Details",
+  "Name": "Name",
+  "Description": "Description",
+  "Project name...": "Project name...",
+  "Project description...": "Project description...",
+
+  "Ok": "Ok",
+  "Cancel": "Cancel",
+
   "Something went wrong": "Something went wrong",
   "Could not create the project.": "Could not create the project.",
   "Could not delete the project.": "Could not delete the project.",

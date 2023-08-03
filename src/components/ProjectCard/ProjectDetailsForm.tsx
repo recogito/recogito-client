@@ -78,25 +78,25 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
 
         <Dialog.Content className="invite-users dialog-content">
           <Dialog.Title className="dialog-title">
-            Project Details
+            {t['Project Details']}
           </Dialog.Title>
 
           <form onSubmit={formik.handleSubmit}>
             <fieldset>
               <div className="field">
-                <label>Name</label>
+                <label>{t['Name']}</label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   onChange={formik.handleChange}
                   value={formik.values.name}
-                  placeholder="Project name..." 
+                  placeholder={t['Project name...']}
                   required />
               </div>
 
               <div className="field">
-                <label>Description</label>
+                <label>{t['Description']}</label>
 
                 <TextareaAutosize 
                   id="description"
@@ -105,7 +105,7 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
                   maxRows={8}
                   value={formik.values.description}
                   onChange={formik.handleChange}
-                  placeholder="Project description..." />
+                  placeholder={t['Project description...']}/>
               </div>
             </fieldset>
 
@@ -115,11 +115,13 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
               type="submit">
 
               <span>
-                Ok
+                {t['Ok']}
               </span>
             </Button>
 
-            <button onClick={props.onCancel}>Cancel</button>
+            <button onClick={props.onCancel}>
+              {t['Cancel']}
+            </button>
           </form>
         </Dialog.Content>
       </Dialog.Portal>
