@@ -87,6 +87,16 @@
   border-radius: 0 0 var(--border-radius) 0;
 }
 
+.project-members-table td button.select-trigger:disabled {
+  background-color: var(--button-background-color);
+  border-color: var(--button-border-color);
+  box-shadow:
+    inset 0 0 0 150px rgba(0, 0, 0, 0),
+    0 2px 3px -2px rgba(0, 0, 0, 0.12);
+  color: var(--button-font-color);
+  cursor: auto;
+}
+
 .project-members-table td button.owner {
   min-width: 120px;
   padding: 4px 8px;
