@@ -89,9 +89,9 @@ export const InviteUser = (props: InviteUserProps) => {
       props.invitations.some(i => i.email.toLowerCase() === email.toLowerCase());
 
     if (toMyself) {
-      setError('You cannot send an invitation to yorself.');
+      setError(t['You cannot send an invitation to yorself.']);
     } else if (hasInvitation) {
-      setError('This user already has an invitation waiting.');
+      setError(t['This user already has an invitation waiting.']);
     } else {
       sendInvitation(email, group).then(() =>
         formik.resetForm());

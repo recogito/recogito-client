@@ -12,6 +12,8 @@
   "Enter e-mail and access level.": "Enter e-mail and access level.",
   "E-Mail": "E-Mail",
   "Send invitation": "Send invitation",
+  "You cannot send an invitation to yorself.": "We know it's good to feel wanted. But you cannot send an invitation to yorself.",
+  "This user already has an invitation waiting.": "This user already has an invitation waiting.",
 
   "Confirm Remove User": "Confirm Remove User",
   "Leave Project?": "Leave Project?",
