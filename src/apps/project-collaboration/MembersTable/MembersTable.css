@@ -87,6 +87,12 @@
   border-radius: 0 0 var(--border-radius) 0;
 }
 
+.project-members-table td button.owner {
+  min-width: 120px;
+  padding: 4px 8px;
+  font-weight: 500;
+}
+
 .project-members-table td .invitation-sent {
   color: var(--font-light);
   display: inline-block;

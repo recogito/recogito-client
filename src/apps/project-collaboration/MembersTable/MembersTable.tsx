@@ -3,11 +3,29 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { CheckSquare, Square } from '@phosphor-icons/react';
 import { GroupSelector } from '../GroupSelector/GroupSelector';
-import type { Invitation, ProjectGroup, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
 import type { TeamMember } from '../TeamMember';
 import { DeleteMember } from '../DeleteMember';
 
 import './MembersTable.css';
+
+interface MembersTableProps {
+
+  i18n: Translations;
+
+  project: ExtendedProjectData;
+
+  invitations: Invitation[];
+
+  me: UserProfile;
+
+  onChangeGroup(member: TeamMember, from: ProjectGroup, to: ProjectGroup): void;
+
+  onDeleteMember(member: TeamMember): void;
+
+  onDeleteMemberError(error: PostgrestError): void;
+
+}
 
 // Helper to flatten the list of groups to the list of users
 // TODO sort by 'member since'
@@ -21,32 +39,22 @@ const getMembers = (groups: ProjectGroup[]): TeamMember[] => groups
   ), [] as TeamMember[])
 .sort((a, b) => (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0);
 
-interface MembersTableProps {
-
-  i18n: Translations;
-
-  groups: ProjectGroup[];
-
-  invitations: Invitation[];
-
-  onChangeGroup(member: TeamMember, from: ProjectGroup, to: ProjectGroup): void;
-
-  onDeleteMember(member: TeamMember): void;
-
-  onDeleteMemberError(error: PostgrestError): void;
-
-}
-
 export const MembersTable = (props: MembersTableProps) => {
 
   const { t } = props.i18n;
 
-  // Selected member IDs
   const [selected, setSelected] = useState<string[]>([]);
 
-  const members = getMembers(props.groups);
+  const members = getMembers(props.project.groups);
 
   const isAllSelected = selected.length === members.length;
+
+  // Shorthands
+  const isMe = (member: TeamMember) => 
+    member.user.id === props.me.id;
+
+  const isOwner = (member: TeamMember) =>
+    member.user.id === props.project.created_by.id;
 
   const formatName = (member: TeamMember) => {
     const { nickname, first_name, last_name } = member.user;
@@ -120,20 +128,27 @@ export const MembersTable = (props: MembersTableProps) => {
 
             <td>{formatName(member)}</td>
 
-            <td>
+            <td>{isMe(member) ? (
+              <button 
+                disabled
+                className="owner">Owner</button>
+            ) : (
               <GroupSelector 
                 i18n={props.i18n}
                 member={member} 
-                availableGroups={props.groups} 
+                availableGroups={props.project.groups} 
                 onChangeGroup={(from, to) => props.onChangeGroup(member, from, to)} />
+            )}
             </td>
 
             <td className="actions">
-              <DeleteMember 
-                i18n={props.i18n}
-                member={member} 
-                onDeleteMember={props.onDeleteMember} 
-                onDeleteError={props.onDeleteMemberError}/>
+              {!isOwner(member) && (
+                <DeleteMember 
+                  i18n={props.i18n}
+                  member={member} 
+                  onDeleteMember={props.onDeleteMember} 
+                  onDeleteError={props.onDeleteMemberError}/>
+              )}
             </td>            
           </tr>
         ))}

@@ -98,8 +98,9 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
 
         <MembersTable 
           i18n={props.i18n}
-          groups={project.groups} 
+          project={project}
           invitations={invitations}
+          me={props.me}
           onChangeGroup={onChangeGroup} 
           onDeleteMember={onDeleteMember} 
           onDeleteMemberError={onDeleteError} />
