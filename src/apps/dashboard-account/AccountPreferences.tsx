@@ -86,13 +86,13 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
                     avatar={gravatar} />
 
                   <span>
-                    We found a Gravatar for your address.
+                    {t['We found a Gravatar for your address.']}
                   </span> <button 
                     type="button" 
                     className="link"
                     onClick={() => formik.setFieldValue('avatar_url', gravatar)}>
-                    Use as my Avatar
-                  </button>.
+                    {t['Use as my Avatar.']}
+                  </button>
                 </div>
               )}
             </fieldset>
