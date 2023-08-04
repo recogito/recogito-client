@@ -80,11 +80,20 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
               </div>
 
               {gravatar && (
-                <button type="button" onClick={() => formik.setFieldValue('avatar_url', gravatar)}>
+                <div className="gravatar-preview">
                   <Avatar 
                     id={gravatar}
                     avatar={gravatar} />
-                </button>
+
+                  <span>
+                    We found a Gravatar for your address.
+                  </span> <button 
+                    type="button" 
+                    className="link"
+                    onClick={() => formik.setFieldValue('avatar_url', gravatar)}>
+                    Use as my Avatar
+                  </button>.
+                </div>
               )}
             </fieldset>
 

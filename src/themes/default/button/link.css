@@ -1,0 +1,13 @@
+button.link, 
+button.link:hover,
+button.link:hover:not(:disabled) {
+  all: unset;
+  box-shadow: none;
+  cursor: pointer;
+  color: var(--link-color);
+}
+
+button.link:hover,
+button.link:hover:not(:disabled) {
+  text-decoration: underline;
+}
