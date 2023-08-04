@@ -41,21 +41,21 @@ export const Avatar = (props: AvatarProps) => {
 
   return (
     <Root className="avatar">
-      {avatar ? (
+      {avatar && (
         <Image
           className="avatar-image"
           title={name} 
           src={avatar} />
-      ) : (
-        <Fallback 
-          className="avatar-fallback"
-          title={name} 
-          style={{ backgroundColor }}>
-          {name ? getInitials(name) : (
-            <User size={16} />
-          )}
-        </Fallback>
       )}
+      
+      <Fallback 
+        className="avatar-fallback"
+        title={name} 
+        style={{ backgroundColor }}>
+        {name ? getInitials(name) : (
+          <User size={16} />
+        )}
+      </Fallback>
     </Root>
   )
 
