@@ -79,7 +79,7 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
                   value={profile.email} />
               </div>
 
-              {gravatar && (
+              {gravatar && !(gravatar === formik.values.avatar_url) && (
                 <div className="gravatar-preview">
                   <Avatar 
                     id={gravatar}
