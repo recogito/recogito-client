@@ -41,7 +41,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [showUploads, setShowUploads] = useState(false);
 
-  const { addUploads, isIdle, uploads } = useUpload(document => setDocuments([...documents, document]));
+  const { addUploads, isIdle, uploads } = 
+    useUpload(document => setDocuments(d => [...d, document]));
 
   const canUpload = policies?.get('documents').has('INSERT');
 
@@ -141,7 +142,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const onRenameDocument = (document: DocumentInProject, name: string) => {
     // Optimistic update
-    setDocuments(documents.map(d => d.id === document.id ? ({
+    setDocuments(documents => documents.map(d => d.id === document.id ? ({
       ...d, name
     }) : d));
 
@@ -156,7 +157,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             type: 'error' 
           });
 
-          setDocuments(documents.map(d => d.id === document.id ? ({
+          setDocuments(documents => documents.map(d => d.id === document.id ? ({
             ...d, name: document.name
           }) : d));
         }
