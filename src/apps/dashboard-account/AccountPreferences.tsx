@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { updateMyProfile } from '@backend/crud/profiles';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import type { Translations, MyProfile } from 'src/Types';
+import { getGravatar } from './getGravatar';
 
 import './AccountPreferences.css';
+import { Avatar } from '@components/Avatar';
 
 interface AccountPreferencesProps {
 
@@ -24,6 +26,12 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
+  const [gravatar, setGravatar] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    getGravatar(profile.email).then(setGravatar);
+  }, []);
+
   const formik = useFormik({
     initialValues: {
       nickname: profile.nickname || '',
@@ -33,7 +41,7 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
     },
 
     onSubmit: values => {
-      updateMyProfile(supabase, values).then(({ error, data }) => {
+      updateMyProfile(supabase, values).then(({ error }) => {
         if (error) {
           console.error(error);
           setError({ 
@@ -70,6 +78,14 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
                   type="text" 
                   value={profile.email} />
               </div>
+
+              {gravatar && (
+                <button type="button" onClick={() => formik.setFieldValue('avatar_url', gravatar)}>
+                  <Avatar 
+                    id={gravatar}
+                    avatar={gravatar} />
+                </button>
+              )}
             </fieldset>
 
             <h2>{t['Public Information']}</h2>
