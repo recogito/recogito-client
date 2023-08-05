@@ -8,6 +8,14 @@
   padding: 30px 40px;
 }
 
+.dashboard-account-preferences h2 {
+  margin-top: 3.5em;
+} 
+
+.dashboard-account-preferences fieldset {
+  margin-bottom: 2.5em;
+}
+
 .dashboard-account-preferences .field {
   margin: 0.6em 0;
 }
@@ -19,4 +27,18 @@
 
 .dashboard-account-preferences .field input {
   width: 320px;
+}
+
+.dashboard-account-preferences .gravatar-preview {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  padding: 0.2em 0 0 120px;
+}
+
+.dashboard-account-preferences .gravatar-preview .avatar {
+  display: inline-flex;
+  height: 24px;
+  margin: 0 8px 0 5px;
+  vertical-align: top;
+  width: 24px;
 }
