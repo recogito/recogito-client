@@ -28,7 +28,7 @@ if (!projects.data || !invitations.data) {
 <BaseLayout title="Dashboard">
   <div class="container">
     <ProjectsHome 
-      client:load
+      client:only
       me={me}
       projects={projects.data} 
       invitations={invitations.data}
