@@ -28,19 +28,20 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
           first_name,   
           last_name,
           avatar_url,
-          org_groups:group_users!group_users_user_id_fkey(
+          group_users!group_users_user_id_fkey(
             group_type,
             type_id
           )
         `)
         .eq('id', user?.id)
-        .eq('org_groups.group_type', 'organization')
+        .eq('group_users.group_type', 'organization')
         .single()
         .then(({ error, data }) => {
           if (error) {
             return { error, data: data as unknown as MyProfile };
           } else {
-            const profile = { ...data, email: user.email };
+            // Keep profile fields + add email
+            const { group_users, ...profile } = { ...data, email: user.email };
 
             return supabase
               .from('organization_groups')
@@ -49,19 +50,15 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
                 name,
                 description
               `)
-              .in('id', data.org_groups.map(r => r.type_id))
+              .in('id', data.group_users.map(r => r.type_id))
               .then(({ error, data}) => {
                 if (error ) {
                   return { error, data: data as unknown as MyProfile };
                 } else {
-                  const withGroups = { 
-                    ...profile,
-                    org_groups: data
-                  };
-
-                  console.log(withGroups);
-
-                  return { error, data: withGroups as MyProfile };
+                  return { error, data: { 
+                    ...profile, 
+                    isOrgAdmin: data.length > 0 
+                  } as MyProfile };
                 }
               });
           }

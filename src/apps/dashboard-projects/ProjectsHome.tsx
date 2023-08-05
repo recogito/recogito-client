@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Hammer } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Invitation, Policies, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, MyProfile, Policies, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
 import { getOrganizationPolicies } from '@backend/helpers';
@@ -9,7 +8,6 @@ import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
-import type { User } from '@supabase/supabase-js';
 
 import './ProjectsHome.css';
 
@@ -17,7 +15,7 @@ export interface ProjectsHomeProps {
 
   i18n: Translations;
 
-  me: User;
+  me: MyProfile;
 
   projects: ExtendedProjectData[];
 
@@ -41,11 +39,11 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [filter, setFilter] = useState(ProjectFilter.ALL);
+  const [filter, setFilter] = useState(me.isOrgAdmin ? ProjectFilter.ALL : ProjectFilter.MINE);
 
   useEffect(() => {
     getMyProfile(supabase)
-      .then(({ error }) => {
+      .then(({ error, data }) => {
         if (error) {
           window.location.href = `/${props.i18n.lang}/sign-in`;
         } else { 
@@ -122,6 +120,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
         <Header 
           i18n={props.i18n} 
+          me={me}
           policies={policies}
           invitations={invitations} 
           filter={filter}
