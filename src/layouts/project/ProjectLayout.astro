@@ -2,15 +2,15 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { ProjectSidebar } from './ProjectSidebar';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import type { MyProfile, Project } from 'src/Types';
+import type { ExtendedProjectData, MyProfile } from 'src/Types';
 
 export interface Props {
 
 	active: string;
 
-  project: Project;
+  project: ExtendedProjectData;
 
-  user?: MyProfile;
+  user: MyProfile;
 
 }
 

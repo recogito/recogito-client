@@ -1,8 +1,9 @@
 ---
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getProject, getMyProfile} from '@backend/crud';
+import { getMyProfile} from '@backend/crud';
 import { getLangFromUrl } from '@i18n';
+import { getProjectExtended } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -12,19 +13,24 @@ if (!supabase)
 
 const projectId = Astro.params.slug;
 
-const { error, data } = await getMyProfile(supabase);
-
-if (error) { 
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) { 
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
-const response = await getProject(supabase, projectId as string);
+const project = await getProjectExtended(supabase, projectId as string);
+if (project.error || !project.data) { 
+  const error = await fetch(`${Astro.url}/404`);
+  return new Response(error.body, { headers: error.headers, status: 404 }); 
+}
 ---
-<ProjectLayout active="assignments" user={data} project={response.data}>
-  {response.error ? (
-    <div>Something went wrong</div>
-  ) : (
-    <div>Assignments</div>
-  )}
+<ProjectLayout active="assignments" user={profile.data} project={project.data}>
+  <h1>Assignments</h1>
 </ProjectLayout>
+
+<style>
+  h1 {
+    padding-left: 40px !important;
+  }
+</style>

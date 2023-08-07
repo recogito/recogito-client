@@ -24,7 +24,6 @@ const projectId = Astro.params.slug;
 const i18n = getTranslations(Astro.request, 'project-home');
 
 const project = await getProjectExtended(supabase, projectId as string);
-
 if (project.error || !project.data) { 
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 

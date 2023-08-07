@@ -15,6 +15,8 @@ interface HeaderProps {
 
   i18n: Translations;
 
+  me: MyProfile;
+
   policies?: Policies;
 
   invitations: Invitation[];
@@ -39,8 +41,6 @@ export const Header = (props: HeaderProps) => {
   
   const { filter, onChangeFilter } = props;
 
-  const [profile, setProfile] = useState<MyProfile | undefined>();
-
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
 
@@ -62,11 +62,6 @@ export const Header = (props: HeaderProps) => {
       });
   }
 
-  useEffect(() => {
-    getMyProfile(supabase)
-      .then(({ data }) => setProfile(data));
-  }, []);
-
   return (
     <header className="dashboard-header">
       <section className="dashboard-header-top">
@@ -76,7 +71,7 @@ export const Header = (props: HeaderProps) => {
         </h1>
 
         <div
-          className={profile ? 'dashboard-header-top-actions' : 'dashboard-header-top-actions loading'}>
+          className="dashboard-header-top-actions">
 
           {props.policies?.get('projects').has('INSERT') && (
             <Button 
@@ -94,27 +89,20 @@ export const Header = (props: HeaderProps) => {
             onInvitationAccepted={props.onInvitationAccepted}
             onInvitationDeclined={props.onInvitationDeclined} 
             onError={props.onError} />
-
-          {profile ? (
-            <AccountActions i18n={props.i18n} profile={profile} />
-          ) : (
-            <button 
-              className="unstyled icon-only avatar-placeholder"
-              disabled>
-              <User
-                size={18} />
-            </button>
-          )}
+          
+          <AccountActions i18n={props.i18n} profile={props.me} />
         </div>
       </section>
 
       <section className="dashboard-header-bottom">
         <ul className="dashboard-header-tabs">
-          <li
-            className={filter === ProjectFilter.ALL ? 'active' : undefined}
-            onClick={() => onChangeFilter(ProjectFilter.ALL)}>
-            <button>{t['All']}</button>
-          </li>
+          {props.me.isOrgAdmin && (
+            <li
+              className={filter === ProjectFilter.ALL ? 'active' : undefined}
+              onClick={() => onChangeFilter(ProjectFilter.ALL)}>
+              <button>{t['All']}</button>
+            </li>
+          )}
 
           <li
             className={filter === ProjectFilter.MINE ? 'active' : undefined}

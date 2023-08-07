@@ -20,6 +20,16 @@
   line-height: 160%;
 }
 
+.dropdown-content .account-actions-meta .role-badge {
+  background-color: var(--orange-500);
+  border-radius: var(--border-radius);
+  display: block;
+  font-size: 0.675em;
+  line-height: 200%;
+  margin-top: 0.3em;
+  text-align: center;
+}
+
 .dropdown-content .account-actions-meta h1 {
   font-size: var(--font-small);
   font-weight: 500;

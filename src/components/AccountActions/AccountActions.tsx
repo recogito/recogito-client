@@ -50,6 +50,10 @@ export const AccountActions = (props: AccountProps) => {
               ) : (
                 <h1>{realname}</h1>
               )}
+
+              {profile.isOrgAdmin && (
+                <div className="role-badge">Organization Admin</div>
+              )}
             </section>
           )}
           

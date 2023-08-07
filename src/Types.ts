@@ -18,6 +18,8 @@ export type MyProfile = UserProfile & {
 
   email: string;
 
+  isOrgAdmin: boolean;
+
 }
 
 export interface Project {

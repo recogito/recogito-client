@@ -10,7 +10,7 @@ import {
   UserCircle, 
   UsersThree } from '@phosphor-icons/react';
 import { NavItem } from './NavItem';
-import type { Project, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 
 import './ProjectSidebar.css';
 
@@ -32,17 +32,21 @@ export interface ProjectSidebarProps {
 
   collapsed: boolean;
 
-  project?: Project;
+  project: ExtendedProjectData;
 
-  user?: UserProfile;
+  user: UserProfile;
 
 }
 
 export const ProjectSidebar = (props: ProjectSidebarProps) => {
   
-  const { active } = props;
+  const { active, user } = props;
 
   const { lang, t } = props.i18n;
+
+  // Find the admin group and check if I'm in there
+  const isAdmin = props.project.groups.find(g => 
+    g.name === 'Project Admins')?.members.some(m => m.user.id === user.id)
 
   const [open, setOpen] = useState(!props.collapsed);
 
@@ -74,14 +78,14 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 icon={Folders}
                 label={t['Documents']}
                 link={link()} />
-            </ul>
 
-            <ul>
-              <NavItem
-                active={active === 'collaboration'}
-                icon={UsersThree}
-                label={t['Collaboration']}
-                link={link('collaboration')} />
+              {isAdmin && (
+                <NavItem
+                  active={active === 'collaboration'}
+                  icon={UsersThree}
+                  label={t['Collaboration']}
+                  link={link('collaboration')} />
+              )}
 
               <NavItem
                 active={active === 'assignments'}
@@ -94,12 +98,14 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 icon={PuzzlePiece}
                 label={t['Add Ons']}
                 link={link('addons')} />
-
-              <NavItem
-                active={active === 'settings'}
-                icon={Sliders}
-                label={t['Settings']}
-                link={link('settings')} />
+              
+              {isAdmin && (
+                <NavItem
+                  active={active === 'settings'}
+                  icon={Sliders}
+                  label={t['Settings']}
+                  link={link('settings')} />
+              )}
             </ul>
           </li>
         </ul>
