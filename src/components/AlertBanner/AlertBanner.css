@@ -1,3 +1,7 @@
+.alert-banner-wrapper {
+  overflow-y: auto;
+}
+
 .alert-banner {
   background-color: orange;
   padding: 20px 60px 20px 30px;

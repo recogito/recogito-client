@@ -21,7 +21,7 @@ export const AlertBanner = (props: AlertBannerProps) => {
 
   const bannerTransition = useTransition([open], {
     from: { maxHeight: '0px' },
-    enter: { maxHeight: open ? '160px': '0px' },
+    enter: { maxHeight: open ? '260px': '0px' },
     leave: { maxHeight: '0px' },
     config: { 
       duration: 300,
