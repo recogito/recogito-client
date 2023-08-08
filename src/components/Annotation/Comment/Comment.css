@@ -19,6 +19,7 @@ li:first-child > .annotation-comment {
 }
 
 .annotation-comment p {
+  cursor: text;
   font-size: var(--font-tiny);
   line-height: 140%;
   margin: 0;

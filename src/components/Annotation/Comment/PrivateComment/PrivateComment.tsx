@@ -31,7 +31,7 @@ export const PrivateComment = (props: PrivateCommentProps) => {
         {comment.created && (
           <TimeAgo datetime={comment.created} locale={props.i18n.lang} />
         )}
-        <p>{comment.value}</p>
+        <p className="no-drag">{comment.value}</p>
       </div>
 
       <PrivateCommentActions 

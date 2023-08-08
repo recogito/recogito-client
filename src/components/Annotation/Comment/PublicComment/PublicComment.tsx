@@ -32,7 +32,7 @@ export const PublicComment = (props: CommentProps) => {
         creator={creator} 
         createdAt={comment.created} />
 
-      <p>{comment.value}</p>
+      <p className="no-drag">{comment.value}</p>
 
       {isMine && (
         <PublicCommentActions 
