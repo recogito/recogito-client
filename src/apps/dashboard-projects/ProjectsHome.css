@@ -41,7 +41,8 @@
   max-width: 62ch;
 }
 
-.dashboard-projects-empty .no-creator-rights svg {
+.dashboard-projects-empty .no-creator-rights svg,
+.swing {
   animation: swing 4s infinite;
   animation-delay: 1s;
   color: var(--font-dark);

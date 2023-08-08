@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Bell } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, MyProfile, Policies, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
@@ -112,9 +113,16 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     <ToastProvider>
       <div className="dashboard-projects-home">
         <AlertBanner id="welcome-to-the-beta">
-          <h1>Welcome to our Beta Test</h1>
+          <h1>Herzlich Willkommen zum Beta-Test!</h1>
           <p>
-            Lorem ipsum.
+            Ihre Projektliste ist im Moment wahrscheinlich noch leer. {invitations.length > 0 ? (
+              <> In ihren Benachrichtigungen <Bell className="text-bottom swing" size={16} /> wartet bereits eine Einladung zu unserem Musterprojekt.</>
+            ) : (
+              <> In ihren Benachrichtigungen <Bell className="text-bottom swing" size={16} /> sollte bereits eine Einladung zu unserem Musterprojekt auf Sie warten.</>
+            )} Dort finden Sie alles, was sie für den Start benötigen. 
+          </p>
+          <p>
+            Viel Spaß beim Erkunden - wir freuen uns auf Ihr Feedback!
           </p>
         </AlertBanner>
 

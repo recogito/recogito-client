@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FunnelSimple, Kanban, MagnifyingGlass, Plus, User } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getMyProfile } from '@backend/crud';
 import { initProject } from '@backend/helpers';
 import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
