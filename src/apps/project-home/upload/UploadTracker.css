@@ -29,6 +29,13 @@
   position: relative;
 }
 
+.upload-tracker li .upload-name {
+  overflow: hidden; 
+  padding-right: 40px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .upload-tracker li .upload-progress {
   color: var(--brighter-blue);
   padding: 0;
