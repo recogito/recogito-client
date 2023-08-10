@@ -62,7 +62,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       projects : 
     // Am I the creator?
     filter === ProjectFilter.MINE ? 
-      projects.filter(p => p.created_by.id === me.id) : 
+      projects.filter(p => p.created_by?.id === me.id) : 
     // Am I one of the users in the groups?
     filter === ProjectFilter.SHARED ? 
       projects.filter(({ created_by, groups }) => 
