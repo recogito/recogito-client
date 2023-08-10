@@ -1,3 +1,5 @@
+import { usePolicies } from '@backend/hooks/usePolicies';
+import { useAssignments } from '@backend/hooks/useAssignments';
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 
 import './ProjectAssignments.css';
@@ -13,6 +15,12 @@ interface ProjectAssignmentsProps {
 }
 
 export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
+
+  const { project } = props;
+
+  const policies = usePolicies(project.id);
+
+  const assignmnets = useAssignments(project);
 
   return (
     <div className="project-assignments">

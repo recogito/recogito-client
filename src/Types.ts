@@ -193,14 +193,6 @@ export interface TagDefinition {
 
   id: string;
 
-  created_at: string;
-
-  created_by?: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
-
   name: string;
 
   target_type: 'context' | 'document' | 'group' | 'layer' | 'profile' | 'project';
@@ -219,13 +211,9 @@ export interface Tag {
 
   created_by?: string;
 
-  updated_at?: string;
-
-  updated_by?: string;
-
-  tag_definition_id: string;
-
   target_id: string;
+
+  tag_definition?: TagDefinition;
 
 }
 
