@@ -2,7 +2,7 @@ import { Annotation } from '@components/Annotation';
 import type { Translations } from 'src/Types';
 import { 
   Annotation as Anno, 
-  OSDAnnotator,
+  AnnotoriousOpenSeadragonAnnotator,
   PresentUser, 
   useAnnotations,
   useAnnotator,
@@ -29,7 +29,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const me = useAnnotatorUser();
 
-  const anno = useAnnotator<OSDAnnotator>();
+  const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const { selected } = useSelection();
 
@@ -39,9 +39,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
     props.beforeSelect(a);
 
     if (a)
-      anno.selection.setSelected(a.id);
+      anno.state.selection.setSelected(a.id);
     else
-      anno.selection.clear();
+      anno.state.selection.clear();
   }
 
   // Shorthands
