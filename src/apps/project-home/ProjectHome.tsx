@@ -3,6 +3,7 @@ import { CloudArrowUp } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { usePolicies } from '@backend/hooks/usePolicies';
 import { archiveLayer, renameDocument } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
@@ -12,7 +13,6 @@ import { ProjectDescription } from './ProjectDescription';
 import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 
 import './ProjectHome.css';
-import { usePolicies } from '@backend/hooks/usePolicies';
 
 export interface ProjectHomeProps {
 
