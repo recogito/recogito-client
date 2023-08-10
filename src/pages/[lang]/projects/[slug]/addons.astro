@@ -25,7 +25,7 @@ if (project.error || !project.data) {
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 ---
-<ProjectLayout active="addons" user={profile.data} project={project.data}>
+<ProjectLayout active="Add Ons" user={profile.data} project={project.data}>
   <h1>Add Ons</h1>
 </ProjectLayout>
 

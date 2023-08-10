@@ -37,7 +37,7 @@ if (documents.error) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 ---
-<ProjectLayout active="documents" user={user.data} project={project.data}>
+<ProjectLayout active="Documents" user={user.data} project={project.data}>
   <ProjectHome 
     client:only
     i18n={i18n}

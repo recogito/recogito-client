@@ -74,34 +74,34 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 link={`/${lang}/projects`} />
 
               <NavItem 
-                active={active === 'documents'}
+                active={active === 'Documents'}
                 icon={Folders}
                 label={t['Documents']}
                 link={link()} />
 
               {isAdmin && (
                 <NavItem
-                  active={active === 'collaboration'}
+                  active={active === 'Collaboration'}
                   icon={UsersThree}
                   label={t['Collaboration']}
                   link={link('collaboration')} />
               )}
 
               <NavItem
-                active={active === 'assignments'}
+                active={active === 'Assignments'}
                 icon={GraduationCap}
                 label={t['Assignments']}
                 link={link('assignments')} />
 
               <NavItem
-                active={active === 'addons'}
+                active={active === 'Add Ons'}
                 icon={PuzzlePiece}
                 label={t['Add Ons']}
                 link={link('addons')} />
               
               {isAdmin && (
                 <NavItem
-                  active={active === 'settings'}
+                  active={active === 'Settings'}
                   icon={Sliders}
                   label={t['Settings']}
                   link={link('settings')} />

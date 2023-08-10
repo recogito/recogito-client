@@ -31,7 +31,7 @@ if (project.error || invitations.error) {
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 ---
-<ProjectLayout active="collaboration" user={profile.data} project={project.data}>
+<ProjectLayout active="Collaboration" user={profile.data} project={project.data}>
   <ProjectCollaboration
     client:load
     i18n={i18n}
