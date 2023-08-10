@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
@@ -5,6 +6,7 @@ import { Button } from '@components/Button';
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 
 import './ProjectAssignments.css';
+import { AssignmentWizard } from './Wizard';
 
 interface ProjectAssignmentsProps {
 
@@ -19,6 +21,8 @@ interface ProjectAssignmentsProps {
 export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const { project } = props;
+
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   const policies = usePolicies(project.id);
 
@@ -35,9 +39,19 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       <h1>Assignments</h1>
 
       {canCreate && (
-        <Button className="primary">
-          <GraduationCap size={20} /> <span>New Assignment</span>
-        </Button>
+        <>
+          <Button 
+            className="primary"
+            onClick={() => setWizardOpen(true)}>
+            <GraduationCap size={20} /> <span>New Assignment</span>
+          </Button>
+
+          {wizardOpen && (
+            <AssignmentWizard
+              i18n={props.i18n} 
+              onCancel={() => setWizardOpen(false)} />
+          )}
+        </>
       )}
 
       {assignments ? assignments.length === 0 ? (
