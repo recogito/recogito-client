@@ -22,6 +22,8 @@ interface HeaderProps {
 
   filter: ProjectFilter;
 
+  counts: [number, number, number];
+
   onChangeFilter(f: ProjectFilter): void;
 
   onProjectCreated(project: ExtendedProjectData): void;
@@ -39,6 +41,8 @@ export const Header = (props: HeaderProps) => {
   const { t } = props.i18n;
   
   const { filter, onChangeFilter } = props;
+
+  const [all, mine, shared] = props.counts;
 
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
@@ -100,6 +104,11 @@ export const Header = (props: HeaderProps) => {
               className={filter === ProjectFilter.ALL ? 'active' : undefined}
               onClick={() => onChangeFilter(ProjectFilter.ALL)}>
               <button>{t['All']}</button>
+              
+              <span 
+                className={all === 0 ? 'badge disabled' : 'badge'}>
+                {all}
+              </span>
             </li>
           )}
 
@@ -107,12 +116,22 @@ export const Header = (props: HeaderProps) => {
             className={filter === ProjectFilter.MINE ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.MINE)}>
             <button>{t['My Projects']}</button>
+
+            <span 
+              className={mine === 0 ? 'badge disabled' : 'badge'}>
+              {mine}
+            </span>
           </li>
 
           <li
             className={filter === ProjectFilter.SHARED ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.SHARED)}>
             <button>{t['Shared with me']}</button>
+
+            <span 
+              className={shared === 0 ? 'badge disabled' : 'badge'}>
+              {shared}
+            </span>
           </li>
         </ul>
 
