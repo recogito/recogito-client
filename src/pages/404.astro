@@ -2,32 +2,14 @@
 import { getTranslations } from '@i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
-import '@themes/default/index.css';
-
 const { t } = getTranslations(Astro.request, 'error');
 ---
 <BaseLayout title="INeedAName | Not Found">
-  <div class="container">
+  <div class="container" style="align-items: center; bottom: 0; display: flex; justify-content: center; position: absolute; top: 0; width: 100%;">
     <div class="column">
-      <h1>404 Not Found</h1>
-      <p>{t['Nothing to see here.']}</p>
+      <h1 style="margin: 0; padding: 0.2em 0;">404 Not Found</h1>
+      <p style="margin: 0.2em 0">{t['Nothing to see here.']}</p>
     </div>
   </div>
 </BaseLayout>
 
-<style>
-  .container {
-    align-items: center;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-
-  .container * {
-    margin: 0;
-    padding: 0.2em 0;
-  }
-</style>
