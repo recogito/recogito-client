@@ -2,6 +2,8 @@
 import { getTranslations } from '@i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
+import '@themes/default/index.css';
+
 const { t } = getTranslations(Astro.request, 'error');
 ---
 <BaseLayout title="INeedAName | Not Found">
