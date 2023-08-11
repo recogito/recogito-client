@@ -66,7 +66,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     // Am I one of the users in the groups?
     filter === ProjectFilter.SHARED ? 
       projects.filter(({ created_by, groups }) => 
-        groups.find(({ members }) => members.find(m => m.user.id === me.id) && me.id !== created_by.id)) : 
+        groups.find(({ members }) => members.find(m => m.user.id === me.id) && me.id !== created_by?.id)) : 
     [];
 
   const onProjectCreated = (project: ExtendedProjectData) =>
