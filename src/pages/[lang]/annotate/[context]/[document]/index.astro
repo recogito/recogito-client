@@ -28,7 +28,11 @@ const document = await getDocumentInContext(supabase, documentId, contextId);
 if (document.error || !document.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { headers: error.headers, status: 404, statusText: 'Not Found' }); 
+  return new Response(error.body, { 
+    headers: { 'Content-Type': 'text/html;charset=utf-8' },
+    status: 404, 
+    statusText: 'Not Found' 
+  }); 
 }
 
 // Compute realtime channel key
