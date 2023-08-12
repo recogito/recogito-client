@@ -1,5 +1,4 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import { X } from '@phosphor-icons/react';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { Invitation, Translations } from 'src/Types';
 
