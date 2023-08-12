@@ -6,5 +6,7 @@
   "Invitation": "${sender} lädt dich zum Projekt <strong>${project}</strong> ein.",
 
   "Accept": "Annehmen",
-  "Ignore": "Ignorieren"
+  "Ignore": "Ignorieren",
+
+  "Confirmed": "<strong>${project}</strong> wurde Deinem Dashboard hinzugefügt. Du findest es unter 'Alle' und 'Mit mir geteilt'."
 }

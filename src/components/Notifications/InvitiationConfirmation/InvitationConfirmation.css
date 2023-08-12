@@ -5,8 +5,12 @@
   width: 520px;
 }
 
+.invitation-confirmation .dialog-description {
+  font-size: var(--font-small);
+}
+
 .invitation-confirmation .success-icon {
-  margin: 60px 0 40px 0;
+  margin: 50px 0 40px 0;
 }
 
 img.graphic-invitation-accepted {
