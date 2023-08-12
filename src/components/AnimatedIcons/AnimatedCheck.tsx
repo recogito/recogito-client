@@ -1,23 +1,32 @@
-// https://codepen.io/wallaceho/pen/vxLbRO
+// Based on https://codepen.io/wallaceho/pen/vxLbRO
 import './AnimatedIcons.css';
 
-export const AnimatedCheck = () => {
+interface AnimatedCheckProps {
+
+  size: number;
+
+}
+
+export const AnimatedCheck = (props: AnimatedCheckProps) => {
+
+  const { size } = props;
 
   return (
-  	<div className="animated-icon success">
-      <svg xmlns="http://www.w3.org/2000/svg" width="154px" height="154px">  
-        <g fill="none" stroke="#22AE73" stroke-width="2"> 
+  	<div className="animated-icon check">
+      <svg viewBox="0 0 154 154" width={`${size}px`} height={`${size}px`} >  
+        <g fill="none"> 
           <circle 
+            className="outline"
             cx="77" cy="77" r="72" 
             style={{ strokeDasharray: '480px, 480px', strokeDashoffset: '960px' }} />
 
           <circle 
-            id="colored" 
+            className="fill" 
             fill="#22AE73" cx="77" cy="77" r="72" 
             style={{ strokeDasharray: '480px, 480px', strokeDashoffset: '960px'}} />
 
           <polyline 
-            className="st0" stroke="#fff" stroke-width="10" 
+            stroke="#fff" stroke-width="10" 
             points="43.5,77.8 63.7,97.9 112.2,49.4 " 
             style={{ strokeDasharray: '100px, 100px', strokeDashoffset: '200px'}} />   
         </g> 
