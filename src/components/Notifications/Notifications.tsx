@@ -32,7 +32,7 @@ export const Notifications = (props: NotificationsProps) => {
 
   const count = unhandled.length;
 
-  const [showConfirmation, setShowConfirmation] = useState<Invitation | undefined>({} as unknown as Invitation);
+  const [showConfirmation, setShowConfirmation] = useState<Invitation | undefined>(undefined);
 
   const onAccepted = (invitation: Invitation) => (project: ExtendedProjectData) => {    
     setShowConfirmation(invitation);

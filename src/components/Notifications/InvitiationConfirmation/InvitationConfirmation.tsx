@@ -17,7 +17,7 @@ interface InvitationConfirmationProps {
 
 export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
 
-  const { invitation }  = props;
+  const { invitation, i18n }  = props;
 
   return (
     <Dialog.Root open={true} onOpenChange={props.onClose}>
@@ -30,8 +30,7 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
           </div>
 
           <Dialog.Description className="dialog-description">
-            <strong>{invitation.project_name}</strong> has been added to your Dashboard.
-            You will find it under 'All' or 'Shared with me'.
+            <span dangerouslySetInnerHTML={{__html: i18n.t['Confirmed'].replace('${project}', invitation.project_name!)}} />
           </Dialog.Description>
 
           <img className="graphic-invitation-accepted" src="/img/graphic-invitation-accepted.png" />

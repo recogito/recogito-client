@@ -6,5 +6,7 @@
   "Invitation": "${sender} invites you to join <strong>${project}</strong>.",
 
   "Accept": "Accept",
-  "Ignore": "Ignore"
+  "Ignore": "Ignore",
+
+  "Confirmed": "<strong>${project}</strong> has been added to your Dashboard. You will find it under 'All' and 'Shared with me'."
 }
