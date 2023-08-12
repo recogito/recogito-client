@@ -3,6 +3,8 @@ import { X } from '@phosphor-icons/react';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { Invitation, Translations } from 'src/Types';
 
+import './InvitationConfirmation.css';
+
 interface InvitationConfirmationProps {
 
   i18n: Translations;
@@ -22,20 +24,20 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
 
-        <Dialog.Content className="invite-users dialog-content">
+        <Dialog.Content className="invitation-confirmation dialog-content">
+          <div className="success-icon">
+            <AnimatedCheck size={36} />
+          </div>
 
           <Dialog.Description className="dialog-description">
-            <AnimatedCheck />
-            You're in! <strong>{invitation.project_name}</strong> has been added to your Dashboard.
+            <strong>{invitation.project_name}</strong> has been added to your Dashboard.
             You will find it under 'All' or 'Shared with me'.
           </Dialog.Description>
 
-          <img className="styled-graphic" src="/img/graphic-accepted-invitation.png" />
-
-          <Dialog.Close asChild>
-            <button className="dialog-close icon-only unstyled" aria-label="Close">
-              <X size={16} />
-            </button>
+          <img className="graphic-invitation-accepted" src="/img/graphic-invitation-accepted.png" />
+          
+          <Dialog.Close className="close" asChild>
+            <button className="primary">Ok</button>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
