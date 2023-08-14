@@ -7,6 +7,7 @@ button.unstyled {
   cursor: pointer;
   font-size: var(--font-small);
   margin: 0;
+  min-width: auto;
   padding: 0;
 }
 
