@@ -29,6 +29,6 @@ if (error)
 // Regular expression to match single newlines
 const regex = /([^\r\n])\r?\n([^\r\n])/g;
 
-const content = (await data.text()).replace(regex, '$1 $2');;
+const content = (await data.text());
 ---
 {content.trim()}
