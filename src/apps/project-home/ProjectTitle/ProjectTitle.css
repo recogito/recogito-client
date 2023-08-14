@@ -1,0 +1,8 @@
+.project-title .tiny-save-indicator {
+  margin-left: 0;
+  vertical-align: text-bottom;
+}
+
+.project-title:hover .tiny-save-indicator {
+  margin-left: 5px;
+}

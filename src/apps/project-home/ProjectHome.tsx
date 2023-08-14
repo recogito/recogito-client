@@ -4,11 +4,11 @@ import type { FileRejection } from 'react-dropzone';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getProjectPolicies } from '@backend/helpers';
-import { archiveLayer, renameDocument, updateProject } from '@backend/crud';
+import { archiveLayer, renameDocument } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
-import { EditableText } from '@components/EditableText';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
+import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
 import type { Policies, DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 
@@ -100,13 +100,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     }]);
   }
 
-  const onRenameProject = (name: string) => {
-    updateProject(supabase, { id: project.id, name })
-      .then(response => {
-        console.log(response);
-      });
-  }
-
   /**
    * When 'deleting a document' we're actually just archiving
    * all the layers on this document in this project!
@@ -178,11 +171,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     <div className="project-home">
       <ToastProvider>
         <div>
-          <h1>
-            <EditableText 
-              value={project.name} 
-              onSubmit={onRenameProject} />
-          </h1>
+          <ProjectTitle project={project} />
 
           <ProjectDescription 
             i18n={props.i18n}
