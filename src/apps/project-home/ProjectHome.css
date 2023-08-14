@@ -7,7 +7,21 @@
 }
 
 .project-home h1 {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.4em;
+}
+
+.project-home h1 > span {
+  display: inline-block;
+  border: 1px dashed transparent;
+  border-radius: var(--border-radius);
+  margin: 0 -8px;
+  padding: 2px 8px;
+}
+
+.project-home h1 > span:hover {
+  background-color: #e6eaf1;
+  border-color: var(--gray-400);
+  cursor: pointer;
 }
 
 .project-home-grid-wrapper {
