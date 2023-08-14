@@ -42,7 +42,7 @@
   display: block;
   display: -webkit-box;
   font-weight: 400;
-  height: 3.2em;
+  max-height: 3.2em;
   line-clamp: 2;
   overflow: hidden;
   overflow-wrap: anywhere;
