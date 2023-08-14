@@ -1,3 +1,4 @@
+# Modified from https://docs.astro.build/en/recipes/docker/
 FROM node:lts AS runtime
 WORKDIR /app
 
