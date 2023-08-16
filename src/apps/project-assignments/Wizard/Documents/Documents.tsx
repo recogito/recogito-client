@@ -1,7 +1,7 @@
-import { useState } from 'react';
 import { Article, CheckSquare, Image, Square } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { DocumentInProject, Translations } from 'src/Types';
+import { useSelectableRows } from '../useSelectableRows';
 
 import './Document.css';
 
@@ -21,23 +21,12 @@ export const Documents = (props: DocumentsProps) => {
 
   const { documents } = props;
 
-  const [selected, setSelected] = useState<string[]>([]);
-
-  const isAllSelected = selected.length === documents.length;
-
-  const onToggleDocument = (document: DocumentInProject, checked: Checkbox.CheckedState) => {
-    if (checked)
-      setSelected(selected => [...selected, document.id])
-    else 
-      setSelected(selected => selected.filter(id => id !== document.id));
-  }
-
-  const onToggleAll = (checked: Checkbox.CheckedState) => {
-    if (checked)
-      setSelected(documents.map(p => p.id));
-    else
-      setSelected([]);    
-  }
+  const { 
+    selected, 
+    toggleSelected, 
+    toggleAll, 
+    isAllSelected 
+  } = useSelectableRows(documents);
 
   return (
     <>
@@ -57,7 +46,7 @@ export const Documents = (props: DocumentsProps) => {
                   <Checkbox.Root 
                     className="checkbox-root"
                     checked={isAllSelected}
-                    onCheckedChange={onToggleAll}>
+                    onCheckedChange={toggleAll}>
                     
                     <Checkbox.Indicator>
                       <CheckSquare size={20} weight="fill" /> 
@@ -80,7 +69,7 @@ export const Documents = (props: DocumentsProps) => {
                     <Checkbox.Root 
                       className="checkbox-root"
                       checked={selected.includes(document.id)}
-                      onCheckedChange={checked => onToggleDocument(document, checked)}>
+                      onCheckedChange={checked => toggleSelected(document, checked)}>
 
                       <Checkbox.Indicator>
                         <CheckSquare size={20} weight="fill" />  

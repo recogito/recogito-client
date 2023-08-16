@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
-import type { DocumentInProject, Translations } from 'src/Types';
+import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 import { Documents } from './Documents';
 import { Team } from './Team';
 import { Instructions } from './Instructions';
@@ -11,6 +11,8 @@ import './AssignmentWizard.css';
 interface AssignmentWizardProps {
 
   i18n: Translations;
+
+  project: ExtendedProjectData;
 
   documents: DocumentInProject[];
 
@@ -75,6 +77,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <Tabs.Content className="tabs-content" value={STEPS[1]}>
               <Team 
                 i18n={props.i18n}
+                project={props.project}
                 onCancel={props.onCancel}
                 onBack={onBack}
                 onNext={onNext} />

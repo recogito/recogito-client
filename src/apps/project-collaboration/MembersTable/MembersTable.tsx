@@ -30,7 +30,6 @@ interface MembersTableProps {
 }
 
 // Helper to flatten the list of groups to the list of users
-// TODO sort by 'member since'
 const getMembers = (groups: ProjectGroup[]): TeamMember[] => groups
   .reduce((members, group) => (
       [

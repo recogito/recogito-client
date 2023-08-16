@@ -52,6 +52,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           {wizardOpen && (
             <AssignmentWizard
               i18n={props.i18n} 
+              project={props.project}
               documents={props.documents}
               onCancel={() => setWizardOpen(false)} />
           )}

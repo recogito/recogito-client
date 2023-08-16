@@ -42,5 +42,4 @@ export const Instructions = (props: InstructionsProps) => {
     </>
   )
 
-
 }
