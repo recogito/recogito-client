@@ -1,13 +1,8 @@
-<<<<<<< HEAD
 import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
-=======
-import { usePolicies } from '@backend/hooks/usePolicies';
-import { useAssignments } from '@backend/hooks/useAssignments';
->>>>>>> 44dd8e2 (Cleanup + some preparatory scaffolding for Assignments)
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 
 import './ProjectAssignments.css';
@@ -27,7 +22,6 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const { project } = props;
 
-<<<<<<< HEAD
   const [wizardOpen, setWizardOpen] = useState(false);
 
   const policies = usePolicies(project.id);
@@ -39,11 +33,6 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
     policies?.get('contexts').has('INSERT');
 
   const assignments = useAssignments(project);
-=======
-  const policies = usePolicies(project.id);
-
-  const assignmnets = useAssignments(project);
->>>>>>> 44dd8e2 (Cleanup + some preparatory scaffolding for Assignments)
 
   return (
     <div className="project-assignments">
