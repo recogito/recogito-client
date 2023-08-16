@@ -25,34 +25,51 @@ interface Member {
 
   id: string;
 
+  name: string;
+
   user: UserProfile;
 
   since: string;
 
 }
 
+type Field = 'name' | 'since';
+
 interface Sorting {
 
-  field: string;
+  field: Field;
 
   ascending: boolean;
 
 }
 
 // Flattens list of groups to the list of members, sorted by 'since'
-const getMembers = (groups: ProjectGroup[]): Member[] => groups
+const getMembers = (groups: ProjectGroup[], sorting?: Sorting): Member[] => groups
   .reduce((members, group) => ([
     ...members, 
-    ...group.members.map(({ user, since }) => ({ id: user.id, user, since }))
+    ...group.members.map(({ user, since }) => 
+      ({ 
+        id: user.id, 
+        name: user.nickname!,  // TODO just a hack for now
+        user, 
+        since 
+      }))
   ]), [] as Member[])
-  .sort((a, b) => 
-    (a.since < b.since) ? -1 : (a.since > b.since) ? 1 : 0);
+  .sort((a, b) => {
+    if (sorting) {
+      const { field } = sorting;
+      const order = sorting.ascending ? -1 : 1;
+      return (a[field] < b[field]) ? -order : (a[field] > b[field]) ? order : 0;
+    } else {
+      return 0;
+    }
+  });
 
 export const Team = (props: TeamProps) => {
 
-  const members = getMembers(props.project.groups);
+  const [sorting, setSorting] = useState<Sorting | undefined>({ field: 'since', ascending: true });
 
-  const [sorting, setSorting] = useState<Sorting | undefined>();
+  const members = getMembers(props.project.groups, sorting);
 
   const { 
     selected, 
@@ -61,14 +78,9 @@ export const Team = (props: TeamProps) => {
     isAllSelected 
   } = useSelectableRows(members);
 
-  const sortBy = (field: string) => () => setSorting(sorting => { 
-    // Cycle through sort states - ascending/descending/none
+  const sortBy = (field: Field) => () => setSorting(sorting => { 
     if (sorting?.field === field) {
-      if (sorting.ascending) {
-        return { field, ascending: false };
-      } else {
-        return undefined;
-      }
+      return { field, ascending: !sorting.ascending };
     } else {
       return { field, ascending: true };
     }
