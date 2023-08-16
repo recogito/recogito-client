@@ -1,0 +1,82 @@
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--font-tiny);
+  width: 100%;
+}
+
+table :is(td, th) {
+  background-color: #fff;
+}
+
+table tr:hover :is(td, th) {
+  background-color: var(--gray-50);
+}
+
+table thead th {
+  border-color: var(--gray-200);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  box-sizing: border-box;
+  color: var(--font-light);
+  font-weight: 400;
+  height: 40px;
+  padding: 0.2em 0.5em;
+  text-align: left;
+}
+
+table .actions {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0.5em;
+}
+
+table tbody td {
+  border-color: var(--gray-200);
+  border-style: solid;
+  border-width: 1px 0 0 0;
+  color: var(--font-dark);
+  height: 40px;
+  padding: 0 0.5em;
+  white-space: nowrap;
+}
+
+table thead th:first-child {
+  border-radius: var(--border-radius) 0 0 0;
+  border-width: 1px 0 0 1px;
+  padding-left: 0.8em;
+}
+
+table thead th:last-child {
+  border-radius: 0 var(--border-radius) 0 0;
+  border-width: 1px 1px 0 0;
+}
+
+table thead th:first-child,
+table tbody td:first-child  {
+  border-width: 1px 0 0 1px;
+  color: var(--font-light);
+  padding-left: 0.8em;
+}
+
+table thead th:first-child [data-state='checked'] ,
+table tbody td:first-child [data-state='checked'] {
+  color: var(--font-dark);
+}
+
+table tbody td:last-child {
+  border-width: 1px 1px 0 0;
+}
+
+table tbody tr:last-child td {
+  border-bottom: 1px solid var(--gray-200);
+}
+
+table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 var(--border-radius);
+}
+  
+table tbody tr:last-child td:last-child {
+  border-radius: 0 0 var(--border-radius) 0;
+}

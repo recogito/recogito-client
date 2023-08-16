@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeSlash } from '@phosphor-icons/react';
+import { CheckSquare, Square } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { DocumentInProject, Translations } from 'src/Types';
 
@@ -58,11 +58,11 @@ export const Documents = (props: DocumentsProps) => {
                     onCheckedChange={onToggleAll}>
                     
                     <Checkbox.Indicator>
-                      <Eye size={20} /> 
+                      <CheckSquare size={20} weight="fill" /> 
                     </Checkbox.Indicator>
 
                     {isNoneSelected && (
-                      <span><EyeSlash size={20} /></span>
+                      <span><Square size={20} /></span>
                     )}
                   </Checkbox.Root>
                 </th>
@@ -82,11 +82,11 @@ export const Documents = (props: DocumentsProps) => {
                       onCheckedChange={checked => onToggleDocument(document, checked)}>
 
                       <Checkbox.Indicator>
-                        <Eye size={20} /> 
+                        <CheckSquare size={20} weight="fill" />  
                       </Checkbox.Indicator>
 
                       {!selected.includes(document.id) && (
-                        <span><EyeSlash size={20} /></span>
+                        <span><Square size={20} /></span>
                       )}
                     </Checkbox.Root>
                   </td>
