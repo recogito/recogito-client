@@ -1,4 +1,4 @@
-import { CaretUpDown, CheckSquare, Square } from '@phosphor-icons/react';
+import { CaretDown, CaretUp, CaretUpDown, CheckSquare, Square } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { TimeAgo } from '@components/TimeAgo';
 import type { ExtendedProjectData, ProjectGroup, Translations, UserProfile } from 'src/Types';
@@ -74,6 +74,20 @@ export const Team = (props: TeamProps) => {
     }
   });
 
+  // Returns the proper sort icon for the given field and
+  // current sorting
+  const sortIcon = (field: string) => (
+    sorting?.field === field ? ( 
+      sorting.ascending ? (
+        <CaretDown size={12} weight="bold" />
+      ) : (
+        <CaretUp size={12} weight="bold" />
+      )
+    ) : (
+      <CaretUpDown size={12} />
+    )
+  );
+
   return (
     <>
       <div className="row tab-team">
@@ -106,13 +120,13 @@ export const Team = (props: TeamProps) => {
 
                 <th>
                   <button onClick={sortBy('name')}>
-                    Name <CaretUpDown size={12} />
+                    Name {sortIcon('name')}
                   </button>
                 </th>
 
                 <th>
                   <button onClick={sortBy('since')}>
-                    Member since <CaretUpDown size={12} />
+                    Member since {sortIcon('since')}
                   </button>
                 </th>
               </tr>
