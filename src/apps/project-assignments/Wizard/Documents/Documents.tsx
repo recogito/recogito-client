@@ -9,6 +9,8 @@ interface DocumentsProps {
 
   documents: DocumentInProject[];
 
+  onCancel(): void;
+
   onNext(): void;
 
 }
@@ -100,7 +102,9 @@ export const Documents = (props: DocumentsProps) => {
       </div>
 
       <section className="wizard-nav">
-        <button>Cancel</button>
+        <button
+          onClick={props.onCancel}>Cancel</button>
+
         <button 
           className="primary"
           onClick={props.onNext}>Next</button>

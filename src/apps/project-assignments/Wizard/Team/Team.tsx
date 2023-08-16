@@ -4,6 +4,8 @@ interface TeamProps {
 
   i18n: Translations;
 
+  onCancel(): void;
+
   onBack(): void;
 
   onNext(): void;
@@ -28,8 +30,12 @@ export const Team = (props: TeamProps) => {
       </div>
 
       <section className="wizard-nav">
-        <button>Cancel</button>
-        <button onClick={props.onBack}>Back</button>
+        <button
+          onClick={props.onCancel}>Cancel</button>
+
+        <button
+          onClick={props.onBack}>Back</button>
+
         <button 
           className="primary"
           onClick={props.onNext}>Next</button>

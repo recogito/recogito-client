@@ -6,6 +6,8 @@ interface InstructionsProps {
 
   i18n: Translations;
 
+  onCancel(): void;
+
   onBack(): void;
 
 }
@@ -18,7 +20,7 @@ export const Instructions = (props: InstructionsProps) => {
         <section className="column">
           <h1>Step 3</h1>
           <p>
-            Provide additional instructions to the team (optional).
+            Write an additional message or assignment instructions for the team (optional).
           </p>
         </section>
 
@@ -28,8 +30,12 @@ export const Instructions = (props: InstructionsProps) => {
       </div>
 
       <section className="wizard-nav">
-        <button>Cancel</button>
-        <button onClick={props.onBack}>Back</button>
+        <button
+          onClick={props.onCancel}>Cancel</button>
+  
+        <button 
+          onClick={props.onBack}>Back</button>
+
         <button 
           className="primary">Done</button>
       </section>
