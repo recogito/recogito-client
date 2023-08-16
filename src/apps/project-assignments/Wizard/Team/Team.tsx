@@ -1,8 +1,11 @@
-import { CheckSquare, Square } from '@phosphor-icons/react';
+import { CaretUpDown, CheckSquare, Square } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { TimeAgo } from '@components/TimeAgo';
 import type { ExtendedProjectData, ProjectGroup, Translations, UserProfile } from 'src/Types';
 import { useSelectableRows } from '../useSelectableRows';
+
+import './Team.css';
+import { useState } from 'react';
 
 interface TeamProps {
 
@@ -28,6 +31,14 @@ interface Member {
 
 }
 
+interface Sorting {
+
+  field: string;
+
+  ascending: boolean;
+
+}
+
 // Flattens list of groups to the list of members, sorted by 'since'
 const getMembers = (groups: ProjectGroup[]): Member[] => groups
   .reduce((members, group) => ([
@@ -41,12 +52,27 @@ export const Team = (props: TeamProps) => {
 
   const members = getMembers(props.project.groups);
 
+  const [sorting, setSorting] = useState<Sorting | undefined>();
+
   const { 
     selected, 
     toggleSelected, 
     toggleAll, 
     isAllSelected 
   } = useSelectableRows(members);
+
+  const sortBy = (field: string) => () => setSorting(sorting => { 
+    // Cycle through sort states - ascending/descending/none
+    if (sorting?.field === field) {
+      if (sorting.ascending) {
+        return { field, ascending: false };
+      } else {
+        return undefined;
+      }
+    } else {
+      return { field, ascending: true };
+    }
+  });
 
   return (
     <>
@@ -79,11 +105,15 @@ export const Team = (props: TeamProps) => {
                 </th>
 
                 <th>
-                  Name
+                  <button onClick={sortBy('name')}>
+                    Name <CaretUpDown size={12} />
+                  </button>
                 </th>
 
                 <th>
-                  Member since
+                  <button onClick={sortBy('since')}>
+                    Member since <CaretUpDown size={12} />
+                  </button>
                 </th>
               </tr>
             </thead>

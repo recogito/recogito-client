@@ -22,7 +22,19 @@ table thead th {
   font-weight: 400;
   height: 40px;
   padding: 0.2em 0.5em;
+  position: relative;
   text-align: left;
+}
+
+table thead th button {
+  all: unset;
+  cursor: pointer;
+  display: inline-block;
+  width: 100%;
+}
+
+table thead th button:hover:not(:disabled) {
+  box-shadow: none;
 }
 
 table .actions {
