@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { CheckSquare, Square } from '@phosphor-icons/react';
+import { Article, CheckSquare, Image, Square } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { DocumentInProject, Translations } from 'src/Types';
+
+import './Document.css';
 
 interface DocumentsProps {
 
@@ -21,7 +23,7 @@ export const Documents = (props: DocumentsProps) => {
 
   const [selected, setSelected] = useState<string[]>([]);
 
-  const isNoneSelected = selected.length === 0;
+  const isAllSelected = selected.length === documents.length;
 
   const onToggleDocument = (document: DocumentInProject, checked: Checkbox.CheckedState) => {
     if (checked)
@@ -54,22 +56,21 @@ export const Documents = (props: DocumentsProps) => {
                 <th>
                   <Checkbox.Root 
                     className="checkbox-root"
-                    checked={!isNoneSelected}
+                    checked={isAllSelected}
                     onCheckedChange={onToggleAll}>
                     
                     <Checkbox.Indicator>
                       <CheckSquare size={20} weight="fill" /> 
                     </Checkbox.Indicator>
 
-                    {isNoneSelected && (
+                    {!isAllSelected && (
                       <span><Square size={20} /></span>
                     )}
                   </Checkbox.Root>
                 </th>
                 
-                <th>
-                  <strong>All</strong>
-                </th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -89,6 +90,15 @@ export const Documents = (props: DocumentsProps) => {
                         <span><Square size={20} /></span>
                       )}
                     </Checkbox.Root>
+                  </td>
+
+                  <td>
+                    {/* Temporary hack - for now, everything that has a content type is a text ! */}
+                    {document.content_type ? (
+                      <Article size={16} />
+                    ) :(
+                      <Image size={16} />
+                    )}
                   </td>
 
                   <td>
