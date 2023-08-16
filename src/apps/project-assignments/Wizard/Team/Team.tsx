@@ -14,7 +14,7 @@ export const Team = (props: TeamProps) => {
 
   return (
     <>
-      <div className="row">
+      <div className="row tab-team">
         <section className="column">
           <h1>Step 2</h1>
           <p>

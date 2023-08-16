@@ -37,7 +37,7 @@ export const Documents = (props: DocumentsProps) => {
 
   return (
     <>
-      <div className="row">
+      <div className="row tab-documents">
         <section className="column">
           <h1>Step 1</h1>
           <p>

@@ -1,23 +1,38 @@
 .assignment-wizard {
-  max-width: 920px;
+  max-width: 780px;
   padding: 0;
 }
 
 .assignment-wizard .tabs-content .row {
   display: flex;
+  padding: 10px 0;
 }
 
 .assignment-wizard .tabs-content section.column {
-  padding: 20px;
+  padding: 30px;
 }
 
 .assignment-wizard .tabs-content section.column:first-child {
   flex: 30%;
+  padding: 30px 40px 30px 30px;
 }
+
+.assignment-wizard .tabs-content section.column:last-child {
+  flex: 70%;
+}
+
+.assignment-wizard .tabs-content h1 { 
+  margin: 0;
+  font-size: 1em;
+}
+
+.assignment-wizard .tabs-content p {
+  font-size: var(--font-small);
+} 
 
 .assignment-wizard .tabs-content .wizard-nav {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
 }

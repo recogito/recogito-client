@@ -16,6 +16,7 @@
   cursor: pointer;
   display: flex;
   flex: 1;
+  font-weight: 500;
   height: 45px;
   justify-content: center;
   padding: 0 20px;

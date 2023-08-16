@@ -46,15 +46,15 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             onValueChange={value => setStep(STEPS.indexOf(value))}>
             <Tabs.List className="tabs-list" aria-label="Create a new Assignment">
               <Tabs.Trigger className="tabs-trigger" value={STEPS[0]}>
-                Documents
+                1. Documents
               </Tabs.Trigger>
 
               <Tabs.Trigger className="tabs-trigger" value={STEPS[1]}>
-                Team
+                2. Team
               </Tabs.Trigger>
 
               <Tabs.Trigger className="tabs-trigger" value={STEPS[2]}>
-                Instructions
+                3. Instructions
               </Tabs.Trigger>
             </Tabs.List>
 

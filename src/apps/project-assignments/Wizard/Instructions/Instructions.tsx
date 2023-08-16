@@ -1,5 +1,7 @@
 import type { Translations } from 'src/Types';
 
+import './Instructions.css';
+
 interface InstructionsProps {
 
   i18n: Translations;
@@ -12,7 +14,7 @@ export const Instructions = (props: InstructionsProps) => {
 
   return (
     <>
-      <div className="row">
+      <div className="row tab-instructions">
         <section className="column">
           <h1>Step 3</h1>
           <p>
@@ -21,7 +23,7 @@ export const Instructions = (props: InstructionsProps) => {
         </section>
 
         <section className="column">
-
+          <textarea rows={10} />
         </section>
       </div>
 
