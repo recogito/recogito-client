@@ -96,7 +96,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
         onKeyDownCapture={onKeyDown} />
 
       <button 
-        className="send"
+        className="send icon-only"
         onClick={onSubmit}>
         <ArrowRight size={18} />
       </button>
