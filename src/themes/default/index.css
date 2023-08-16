@@ -10,6 +10,7 @@
 @import './mixins/index.css';
 @import './popover/index.css';
 @import './select/index.css';
+@import './tabs/index.css';
 @import './toast/index.css';
 @import './tooltip/index.css';
 

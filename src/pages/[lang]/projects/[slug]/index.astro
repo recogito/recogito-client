@@ -12,16 +12,13 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
 
-const user = await getMyProfile(supabase);
-
-if (user.error || !user.data) { 
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) { 
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
 const projectId = Astro.params.slug;
-
-const i18n = getTranslations(Astro.request, 'project-home');
 
 const project = await getProjectExtended(supabase, projectId as string);
 if (project.error || !project.data) { 
@@ -36,8 +33,10 @@ if (documents.error) {
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
+
+const i18n = getTranslations(Astro.request, 'project-home');
 ---
-<ProjectLayout active="Documents" user={user.data} project={project.data}>
+<ProjectLayout active="Documents" user={profile.data} project={project.data}>
   <ProjectHome 
     client:only
     i18n={i18n}

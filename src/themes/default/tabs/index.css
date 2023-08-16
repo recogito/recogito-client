@@ -1,0 +1,33 @@
+.tabs-root {
+  display: flex;
+  flex-direction: column;
+}
+
+.tabs-list {
+  flex-shrink: 0;
+  font-size: var(--font-small);
+  display: flex;
+}
+
+.tabs-trigger {
+  all: unset;
+  align-items: center;
+  border-bottom: 1px solid var(--gray-300);
+  cursor: pointer;
+  display: flex;
+  flex: 1;
+  height: 45px;
+  justify-content: center;
+  padding: 0 20px;
+  user-select: none;
+}
+
+.tabs-trigger:is(button, a.button) + :is(button, a.button) {
+  margin: 0;
+}
+
+button.tabs-trigger[data-state='active'],
+buttton.tabs-trigger[data-state='active']:hover {
+  border-bottom: 2px solid var(--bright-blue);
+  color: var(--bright-blue);
+}

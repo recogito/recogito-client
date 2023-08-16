@@ -3,18 +3,21 @@ import { GraduationCap } from '@phosphor-icons/react';
 import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import { AssignmentWizard } from './Wizard';
+import type { DocumentInProject, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 
 import './ProjectAssignments.css';
-import { AssignmentWizard } from './Wizard';
+
 
 interface ProjectAssignmentsProps {
 
   i18n: Translations;
 
+  me: MyProfile;
+
   project: ExtendedProjectData;
 
-  me: MyProfile;
+  documents: DocumentInProject[];
 
 }
 
@@ -49,17 +52,18 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           {wizardOpen && (
             <AssignmentWizard
               i18n={props.i18n} 
+              documents={props.documents}
               onCancel={() => setWizardOpen(false)} />
           )}
         </>
       )}
 
       {assignments ? assignments.length === 0 ? (
-        <span>Empty</span>
+        <div>Placeholder: Empty</div>
       ) : (
-        <span>Got {assignments.length} assignments</span>
+        <div>Placeholder: Got {assignments.length} assignments</div>
       ) : (
-        <span>Loading</span>
+        <div>Placeholder: Loading</div>
       )}
     </div>
   )

@@ -3,18 +3,14 @@ import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile} from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { getProjectExtended } from '@backend/helpers';
+import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
 import { ProjectAssignments } from '@apps/project-assignments';
 
 const lang = getLangFromUrl(Astro.url);
 
-const i18n = getTranslations(Astro.request, 'project-assignments');
-
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
-
-const projectId = Astro.params.slug;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) { 
@@ -22,16 +18,29 @@ if (profile.error || !profile.data) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
+const projectId = Astro.params.slug;
+
 const project = await getProjectExtended(supabase, projectId as string);
 if (project.error || !project.data) { 
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
+
+const documents = await listDocumentsInProject(supabase, projectId as string);
+
+if (documents.error) { 
+  const path = Astro.url.protocol + '//' + Astro.url.host;
+  const error = await fetch(`${path}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
+
+const i18n = getTranslations(Astro.request, 'project-assignments');
 ---
 <ProjectLayout active="Assignments" user={profile.data} project={project.data}>
   <ProjectAssignments
     client:load
     i18n={i18n}
     me={profile.data}
-    project={project.data}>
+    project={project.data}
+    documents={documents.data}>
 </ProjectLayout>

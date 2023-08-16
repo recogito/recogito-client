@@ -1,0 +1,23 @@
+.assignment-wizard {
+  max-width: 920px;
+  padding: 0;
+}
+
+.assignment-wizard .tabs-content .row {
+  display: flex;
+}
+
+.assignment-wizard .tabs-content section.column {
+  padding: 20px;
+}
+
+.assignment-wizard .tabs-content section.column:first-child {
+  flex: 30%;
+}
+
+.assignment-wizard .tabs-content .wizard-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 20px;
+}
