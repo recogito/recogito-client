@@ -6,7 +6,12 @@
 
 .dialog-content.assignment-wizard h1 {
   display: inline-block;
-  margin: 30px;
+  font-size: 1.25em;
+  margin: 20px;
+}
+
+.assignment-wizard .tabs-list {
+  border-top: 1px solid var(--gray-300);
 }
 
 .assignment-wizard .tabs-content {

@@ -1,26 +1,22 @@
-.tabs-root {
-  display: flex;
-  flex-direction: column;
-}
-
 .tabs-list {
+  border-bottom: 1px solid var(--gray-300);
   flex-shrink: 0;
   font-size: var(--font-small);
-  display: flex;
 }
 
 .tabs-trigger {
   all: unset;
   align-items: center;
-  border-bottom: 1px solid var(--gray-300);
+  border-bottom: 2px solid transparent;
   cursor: pointer;
-  display: flex;
-  flex: 1;
+  display: inline-flex;
   font-size: var(--font-tiny);
   font-weight: 500;
-  height: 45px;
+  height: 38px;
   justify-content: center;
-  padding: 0 20px;
+  padding: 2px 20px 0 20px;
+  position: relative;
+  top: 1px;
   user-select: none;
 }
 
@@ -28,8 +24,21 @@
   margin: 0;
 }
 
+.tabs-trigger:is(button, a.button)  + .tabs-trigger:is(button, a.button)  {
+  margin-left: 1.5em;
+}
+
+.tabs-trigger svg {
+  padding-right: 0.5em;
+}
+
+button.tabs-trigger:hover:not(:disabled) {
+  box-shadow: none;
+  border-bottom-color: var(--gray-400);
+}
+
 button.tabs-trigger[data-state='active'],
-buttton.tabs-trigger[data-state='active']:hover {
+button.tabs-trigger[data-state='active']:hover {
   border-bottom: 2px solid var(--bright-blue);
   color: var(--bright-blue);
 }

@@ -20,7 +20,7 @@ interface VerifyProps {
 
 export const Verify = (props: VerifyProps) => {
 
-  const { documents, team, description } = props.assignment;
+  const { name, documents, team, description } = props.assignment;
  
   return (
     <>
@@ -34,6 +34,16 @@ export const Verify = (props: VerifyProps) => {
 
         <section className="column">
           <ol>
+            {name === 'Untitled Assignment' ? (
+              <li className="invalid">
+                <X size={16} weight="bold" /> Unnamed assignment. Please add a name, so this assignment is easier to find.
+              </li>
+            ) : (
+              <li className="valid">
+                <Check size={16} weight="bold" /> Name: {name}
+              </li>
+            )}
+
             {documents.length === 0 ? (
               <li className="invalid">
                 <X size={16} weight="bold" /> No documents. Please select at least one document for the assignment.

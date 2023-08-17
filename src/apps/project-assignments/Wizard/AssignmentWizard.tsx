@@ -9,9 +9,9 @@ import { Documents } from './Documents';
 import { Team } from './Team';
 import { Instructions } from './Instructions';
 import { Verify } from './Verify';
+import { Progress } from './Progress';
 
 import './AssignmentWizard.css';
-import { Progress } from './Progress';
 
 interface AssignmentWizardProps {
 
@@ -39,7 +39,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const [complete, setComplete] = useState(false);
 
   const [assignment, setAssignment] = useState<AssignmentSpec>({
-    name: 'Unnamed Assignement',
+    name: 'Untitled Assignment',
     documents: [],
     team: []
   });
@@ -86,7 +86,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
               <h1>
                 <EditableText 
                   focus={step === 0}
-                  value="Untitled Assignment" 
+                  value={assignment.name}
                   onSubmit={onChangeName} />
               </h1>
 
