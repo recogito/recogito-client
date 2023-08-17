@@ -4,13 +4,14 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Files, Info, ListChecks, UsersThree } from '@phosphor-icons/react';
 import { EditableText } from '@components/EditableText';
 import type { DocumentInProject, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
-import type { AssignmentSpec } from './AsssignmentSpec';
+import type { AssignmentSpec } from './AssignmentSpec';
 import { Documents } from './Documents';
 import { Team } from './Team';
 import { Instructions } from './Instructions';
 import { Verify } from './Verify';
 
 import './AssignmentWizard.css';
+import { Progress } from './Progress';
 
 interface AssignmentWizardProps {
 
@@ -34,6 +35,8 @@ const STEPS = [
 export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
   const [step, setStep] = useState(0);
+
+  const [complete, setComplete] = useState(false);
 
   const [assignment, setAssignment] = useState<AssignmentSpec>({
     name: 'Unnamed Assignement',
@@ -73,74 +76,83 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
           className="dialog-content assignment-wizard"
           onPointerDownOutside={onPointerDownOutside}>
 
-          <h1>
-            <EditableText 
-              focus={step === 0}
-              value="Untitled Assignment" 
-              onSubmit={onChangeName} />
-          </h1>
+          {complete ? (
+            <Progress 
+              i18n={props.i18n} 
+              assignment={assignment} />
+          ) : (
+            <>
+              <h1>
+                <EditableText 
+                  focus={step === 0}
+                  value="Untitled Assignment" 
+                  onSubmit={onChangeName} />
+              </h1>
 
-          <Tabs.Root 
-            className="tabs-root" 
-            value={STEPS[step]}
-            onValueChange={value => setStep(STEPS.indexOf(value))}>
-            <Tabs.List className="tabs-list" aria-label="Create a new Assignment">
-              <Tabs.Trigger className="tabs-trigger" value={STEPS[0]}>
-                <Files size={18} /> Documents
-              </Tabs.Trigger>
+              <Tabs.Root 
+                className="tabs-root" 
+                value={STEPS[step]}
+                onValueChange={value => setStep(STEPS.indexOf(value))}>
+                <Tabs.List className="tabs-list" aria-label="Create a new Assignment">
+                  <Tabs.Trigger className="tabs-trigger" value={STEPS[0]}>
+                    <Files size={18} /> Documents
+                  </Tabs.Trigger>
 
-              <Tabs.Trigger className="tabs-trigger" value={STEPS[1]}>
-                <UsersThree size={18} /> Team
-              </Tabs.Trigger>
+                  <Tabs.Trigger className="tabs-trigger" value={STEPS[1]}>
+                    <UsersThree size={18} /> Team
+                  </Tabs.Trigger>
 
-              <Tabs.Trigger className="tabs-trigger" value={STEPS[2]}>
-                <Info size={18} /> Instructions
-              </Tabs.Trigger>
+                  <Tabs.Trigger className="tabs-trigger" value={STEPS[2]}>
+                    <Info size={18} /> Instructions
+                  </Tabs.Trigger>
 
-              <Tabs.Trigger className="tabs-trigger" value={STEPS[3]}>
-                <ListChecks size={18} /> Verify
-              </Tabs.Trigger>
-            </Tabs.List>
+                  <Tabs.Trigger className="tabs-trigger" value={STEPS[3]}>
+                    <ListChecks size={18} /> Verify
+                  </Tabs.Trigger>
+                </Tabs.List>
 
-            <Tabs.Content className="tabs-content" value={STEPS[0]}>
-              <Documents
-                i18n={props.i18n}
-                assignment={assignment}
-                documents={props.documents} 
-                onChange={onChangeDocuments}
-                onCancel={props.onCancel} 
-                onNext={onNext} />
-            </Tabs.Content>
+                <Tabs.Content className="tabs-content" value={STEPS[0]}>
+                  <Documents
+                    i18n={props.i18n}
+                    assignment={assignment}
+                    documents={props.documents} 
+                    onChange={onChangeDocuments}
+                    onCancel={props.onCancel} 
+                    onNext={onNext} />
+                </Tabs.Content>
 
-            <Tabs.Content className="tabs-content" value={STEPS[1]}>
-              <Team 
-                i18n={props.i18n}
-                assignment={assignment}
-                project={props.project}
-                onChange={onChangeTeam}
-                onCancel={props.onCancel}
-                onBack={onBack}
-                onNext={onNext} />
-            </Tabs.Content>
+                <Tabs.Content className="tabs-content" value={STEPS[1]}>
+                  <Team 
+                    i18n={props.i18n}
+                    assignment={assignment}
+                    project={props.project}
+                    onChange={onChangeTeam}
+                    onCancel={props.onCancel}
+                    onBack={onBack}
+                    onNext={onNext} />
+                </Tabs.Content>
 
-            <Tabs.Content className="tabs-content" value={STEPS[2]}>
-              <Instructions 
-                i18n={props.i18n} 
-                assignment={assignment}
-                onChange={onChangeDescription}
-                onCancel={props.onCancel}
-                onBack={onBack} 
-                onNext={onNext} />
-            </Tabs.Content>
+                <Tabs.Content className="tabs-content" value={STEPS[2]}>
+                  <Instructions 
+                    i18n={props.i18n} 
+                    assignment={assignment} 
+                    onChange={onChangeDescription}
+                    onCancel={props.onCancel}
+                    onBack={onBack} 
+                    onNext={onNext} />
+                </Tabs.Content>
 
-            <Tabs.Content className="tabs-content" value={STEPS[3]}>
-              <Verify 
-                i18n={props.i18n}
-                assignment={assignment}
-                onCancel={props.onCancel}
-                onBack={onBack} />
-            </Tabs.Content>
-          </Tabs.Root>
+                <Tabs.Content className="tabs-content" value={STEPS[3]}>
+                  <Verify 
+                    i18n={props.i18n}
+                    assignment={assignment}
+                    onCancel={props.onCancel}
+                    onBack={onBack} 
+                    onCreateAssignment={() => setComplete(true)} />
+                </Tabs.Content>
+              </Tabs.Root>
+            </>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

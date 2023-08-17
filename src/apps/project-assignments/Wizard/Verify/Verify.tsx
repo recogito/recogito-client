@@ -1,6 +1,6 @@
 import { Check, Warning, X } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
-import type { AssignmentSpec } from '../AsssignmentSpec';
+import type { AssignmentSpec } from '../AssignmentSpec';
 
 import './Verify.css';
 
@@ -13,6 +13,8 @@ interface VerifyProps {
   onCancel(): void;
 
   onBack(): void;
+
+  onCreateAssignment(): void;
 
 }
 
@@ -81,7 +83,8 @@ export const Verify = (props: VerifyProps) => {
           onClick={props.onBack}>Back</button>
 
         <button 
-          className="primary">Done</button>
+          className="primary"
+          onClick={props.onCreateAssignment}>Create Assignment</button>
       </section>
     </>
   )

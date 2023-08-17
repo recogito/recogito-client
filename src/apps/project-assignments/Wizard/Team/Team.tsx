@@ -11,7 +11,7 @@ import {
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { TimeAgo } from '@components/TimeAgo';
 import type { ExtendedProjectData, ProjectGroup, Translations, UserProfile } from 'src/Types';
-import type { AssignmentSpec } from '../AsssignmentSpec';
+import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
 import './Team.css';

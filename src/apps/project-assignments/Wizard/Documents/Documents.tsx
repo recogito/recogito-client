@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { Article, Check, CheckSquare, Image, Square, Warning } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { DocumentInProject, Translations } from 'src/Types';
+import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
 import './Document.css';
-import type { AssignmentSpec } from '../AsssignmentSpec';
 
 interface DocumentsProps {
 

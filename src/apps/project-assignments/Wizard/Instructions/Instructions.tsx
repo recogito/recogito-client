@@ -1,5 +1,5 @@
 import type { Translations } from 'src/Types';
-import type { AssignmentSpec } from '../AsssignmentSpec';
+import type { AssignmentSpec } from '../AssignmentSpec';
 
 import './Instructions.css';
 
