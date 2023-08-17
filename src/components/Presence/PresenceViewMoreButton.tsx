@@ -9,7 +9,7 @@ const { Content, Item, Portal, Root, Trigger, RadioGroup, RadioItem, ItemIndicat
 
 interface PresenceViewMoreButtonProps {
 
-    present: PresentUser[];
+    present?: PresentUser[];
 
     limit?: number;
 
@@ -21,7 +21,7 @@ export const PresenceViewMoreButton = (props: PresenceViewMoreButtonProps) => {
   const { limit = 3 } = props;
     
   const present = props.showMe ? 
-    props.present : props.present.filter(u => !isMe(u));
+    props.present : props.present?.filter(u => !isMe(u));
 
     return (
     <Root>
@@ -29,18 +29,30 @@ export const PresenceViewMoreButton = (props: PresenceViewMoreButtonProps) => {
         <button
           className="presence-view-more-trigger">
           <span>
-            +{present.length - limit} more
+            +{present ? present.length - limit : '0'} more
           </span>   
           <CaretDown size={10} weight="bold" />
         </button>
       </Trigger>
 
-
-        <Content>
-          <Item>hi</Item>
-          <Item>bye</Item>
+      <Portal>
+        <Content align="start" className="presence-view-more-content">
+            {present?.slice(limit, undefined).map((presentUser) => (
+                <Item className="presence-view-more-item">
+                    
+                    <Avatar 
+                    id={presentUser.id}
+                    name={presentUser.appearance.label}
+                    color={presentUser.appearance.color} 
+                    avatar={presentUser.appearance.avatar} />
+                    <span style={{ paddingLeft: '15px' }}>
+                        {presentUser.name}
+                    </span>
+                    
+                </Item>
+            ))}
         </Content>
-
+      </Portal>
     </Root>
     );
 };
