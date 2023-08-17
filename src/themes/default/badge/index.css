@@ -9,6 +9,11 @@
   height: 2em;
   justify-content: center;
   margin: 0 7px;
-  min-width: 18px;
+  min-width: 8px;
   padding: 0 10px;
+}
+
+.badge.disabled {
+  color: var(--gray-400);
+  background-color: var(--gray-100);
 }

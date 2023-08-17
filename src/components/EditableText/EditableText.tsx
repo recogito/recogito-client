@@ -1,10 +1,14 @@
-import { useEffect, useRef } from 'react';
-import type { FocusEvent, KeyboardEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { KeyboardEvent } from 'react';
 import ContentEditable from 'react-contenteditable';
+
+import './EditableText.css';
 
 interface EditableTextProps {
 
   focus?: boolean;
+
+  maxLength?: number;
 
   value: string;
 
@@ -14,13 +18,18 @@ interface EditableTextProps {
 
 export const EditableText = (props: EditableTextProps) => {
 
+  const maxLength = props.maxLength || 256;
+
   const el = useRef<HTMLElement>(null);
+
+  const [value, setValue] = useState(props.value);
 
   useEffect(() => {
     if (props.focus && el.current)
       setTimeout(() => el.current?.focus(), 1);
   }, []);
 
+  // Select all on focus
   const onFocus = () => {
     if (el.current) {
       const range = document.createRange();
@@ -33,27 +42,42 @@ export const EditableText = (props: EditableTextProps) => {
     }
   }
 
+  // Submit change on blur
+  const onBlur = () => { 
+    const currentValue = el.current?.innerText;
+    if (currentValue) {
+      props.onSubmit(currentValue);
+    } else {
+      setValue(() => value);
+    }
+  }
+
+  // Enter key will blur the element (and submit)
   const onKeyDown = (evt: KeyboardEvent) => {
     if (evt.key === 'Enter') {
       evt.preventDefault();
-
-      const el = evt.target as HTMLElement;
-      el.blur();
-      
-      const value = el.innerHTML.trim();
-      props.onSubmit(value);
+      (evt.target as HTMLElement).blur();
     }
+  }
+  
+  // Paste without formatting
+  const onPaste = (evt: React.ClipboardEvent) => {
+    evt.preventDefault();
+    navigator.clipboard.readText().then(text => setValue(text.slice(0, maxLength)));
   }
 
   return (
     <ContentEditable
+      className="editable-text"
       innerRef={el}
       spellCheck={false}
-      html={props.value} 
+      html={value} 
       tagName="span"
       onKeyDown={onKeyDown}
-      onChange={() => {}}
-      onFocus={onFocus} />
+      onBlur={onBlur}
+      onChange={evt => setValue(evt.target.value)}
+      onFocus={onFocus} 
+      onPaste={onPaste} />
   )
 
 }

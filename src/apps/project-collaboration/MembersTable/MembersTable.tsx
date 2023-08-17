@@ -56,7 +56,7 @@ export const MembersTable = (props: MembersTableProps) => {
     member.user.id === props.me.id;
 
   const isOwner = (member: TeamMember) =>
-    member.user.id === props.project.created_by.id;
+    member.user.id === props.project.created_by?.id;
 
   const formatName = (member: TeamMember) => {
     const { nickname, first_name, last_name } = member.user;

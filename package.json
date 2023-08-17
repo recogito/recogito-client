@@ -6,12 +6,14 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "build-node": "astro build --config astro.config.node.mjs",
+    "preview-node": "node ./dist/server/entry.mjs",
     "astro": "astro"
   },
   "dependencies": {
     "@annotorious/react": "file:../../annotorious/annotorious-v3/packages/annotorious-react",
     "@astrojs/netlify": "^2.2.3",
+    "@astrojs/node": "^5.3.3",
     "@astrojs/react": "^2.2.0",
     "@phosphor-icons/react": "^2.0.9",
     "@radix-ui/react-avatar": "^1.0.3",

@@ -56,17 +56,26 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       });
   }, []);
 
+  // Filtered projects
+  const myProjects = projects.filter(p => p.created_by?.id === me.id);
+
+  const sharedProjects = projects.filter(({ created_by, groups }) => 
+    groups.find(({ members }) => 
+      members.find(m => m.user.id === me.id) && me.id !== created_by?.id));
+
+  // All projects are different for admins vs. mere mortals
+  const allProjects = me.isOrgAdmin ? projects : [...myProjects, ...sharedProjects];
+
   const filteredProjects = 
     // All projects
     filter === ProjectFilter.ALL ?
-      projects : 
+      allProjects :
     // Am I the creator?
     filter === ProjectFilter.MINE ? 
-      projects.filter(p => p.created_by.id === me.id) : 
+      myProjects :
     // Am I one of the users in the groups?
     filter === ProjectFilter.SHARED ? 
-      projects.filter(({ created_by, groups }) => 
-        groups.find(({ members }) => members.find(m => m.user.id === me.id) && me.id !== created_by.id)) : 
+      sharedProjects : 
     [];
 
   const onProjectCreated = (project: ExtendedProjectData) =>
@@ -132,6 +141,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           policies={policies}
           invitations={invitations} 
           filter={filter}
+          counts={[allProjects.length, myProjects.length, sharedProjects.length]}
           onChangeFilter={setFilter}
           onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}

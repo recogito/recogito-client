@@ -40,7 +40,9 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
           </li>
 
           <li>
-            <a href=`/${lang}/projects/${project.id}`>{project.name}</a>
+            <a href=`/${lang}/projects/${project.id}`>
+              {project.name.length > 30 ? `${project.name.slice(0, 30)}...` : project.name}
+            </a>
           </li>
 
           <li>
