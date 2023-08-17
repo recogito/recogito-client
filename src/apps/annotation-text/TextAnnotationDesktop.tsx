@@ -91,6 +91,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
             )} />
         )}
 
+        <div className="anno-desktop-left">
+          <AnnotationDesktop.DocumentMenu
+            document={props.document} />
+        </div>
+
         <div className="anno-desktop-right not-annotatable">
           <PresenceStack
             present={present} />

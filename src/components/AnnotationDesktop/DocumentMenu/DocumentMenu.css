@@ -4,6 +4,7 @@
   border-width: 0 0 1px 1px;
   box-sizing: border-box;
   display: flex;
+  gap: 0.5em;
   height: 48px;
   padding: 0 20px 0 10px;
   pointer-events: all;
@@ -14,4 +15,29 @@
   font-family: Inter;
   font-weight: 500;
   margin: 0;
+}
+
+.document-menu .assignment-icon {
+  align-items: center;
+  background-color: var(--font-dark);
+  border-radius: 50%;
+  color: #fff;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.document-menu h1 a {
+  color: var(--font-dark);
+}
+
+.document-menu h1 > *:not(:last-child)::after {
+  color: var(--font-light);
+  content: '/';
+  padding: 0 3px;
+}
+
+.document-menu h1 *:last-child {
+  color: var(--font-light);
 }

@@ -66,12 +66,19 @@ export const listDocumentsInProject = (
         document_id,
         project_id,
         name,
-        description
+        description,
+        contexts:layer_contexts!inner (
+          ...contexts (
+            id,
+            name,
+            project_id
+          )
+        )
       )
     `)
     .eq('layers.project_id', projectId)
     .then(({ error, data }) => 
-      error ? ({ error, data: [] }) : ({ error, data }));
+      error ? ({ error, data: [] }) : ({ error, data: data as unknown as DocumentInContext[] }));
 
 export const listDocumentsInContext = (
   supabase: SupabaseClient,
@@ -95,14 +102,18 @@ export const listDocumentsInContext = (
         project_id,
         name,
         description,
-        layer_contexts!inner (
-          context_id
+        contexts:layer_contexts!inner (
+          ...contexts (
+            id,
+            name,
+            project_id
+          )
         )
       )
     `)
     .eq('layers.layer_contexts.context_id', contextId)
     .then(({ error, data }) => 
-      error ? ({ error, data: [] }) : ({ error, data }));
+      error ? ({ error, data: [] }) : ({ error, data: data as unknown as DocumentInContext[] }));
 
 export const getDocumentInContext = (
   supabase: SupabaseClient,
@@ -127,8 +138,12 @@ export const getDocumentInContext = (
         project_id,
         name,
         description,
-        layer_contexts!inner (
-          context_id
+        contexts:layer_contexts!inner (
+          ...contexts (
+            id,
+            name, 
+            project_id
+          )
         )
       )
     `)
@@ -136,4 +151,4 @@ export const getDocumentInContext = (
     .eq('layers.layer_contexts.context_id', contextId)
     .single()
     .then(({ error, data }) => 
-      error ? ({ error, data: undefined }) : ({ error, data }));
+      error ? ({ error, data: undefined }) : ({ error, data: data as unknown as DocumentInContext }));

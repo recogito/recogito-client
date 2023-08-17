@@ -187,6 +187,8 @@ export interface Layer {
 
   description?: string;
 
+  contexts: Context[];
+
 }
 
 export interface TagDefinition {
