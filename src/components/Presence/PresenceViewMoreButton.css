@@ -1,0 +1,11 @@
+.presence-view-more-trigger {
+    background-color: white;
+    border-radius: 9999px;
+    box-sizing: border-box;
+    font-size: var(--font-tiny);
+    font-weight: 500;
+    height: 38px;
+    padding: 0 12px;
+    width: auto;
+    margin-right: 8px;
+}
