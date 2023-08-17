@@ -4,11 +4,10 @@ import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
 import { AssignmentWizard } from './Wizard';
-import type { DocumentInProject, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
-
-import './ProjectAssignments.css';
+import type { DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
+import './ProjectAssignments.css';
 
 interface ProjectAssignmentsProps {
 
@@ -18,7 +17,7 @@ interface ProjectAssignmentsProps {
 
   project: ExtendedProjectData;
 
-  documents: DocumentInProject[];
+  documents: DocumentInContext[];
 
 }
 

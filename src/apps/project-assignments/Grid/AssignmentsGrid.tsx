@@ -15,7 +15,10 @@ export const AssignmentsGrid = (props: AssignmentsGridProps) => {
   return (
     <div className="project-assignments-grid">
       {props.assignments.map(assignment => (
-        <AssignmentCard assignment={assignment} />
+        <AssignmentCard 
+          key={assignment.id}
+          i18n={props.i18n}
+          assignment={assignment} />
       ))}
     </div>
   )

@@ -151,7 +151,7 @@ export interface Document {
 
 }
 
-export interface DocumentInProject extends Document {
+export interface DocumentInContext extends Document {
 
   layers: Layer[];
 

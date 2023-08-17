@@ -3,7 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Files, Info, ListChecks, UsersThree } from '@phosphor-icons/react';
 import { EditableText } from '@components/EditableText';
-import type { DocumentInProject, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
+import type { DocumentInContext, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from './AssignmentSpec';
 import { Documents } from './Documents';
 import { Team } from './Team';
@@ -19,7 +19,7 @@ interface AssignmentWizardProps {
 
   project: ExtendedProjectData;
 
-  documents: DocumentInProject[];
+  documents: DocumentInContext[];
 
   onCancel(): void;
 
@@ -53,7 +53,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const onChangeName = (name: string) =>
     setAssignment({ ...assignment, name });
 
-  const onChangeDocuments = (documents: DocumentInProject[]) =>
+  const onChangeDocuments = (documents: DocumentInContext[]) =>
     setAssignment({ ...assignment, documents });
 
   const onChangeTeam = (team: UserProfile[]) =>

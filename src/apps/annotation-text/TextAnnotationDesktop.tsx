@@ -5,7 +5,7 @@ import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { DocumentInProject, Layer, Translations } from 'src/Types';
+import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   TextAnnotator, 
@@ -25,7 +25,7 @@ export interface TextAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInProject;
+  document: DocumentInContext;
 
   channelId: string;
 

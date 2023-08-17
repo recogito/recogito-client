@@ -10,7 +10,7 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
-import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
+import type { DocumentInContext, ExtendedProjectData, Translations } from 'src/Types';
 
 import './ProjectHome.css';
 
@@ -20,7 +20,7 @@ export interface ProjectHomeProps {
 
   project: ExtendedProjectData;
 
-  documents: DocumentInProject[];
+  documents: DocumentInContext[];
 
 }
 
@@ -33,7 +33,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   // Temporary hack!
   const defaultContext = project.contexts[0];
 
-  const [documents, setDocuments] = useState<DocumentInProject[]>(props.documents);
+  const [documents, setDocuments] = useState<DocumentInContext[]>(props.documents);
 
   const policies = usePolicies(project.id);
 
@@ -96,7 +96,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
    * When 'deleting a document' we're actually just archiving
    * all the layers on this document in this project!
    */
-  const onDeleteDocument = (document: DocumentInProject) => {
+  const onDeleteDocument = (document: DocumentInContext) => {
     // Optimistic update: remove document from the list
     setDocuments(documents => documents.filter(d => d.id !== document.id));
 
@@ -125,7 +125,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       });
   }
 
-  const onRenameDocument = (document: DocumentInProject, name: string) => {
+  const onRenameDocument = (document: DocumentInContext, name: string) => {
     // Optimistic update
     setDocuments(documents => documents.map(d => d.id === document.id ? ({
       ...d, name

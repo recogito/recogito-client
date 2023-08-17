@@ -3,7 +3,7 @@ import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import { uploadFile } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, DocumentInProject, Layer } from 'src/Types';
+import type { Document, DocumentInContext, Layer } from 'src/Types';
 
 /**
  * Initializes a new Document in a Context.
@@ -19,7 +19,7 @@ export const initDocument = (
   onProgress?: (progress: number) => void,
   file?: File,
   url?: string
-): Promise<DocumentInProject> => {
+): Promise<DocumentInContext> => {
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) => 
     createDocument(supabase, name, file?.type, { protocol: 'IIIF_IMAGE', url })
@@ -48,7 +48,7 @@ export const initDocument = (
 export const listDocumentsInProject = (
   supabase: SupabaseClient,
   projectId: string
-): Response<DocumentInProject[]> =>
+): Response<DocumentInContext[]> =>
   supabase
     .from('documents')
     .select(`
@@ -76,7 +76,7 @@ export const listDocumentsInProject = (
 export const listDocumentsInContext = (
   supabase: SupabaseClient,
   contextId: string
-): Response<DocumentInProject[]> =>
+): Response<DocumentInContext[]> =>
   supabase
     .from('documents')
     .select(`
@@ -108,7 +108,7 @@ export const getDocumentInContext = (
   supabase: SupabaseClient,
   documentId: string, 
   contextId: string
-): Response<DocumentInProject | undefined> =>
+): Response<DocumentInContext | undefined> =>
   supabase
     .from('documents')
     .select(`

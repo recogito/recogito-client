@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Article, Check, CheckSquare, Image, Square, Warning } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import type { DocumentInProject, Translations } from 'src/Types';
+import type { DocumentInContext, Translations } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
@@ -13,9 +13,9 @@ interface DocumentsProps {
 
   assignment: AssignmentSpec;
 
-  documents: DocumentInProject[];
+  documents: DocumentInContext[];
 
-  onChange(documents: DocumentInProject[]): void;
+  onChange(documents: DocumentInContext[]): void;
 
   onCancel(): void;
 
