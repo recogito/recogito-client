@@ -1,0 +1,26 @@
+.tab-verify ol {
+  font-size: var(--font-small);
+  line-height: 200%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tab-verify ol svg {
+  padding-right: 1em;
+  position: relative;
+  top: -1px;
+  vertical-align: text-bottom;
+}
+
+.tab-verify li.valid {
+  color: var(--green-500);
+}
+
+.tab-verify li.invalid {
+  color: var(--red-500);
+}
+
+.tab-verify li.warning {
+  color: var(--orange-500);
+}

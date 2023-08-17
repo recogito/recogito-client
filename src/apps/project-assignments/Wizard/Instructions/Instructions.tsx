@@ -10,6 +10,8 @@ interface InstructionsProps {
 
   onBack(): void;
 
+  onNext(): void;
+
 }
 
 export const Instructions = (props: InstructionsProps) => {
@@ -32,12 +34,13 @@ export const Instructions = (props: InstructionsProps) => {
       <section className="wizard-nav">
         <button
           onClick={props.onCancel}>Cancel</button>
-  
-        <button 
+
+        <button
           onClick={props.onBack}>Back</button>
 
         <button 
-          className="primary">Done</button>
+          className="primary"
+          onClick={props.onNext}>Next</button>
       </section>
     </>
   )

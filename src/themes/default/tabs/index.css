@@ -16,6 +16,7 @@
   cursor: pointer;
   display: flex;
   flex: 1;
+  font-size: var(--font-tiny);
   font-weight: 500;
   height: 45px;
   justify-content: center;

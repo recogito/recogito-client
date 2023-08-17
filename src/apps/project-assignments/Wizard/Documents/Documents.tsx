@@ -1,4 +1,4 @@
-import { Article, CheckSquare, Image, Square } from '@phosphor-icons/react';
+import { Article, Check, CheckSquare, Image, Square, Warning } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { DocumentInProject, Translations } from 'src/Types';
 import { useSelectableRows } from '../useSelectableRows';
@@ -97,6 +97,16 @@ export const Documents = (props: DocumentsProps) => {
               ))}
             </tbody>
           </table>
+
+          {selected.length === 0 ? (
+            <p className="hint warn">
+              <Warning size={16} /> Select at least 1 document
+            </p>
+          ) : (
+            <p className="hint ok">
+              <Check size={16} /> Selected {selected.length} documents
+            </p>
+          )}
         </section>
       </div>
 

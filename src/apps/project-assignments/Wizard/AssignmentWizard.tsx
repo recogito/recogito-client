@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
+import { Files, Info, ListChecks, UsersThree } from '@phosphor-icons/react';
+import { EditableText } from '@components/EditableText';
 import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
 import { Documents } from './Documents';
 import { Team } from './Team';
 import { Instructions } from './Instructions';
+import { Verify } from './Verify';
 
 import './AssignmentWizard.css';
 
@@ -23,7 +26,8 @@ interface AssignmentWizardProps {
 const STEPS = [
   'documents',
   'team',
-  'instructions'
+  'instructions',
+  'verify'
 ]
 
 export const AssignmentWizard = (props: AssignmentWizardProps) => {
@@ -35,6 +39,10 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
   const onBack = () =>
     setStep(idx => Math.max(0, idx - 1));
+
+  const onChangeTitle = (title: string) => {
+    console.log('changed', title);
+  }
 
   // Don't close this dialog when the user clicks outside!
   const onPointerDownOutside = (evt: Event) =>
@@ -48,21 +56,33 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
         <Dialog.Content 
           className="dialog-content assignment-wizard"
           onPointerDownOutside={onPointerDownOutside}>
+
+          <h1>
+            <EditableText 
+              focus={step === 0}
+              value="Untitled Assignment" 
+              onSubmit={onChangeTitle} />
+          </h1>
+
           <Tabs.Root 
             className="tabs-root" 
             value={STEPS[step]}
             onValueChange={value => setStep(STEPS.indexOf(value))}>
             <Tabs.List className="tabs-list" aria-label="Create a new Assignment">
               <Tabs.Trigger className="tabs-trigger" value={STEPS[0]}>
-                1. Documents
+                <Files size={18} /> Documents
               </Tabs.Trigger>
 
               <Tabs.Trigger className="tabs-trigger" value={STEPS[1]}>
-                2. Team
+                <UsersThree size={18} /> Team
               </Tabs.Trigger>
 
               <Tabs.Trigger className="tabs-trigger" value={STEPS[2]}>
-                3. Instructions
+                <Info size={18} /> Instructions
+              </Tabs.Trigger>
+
+              <Tabs.Trigger className="tabs-trigger" value={STEPS[3]}>
+                <ListChecks size={18} /> Verify
               </Tabs.Trigger>
             </Tabs.List>
 
@@ -86,6 +106,14 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <Tabs.Content className="tabs-content" value={STEPS[2]}>
               <Instructions 
                 i18n={props.i18n} 
+                onCancel={props.onCancel}
+                onBack={onBack} 
+                onNext={onNext} />
+            </Tabs.Content>
+
+            <Tabs.Content className="tabs-content" value={STEPS[3]}>
+              <Verify 
+                i18n={props.i18n}
                 onCancel={props.onCancel}
                 onBack={onBack} />
             </Tabs.Content>

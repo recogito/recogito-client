@@ -1,4 +1,12 @@
-import { CaretDown, CaretUp, CaretUpDown, CheckSquare, Square } from '@phosphor-icons/react';
+import { 
+  CaretDown, 
+  CaretUp, 
+  CaretUpDown, 
+  Check, 
+  CheckSquare, 
+  Square, 
+  Warning
+} from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { TimeAgo } from '@components/TimeAgo';
 import type { ExtendedProjectData, ProjectGroup, Translations, UserProfile } from 'src/Types';
@@ -67,7 +75,7 @@ const getMembers = (groups: ProjectGroup[], sorting?: Sorting): Member[] => grou
 
 export const Team = (props: TeamProps) => {
 
-  const [sorting, setSorting] = useState<Sorting | undefined>({ field: 'since', ascending: true });
+  const [sorting, setSorting] = useState<Sorting | undefined>({ field: 'name', ascending: false });
 
   const members = getMembers(props.project.groups, sorting);
 
@@ -173,6 +181,16 @@ export const Team = (props: TeamProps) => {
               ))}
             </tbody>
           </table>
+
+          {selected.length === 0 ? (
+            <p className="hint warn">
+              <Warning size={16} /> Select at least 1 team member
+            </p>
+          ) : (
+            <p className="hint ok">
+              <Check size={16} /> Selected {selected.length} team members
+            </p>
+          )}
         </section>
       </div>
 
