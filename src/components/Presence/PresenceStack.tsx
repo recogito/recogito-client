@@ -10,14 +10,21 @@ interface PresenceStackProps {
 
   present: PresentUser[];
 
+  limit?: number;
+
 }
 
 export const PresenceStack = (props: PresenceStackProps) => {
+  console.log(props.present);
+
+  const { limit = 3 } = props;
 
   const present = props.showMe ? 
     props.present : props.present.filter(u => !isMe(u));
 
-  const transition = useTransition(present, {
+  const displayList = present.length <= limit ? present : [ ...present.slice(0, limit), { presenceKey: '0', presentList: present.slice(limit+1, undefined), appearance: { label: `+ ${present.length - limit} more`, color: 'white' } }];
+  console.log(displayList);
+  const transition = useTransition(displayList, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
     leave: { opacity: 0 }, 
@@ -36,11 +43,11 @@ export const PresenceStack = (props: PresenceStackProps) => {
               ...{'--presence-color': presentUser.appearance.color }
             }} 
             key={presentUser.presenceKey}>
-            <Avatar 
+            {presentUser.presenceKey != '0' ? <Avatar 
               id={presentUser.id}
               name={presentUser.appearance.label}
               color={presentUser.appearance.color} 
-              avatar={presentUser.appearance.avatar} />
+              avatar={presentUser.appearance.avatar} /> : <></>}
           </animated.li>
         ))}
       </ul>
