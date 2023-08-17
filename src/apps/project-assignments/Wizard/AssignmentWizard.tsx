@@ -79,6 +79,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
           {complete ? (
             <Progress 
               i18n={props.i18n} 
+              project={props.project}
               assignment={assignment} />
           ) : (
             <>
