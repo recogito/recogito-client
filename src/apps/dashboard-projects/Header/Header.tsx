@@ -99,18 +99,16 @@ export const Header = (props: HeaderProps) => {
 
       <section className="dashboard-header-bottom">
         <ul className="dashboard-header-tabs">
-          {props.me.isOrgAdmin && (
-            <li
-              className={filter === ProjectFilter.ALL ? 'active' : undefined}
-              onClick={() => onChangeFilter(ProjectFilter.ALL)}>
-              <button>{t['All']}</button>
-              
-              <span 
-                className={all === 0 ? 'badge disabled' : 'badge'}>
-                {all}
-              </span>
-            </li>
-          )}
+          <li
+            className={filter === ProjectFilter.ALL ? 'active' : undefined}
+            onClick={() => onChangeFilter(ProjectFilter.ALL)}>
+            <button>{t['All']}</button>
+            
+            <span 
+              className={all === 0 ? 'badge disabled' : 'badge'}>
+              {all}
+            </span>
+          </li>
 
           <li
             className={filter === ProjectFilter.MINE ? 'active' : undefined}
