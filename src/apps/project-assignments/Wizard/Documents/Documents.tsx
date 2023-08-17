@@ -1,15 +1,21 @@
+import { useEffect } from 'react';
 import { Article, Check, CheckSquare, Image, Square, Warning } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { DocumentInProject, Translations } from 'src/Types';
 import { useSelectableRows } from '../useSelectableRows';
 
 import './Document.css';
+import type { AssignmentSpec } from '../AsssignmentSpec';
 
 interface DocumentsProps {
 
   i18n: Translations;
 
+  assignment: AssignmentSpec;
+
   documents: DocumentInProject[];
+
+  onChange(documents: DocumentInProject[]): void;
 
   onCancel(): void;
 
@@ -26,7 +32,11 @@ export const Documents = (props: DocumentsProps) => {
     toggleSelected, 
     toggleAll, 
     isAllSelected 
-  } = useSelectableRows(documents);
+  } = useSelectableRows(documents, props.assignment.documents);
+
+  useEffect(() => {
+    props.onChange(documents.filter(d => selected.includes(d.id)));
+  }, [selected, documents ]);
 
   return (
     <>

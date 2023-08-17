@@ -1,10 +1,15 @@
 import type { Translations } from 'src/Types';
+import type { AssignmentSpec } from '../AsssignmentSpec';
 
 import './Instructions.css';
 
 interface InstructionsProps {
 
   i18n: Translations;
+
+  assignment: AssignmentSpec;
+
+  onChange(description: string): void;
 
   onCancel(): void;
 
@@ -27,7 +32,10 @@ export const Instructions = (props: InstructionsProps) => {
         </section>
 
         <section className="column">
-          <textarea rows={10} />
+          <textarea 
+            rows={10} 
+            value={props.assignment.description || ''} 
+            onChange={evt => props.onChange(evt.target.value)}/>
         </section>
       </div>
 

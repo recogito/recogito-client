@@ -1,11 +1,14 @@
 import { Check, Warning, X } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
+import type { AssignmentSpec } from '../AsssignmentSpec';
 
 import './Verify.css';
 
 interface VerifyProps {
 
   i18n: Translations;
+
+  assignment: AssignmentSpec;
 
   onCancel(): void;
 
@@ -14,6 +17,8 @@ interface VerifyProps {
 }
 
 export const Verify = (props: VerifyProps) => {
+
+  const { documents, team, description } = props.assignment;
  
   return (
     <>
@@ -27,17 +32,43 @@ export const Verify = (props: VerifyProps) => {
 
         <section className="column">
           <ol>
-            <li className="valid">
-              <Check size={16} weight="bold" /> 2 Documents 
-            </li>
+            {documents.length === 0 ? (
+              <li className="invalid">
+                <X size={16} weight="bold" /> No documents. Please select at least one document for the assignment.
+              </li> 
+            ) : (
+              <li className="valid">
+                <Check size={16} weight="bold" /> {documents.length === 1 ? (
+                  <>1 document</>
+                ) : (
+                  <>{documents.length} documents</>
+                )}
+              </li> 
+            )}
 
-            <li className="invalid">
-              <X size={16} weight="bold" /> No team members 
-            </li>
+            {team.length === 0 ? (
+              <li className="invalid">
+                <X size={16} weight="bold" /> No team members 
+              </li>
+            ) : (
+              <li className="valid">
+                <Check size={16} weight="bold" /> {team.length === 1 ? (
+                  <>1 team member</>
+                ) : (
+                  <>{team.length} team members</>
+                )}
+              </li>
+            )}
 
-            <li className="warning">
-              <Warning size={16} weight="bold" /> No instructions
-            </li>
+            {description ? (
+              <li className="valid">
+                <Check size={16} weight="bold" /> Instructions
+              </li>
+            ) : (
+              <li className="warning">
+                <Warning size={16} weight="bold" /> No instructions
+              </li>
+            )}
           </ol>
         </section>
       </div>

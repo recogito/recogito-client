@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import type * as Checkbox from '@radix-ui/react-checkbox';
 
-export const useSelectableRows = <T extends { id: string }>(items: T[]) => {
+export const useSelectableRows = <T extends { id: string }>(items: T[], initialSelection?: T[] | string[]) => {
 
-  const [selected, setSelected] = useState<string[]>([]);
+  const initialIds = initialSelection?.map(x => typeof x === 'string' ? x : x.id);
+
+  const [selected, setSelected] = useState<string[]>(initialIds || []);
 
   const isAllSelected = selected.length === items.length;
 

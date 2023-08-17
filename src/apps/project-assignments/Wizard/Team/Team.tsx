@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { 
   CaretDown, 
   CaretUp, 
@@ -10,16 +11,20 @@ import {
 import * as Checkbox from '@radix-ui/react-checkbox';
 import { TimeAgo } from '@components/TimeAgo';
 import type { ExtendedProjectData, ProjectGroup, Translations, UserProfile } from 'src/Types';
+import type { AssignmentSpec } from '../AsssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
 import './Team.css';
-import { useState } from 'react';
 
 interface TeamProps {
 
   i18n: Translations;
 
+  assignment: AssignmentSpec;
+
   project: ExtendedProjectData;
+
+  onChange(members: UserProfile[]): void;
 
   onCancel(): void;
 
@@ -84,7 +89,15 @@ export const Team = (props: TeamProps) => {
     toggleSelected, 
     toggleAll, 
     isAllSelected 
-  } = useSelectableRows(members);
+  } = useSelectableRows(members, props.assignment.team.map(u => u.id));
+
+  useEffect(() => {
+    const members = props.project.groups.reduce((members, group) => (
+      [...members, ...group.members.map(m => m.user).filter(u => selected.includes(u.id))]
+    ), [] as UserProfile[]);
+
+    props.onChange(members);
+  }, [selected, props.project.groups, props.onChange]);
 
   const sortBy = (field: Field) => () => setSorting(sorting => { 
     if (sorting?.field === field) {

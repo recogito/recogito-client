@@ -3,7 +3,8 @@ import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Files, Info, ListChecks, UsersThree } from '@phosphor-icons/react';
 import { EditableText } from '@components/EditableText';
-import type { DocumentInProject, ExtendedProjectData, Translations } from 'src/Types';
+import type { DocumentInProject, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
+import type { AssignmentSpec } from './AsssignmentSpec';
 import { Documents } from './Documents';
 import { Team } from './Team';
 import { Instructions } from './Instructions';
@@ -28,11 +29,17 @@ const STEPS = [
   'team',
   'instructions',
   'verify'
-]
+];
 
 export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
   const [step, setStep] = useState(0);
+
+  const [assignment, setAssignment] = useState<AssignmentSpec>({
+    name: 'Unnamed Assignement',
+    documents: [],
+    team: []
+  });
 
   const onNext = () =>
     setStep(idx => Math.min(STEPS.length - 1, idx + 1));
@@ -40,9 +47,18 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const onBack = () =>
     setStep(idx => Math.max(0, idx - 1));
 
-  const onChangeTitle = (title: string) => {
-    console.log('changed', title);
-  }
+  const onChangeName = (name: string) =>
+    setAssignment({ ...assignment, name });
+
+  const onChangeDocuments = (documents: DocumentInProject[]) =>
+    setAssignment({ ...assignment, documents });
+
+  const onChangeTeam = (team: UserProfile[]) =>
+    setAssignment({...assignment, team });
+
+  const onChangeDescription = (description: string) => description ? 
+    setAssignment({ ...assignment, description }) :
+    setAssignment({ ...assignment, description: undefined });
 
   // Don't close this dialog when the user clicks outside!
   const onPointerDownOutside = (evt: Event) =>
@@ -61,7 +77,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <EditableText 
               focus={step === 0}
               value="Untitled Assignment" 
-              onSubmit={onChangeTitle} />
+              onSubmit={onChangeName} />
           </h1>
 
           <Tabs.Root 
@@ -89,15 +105,19 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <Tabs.Content className="tabs-content" value={STEPS[0]}>
               <Documents
                 i18n={props.i18n}
+                assignment={assignment}
                 documents={props.documents} 
-                onCancel={props.onCancel}
+                onChange={onChangeDocuments}
+                onCancel={props.onCancel} 
                 onNext={onNext} />
             </Tabs.Content>
 
             <Tabs.Content className="tabs-content" value={STEPS[1]}>
               <Team 
                 i18n={props.i18n}
+                assignment={assignment}
                 project={props.project}
+                onChange={onChangeTeam}
                 onCancel={props.onCancel}
                 onBack={onBack}
                 onNext={onNext} />
@@ -106,6 +126,8 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <Tabs.Content className="tabs-content" value={STEPS[2]}>
               <Instructions 
                 i18n={props.i18n} 
+                assignment={assignment}
+                onChange={onChangeDescription}
                 onCancel={props.onCancel}
                 onBack={onBack} 
                 onNext={onNext} />
@@ -114,6 +136,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <Tabs.Content className="tabs-content" value={STEPS[3]}>
               <Verify 
                 i18n={props.i18n}
+                assignment={assignment}
                 onCancel={props.onCancel}
                 onBack={onBack} />
             </Tabs.Content>
