@@ -107,6 +107,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
                   i18n={i18n} /> )} />
           )}
 
+          <div className="anno-desktop-left">
+            <AnnotationDesktop.DocumentMenu
+              document={props.document} />
+          </div>
+
           <div className="anno-desktop-right">
             <PresenceStack 
               present={present} />
