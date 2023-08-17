@@ -7,6 +7,7 @@ import { AssignmentWizard } from './Wizard';
 import type { DocumentInProject, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 
 import './ProjectAssignments.css';
+import { AssignmentsGrid } from './Grid';
 
 
 interface ProjectAssignmentsProps {
@@ -62,7 +63,9 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       {assignments ? assignments.length === 0 ? (
         <div>Placeholder: Empty</div>
       ) : (
-        <div>Placeholder: Got {assignments.length} assignments</div>
+        <AssignmentsGrid
+          i18n={props.i18n}
+          assignments={assignments} />
       ) : (
         <div>Placeholder: Loading</div>
       )}
