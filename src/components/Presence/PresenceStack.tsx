@@ -3,6 +3,7 @@ import { animated, useTransition } from '@react-spring/web';
 import { Avatar } from '@components/Avatar';
 
 import './PresenceStack.css';
+import { PresenceViewMoreButton } from './PresenceViewMoreButton';
 
 interface PresenceStackProps {
 
@@ -31,23 +32,26 @@ export const PresenceStack = (props: PresenceStackProps) => {
   });
 
   return (
-    <div className="presence-stack">
-      <ul>
-        {transition((style, presentUser) => (
-          <animated.li 
-            style={{ 
-              ...style, 
-              ...{'--presence-color': presentUser.appearance.color }
-            }} 
-            key={presentUser.presenceKey}>
-            <Avatar 
-              id={presentUser.id}
-              name={presentUser.appearance.label}
-              color={presentUser.appearance.color} 
-              avatar={presentUser.appearance.avatar} />
-          </animated.li>
-        ))}
-      </ul>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '50px' }}>
+      <div className="presence-stack">
+        <ul>
+          {transition((style, presentUser) => (
+            <animated.li 
+              style={{ 
+                ...style, 
+                ...{'--presence-color': presentUser.appearance.color }
+              }} 
+              key={presentUser.presenceKey}>
+              <Avatar 
+                id={presentUser.id}
+                name={presentUser.appearance.label}
+                color={presentUser.appearance.color} 
+                avatar={presentUser.appearance.avatar} />
+            </animated.li>
+          ))}
+        </ul>
+      </div>
+      { present.length > limit && <PresenceViewMoreButton limit={limit} present={present} /> }
     </div>
   )
 

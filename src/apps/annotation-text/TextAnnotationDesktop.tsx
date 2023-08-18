@@ -96,17 +96,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         )}
 
         <div className="anno-desktop-right not-annotatable">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '50px', zIndex: 3 }}>
           <PresenceStack
             present={present}
             limit={limit} />
-
-          { present.length > limit+1 && (
-            <PresenceViewMoreButton
-              present={present}
-              limit={limit} />
-          )}
-          </div>
 
           <AnnotationDesktop.ViewMenu 
             i18n={i18n}

@@ -12,7 +12,7 @@
 }
 
 .presence-view-more-content {
-    min-width: 220px;
+    min-width: 150px;
     background-color: white;
     border-radius: 6px;
     padding: 5px;
@@ -21,9 +21,11 @@
     animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
     will-change: transform, opacity;  
     cursor: default;
+    max-height: 50vh;
+    overflow-y: scroll;
 }
 
-.presence-view-more-item {
+.presence-view-more-content li {
     display: flex;
     align-items: center;
     padding: 5px;
@@ -31,7 +33,6 @@
     border-radius: 5px;
 }
 
-.presence-view-more-item[data-highlighted] {
-    border-style: none;
-    background-color: rgb(226, 226, 226)
+.presence-view-more-content ul {
+    padding-left: 0;
 }

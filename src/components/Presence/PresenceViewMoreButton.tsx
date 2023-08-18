@@ -1,10 +1,10 @@
 import { isMe, type PresentUser } from '@annotorious/react';
-import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import * as Popover from '@radix-ui/react-popover';
 import { Avatar } from '@components/Avatar';
 import './PresenceViewMoreButton.css';
 import { CaretDown, Check } from '@phosphor-icons/react';
 
-const { Content, Item, Portal, Root, Trigger, RadioGroup, RadioItem, ItemIndicator } = Dropdown;
+const { Content, Portal, Root, Trigger } = Popover;
 
 
 interface PresenceViewMoreButtonProps {
@@ -37,8 +37,9 @@ export const PresenceViewMoreButton = (props: PresenceViewMoreButtonProps) => {
 
       <Portal>
         <Content align="start" className="presence-view-more-content">
-            {present?.slice(limit, undefined).map((presentUser) => (
-                <Item className="presence-view-more-item">
+          <ul>
+            {present?.map((presentUser) => (
+                <li className="presence-view-more-item">
                     
                     <Avatar 
                     id={presentUser.id}
@@ -49,8 +50,9 @@ export const PresenceViewMoreButton = (props: PresenceViewMoreButtonProps) => {
                         {presentUser.name}
                     </span>
                     
-                </Item>
+                </li>
             ))}
+            </ul>
         </Content>
       </Portal>
     </Root>
