@@ -76,7 +76,7 @@ export const Verify = (props: VerifyProps) => {
 
             {description ? (
               <li className="valid">
-                <Check size={16} weight="bold" /> Instructions.
+                <Check size={16} weight="bold" /> Instructions provided.
               </li>
             ) : (
               <li className="warning">

@@ -75,7 +75,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   
   const onCreated = (assignment: Context) => {
     setComplete(true);
-    // props.onCreated(assignment);
+    props.onCreated(assignment);
   }
 
   // Don't close this dialog when the user clicks outside!
@@ -99,7 +99,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
               project={props.project}
               assignment={assignment} 
               onCreated={onCreated}
-              onClose={props.onClose}/>
+              onError={() => setComplete(true)} />
           ) : (
             <>
               <h1>

@@ -16,9 +16,9 @@ interface ProgressProps {
 
   assignment: AssignmentSpec;
 
-  onClose(): void;
-
   onCreated(assignment: Context): void;
+
+  onError(error: string): void;
 
 }
 
@@ -34,22 +34,18 @@ export const Progress = (props: ProgressProps) => {
     // TODO just a hack for now!
     const projectId = props.project.id;
 
-    setTimeout(() => {
-      setState('success');
+    setState('creating_assignment');
 
-      //@ts-ignore
-      props.onCreated(null);
-    }, 2000);
-
-    /* Step 1. Create a new context for this assignment
-    createAssignmentContext(supabase, name, projectId)
+    // Step 1. Create a new context for this assignment
+    createAssignmentContext(supabase, name!, projectId)
       .then(({ error, data }) => {
         if (error) {
-          console.error('ERROR creating Assignment Context', error);
+          console.error(error);
+
+          setState('failed');
+          props.onError(error.message);
         } else {
           const context = data;
-
-          console.log('Succesfully created Assignment context', context);
 
           // Step 2. For each document, create a layer in this context
           documents.reduce((promise, document) => {
@@ -58,16 +54,19 @@ export const Progress = (props: ProgressProps) => {
                 .then(layer => ([...layers, layer]))
             });
           }, Promise.resolve<Layer[]>([])).then(layers => {
-
-            console.log('Successfully created Layers for each document', layers);
-
+            setState('success');
+            
             // TODO add team members to layer groups
+
+            props.onCreated(context);
           }).catch(error => {
-            console.log('ERROR creating Layers', error);
+            console.error(error);
+
+            setState('failed');
+            props.onError(error.message);
           })
         }
       });
-      */
   }, []);
 
   return (
