@@ -36,6 +36,8 @@ const STEPS = [
 
 export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
+  const { t } = props.i18n;
+
   const [step, setStep] = useState(0);
 
   const [creating, setCreating] = useState(false);
@@ -105,7 +107,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
               <h1>
                 <EditableText 
                   focus={step === 0}
-                  value={assignment.name || 'Unnamed Assignment'}
+                  value={assignment.name || t['Unnamed Assignment']}
                   onSubmit={onChangeName} />
               </h1>
 
@@ -113,21 +115,21 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                 className="tabs-root" 
                 value={STEPS[step]}
                 onValueChange={value => setStep(STEPS.indexOf(value))}>
-                <Tabs.List className="tabs-list" aria-label="Create a new Assignment">
+                <Tabs.List className="tabs-list" aria-label={t['Create a new Assignment']}>
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[0]}>
-                    1. Documents
+                    {t['1. Documents']}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[1]}>
-                    2. Team
+                    {t['2. Team']}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[2]}>
-                    3. Instructions
+                    {t['3. Instructions']}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[3]}>
-                    4. Verify
+                    {t['4. Verify']}
                     <span 
                       className={
                         validityScore < 3 ? 'badge invalid' : 

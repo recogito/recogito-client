@@ -31,7 +31,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   // This assumes that people with project UPDATE and context INSERT 
   // privileges are authorized to create assignments
-  const canCreate = true; /*
+  const canCreate = false; /*
     policies?.get('projects').has('UPDATE') &&
     policies?.get('contexts').has('INSERT'); */
 

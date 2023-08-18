@@ -20,6 +20,8 @@ interface VerifyProps {
 
 export const Verify = (props: VerifyProps) => {
 
+  const { t } = props.i18n;
+
   const { name, documents, team, description } = props.assignment;
 
   const isValid = name && documents.length > 0 && team.length > 0;
@@ -28,9 +30,9 @@ export const Verify = (props: VerifyProps) => {
     <>
       <div className="row tab-verify">
         <section className="column">
-          <h1>Almost Ready!</h1>
+          <h1>{t['Almost Ready!']}</h1>
           <p>
-            Verify and confirm this assignment.
+            {t['Verify and confirm this assignment.']}
           </p>
         </section>
 
@@ -38,49 +40,49 @@ export const Verify = (props: VerifyProps) => {
           <ol>
             {!name ? (
               <li className="invalid">
-                <X size={16} weight="bold" /> Unnamed assignment. Please change the name to make it easier to find.
+                <X size={16} weight="bold" /> {t['Unnamed assignment.']}
               </li>
             ) : (
               <li className="valid">
-                <Check size={16} weight="bold" /> Name: {name}
+                <Check size={16} weight="bold" /> {t['Name:']} {name}
               </li>
             )}
 
             {documents.length === 0 ? (
               <li className="invalid">
-                <X size={16} weight="bold" /> No documents. Please select at least one document for the assignment.
+                <X size={16} weight="bold" /> {t['No documents.']}
               </li> 
             ) : (
               <li className="valid">
                 <Check size={16} weight="bold" /> {documents.length === 1 ? (
-                  <>1 document</>
+                  t['1 document']
                 ) : (
-                  <>{documents.length} documents</>
+                  t['${n} documents'].replace('${n}', documents.length.toString())
                 )}
               </li> 
             )}
 
             {team.length === 0 ? (
               <li className="invalid">
-                <X size={16} weight="bold" /> No team members. Please add at least one member.
+                <X size={16} weight="bold" /> {t['No team members.']}
               </li>
             ) : (
               <li className="valid">
                 <Check size={16} weight="bold" /> {team.length === 1 ? (
-                  <>1 team member</>
+                  t['1 team member']
                 ) : (
-                  <>{team.length} team members</>
+                  t['${n} team members'].replace('${n}', team.length.toString())
                 )}
               </li>
             )}
 
             {description ? (
               <li className="valid">
-                <Check size={16} weight="bold" /> Instructions provided.
+                <Check size={16} weight="bold" /> {t['Instructions provided.']}
               </li>
             ) : (
               <li className="warning">
-                <Warning size={16} weight="bold" /> Please consider adding instructions.
+                <Warning size={16} weight="bold" /> {t['Please consider adding instructions.']}
               </li>
             )}
           </ol>
@@ -89,15 +91,15 @@ export const Verify = (props: VerifyProps) => {
 
       <section className="wizard-nav">
         <button
-          onClick={props.onCancel}>Cancel</button>
+          onClick={props.onCancel}>{t['Cancel']}</button>
   
         <button 
-          onClick={props.onBack}>Back</button>
+          onClick={props.onBack}>{t['Back']}</button>
 
         <button 
           className="primary"
           disabled={!isValid}
-          onClick={props.onCreateAssignment}>Create Assignment</button>
+          onClick={props.onCreateAssignment}>{t['Create Assignment']}</button>
       </section>
     </>
   )

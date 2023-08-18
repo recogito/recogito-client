@@ -1,3 +1,45 @@
 {
-  
+  "Unnamed Assignment": "Unnamed Assignment",
+  "Create a new Assignment": "Create a new Assignment",
+  "1. Documents": "1. Documents",
+  "2. Team": "2. Team",
+  "3. Instructions": "3. Instructions",
+  "4. Verify": "4. Verify",
+
+  "Cancel": "Cancel",
+  "Next": "Next",
+  "Back": "Back",
+  "Create Assignment": "Create Assignment",
+
+  "Step": "Step",
+
+  "Add documents to this assignment.": "Add documents to this assignment.",
+  "Select at least 1 document": "Select at least 1 document",
+  "Selected 1 document": "Selected 1 document",
+  "Selected ${n} documents": "Selected ${n} documents",
+
+  "Add people to the assignment.": "Add people to the assignment",
+  "Name": "Name",
+  "Member since": "Member since",
+  "Select at least 1 team member": "Select at least 1 team member",
+  "Selected 1 team member": "Selected 1 team member",
+  "Selected ${n} team members": "Selected ${n} team members",
+
+  "Add a message": "Add a message or instructions for the team. This step is optional.",
+
+  "Almost Ready!": "Almost Ready!",
+  "Verify and confirm this assignment.": "Verify and confirm this assignment.",
+
+  "Name:": "Name:",
+  "1 document": "1 document",
+  "${n} documents": "${n} documents",
+  "1 team member": "1 team member",
+  "${n} team members": "${n} team members",
+  "Unnamed assignment.": "Unnamed assignment. Please change the name to make it easier to find.",
+  "No documents.": "No documents. Please select at least one document for the assignment.",
+  "No team members.": "No team members. Please add at least one member.",
+  "Instructions provided.": "Instructions provided.",
+  "Please consider adding instructions.": "Please consider adding instructions.",
+
+  "The assignment was created successfully": "The assignment was created successfully and was added to the team members' dashboards."
 }

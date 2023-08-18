@@ -26,6 +26,8 @@ type ProgressState = 'idle' | 'creating_assignment' | 'success' | 'failed';
 
 export const Progress = (props: ProgressProps) => {
 
+  const { t } = props.i18n;
+
   const { name, description, documents, team } = props.assignment;
 
   const [state, setState] = useState<ProgressState>('idle');
@@ -76,7 +78,9 @@ export const Progress = (props: ProgressProps) => {
       ) : state === 'success' ? (
         <>
           <AnimatedCheck size={40} />
-          <p>The assignment was created successfully and was added to the team members' dashboards.</p>
+          <p>
+            {t['The assignment was created successfully']}
+          </p>
         </>
       ) : (
         <p>Something went wrong</p>

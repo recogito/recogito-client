@@ -80,6 +80,8 @@ const getMembers = (groups: ProjectGroup[], sorting?: Sorting): Member[] => grou
 
 export const Team = (props: TeamProps) => {
 
+  const { t } = props.i18n;
+
   const [sorting, setSorting] = useState<Sorting | undefined>({ field: 'name', ascending: false });
 
   const members = getMembers(props.project.groups, sorting);
@@ -125,9 +127,9 @@ export const Team = (props: TeamProps) => {
     <>
       <div className="row tab-team">
         <section className="column">
-          <h1>Step 2</h1>
+          <h1>{t['Step']}  2</h1>
           <p>
-            Add people to the assignment.
+            {t['Add people to the assignment.']}
           </p>
         </section>
 
@@ -153,13 +155,13 @@ export const Team = (props: TeamProps) => {
 
                 <th>
                   <button onClick={sortBy('name')}>
-                    Name {sortIcon('name')}
+                    {t['Name']} {sortIcon('name')}
                   </button>
                 </th>
 
                 <th>
                   <button onClick={sortBy('since')}>
-                    Member since {sortIcon('since')}
+                    {t['Member since']}  {sortIcon('since')}
                   </button>
                 </th>
               </tr>
@@ -197,15 +199,15 @@ export const Team = (props: TeamProps) => {
 
           {selected.length === 0 ? (
             <p className="hint warn">
-              <Warning size={16} /> Select at least 1 team member
+              <Warning size={16} /> {t['Select at least 1 team member']}
             </p>
           ) : selected.length === 1 ? (
             <p className="hint ok">
-              <Check size={16} /> Selected 1 team member
+              <Check size={16} /> {t['Selected 1 team member']}
             </p>
           ) : (
             <p className="hint ok">
-              <Check size={16} /> Selected {selected.length} team members
+              <Check size={16} /> {t['Selected ${n} team members'].replace('${n}', selected.length.toString())}
             </p>
           )}
         </section>
@@ -213,14 +215,14 @@ export const Team = (props: TeamProps) => {
 
       <section className="wizard-nav">
         <button
-          onClick={props.onCancel}>Cancel</button>
+          onClick={props.onCancel}>{t['Cancel']}</button>
 
         <button
-          onClick={props.onBack}>Back</button>
+          onClick={props.onBack}>{t['Back']}</button>
 
         <button 
           className="primary"
-          onClick={props.onNext}>Next</button>
+          onClick={props.onNext}>{t['Next']}</button>
       </section>
     </>
   )

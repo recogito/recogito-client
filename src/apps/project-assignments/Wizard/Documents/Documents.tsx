@@ -25,6 +25,8 @@ interface DocumentsProps {
 
 export const Documents = (props: DocumentsProps) => {
 
+  const { t } = props.i18n;
+
   const { documents } = props;
 
   const { 
@@ -42,9 +44,9 @@ export const Documents = (props: DocumentsProps) => {
     <>
       <div className="row tab-documents">
         <section className="column">
-          <h1>Step 1</h1>
+          <h1>{t['Step']} 1</h1>
           <p>
-            Add documents to this assignment.
+            {t['Add documents to this assignment.']}
           </p>
         </section>
 
@@ -110,15 +112,15 @@ export const Documents = (props: DocumentsProps) => {
 
           {selected.length === 0 ? (
             <p className="hint warn">
-              <Warning size={16} /> Select at least 1 document
+              <Warning size={16} /> {t['Select at least 1 document']}
             </p>
           ) : selected.length === 1 ? (
             <p className="hint ok">
-              <Check size={16} /> Selected 1 document
+              <Check size={16} /> {t['Selected 1 document']}
             </p>
           ) :(
             <p className="hint ok">
-              <Check size={16} /> Selected {selected.length} documents
+              <Check size={16} /> {t['Selected ${n} documents'].replace('${n}', selected.length.toString())}
             </p>
           )}
         </section>
@@ -126,11 +128,11 @@ export const Documents = (props: DocumentsProps) => {
 
       <section className="wizard-nav">
         <button
-          onClick={props.onCancel}>Cancel</button>
+          onClick={props.onCancel}>{t['Cancel']}</button>
 
         <button 
           className="primary"
-          onClick={props.onNext}>Next</button>
+          onClick={props.onNext}>{t['Next']}</button>
       </section>
     </>
   )

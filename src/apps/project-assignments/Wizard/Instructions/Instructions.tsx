@@ -21,13 +21,15 @@ interface InstructionsProps {
 
 export const Instructions = (props: InstructionsProps) => {
 
+  const { t } = props.i18n;
+
   return (
     <>
       <div className="row tab-instructions">
         <section className="column">
-          <h1>Step 3</h1>
+          <h1>{t['Step']}  3</h1>
           <p>
-            Add a message or instructions for the team. This step is optional.
+            {t['Add a message']}
           </p>
         </section>
 
@@ -41,14 +43,14 @@ export const Instructions = (props: InstructionsProps) => {
 
       <section className="wizard-nav">
         <button
-          onClick={props.onCancel}>Cancel</button>
+          onClick={props.onCancel}>{t['Cancel']}</button>
 
         <button
-          onClick={props.onBack}>Back</button>
+          onClick={props.onBack}>{t['Back']}</button>
 
         <button 
           className="primary"
-          onClick={props.onNext}>Next</button>
+          onClick={props.onNext}>{t['Next']}</button>
       </section>
     </>
   )
