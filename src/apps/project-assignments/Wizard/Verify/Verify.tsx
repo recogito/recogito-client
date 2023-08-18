@@ -38,7 +38,7 @@ export const Verify = (props: VerifyProps) => {
           <ol>
             {!name ? (
               <li className="invalid">
-                <X size={16} weight="bold" /> Unnamed assignment. Please add a name, so this assignment is easier to find.
+                <X size={16} weight="bold" /> Unnamed assignment. Please change the name to make it easier to find.
               </li>
             ) : (
               <li className="valid">
@@ -62,7 +62,7 @@ export const Verify = (props: VerifyProps) => {
 
             {team.length === 0 ? (
               <li className="invalid">
-                <X size={16} weight="bold" /> No team members 
+                <X size={16} weight="bold" /> No team members. Please add at least one member.
               </li>
             ) : (
               <li className="valid">
@@ -76,11 +76,11 @@ export const Verify = (props: VerifyProps) => {
 
             {description ? (
               <li className="valid">
-                <Check size={16} weight="bold" /> Instructions
+                <Check size={16} weight="bold" /> Instructions.
               </li>
             ) : (
               <li className="warning">
-                <Warning size={16} weight="bold" /> No instructions
+                <Warning size={16} weight="bold" /> Please consider adding instructions.
               </li>
             )}
           </ol>

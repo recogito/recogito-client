@@ -77,7 +77,7 @@ export const Progress = (props: ProgressProps) => {
       ) : state === 'success' ? (
         <>
           <AnimatedCheck size={40} />
-          <p>The assignment was created successfully and added to the team members' dashboards.</p>
+          <p>The assignment was created successfully and was added to the team members' dashboards.</p>
         </>
       ) : (
         <p>Something went wrong</p>

@@ -45,12 +45,12 @@
 }
 
 .assignment-wizard .tabs-content section.column:first-child {
-  flex: 30%;
+  flex: 25%;
   padding: 30px 40px 30px 30px;
 }
 
 .assignment-wizard .tabs-content section.column:last-child {
-  flex: 70%;
+  flex: 75%;
 }
 
 .assignment-wizard .tabs-content h1 { 

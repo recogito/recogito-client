@@ -27,7 +27,7 @@ export const Instructions = (props: InstructionsProps) => {
         <section className="column">
           <h1>Step 3</h1>
           <p>
-            Write an additional message or assignment instructions for the team (optional).
+            Add a message or instructions for the team. This step is optional.
           </p>
         </section>
 
