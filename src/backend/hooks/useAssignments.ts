@@ -32,6 +32,6 @@ export const useAssignments = (project: ExtendedProjectData, onError?: (arg: str
       })
   }, []);
 
-  return assignments;
+  return { assignments, setAssignments };
 
 }

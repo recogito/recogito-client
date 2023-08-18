@@ -4,7 +4,7 @@ import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
 import { AssignmentWizard } from './Wizard';
-import type { DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
@@ -35,7 +35,10 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
     policies?.get('projects').has('UPDATE') &&
     policies?.get('contexts').has('INSERT');
 
-  const assignments = useAssignments(project);
+  const { assignments, setAssignments } = useAssignments(project);
+
+  const onAssignmentCreated = (assignment: Context) =>
+    setAssignments(assignments => ([...(assignments || []), assignment]));
 
   return (
     <div className="project-assignments">
@@ -54,7 +57,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
               i18n={props.i18n} 
               project={props.project}
               documents={props.documents}
-              onCancel={() => setWizardOpen(false)} />
+              onCreated={onAssignmentCreated}
+              onClose={() => setWizardOpen(false)} />
           )}
         </>
       )}

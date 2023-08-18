@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createAssignmentContext, createLayerInContext } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Layer, ExtendedProjectData, Translations } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 
 import './Progress.css';
+import { Spinner } from '@components/Spinner';
+import { AnimatedCheck } from '@components/AnimatedIcons';
 
 interface ProgressProps {
 
@@ -14,17 +16,27 @@ interface ProgressProps {
 
   assignment: AssignmentSpec;
 
+  onClose(): void;
+
 }
+
+type ProgressState = 'idle' | 'creating_assignment' | 'success' | 'failed';
 
 export const Progress = (props: ProgressProps) => {
 
   const { name, description, documents, team } = props.assignment;
+
+  const [state, setState] = useState<ProgressState>('idle');
   
   useEffect(() => {
     // TODO just a hack for now!
     const projectId = props.project.id;
 
-    // Step 1. Create a new context for this assignment
+    setTimeout(() => {
+      setState('success');
+    }, 1000);
+
+    /* Step 1. Create a new context for this assignment
     createAssignmentContext(supabase, name, projectId)
       .then(({ error, data }) => {
         if (error) {
@@ -50,11 +62,22 @@ export const Progress = (props: ProgressProps) => {
           })
         }
       });
+      */
   }, []);
 
   return (
     <div className="creating-assignment">
-      Please wait while we're creating your assignment.
+      {state === 'idle' || state === 'creating_assignment' ? (
+        <Spinner />
+      ) : state === 'success' ? (
+        <>
+          <AnimatedCheck size={40} />
+          <h1>Assignment created</h1>
+          <button className="primary" onClick={props.onClose}>Ok</button>
+        </>
+      ) : (
+        <h1>Something went wrong</h1>
+      )}
     </div>
   )
 

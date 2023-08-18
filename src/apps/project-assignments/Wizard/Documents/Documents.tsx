@@ -112,7 +112,11 @@ export const Documents = (props: DocumentsProps) => {
             <p className="hint warn">
               <Warning size={16} /> Select at least 1 document
             </p>
-          ) : (
+          ) : selected.length === 1 ? (
+            <p className="hint ok">
+              <Check size={16} /> Selected 1 document
+            </p>
+          ) :(
             <p className="hint ok">
               <Check size={16} /> Selected {selected.length} documents
             </p>

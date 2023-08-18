@@ -199,6 +199,10 @@ export const Team = (props: TeamProps) => {
             <p className="hint warn">
               <Warning size={16} /> Select at least 1 team member
             </p>
+          ) : selected.length === 1 ? (
+            <p className="hint ok">
+              <Check size={16} /> Selected 1 team member
+            </p>
           ) : (
             <p className="hint ok">
               <Check size={16} /> Selected {selected.length} team members

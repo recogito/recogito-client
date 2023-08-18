@@ -34,7 +34,7 @@ export const Verify = (props: VerifyProps) => {
 
         <section className="column">
           <ol>
-            {name === 'Untitled Assignment' ? (
+            {!name ? (
               <li className="invalid">
                 <X size={16} weight="bold" /> Unnamed assignment. Please add a name, so this assignment is easier to find.
               </li>

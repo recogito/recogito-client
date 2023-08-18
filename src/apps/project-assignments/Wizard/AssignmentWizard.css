@@ -14,6 +14,23 @@
   border-top: 1px solid var(--gray-300);
 }
 
+.assignment-wizard .tabs-list .badge {
+  color: #fff;
+}
+
+.assignment-wizard .tabs-list .badge.invalid {
+  background-color: var(--red-500);
+}
+
+.assignment-wizard .tabs-list .badge.warn {
+  background-color: var(--orange-500);
+}
+
+
+.assignment-wizard .tabs-list .badge.valid {
+  background-color: var(--green-500);
+}
+
 .assignment-wizard .tabs-content {
   background-color: #fff;
 }
