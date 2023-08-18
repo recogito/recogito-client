@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Files, Info, ListChecks, UsersThree, X } from '@phosphor-icons/react';
+import { X } from '@phosphor-icons/react';
 import { EditableText } from '@components/EditableText';
 import type { Context, DocumentInContext, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from './AssignmentSpec';
@@ -115,19 +115,19 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                 onValueChange={value => setStep(STEPS.indexOf(value))}>
                 <Tabs.List className="tabs-list" aria-label="Create a new Assignment">
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[0]}>
-                    <Files size={18} /> Documents
+                    1. Documents
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[1]}>
-                    <UsersThree size={18} /> Team
+                    2. Team
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[2]}>
-                    <Info size={18} /> Instructions
+                    3. Instructions
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className="tabs-trigger" value={STEPS[3]}>
-                    <ListChecks size={18} /> Verify
+                    4. Verify
                     <span 
                       className={
                         validityScore < 3 ? 'badge invalid' : 
