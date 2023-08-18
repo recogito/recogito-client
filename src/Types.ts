@@ -151,7 +151,7 @@ export interface Document {
 
 }
 
-export interface DocumentInProject extends Document {
+export interface DocumentInContext extends Document {
 
   layers: Layer[];
 
@@ -187,19 +187,13 @@ export interface Layer {
 
   description?: string;
 
+  contexts: Context[];
+
 }
 
 export interface TagDefinition {
 
   id: string;
-
-  created_at: string;
-
-  created_by?: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
 
   name: string;
 
@@ -219,13 +213,9 @@ export interface Tag {
 
   created_by?: string;
 
-  updated_at?: string;
-
-  updated_by?: string;
-
-  tag_definition_id: string;
-
   target_id: string;
+
+  tag_definition?: TagDefinition;
 
 }
 
@@ -257,7 +247,7 @@ export interface Invitation {
 
 }
 
-export type TableName = 'projects' | 'documents'; 
+export type TableName = 'projects' | 'documents' | 'contexts'; 
 
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
 

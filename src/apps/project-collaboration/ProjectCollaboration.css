@@ -1,9 +1,9 @@
-.manage-users {
+.project-collaboration {
   padding: 20px 40px;
   width: 100%;
 }
 
-.manage-users button.select-trigger {
+.project-collaboration button.select-trigger {
   justify-content: space-between;
 }
 

@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { initDocument } from '@backend/helpers';
-import type { DocumentInProject } from 'src/Types';
+import type { DocumentInContext } from 'src/Types';
 import type { Upload, UploadProgress, UploadStatus } from './Upload';
 
 let queue = Promise.resolve();
 
 export const useUpload = (
-  onImport: (document: DocumentInProject) => void
+  onImport: (document: DocumentInContext) => void
 ) => {
 
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
@@ -21,7 +21,7 @@ export const useUpload = (
     } : upload));
   };
 
-  const onSuccess = (id: string, document: DocumentInProject) => {
+  const onSuccess = (id: string, document: DocumentInContext) => {
     setUploads(prev => prev.map(upload => upload.id === id ? {
       ...upload,
       progress: 100,

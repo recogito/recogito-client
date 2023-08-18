@@ -5,7 +5,7 @@ import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { DocumentInProject, Layer, Translations } from 'src/Types';
+import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   TextAnnotator, 
@@ -25,7 +25,7 @@ export interface TextAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInProject;
+  document: DocumentInContext;
 
   channelId: string;
 
@@ -90,6 +90,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
                 i18n={i18n} />
             )} />
         )}
+
+        <div className="anno-desktop-left">
+          <AnnotationDesktop.DocumentMenu
+            document={props.document} />
+        </div>
 
         <div className="anno-desktop-right not-annotatable">
           <PresenceStack

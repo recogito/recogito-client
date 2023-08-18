@@ -3,7 +3,7 @@ import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import { uploadFile } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, DocumentInProject, Layer } from 'src/Types';
+import type { Document, DocumentInContext, Layer } from 'src/Types';
 
 /**
  * Initializes a new Document in a Context.
@@ -19,7 +19,7 @@ export const initDocument = (
   onProgress?: (progress: number) => void,
   file?: File,
   url?: string
-): Promise<DocumentInProject> => {
+): Promise<DocumentInContext> => {
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) => 
     createDocument(supabase, name, file?.type, { protocol: 'IIIF_IMAGE', url })
@@ -48,35 +48,7 @@ export const initDocument = (
 export const listDocumentsInProject = (
   supabase: SupabaseClient,
   projectId: string
-): Response<DocumentInProject[]> =>
-  supabase
-    .from('documents')
-    .select(`
-      id,
-      created_at,
-      created_by,
-      updated_at,
-      updated_by,
-      name,
-      bucket_id,
-      content_type,
-      meta_data,
-      layers!inner (
-        id,
-        document_id,
-        project_id,
-        name,
-        description
-      )
-    `)
-    .eq('layers.project_id', projectId)
-    .then(({ error, data }) => 
-      error ? ({ error, data: [] }) : ({ error, data }));
-
-export const listDocumentsInContext = (
-  supabase: SupabaseClient,
-  contextId: string
-): Response<DocumentInProject[]> =>
+): Response<DocumentInContext[]> =>
   supabase
     .from('documents')
     .select(`
@@ -95,20 +67,59 @@ export const listDocumentsInContext = (
         project_id,
         name,
         description,
-        layer_contexts!inner (
-          context_id
+        contexts:layer_contexts!inner (
+          ...contexts (
+            id,
+            name,
+            project_id
+          )
+        )
+      )
+    `)
+    .eq('layers.project_id', projectId)
+    .then(({ error, data }) => 
+      error ? ({ error, data: [] }) : ({ error, data: data as unknown as DocumentInContext[] }));
+
+export const listDocumentsInContext = (
+  supabase: SupabaseClient,
+  contextId: string
+): Response<DocumentInContext[]> =>
+  supabase
+    .from('documents')
+    .select(`
+      id,
+      created_at,
+      created_by,
+      updated_at,
+      updated_by,
+      name,
+      bucket_id,
+      content_type,
+      meta_data,
+      layers!inner (
+        id,
+        document_id,
+        project_id,
+        name,
+        description,
+        contexts:layer_contexts!inner (
+          ...contexts (
+            id,
+            name,
+            project_id
+          )
         )
       )
     `)
     .eq('layers.layer_contexts.context_id', contextId)
     .then(({ error, data }) => 
-      error ? ({ error, data: [] }) : ({ error, data }));
+      error ? ({ error, data: [] }) : ({ error, data: data as unknown as DocumentInContext[] }));
 
 export const getDocumentInContext = (
   supabase: SupabaseClient,
   documentId: string, 
   contextId: string
-): Response<DocumentInProject | undefined> =>
+): Response<DocumentInContext | undefined> =>
   supabase
     .from('documents')
     .select(`
@@ -127,8 +138,12 @@ export const getDocumentInContext = (
         project_id,
         name,
         description,
-        layer_contexts!inner (
-          context_id
+        contexts:layer_contexts!inner (
+          ...contexts (
+            id,
+            name, 
+            project_id
+          )
         )
       )
     `)
@@ -136,4 +151,4 @@ export const getDocumentInContext = (
     .eq('layers.layer_contexts.context_id', contextId)
     .single()
     .then(({ error, data }) => 
-      error ? ({ error, data: undefined }) : ({ error, data }));
+      error ? ({ error, data: undefined }) : ({ error, data: data as unknown as DocumentInContext }));

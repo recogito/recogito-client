@@ -10,6 +10,8 @@
 @import './mixins/index.css';
 @import './popover/index.css';
 @import './select/index.css';
+@import './table/index.css';
+@import './tabs/index.css';
 @import './toast/index.css';
 @import './tooltip/index.css';
 
@@ -125,6 +127,7 @@
   --gray-50: #f6f7f9;
 
   --red-500: #da1e26;
+  --red-200: #f25158;
   --orange-500: #ffa929;
   --green-500: #11a011;
 

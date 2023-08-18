@@ -1,0 +1,12 @@
+.tab-documents td:nth-child(2) {
+  text-align: center;
+}
+
+.tab-documents td:nth-child(2) svg {
+  color: var(--font-light);
+  vertical-align: text-bottom;
+}
+
+.tab-documents td:nth-child(3) {
+  width: 99%;
+}

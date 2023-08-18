@@ -63,29 +63,6 @@ export const initProject = (
         })));
 }
 
-export const getProjectWithContexts = (
-  supabase: SupabaseClient, 
-  projectId: string
-): Response<Project & { contexts: Context[] }> => 
-  supabase
-   .from('projects')
-   .select(`
-    id,
-    created_at,
-    updated_at,
-    updated_by,
-    name,
-    description,
-    contexts (
-      id,
-      project_id,
-      name
-    )
-  `)
-  .eq('id', projectId)
-  .single()
-  .then(({ error, data }) => ({ error, data: data as Project & { contexts: Context[] } }));
-
 export const listMyProjectsExtended = (supabase: SupabaseClient): Response<ExtendedProjectData[]> => 
   supabase
     .from('projects')

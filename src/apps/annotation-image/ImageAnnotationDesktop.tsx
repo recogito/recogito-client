@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import type { DocumentInProject, Translations } from 'src/Types';
+import type { DocumentInContext, Translations } from 'src/Types';
 import { Annotation } from '@components/Annotation';
 import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
@@ -26,7 +26,7 @@ export interface ImageAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInProject;
+  document: DocumentInContext;
 
   channelId: string;
 
@@ -106,6 +106,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
                   present={present} 
                   i18n={i18n} /> )} />
           )}
+
+          <div className="anno-desktop-left">
+            <AnnotationDesktop.DocumentMenu
+              document={props.document} />
+          </div>
 
           <div className="anno-desktop-right">
             <PresenceStack 

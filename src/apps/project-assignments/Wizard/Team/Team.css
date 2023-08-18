@@ -1,0 +1,5 @@
+.tab-team thead th button {
+  align-items: center;
+  display: inline-flex;
+  justify-content: space-between;
+}

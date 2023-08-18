@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Context, DocumentInProject, Translations } from 'src/Types';
+import type { Context, DocumentInContext, Translations } from 'src/Types';
 import { EditableText } from '@components/EditableText';
 import { DocumentCardActions } from './DocumentCardActions';
 import { ContentTypeIcon } from './ContentTypeIcon';
@@ -12,7 +12,7 @@ interface DocumentCardProps {
 
   context: Context;
 
-  document: DocumentInProject;
+  document: DocumentInContext;
 
   onDelete(): void;
 
