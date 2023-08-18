@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
-import { supabase } from '@backend/supabaseBrowserClient';
-import { listDocumentsInContext } from '@backend/helpers';
-import type { DocumentInContext, Context, Translations } from 'src/Types';
+import type { Context, Translations } from 'src/Types';
+import { GraduationCap } from '@phosphor-icons/react';
+import { AssignmentCardActions } from './AssignmentCardActions';
+
+import './AssignmentCard.css';
 
 interface AssignmentCardProps {
 
@@ -16,22 +17,23 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 
   const { assignment } = props;
 
-  const { lang } = props.i18n;
-
-  const [documents, setDocuments] = useState<DocumentInContext[]>();
-
-  useEffect(() => {
-    // Temporary hack
-    listDocumentsInContext(supabase, assignment.id)
-      .then(({ data, error }) => setDocuments(data));
-  }, []);
-
   return (
     <article className="assignment-card">
-      <h1>{assignment.name}</h1>
-      {documents?.map(document => (
-        <a key={document.id} href={`/${lang}/annotate/${assignment.id}/${document.id}`}>{document.name}</a>
-      ))}
+      <div className="ribbon">
+        <GraduationCap size={18} />
+      </div>
+      <div className="top">
+        <h1>
+          My First Project
+        </h1>
+        <h2>
+          {assignment.name}
+        </h2>
+      </div>
+
+      <div className="bottom">
+        <AssignmentCardActions i18n={props.i18n} />
+      </div>
     </article>
   )
 

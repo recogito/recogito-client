@@ -31,9 +31,9 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   // This assumes that people with project UPDATE and context INSERT 
   // privileges are authorized to create assignments
-  const canCreate = false; /*
+  const canCreate =
     policies?.get('projects').has('UPDATE') &&
-    policies?.get('contexts').has('INSERT'); */
+    policies?.get('contexts').has('INSERT');
 
   const { assignments, setAssignments } = useAssignments(project);
 
@@ -63,7 +63,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
         </>
       )}
 
-      {/* assignments ? assignments.length === 0 ? (
+      {assignments ? assignments.length === 0 ? (
         <div>Placeholder: Empty</div>
       ) : (
         <AssignmentsGrid
@@ -71,7 +71,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           assignments={assignments} />
       ) : (
         <div>Placeholder: Loading</div>
-      ) */}
+      )}
     </div>
   )
 

@@ -1,6 +1,8 @@
 import { AssignmentCard } from '@components/AssignmentCard';
 import type { Context, Translations } from 'src/Types';
 
+import './AssignmentsGrid.css';
+
 interface AssignmentsGridProps {
 
   i18n: Translations;

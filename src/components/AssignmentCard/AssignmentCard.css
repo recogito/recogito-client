@@ -1,0 +1,76 @@
+.assignment-card {
+  background-color: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.07);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  position: relative;
+  transition: all .25s ease-in-out;
+}
+
+.assignment-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 2px 8px -2px rgba(0, 0, 0, 0.28);
+}
+
+.ribbon {
+  background: var(--bright-blue);
+  height: 30px;
+  right: 10px;
+  margin: 0 0 10px 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 30px;
+}
+
+.ribbon svg {
+  color: #fff;
+  padding: 6px;
+}
+
+.ribbon::after{
+  background: 
+    linear-gradient(-35deg, transparent 16px, var(--bright-blue) 0), 
+    linear-gradient(35deg, transparent 16px, var(--bright-blue)  0);
+  background-position: left bottom;
+  background-repeat: repeat-x;
+  background-size: 10px 20px;
+  content: '';
+  display: block;
+  height: 20px;
+  left:0px;
+  position: relative;
+  top:-10px;
+}
+
+.assignment-card .top {
+  flex-grow: 1;
+  font-size: 1em;
+  font-weight: 500;
+  margin: 0;
+  padding: 20px 50px 0 20px;
+}
+
+.assignment-card .top h1 {
+  font-family: 'Inter';
+  font-size: var(--font-tiny);
+  font-weight: 400;
+  margin: 0;
+}
+
+.assignment-card .top h2 {
+  font-size: 1em;
+  font-weight: 500;
+  margin: 0.1em 0;
+}
+
+.assignment-card .bottom {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 10px;
+}
