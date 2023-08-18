@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { createAssignmentContext, createLayerInContext } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { Layer, ExtendedProjectData, Translations } from 'src/Types';
+import type { Layer, ExtendedProjectData, Translations, Context } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 
 import './Progress.css';
@@ -17,6 +17,8 @@ interface ProgressProps {
   assignment: AssignmentSpec;
 
   onClose(): void;
+
+  onCreated(assignment: Context): void;
 
 }
 
@@ -34,7 +36,10 @@ export const Progress = (props: ProgressProps) => {
 
     setTimeout(() => {
       setState('success');
-    }, 1000);
+
+      //@ts-ignore
+      props.onCreated(null);
+    }, 2000);
 
     /* Step 1. Create a new context for this assignment
     createAssignmentContext(supabase, name, projectId)
@@ -72,11 +77,10 @@ export const Progress = (props: ProgressProps) => {
       ) : state === 'success' ? (
         <>
           <AnimatedCheck size={40} />
-          <h1>Assignment created</h1>
-          <button className="primary" onClick={props.onClose}>Ok</button>
+          <p>The assignment was created successfully and added to the team members' dashboards.</p>
         </>
       ) : (
-        <h1>Something went wrong</h1>
+        <p>Something went wrong</p>
       )}
     </div>
   )

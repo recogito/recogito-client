@@ -21,6 +21,8 @@ interface VerifyProps {
 export const Verify = (props: VerifyProps) => {
 
   const { name, documents, team, description } = props.assignment;
+
+  const isValid = name && documents.length > 0 && team.length > 0;
  
   return (
     <>
@@ -94,6 +96,7 @@ export const Verify = (props: VerifyProps) => {
 
         <button 
           className="primary"
+          disabled={!isValid}
           onClick={props.onCreateAssignment}>Create Assignment</button>
       </section>
     </>

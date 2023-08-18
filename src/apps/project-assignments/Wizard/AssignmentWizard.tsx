@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Files, Info, ListChecks, UsersThree } from '@phosphor-icons/react';
+import { Files, Info, ListChecks, UsersThree, X } from '@phosphor-icons/react';
 import { EditableText } from '@components/EditableText';
 import type { Context, DocumentInContext, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from './AssignmentSpec';
@@ -38,6 +38,8 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
   const [step, setStep] = useState(0);
 
+  const [creating, setCreating] = useState(false);
+
   const [complete, setComplete] = useState(false);
 
   const [assignment, setAssignment] = useState<AssignmentSpec>({
@@ -70,10 +72,17 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const onChangeDescription = (description: string) => description ? 
     setAssignment(assignment => ({ ...assignment, description })) :
     setAssignment(assignment => ({ ...assignment, description: undefined }));
+  
+  const onCreated = (assignment: Context) => {
+    setComplete(true);
+    // props.onCreated(assignment);
+  }
 
   // Don't close this dialog when the user clicks outside!
-  const onPointerDownOutside = (evt: Event) =>
-    evt.preventDefault();
+  const onPointerDownOutside = (evt: Event) => {
+    if (!complete)
+      evt.preventDefault();
+  }
 
   return (
     <Dialog.Root open={true} onOpenChange={props.onClose}>
@@ -84,12 +93,12 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
           className="dialog-content assignment-wizard"
           onPointerDownOutside={onPointerDownOutside}>
 
-          {complete ? (
+          {creating ? (
             <Progress 
               i18n={props.i18n} 
               project={props.project}
               assignment={assignment} 
-              onCreated={props.onCreated}
+              onCreated={onCreated}
               onClose={props.onClose}/>
           ) : (
             <>
@@ -167,10 +176,18 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                     assignment={assignment}
                     onCancel={props.onClose}
                     onBack={onBack} 
-                    onCreateAssignment={() => setComplete(true)} />
+                    onCreateAssignment={() => setCreating(true)} />
                 </Tabs.Content>
               </Tabs.Root>
             </>
+          )}
+
+          {complete && (
+            <Dialog.Close asChild>
+              <button className="dialog-close icon-only unstyled" aria-label="Close">
+                <X size={16} />
+              </button>
+            </Dialog.Close>
           )}
         </Dialog.Content>
       </Dialog.Portal>
