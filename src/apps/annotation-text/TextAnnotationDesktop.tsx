@@ -16,6 +16,7 @@ import {
 import './TextAnnotationDesktop.css';
 
 import '@recogito/react-text-annotator/dist/react-text-annotator.css';
+import { PresenceViewMoreButton } from '@components/Presence/PresenceViewMoreButton';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -42,6 +43,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
+  //max number of avatars displayed in the top right
+  const limit = 5;
 
   const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
     if (panel === ViewMenuPanel.ANNOTATIONS) {
@@ -98,7 +102,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
         <div className="anno-desktop-right not-annotatable">
           <PresenceStack
-            present={present} />
+            present={present}
+            limit={limit} />
 
           <AnnotationDesktop.ViewMenu 
             i18n={i18n}
