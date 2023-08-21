@@ -1,0 +1,45 @@
+.tabs-list {
+  background-color: #fff;
+  border-bottom: 1px solid var(--gray-300);
+  flex-shrink: 0;
+  font-size: var(--font-small);
+}
+
+.tabs-trigger {
+  all: unset;
+  align-items: center;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--font-tiny);
+  font-weight: 600;
+  height: 38px;
+  justify-content: center;
+  padding: 2px 20px 0 20px;
+  position: relative;
+  top: 1px;
+  user-select: none;
+}
+
+.tabs-trigger:is(button, a.button) + :is(button, a.button) {
+  margin: 0;
+}
+
+.tabs-trigger:is(button, a.button)  + .tabs-trigger:is(button, a.button)  {
+  margin-left: 1.5em;
+}
+
+.tabs-trigger svg {
+  padding-right: 0.5em;
+}
+
+button.tabs-trigger:hover:not(:disabled) {
+  box-shadow: none;
+  border-bottom-color: var(--gray-400);
+}
+
+button.tabs-trigger[data-state='active'],
+button.tabs-trigger[data-state='active']:hover {
+  border-bottom: 2px solid var(--bright-blue);
+  color: var(--bright-blue);
+}

@@ -16,6 +16,16 @@ interface EditableTextProps {
 
 }
 
+const clearSelection = () => {
+  if (window.getSelection) {
+    if (window.getSelection()?.empty) { 
+      window.getSelection()?.empty();
+    } else if (window.getSelection()?.removeAllRanges) {  
+      window.getSelection()?.removeAllRanges();
+    }
+  }
+}
+
 export const EditableText = (props: EditableTextProps) => {
 
   const maxLength = props.maxLength || 256;
@@ -44,8 +54,10 @@ export const EditableText = (props: EditableTextProps) => {
 
   // Submit change on blur
   const onBlur = () => { 
+    clearSelection();
+
     const currentValue = el.current?.innerText;
-    if (currentValue) {
+    if (currentValue && currentValue !== props.value) {
       props.onSubmit(currentValue);
     } else {
       setValue(() => value);

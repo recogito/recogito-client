@@ -1,0 +1,90 @@
+.dialog-content.assignment-wizard {
+  background-color: var(--gray-100);
+  max-width: 780px;
+  padding: 0;
+}
+
+.dialog-content.assignment-wizard h1 {
+  display: inline-block;
+  font-size: 1.25em;
+  margin: 20px;
+}
+
+.assignment-wizard .tabs-list {
+  border-top: 1px solid var(--gray-300);
+}
+
+.assignment-wizard .tabs-list .badge {
+  color: #fff;
+}
+
+.assignment-wizard .tabs-list .badge.invalid {
+  background-color: var(--red-500);
+}
+
+.assignment-wizard .tabs-list .badge.warn {
+  background-color: var(--orange-500);
+}
+
+
+.assignment-wizard .tabs-list .badge.valid {
+  background-color: var(--green-500);
+}
+
+.assignment-wizard .tabs-content {
+  background-color: #fff;
+}
+
+.assignment-wizard .tabs-content .row {
+  display: flex;
+  padding: 10px 0;
+}
+
+.assignment-wizard .tabs-content section.column {
+  padding: 30px;
+}
+
+.assignment-wizard .tabs-content section.column:first-child {
+  flex: 25%;
+  padding: 30px 40px 30px 30px;
+}
+
+.assignment-wizard .tabs-content section.column:last-child {
+  flex: 75%;
+}
+
+.assignment-wizard .tabs-content h1 { 
+  margin: 0;
+  font-size: 1em;
+}
+
+.assignment-wizard .tabs-content p {
+  font-size: var(--font-small);
+} 
+
+.assignment-wizard .tabs-content .wizard-nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 0 30px 30px 30px;
+}
+
+.assignment-wizard .tabs-content p.hint {
+  font-size: var(--font-tiny);
+  margin: 0.5em 1.1em;
+}
+
+.assignment-wizard .tabs-content p.hint svg {
+  padding-right: 0.1em;
+  position: relative;
+  top: -1px;
+  vertical-align: text-bottom;
+}
+
+.assignment-wizard .tabs-content p.hint.ok {
+  color: var(--green-500);
+}
+
+.assignment-wizard .tabs-content p.hint.warn {
+  color: var(--red-500);
+}

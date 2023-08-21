@@ -40,7 +40,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [filter, setFilter] = useState(me.isOrgAdmin ? ProjectFilter.ALL : ProjectFilter.MINE);
+  const [filter, setFilter] = useState(ProjectFilter.ALL);
 
   useEffect(() => {
     getMyProfile(supabase)

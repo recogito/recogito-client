@@ -1,0 +1,6 @@
+.assignment-wizard .tab-instructions textarea {
+  background-color: var(--gray-50);
+  height: 100%;
+  resize: none;
+  width: 100%;
+}

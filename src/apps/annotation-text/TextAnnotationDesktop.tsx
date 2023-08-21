@@ -5,7 +5,7 @@ import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { DocumentInProject, Translations } from 'src/Types';
+import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
   TextAnnotator, 
@@ -16,6 +16,7 @@ import {
 import './TextAnnotationDesktop.css';
 
 import '@recogito/react-text-annotator/dist/react-text-annotator.css';
+import { PresenceViewMoreButton } from '@components/Presence/PresenceViewMoreButton';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -25,7 +26,7 @@ export interface TextAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInProject;
+  document: DocumentInContext;
 
   channelId: string;
 
@@ -42,6 +43,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
+  //max number of avatars displayed in the top right
+  const limit = 5;
 
   const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
     if (panel === ViewMenuPanel.ANNOTATIONS) {
@@ -91,9 +95,15 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
             )} />
         )}
 
+        <div className="anno-desktop-left">
+          <AnnotationDesktop.DocumentMenu
+            document={props.document} />
+        </div>
+
         <div className="anno-desktop-right not-annotatable">
           <PresenceStack
-            present={present} />
+            present={present}
+            limit={limit} />
 
           <AnnotationDesktop.ViewMenu 
             i18n={i18n}

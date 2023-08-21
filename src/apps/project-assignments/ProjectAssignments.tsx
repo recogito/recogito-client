@@ -3,18 +3,21 @@ import { GraduationCap } from '@phosphor-icons/react';
 import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import { AssignmentWizard } from './Wizard';
+import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
-import { AssignmentWizard } from './Wizard';
 
 interface ProjectAssignmentsProps {
 
   i18n: Translations;
 
+  me: MyProfile;
+
   project: ExtendedProjectData;
 
-  me: MyProfile;
+  documents: DocumentInContext[];
 
 }
 
@@ -28,11 +31,14 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   // This assumes that people with project UPDATE and context INSERT 
   // privileges are authorized to create assignments
-  const canCreate = 
+  const canCreate = false; /*
     policies?.get('projects').has('UPDATE') &&
-    policies?.get('contexts').has('INSERT');
+    policies?.get('contexts').has('INSERT'); */
 
-  const assignments = useAssignments(project);
+  const { assignments, setAssignments } = useAssignments(project);
+
+  const onAssignmentCreated = (assignment: Context) =>
+    setAssignments(assignments => ([...(assignments || []), assignment]));
 
   return (
     <div className="project-assignments">
@@ -49,18 +55,23 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           {wizardOpen && (
             <AssignmentWizard
               i18n={props.i18n} 
-              onCancel={() => setWizardOpen(false)} />
+              project={props.project}
+              documents={props.documents}
+              onCreated={onAssignmentCreated}
+              onClose={() => setWizardOpen(false)} />
           )}
         </>
       )}
 
-      {assignments ? assignments.length === 0 ? (
-        <span>Empty</span>
+      {/* assignments ? assignments.length === 0 ? (
+        <div>Placeholder: Empty</div>
       ) : (
-        <span>Got {assignments.length} assignments</span>
+        <AssignmentsGrid
+          i18n={props.i18n}
+          assignments={assignments} />
       ) : (
-        <span>Loading</span>
-      )}
+        <div>Placeholder: Loading</div>
+      ) */}
     </div>
   )
 

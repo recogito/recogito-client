@@ -26,7 +26,7 @@ export const AnimatedCheck = (props: AnimatedCheckProps) => {
             style={{ strokeDasharray: '480px, 480px', strokeDashoffset: '960px' }} />
 
           <polyline
-            stroke="#fff" stroke-width="10"
+            stroke="#fff" strokeWidth="10"
             points="43.5,77.8 63.7,97.9 112.2,49.4 "
             style={{ strokeDasharray: '100px, 100px', strokeDashoffset: '200px' }} />
         </g>
