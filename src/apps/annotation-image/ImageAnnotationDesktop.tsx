@@ -6,9 +6,9 @@ import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
-  Annotation as Anno,
   Annotorious, 
-  OSDAnnotator, 
+  AnnotoriousOpenSeadragonAnnotator, 
+  ImageAnnotation,
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,
@@ -36,7 +36,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
 
   const { i18n } = props;
 
-  const anno = useRef<OSDAnnotator>();
+  const anno = useRef<AnnotoriousOpenSeadragonAnnotator>();
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -61,10 +61,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
     }
   }
 
-  const beforeSelectAnnotation = (a?: Anno) => {
+  const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno.current) {
       // Don't fit the view if the annotation is already selected
-      if (anno.current.selection.isSelected(a))
+      if (anno.current.state.selection.isSelected(a))
         return;
 
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
@@ -95,7 +95,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               gestureSettingsMouse: {
                 clickToZoom: false
               },
-              showNavigationControl: false
+              showNavigationControl: false,
+              crossOriginPolicy: 'Anonymous'
             }} />
 
           {usePopup && (
