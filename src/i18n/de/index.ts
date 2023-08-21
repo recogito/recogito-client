@@ -3,6 +3,7 @@ import annotationCommon from './annotation-common.json';
 import annotationImage from './annotation-image.json';
 import annotationText from './annotation-text.json';
 import authLogin from './auth-login.json';
+import authResetPassword from './auth-reset-password.json';
 import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
@@ -16,6 +17,7 @@ export default {
   'annotation-image': {...annotationCommon, ...annotationImage},
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-login': authLogin,
+  'auth-reset-password': authResetPassword,
   'dashboard-account': { ...dashboardAccount },
   'dashboard-projects': { ...dashboardProjects, ...notifications, ...accountMenu },
   'error': error,
