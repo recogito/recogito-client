@@ -5,19 +5,17 @@ import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { DocumentInProject, Layer, Translations } from 'src/Types';
+import type { DocumentInProject, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
-/*
 import {
   TextAnnotator, 
   TextAnnotatorRef, 
   TextAnnotatorPopup 
 } from '@recogito/react-text-annotator';
-*/
 
 import './TextAnnotationDesktop.css';
 
-// import '@recogito/react-text-annotator/dist/react-text-annotator.css';
+import '@recogito/react-text-annotator/dist/react-text-annotator.css';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -35,9 +33,6 @@ export interface TextAnnotationDesktopProps {
 
 export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
-  return null;
-
-  /*
   const { i18n } = props;
 
   const anno = useRef<TextAnnotatorRef>();
@@ -116,6 +111,5 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
       </Annotorious>
     </div>
   )
-  */
 
 }
