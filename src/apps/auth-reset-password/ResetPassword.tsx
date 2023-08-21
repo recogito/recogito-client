@@ -36,7 +36,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
     } else {
       setBusy(true);
 
-      supabase.auth.updateUser({ password }).then(({ data, error }) => {
+      supabase.auth.updateUser({ password }).then(({ error }) => {
         if (error) {
           console.error(error);
           setError(t[error.message] || t['Could not reset password']);
