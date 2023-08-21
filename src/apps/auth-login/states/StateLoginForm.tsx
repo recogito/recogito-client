@@ -92,7 +92,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           </form>
 
           <div className="forgot-password">
-            <a href="#">{t['Forgot password?']}</a>
+            <a href={`/${props.i18n.lang}/forgot-password`}>{t['Forgot password?']}</a>
           </div>
         </div>
 
