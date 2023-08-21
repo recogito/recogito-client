@@ -95,7 +95,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               gestureSettingsMouse: {
                 clickToZoom: false
               },
-              showNavigationControl: false
+              showNavigationControl: false,
+              crossOriginPolicy: 'Anonymous'
             }} />
 
           {usePopup && (
