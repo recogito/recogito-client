@@ -16,7 +16,6 @@ import {
 import './TextAnnotationDesktop.css';
 
 import '@recogito/react-text-annotator/dist/react-text-annotator.css';
-import { PresenceViewMoreButton } from '@components/Presence/PresenceViewMoreButton';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -60,7 +59,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const beforeSelectAnnotation = (a?: Anno) => {
     if (a && !usePopup && anno.current) {
       // Don't fit the view if the annotation is already selected
-      if (anno.current.selection.isSelected(a))
+      if (anno.current.state.selection.isSelected(a))
         return;
 
       anno.current.scrollIntoView(a);
