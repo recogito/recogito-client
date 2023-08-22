@@ -1,3 +1,32 @@
+.content-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.content-wrapper main {
+  background-color: #fff;
+  border-color: var(--gray-300);
+  border-style: solid;
+  border-width: 0 1px;
+  font-family: Lora;
+  font-size: 17px;
+  line-height: 190%;
+  padding: 70px 85px 90px 85px;
+  pointer-events: all;
+  position: relative;
+  width: 60ch;
+  word-wrap: break-word;
+}
+
+.content-wrapper.text main {
+  white-space: pre-line;
+
+}
+
+.content-wrapper main img {
+  max-width: 100%;
+}
+
 .ta-desktop .presence-stack {
   margin: 4px 8px;
 }
