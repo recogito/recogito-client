@@ -3,6 +3,8 @@ import { supabase } from '@backend/supabaseBrowserClient.js';
 import type { DocumentInContext } from 'src/Types';
 import { CETEIcean } from '@recogito/react-text-annotator';
 
+import './TEIContent.css';
+
 interface TEIContentProps {
 
   document: DocumentInContext;
