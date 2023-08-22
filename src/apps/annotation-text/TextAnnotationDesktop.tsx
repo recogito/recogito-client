@@ -8,10 +8,12 @@ import { Toolbar } from './Toolbar';
 import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import {
+  TEIAnnotator,
   TextAnnotator, 
   TextAnnotatorRef, 
   TextAnnotatorPopup 
 } from '@recogito/react-text-annotator';
+import { TEIContent } from './content/TEIContent';
 
 import './TextAnnotationDesktop.css';
 
@@ -69,11 +71,17 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   return (
     <div className="anno-desktop ta-desktop">
       <Annotorious ref={anno}>
-        <TextAnnotator 
-          element="annotatable" 
-          presence={{
-            font: "500 12px Inter, Arial, Helvetica, sans-serif"
-          }} />
+        {props.document.content_type === 'text/xml' ? (
+          <TEIAnnotator>
+            <TEIContent document={props.document} />
+          </TEIAnnotator>
+        ) : (
+          <TextAnnotator 
+            element="annotatable" 
+            presence={{
+              font: "500 12px Inter, Arial, Helvetica, sans-serif"
+            }} />
+        )}
 
         <SupabasePlugin 
           base={SUPABASE}
