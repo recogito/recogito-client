@@ -24,8 +24,6 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const { context, document } = props;
 
-  console.log(document);
-
   const { lang } = props.i18n;
 
   const [editable, setEditable] = useState(false);
