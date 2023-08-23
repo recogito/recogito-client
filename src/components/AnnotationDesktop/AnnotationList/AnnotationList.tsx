@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Translations } from 'src/Types';
 import { 
@@ -24,6 +25,8 @@ interface AnnotationListProps {
 }
 
 export const AnnotationList = (props: AnnotationListProps) => {
+
+  const el = useRef<HTMLUListElement>(null);
 
   const annotations = useAnnotations();
 
@@ -66,8 +69,20 @@ export const AnnotationList = (props: AnnotationListProps) => {
     return classes.join(' ');
   }
 
+  useEffect(() => {
+    // Scroll the first selected card into view
+    if (selected?.length > 0) {
+     const card = el.current?.querySelector('.selected');
+     if (card)
+      card.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selected]);
+
   return (
-    <ul className="anno-sidepanel annotation-list" onClick={onClick}>
+    <ul
+      ref={el}
+      className="anno-sidepanel annotation-list" 
+      onClick={onClick}>
       {annotations.map(a => (
         <li 
           key={a.id}

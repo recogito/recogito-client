@@ -4,6 +4,7 @@
   margin: 0;
   overflow-y: auto;
   padding: 0 8px;
+  scroll-padding: 20px;
 }
 
 .anno-sidepanel.annotation-list .annotation-card {
