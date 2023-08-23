@@ -13,6 +13,8 @@ export interface EmptyCardProps {
   present: PresentUser[];
 
   typing?: boolean;
+
+  selected?: boolean;
   
   private?: boolean;
 
@@ -27,9 +29,20 @@ export const EmptyCard = (props: EmptyCardProps) => {
   const creator: PresentUser | User | undefined = 
     props.present.find(p => p.id === target.creator?.id) || target.creator;
 
+  const getClass = () => {
+    const classes = ['annotation-card', 'empty'];
+
+    if (props.private)
+      classes.push('private');
+
+    if (props.selected)
+      classes.push('selected')
+    
+    return classes.join(' ');
+  }
+
   return (
-    <div className={props.private ? 
-      'annotation-card empty private' : 'annotation-card empty'}>
+    <div className={getClass()}>
       <Creator 
         i18n={props.i18n}
         creator={creator} 

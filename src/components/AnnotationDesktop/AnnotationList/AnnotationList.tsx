@@ -91,6 +91,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
             ) : (
               <Annotation.EmptyCard 
                 typing
+                selected={isSelected(a)}
                 i18n={props.i18n} 
                 annotation={a} 
                 present={props.present} />              
