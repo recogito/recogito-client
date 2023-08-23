@@ -13,7 +13,7 @@ export const ContentTypeIcon = (props: ContentTypeIconProps) => {
 
   if (content_type === 'text/plain') {
     return <TextAlignLeft size={44} weight="thin" />;
-  } else if (content_type === 'application/tei+xml') {
+  } else if (content_type === 'text/xml') {
     return <Code size={44} weight="thin" />;
   } else if (meta_data?.protocol === 'IIIF_IMAGE') {
     return <img src="/img/iiif-logo.png" style={{ width: 52, height: 45 }} />

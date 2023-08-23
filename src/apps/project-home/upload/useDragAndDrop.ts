@@ -12,7 +12,8 @@ export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: Fil
     rootRef 
   } = useDropzone({ 
     accept: {
-      'text/plain': ['.txt']
+      'text/plain': ['.txt'],
+      'text/xml': ['.xml']
     },
     noClick: true, 
     noKeyboard: true,

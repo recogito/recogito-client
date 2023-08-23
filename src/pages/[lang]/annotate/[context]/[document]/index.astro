@@ -5,7 +5,6 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotationDesktop } from '@apps/annotation-image';
 import { TextAnnotationDesktop } from '@apps/annotation-text';
-import PlainText from '@apps/annotation-text/content/PlainText.astro';
 import { getDocumentInContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
@@ -46,6 +45,8 @@ let viewer;
 
 if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
+} else if (document.data.content_type === 'text/xml') {
+  viewer = 'TEI';
 } else if (document.data.meta_data?.protocol === 'IIIF_IMAGE') {
   viewer ='OPENSEADRAGON';
 } else {
@@ -64,19 +65,11 @@ if (document.data.content_type === 'text/plain') {
         channelId={channelId} />
     </div>
   ) : (
-    <div class="container text">
-      <main id="annotatable">
-        <PlainText
-          document={document.data} 
-          supabase={supabase} />
-      </main>
-
-      <TextAnnotationDesktop 
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-text')} 
-        document={document.data}
-        channelId={channelId} />
-    </div>
+    <TextAnnotationDesktop 
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-text')} 
+      document={document.data}
+      channelId={channelId} />
   )}
 </BaseLayout>
 
@@ -88,24 +81,5 @@ if (document.data.content_type === 'text/plain') {
     position: absolute;
     right: 0;
     top: 0;
-  }
-
-  .container.text {
-    display: flex;
-    justify-content: center;
-  }
-
-  .container.text main {
-    background-color: #fff;
-    border-color: var(--gray-300);
-    border-style: solid;
-    border-width: 0 1px;
-    font-family: Lora;
-    font-size: 17px;
-    line-height: 190%;
-    padding: 70px 85px 90px 85px;
-    white-space: pre-line;
-    width: 60ch;
-    word-wrap: break-word;
   }
 </style>

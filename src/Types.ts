@@ -157,7 +157,7 @@ export interface DocumentInContext extends Document {
 
 }
 
-export const ContentTypes = ['text/plain', 'application/tei+xml'] as const;
+export const ContentTypes = ['text/plain', 'text/xml'] as const;
 
 export type ContentType = typeof ContentTypes[number];
 
