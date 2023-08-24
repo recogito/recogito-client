@@ -1,0 +1,21 @@
+.annotation-tagswidget {
+  background-color: var(--gray-100);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 5px 5px 0 0;
+  line-height: 100%;
+  padding: 10px;
+  position: relative;
+}
+
+.annotation-tagswidget .tags {
+  display: flex;
+}
+
+.annotation-tagswidget ul {
+  display: inline;
+  line-height: 100%;
+}
+
+.annotation-tagswidget li {
+  display: inline;
+}

@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import type { AnnotationBody } from '@annotorious/react';
 import * as Popover from '@radix-ui/react-popover';
-import { Tag } from '../Tag';
+import { Tag } from '../../Tag';
 import type { Translations } from 'src/Types';
 
 import './MoreTags.css';
 
-interface MoreTagsActions {
+interface MoreTagsProps {
 
   i18n: Translations;
 
@@ -18,14 +18,17 @@ interface MoreTagsActions {
 
 }
 
-export const MoreTags = (props: MoreTagsActions) => {
+export const MoreTags = (props: MoreTagsProps) => {
 
   const { displayed, tags } = props;
 
   const [open, setOpen] = useState(false);
 
   return (
-    <Popover.Root open={open} onOpenChange={setOpen}>
+    <Popover.Root 
+      open={open}
+      onOpenChange={setOpen}>
+
       <Popover.Trigger asChild>
         <button className="more-tags-trigger unstyled">
           + {tags.length - displayed} more

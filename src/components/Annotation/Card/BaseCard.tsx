@@ -5,7 +5,7 @@ import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
 import { ReplyForm } from '../ReplyForm';
-import { TagList } from '../TagList';
+import { TagsWidget } from '../TagsWidget';
 import type { CardProps } from './CardProps';
 
 import './BaseCard.css';
@@ -75,7 +75,7 @@ export const BaseCard = (props: BaseCardProps) => {
 
   return (
     <>
-      <TagList 
+      <TagsWidget 
         i18n={props.i18n}
         annotation={props.annotation} 
         me={me} />

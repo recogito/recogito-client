@@ -3,7 +3,9 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
-interface TagInputProps {
+import './TagInput.css';
+
+export interface TagInputProps {
 
   i18n: Translations;
 

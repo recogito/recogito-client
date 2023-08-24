@@ -1,0 +1,9 @@
+.annotation-tagswidget .add-tag {
+  position: absolute;
+  right: 6px;
+  top: 5px;
+}
+
+.annotation-tagswidget .add-tag svg {
+  color: var(--gray-600);
+}

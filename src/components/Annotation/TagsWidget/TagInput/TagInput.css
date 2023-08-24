@@ -1,0 +1,17 @@
+.annotation-tagswidget form {
+  display: inline;
+}
+
+.annotation-tagswidget input {
+  background-color: transparent;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 4px;
+  transition: all 180ms;
+}
+
+.annotation-tagswidget input:focus {
+  background-color: var(--gray-300);
+  box-shadow: none;
+}

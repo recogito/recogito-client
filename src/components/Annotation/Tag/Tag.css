@@ -16,9 +16,14 @@
 }
 
 .popover-content.delete-popover {
+  box-shadow: 
+    0 0 0 1px rgba(128, 0, 0, 0.12), 
+    0 2px 12px -2px rgba(128, 0, 0, 0.12), 
+    0 8px 24px -4px rgba(128, 0, 0, 0.08);
   line-height: 100%;
   width: auto;
 }
+
 .popover-content.delete-popover button {
   padding: 8px 12px 8px 10px;
 }
