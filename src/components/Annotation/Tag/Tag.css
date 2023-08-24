@@ -1,3 +1,20 @@
+.annotation-tag {
+  background-color: var(--gray-200);
+  border: 1px solid var(--gray-400);
+  border-radius: 3px;
+  color: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  margin-right: 5px;
+  padding: 2px 4px;
+}
+
+.annotation-tag:hover {
+  background-color: var(--gray-300);
+}
+
 .popover-content.delete-popover {
   line-height: 100%;
   width: auto;
@@ -18,4 +35,5 @@
 
 .popover-content.delete-popover .popover-arrow {
   fill: var(--red-500);
+  stroke: var(--red-500);
 }

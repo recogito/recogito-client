@@ -26,4 +26,8 @@
 
 .popover-arrow {
   fill: #fff;
+  margin-top: -1px;
+  stroke: #c6c6c6;
+  z-index: -1;
 }
+

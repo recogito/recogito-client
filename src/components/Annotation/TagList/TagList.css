@@ -20,35 +20,7 @@
 }
 
 .annotation-taglist li {
-  background-color: var(--gray-200);
-  border: 1px solid var(--gray-400);
-  border-radius: 3px;
-  color: rgba(0, 0, 0, 0.7);
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 500;
-  margin-right: 5px;
-  padding: 2px 4px;
-}
-
-.annotation-taglist li:hover {
-  background-color: var(--gray-300);
-}
-
-.annotation-taglist li.annotation-taglist-more {
-  border: none;
-  background: none;
-}
-
-.annotation-taglist .more-tags-trigger {
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 2px 4px;
-}
-
-.annotation-taglist .more-tags-trigger svg {
-
+  display: inline;
 }
 
 .annotation-taglist input {
@@ -63,11 +35,4 @@
 .annotation-taglist input:focus {
   background-color: var(--gray-300);
   box-shadow: none;
-}
-
-.annotation-taglist .annotation-taglist-actions {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  color: #979ea5;
 }

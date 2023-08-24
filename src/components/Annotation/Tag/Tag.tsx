@@ -34,14 +34,17 @@ export const Tag = (props: TagProps) => {
           className="delete-popover popover-content" 
           side="top"
           align="center" 
-          sideOffset={10}>
+          sideOffset={2}>
           <button 
             className="danger sm"
             onClick={props.onDelete}> 
             <Trash size={16} /> <span>Delete</span>
           </button>
 
-          <Arrow className="popover-arrow" />
+          <Arrow 
+            className="popover-arrow" 
+            height={8}
+            width={18} />
         </Content>
       </Portal>
     </Root>

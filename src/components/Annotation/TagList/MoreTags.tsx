@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import type { AnnotationBody } from '@annotorious/react';
-import { CaretDown } from '@phosphor-icons/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Tag } from '../Tag';
 import type { Translations } from 'src/Types';
+
+import './MoreTags.css';
 
 interface MoreTagsActions {
 
@@ -32,7 +33,7 @@ export const MoreTags = (props: MoreTagsActions) => {
       </Popover.Trigger>
 
       <Popover.Portal>
-        <Popover.Content className="popover-content" align="start" sideOffset={10}>
+        <Popover.Content className="more-tags-popover popover-content" align="start" sideOffset={2}>
           <ul>
             {tags.map(tag => (
               <li key={tag.id}>
@@ -44,7 +45,10 @@ export const MoreTags = (props: MoreTagsActions) => {
             ))}
           </ul>
 
-          <Popover.Arrow className="popover-arrow" />
+          <Popover.Arrow 
+            className="popover-arrow"
+            height={8}
+            width={18} />
         </Popover.Content>
       </Popover.Portal>
     </Popover.Root>
