@@ -2,11 +2,11 @@ import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { DotsThreeVertical, Trash } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
-const { Content, Item, Root, Trigger } = Dropdown;
+const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface PublicCommentActionsProps {
 
-  i18n: Translations
+  i18n: Translations;
 
   isFirst?: boolean;
 
@@ -28,21 +28,23 @@ export const PublicCommentActions = (props: PublicCommentActionsProps) => {
         </button>
       </Trigger>
 
-      <Content asChild sideOffset={5} align="start">
-        <div className="dropdown-content no-icons">
-          {props.isFirst && (
-            <>
-              <Item className="dropdown-item" onSelect={props.onDeleteAnnotation}>
-                <Trash size={16} /> <span>{t['Delete this annotation']}</span>
-              </Item>
-            </>
-          )}
+      <Portal>
+        <Content asChild sideOffset={5} align="start">
+          <div className="dropdown-content no-icons">
+            {props.isFirst && (
+              <>
+                <Item className="dropdown-item" onSelect={props.onDeleteAnnotation}>
+                  <Trash size={16} /> <span>{t['Delete this annotation']}</span>
+                </Item>
+              </>
+            )}
 
-          <Item className="dropdown-item" onSelect={props.onDeleteComment}>
-            <Trash size={16} /> <span>{t['Delete this comment']}</span>
-          </Item>
-        </div>
-      </Content>
+            <Item className="dropdown-item" onSelect={props.onDeleteComment}>
+              <Trash size={16} /> <span>{t['Delete this comment']}</span>
+            </Item>
+          </div>
+        </Content>
+      </Portal>
     </Root>
   )
 
