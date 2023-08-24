@@ -140,7 +140,7 @@
   --font-light: var(--gray-700);
   --font-semi: rgba(255, 255, 255, 0.65);
 
-  --font-small: 0.875em;
+  --font-small: 0.875rem;
   --font-tiny: 13px;
 
   /** Borders **/

@@ -1,0 +1,21 @@
+.popover-content.delete-popover {
+  line-height: 100%;
+  width: auto;
+}
+.popover-content.delete-popover button {
+  padding: 8px 12px 8px 10px;
+}
+
+.popover-content.delete-popover button svg {
+  margin-right: 0.3em;
+  position: relative;
+  top: 0.5px;
+}
+
+.popover-content.delete-popover button:focus-visible {
+  box-shadow: none;
+}
+
+.popover-content.delete-popover .popover-arrow {
+  fill: var(--red-500);
+}

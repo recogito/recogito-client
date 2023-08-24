@@ -1,5 +1,6 @@
 import * as Popover from '@radix-ui/react-popover';
 import type { AnnotationBody } from '@annotorious/react';
+import { Trash } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
 import './Tag.css';
@@ -30,11 +31,17 @@ export const Tag = (props: TagProps) => {
 
       <Portal>
         <Content 
-          className="popover-tooltip-content" 
-          side="top">
-          <button onClick={props.onDelete}>Delete this tag</button>
+          className="delete-popover popover-content" 
+          side="top"
+          align="center" 
+          sideOffset={10}>
+          <button 
+            className="danger sm"
+            onClick={props.onDelete}> 
+            <Trash size={16} /> <span>Delete</span>
+          </button>
 
-          <Arrow className="popover-tooltip-arrow" />
+          <Arrow className="popover-arrow" />
         </Content>
       </Portal>
     </Root>

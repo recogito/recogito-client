@@ -23,3 +23,7 @@
   margin: 0;
   padding: 0;
 }
+
+.popover-arrow {
+  fill: #fff;
+}

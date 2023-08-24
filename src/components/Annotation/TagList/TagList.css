@@ -12,20 +12,6 @@
   display: inline;
 }
 
-.annotation-taglist input {
-  background-color: transparent;
-  border: none;
-  border-radius: 3px;
-  font-size: var(--font-tiny);
-  padding: 4px;
-  transition: all 180ms;
-}
-
-.annotation-taglist input:focus {
-  background-color: var(--gray-300);
-  box-shadow: none;
-}
-
 .annotation-taglist ul {
   list-style-type: none;
   margin: 0;
@@ -39,7 +25,7 @@
   border-radius: 3px;
   color: rgba(0, 0, 0, 0.7);
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   margin-right: 5px;
   padding: 2px 4px;
@@ -52,6 +38,31 @@
 .annotation-taglist li.annotation-taglist-more {
   border: none;
   background: none;
+}
+
+.annotation-taglist .more-tags-trigger {
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 2px 4px;
+}
+
+.annotation-taglist .more-tags-trigger svg {
+
+}
+
+.annotation-taglist input {
+  background-color: transparent;
+  border: none;
+  border-radius: 3px;
+  font-size: var(--font-tiny);
+  padding: 4px;
+  transition: all 180ms;
+}
+
+.annotation-taglist input:focus {
+  background-color: var(--gray-300);
+  box-shadow: none;
 }
 
 .annotation-taglist .annotation-taglist-actions {
