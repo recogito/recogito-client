@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTransition, animated } from '@react-spring/web';
 import { useAnnotatorUser, useAnnotationStore } from '@annotorious/react';
-import type { AnnotationBody } from '@annotorious/react';
+import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
 import { ReplyForm } from '../ReplyForm';
@@ -35,7 +35,9 @@ export const BaseCard = (props: BaseCardProps) => {
 
   const [animate, setAnimate] = useState(false);
 
-  const me = useAnnotatorUser();
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
@@ -73,7 +75,10 @@ export const BaseCard = (props: BaseCardProps) => {
 
   return (
     <>
-      <TagList i18n={props.i18n}/>
+      <TagList 
+        i18n={props.i18n}
+        annotation={props.annotation} 
+        me={me} />
 
       {comments.length > 0 && (
         <ul className="annotation-card-comments-container">
@@ -137,7 +142,7 @@ export const BaseCard = (props: BaseCardProps) => {
         <ReplyForm 
           autofocus
           annotation={props.annotation}
-          present={props.present}
+          me={me}
           placeholder={props.i18n.t['Reply...']}
           beforeSubmit={beforeReply} 
           onSubmit={props.onReply} />
