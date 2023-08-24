@@ -1,8 +1,8 @@
-.annotation-tagswidget form {
+form.annotation-tag-input-form {
   display: inline;
 }
 
-.annotation-tagswidget input {
+form.annotation-tag-input-form input {
   background-color: transparent;
   border: none;
   border-radius: 3px;
@@ -11,7 +11,7 @@
   transition: all 180ms;
 }
 
-.annotation-tagswidget input:focus {
+form.annotation-tag-input-form input:focus {
   background-color: var(--gray-300);
   box-shadow: none;
 }

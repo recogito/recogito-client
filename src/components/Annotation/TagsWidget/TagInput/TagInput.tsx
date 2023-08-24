@@ -48,7 +48,7 @@ export const TagInput = (props: TagInputProps) => {
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form className="annotation-tag-input-form" onSubmit={onSubmit}>
       <input 
         placeholder="Add a tag..." 
         value={value} 

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
+import type { AnnotationBody } from '@annotorious/react';
 import { PlusCircle } from '@phosphor-icons/react';
 import { TagInput, TagInputProps } from '../TagInput';
 
@@ -8,6 +9,11 @@ import './AddTagAction.css';
 export const AddTagAction = (props: TagInputProps) => {
 
   const [open, setOpen] = useState(false);
+
+  const onCreate = (tag: AnnotationBody) => {
+    setOpen(false);
+    props.onCreate(tag);
+  }
 
   return (
     <Popover.Root 
@@ -23,8 +29,8 @@ export const AddTagAction = (props: TagInputProps) => {
       </Popover.Trigger>
 
       <Popover.Portal>
-        <Popover.Content className="add-tag-popover popover-content" align="start" sideOffset={2}>
-          <TagInput {...props} />
+        <Popover.Content className="add-tag-popover popover-content" align="start" sideOffset={-2}>
+          <TagInput {...{...props, onCreate}} />
 
           <Popover.Arrow 
             className="popover-arrow"
