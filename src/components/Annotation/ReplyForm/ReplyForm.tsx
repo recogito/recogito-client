@@ -16,7 +16,7 @@ export interface ReplyFormProps {
 
   placeholder: string;
 
-  present: PresentUser[];
+  me: PresentUser | User;
 
   beforeSubmit?(body: AnnotationBody): void;
 
@@ -26,9 +26,7 @@ export interface ReplyFormProps {
 
 export const ReplyForm = (props: ReplyFormProps) => {
 
-  const user = useAnnotatorUser();
-
-  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
+  const { me } = props;
 
   const textarea = useRef<HTMLTextAreaElement>(null);
   

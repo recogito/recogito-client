@@ -1,3 +1,7 @@
+[data-radix-popper-content-wrapper] {
+  z-index: 999 !important;
+}
+
 .dropdown-content, .dropdown-subcontent {
   animation-duration: 400ms;
   animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);

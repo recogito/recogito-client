@@ -1,9 +1,11 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTransition, animated } from '@react-spring/web';
-import { useAnnotatorUser, type AnnotationBody, useAnnotationStore } from '@annotorious/react';
+import { useAnnotatorUser, useAnnotationStore } from '@annotorious/react';
+import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
 import { ReplyForm } from '../ReplyForm';
+import { TagsWidget } from '../TagsWidget';
 import type { CardProps } from './CardProps';
 
 import './BaseCard.css';
@@ -21,19 +23,21 @@ export const BaseCard = (props: BaseCardProps) => {
   const { annotation } = props;
 
   const comments = annotation.bodies
-    .filter(b => !b.purpose || b.purpose === 'commenting');
+    .filter((b: AnnotationBody) => !b.purpose || b.purpose === 'commenting');
 
   // Keep a list of comments that should not be color-highlighted 
   // on render, either because they were already in the annotation, or they 
   // are new additions created by the current user. We're using a
   // ref, because we don't want to re-render when this list changes.
-  const dontEmphasise = useRef(new Set(comments.map(b => b.id))); 
+  const dontEmphasise = useRef(new Set(comments.map((b: AnnotationBody) => b.id))); 
 
   const [collapsed, setCollapsed] = useState(comments.length > 3);
 
   const [animate, setAnimate] = useState(false);
 
-  const me = useAnnotatorUser();
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
@@ -60,7 +64,7 @@ export const BaseCard = (props: BaseCardProps) => {
 
   useEffect(() => {
     // Update the ref after comments have rendered...
-    dontEmphasise.current = new Set(comments.map(b => b.id));
+    dontEmphasise.current = new Set(comments.map((b: AnnotationBody) => b.id));
 
     // ...and remove 'is-new' CSS class instantly for fading effect
     setTimeout(() => {
@@ -71,6 +75,11 @@ export const BaseCard = (props: BaseCardProps) => {
 
   return (
     <>
+      <TagsWidget 
+        i18n={props.i18n}
+        annotation={props.annotation} 
+        me={me} />
+
       {comments.length > 0 && (
         <ul className="annotation-card-comments-container">
           <li 
@@ -133,7 +142,7 @@ export const BaseCard = (props: BaseCardProps) => {
         <ReplyForm 
           autofocus
           annotation={props.annotation}
-          present={props.present}
+          me={me}
           placeholder={props.i18n.t['Reply...']}
           beforeSubmit={beforeReply} 
           onSubmit={props.onReply} />

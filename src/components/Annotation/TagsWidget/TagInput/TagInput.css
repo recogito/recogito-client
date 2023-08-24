@@ -1,0 +1,17 @@
+form.annotation-tag-input-form {
+  display: inline;
+}
+
+form.annotation-tag-input-form input {
+  background-color: transparent;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 4px;
+  transition: all 180ms;
+}
+
+form.annotation-tag-input-form input:focus {
+  background-color: var(--gray-300);
+  box-shadow: none;
+}

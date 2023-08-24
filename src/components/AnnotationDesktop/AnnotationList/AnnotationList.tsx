@@ -9,6 +9,7 @@ import {
   useAnnotator,
   useAnnotatorUser,
   useSelection,
+  User,
   Visibility, 
 } from '@annotorious/react';
 
@@ -30,7 +31,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const annotations = useAnnotations();
 
-  const me = useAnnotatorUser();
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -94,7 +97,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   <Annotation.ReplyForm
                     annotation={a} 
                     placeholder={props.i18n.t['Comment...']}
-                    present={props.present} />
+                    me={me} />
                 </div>
               ) : (
                 <Annotation.EmptyCard

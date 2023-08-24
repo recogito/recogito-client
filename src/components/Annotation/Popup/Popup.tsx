@@ -1,6 +1,6 @@
 import { Annotation } from '@components/Annotation';
 import { useAnnotator, useAnnotatorUser, Visibility } from '@annotorious/react';
-import type { Annotation as Anno, PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 import './Popup.css';
@@ -19,7 +19,9 @@ export const Popup = (props: PopupProps) => {
 
   const anno = useAnnotator();
 
-  const me = useAnnotatorUser();
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
   const selected = props.selected[0];
@@ -59,6 +61,7 @@ export const Popup = (props: PopupProps) => {
             <Annotation.ReplyForm 
               {...props}
               autofocus
+              me={me}
               annotation={selected}
               placeholder={props.i18n.t['Comment...']}
               onSubmit={onReply} />
@@ -68,6 +71,7 @@ export const Popup = (props: PopupProps) => {
             <Annotation.ReplyForm 
               {...props}
               autofocus
+              me={me}
               annotation={selected}
               placeholder={props.i18n.t['Comment...']}
               onSubmit={onReply} />
@@ -77,7 +81,8 @@ export const Popup = (props: PopupProps) => {
         <Annotation.EmptyCard 
           {...props} 
           typing
-          annotation={selected} />
+          annotation={selected}
+          selected />
       )}
     </div>
   )

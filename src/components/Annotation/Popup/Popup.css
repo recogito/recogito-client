@@ -2,10 +2,10 @@
   background-color: #fff;
   border-radius: 6px;
   box-shadow:
-    2.4px 3.9px 3.3px rgba(0, 0, 0, 0.024),
-    6.5px 10.8px 9.1px rgba(0, 0, 0, 0.035),
-    15.7px 25.9px 22px rgba(0, 0, 0, 0.046),
-    52px 86px 73px rgba(0, 0, 0, 0.07);
+    1px 2px 4px rgba(0, 0, 0, 0.02),
+    6px 2px 9px rgba(0, 0, 0, 0.03),
+    7px 12px 22px rgba(0, 0, 0, 0.06),
+    12px 24px 73px rgba(0, 0, 0, 0.07);
   cursor: move;
   cursor: grab;
   cursor: -moz-grab;
