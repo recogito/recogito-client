@@ -32,7 +32,6 @@ export const AnonymousTooltip = (props: AnonymousTooltipProps) => {
         </Content>
       </Portal>
     </Root>
-
   )
 
 }

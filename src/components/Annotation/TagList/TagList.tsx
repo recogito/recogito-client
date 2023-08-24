@@ -23,10 +23,12 @@ export const TagList = (props: TagListProps) => {
 
   const tags = props.annotation.bodies.filter((b: AnnotationBody) => b.purpose === 'tagging');
 
-  console.log(tags);
-
   const onCreate = (tag: AnnotationBody) => {
     store.addBody(tag);
+  }
+
+  const onDelete = (tag: AnnotationBody) => () => {
+    store.deleteBody(tag);
   }
 
   return (
@@ -34,7 +36,10 @@ export const TagList = (props: TagListProps) => {
       <ul>
         {tags.map((t: AnnotationBody) => (
           <li key={t.id}>
-            {t.value}
+            <Tag 
+              i18n={props.i18n} 
+              tag={t} 
+              onDelete={onDelete(t)} />
           </li>
         ))}
       </ul>
