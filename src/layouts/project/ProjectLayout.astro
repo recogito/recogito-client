@@ -28,7 +28,7 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
     active={active} 
     collapsed={cookie.value === 'true'}
     i18n={i18n}
-    user={user}
+    me={user}
     project={project} />
 
   <div class="container">

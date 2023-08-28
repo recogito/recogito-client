@@ -26,5 +26,5 @@ export default {
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
   'project-home': projectHome,
-  'project-sidebar': projectSidedbar
+  'project-sidebar': { ...projectSidedbar, ...accountMenu }
 }
