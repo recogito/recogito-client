@@ -5,6 +5,8 @@ import { File, LinkSimple, Plus } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 import { IIIFDialog } from './dialogs';
 
+import './UploadActions.css';
+
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 // For future extension...
@@ -50,13 +52,21 @@ export const UploadActions = (props: UploadActionsProps) => {
         </Trigger>
 
         <Portal>
-          <Content className="dropdown-content no-icons" sideOffset={5} align="start">
+          <Content className="upload-dropdown dropdown-content no-icons" sideOffset={5} align="start">
             <Item className="dropdown-item" onSelect={props.onUpload}>
-              <File size={16} /> <span>{t['File upload']}</span>
+              <File size={16} /> 
+              <div>
+                <span>{t['File upload']}</span>
+                <p>UTF-8 plaintext (.txt), TEI (.xml)</p>
+              </div>
             </Item>
 
             <Item className="dropdown-item" onSelect={onImportIIIF}>
-              <LinkSimple size={16} /> <span>{t['From IIIF manifest']}</span>
+              <LinkSimple size={16} /> 
+              <div>
+                <span>{t['From IIIF manifest']}</span>
+                <p>{t['v2 or v3 image info.json']}</p>
+              </div>
             </Item>
           </Content>
         </Portal>

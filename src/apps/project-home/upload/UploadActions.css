@@ -1,0 +1,13 @@
+.dropdown-content.upload-dropdown .dropdown-item {
+  align-items: flex-start;
+  line-height: 150%;
+  padding: 8px 10px;
+}
+
+.dropdown-content.upload-dropdown .dropdown-item svg {
+  padding-top: 2px;
+}
+
+.dropdown-content.upload-dropdown .dropdown-item p {
+  padding: 0;
+}
