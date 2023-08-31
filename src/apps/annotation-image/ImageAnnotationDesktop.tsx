@@ -77,7 +77,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   return (
     <div className="anno-desktop ia-desktop">
       <Annotorious ref={anno}>
-        <OpenSeadragonAnnotator tool={tool} keepEnabled={true}>
+        <OpenSeadragonAnnotator 
+          adapter={null}
+          tool={tool} 
+          keepEnabled={true}>
           <SupabasePlugin
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
