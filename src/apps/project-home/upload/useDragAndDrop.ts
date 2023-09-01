@@ -15,7 +15,11 @@ export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: Fil
       'text/plain': ['.txt'],
       'text/xml': ['.xml'],
       'image/jpg': ['.jpg', '.jpeg'],
-      'image/png': ['.png']
+      'image/png': ['.png'],
+      'image/tiff': ['.tif', '.tiff'],
+      'image/gif': ['.gif'],
+      'image/bmp': ['.bmp'],
+      'image/jp2': ['.jp2']
     },
     noClick: true, 
     noKeyboard: true,

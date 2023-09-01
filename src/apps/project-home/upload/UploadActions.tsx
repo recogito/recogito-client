@@ -61,7 +61,7 @@ export const UploadActions = (props: UploadActionsProps) => {
               <div>
                 <span>{t['File upload']}</span>
                 <p>
-                  .txt .xml .jpg .png
+                  .txt .xml .jpg .png .tif .gif .jp2 .bmp
                 </p>
               </div>
             </Item>
