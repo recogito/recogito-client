@@ -13,7 +13,9 @@ export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: Fil
   } = useDropzone({ 
     accept: {
       'text/plain': ['.txt'],
-      'text/xml': ['.xml']
+      'text/xml': ['.xml'],
+      'image/jpg': ['.jpg', '.jpeg'],
+      'image/png': ['.png']
     },
     noClick: true, 
     noKeyboard: true,

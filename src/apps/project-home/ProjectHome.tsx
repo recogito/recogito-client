@@ -64,6 +64,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           file
         })));
       } else if (typeof accepted === 'string') {
+        // IIIF URL
         addUploads([{
           name: accepted, // TODO find a better solution
           projectId: project.id,

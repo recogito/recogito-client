@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { initDocument } from '@backend/helpers';
+import { initDocument, initImageDocument } from '@backend/helpers';
 import type { DocumentInContext } from 'src/Types';
 import type { Upload, UploadProgress, UploadStatus } from './Upload';
 
@@ -49,6 +49,21 @@ export const useUpload = (
       { id, name: i.name, progress: 0, status: 'preparing' }
     ]);
 
+    queue = queue.then(() => initImageDocument(
+      supabase, 
+      i.name, 
+      i.projectId, 
+      i.contextId, 
+      i.file!,
+      progress => onProgress(id, progress, 'uploading')
+    ).then(result => {
+      console.log('upload successful', result);
+      // onSuccess(id, document);
+    })).catch(error => {
+      onError(id, error);
+    });
+
+    /*
     queue = queue.then(() => initDocument(
       supabase, 
       i.name, 
@@ -62,6 +77,7 @@ export const useUpload = (
     })).catch(error => {
       onError(id, error);
     });
+    */
 
     return id;
   }

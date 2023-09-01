@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
-import { uploadFile } from '@backend/storage';
+import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
 import type { Document, DocumentInContext, Layer } from 'src/Types';
 
@@ -44,6 +44,16 @@ export const initDocument = (
       }
     })
 }
+
+/** Just temporary... */
+export const initImageDocument = (
+  supabase: SupabaseClient, 
+  name: string, 
+  projectId: string, 
+  contextId: string,
+  file: File,
+  onProgress?: (progress: number) => void,
+) => uploadImage(supabase, file, name, onProgress);
 
 export const listDocumentsInProject = (
   supabase: SupabaseClient,
