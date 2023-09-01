@@ -24,7 +24,6 @@ export const initDocument = (
   url?: string
 ): Promise<DocumentInContext> => { 
   if (file?.type.startsWith('image')) {
-    console.log
     // If the document is an image upload, the file is first
     // uploaded to the IIIF server, and then treated like a remote
     // IIIF source.
