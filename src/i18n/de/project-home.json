@@ -14,7 +14,7 @@
   "Delete document": "Dokument löschen",
   "Rename document": "Dokument umbenennen",
 
-  "File upload": "Datei hochladen",
+  "File upload": "Datei hochladen (Text, TEI, Bild)",
   "From IIIF manifest": "IIIF Manifest importieren",
   "v2 or v3 image info.json": "v2 oder v3 image info.json",
   "Import IIIF": "IIIF Importieren",
