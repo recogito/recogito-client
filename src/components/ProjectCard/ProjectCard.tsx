@@ -1,4 +1,4 @@
-import { Article, Image } from '@phosphor-icons/react';
+import { Article, GraduationCap, Image } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import type { ContentType, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
@@ -21,7 +21,7 @@ interface ProjectCardProps {
 
 export const ProjectCard = (props: ProjectCardProps) => {
 
-  const { description, layers, id, groups, name } = props.project;
+  const { contexts, description, layers, id, groups, name } = props.project;
 
   const members = groups.reduce((members, group) => (
     [...members, ...group.members]
@@ -55,6 +55,13 @@ export const ProjectCard = (props: ProjectCardProps) => {
           </p>
         )}
         <ul className="document-stats">
+          {contexts.length > 1 && (
+            <li>
+              <GraduationCap size={16} />
+              <span className="count">{contexts.length - 1}</span>
+            </li>
+          )}
+
           {images.length > 0 && (
             <li>
               <Image size={16} />
