@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Context, ExtendedAssignmentData } from 'src/Types';
+import type { Context } from 'src/Types';
 
 /**
  * An assignment is just an untagged context.
