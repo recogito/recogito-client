@@ -1,10 +1,10 @@
-import type { ProjectGroup, UserProfile } from 'src/Types';
+import type { Group, UserProfile } from 'src/Types';
 
 export interface TeamMember {
 
   user: UserProfile;
 
-  inGroup: ProjectGroup;
+  inGroup: Group;
 
   since: string;
 

@@ -2,14 +2,14 @@ import { useState } from 'react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { CheckSquare, Square } from '@phosphor-icons/react';
-import { GroupSelector } from '../GroupSelector/GroupSelector';
-import type { ExtendedProjectData, Invitation, ProjectGroup, Translations, UserProfile } from 'src/Types';
+import { formatName } from '@components/Avatar';
+import { GroupSelector } from '../GroupSelector';
+import type { ExtendedProjectData, Invitation, Group, Translations, UserProfile } from 'src/Types';
 import { AnonymousTooltip } from './AnonymousTooltip';
 import type { TeamMember } from '../TeamMember';
 import { DeleteMember } from '../DeleteMember';
 
 import './MembersTable.css';
-
 
 interface MembersTableProps {
 
@@ -21,7 +21,7 @@ interface MembersTableProps {
 
   me: UserProfile;
 
-  onChangeGroup(member: TeamMember, from: ProjectGroup, to: ProjectGroup): void;
+  onChangeGroup(member: TeamMember, from: Group, to: Group): void;
 
   onDeleteMember(member: TeamMember): void;
 
@@ -30,7 +30,7 @@ interface MembersTableProps {
 }
 
 // Helper to flatten the list of groups to the list of users
-const getMembers = (groups: ProjectGroup[]): TeamMember[] => groups
+const getMembers = (groups: Group[]): TeamMember[] => groups
   .reduce((members, group) => (
       [
         ...members, 
@@ -56,18 +56,6 @@ export const MembersTable = (props: MembersTableProps) => {
 
   const isOwner = (member: TeamMember) =>
     member.user.id === props.project.created_by?.id;
-
-  const formatName = (member: TeamMember) => {
-    const { nickname, first_name, last_name } = member.user;
-    if (nickname)
-      return nickname;
-    
-    if (first_name || last_name)
-      return `${first_name} ${last_name}`.trim();
-
-    // Note this method will return undefined here, 
-    // if the user has no (nick)name set.
-  }
 
   const onSelectRow = (member: TeamMember, checked: Checkbox.CheckedState) => {
     if (checked)
@@ -129,7 +117,7 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td>
-              {formatName(member) || (
+              {formatName(member.user) || (
                 <span className="anonymous-member">
                   {t['Anonymous team member']} <AnonymousTooltip i18n={props.i18n} />
                 </span>
