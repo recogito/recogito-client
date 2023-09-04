@@ -10,6 +10,8 @@ interface AssignmentsGridProps {
   // Just temporary, for hacking/testing
   assignments: Context[];
 
+  onDeleteAssignment(assignment: Context): void;
+
 }
 
 export const AssignmentsGrid = (props: AssignmentsGridProps) => {
@@ -20,7 +22,8 @@ export const AssignmentsGrid = (props: AssignmentsGridProps) => {
         <AssignmentCard 
           key={assignment.id}
           i18n={props.i18n}
-          assignment={assignment} />
+          assignment={assignment} 
+          onDelete={() => props.onDeleteAssignment(assignment)} />
       ))}
     </div>
   )

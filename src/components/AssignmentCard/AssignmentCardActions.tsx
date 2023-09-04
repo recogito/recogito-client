@@ -6,6 +6,8 @@ interface AssignmentCardActionsProps {
 
   i18n: Translations;
 
+  onDelete(): void;
+
 }
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
@@ -22,7 +24,7 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
 
     <Portal>
       <Content className="dropdown-content no-icons" sideOffset={5} align="start">
-        <Item className="dropdown-item">
+        <Item className="dropdown-item" onSelect={props.onDelete}>
           <Trash size={16} /> <span>Delete assignment</span>
         </Item>
       </Content>

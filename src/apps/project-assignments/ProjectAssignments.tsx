@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
+import { archiveAssignment } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
 import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
@@ -40,6 +42,21 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
   const onAssignmentCreated = (assignment: Context) =>
     setAssignments(assignments => ([...(assignments || []), assignment]));
 
+  const onDeleteAssignment = (assignment: Context) => {
+    // Optimistic update: remove assignment from the list
+    setAssignments(assignments => (assignments || []).filter(a => a.id !== assignment.id));
+
+    archiveAssignment(supabase, assignment.id)
+      .then(() => {
+        // TODO toast?
+      })
+      .catch(() => {
+        // Roll back optimistic update in case of failure
+        setAssignments(assignments => ([...(assignments || []), assignment]));
+        // TODO toast?
+      });
+  }
+
   return (
     <div className="project-assignments">
       <h1>Assignments</h1>
@@ -68,7 +85,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       ) : (
         <AssignmentsGrid
           i18n={props.i18n}
-          assignments={assignments} />
+          assignments={assignments} 
+          onDeleteAssignment={onDeleteAssignment} />
       ) : (
         <div>Placeholder: Loading</div>
       )}
