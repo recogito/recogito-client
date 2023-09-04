@@ -187,8 +187,6 @@ export interface Layer {
 
   description?: string;
 
-  contexts: Context[];
-
 }
 
 export interface ExtendedAssignmentData extends Context {

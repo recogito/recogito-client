@@ -29,7 +29,7 @@ interface EmptyGroup {
   name: string;
 
 }
-
+    
 // Takes the given group and member lists as input, and 'distributes'
 // members across groups, resulting in a list of proper Group object.
 export const zipMembers = (groups: EmptyGroup[], members: GroupMember[]) =>
@@ -38,4 +38,4 @@ export const zipMembers = (groups: EmptyGroup[], members: GroupMember[]) =>
     members: members
       .filter(m => m.in_group === g.id)
       .map(({ user, since }) => ({ user, since }))
-  }))
+  }));

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { createAssignmentContext, createLayerInContext } from '@backend/helpers';
+import { addUsersToLayer, createAssignmentContext, createLayerInContext } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { Spinner } from '@components/Spinner';
+import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { Layer, ExtendedProjectData, Translations, Context } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 
 import './Progress.css';
-import { Spinner } from '@components/Spinner';
-import { AnimatedCheck } from '@components/AnimatedIcons';
 
 interface ProgressProps {
 
@@ -56,11 +56,15 @@ export const Progress = (props: ProgressProps) => {
                 .then(layer => ([...layers, layer]))
             });
           }, Promise.resolve<Layer[]>([])).then(layers => {
-            setState('success');
             
-            // TODO add team members to layer groups
-
-            props.onCreated(context);
+            // Step 3. For each layer, add users to the 'Layer Student' group
+            layers.reduce((promise, layer) => {
+              return promise.then(() => 
+                addUsersToLayer(supabase, layer.id, 'Layer Student', team));
+            }, Promise.resolve<void>(undefined)).then(() => {
+              setState('success');
+              props.onCreated(context);
+            })            
           }).catch(error => {
             console.error(error);
 
