@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
+import { archiveAssignment } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
 import { usePolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
@@ -31,14 +33,29 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   // This assumes that people with project UPDATE and context INSERT 
   // privileges are authorized to create assignments
-  const canCreate = false; /*
+  const canCreate =
     policies?.get('projects').has('UPDATE') &&
-    policies?.get('contexts').has('INSERT'); */
+    policies?.get('contexts').has('INSERT');
 
   const { assignments, setAssignments } = useAssignments(project);
 
   const onAssignmentCreated = (assignment: Context) =>
     setAssignments(assignments => ([...(assignments || []), assignment]));
+
+  const onDeleteAssignment = (assignment: Context) => {
+    // Optimistic update: remove assignment from the list
+    setAssignments(assignments => (assignments || []).filter(a => a.id !== assignment.id));
+
+    archiveAssignment(supabase, assignment.id)
+      .then(() => {
+        // TODO toast?
+      })
+      .catch(() => {
+        // Roll back optimistic update in case of failure
+        setAssignments(assignments => ([...(assignments || []), assignment]));
+        // TODO toast?
+      });
+  }
 
   return (
     <div className="project-assignments">
@@ -63,15 +80,16 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
         </>
       )}
 
-      {/* assignments ? assignments.length === 0 ? (
+      {assignments ? assignments.length === 0 ? (
         <div>Placeholder: Empty</div>
       ) : (
         <AssignmentsGrid
           i18n={props.i18n}
-          assignments={assignments} />
+          assignments={assignments} 
+          onDeleteAssignment={onDeleteAssignment} />
       ) : (
         <div>Placeholder: Loading</div>
-      ) */}
+      )}
     </div>
   )
 

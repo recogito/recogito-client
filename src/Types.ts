@@ -191,6 +191,55 @@ export interface Layer {
 
 }
 
+export interface ExtendedAssignmentData extends Context {
+
+  layers: [{
+
+    id: string;
+  
+    name: string;
+
+    description: string;
+
+    document: {
+
+      id: string;
+
+      name: string;
+
+      content_type?: ContentType;
+
+      meta_data: {
+
+        protocol: Protocol;
+
+        url: string;
+    
+        meta?: object;
+
+      }
+    }
+
+    groups: [{
+
+      id: string;
+
+      name: string;
+    
+      members: Array<{ 
+    
+        user: UserProfile; 
+    
+        since: string;
+    
+      }>;
+      
+    }]
+
+  }];
+
+}
+
 export interface TagDefinition {
 
   id: string;
