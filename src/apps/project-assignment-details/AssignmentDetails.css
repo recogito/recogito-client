@@ -2,3 +2,11 @@
   padding: 20px 40px;
   width: 100%;
 }
+
+.project-assignment-details .project-assignment-document-grid {
+  display: grid;
+  gap: 1rem;
+  grid-auto-rows: 1fr;  
+  grid-template-columns: repeat(auto-fill, 180px);
+  padding: 2em 0 40px 0;
+}

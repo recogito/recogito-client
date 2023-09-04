@@ -201,24 +201,7 @@ export interface ExtendedAssignmentData extends Context {
 
     description: string;
 
-    document: {
-
-      id: string;
-
-      name: string;
-
-      content_type?: ContentType;
-
-      meta_data: {
-
-        protocol: Protocol;
-
-        url: string;
-    
-        meta?: object;
-
-      }
-    }
+    document: Document,
 
     groups: [{
 

@@ -62,6 +62,8 @@ export const getAssignment = (
         description,
         document:documents (
           id,
+          created_at,
+          created_by,
           name,
           content_type,
           meta_data

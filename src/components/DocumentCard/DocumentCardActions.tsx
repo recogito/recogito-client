@@ -10,9 +10,9 @@ interface DocumentCardActionsProps {
 
   onOpen(tab: boolean): void;
 
-  onDelete(): void;
+  onDelete?(): void;
 
-  onRename(): void;
+  onRename?(): void;
 
 }
 

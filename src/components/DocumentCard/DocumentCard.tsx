@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { Context, DocumentInContext, Translations } from 'src/Types';
+import type { Context, Document, Translations } from 'src/Types';
 import { EditableText } from '@components/EditableText';
 import { DocumentCardActions } from './DocumentCardActions';
 import { ContentTypeIcon } from './ContentTypeIcon';
@@ -12,17 +12,19 @@ interface DocumentCardProps {
 
   context: Context;
 
-  document: DocumentInContext;
+  document: Document;
 
-  onDelete(): void;
+  readonly?: boolean;
 
-  onRename(name: string): void;
+  onDelete?(): void;
+
+  onRename?(name: string): void;
 
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
 
-  const { context, document } = props;
+  const { context, document, readonly } = props;
 
   const { lang } = props.i18n;
 
@@ -44,7 +46,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const onRename = (name: string) => {
     setEditable(false);
-    props.onRename(name);
+    props.onRename!(name);
   }
 
   return (
@@ -58,11 +60,13 @@ export const DocumentCard = (props: DocumentCardProps) => {
         </div>
 
         <div className="document-card-footer">
-          <DocumentCardActions
-            i18n={props.i18n} 
-            onOpen={onOpen}
-            onDelete={props.onDelete} 
-            onRename={() => setEditable(true)} />
+          {!readonly && (
+            <DocumentCardActions
+              i18n={props.i18n} 
+              onOpen={onOpen}
+              onDelete={props.onDelete} 
+              onRename={() => setEditable(true)} />
+          )}
         </div>
       </div>
 
