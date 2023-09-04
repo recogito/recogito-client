@@ -13,6 +13,7 @@ import { AccountActions } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
 import { NavItem } from './NavItem';
 import type { 
+  ExtendedAssignmentData,
   ExtendedProjectData, 
   MyProfile,
   Translations 

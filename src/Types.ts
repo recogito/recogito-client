@@ -91,11 +91,11 @@ export interface ExtendedProjectData {
 
   }];
 
-  groups: ProjectGroup[];
+  groups: Group[];
 
 }
 
-export interface ProjectGroup {
+export interface Group {
 
   id: string;
 
@@ -111,7 +111,7 @@ export interface ProjectGroup {
 
 }
 
-export interface ProjectMember {
+export interface GroupMember {
 
   user: UserProfile;
 
@@ -225,6 +225,8 @@ export interface ExtendedAssignmentData extends Context {
       id: string;
 
       name: string;
+
+      description?: string,
     
       members: Array<{ 
     

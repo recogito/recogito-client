@@ -3,8 +3,8 @@ import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile} from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
-import { ProjectAssignments } from '@apps/project-assignments';
+import { AssignmentDetails } from '@apps/project-assignment-details';
+import { getAssignment, getProjectExtended } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -18,7 +18,7 @@ if (profile.error || !profile.data) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
-const projectId = Astro.params.slug;
+const projectId = Astro.params.project!;
 
 const project = await getProjectExtended(supabase, projectId as string);
 if (project.error || !project.data) { 
@@ -26,21 +26,24 @@ if (project.error || !project.data) {
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
-const documents = await listDocumentsInProject(supabase, projectId as string);
+const assignmentId = Astro.params.assignment!;
 
-if (documents.error) { 
-  const path = Astro.url.protocol + '//' + Astro.url.host;
-  const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+const assignment = await getAssignment(supabase, assignmentId);
+if (assignment.error || !assignment.data) {
+  const error = await fetch(`${Astro.url}/404`);
+  return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 
-const i18n = getTranslations(Astro.request, 'project-assignments');
+const i18n = getTranslations(Astro.request, 'project-assignment-details');
 ---
-<ProjectLayout active="Assignments" user={profile.data} project={project.data}>
-  <ProjectAssignments
+<ProjectLayout 
+  active="Assignments" 
+  user={profile.data} 
+  project={project.data}
+  assignment={assignment.data}>
+  
+  <AssignmentDetails
     client:load
     i18n={i18n}
-    me={profile.data}
-    project={project.data}
-    documents={documents.data}>
+    assignment={assignment.data} />
 </ProjectLayout>

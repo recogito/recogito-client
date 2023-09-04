@@ -9,6 +9,7 @@ import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
 import notifications from './notifications.json';
+import projectAssignmentDetails from './project-assignment-details.json';
 import projectAssignments from './project-assignments.json';
 import projectCollaboration from './project-collaboration.json';
 import projectHome from './project-home.json';
@@ -23,6 +24,7 @@ export default {
   'dashboard-account': { ...dashboardAccount },
   'dashboard-projects': { ...dashboardProjects, ...notifications, ...accountMenu },
   'error': error,
+  'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
   'project-home': projectHome,
