@@ -14,7 +14,7 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
 
-const projectId = Astro.params.slug;
+const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) { 

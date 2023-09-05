@@ -91,11 +91,11 @@ export interface ExtendedProjectData {
 
   }];
 
-  groups: ProjectGroup[];
+  groups: Group[];
 
 }
 
-export interface ProjectGroup {
+export interface Group {
 
   id: string;
 
@@ -111,7 +111,7 @@ export interface ProjectGroup {
 
 }
 
-export interface ProjectMember {
+export interface GroupMember {
 
   user: UserProfile;
 
@@ -187,8 +187,6 @@ export interface Layer {
 
   description?: string;
 
-  contexts: Context[];
-
 }
 
 export interface ExtendedAssignmentData extends Context {
@@ -201,30 +199,15 @@ export interface ExtendedAssignmentData extends Context {
 
     description: string;
 
-    document: {
-
-      id: string;
-
-      name: string;
-
-      content_type?: ContentType;
-
-      meta_data: {
-
-        protocol: Protocol;
-
-        url: string;
-    
-        meta?: object;
-
-      }
-    }
+    document: Document,
 
     groups: [{
 
       id: string;
 
       name: string;
+
+      description?: string,
     
       members: Array<{ 
     

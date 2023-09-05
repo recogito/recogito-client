@@ -18,7 +18,7 @@ if (profile.error || !profile.data) {
   return new Response(error.body, { headers: error.headers, status: 500 }); 
 }
 
-const projectId = Astro.params.slug;
+const projectId = Astro.params.project;
 
 const project = await getProjectExtended(supabase, projectId as string);
 if (project.error || !project.data) { 

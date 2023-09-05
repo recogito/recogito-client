@@ -2,7 +2,7 @@ import { isMe, type PresentUser } from '@annotorious/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Avatar } from '@components/Avatar';
 import './PresenceViewMoreButton.css';
-import { CaretDown, Check } from '@phosphor-icons/react';
+import { CaretDown } from '@phosphor-icons/react';
 
 const { Content, Portal, Root, Trigger } = Popover;
 

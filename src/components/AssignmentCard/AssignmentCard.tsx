@@ -19,8 +19,11 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 
   const { assignment } = props;
 
+  const onClick = () =>
+    window.location.href = `/${props.i18n.lang}/projects/${assignment.project_id}/assignments/${assignment.id}`;
+
   return (
-    <article className="assignment-card">
+    <article className="assignment-card" onClick={onClick}>
       <div className="ribbon">
         <GraduationCap size={18} />
       </div>

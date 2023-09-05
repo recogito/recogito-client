@@ -11,7 +11,7 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
   return Astro.redirect(`/${lang}/sign-in`);
 
-const projectId = Astro.params.slug;
+const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) { 
@@ -25,8 +25,8 @@ if (project.error || !project.data) {
   return new Response(error.body, { headers: error.headers, status: 404 }); 
 }
 ---
-<ProjectLayout active="Add Ons" user={profile.data} project={project.data}>
-  <h1>Add Ons</h1>
+<ProjectLayout active="Settings" user={profile.data} project={project.data}>
+  <h1>Settings</h1>
 </ProjectLayout>
 
 <style>

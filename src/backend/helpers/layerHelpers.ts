@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Layer } from "src/Types";
+import type { Layer, UserProfile } from "src/Types";
 
 export const createLayerInContext = (
   supabase: SupabaseClient, 
@@ -40,6 +40,47 @@ export const createLayerInContext = (
               } else {
                 resolve(layer);
               }
+            });
+        }
+      });
+  });
+
+  export const addUsersToLayer = (
+    supabase: SupabaseClient,
+    layerId: string,
+    groupName: string,
+    users: UserProfile[]
+  ): Promise<void> => new Promise((resolve, reject) => {
+    // Step 1. get layer group with the given name
+    supabase
+      .from('layer_groups')
+      .select(`
+        id,
+        name
+      `)
+      .eq('layer_id', layerId)
+      .eq('name', groupName)
+      .then(({ error, data }) => {
+        if (error || data?.length !== 1) {
+          reject(error);
+        } else {
+          const groupId = data[0].id;
+
+          const records = users.map(user => ({
+            user_id: user.id,
+            group_type: 'layer',
+            type_id: groupId
+          }));
+
+          // Step 2. add users to this group
+          supabase
+            .from('group_users')
+            .insert(records)
+            .then(({ data, error }) => {
+              if (error)
+                reject(error)
+              else 
+                resolve();
             });
         }
       });
