@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import { archiveAssignment } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { usePolicies } from '@backend/hooks/usePolicies';
+import { useProjectPolicies } from '@backend/hooks/usePolicies';
 import { useAssignments } from '@backend/hooks/useAssignments';
 import { Button } from '@components/Button';
 import { AssignmentWizard } from './Wizard';
@@ -29,7 +29,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const [wizardOpen, setWizardOpen] = useState(false);
 
-  const policies = usePolicies(project.id);
+  const policies = useProjectPolicies(project.id);
 
   // This assumes that people with project UPDATE and context INSERT 
   // privileges are authorized to create assignments

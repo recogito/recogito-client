@@ -3,7 +3,7 @@ import { Bell } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, MyProfile, Policies, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, getMyProfile } from '@backend/crud';
-import { getOrganizationPolicies } from '@backend/helpers';
+import { useOrganizationPolicies } from '@backend/hooks';
 import { AlertBanner } from '@components/AlertBanner';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header } from './Header';
@@ -34,7 +34,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [projects, setProjects] = useState<ExtendedProjectData[]>(props.projects);
 
-  const [policies, setPolicies] = useState<Policies | undefined>(undefined);
+  const policies = useOrganizationPolicies();
 
   const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
 
@@ -44,15 +44,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   useEffect(() => {
     getMyProfile(supabase)
-      .then(({ error, data }) => {
-        if (error) {
+      .then(({ error }) => {
+        if (error)
           window.location.href = `/${props.i18n.lang}/sign-in`;
-        } else { 
-          getOrganizationPolicies(supabase).then(({ error, data }) => {
-            if (!error)
-              setPolicies(data);
-          });
-        }
       });
   }, []);
 
@@ -160,6 +154,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           <ProjectsGrid 
             i18n={props.i18n} 
             projects={filteredProjects} 
+            policies={policies}
             onProjectDeleted={onDeleteProject} 
             onDetailsChanged={onDetailsChanged} 
             onError={onError} />  

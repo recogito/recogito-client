@@ -1,6 +1,6 @@
 import { Article, Image } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
-import type { ContentType, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
+import type { ContentType, ExtendedProjectData, Policies, Translations, UserProfile } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
 
 import './ProjectCard.css';
@@ -10,6 +10,8 @@ interface ProjectCardProps {
   i18n: Translations;
 
   project: ExtendedProjectData;
+
+  policies?: Policies;
 
   onDeleted(): void;
 
@@ -85,12 +87,14 @@ export const ProjectCard = (props: ProjectCardProps) => {
           ))}
         </div>
 
-        <ProjectCardActions
-          i18n={props.i18n}
-          project={props.project}
-          onDeleted={props.onDeleted} 
-          onDetailsChanged={props.onDetailsChanged}
-          onError={props.onError} />
+        {props.policies?.get('projects').has('UPDATE') && (
+          <ProjectCardActions
+            i18n={props.i18n}
+            project={props.project}
+            onDeleted={props.onDeleted} 
+            onDetailsChanged={props.onDetailsChanged}
+            onError={props.onError} />
+        )}
       </div>
     </div>
   )

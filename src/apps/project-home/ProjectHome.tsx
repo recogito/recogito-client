@@ -3,7 +3,7 @@ import { CloudArrowUp } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { usePolicies } from '@backend/hooks/usePolicies';
+import { useProjectPolicies } from '@backend/hooks/usePolicies';
 import { archiveLayer, renameDocument } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
@@ -35,7 +35,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documents, setDocuments] = useState<DocumentInContext[]>(props.documents);
 
-  const policies = usePolicies(project.id);
+  const policies = useProjectPolicies(project.id);
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
