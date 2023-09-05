@@ -18,12 +18,20 @@ li:first-child > .annotation-comment {
   border-color: var(--emphasis-light);
 }
 
-.annotation-comment p {
+.annotation-comment p,
+.annotation-comment textarea {
   cursor: text;
   font-size: var(--font-tiny);
   line-height: 140%;
-  margin: 0;
-  padding: 14px 4px 0 4px;
+  margin: 10px 2px 0 2px;
+  padding: 2px 4px;
+}
+
+.annotation-comment textarea {
+  border: none;
+  overflow-y: hidden;
+  resize: none;
+  width: 100%;
 }
 
 .annotation-comment .comment-actions {
