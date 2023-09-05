@@ -100,7 +100,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onError = (error: string) =>
     setError({
-      title: t[error] || error,
+      title: t['Something went wrong'],
+      description: t[error] || error,
       type: 'error'
     });
 
