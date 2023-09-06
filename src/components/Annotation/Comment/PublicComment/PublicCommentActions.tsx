@@ -1,8 +1,8 @@
+import { useState } from 'react'; 
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import * as Dialog from '@radix-ui/react-dialog';
 import { DotsThreeVertical, Pencil, Trash } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
-
-const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface PublicCommentActionsProps {
 
@@ -24,36 +24,111 @@ export const PublicCommentActions = (props: PublicCommentActionsProps) => {
 
   const { t } = props.i18n;
 
+  const [confirmableFn, setConfirmableFn] = useState<() => void | undefined>();
+
+  const withAlert = (fn: () => void) => {
+    if (props.isMine) {
+      return fn;
+    } else {
+      return () => setConfirmableFn(() => fn);
+    }
+  }
+
+  const onConfirmed = () => {
+    setConfirmableFn(undefined);
+    confirmableFn!();
+  }
+
   return (
-    <Root>
-      <Trigger asChild>
-        <button className="comment-actions unstyled icon-only">
-          <DotsThreeVertical size={20} weight="bold" />
-        </button>
-      </Trigger>
+    <>
+      <Dropdown.Root>
+        <Dropdown.Trigger asChild>
+          <button className="comment-actions unstyled icon-only">
+            <DotsThreeVertical size={20} weight="bold" />
+          </button>
+        </Dropdown.Trigger>
 
-      <Portal>
-        <Content asChild sideOffset={5} align="start">
-          <div className="dropdown-content no-icons">
-            {props.isFirst && (
-              <>
-                <Item className="dropdown-item" onSelect={props.onDeleteAnnotation}>
-                  <Trash size={16} /> <span>{t['Delete annotation']}</span>
-                </Item>
-              </>
-            )}
+        <Dropdown.Portal>
+          <Dropdown.Content asChild sideOffset={5} align="start">
+            <div className="dropdown-content no-icons">
+              {props.isFirst && (
+                <>
+                  <Dropdown.Item 
+                    className="dropdown-item" 
+                    onSelect={withAlert(props.onDeleteAnnotation)}>
+                    <Trash size={16} /> <span>{t['Delete annotation']}</span>
+                  </Dropdown.Item>
+                </>
+              )}
 
-            <Item className="dropdown-item" onSelect={props.onEditComment}>
-              <Pencil size={16} /> <span>{t['Edit comment']}</span>
-            </Item>
+              <Dropdown.Item 
+                className="dropdown-item" 
+                onSelect={withAlert(props.onEditComment)}>
+                <Pencil size={16} /> <span>{t['Edit comment']}</span>
+              </Dropdown.Item>
 
-            <Item className="dropdown-item" onSelect={props.onDeleteComment}>
-              <Trash size={16} /> <span>{t['Delete comment']}</span>
-            </Item>
-          </div>
-        </Content>
-      </Portal>
-    </Root>
+              <Dropdown.Item 
+                className="dropdown-item" 
+                onSelect={withAlert(props.onDeleteComment)}>
+                <Trash size={16} /> <span>{t['Delete comment']}</span>
+              </Dropdown.Item>
+            </div>
+          </Dropdown.Content>
+        </Dropdown.Portal>
+      </Dropdown.Root>
+
+      <AdminOverrideAlert 
+        i18n={props.i18n} 
+        open={Boolean(confirmableFn)} 
+        onClose={onConfirmed} />
+    </>
   )
+
+}
+
+interface AdminOverrideAlertProps {
+
+  i18n: Translations;
+
+  open: boolean;
+
+  onClose(): void;
+
+}
+
+const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
+
+  const onOpenChange = (open: boolean) => {
+    if (!open)
+      props.onClose();
+  }
+
+  return (
+    <Dialog.Root open={props.open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Content className="dialog-content admin-override-alert">
+          <Dialog.Title className="dialog-title">With Great Power...</Dialog.Title>
+          
+          <Dialog.Description className="dialog-description">
+            <p>
+              ...comes great responsibility. You can change other users' annotations because 
+              you have administrator privileges on this document.
+            </p>
+            <p>
+              Use your powers responsibly.
+            </p>
+          </Dialog.Description>
+
+          <div className="dialog-footer">
+            <Dialog.Close asChild>
+              <button className="primary small">Proceed</button>
+            </Dialog.Close>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  )
+
 
 }

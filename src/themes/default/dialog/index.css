@@ -29,6 +29,7 @@
   max-width: 450px;
   max-height: 85vh;
   padding: 25px;
+  z-index: 9999;
 }
 
 .dialog-content form .field {
