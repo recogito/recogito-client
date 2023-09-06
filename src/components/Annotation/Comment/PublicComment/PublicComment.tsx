@@ -16,6 +16,8 @@ export const PublicComment = (props: CommentProps) => {
 
   const [editable, setEditable] = useState(false);
 
+  const [value, setValue] = useState(comment.value);
+
   const me = useAnnotatorUser();
 
   const store = useAnnotationStore();
@@ -53,6 +55,11 @@ export const PublicComment = (props: CommentProps) => {
     setEditable(false);
   }
 
+  const onCancelChange = () => {
+    setEditable(false);
+    setValue(comment.value);
+  }
+
   const onDeleteComment = () => store.deleteBody(comment);
 
   return (
@@ -71,19 +78,21 @@ export const PublicComment = (props: CommentProps) => {
           <TextareaAutosize 
             className="no-drag"
             ref={textarea}
-            defaultValue={comment.value}
+            value={value}
+            onChange={evt => setValue(evt.target.value)}
             rows={1} 
             maxRows={10} />
 
           <div className="buttons">
             <button 
+              disabled={value === comment.value}
               className="primary sm flat"
               type="submit">Save</button>
 
             <button 
               className="sm flat"
               type="button"
-              onClick={() => setEditable(false)}>Cancel</button>
+              onClick={onCancelChange}>Cancel</button>
           </div>
         </form>
       ) : (
