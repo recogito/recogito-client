@@ -42,9 +42,6 @@ export const BaseCard = (props: BaseCardProps) => {
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
 
-  const onUpdateComment = (comment: AnnotationBody, updated: AnnotationBody) =>
-    store.updateBody(comment, updated);
-
   const onDeleteAnnotation = () => 
     store.deleteAnnotation(props.annotation);
 
@@ -94,7 +91,6 @@ export const BaseCard = (props: BaseCardProps) => {
               present: props.present,
               emphasizeOnEntry: !dontEmphasise.current.has(comments[0].id),
               editable: isMine(comments[0]),
-              onUpdateComment,
               onDeleteAnnotation
             })}
           </li>
@@ -121,7 +117,6 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(item.id),
                 editable: isMine(item),
-                onUpdateComment,
                 onDeleteAnnotation
               })}
             </animated.li>
@@ -136,7 +131,6 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(comments[comments.length - 1].id),
                 editable: isMine(comments[comments.length - 1]),
-                onUpdateComment,
                 onDeleteAnnotation
               })}
             </li>
