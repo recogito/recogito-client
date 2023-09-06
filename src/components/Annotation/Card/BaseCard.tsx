@@ -33,7 +33,7 @@ export const BaseCard = (props: BaseCardProps) => {
 
   const [collapsed, setCollapsed] = useState(comments.length > 3);
 
-  const [animate, setAnimate] = useState(false);
+  const animate = useRef<boolean>(false);
 
   const user = useAnnotatorUser();
 
@@ -48,14 +48,16 @@ export const BaseCard = (props: BaseCardProps) => {
   const transition = useTransition(collapsed ? 
     [] : comments.slice(1, comments.length - 1), {
       from: { 
-        maxHeight: animate ? '0vh' : '80vh' 
+        maxHeight: animate.current ? '0vh' : '80vh' 
       },
       enter: { maxHeight: '80vh' },
       leave: { maxHeight: '0vh' },
-      config: { duration: 350 }
+      config: { duration: animate.current ? 350 : 0 }
     });
 
-  useEffect(() => setAnimate(true), []);
+  useEffect(() => { 
+    animate.current = true;
+  }, []);
 
   // When this user creates a reply, add the comment to the list,
   // so it doesn't get emphasised like additions from the other users
@@ -63,6 +65,13 @@ export const BaseCard = (props: BaseCardProps) => {
     dontEmphasise.current = new Set([...dontEmphasise.current, b.id]);
 
   useEffect(() => {
+    const eqSet = (x: Set<any>, y: Set<any>) => 
+      x.size === y.size && [...x].every(x => y.has(x));
+
+    const commentIds = comments.map((c: AnnotationBody) => c.id);
+    if (eqSet(new Set(commentIds), dontEmphasise.current || new Set()))
+      animate.current = false;
+
     // Update the ref after comments have rendered...
     dontEmphasise.current = new Set(comments.map((b: AnnotationBody) => b.id));
 
@@ -105,6 +114,7 @@ export const BaseCard = (props: BaseCardProps) => {
 
           {transition((style, item, _, index) => (
             <animated.li 
+              key={item.id}
               style={{
                 ...style,
                 zIndex: comments.length - index - 1
