@@ -1,5 +1,4 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
-import type { UserProfile } from 'src/Types';
 
 export const getUser = (supabase: SupabaseClient): Promise<User> =>
   supabase.auth.getUser().then(({ error, data: { user } }) => {

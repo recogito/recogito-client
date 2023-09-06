@@ -14,7 +14,7 @@
   "Delete document": "Delete document",
   "Rename document": "Rename document",
 
-  "File upload": "File upload",
+  "File upload": "File upload (text, TEI, image)",
   "From IIIF manifest": "From IIIF manifest",
   "v2 or v3 image info.json": "v2 or v3 image info.json",
   "Import IIIF": "Import IIIF",

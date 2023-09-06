@@ -52,12 +52,17 @@ export const UploadActions = (props: UploadActionsProps) => {
         </Trigger>
 
         <Portal>
-          <Content className="upload-dropdown dropdown-content no-icons" sideOffset={5} align="start">
+          <Content 
+            className="upload-dropdown dropdown-content no-icons" 
+            sideOffset={5} 
+            align="start">
             <Item className="dropdown-item" onSelect={props.onUpload}>
               <File size={16} /> 
               <div>
                 <span>{t['File upload']}</span>
-                <p>UTF-8 plaintext (.txt), TEI (.xml)</p>
+                <p>
+                  .txt .xml .jpg .png .tif .gif .jp2 .bmp
+                </p>
               </div>
             </Item>
 
