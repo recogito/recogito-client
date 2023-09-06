@@ -98,6 +98,8 @@ interface AdminOverrideAlertProps {
 
 const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
 
+  const { t } = props.i18n;
+
   const onOpenChange = (open: boolean) => {
     if (!open)
       props.onClose();
@@ -108,21 +110,19 @@ const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
         <Dialog.Content className="dialog-content admin-override-alert">
-          <Dialog.Title className="dialog-title">With Great Power...</Dialog.Title>
+          <Dialog.Title className="dialog-title">
+            {t['With Great Power...']}
+          </Dialog.Title>
           
           <Dialog.Description className="dialog-description">
-            <p>
-              ...comes great responsibility. You can change other users' annotations because 
-              you have administrator privileges on this document.
-            </p>
-            <p>
-              Use your powers responsibly.
-            </p>
+            {t['...comes great responsibility.']}
           </Dialog.Description>
 
           <div className="dialog-footer">
             <Dialog.Close asChild>
-              <button className="primary small">Proceed</button>
+              <button className="primary small">
+                {t['Proceed']}
+              </button>
             </Dialog.Close>
           </div>
         </Dialog.Content>

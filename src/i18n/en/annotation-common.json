@@ -14,5 +14,10 @@
   "Edit comment": "Edit comment",
   "Delete annotation": "Delete annotation",
   "Delete comment": "Delete comment",
-  "Make annotation public": "Make this annotation public"
+  "Make annotation public": "Make this annotation public",
+  "Save": "Save",
+  "Cancel": "Cancel",
+  "With Great Power...": "With Great Power...",
+  "...comes great responsibility.": "...comes great responsibility. You can change other users' annotations because you have administrator privileges on this document. Use your powers responsibly.",
+  "Proceed": "Proceed"
 }

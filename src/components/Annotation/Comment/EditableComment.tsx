@@ -19,6 +19,8 @@ interface EditableCommentProps {
 
 export const EditableComment = (props: EditableCommentProps) => {
 
+  const { t } = props.i18n;
+
   const { comment, editable } = props;
 
   const store = useAnnotationStore();
@@ -74,12 +76,12 @@ export const EditableComment = (props: EditableCommentProps) => {
         <button 
           disabled={value === comment.value}
           className="primary sm flat"
-          type="submit">Save</button>
+          type="submit">{t['Save']}</button>
 
         <button 
           className="sm flat"
           type="button"
-          onClick={onCancelChange}>Cancel</button>
+          onClick={onCancelChange}>{t['Cancel']}</button>
       </div>
     </form>
   ) : (
