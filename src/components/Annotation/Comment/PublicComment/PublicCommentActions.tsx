@@ -34,9 +34,9 @@ export const PublicCommentActions = (props: PublicCommentActionsProps) => {
     }
   }
 
-  const onConfirmed = () => {
-    setConfirmableFn(undefined);
+  const onConfirm = () => {
     confirmableFn!();
+    setConfirmableFn(undefined);
   }
 
   return (
@@ -80,7 +80,8 @@ export const PublicCommentActions = (props: PublicCommentActionsProps) => {
       <AdminOverrideAlert 
         i18n={props.i18n} 
         open={Boolean(confirmableFn)} 
-        onClose={onConfirmed} />
+        onConfirm={onConfirm}
+        onCancel={() => setConfirmableFn(undefined)} />
     </>
   )
 
@@ -92,7 +93,9 @@ interface AdminOverrideAlertProps {
 
   open: boolean;
 
-  onClose(): void;
+  onConfirm(): void;
+
+  onCancel(): void;
 
 }
 
@@ -102,7 +105,7 @@ const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
 
   const onOpenChange = (open: boolean) => {
     if (!open)
-      props.onClose();
+      props.onCancel();
   }
 
   return (
@@ -119,11 +122,16 @@ const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
           </Dialog.Description>
 
           <div className="dialog-footer">
-            <Dialog.Close asChild>
-              <button className="primary small">
-                {t['Proceed']}
-              </button>
-            </Dialog.Close>
+            <button 
+              className="small"
+              onClick={props.onCancel}>
+              {t['Cancel']}
+            </button>
+            <button 
+              className="primary small"
+              onClick={props.onConfirm}>
+              {t['Proceed']}
+            </button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
