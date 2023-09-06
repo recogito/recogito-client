@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Annotation } from '@components/Annotation';
-import type { Translations } from 'src/Types';
+import type { Policies, Translations } from 'src/Types';
 import { 
   Annotation as Anno, 
   AnnotoriousOpenSeadragonAnnotator,
@@ -20,6 +20,8 @@ interface AnnotationListProps {
   i18n: Translations;
 
   present: PresentUser[];
+
+  policies?: Policies;
 
   beforeSelect(a: Anno | undefined): void;
 
@@ -128,7 +130,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
                 showReplyForm={isSelected(a)}
                 i18n={props.i18n}
                 annotation={a} 
-                present={props.present} />  
+                present={props.present}
+                policies={props.policies} />  
             )
           )}
         </li>

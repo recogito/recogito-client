@@ -10,6 +10,8 @@ interface PublicCommentActionsProps {
 
   isFirst?: boolean;
 
+  isMine: boolean;
+
   onDeleteAnnotation(): void;
 
   onDeleteComment(): void;

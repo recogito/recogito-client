@@ -1,7 +1,7 @@
 import { Annotation } from '@components/Annotation';
 import { useAnnotator, useAnnotatorUser, Visibility } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
-import type { Translations } from 'src/Types';
+import type { Policies, Translations } from 'src/Types';
 
 import './Popup.css';
 
@@ -12,6 +12,8 @@ interface PopupProps {
   i18n: Translations;
 
   present: PresentUser[];
+
+  policies?: Policies;
 
 }
 
@@ -53,6 +55,7 @@ export const Popup = (props: PopupProps) => {
             {...props} 
             showReplyForm
             annotation={selected} 
+            policies={props.policies}
             onReply={onReply} />
         )
       ) : isMine ? (

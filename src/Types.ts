@@ -296,7 +296,7 @@ export interface Invitation {
 
 }
 
-export type TableName = 'projects' | 'documents' | 'contexts'; 
+export type TableName = 'projects' | 'documents' | 'contexts' | 'layers'; 
 
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
 

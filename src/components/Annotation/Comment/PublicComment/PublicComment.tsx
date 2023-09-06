@@ -23,6 +23,9 @@ export const PublicComment = (props: CommentProps) => {
 
   const isMine = creator?.id === me.id;
 
+  // Comments are editable if they are mine, or I'm a layer admin
+  const canEdit = isMine || props.policies?.get('layers').has('INSERT');
+
   const onDeleteComment = () => store.deleteBody(comment);
 
   return (
@@ -43,10 +46,11 @@ export const PublicComment = (props: CommentProps) => {
         onChanged={() => setEditable(false)} 
         onCanceled={() => setEditable(false)} />
 
-      {isMine && (
+      {canEdit && (
         <PublicCommentActions 
           i18n={props.i18n}
           isFirst={props.index === 0}
+          isMine={isMine}
           onDeleteAnnotation={props.onDeleteAnnotation}
           onDeleteComment={onDeleteComment}
           onEditComment={() => setEditable(true)} />
