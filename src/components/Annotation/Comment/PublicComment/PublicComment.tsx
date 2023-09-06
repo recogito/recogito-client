@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
@@ -14,7 +14,7 @@ export const PublicComment = (props: CommentProps) => {
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
-  const [editable, setEditable] = useState(true);
+  const [editable, setEditable] = useState(false);
 
   const me = useAnnotatorUser();
 
@@ -24,6 +24,24 @@ export const PublicComment = (props: CommentProps) => {
     present.find(p => p.id === comment.creator?.id) || comment.creator;
 
   const isMine = creator?.id === me.id;
+
+  useEffect(() => {
+    const { current } = textarea;
+
+    if (editable && current) {
+      // Put this in the event queue, so that 
+      // Radix trigger focus happens first, textarea
+      // focus second
+      setTimeout(() => {
+        current?.focus({ preventScroll: true });
+
+        // This trick sets the cursor to the end of the text
+        const { value } = current;
+        current.value = '';
+        current.value = value;
+      }, 1);
+    }
+  }, [editable]);
 
   const onKeyDown = (evt: React.KeyboardEvent) => {
     /*
@@ -64,7 +82,8 @@ export const PublicComment = (props: CommentProps) => {
           i18n={props.i18n}
           isFirst={props.index === 0}
           onDeleteAnnotation={props.onDeleteAnnotation}
-          onDeleteComment={onDeleteComment} />
+          onDeleteComment={onDeleteComment}
+          onEditComment={() => setEditable(true)} />
       )}
     </article>
   )

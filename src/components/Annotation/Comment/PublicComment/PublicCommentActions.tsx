@@ -1,5 +1,5 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { DotsThreeVertical, Trash } from '@phosphor-icons/react';
+import { DotsThreeVertical, Pencil, Trash } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
@@ -13,6 +13,8 @@ interface PublicCommentActionsProps {
   onDeleteAnnotation(): void;
 
   onDeleteComment(): void;
+
+  onEditComment(): void;
 
 }
 
@@ -34,13 +36,17 @@ export const PublicCommentActions = (props: PublicCommentActionsProps) => {
             {props.isFirst && (
               <>
                 <Item className="dropdown-item" onSelect={props.onDeleteAnnotation}>
-                  <Trash size={16} /> <span>{t['Delete this annotation']}</span>
+                  <Trash size={16} /> <span>{t['Delete annotation']}</span>
                 </Item>
               </>
             )}
 
+            <Item className="dropdown-item" onSelect={props.onEditComment}>
+              <Pencil size={16} /> <span>{t['Edit comment']}</span>
+            </Item>
+
             <Item className="dropdown-item" onSelect={props.onDeleteComment}>
-              <Trash size={16} /> <span>{t['Delete this comment']}</span>
+              <Trash size={16} /> <span>{t['Delete comment']}</span>
             </Item>
           </div>
         </Content>

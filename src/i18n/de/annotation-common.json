@@ -11,7 +11,8 @@
   "Comment...": "Kommentar...",
   "Reply...": "Antworten...",
 
-  "Delete this annotation": "Annotation löschen",
-  "Delete this comment": "Diesen Kommentar löschen",
+  "Edit comment": "Kommentar bearbeiten",
+  "Delete annotation": "Annotation löschen",
+  "Delete comment": "Kommentar löschen",
   "Make this annotation public": "Diese Annotation öffentlich machen"
 }

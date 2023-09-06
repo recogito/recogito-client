@@ -1,6 +1,6 @@
 .annotation-comment {
   border-top: 1px solid var(--border-color);
-  padding: 15px 10px;
+  padding: 15px 15px 0 15px;
   transition: background-color 1500ms;
   white-space: pre-wrap;
 }
@@ -23,12 +23,18 @@ li:first-child > .annotation-comment {
   cursor: text;
   font-size: var(--font-tiny);
   line-height: 140%;
-  margin: 10px 2px 0 2px;
-  padding: 2px 4px;
+  padding: 5px 6px;
+}
+
+.annotation-comment p {
+  margin: 10px 2px;
 }
 
 .annotation-comment textarea {
   border: none;
+  box-shadow: 0 0 0 1px var(--input-focus-border-color);
+  box-sizing: border-box;
+  margin: 10px 2px 0 2px;
   overflow-y: hidden;
   resize: none;
   width: 100%;

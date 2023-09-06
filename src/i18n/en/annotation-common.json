@@ -11,7 +11,8 @@
   "Comment...": "Comment...",
   "Reply...": "Reply...",
 
-  "Delete this annotation": "Delete this annotation",
-  "Delete this comment": "Delete this comment",
+  "Edit comment": "Edit comment",
+  "Delete annotation": "Delete annotation",
+  "Delete comment": "Delete comment",
   "Make this annotation public": "Make this annotation public"
 }
