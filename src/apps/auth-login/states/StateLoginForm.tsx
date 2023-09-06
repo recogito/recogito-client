@@ -12,6 +12,8 @@ export interface StateSignInFormProps {
 
   onSendLink(): void;
 
+  onSignInWithSSO(): void;
+
 }
 
 export const StateLoginForm = (props: StateSignInFormProps) => {
@@ -105,7 +107,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
             <MagicWand size={19} /> {t['Continue with Magic Link']}
           </button>
 
-          <button className="lg w-full">
+          <button className="lg w-full" onClick={props.onSignInWithSSO}>
             <Lock size={19} /> {t['Continue with SSO']}
           </button>
         </div>

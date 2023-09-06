@@ -7,6 +7,8 @@ import { StateChecking, StateLoginForm, StateMagicLink } from './states';
 
 import './Login.css';
 
+const SSO_DOMAIN = import.meta.env.PUBLIC_SSO_DOMAIN;
+
 const setCookies = (session: Session | null) => {
   if (!session)
     throw 'SIGNED_IN event without session - should never happen';
@@ -51,6 +53,18 @@ export const Login = (props: { i18n: Translations }) => {
     });
   }, []);
 
+  const signInWithSSO = () => {
+    supabase.auth.signInWithSSO({
+      domain: SSO_DOMAIN
+    }).then(({ data, error }) => {
+      if (data?.url) {
+        window.location.href= data.url;
+      } else {
+        console.error(error);
+      }
+    });
+  }
+
   if (isChecking) {
     return (
       <StateChecking />
@@ -63,7 +77,8 @@ export const Login = (props: { i18n: Translations }) => {
     return (
       <StateLoginForm 
         i18n={props.i18n}
-        onSendLink={() => setSendLink(true)} />
+        onSendLink={() => setSendLink(true)} 
+        onSignInWithSSO={signInWithSSO}/>
     )
   }
 
