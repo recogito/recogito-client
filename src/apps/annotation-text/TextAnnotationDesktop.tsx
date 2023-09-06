@@ -88,6 +88,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         </main>
 
         <div className="anno-desktop ta-desktop">
+          <AnnotationDesktop.UndoStack 
+            undoEmpty={true} />
+            
           <SupabasePlugin 
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
@@ -96,9 +99,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
             appearanceProvider={createAppearenceProvider()}
             onPresence={setPresent} 
             privacyMode={privacy === 'PRIVATE'}/>
-
-          <AnnotationDesktop.UndoStack 
-            undoEmpty={true} />
 
           {usePopup && (
             <TextAnnotatorPopup

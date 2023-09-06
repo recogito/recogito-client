@@ -81,6 +81,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
           adapter={null}
           tool={tool} 
           keepEnabled={true}>
+          
+          <AnnotationDesktop.UndoStack 
+            undoEmpty={true} />
+
           <SupabasePlugin
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
