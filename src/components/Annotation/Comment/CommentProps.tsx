@@ -15,6 +15,8 @@ export interface CommentProps {
 
   present: PresentUser[];
 
+  onUpdateComment(comment: AnnotationBody, updated: AnnotationBody): void;
+
   onDeleteAnnotation(): void;
   
 }

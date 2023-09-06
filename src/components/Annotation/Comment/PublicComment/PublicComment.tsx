@@ -36,20 +36,21 @@ export const PublicComment = (props: CommentProps) => {
         current?.focus({ preventScroll: true });
 
         // This trick sets the cursor to the end of the text
-        const { value } = current;
         current.value = '';
-        current.value = value;
+        current.value = comment.value;
       }, 1);
     }
   }, [editable]);
 
-  const onKeyDown = (evt: React.KeyboardEvent) => {
-    /*
-    if (evt.ctrlKey && evt.key === 'Enter')
-      onSubmit();
-    else if (evt.key === 'Delete')
-      evt.stopPropagation();
-    */
+  const onSaveChange = (evt: React.FormEvent) => {
+    evt.preventDefault();
+
+    props.onUpdateComment(comment, {
+      ...comment,
+      value: textarea.current!.value
+    });
+
+    setEditable(false);
   }
 
   const onDeleteComment = () => store.deleteBody(comment);
@@ -66,13 +67,25 @@ export const PublicComment = (props: CommentProps) => {
         createdAt={comment.created} />
 
       {editable ? (
-        <TextareaAutosize 
-          className="no-drag"
-          ref={textarea}
-          defaultValue={comment.value}
-          rows={1} 
-          maxRows={10}
-          onKeyDownCapture={onKeyDown} />
+        <form onSubmit={onSaveChange}>
+          <TextareaAutosize 
+            className="no-drag"
+            ref={textarea}
+            defaultValue={comment.value}
+            rows={1} 
+            maxRows={10} />
+
+          <div className="buttons">
+            <button 
+              className="primary sm flat"
+              type="submit">Save</button>
+
+            <button 
+              className="sm flat"
+              type="button"
+              onClick={() => setEditable(false)}>Cancel</button>
+          </div>
+        </form>
       ) : (
         <p className="no-drag">{comment.value}</p>
       )}

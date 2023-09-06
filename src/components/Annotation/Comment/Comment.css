@@ -40,6 +40,10 @@ li:first-child > .annotation-comment {
   width: 100%;
 }
 
+.annotation-comment form .buttons {
+  margin-bottom: 10px;
+}
+
 .annotation-comment .comment-actions {
   position: absolute;
   right: 5px;
