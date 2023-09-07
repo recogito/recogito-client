@@ -61,6 +61,11 @@ export const getProjectPolicies = (
     .rpc('get_project_policies', { _project_id: projectId })
     .then(({ error, data}) => ({ error, data: parsePolicies(data) }));
 
-// TODO
-// get_layer_policies(_layer_id)
+export const getLayerPolicies = (
+  supabase: SupabaseClient,
+  layerId: string
+) =>
+  supabase
+    .rpc('get_layer_policies', { _layer_id: layerId })
+    .then(({ error, data}) => ({ error, data: parsePolicies(data) }));
 

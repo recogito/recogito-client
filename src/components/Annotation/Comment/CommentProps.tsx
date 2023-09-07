@@ -1,5 +1,5 @@
 import type { AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Translations } from 'src/Types';
+import type { Policies, Translations } from 'src/Types';
 
 export interface CommentProps {
 
@@ -15,6 +15,8 @@ export interface CommentProps {
 
   present: PresentUser[];
 
+  policies?: Policies;
+  
   onDeleteAnnotation(): void;
   
 }

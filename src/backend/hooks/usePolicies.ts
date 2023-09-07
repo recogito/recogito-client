@@ -1,36 +1,29 @@
 import { useEffect, useState } from 'react';
-import { getOrganizationPolicies, getProjectPolicies } from '@backend/helpers';
+import { getLayerPolicies, getOrganizationPolicies, getProjectPolicies } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Policies } from 'src/Types';
+import type { Response } from '@backend/Types';
 
-export const useProjectPolicies = (projectId: string) => {
+const _usePolicies = (rpc: () => Response<Policies>) => {
 
   const [policies, setPolicies] = useState<Policies | undefined>(undefined);
 
   useEffect(() => {
-    getProjectPolicies(supabase, projectId)
-      .then(({ error, data }) => {
-        if (!error)
-          setPolicies(data);
-      });
+    rpc().then(({ error, data }) => {
+      if (!error)
+        setPolicies(data);
+    });
   }, []);
 
   return policies;
 
 }
 
-export const useOrganizationPolicies = () => {
+export const useProjectPolicies = (projectId: string) =>
+  _usePolicies(() => getProjectPolicies(supabase, projectId));
 
-  const [policies, setPolicies] = useState<Policies | undefined>(undefined);
+export const useOrganizationPolicies = (projectId: string) =>
+  _usePolicies(() => getOrganizationPolicies(supabase));
 
-  useEffect(() => {
-    getOrganizationPolicies(supabase)
-      .then(({ error, data }) => {
-        if (!error)
-          setPolicies(data);
-      });
-  }, []);
-
-  return policies;
-
-}
+export const useLayerPolicies = (layerId: string) =>
+  _usePolicies(() => getLayerPolicies(supabase, layerId));
