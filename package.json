@@ -11,7 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@annotorious/react": "file:../../annotorious/annotorious-v3/packages/annotorious-react",
+    "@annotorious/react": "^3.0.0-pre-alpha-35",
     "@astrojs/netlify": "^2.2.3",
     "@astrojs/node": "^5.3.3",
     "@astrojs/react": "^2.2.0",
@@ -26,7 +26,7 @@
     "@radix-ui/react-tabs": "^1.0.4",
     "@radix-ui/react-toast": "^1.1.3",
     "@react-spring/web": "^9.7.3",
-    "@recogito/react-text-annotator": "file:../text-annotator/packages/text-annotator-react",
+    "@recogito/react-text-annotator": "^3.0.0-pre-alpha-38",
     "@supabase/auth-helpers-shared": "^0.3.4",
     "@supabase/supabase-js": "^2.32.0",
     "@uppy/core": "^3.2.1",
