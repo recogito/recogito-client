@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Visibility, useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
+import { Visibility, useAnnotationStore } from '@annotorious/react';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Avatar } from '../../Avatar';
 

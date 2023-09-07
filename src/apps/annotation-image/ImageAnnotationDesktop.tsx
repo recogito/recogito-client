@@ -6,10 +6,10 @@ import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { Toolbar } from './Toolbar';
-import {
+import { 
   Annotorious, 
-  AnnotoriousOpenSeadragonAnnotator, 
-  ImageAnnotation,
+  AnnotoriousOpenSeadragonAnnotator,
+  ImageAnnotation, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,

@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import { 
   TEIAnnotator, 
   TextAnnotator, 
-  TextAnnotatorRef, 
-  TextAnnotatorPopup 
+  RecogitoTextAnnotator, 
+  TextAnnotatorPopup, 
+  TextAnnotation
 } from '@recogito/react-text-annotator';
-import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
@@ -17,7 +18,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { TEIContent, PlaintextContent } from './content';
 
 import './TextAnnotationDesktop.css';
-import '@recogito/react-text-annotator/dist/react-text-annotator.css';
+import '@recogito/react-text-annotator/react-text-annotator.css';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -39,7 +40,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const contentType = props.document.content_type;
 
-  const anno = useRef<TextAnnotatorRef>();
+  const anno = useRef<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -64,11 +65,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const beforeSelectAnnotation = (a?: Anno) => {
     if (a && !usePopup && anno.current) {
+      const t = a as TextAnnotation;
       // Don't fit the view if the annotation is already selected
-      if (anno.current.state.selection.isSelected(a))
+      if (anno.current.state.selection.isSelected(t))
         return;
 
-      anno.current.scrollIntoView(a);
+      anno.current.scrollIntoView(t);
     }
   }
 

@@ -64,8 +64,8 @@ export const Toolbar = (props: ToolbarProps) => {
           </button>
 
           <button 
-            className={tool === 'box' ? 'active' : undefined}
-            onClick={() => onChangeTool('box')}>
+            className={tool === 'rectangle' ? 'active' : undefined}
+            onClick={() => onChangeTool('rectangle')}>
             <Rectangle />
           </button>
 
