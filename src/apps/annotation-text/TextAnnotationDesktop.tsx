@@ -6,7 +6,8 @@ import {
   TextAnnotator, 
   RecogitoTextAnnotator, 
   TextAnnotatorPopup, 
-  TextAnnotation
+  TextAnnotation,
+  CETEIcean
 } from '@recogito/react-text-annotator';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
@@ -15,8 +16,9 @@ import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop'
 import { Toolbar } from './Toolbar';
 import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
-import { TEIContent, PlaintextContent } from './content';
+import { useContent } from './useContent';
 
+import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
 
@@ -43,6 +45,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const anno = useRef<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
+
+  const text = useContent(props.document);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -78,16 +82,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
     <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
       <Annotorious ref={anno}>
         <main>
-          {contentType === 'text/xml' ? (
+          {contentType === 'text/xml' && text ? (
             <TEIAnnotator>
-              <TEIContent document={props.document} />
+              <CETEIcean tei={text} />
             </TEIAnnotator>
-          ) : (
+          ) : text && (
             <TextAnnotator
               presence={{
                 font: "500 12px Inter, Arial, Helvetica, sans-serif"
               }}>
-              <PlaintextContent document={props.document} />
+              {text}
             </TextAnnotator>
           )}
         </main>
