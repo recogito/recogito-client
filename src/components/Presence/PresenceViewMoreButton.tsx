@@ -1,11 +1,11 @@
-import { isMe, type PresentUser } from '@annotorious/react';
+import { isMe } from '@annotorious/react';
+import type { PresentUser } from '@annotorious/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Avatar } from '@components/Avatar';
 import './PresenceViewMoreButton.css';
 import { CaretDown } from '@phosphor-icons/react';
 
 const { Content, Portal, Root, Trigger } = Popover;
-
 
 interface PresenceViewMoreButtonProps {
 

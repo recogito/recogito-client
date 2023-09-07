@@ -1,12 +1,12 @@
 import { useRef, useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import { 
   TEIAnnotator, 
   TextAnnotator, 
   TextAnnotatorRef, 
   TextAnnotatorPopup 
 } from '@recogito/react-text-annotator';
-import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
