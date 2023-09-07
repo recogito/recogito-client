@@ -1,5 +1,5 @@
 import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Translations } from 'src/Types';
+import type { Policies, Translations } from 'src/Types';
 
 export interface CardProps {
 
@@ -10,6 +10,8 @@ export interface CardProps {
   i18n: Translations;
   
   present: PresentUser[];
+
+  policies?: Policies;
 
   showReplyForm?: boolean;
 

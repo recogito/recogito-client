@@ -4,7 +4,7 @@ import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
 import type { Annotation, PresentUser } from '@annotorious/react';
-import type { Translations } from 'src/Types';
+import type { Policies, Translations } from 'src/Types';
 import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
 
@@ -15,6 +15,8 @@ interface ViewMenuProps {
   i18n: Translations;
 
   present: PresentUser[];
+
+  policies?: Policies;
 
   onChangePanel(panel: ViewMenuPanel | undefined): void;
 
@@ -101,6 +103,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
             <AnnotationList 
               i18n={props.i18n}
               present={props.present} 
+              policies={props.policies}
               beforeSelect={props.beforeSelectAnnotation} />
           )}
         </animated.aside>

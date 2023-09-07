@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { Detective } from '@phosphor-icons/react';
 import { useAnnotationStore } from '@annotorious/react';
 import { TimeAgo } from '@components/TimeAgo';
 import { PrivateCommentActions } from './PrivateCommentActions';
+import { EditableComment } from '../EditableComment';
 import type { CommentProps } from '../CommentProps';
 
 import '../Comment.css';
@@ -19,6 +21,8 @@ export const PrivateComment = (props: PrivateCommentProps) => {
 
   const store = useAnnotationStore();
 
+  const [editable, setEditable] = useState(false);
+
   const onDeleteComment = () => store.deleteBody(comment);
 
   return (
@@ -31,13 +35,20 @@ export const PrivateComment = (props: PrivateCommentProps) => {
         {comment.created && (
           <TimeAgo datetime={comment.created} locale={props.i18n.lang} />
         )}
-        <p className="no-drag">{comment.value}</p>
+        
+        <EditableComment 
+          i18n={props.i18n}
+          editable={editable}
+          comment={comment} 
+          onChanged={() => setEditable(false)} 
+          onCanceled={() => setEditable(false)} />
       </div>
 
       <PrivateCommentActions 
         i18n={props.i18n}
         isFirst={props.index === 0}
         onMakePublic={props.onMakePublic}
+        onEditComment={() => setEditable(true)}
         onDeleteAnnotation={props.onDeleteAnnotation}
         onDeleteComment={onDeleteComment} />
     </article>

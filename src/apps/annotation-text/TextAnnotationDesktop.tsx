@@ -7,6 +7,7 @@ import {
   TextAnnotatorPopup 
 } from '@recogito/react-text-annotator';
 import type { Annotation as Anno, PresentUser } from '@annotorious/react';
+import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
@@ -39,6 +40,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const contentType = props.document.content_type;
 
   const anno = useRef<TextAnnotatorRef>();
+
+  const policies = useLayerPolicies(props.document.layers[0].id);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -106,6 +109,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
                 <Annotation.Popup 
                   {...props} 
                   present={present} 
+                  policies={policies}
                   i18n={i18n} />
               )} />
           )}
@@ -123,6 +127,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
             <AnnotationDesktop.ViewMenu 
               i18n={i18n}
               present={present} 
+              policies={policies}
               onChangePanel={onChangeViewMenuPanel}
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>

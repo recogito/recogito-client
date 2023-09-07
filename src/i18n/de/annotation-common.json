@@ -11,7 +11,13 @@
   "Comment...": "Kommentar...",
   "Reply...": "Antworten...",
 
-  "Delete this annotation": "Annotation löschen",
-  "Delete this comment": "Diesen Kommentar löschen",
-  "Make this annotation public": "Diese Annotation öffentlich machen"
+  "Edit comment": "Kommentar bearbeiten",
+  "Delete annotation": "Annotation löschen",
+  "Delete comment": "Kommentar löschen",
+  "Make annotation public": "Diese Annotation öffentlich machen",
+  "Save": "Speichern",
+  "Cancel": "Abbrechen",
+  "With Great Power...": "Aus großer Macht...",
+  "...comes great responsibility.": "...folgt große Verantwortung. Du kannst die Annotationen anderer Benutzer ändern weil Du Adminstrator-Rechte auf diesem Dokument hast. Nutze deine Befugnisse verantwortungsbewusst.",
+  "Proceed": "Weitermachen"
 }

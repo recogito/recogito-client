@@ -1,10 +1,11 @@
 import { useMemo, useRef, useState } from 'react';
 import type { DocumentInContext, Translations } from 'src/Types';
+import { useLayerPolicies } from '@backend/hooks';
 import { Annotation } from '@components/Annotation';
-import { Toolbar } from './Toolbar';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { Toolbar } from './Toolbar';
 import {
   Annotorious, 
   AnnotoriousOpenSeadragonAnnotator, 
@@ -37,6 +38,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const { i18n } = props;
 
   const anno = useRef<AnnotoriousOpenSeadragonAnnotator>();
+
+  const policies = useLayerPolicies(props.document.layers[0].id);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -111,6 +114,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               popup ={props => (
                 <Annotation.Popup 
                   {...props} 
+                  policies={policies}
                   present={present} 
                   i18n={i18n} /> )} />
           )}
@@ -127,6 +131,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
             <AnnotationDesktop.ViewMenu 
               i18n={i18n}
               present={present} 
+              policies={policies}
               onChangePanel={onChangeViewMenuPanel} 
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
