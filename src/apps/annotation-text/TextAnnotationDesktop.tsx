@@ -17,7 +17,6 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { TEIContent, PlaintextContent } from './content';
 
 import './TextAnnotationDesktop.css';
-
 import '@recogito/react-text-annotator/dist/react-text-annotator.css';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
@@ -92,6 +91,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         </main>
 
         <div className="anno-desktop ta-desktop">
+          <AnnotationDesktop.UndoStack 
+            undoEmpty={true} />
+            
           <SupabasePlugin 
             base={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
