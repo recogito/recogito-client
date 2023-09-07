@@ -2,15 +2,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient.js';
 import type { DocumentInContext } from 'src/Types';
 
-interface PlaintextContentProps {
-
-  document: DocumentInContext;
-  
-}
-
-export const PlaintextContent = (props: PlaintextContentProps) => {
-
-  const { document } = props;
+export const useContent = (document: DocumentInContext) => {
 
   const [text, setText] = useState<string | undefined>();
 
