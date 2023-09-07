@@ -18,7 +18,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { TEIContent, PlaintextContent } from './content';
 
 import './TextAnnotationDesktop.css';
-import '@recogito/react-text-annotator/dist/react-text-annotator.css';
+import '@recogito/react-text-annotator/react-text-annotator.css';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
