@@ -1,6 +1,7 @@
 import { Article, GraduationCap, Image } from '@phosphor-icons/react';
+import { useProjectPolicies } from '@backend/hooks';
 import { Avatar } from '@components/Avatar';
-import type { ContentType, ExtendedProjectData, Policies, Translations, UserProfile } from 'src/Types';
+import type { ContentType, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
 
 import './ProjectCard.css';
@@ -10,8 +11,6 @@ interface ProjectCardProps {
   i18n: Translations;
 
   project: ExtendedProjectData;
-
-  policies?: Policies;
 
   onDeleted(): void;
 
@@ -24,6 +23,8 @@ interface ProjectCardProps {
 export const ProjectCard = (props: ProjectCardProps) => {
 
   const { contexts, description, layers, id, groups, name } = props.project;
+
+  const policies = useProjectPolicies(props.project.id);
 
   const members = groups.reduce((members, group) => (
     [...members, ...group.members]
@@ -94,7 +95,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
           ))}
         </div>
 
-        {props.policies?.get('projects').has('UPDATE') && (
+        {policies?.get('projects').has('UPDATE') && (
           <ProjectCardActions
             i18n={props.i18n}
             project={props.project}

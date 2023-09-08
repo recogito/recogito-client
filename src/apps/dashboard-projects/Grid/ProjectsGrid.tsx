@@ -7,8 +7,6 @@ export interface ProjectsGridProps {
 
   projects: ExtendedProjectData[];
 
-  policies?: Policies;
-
   onProjectDeleted(project: ExtendedProjectData): void;
 
   onDetailsChanged(project: ExtendedProjectData): void;
@@ -27,8 +25,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
             <ProjectCard 
               key={project.id} 
               i18n={props.i18n}
-              project={project} 
-              policies={props.policies}
+              project={project}
               onDeleted={() => props.onProjectDeleted(project)} 
               onDetailsChanged={props.onDetailsChanged} 
               onError={props.onError} />

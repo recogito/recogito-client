@@ -154,7 +154,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           <ProjectsGrid 
             i18n={props.i18n} 
             projects={filteredProjects} 
-            policies={policies}
             onProjectDeleted={onDeleteProject} 
             onDetailsChanged={onDetailsChanged} 
             onError={onError} />  

@@ -22,7 +22,7 @@ const _usePolicies = (rpc: () => Response<Policies>) => {
 export const useProjectPolicies = (projectId: string) =>
   _usePolicies(() => getProjectPolicies(supabase, projectId));
 
-export const useOrganizationPolicies = (projectId: string) =>
+export const useOrganizationPolicies = () =>
   _usePolicies(() => getOrganizationPolicies(supabase));
 
 export const useLayerPolicies = (layerId: string) =>
