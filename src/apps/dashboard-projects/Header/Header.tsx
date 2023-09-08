@@ -18,11 +18,11 @@ interface HeaderProps {
 
   policies?: Policies;
 
+  projects: ExtendedProjectData[][];
+
   invitations: Invitation[];
 
   filter: ProjectFilter;
-
-  counts: [number, number, number];
 
   onChangeFilter(f: ProjectFilter): void;
 
@@ -42,7 +42,7 @@ export const Header = (props: HeaderProps) => {
   
   const { filter, onChangeFilter } = props;
 
-  const [all, mine, shared] = props.counts;
+  const [all, mine, shared] = props.projects;
 
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
@@ -88,6 +88,7 @@ export const Header = (props: HeaderProps) => {
 
           <Notifications 
             i18n={props.i18n} 
+            myProjects={[...mine, ...shared]}
             invitations={props.invitations} 
             onInvitationAccepted={props.onInvitationAccepted}
             onInvitationDeclined={props.onInvitationDeclined} 
@@ -105,8 +106,8 @@ export const Header = (props: HeaderProps) => {
             <button>{t['All']}</button>
             
             <span 
-              className={all === 0 ? 'badge disabled' : 'badge'}>
-              {all}
+              className={all.length === 0 ? 'badge disabled' : 'badge'}>
+              {all.length}
             </span>
           </li>
 
@@ -116,8 +117,8 @@ export const Header = (props: HeaderProps) => {
             <button>{t['My Projects']}</button>
 
             <span 
-              className={mine === 0 ? 'badge disabled' : 'badge'}>
-              {mine}
+              className={mine.length === 0 ? 'badge disabled' : 'badge'}>
+              {mine.length}
             </span>
           </li>
 
@@ -127,8 +128,8 @@ export const Header = (props: HeaderProps) => {
             <button>{t['Shared with me']}</button>
 
             <span 
-              className={shared === 0 ? 'badge disabled' : 'badge'}>
-              {shared}
+              className={shared.length === 0 ? 'badge disabled' : 'badge'}>
+              {shared.length}
             </span>
           </li>
         </ul>

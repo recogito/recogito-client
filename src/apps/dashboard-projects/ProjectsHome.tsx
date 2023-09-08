@@ -134,9 +134,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           i18n={props.i18n} 
           me={me}
           policies={policies}
+          projects={[allProjects, myProjects, sharedProjects]}
           invitations={invitations} 
           filter={filter}
-          counts={[allProjects.length, myProjects.length, sharedProjects.length]}
           onChangeFilter={setFilter}
           onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}

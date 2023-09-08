@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { Bell, X } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
@@ -7,12 +7,16 @@ import { InvitationItem } from './InvitationItem';
 
 import './Notifications.css';
 import { InvitationConfirmation } from './InvitiationConfirmation';
+import { joinProject, silentlyJoinProject } from '@backend/helpers/invitationHelpers';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 const { Close, Content, Portal, Root, Trigger } = Popover;
 
 interface NotificationsProps {
   
   i18n: Translations;
+
+  myProjects: ExtendedProjectData[];
 
   invitations: Invitation[];
 
@@ -30,9 +34,25 @@ export const Notifications = (props: NotificationsProps) => {
 
   const unhandled = props.invitations.filter(i => !i.ignored);
 
-  const count = unhandled.length;
+  // Workaround - silently accept duplicate invites, i.e. invites
+  // to projects we're already a member of
+  const duplicates = unhandled.filter(i => props.myProjects.find(p => p.id === i.project_id));
+
+  const remaining = unhandled.filter(i => !duplicates.includes(i));
+
+  const count = remaining.length;
 
   const [showConfirmation, setShowConfirmation] = useState<Invitation | undefined>(undefined);
+
+  useEffect(() => {
+    if (duplicates.length > 0) {
+      console.warn('Received invitations to projects we are already part of - discarding');
+
+      duplicates.reduce((promise, invitation) =>
+        promise.then(() => silentlyJoinProject(supabase, invitation))
+      , Promise.resolve());
+    }
+  }, []);
 
   const onAccepted = (invitation: Invitation) => (project: ExtendedProjectData) => {    
     setShowConfirmation(invitation);
@@ -71,7 +91,7 @@ export const Notifications = (props: NotificationsProps) => {
                 <EmptyList i18n={props.i18n} />
               ) : (
                 <ol>
-                  {props.invitations.map(invitation => (
+                  {remaining.map(invitation => (
                     <InvitationItem 
                       key={invitation.id}
                       i18n={props.i18n}
