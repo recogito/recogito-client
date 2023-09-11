@@ -81,7 +81,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       )}
 
       {assignments ? assignments.length === 0 ? (
-        <div>Placeholder: Empty</div>
+        <div />
       ) : (
         <AssignmentsGrid
           i18n={props.i18n}
