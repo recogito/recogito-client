@@ -9,6 +9,7 @@ import {
   TextAnnotation,
   CETEIcean
 } from '@recogito/react-text-annotator';
+import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
@@ -22,7 +23,6 @@ import type { DocumentInTaggedContext, Translations, Layer } from 'src/Types';
 import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-import { supabase } from '@backend/supabaseBrowserClient';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -56,25 +56,29 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [layers, setLayers] = useState<Layer[]>(props.document.layers)
+  const [layers, setLayers] = useState<Layer[] | undefined>()
 
   useEffect(() => {
-    const isDefault = isDefaultContext(props.document.context);
+    if (policies) {
+      const isDefault = isDefaultContext(props.document.context);
     
-    const isAdmin = policies?.get('layers').has('INSERT');
+      const isAdmin = policies?.get('layers').has('INSERT');
 
-    // If this is the default context, and the user has
-    // sufficient privileges to create layers, load all layers
-    getAllLayersInProject(supabase, props.document.id, props.document.context.project_id)
-      .then(({ data, error }) => {
-        if (error)
-          console.error(error);
-        else
-          setLayers(data);
-      });
+      // If this is the default context, and the user has
+      // sufficient privileges to create layers, load all layers
+      if (isDefault && isAdmin) {
+        getAllLayersInProject(supabase, props.document.id, props.document.context.project_id)
+          .then(({ data, error }) => {
+            if (error)
+              console.error(error);
+            else
+              setLayers(data);
+          });
+      } else {
+        setLayers(props.document.layers);
+      }
+    }
   }, [policies]);
-
-  console.log(layers);
 
   //max number of avatars displayed in the top right
   const limit = 5;
@@ -121,15 +125,17 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         <div className="anno-desktop ta-desktop">
           <AnnotationDesktop.UndoStack 
             undoEmpty={true} />
-            
-          <SupabasePlugin 
-            base={SUPABASE}
-            apiKey={SUPABASE_API_KEY} 
-            channel={props.channelId}
-            layerId={props.document.layers[0].id} 
-            appearanceProvider={createAppearenceProvider()}
-            onPresence={setPresent} 
-            privacyMode={privacy === 'PRIVATE'}/>
+
+          {layers && 
+            <SupabasePlugin 
+              base={SUPABASE}
+              apiKey={SUPABASE_API_KEY} 
+              channel={props.channelId}
+              layerId={layers[0].id} 
+              appearanceProvider={createAppearenceProvider()}
+              onPresence={setPresent} 
+              privacyMode={privacy === 'PRIVATE'}/>
+          }
 
           {usePopup && (
             <TextAnnotatorPopup
