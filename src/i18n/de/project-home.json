@@ -14,9 +14,9 @@
   "Delete document": "Dokument löschen",
   "Rename document": "Dokument umbenennen",
 
-  "File upload": "Datei hochladen (Text, TEI, Bild)",
-  "From IIIF manifest": "IIIF Manifest importieren",
-  "v2 or v3 image info.json": "v2 oder v3 image info.json",
+  "File upload": "Datei hochladen (unterstützte Formate: Text, TEI, Bild)",
+  "From IIIF image manifest": "IIIF Image Manifest importieren",
+  "No presentation manifests": "Derzeit werden ausschließlich Einzelbilder unterstützt, keine Sammlungen nach dem IIIF Presentation Standard.",
   "Import IIIF": "IIIF Importieren",
   "Paste URL to a IIIF image manifest": "URL zu einem IIIF Bild-Manifest",
   "Please enter a valid IIIF manifest URL": "Bitte eine gültige IIIF Manifest URL eingeben",
