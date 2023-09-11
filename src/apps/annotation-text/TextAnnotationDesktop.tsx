@@ -131,7 +131,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               base={SUPABASE}
               apiKey={SUPABASE_API_KEY} 
               channel={props.channelId}
-              layerId={layers[0].id} 
+              defaultLayer={props.document.layers[0].id} 
+              layerIds={layers.map(layer => layer.id)}
               appearanceProvider={createAppearenceProvider()}
               onPresence={setPresent} 
               privacyMode={privacy === 'PRIVATE'}/>
