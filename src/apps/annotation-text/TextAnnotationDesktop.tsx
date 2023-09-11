@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import { 
@@ -9,18 +9,20 @@ import {
   TextAnnotation,
   CETEIcean
 } from '@recogito/react-text-annotator';
+import { getAllLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { useContent } from './useContent';
+import type { DocumentInTaggedContext, Translations, Layer } from 'src/Types';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -30,7 +32,7 @@ export interface TextAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInContext;
+  document: DocumentInTaggedContext;
 
   channelId: string;
 
@@ -53,6 +55,26 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
+  const [layers, setLayers] = useState<Layer[]>(props.document.layers)
+
+  useEffect(() => {
+    const isDefault = isDefaultContext(props.document.context);
+    
+    const isAdmin = policies?.get('layers').has('INSERT');
+
+    // If this is the default context, and the user has
+    // sufficient privileges to create layers, load all layers
+    getAllLayersInProject(supabase, props.document.id, props.document.context.project_id)
+      .then(({ data, error }) => {
+        if (error)
+          console.error(error);
+        else
+          setLayers(data);
+      });
+  }, [policies]);
+
+  console.log(layers);
 
   //max number of avatars displayed in the top right
   const limit = 5;

@@ -22,6 +22,30 @@ export const createSystemTag = (
     }
   }));
 
+export const getTagsForContext = (
+  supabase: SupabaseClient, 
+  contextId: string
+): Response<Tag[]> =>
+  supabase
+    .from('tags')
+    .select(`
+      id,
+      created_at,
+      created_by,
+      target_id,
+      tag_definition:tag_definitions(
+        id,
+        name,
+        target_type,
+        scope,
+        scope_id
+      )
+    `)
+    .eq('target_id', contextId)
+    .eq('tag_definitions.scope', 'system')
+    .then(({ error, data }) => error || !data ?
+      ({ error, data: [] }) : ({ error, data: data as unknown as Tag[] }));
+
 export const getTagsForContexts = (
   supabase: SupabaseClient, 
   contextIds: string[]

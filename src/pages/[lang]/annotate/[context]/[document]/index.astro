@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotationDesktop } from '@apps/annotation-image';
 import { TextAnnotationDesktop } from '@apps/annotation-text';
-import { getDocumentInContext } from '@backend/helpers';
+import { getDocumentInContext, getTagsForContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -24,7 +24,7 @@ if (!contextId || !documentId) {
 
 // Will return empty if this user has no access priviliges
 const document = await getDocumentInContext(supabase, documentId, contextId);
-if (document.error || !document.data) {
+if (document.error || !document.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, { 

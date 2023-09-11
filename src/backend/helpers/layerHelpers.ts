@@ -99,14 +99,24 @@ export const getAllLayersInProject = (
       document_id, 
       project_id, 
       name,
-      description
+      description,
+      contexts:layer_contexts (
+        ...contexts (
+          id,
+          name,        
+          project_id
+        )
+      )
     `)
     .eq('document_id', documentId)
     .eq('project_id', projectId)
     .then(({ data, error }) => {
-      if (error)
+      if (error) {
         return { error, data: [] };
-      else 
-        return { error, data: data as Layer[] };
+      } else {
+        // @ts-ignore
+        const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
+        return { error, data: flattened as unknown as Layer[] };
+      }
     });
 

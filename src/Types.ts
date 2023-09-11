@@ -157,6 +157,12 @@ export interface DocumentInContext extends Document {
 
 }
 
+export interface DocumentInTaggedContext extends DocumentInContext {
+
+  context: TaggedContext;
+
+}
+
 export const ContentTypes = ['text/plain', 'text/xml'] as const;
 
 export type ContentType = typeof ContentTypes[number];
@@ -175,6 +181,12 @@ export interface Context {
 
 }
 
+export interface TaggedContext extends Context {
+
+  tags: Tag[];
+
+}
+
 export interface Layer {
 
   id: string;
@@ -186,6 +198,8 @@ export interface Layer {
   name?: string;
 
   description?: string;
+
+  context: Context;
 
 }
 

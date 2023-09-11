@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import type { DocumentInContext, Translations } from 'src/Types';
+import type { DocumentInTaggedContext, Translations } from 'src/Types';
 import { useLayerPolicies } from '@backend/hooks';
 import { Annotation } from '@components/Annotation';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
@@ -27,7 +27,7 @@ export interface ImageAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInContext;
+  document: DocumentInTaggedContext;
 
   channelId: string;
 
