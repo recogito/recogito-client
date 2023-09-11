@@ -143,7 +143,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onInvitationDeclined={onInvitationDeclined} 
           onError={onError} />
 
-        {projects.length === 0 ? policies && (
+        {filteredProjects.length === 0 ? policies && (
           <ProjectsEmpty 
             i18n={props.i18n} 
             canCreateProjects={policies.get('projects').has('INSERT')}

@@ -88,7 +88,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           assignments={assignments} 
           onDeleteAssignment={onDeleteAssignment} />
       ) : (
-        <div>Placeholder: Loading</div>
+        <div />
       )}
     </div>
   )
