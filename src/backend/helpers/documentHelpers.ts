@@ -22,10 +22,7 @@ export const initDocument = (
   onProgress?: (progress: number) => void,
   file?: File,
   url?: string
-): Promise<DocumentInContext> => { 
-
-  console.log('init document', file);
-
+): Promise<DocumentInContext> => {
   if (file?.type.startsWith('image')) {
     // If the document is an image upload, the file is first
     // uploaded to the IIIF server, and then treated like a remote
