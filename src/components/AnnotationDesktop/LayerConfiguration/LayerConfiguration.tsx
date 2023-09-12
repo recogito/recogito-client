@@ -18,7 +18,7 @@ interface LayerConfigurationProps {
 }
 
 const PRIVACY_FORMATTER: Formatter = (annotation: Annotation) => ({
-  fill: annotation.visibility === Visibility.PRIVATE ? 0xff0000 : 0x0000ff
+  fill: annotation.visibility === Visibility.PRIVATE ? '#ff0000' : '#0000ff'
 });
 
 export const LayerConfiguration = (props: LayerConfigurationProps) => {

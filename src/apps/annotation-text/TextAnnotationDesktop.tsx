@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
-import type { Annotation as Anno, PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
 import { 
   TEIAnnotator, 
   TextAnnotator, 
@@ -51,6 +51,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const text = useContent(props.document);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -109,11 +111,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
       <Annotorious ref={anno}>
         <main>
           {contentType === 'text/xml' && text ? (
-            <TEIAnnotator>
+            <TEIAnnotator
+              formatter={formatter}
+              presence={{
+                font: "500 12px Inter, Arial, Helvetica, sans-serif"
+              }}>
               <CETEIcean tei={text} />
             </TEIAnnotator>
           ) : text && (
             <TextAnnotator
+              formatter={formatter}
               presence={{
                 font: "500 12px Inter, Arial, Helvetica, sans-serif"
               }}>
@@ -163,7 +170,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               i18n={i18n}
               present={present} 
               policies={policies}
+              layers={layers}
               onChangePanel={onChangeViewMenuPanel}
+              onChangeLayerConfig={f => setFormatter(() => f)}
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
 
