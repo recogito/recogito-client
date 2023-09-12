@@ -56,7 +56,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [layers, setLayers] = useState<Layer[] | undefined>()
+  const [layers, setLayers] = useState<Layer[] | undefined>();
 
   useEffect(() => {
     if (policies) {
