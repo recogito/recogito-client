@@ -11,6 +11,7 @@ import { Toolbar } from './Toolbar';
 import { 
   Annotorious, 
   AnnotoriousOpenSeadragonAnnotator,
+  Formatter,
   ImageAnnotation, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
@@ -46,6 +47,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [tool, setTool] = useState<string | null>(null);
+
+  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -109,7 +112,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
         <OpenSeadragonAnnotator 
           adapter={null}
           tool={tool} 
-          keepEnabled={true}>
+          keepEnabled={true}
+          formatter={formatter}>
           
           <AnnotationDesktop.UndoStack 
             undoEmpty={true} />
@@ -162,6 +166,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               present={present} 
               policies={policies}
               onChangePanel={onChangeViewMenuPanel} 
+              onChangeLayerConfig={f => setFormatter(() => f)}
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
 

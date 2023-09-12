@@ -3,8 +3,9 @@ import { Chats, MagnifyingGlass, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
-import type { Annotation, PresentUser } from '@annotorious/react';
+import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
 import type { Policies, Translations } from 'src/Types';
+import { LayerConfiguration } from '../LayerConfiguration';
 import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
 
@@ -21,6 +22,8 @@ interface ViewMenuProps {
   onChangePanel(panel: ViewMenuPanel | undefined): void;
 
   beforeSelectAnnotation(a?: Annotation): void;
+
+  onChangeLayerConfig(formatter?: Formatter): void;
 
 }
 
@@ -69,7 +72,9 @@ export const ViewMenu = (props: ViewMenuProps) => {
             <Chats />
           </button>
 
-          <button>
+          <button
+            className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
+            onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
             <StackSimple />
           </button>
 
@@ -99,13 +104,17 @@ export const ViewMenu = (props: ViewMenuProps) => {
 
       {panelTransition((style, panel) => panel && (
         <animated.aside style={style}>
-          {panel === ViewMenuPanel.ANNOTATIONS && (
+          {panel === ViewMenuPanel.ANNOTATIONS ? (
             <AnnotationList 
               i18n={props.i18n}
               present={props.present} 
               policies={props.policies}
               beforeSelect={props.beforeSelectAnnotation} />
-          )}
+          ) : panel === ViewMenuPanel.LAYERS ? (
+            <LayerConfiguration
+              i18n={props.i18n}
+              onChange={props.onChangeLayerConfig} />
+          ) : undefined}
         </animated.aside>
       ))}
     </div>
