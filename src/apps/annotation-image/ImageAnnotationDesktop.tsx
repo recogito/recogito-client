@@ -165,6 +165,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
               i18n={i18n}
               present={present} 
               policies={policies}
+              layers={layers}
               onChangePanel={onChangeViewMenuPanel} 
               onChangeLayerConfig={f => setFormatter(() => f)}
               beforeSelectAnnotation={beforeSelectAnnotation} />

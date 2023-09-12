@@ -4,7 +4,7 @@ import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
 import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
-import type { Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 import { LayerConfiguration } from '../LayerConfiguration';
 import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
@@ -18,6 +18,8 @@ interface ViewMenuProps {
   present: PresentUser[];
 
   policies?: Policies;
+
+  layers?: Layer[];
 
   onChangePanel(panel: ViewMenuPanel | undefined): void;
 
@@ -113,6 +115,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
           ) : panel === ViewMenuPanel.LAYERS ? (
             <LayerConfiguration
               i18n={props.i18n}
+              layers={props.layers}
               onChange={props.onChangeLayerConfig} />
           ) : undefined}
         </animated.aside>
