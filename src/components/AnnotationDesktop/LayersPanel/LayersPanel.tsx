@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import { Visibility, type Annotation, type Formatter } from '@annotorious/react';
+import { Visibility, type Annotation, type Formatter, Color } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { AssignmentConfiguration } from './configurations';
 import type { LayerConfiguration } from './LayerConfiguration';
@@ -27,25 +27,26 @@ export const LayersPanel = (props: LayerConfigurationProps) => {
 
   const [value, setValue] = useState('none');
 
-  const [config, setConfig] = useState<LayerConfiguration | undefined>();
+  const [legend, setLegend] = useState<{ color: Color, label: string }[]>([]);
+
+  console.log(props.layers);
 
   const onValueChange = (value: string) => {
     setValue(value);
 
     if (value === 'none') {
       props.onChange();
-      setConfig(undefined);
+      setLegend([]);
     } else if (value === 'privacy') {
       props.onChange();
-      setConfig(undefined);
+      setLegend([]);
     } else if (value === 'assignment') {
-      const config = AssignmentConfiguration();
+      const config = AssignmentConfiguration(setLegend);
       props.onChange(config.formatter);
       console.log(config);
-      setConfig(AssignmentConfiguration);
     } else if (value === 'creator') {
       props.onChange();
-      setConfig(undefined);
+      setLegend([]);
     }
   }
 
@@ -99,11 +100,13 @@ export const LayersPanel = (props: LayerConfigurationProps) => {
       </form>
 
       <div className="layer-configuration-legend">
-        {config && (
+        {legend && (
           <ul>
-            {config.legend.map(({ label, color }) => (
+            {legend.map(({ label, color }) => (
               <li key={label}>
-                {label}
+                <span 
+                  className="legend-color" 
+                  style={{ backgroundColor: color }}/> {label}
               </li>
             ))}
           </ul>

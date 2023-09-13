@@ -1,0 +1,6 @@
+.legend-color {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--border-radius);
+}

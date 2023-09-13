@@ -30,7 +30,7 @@ const getRandomColor = () => {
 
 const assignedColors = new Map<string, Color>();
 
-export const AssignmentConfiguration = (): LayerConfiguration => ({
+export const AssignmentConfiguration = (onUpdateLegend: (legend: { color: Color; label: string }[]) => void): LayerConfiguration => ({
 
   // @ts-ignore
   assignedColors: new Map<string, Color>(),
@@ -44,6 +44,10 @@ export const AssignmentConfiguration = (): LayerConfiguration => ({
       const rnd = getRandomColor();
       //@ts-ignore
       assignedColors.set(annotation.layer_id, rnd);
+
+      const legend = Array.from(assignedColors.entries()).map(([ label, color ]) => ({ color, label }));
+      onUpdateLegend(legend);
+
       return { fill: rnd, fillOpacity: 0.25 };
     }
   },
