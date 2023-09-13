@@ -19,25 +19,30 @@ export const ProjectTitle = (props: ProjectTitleProps) => {
 
   const { project } = props;
 
+  const [title, setTitle] = useState(project.name);
+
   const [saveState, setSaveState] = useState<SaveState>('idle');
 
   const onRenameProject = (name: string) => {
+    setTitle(name);
     setSaveState('saving');
 
     updateProject(supabase, { id: project.id, name })
       .then(({ error }) => {
         if (error) {
+          setTitle(project.name);
           setSaveState('failed');
         } else {
           setSaveState('success');
+
         }
-      })
+      });
   }
 
   return (
     <h1 className="project-title">
       <EditableText 
-        value={project.name} 
+        value={title} 
         onSubmit={onRenameProject} />
 
       {saveState !== 'idle' && (
