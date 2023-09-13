@@ -9,6 +9,8 @@ import './ProjectTitle.css';
 
 interface ProjectTitleProps {
 
+  editable?: boolean;
+
   project: ExtendedProjectData;
 
   onChanged?(title: string): void;
@@ -34,16 +36,19 @@ export const ProjectTitle = (props: ProjectTitleProps) => {
           setSaveState('failed');
         } else {
           setSaveState('success');
-
         }
       });
   }
 
   return (
     <h1 className="project-title">
-      <EditableText 
-        value={title} 
-        onSubmit={onRenameProject} />
+      {props.editable ? (
+        <EditableText
+          value={title} 
+          onSubmit={onRenameProject} />
+      ) : (
+        title
+      )}
 
       {saveState !== 'idle' && (
         <TinySaveIndicator 
