@@ -1,6 +1,25 @@
-.legend-color {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
+.layer-configuration-legend {
+  font-size: var(--font-small);
+  padding: 15px;
+}
+
+.layer-configuration-legend ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.layer-configuration-legend li {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.layer-configuration-legend li .legend-color {
   border-radius: var(--border-radius);
+  display: inline-block;
+  height: 17px;
+  position: relative;
+  top: -1px;
+  width: 17px;
 }

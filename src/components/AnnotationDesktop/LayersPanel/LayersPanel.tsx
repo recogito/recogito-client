@@ -3,8 +3,7 @@ import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import { Visibility, type Annotation, type Formatter, Color } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
-import { AssignmentConfiguration } from './configurations';
-import type { LayerConfiguration } from './LayerConfiguration';
+import { useAssignmentLayerConfiguration } from './configurations';
 
 import './LayersPanel.css';
 
@@ -27,26 +26,19 @@ export const LayersPanel = (props: LayerConfigurationProps) => {
 
   const [value, setValue] = useState('none');
 
-  const [legend, setLegend] = useState<{ color: Color, label: string }[]>([]);
-
-  console.log(props.layers);
+  const { formatter, legend } = useAssignmentLayerConfiguration(props.layers);
 
   const onValueChange = (value: string) => {
     setValue(value);
 
     if (value === 'none') {
       props.onChange();
-      setLegend([]);
     } else if (value === 'privacy') {
       props.onChange();
-      setLegend([]);
     } else if (value === 'assignment') {
-      const config = AssignmentConfiguration(setLegend);
-      props.onChange(config.formatter);
-      console.log(config);
+      props.onChange(formatter);
     } else if (value === 'creator') {
       props.onChange();
-      setLegend([]);
     }
   }
 

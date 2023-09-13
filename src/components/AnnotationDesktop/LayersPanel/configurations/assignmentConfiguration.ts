@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import type { Color, Annotation } from '@annotorious/react';
-import type { LayerConfiguration } from '../LayerConfiguration';
+import type { Layer } from 'src/Types';
 
 // https://tailwindcolor.com/
 // (color brightness 600)
@@ -30,29 +31,36 @@ const getRandomColor = () => {
 
 const assignedColors = new Map<string, Color>();
 
-export const AssignmentConfiguration = (onUpdateLegend: (legend: { color: Color; label: string }[]) => void): LayerConfiguration => ({
+export const useAssignmentLayerConfiguration = (
+  layers?: Layer[]
+) => {
 
-  // @ts-ignore
-  assignedColors: new Map<string, Color>(),
+  const [legend, setLegend] = useState<{ color: Color, label?: string}[]>([]);
 
-  formatter: (annotation: Annotation) => {
-    //@ts-ignore
+  const getLabel = (layerId: string) =>
+    layers?.find(l => l.id === layerId)?.context.name;
+
+  const formatter = (annotation: Annotation) => {
+    // @ts-ignore
     const assignedColor = assignedColors.get(annotation.layer_id);
     if (assignedColor) {
       return { fill: assignedColor, fillOpacity: 0.25 };
     } else {
       const rnd = getRandomColor();
+
       //@ts-ignore
       assignedColors.set(annotation.layer_id, rnd);
 
-      const legend = Array.from(assignedColors.entries()).map(([ label, color ]) => ({ color, label }));
-      onUpdateLegend(legend);
+      const legend = Array.from(assignedColors.entries())
+        .map(([ id, color ]) => ({ color, label: getLabel(id) }));
+
+      setLegend(legend);
 
       return { fill: rnd, fillOpacity: 0.25 };
     }
-  },
+  };
 
-  legend: Array.from(assignedColors.entries()).map(([ label, color ]) => ({ color, label }))
+  return { legend, formatter };
 
-})
+}
 
