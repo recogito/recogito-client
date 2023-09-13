@@ -16,6 +16,7 @@ import {
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,
+  PointerSelectAction,
   PresentUser,
   SupabasePlugin
 } from '@annotorious/react';
@@ -106,11 +107,21 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
     }
   }
 
+  const selectAction = (annotation: ImageAnnotation) => {
+    // Annotation targets are editable for creators and admins
+    const me = anno.current?.getUser()?.id;
+    const canEdit = annotation.target.creator?.id === me ||
+      policies?.get('targets').has('UPDATE');
+
+    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.HIGHLIGHT;
+  }
+
   return (
     <div className="anno-desktop ia-desktop">
       <Annotorious ref={anno}>
         <OpenSeadragonAnnotator 
           adapter={null}
+          pointerSelectAction={selectAction}
           tool={tool} 
           keepEnabled={true}
           formatter={formatter}>

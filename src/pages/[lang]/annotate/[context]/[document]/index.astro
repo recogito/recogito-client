@@ -5,7 +5,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotationDesktop } from '@apps/annotation-image';
 import { TextAnnotationDesktop } from '@apps/annotation-text';
-import { getDocumentInContext, getTagsForContext } from '@backend/helpers';
+import { getDocumentInContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
