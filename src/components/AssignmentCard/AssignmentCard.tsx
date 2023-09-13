@@ -1,4 +1,4 @@
-import type { Context, Translations } from 'src/Types';
+import type { Context, ExtendedProjectData, Translations } from 'src/Types';
 import { GraduationCap } from '@phosphor-icons/react';
 import { AssignmentCardActions } from './AssignmentCardActions';
 
@@ -7,6 +7,8 @@ import './AssignmentCard.css';
 interface AssignmentCardProps {
 
   i18n: Translations;
+
+  project: ExtendedProjectData;
 
   // Just temporary, for hacking/testing
   assignment: Context;
@@ -17,7 +19,7 @@ interface AssignmentCardProps {
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
 
-  const { assignment } = props;
+  const { assignment, project } = props;
 
   const onClick = () =>
     window.location.href = `/${props.i18n.lang}/projects/${assignment.project_id}/assignments/${assignment.id}`;
@@ -29,7 +31,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
       </div>
       <div className="top">
         <h1>
-          My First Project
+          {project.name}
         </h1>
         <h2>
           {assignment.name}
