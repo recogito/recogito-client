@@ -28,7 +28,11 @@ const invitations = await listPendingInvitations(supabase, projectId as string);
 
 if (project.error || invitations.error) { 
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { headers: error.headers, status: 404 }); 
+  return new Response(error.body, {
+    headers: { 'Content-Type': 'text/html;charset=utf-8' },
+    status: 404, 
+    statusText: 'Not Found' 
+  }); 
 }
 ---
 <ProjectLayout active="Collaboration" user={profile.data} project={project.data}>
