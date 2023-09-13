@@ -3,7 +3,7 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { InviteUser } from './InviteUser';
 import { MembersTable } from './MembersTable';
 import type { TeamMember } from './TeamMember';
-import type { ExtendedProjectData, Invitation, MyProfile, ProjectGroup, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, MyProfile, Group, Translations } from 'src/Types';
 
 import './ProjectCollaboration.css';
 
@@ -29,7 +29,7 @@ export const ProjectCollaboration = (props: ManageUsersProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const onChangeGroup = (member: TeamMember, from: ProjectGroup, to: ProjectGroup) => {
+  const onChangeGroup = (member: TeamMember, from: Group, to: Group) => {
     // Update member
     const updated = {
       ...member,
