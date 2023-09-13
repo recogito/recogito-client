@@ -34,8 +34,6 @@ export const EditableText = (props: EditableTextProps) => {
 
   const el = useRef<HTMLElement>(null);
 
-  // const [value, setValue] = useState(props.value);
-
   useEffect(() => {
     if (props.focus && el.current)
       setTimeout(() => el.current?.focus(), 1);
