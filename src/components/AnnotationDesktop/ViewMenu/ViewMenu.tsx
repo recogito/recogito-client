@@ -5,7 +5,7 @@ import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
 import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
 import type { Layer, Policies, Translations } from 'src/Types';
-import { LayerConfiguration } from '../LayerConfiguration';
+import { LayersPanel } from '../LayersPanel';
 import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
 
@@ -25,7 +25,7 @@ interface ViewMenuProps {
 
   beforeSelectAnnotation(a?: Annotation): void;
 
-  onChangeLayerConfig(formatter?: Formatter): void;
+  onChangeFormatter(formatter?: Formatter): void;
 
 }
 
@@ -113,10 +113,10 @@ export const ViewMenu = (props: ViewMenuProps) => {
               policies={props.policies}
               beforeSelect={props.beforeSelectAnnotation} />
           ) : panel === ViewMenuPanel.LAYERS ? (
-            <LayerConfiguration
+            <LayersPanel
               i18n={props.i18n}
               layers={props.layers}
-              onChange={props.onChangeLayerConfig} />
+              onChange={props.onChangeFormatter} />
           ) : undefined}
         </animated.aside>
       ))}

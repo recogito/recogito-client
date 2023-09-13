@@ -3,9 +3,10 @@ import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import { Visibility, type Annotation, type Formatter } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
-import { AssignmentFormatter } from './formatters';
+import { AssignmentConfiguration } from './configurations';
+import type { LayerConfiguration } from './LayerConfiguration';
 
-import './LayerConfiguration.css';
+import './LayersPanel.css';
 
 interface LayerConfigurationProps {
 
@@ -18,24 +19,34 @@ interface LayerConfigurationProps {
 }
 
 const PRIVACY_FORMATTER: Formatter = (annotation: Annotation) => ({
+  //@ts-ignore
   fill: annotation.visibility === Visibility.PRIVATE ? '#ff0000' : '#0000ff'
 });
 
-export const LayerConfiguration = (props: LayerConfigurationProps) => {
+export const LayersPanel = (props: LayerConfigurationProps) => {
 
   const [value, setValue] = useState('none');
+
+  const [config, setConfig] = useState<LayerConfiguration | undefined>();
 
   const onValueChange = (value: string) => {
     setValue(value);
 
-    if (value === 'none')
+    if (value === 'none') {
       props.onChange();
-    else if (value === 'privacy')
-      props.onChange(PRIVACY_FORMATTER);
-    else if (value === 'assignment')
-      props.onChange(AssignmentFormatter);
-    else if (value === 'creator')
+      setConfig(undefined);
+    } else if (value === 'privacy') {
       props.onChange();
+      setConfig(undefined);
+    } else if (value === 'assignment') {
+      const config = AssignmentConfiguration();
+      props.onChange(config.formatter);
+      console.log(config);
+      setConfig(AssignmentConfiguration);
+    } else if (value === 'creator') {
+      props.onChange();
+      setConfig(undefined);
+    }
   }
 
   return (
@@ -88,7 +99,15 @@ export const LayerConfiguration = (props: LayerConfigurationProps) => {
       </form>
 
       <div className="layer-configuration-legend">
-        
+        {config && (
+          <ul>
+            {config.legend.map(({ label, color }) => (
+              <li key={label}>
+                {label}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   )
