@@ -19,9 +19,8 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const store = useAnnotationStore();
 
-  const onDeleteSelection = () => {
-    store.bulkDeleteAnnotation(selected);
-  }
+  const onDeleteSelection = () =>
+    store.bulkDeleteAnnotation(selected.map(s => s.annotation));
 
   return (
     <div className="ta-toolbar-container not-annotatable">

@@ -32,9 +32,8 @@ export const Toolbar = (props: ToolbarProps) => {
     setTool(tool);
   }
 
-  const onDeleteSelection = () => {
-    store.bulkDeleteAnnotation(selected);
-  }
+  const onDeleteSelection = () =>
+    store.bulkDeleteAnnotation(selected.map(s => s.annotation));
 
   useEffect(() => {
     if (anno) {

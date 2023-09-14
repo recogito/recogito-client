@@ -7,7 +7,7 @@ import './Popup.css';
 
 interface PopupProps {
 
-  selected: Anno[];
+  selected: { annotation: Anno, editable?: boolean }[];
 
   i18n: Translations;
 
@@ -26,7 +26,7 @@ export const Popup = (props: PopupProps) => {
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
-  const selected = props.selected[0];
+  const selected = props.selected[0].annotation;
 
   const isPrivate = selected.visibility === Visibility.PRIVATE;
 

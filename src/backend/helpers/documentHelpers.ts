@@ -3,7 +3,8 @@ import { createDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, DocumentInContext, Layer } from 'src/Types';
+import type { Document, DocumentInContext, DocumentInTaggedContext, Layer, TaggedContext } from 'src/Types';
+import { getTagsForContext } from './tagHelpers';
 
 /**
  * Initializes a new Document in a Context. Process differs for
@@ -167,7 +168,7 @@ export const getDocumentInContext = (
   supabase: SupabaseClient,
   documentId: string, 
   contextId: string
-): Response<DocumentInContext | undefined> =>
+): Response<DocumentInTaggedContext | undefined> =>
   supabase
     .from('documents')
     .select(`
@@ -198,5 +199,37 @@ export const getDocumentInContext = (
     .eq('id', documentId)
     .eq('layers.layer_contexts.context_id', contextId)
     .single()
-    .then(({ error, data }) => 
-      error ? ({ error, data: undefined }) : ({ error, data: data as unknown as DocumentInContext }));
+    .then(({ error, data }) => { 
+      const doc = data;
+
+      if (error) {
+        return { error, data: undefined };
+      } else {
+        return getTagsForContext(supabase, contextId).then(({ error, data }) => { 
+          //@ts-ignore
+          const context = doc?.layers[0].contexts[0];
+
+          if (!context)
+            // Should never happen, except for DB integrity issue
+            throw new Error('DocumentInContext without context');
+          
+          
+          const documentInContext = {
+            // @ts-ignore
+            ...doc,
+            // @ts-ignore
+            layers: doc.layers.map(({ contexts, ...layer }) => ({ ...layer, context: contexts[0] })),
+            context: {
+              ...context,
+              tags: data
+            }
+          }
+
+          return { error, data: documentInContext as unknown as DocumentInTaggedContext }
+        });
+      }
+    });
+
+export const isDefaultContext = (context: TaggedContext) =>
+  context.tags?.length > 0 && context.tags.some(t => 
+    t.tag_definition?.scope === 'system' && t.tag_definition?.name === 'DEFAULT_CONTEXT');

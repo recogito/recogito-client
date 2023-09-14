@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Annotorious, SupabasePlugin } from '@annotorious/react';
-import type { Annotation as Anno, PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
 import { 
   TEIAnnotator, 
   TextAnnotator, 
@@ -9,14 +9,16 @@ import {
   TextAnnotation,
   CETEIcean
 } from '@recogito/react-text-annotator';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { getAllLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import { Toolbar } from './Toolbar';
-import type { DocumentInContext, Translations } from 'src/Types';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { useContent } from './useContent';
+import type { DocumentInTaggedContext, Translations, Layer } from 'src/Types';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
@@ -30,7 +32,7 @@ export interface TextAnnotationDesktopProps {
 
   i18n: Translations;
 
-  document: DocumentInContext;
+  document: DocumentInTaggedContext;
 
   channelId: string;
 
@@ -50,9 +52,35 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
+  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
+
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
+  const [layers, setLayers] = useState<Layer[] | undefined>();
+
+  useEffect(() => {
+    if (policies) {
+      const isDefault = isDefaultContext(props.document.context);
+    
+      const isAdmin = policies?.get('layers').has('INSERT');
+
+      // If this is the default context, and the user has
+      // sufficient privileges to create layers, load all layers
+      if (isDefault && isAdmin) {
+        getAllLayersInProject(supabase, props.document.id, props.document.context.project_id)
+          .then(({ data, error }) => {
+            if (error)
+              console.error(error);
+            else
+              setLayers(data);
+          });
+      } else {
+        setLayers(props.document.layers);
+      }
+    }
+  }, [policies]);
 
   //max number of avatars displayed in the top right
   const limit = 5;
@@ -83,11 +111,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
       <Annotorious ref={anno}>
         <main>
           {contentType === 'text/xml' && text ? (
-            <TEIAnnotator>
+            <TEIAnnotator
+              formatter={formatter}
+              presence={{
+                font: "500 12px Inter, Arial, Helvetica, sans-serif"
+              }}>
               <CETEIcean tei={text} />
             </TEIAnnotator>
           ) : text && (
             <TextAnnotator
+              formatter={formatter}
               presence={{
                 font: "500 12px Inter, Arial, Helvetica, sans-serif"
               }}>
@@ -99,15 +132,18 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
         <div className="anno-desktop ta-desktop">
           <AnnotationDesktop.UndoStack 
             undoEmpty={true} />
-            
-          <SupabasePlugin 
-            base={SUPABASE}
-            apiKey={SUPABASE_API_KEY} 
-            channel={props.channelId}
-            layerId={props.document.layers[0].id} 
-            appearanceProvider={createAppearenceProvider()}
-            onPresence={setPresent} 
-            privacyMode={privacy === 'PRIVATE'}/>
+
+          {layers && 
+            <SupabasePlugin 
+              base={SUPABASE}
+              apiKey={SUPABASE_API_KEY} 
+              channel={props.channelId}
+              defaultLayer={props.document.layers[0].id} 
+              layerIds={layers.map(layer => layer.id)}
+              appearanceProvider={createAppearenceProvider()}
+              onPresence={setPresent} 
+              privacyMode={privacy === 'PRIVATE'}/>
+          }
 
           {usePopup && (
             <TextAnnotatorPopup
@@ -134,7 +170,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               i18n={i18n}
               present={present} 
               policies={policies}
+              layers={layers}
               onChangePanel={onChangeViewMenuPanel}
+              onChangeFormatter={f => setFormatter(() => f)}
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
 

@@ -1,23 +1,17 @@
 import { GraduationCap } from '@phosphor-icons/react';
-import type { Context, DocumentInContext } from 'src/Types';
+import type { Context, DocumentInTaggedContext } from 'src/Types';
 
 import './DocumentMenu.css';
 
 interface DocumentMenuProps {
 
-  document: DocumentInContext;
+  document: DocumentInTaggedContext;
 
 }
 
 export const DocumentMenu = (props: DocumentMenuProps) => {
 
-  const contexts = props.document.layers.reduce((contexts, layer) => (
-    [...contexts, ...layer.contexts]
-  ), [] as Context[]);
-
-  // For the time being, we can assume that there will always be exactly 
-  // one (named or unnamed!) context for a document in the annotation view
-  const contextName = contexts.length === 1 ? contexts[0].name : undefined;
+  const contextName = props.document.context.name;
 
   return (
     <div className="anno-menubar anno-desktop-overlay document-menu">
