@@ -1,5 +1,18 @@
 import type { Color } from '@annotorious/react';
 
+// https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+export const shuffle = <T extends any>(array: T[]): T[] => {
+  const randomized = [...array];
+
+  // Do the Durstenfeld shuffle!
+  for (let i = randomized.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [randomized[i], randomized[j]] = [randomized[j], randomized[i]];
+  }
+
+  return randomized;
+}
+
 // https://colorbrewer2.org/
 export const ColorBrewerSet1_8 = [
   '#e41a1c',
