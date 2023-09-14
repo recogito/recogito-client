@@ -4,7 +4,7 @@ import { CaretDown, Check } from '@phosphor-icons/react';
 import type { Formatter } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useColorCoding } from './ColorCoding';
-import { colorByAssignment, colorByPrivacy} from './colorCodings';
+import { colorByAssignment, colorByFirstTag, colorByPrivacy} from './colorCodings';
 
 import './LayersPanel.css';
 
@@ -37,7 +37,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
     } else if (value === 'creator') {
       setCoding();
     } else if (value === 'tag') {
-      setCoding();
+      setCoding(colorByFirstTag());
     }
   }
 
