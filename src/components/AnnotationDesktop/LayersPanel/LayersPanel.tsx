@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import { Visibility, type Annotation, type Formatter, Color } from '@annotorious/react';
+import type { Formatter } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
-import { useAssignmentLayerConfiguration } from './configurations';
+import { useColorCoding } from './ColorCoding';
+import { colorByAssignment } from './colorCodings';
 
 import './LayersPanel.css';
 
-interface LayerConfigurationProps {
+interface LayersPanelProps {
 
   i18n: Translations;
 
@@ -17,30 +18,30 @@ interface LayerConfigurationProps {
   
 }
 
-const PRIVACY_FORMATTER: Formatter = (annotation: Annotation) => ({
-  //@ts-ignore
-  fill: annotation.visibility === Visibility.PRIVATE ? '#ff0000' : '#0000ff'
-});
-
-export const LayersPanel = (props: LayerConfigurationProps) => {
+export const LayersPanel = (props: LayersPanelProps) => {
 
   const [value, setValue] = useState('none');
 
-  const { formatter, legend } = useAssignmentLayerConfiguration(props.layers);
+  const { formatter, legend, setCoding } = useColorCoding();
 
   const onValueChange = (value: string) => {
     setValue(value);
 
     if (value === 'none') {
-      props.onChange();
+      setCoding();
     } else if (value === 'privacy') {
-      props.onChange();
+      setCoding();
     } else if (value === 'assignment') {
-      props.onChange(formatter);
+      if (props.layers)
+        setCoding(colorByAssignment(props.layers));
     } else if (value === 'creator') {
-      props.onChange();
+      setCoding();
     }
   }
+
+  useEffect(() => {
+    props.onChange(formatter);
+  }, [formatter]);
 
   return (
     <div className="anno-sidepanel layer-configuration">
