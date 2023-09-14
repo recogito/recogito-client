@@ -111,8 +111,8 @@ export const LayersPanel = (props: LayersPanelProps) => {
       <div className="layer-configuration-legend">
         {legend && (
           <ul>
-            {legend.map(({ label, color }) => (
-              <li key={label}>
+            {legend.map(({ label, color }, index) => (
+              <li key={`${label}-${index}`}>
                 <span 
                   className="legend-color" 
                   style={{ backgroundColor: color }}/> {label}

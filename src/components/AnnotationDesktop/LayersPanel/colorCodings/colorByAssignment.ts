@@ -11,7 +11,7 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
 
   // Resolves layer ID to context name
   const getLabel = (layerId: string) =>
-    layers?.find(l => l.id === layerId)?.context.name;
+    layers?.find(l => l.id === layerId)?.context?.name;
 
   const getNextAvailableColor = () =>
     PALETTE[assignedColors.size % PALETTE.length];
