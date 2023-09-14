@@ -6,17 +6,21 @@ const PALETTE = AdobeCategorical12;
 
 const UNKNOWN_CREATOR: Color = '#727272';
 
-// TODO resolve against present users!
 export const colorByCreator = (present: PresentUser[]): ColorCoding => {
 
-  const assignedColors = new Map<string, Color>();
+  const assignedColors = new Map<string, { color: Color, creator: PresentUser | User | undefined }>();
 
-  const getName = (userId: string, annotation: Annotation) => {
-    const creator: PresentUser | User = present.find(p => p.id === userId) || 
-      annotation.target.creator!; 
+  const getCreator = (a: Annotation): PresentUser | User | undefined =>
+    present.find(p => p.id === a.target.creator?.id) || 
+      a.target.creator;
 
-    return 'appearance' in creator ? 
-      (creator as PresentUser).appearance.label : creator.name || 'Anonymous';
+  const getName = (user?: PresentUser | User) => {
+    if (user) {
+      return 'appearance' in user ? 
+        (user as PresentUser).appearance.label : user.name || 'Anonymous';
+    } else {
+      return 'Anonymous';
+    }
   }
 
   const getNextAvailableColor = () =>
@@ -28,18 +32,17 @@ export const colorByCreator = (present: PresentUser[]): ColorCoding => {
       const creatorId = annotation.target.creator?.id;
 
       if (creatorId) {
-        const assignedColor = assignedColors.get(creatorId);
+        const assignedColor = assignedColors.get(creatorId)?.color;
         if (assignedColor) {
           return { fill: assignedColor, fillOpacity: 0.25 };
         } else {
           const color = getNextAvailableColor();
-          assignedColors.set(creatorId, color);
+          const creator = getCreator(annotation);
+          assignedColors.set(creatorId, { color, creator });
 
-          // New color assigned - update legend
-          // TODO resolve IDs against present users
           const legend = 
             Array.from(assignedColors.entries())
-              .map(([ userId, color ]) => ({ color, label: getName(userId, annotation) })); 
+              .map(([ _, { color, creator } ]) => ({ color, label: getName(creator) })); 
 
           // Sort names alphabetically
           legend.sort((a, b) => a.label < b.label ? -1 : (a.label > b.label) ? 1 : 0);
