@@ -2,10 +2,10 @@ import { useState } from 'react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { CheckSquare, Square } from '@phosphor-icons/react';
+import { AnonymousTooltip } from '@components/AnonymousTooltip';
 import { formatName } from '@components/Avatar';
 import { GroupSelector } from '../GroupSelector';
 import type { ExtendedProjectData, Invitation, Group, Translations, UserProfile } from 'src/Types';
-import { AnonymousTooltip } from './AnonymousTooltip';
 import type { TeamMember } from '../TeamMember';
 import { DeleteMember } from '../DeleteMember';
 

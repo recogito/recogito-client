@@ -9,8 +9,10 @@ import {
   Warning
 } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
+import { AnonymousTooltip } from '@components/AnonymousTooltip';
+import { formatName } from '@components/Avatar';
 import { TimeAgo } from '@components/TimeAgo';
-import type { ExtendedProjectData, ProjectGroup, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Group, Translations, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
@@ -19,6 +21,8 @@ import './Team.css';
 interface TeamProps {
 
   i18n: Translations;
+
+  me: UserProfile;
 
   assignment: AssignmentSpec;
 
@@ -57,7 +61,7 @@ interface Sorting {
 }
 
 // Flattens list of groups to the list of members, sorted by 'since'
-const getMembers = (groups: ProjectGroup[], sorting?: Sorting): Member[] => groups
+const getMembers = (groups: Group[], sorting?: Sorting): Member[] => groups
   .reduce((members, group) => ([
     ...members, 
     ...group.members.map(({ user, since }) => 
@@ -123,6 +127,9 @@ export const Team = (props: TeamProps) => {
     )
   );
 
+  const isMe = (member: Member) => 
+    member.user.id === props.me.id;
+
   return (
     <>
       <div className="row tab-team">
@@ -186,7 +193,16 @@ export const Team = (props: TeamProps) => {
                   </td>
 
                   <td>
-                    {member.user.nickname}
+                    {formatName(member.user) || (
+                      <span className="anonymous-member">
+                        {t['Anonymous team member']} <AnonymousTooltip i18n={props.i18n} />
+                      </span>
+                    )}
+                    {isMe(member) && (
+                      <span className="badge">
+                        {t['You']}
+                      </span>
+                    )}
                   </td>
 
                   <td>

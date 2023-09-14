@@ -17,6 +17,8 @@ interface AssignmentWizardProps {
 
   i18n: Translations;
 
+  me: UserProfile;
+
   project: ExtendedProjectData;
 
   documents: DocumentInContext[];
@@ -154,6 +156,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                 <Tabs.Content className="tabs-content" value={STEPS[1]}>
                   <Team 
                     i18n={props.i18n}
+                    me={props.me}
                     assignment={assignment}
                     project={props.project}
                     onChange={onChangeTeam}

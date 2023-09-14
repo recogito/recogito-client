@@ -72,6 +72,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           {wizardOpen && (
             <AssignmentWizard
               i18n={props.i18n} 
+              me={props.me}
               project={props.project}
               documents={props.documents}
               onCreated={onAssignmentCreated}
