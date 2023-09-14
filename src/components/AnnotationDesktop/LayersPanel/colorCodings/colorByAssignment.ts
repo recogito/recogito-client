@@ -27,7 +27,7 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
         assignedColors.set(annotation.layer_id!, color);
 
         // New color assigned - update legend
-        const legend = 
+        const legend: ColorLegendValue[] = 
           Array.from(assignedColors.entries())
             .map(([ id, color ]) => { 
               // Assignment name or undefined for default context
@@ -35,12 +35,18 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
 
               const className = label ? undefined : 'default-value';
 
-              return { color, label: label || 'No Assignment', className };
+              return { color, label: label!, className };
             });
 
-        // TODO sort the legend so that the default value is always at the bottom
+        // Sort the legend so that the default value is always at the bottom
+        const sorted = legend.filter(({ label }) => label);
+        sorted.sort((a, b) => a.label! < b.label! ? -1 : (a.label! > b.label!) ? 1 : 0);
 
-        setLegend(legend);
+        const noAssignment = legend
+          .filter(({ label }) => !label)
+          .map(({ color, className}) => ({ color, label: 'No Assignment', className }));
+
+        setLegend([ ...sorted, ...noAssignment ]);
 
         return { fill: color, fillOpacity: 0.25 };
       }
