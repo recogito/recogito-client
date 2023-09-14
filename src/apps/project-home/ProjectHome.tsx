@@ -37,6 +37,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const policies = useProjectPolicies(project.id);
 
+  const canEdit = policies?.get('projects').has('UPDATE');
+
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showUploads, setShowUploads] = useState(false);
@@ -164,12 +166,14 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     <div className="project-home">
       <ToastProvider>
         <div>
-          <ProjectTitle project={project} />
+          <ProjectTitle 
+            editable={canEdit}
+            project={project} />
 
           <ProjectDescription 
             i18n={props.i18n}
+            editable={canEdit}
             project={project} 
-            policies={policies}
             onChanged={setProject} 
             onError={error => onError(error, 'Error updating project description.')} />
           

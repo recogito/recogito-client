@@ -13,9 +13,9 @@ interface ProjectDescriptionProps {
 
   i18n: Translations;
 
-  project: ExtendedProjectData;
+  editable?: boolean;
 
-  policies?: Policies;
+  project: ExtendedProjectData;
 
   onChanged(project: ExtendedProjectData): void;
 
@@ -26,8 +26,6 @@ interface ProjectDescriptionProps {
 export const ProjectDescription = (props: ProjectDescriptionProps) => {
 
   const { t } = props.i18n;
-
-  const canEdit = props.policies?.get('projects').has('UPDATE');
 
   const el = useRef<HTMLTextAreaElement>(null);
 
@@ -115,8 +113,8 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
         </>
       ) : description ? (
         <p 
-          className={canEdit ? 'editable' : undefined}
-          onClick={canEdit ? () => setEditable(true) : undefined}>
+          className={props.editable ? 'editable' : undefined}
+          onClick={props.editable ? () => setEditable(true) : undefined}>
           {description}
           {saveState !== 'idle' && (
             <TinySaveIndicator 
@@ -124,7 +122,7 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
               fadeOut={1500} />
           )}
         </p>
-      ) : canEdit && (
+      ) : props.editable && (
         <button className="minimal" onClick={() => setEditable(true)}>
           <PlusCircle size={16} /> <span>{t['Add a project description']}</span>
         </button>

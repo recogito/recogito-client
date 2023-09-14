@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import type { KeyboardEvent } from 'react';
 import ContentEditable from 'react-contenteditable';
 
@@ -11,6 +11,8 @@ interface EditableTextProps {
   maxLength?: number;
 
   value: string;
+
+  onChange?(value: string): void;
 
   onSubmit(value: string): void;
 
@@ -31,8 +33,6 @@ export const EditableText = (props: EditableTextProps) => {
   const maxLength = props.maxLength || 256;
 
   const el = useRef<HTMLElement>(null);
-
-  const [value, setValue] = useState(props.value);
 
   useEffect(() => {
     if (props.focus && el.current)
@@ -55,13 +55,9 @@ export const EditableText = (props: EditableTextProps) => {
   // Submit change on blur
   const onBlur = () => { 
     clearSelection();
-
     const currentValue = el.current?.innerText;
-    if (currentValue && currentValue !== props.value) {
+    if (currentValue && currentValue !== props.value)
       props.onSubmit(currentValue);
-    } else {
-      setValue(() => value);
-    }
   }
 
   // Enter key will blur the element (and submit)
@@ -71,11 +67,14 @@ export const EditableText = (props: EditableTextProps) => {
       (evt.target as HTMLElement).blur();
     }
   }
+
+  const onChange = (value: string) =>
+    props.onChange && props.onChange(value);
   
   // Paste without formatting
   const onPaste = (evt: React.ClipboardEvent) => {
     evt.preventDefault();
-    navigator.clipboard.readText().then(text => setValue(text.slice(0, maxLength)));
+    navigator.clipboard.readText().then(text => onChange(text.slice(0, maxLength)));
   }
 
   return (
@@ -83,11 +82,11 @@ export const EditableText = (props: EditableTextProps) => {
       className="editable-text"
       innerRef={el}
       spellCheck={false}
-      html={value} 
+      html={props.value} 
       tagName="span"
       onKeyDown={onKeyDown}
       onBlur={onBlur}
-      onChange={evt => setValue(evt.target.value)}
+      onChange={evt => onChange(evt.target.value)}
       onFocus={onFocus} 
       onPaste={onPaste} />
   )
