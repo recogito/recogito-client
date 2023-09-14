@@ -1,6 +1,18 @@
+.layer-configuration {
+  height: 100%;
+  overflow-y: scroll;
+  padding: 15px 20px;
+  font-size: var(--font-tiny);
+}
+
+.layer-configuration label {
+  display: inline-block;
+  margin-right: 10px;
+}
+
 .layer-configuration-legend {
   font-size: var(--font-small);
-  padding: 15px;
+  padding: 15px 0;
 }
 
 .layer-configuration-legend ul {
