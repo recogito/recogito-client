@@ -116,6 +116,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
             <LayersPanel
               i18n={props.i18n}
               layers={props.layers}
+              present={props.present}
               onChange={props.onChangeFormatter} />
           ) : undefined}
         </animated.aside>

@@ -1,10 +1,15 @@
 import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import type { Formatter } from '@annotorious/react';
+import type { Formatter, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useColorCoding } from './ColorCoding';
-import { colorByAssignment, colorByFirstTag, colorByPrivacy} from './colorCodings';
+import { 
+  colorByAssignment, 
+  colorByCreator,
+  colorByFirstTag, 
+  colorByPrivacy
+} from './colorCodings';
 
 import './LayersPanel.css';
 
@@ -13,6 +18,8 @@ interface LayersPanelProps {
   i18n: Translations;
 
   layers?: Layer[];
+
+  present: PresentUser[];
 
   onChange(formatter?: Formatter): void;
   
@@ -35,7 +42,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
       if (props.layers)
         setCoding(colorByAssignment(props.layers));
     } else if (value === 'creator') {
-      setCoding();
+      setCoding(colorByCreator(props.present));
     } else if (value === 'tag') {
       setCoding(colorByFirstTag());
     }

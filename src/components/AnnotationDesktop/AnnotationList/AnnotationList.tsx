@@ -2,9 +2,9 @@ import { useEffect, useRef } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { 
-  Annotation as Anno, 
   AnnotoriousOpenSeadragonAnnotator,
   PresentUser, 
+  SupabaseAnnotation,
   useAnnotations,
   useAnnotator,
   useAnnotatorUser,
@@ -23,7 +23,7 @@ interface AnnotationListProps {
 
   policies?: Policies;
 
-  beforeSelect(a: Anno | undefined): void;
+  beforeSelect(a: SupabaseAnnotation | undefined): void;
 
 }
 
@@ -41,7 +41,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const { selected } = useSelection();
 
-  const onClick = (event: React.MouseEvent, a?: Anno) => {    
+  const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
     event.stopPropagation();
 
     props.beforeSelect(a);
@@ -53,16 +53,16 @@ export const AnnotationList = (props: AnnotationListProps) => {
   }
 
   // Shorthands
-  const isSelected = (a: Anno) => 
-    selected.length > 0 && selected[0].id == a.id;
+  const isSelected = (a: SupabaseAnnotation) => 
+    selected.length > 0 && selected[0].annotation.id == a.id;
 
-  const isMine = (a: Anno) =>
+  const isMine = (a: SupabaseAnnotation) =>
     me.id === a.target.creator?.id;
 
-  const isPrivate = (a: Anno) =>
+  const isPrivate = (a: SupabaseAnnotation) =>
     a.visibility === Visibility.PRIVATE
 
-  const getReplyFormClass = (a: Anno) => {
+  const getReplyFormClass = (a: SupabaseAnnotation) => {
     const classes = ['annotation-card'];
 
     if (isSelected(a))
