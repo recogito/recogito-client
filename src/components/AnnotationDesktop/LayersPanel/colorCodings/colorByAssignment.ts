@@ -35,7 +35,7 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
 
               const className = label ? undefined : 'default-value';
 
-              return { color, label: label || 'Other', className };
+              return { color, label: label || 'No Assignment', className };
             });
 
         // TODO sort the legend so that the default value is always at the bottom

@@ -4,7 +4,7 @@ import { CaretDown, Check } from '@phosphor-icons/react';
 import type { Formatter } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useColorCoding } from './ColorCoding';
-import { colorByAssignment } from './colorCodings';
+import { colorByAssignment, colorByPrivacy} from './colorCodings';
 
 import './LayersPanel.css';
 
@@ -30,11 +30,13 @@ export const LayersPanel = (props: LayersPanelProps) => {
     if (value === 'none') {
       setCoding();
     } else if (value === 'privacy') {
-      setCoding();
+      setCoding(colorByPrivacy());
     } else if (value === 'assignment') {
       if (props.layers)
         setCoding(colorByAssignment(props.layers));
     } else if (value === 'creator') {
+      setCoding();
+    } else if (value === 'tag') {
       setCoding();
     }
   }
@@ -85,6 +87,13 @@ export const LayersPanel = (props: LayersPanelProps) => {
                     <Check />
                   </Select.ItemIndicator>
                   <Select.ItemText>Creator</Select.ItemText>
+                </Select.Item> 
+
+                <Select.Item value="tag" className="select-item">
+                  <Select.ItemIndicator className="select-item-indicator">
+                    <Check />
+                  </Select.ItemIndicator>
+                  <Select.ItemText>First Tag</Select.ItemText>
                 </Select.Item> 
               </Select.Viewport>
             </Select.Content>
