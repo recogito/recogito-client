@@ -69,8 +69,8 @@ export const UploadActions = (props: UploadActionsProps) => {
             <Item className="dropdown-item" onSelect={onImportIIIF}>
               <LinkSimple size={16} /> 
               <div>
-                <span>{t['From IIIF manifest']}</span>
-                <p>{t['v2 or v3 image info.json']}</p>
+                <span>{t['From IIIF image manifest']}</span>
+                <p>{t['No presentation manifests']}</p>
               </div>
             </Item>
           </Content>

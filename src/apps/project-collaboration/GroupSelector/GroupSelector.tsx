@@ -5,7 +5,7 @@ import { updateUserProjectGroup } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TinySaveIndicator, SaveState } from '@components/TinySaveIndicator';
 import type { TeamMember } from '../TeamMember';
-import type { ProjectGroup, Translations } from 'src/Types';
+import type { Group, Translations } from 'src/Types';
 
 interface GroupSelectorProps {
 
@@ -13,9 +13,9 @@ interface GroupSelectorProps {
 
   member: TeamMember;
 
-  availableGroups: ProjectGroup[];
+  availableGroups: Group[];
 
-  onChangeGroup(from: ProjectGroup, to: ProjectGroup): void;
+  onChangeGroup(from: Group, to: Group): void;
 
 }
 
@@ -61,8 +61,6 @@ export const GroupSelector = (props: GroupSelectorProps) => {
         value
       ).then(({ error }) => {
         if (error) {
-          console.error(error);
-
           // Rollback optimistic update
           setState('failed');
           props.onChangeGroup(group, member.inGroup);
