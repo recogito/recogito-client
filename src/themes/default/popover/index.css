@@ -11,6 +11,10 @@
   width: 320px;
 }
 
+[data-radix-popper-content-wrapper] {
+  z-index: 9999 !important;
+}
+
 .popover-close {
   background-color: transparent;
   border: none;

@@ -3,3 +3,25 @@
   display: inline-flex;
   justify-content: space-between;
 }
+
+.tab-team td .anonymous-member {
+  color: var(--font-light);
+}
+
+.tab-team td .anonymous-member button {
+  height: 24px;
+  margin-left: 2px;
+  padding: 0;
+  vertical-align: sub;
+  width: 24px;
+}
+
+.tab-team td .anonymous-member button svg {
+  left: 0;
+  position: relative;
+  top: 0;
+}
+
+.tab-team td .anonymous-member button:hover svg {
+  color: var(--font-dark);
+}
