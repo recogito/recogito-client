@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { 
+  Annotation as Anno,
   AnnotoriousOpenSeadragonAnnotator,
   PresentUser, 
   SupabaseAnnotation,
@@ -10,7 +11,8 @@ import {
   useAnnotatorUser,
   useSelection,
   User,
-  Visibility, 
+  Visibility,
+  useViewportState, 
 } from '@annotorious/react';
 
 import './AnnotationList.css';
@@ -23,6 +25,8 @@ interface AnnotationListProps {
 
   policies?: Policies;
 
+  sorting?: ((a: Anno, b: Anno) => number);
+
   beforeSelect(a: SupabaseAnnotation | undefined): void;
 
 }
@@ -31,7 +35,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const el = useRef<HTMLUListElement>(null);
 
-  const annotations = useAnnotations();
+  const annotations = useAnnotations(250);
+
+  const sorted = props.sorting ? [...annotations].sort(props.sorting) : annotations;
 
   const user = useAnnotatorUser();
 
@@ -88,7 +94,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
       ref={el}
       className="anno-sidepanel annotation-list" 
       onClick={onClick}>
-      {annotations.map(a => (
+      {sorted.map(a => (
         <li 
           key={a.id}
           onClick={event => onClick(event, a)}>
