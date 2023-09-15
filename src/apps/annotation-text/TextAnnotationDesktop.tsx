@@ -171,6 +171,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               present={present} 
               policies={policies}
               layers={layers}
+              sorting={(a, b) => a.target.selector.start - b.target.selector.start}
               onChangePanel={onChangeViewMenuPanel}
               onChangeFormatter={f => setFormatter(() => f)}
               beforeSelectAnnotation={beforeSelectAnnotation} />

@@ -21,6 +21,8 @@ interface ViewMenuProps {
 
   layers?: Layer[];
 
+  sorting?: ((a: Annotation, b: Annotation) => number);
+
   onChangePanel(panel: ViewMenuPanel | undefined): void;
 
   beforeSelectAnnotation(a?: Annotation): void;
@@ -111,6 +113,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
               i18n={props.i18n}
               present={props.present} 
               policies={props.policies}
+              sorting={props.sorting}
               beforeSelect={props.beforeSelectAnnotation} />
           ) : panel === ViewMenuPanel.LAYERS ? (
             <LayersPanel
