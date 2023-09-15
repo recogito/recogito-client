@@ -11,7 +11,8 @@ import {
   useAnnotatorUser,
   useSelection,
   User,
-  Visibility, 
+  Visibility,
+  useViewportState, 
 } from '@annotorious/react';
 
 import './AnnotationList.css';
@@ -34,7 +35,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const el = useRef<HTMLUListElement>(null);
 
-  const annotations = useAnnotations();
+  const annotations = useAnnotations(250);
 
   const sorted = props.sorting ? [...annotations].sort(props.sorting) : annotations;
 
