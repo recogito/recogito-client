@@ -111,7 +111,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
     // Annotation targets are editable for creators and admins
     const me = anno.current?.getUser()?.id;
     const canEdit = annotation.target.creator?.id === me ||
-      policies?.get('targets').has('UPDATE');
+      policies?.get('layers').has('INSERT');
 
     return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.HIGHLIGHT;
   }
