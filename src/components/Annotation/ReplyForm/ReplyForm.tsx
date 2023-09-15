@@ -3,14 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Visibility, useAnnotationStore } from '@annotorious/react';
-import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
+import type { AnnotationBody, PresentUser, SupabaseAnnotation, User } from '@annotorious/react';
 import { Avatar } from '../../Avatar';
 
 import './ReplyForm.css';
 
 export interface ReplyFormProps {
 
-  annotation: Annotation;
+  annotation: SupabaseAnnotation;
 
   autofocus?: boolean;
 
@@ -35,10 +35,9 @@ export const ReplyForm = (props: ReplyFormProps) => {
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
   useEffect(() => {
-    if (textarea.current && props.autofocus) {
-      textarea.current.focus({ preventScroll: true });
-    }
-  }, [props.autofocus]);
+    if (textarea.current && props.autofocus)
+      setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
+  }, []);
 
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();

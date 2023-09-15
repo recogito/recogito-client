@@ -121,7 +121,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
       <Annotorious ref={anno}>
         <OpenSeadragonAnnotator 
           adapter={null}
-          pointerSelectAction={selectAction}
+          pointerSelectAction={policies ? selectAction : undefined}
           tool={tool} 
           keepEnabled={true}
           formatter={formatter}>
