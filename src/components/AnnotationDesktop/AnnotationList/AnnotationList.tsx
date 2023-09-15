@@ -81,7 +81,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
      if (card)
       card.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [selected]);
+  }, [selected.map(s => s.annotation.id).join('-')]);
 
   return (
     <ul

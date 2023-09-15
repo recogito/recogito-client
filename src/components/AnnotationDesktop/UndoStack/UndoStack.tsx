@@ -23,11 +23,25 @@ export const UndoStack = (props: UndoStackProps) => {
   const [created, setCreated] = useState<Annotation | undefined>();
 
   const { selected } = useSelection();
+
+  const deleteIfEmpty = (annotation: Annotation) => {
+    const currentState = store.getAnnotation(annotation.id);
+    if (currentState.bodies.length === 0)
+      store.deleteAnnotation(currentState);
+  }
   
   useEffect(() => {
     if (anno && undoEmpty) {
-      const onCreate = (annotation: Annotation) =>
+      const onCreate = (annotation: Annotation) => {
+        if (created) {
+          // This happens if the user goes directly from 
+          // having one empty annotation open to creating
+          // a new one! Delete the previous in this case.
+          deleteIfEmpty(created);
+        }
+
         setCreated(annotation);
+      }
       
       const onDelete = () =>
         setCreated(undefined);
@@ -40,7 +54,7 @@ export const UndoStack = (props: UndoStackProps) => {
         anno.off('deleteAnnotation', onDelete);
       }
     }
-  }, [anno]);
+  }, [anno, created]);
 
   useEffect(() => {
     if (!undoEmpty || !created)
@@ -51,17 +65,10 @@ export const UndoStack = (props: UndoStackProps) => {
     if (selected.length === 1 && selected[0].annotation.id === created.id)
       return;
 
-    // Check if the create annotation is still empty
-    const lastCreated = store.getAnnotation(created.id);
-
-    if (lastCreated.bodies.length === 0) {
-      if (created.bodies.length === 0) {
-        store.deleteAnnotation(lastCreated);
-      }
-    }
+    deleteIfEmpty(created);
 
     setCreated(undefined);
-  }, [selected.map(s => s.annotation.id).join('-')]);
+  }, [selected.map(s => s.annotation.id).join('-'), created]);
 
   return null;
 
