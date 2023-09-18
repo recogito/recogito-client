@@ -3,7 +3,7 @@ import { CloudArrowUp } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { useProjectPolicies } from '@backend/hooks/usePolicies';
+import { useOrganizationPolicies, useProjectPolicies } from '@backend/hooks/usePolicies';
 import { archiveLayer, renameDocument } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
@@ -35,9 +35,13 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documents, setDocuments] = useState<DocumentInContext[]>(props.documents);
 
-  const policies = useProjectPolicies(project.id);
+  const projectPolicies = useProjectPolicies(project.id);
 
-  const canEdit = policies?.get('projects').has('UPDATE');
+  const canEdit = projectPolicies?.get('projects').has('UPDATE');
+
+  const orgPolicies = useOrganizationPolicies();
+
+  const canUpload = orgPolicies?.get('documents').has('INSERT');
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -45,8 +49,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { addUploads, isIdle, uploads } = 
     useUpload(document => setDocuments(d => [...d, document]));
-
-  const canUpload = policies?.get('documents').has('INSERT');
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
