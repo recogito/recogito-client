@@ -100,19 +100,19 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 label={t['Assignments']}
                 link={link('assignments')} />
 
-              <NavItem
+              {/* <NavItem
                 active={active === 'Add Ons'}
                 icon={PuzzlePiece}
                 label={t['Add Ons']}
-                link={link('addons')} />
+              link={link('addons')} /> */}
               
-              {isAdmin && (
+              {/* isAdmin && (
                 <NavItem
                   active={active === 'Settings'}
                   icon={Sliders}
                   label={t['Settings']}
                   link={link('settings')} />
-              )}
+              ) */}
             </ul>
           </li>
         </ul>
