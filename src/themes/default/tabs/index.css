@@ -43,3 +43,8 @@ button.tabs-trigger[data-state='active']:hover {
   border-bottom: 2px solid var(--bright-blue);
   color: var(--bright-blue);
 }
+
+.tabs-content {
+  max-height: 60vh;
+  overflow-y: scroll;
+}
