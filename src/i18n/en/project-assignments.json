@@ -44,5 +44,8 @@
   "Instructions provided.": "Instructions provided.",
   "Please consider adding instructions.": "Please consider adding instructions.",
 
-  "The assignment was created successfully": "The assignment was created successfully and was added to the team members' dashboards."
+  "The assignment was created successfully": "The assignment was created successfully and was added to the team members' dashboards.",
+
+  "Something went wrong": "Something went wrong",
+  "Could not delete the assignment.": "Could not create the document."
 }

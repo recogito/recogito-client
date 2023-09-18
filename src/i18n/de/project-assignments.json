@@ -44,5 +44,8 @@
   "Instructions provided.": "Anweisungen vorhanden.",
   "Please consider adding instructions.": "Keine Anweisungen.",
 
-  "The assignment was created successfully": "Der Arbeitsauftrag wurde erfolgreich erstellt, und dem Dashboard der Teammitglieder hinzugefügt."
+  "The assignment was created successfully": "Der Arbeitsauftrag wurde erfolgreich erstellt, und dem Dashboard der Teammitglieder hinzugefügt.",
+
+  "Something went wrong": "Etwas ist schiefgelaufen",
+  "Could not delete the assignment.": "Der Arbeitsauftrag konnte nicht gelöscht werden."
 }
