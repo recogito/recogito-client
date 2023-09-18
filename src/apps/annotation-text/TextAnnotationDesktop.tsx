@@ -135,7 +135,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
           {layers && 
             <SupabasePlugin 
-              base={SUPABASE}
+              supabaseUrl={SUPABASE}
               apiKey={SUPABASE_API_KEY} 
               channel={props.channelId}
               defaultLayer={props.document.layers[0].id} 
@@ -158,6 +158,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
 
           <div className="anno-desktop-left">
             <AnnotationDesktop.DocumentMenu
+              i18n={props.i18n}
               document={props.document} />
           </div>
 

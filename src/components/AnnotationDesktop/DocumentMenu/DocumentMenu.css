@@ -28,16 +28,14 @@
   width: 28px;
 }
 
-.document-menu h1 a {
+.document-menu a {
   color: var(--font-dark);
 }
 
-.document-menu h1 > *:not(:last-child)::after {
-  color: var(--font-light);
-  content: '/';
-  padding: 0 3px;
+.document-menu a svg {
+  display: block;
 }
 
-.document-menu h1 *:last-child {
+.document-menu span {
   color: var(--font-light);
 }
