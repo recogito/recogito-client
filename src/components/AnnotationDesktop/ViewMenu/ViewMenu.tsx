@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chats, MagnifyingGlass, StackSimple, X } from '@phosphor-icons/react';
+import { Chats, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@annotorious/react';
@@ -112,6 +112,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
             <AnnotationList 
               i18n={props.i18n}
               present={props.present} 
+              me={me}
               policies={props.policies}
               sorting={props.sorting}
               beforeSelect={props.beforeSelectAnnotation} />

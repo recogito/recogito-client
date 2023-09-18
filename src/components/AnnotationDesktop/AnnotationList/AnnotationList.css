@@ -1,10 +1,14 @@
 .anno-sidepanel.annotation-list {
-  height: 100%;
-  list-style-type: none;  
-  margin: 0;
   overflow-y: auto;
   padding: 0 8px;
   scroll-padding: 20px;
+}
+
+.anno-sidepanel.annotation-list ul {
+  height: 100%;
+  list-style-type: none;  
+  margin: 0;
+  padding: 0;
 }
 
 .anno-sidepanel.annotation-list .annotation-card {
@@ -19,4 +23,21 @@
 
 .anno-sidepanel.annotation-list .annotation-card.selected {
   box-shadow: 0 0 0 3px var(--button-focus-outline-color);
+}
+
+.anno-sidepanel.annotation-list .annotation-list-filter {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  padding: 0.5em 8px 0em 0;
+  text-align: right;
+}
+
+.anno-sidepanel.annotation-list .annotation-list-filter label {
+  margin-right: 0.5em;
+}
+
+.anno-sidepanel.annotation-list .annotation-list-filter button {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline;
 }
