@@ -134,7 +134,7 @@ export const Header = (props: HeaderProps) => {
           </li>
         </ul>
 
-        <ul className="dashboard-header-bottom-actions">
+        {/* <ul className="dashboard-header-bottom-actions">
           <li>
             <button>
               <MagnifyingGlass size={16} /> <span>{t['Search']}</span>
@@ -146,7 +146,7 @@ export const Header = (props: HeaderProps) => {
               <FunnelSimple size={16} /> <span>{t['Sort']}</span>
             </button>
           </li>
-        </ul>
+        </ul> */}
       </section>
     </header>
   )
