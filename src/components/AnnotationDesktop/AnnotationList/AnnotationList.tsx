@@ -38,9 +38,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const el = useRef<HTMLUListElement>(null);
 
-  const all = useAnnotations(250);
+  const all = useAnnotations(150);
   
-  const visible = useViewportState(250);
+  const visible = useViewportState(150);
 
   const [filter, setFilter] = useState<Filter>(Filter.NONE);
 
