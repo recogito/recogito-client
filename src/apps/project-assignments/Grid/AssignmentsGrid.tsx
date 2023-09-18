@@ -7,6 +7,8 @@ interface AssignmentsGridProps {
 
   i18n: Translations;
 
+  canUpdate?: boolean;
+
   project: ExtendedProjectData;
 
   // Just temporary, for hacking/testing
@@ -24,6 +26,7 @@ export const AssignmentsGrid = (props: AssignmentsGridProps) => {
         <AssignmentCard 
           key={assignment.id}
           i18n={props.i18n}
+          canUpdate={props.canUpdate}
           project={props.project}
           assignment={assignment} 
           onDelete={() => props.onDeleteAssignment(assignment)} />

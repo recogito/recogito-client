@@ -86,6 +86,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       ) : (
         <AssignmentsGrid
           i18n={props.i18n}
+          canUpdate={canCreate}
           project={project}
           assignments={assignments} 
           onDeleteAssignment={onDeleteAssignment} />
