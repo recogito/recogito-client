@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { 
@@ -12,8 +12,9 @@ import {
   useSelection,
   User,
   Visibility,
-  useViewportState, 
+  useViewportState
 } from '@annotorious/react';
+import { Filter, FilterSelector } from './FilterSelector';
 
 import './AnnotationList.css';
 
@@ -22,6 +23,8 @@ interface AnnotationListProps {
   i18n: Translations;
 
   present: PresentUser[];
+
+  me: PresentUser;
 
   policies?: Policies;
 
@@ -35,9 +38,26 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const el = useRef<HTMLUListElement>(null);
 
-  const annotations = useAnnotations(250);
+  const all = useAnnotations(150);
+  
+  const visible = useViewportState(150);
 
-  const sorted = props.sorting ? [...annotations].sort(props.sorting) : annotations;
+  const [filter, setFilter] = useState<Filter>(Filter.NONE);
+
+  const applyFilter = () => {
+    if (filter === Filter.VIEWPORT) {
+      return visible;
+    } else if (filter === Filter.MINE) {
+      return all.filter(a => a.target.creator?.id === props.me.id);
+    } else {
+      return all;
+    }
+  }
+
+  const annotations = applyFilter();
+
+  const sorted = useMemo(() => 
+    props.sorting ? [...annotations].sort(props.sorting) : annotations, [annotations]);
 
   const user = useAnnotatorUser();
 
@@ -90,59 +110,64 @@ export const AnnotationList = (props: AnnotationListProps) => {
   }, [selected.map(s => s.annotation.id).join('-')]);
 
   return (
-    <ul
-      ref={el}
-      className="anno-sidepanel annotation-list" 
-      onClick={onClick}>
-      {sorted.map(a => (
-        <li 
-          key={a.id}
-          onClick={event => onClick(event, a)}>
-          {a.bodies.length === 0 ? (
-            isMine(a) ? (              
-              isSelected(a) ? (
-                <div className={getReplyFormClass(a)}>
-                  <Annotation.ReplyForm
+    <div className="anno-sidepanel annotation-list" >
+      <FilterSelector 
+        i18n={props.i18n} 
+        onChange={setFilter} />
+
+      <ul
+        ref={el}
+        onClick={onClick}>
+        {sorted.map(a => (
+          <li 
+            key={a.id}
+            onClick={event => onClick(event, a)}>
+            {a.bodies.length === 0 ? (
+              isMine(a) ? (              
+                isSelected(a) ? (
+                  <div className={getReplyFormClass(a)}>
+                    <Annotation.ReplyForm
+                      annotation={a} 
+                      placeholder={props.i18n.t['Comment...']}
+                      me={me} />
+                  </div>
+                ) : (
+                  <Annotation.EmptyCard
+                    private={isPrivate(a)}
+                    i18n={props.i18n}
                     annotation={a} 
-                    placeholder={props.i18n.t['Comment...']}
-                    me={me} />
-                </div>
+                    present={props.present} />
+                )
               ) : (
-                <Annotation.EmptyCard
-                  private={isPrivate(a)}
+                <Annotation.EmptyCard 
+                  typing
+                  selected={isSelected(a)}
+                  i18n={props.i18n} 
+                  annotation={a} 
+                  present={props.present} />              
+              )
+            ) : (
+              isPrivate(a) ? (
+                <Annotation.PrivateCard 
+                  className={isSelected(a) ? 'selected' : undefined}
+                  showReplyForm={isSelected(a)}
                   i18n={props.i18n}
                   annotation={a} 
                   present={props.present} />
+              ) : (
+                <Annotation.PublicCard 
+                  className={isSelected(a) ? 'selected' : undefined}
+                  showReplyForm={isSelected(a)}
+                  i18n={props.i18n}
+                  annotation={a} 
+                  present={props.present}
+                  policies={props.policies} />  
               )
-            ) : (
-              <Annotation.EmptyCard 
-                typing
-                selected={isSelected(a)}
-                i18n={props.i18n} 
-                annotation={a} 
-                present={props.present} />              
-            )
-          ) : (
-            isPrivate(a) ? (
-              <Annotation.PrivateCard 
-                className={isSelected(a) ? 'selected' : undefined}
-                showReplyForm={isSelected(a)}
-                i18n={props.i18n}
-                annotation={a} 
-                present={props.present} />
-            ) : (
-              <Annotation.PublicCard 
-                className={isSelected(a) ? 'selected' : undefined}
-                showReplyForm={isSelected(a)}
-                i18n={props.i18n}
-                annotation={a} 
-                present={props.present}
-                policies={props.policies} />  
-            )
-          )}
-        </li>
-      ))}
-    </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   )
 
 }
