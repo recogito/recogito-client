@@ -20,7 +20,7 @@ export const colorByFirstTag = (): ColorCoding => {
 
       const assignedColor = assignedColors.get(firstTag);
       if (assignedColor) {
-        return { fill: assignedColor, fillOpacity: selected ? 0.45: 0.18 };
+        return { fill: assignedColor, fillOpacity: selected ? 0.45: 0.14 };
       } else {
         const color = firstTag ? getNextAvailableColor() : NO_TAG;
         assignedColors.set(firstTag, color);
@@ -35,9 +35,8 @@ export const colorByFirstTag = (): ColorCoding => {
 
         setLegend(legend);
 
-        return { fill: color, fillOpacity: selected ? 0.45: 0.18 };
+        return { fill: color, fillOpacity: selected ? 0.45: 0.14 };
       }
-
     };
 
   return { createFormatter };

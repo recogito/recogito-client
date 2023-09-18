@@ -18,7 +18,7 @@ export const colorByPrivacy = (): ColorCoding => {
       const color = annotation.visibility === Visibility.PRIVATE ?
         PALETTE[4] : PALETTE[7];
 
-      return { fill: color, fillOpacity: selected ? 0.45: 0.18 };
+      return { fill: color, fillOpacity: selected ? 0.45: 0.14 };
     };
 
   }

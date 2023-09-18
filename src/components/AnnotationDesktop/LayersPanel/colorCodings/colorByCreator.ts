@@ -34,7 +34,7 @@ export const colorByCreator = (present: PresentUser[]): ColorCoding => {
       if (creatorId) {
         const assignedColor = assignedColors.get(creatorId)?.color;
         if (assignedColor) {
-          return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.18 };
+          return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.14 };
         } else {
           const color = getNextAvailableColor();
           const creator = getCreator(annotation);
@@ -49,10 +49,10 @@ export const colorByCreator = (present: PresentUser[]): ColorCoding => {
 
           setLegend(legend);
 
-          return { fill: color, fillOpacity: 0.25 };
+          return { fill: color, fillOpacity: selected ? 0.45 : 0.14 };
         }
       } else {
-        return { fill: UNKNOWN_CREATOR, fillOpacity: selected ? 0.45 : 0.18 };
+        return { fill: UNKNOWN_CREATOR, fillOpacity: selected ? 0.45 : 0.14 };
       }
     };
 

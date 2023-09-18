@@ -21,7 +21,7 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
     (annotation: SupabaseAnnotation, selected?: boolean) => {
       const assignedColor = assignedColors.get(annotation.layer_id!);
       if (assignedColor) {
-        return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.18 };
+        return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.14 };
       } else {
         const color = getNextAvailableColor();
         assignedColors.set(annotation.layer_id!, color);
@@ -48,7 +48,7 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
 
         setLegend([ ...sorted, ...noAssignment ]);
 
-        return { fill: color, fillOpacity: selected ? 0.45 : 0.18 };
+        return { fill: color, fillOpacity: selected ? 0.45 : 0.14 };
       }
     };
 
