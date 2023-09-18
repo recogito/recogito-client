@@ -28,13 +28,13 @@ export const colorByCreator = (present: PresentUser[]): ColorCoding => {
 
   const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
 
-    (annotation: SupabaseAnnotation) => {
+    (annotation: SupabaseAnnotation, selected?: boolean) => {
       const creatorId = annotation.target.creator?.id;
 
       if (creatorId) {
         const assignedColor = assignedColors.get(creatorId)?.color;
         if (assignedColor) {
-          return { fill: assignedColor, fillOpacity: 0.25 };
+          return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.18 };
         } else {
           const color = getNextAvailableColor();
           const creator = getCreator(annotation);
@@ -52,7 +52,7 @@ export const colorByCreator = (present: PresentUser[]): ColorCoding => {
           return { fill: color, fillOpacity: 0.25 };
         }
       } else {
-        return { fill: UNKNOWN_CREATOR, fillOpacity: 0.25 };
+        return { fill: UNKNOWN_CREATOR, fillOpacity: selected ? 0.45 : 0.18 };
       }
     };
 

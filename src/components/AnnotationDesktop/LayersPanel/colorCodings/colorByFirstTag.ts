@@ -15,12 +15,12 @@ export const colorByFirstTag = (): ColorCoding => {
 
   const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
 
-    (annotation: SupabaseAnnotation) => {
+    (annotation: SupabaseAnnotation, selected?: boolean) => {
       const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
 
       const assignedColor = assignedColors.get(firstTag);
       if (assignedColor) {
-        return { fill: assignedColor, fillOpacity: 0.25 };
+        return { fill: assignedColor, fillOpacity: selected ? 0.45: 0.18 };
       } else {
         const color = firstTag ? getNextAvailableColor() : NO_TAG;
         assignedColors.set(firstTag, color);
@@ -35,7 +35,7 @@ export const colorByFirstTag = (): ColorCoding => {
 
         setLegend(legend);
 
-        return { fill: color, fillOpacity: 0.25 };
+        return { fill: color, fillOpacity: selected ? 0.45: 0.18 };
       }
 
     };

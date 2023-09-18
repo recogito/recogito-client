@@ -14,11 +14,11 @@ export const colorByPrivacy = (): ColorCoding => {
       color: PALETTE[7] , label: 'All public annotations'
     }])
 
-    return (annotation: SupabaseAnnotation) => {
+    return (annotation: SupabaseAnnotation, selected?: boolean) => {
       const color = annotation.visibility === Visibility.PRIVATE ?
         PALETTE[4] : PALETTE[7];
 
-      return { fill: color, fillOpacity: 0.35 };
+      return { fill: color, fillOpacity: selected ? 0.45: 0.18 };
     };
 
   }
