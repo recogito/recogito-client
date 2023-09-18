@@ -27,6 +27,8 @@ interface LayersPanelProps {
 
 export const LayersPanel = (props: LayersPanelProps) => {
 
+  const { t } = props.i18n;
+
   const [value, setValue] = useState('none');
 
   const { formatter, legend, setCoding } = useColorCoding();
@@ -57,7 +59,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
   return (
     <div className="anno-sidepanel layer-configuration">
       <form>
-        <label>Color by</label>
+        <label>{t['Color by']}</label>
 
         <Select.Root value={value} onValueChange={onValueChange}>
           <Select.Trigger className="select-trigger" aria-label="Annotation color by">
@@ -74,14 +76,14 @@ export const LayersPanel = (props: LayersPanelProps) => {
                   <Select.ItemIndicator className="select-item-indicator">
                     <Check />
                   </Select.ItemIndicator>
-                  <Select.ItemText>No color coding</Select.ItemText>
+                  <Select.ItemText>{t['No color coding']}</Select.ItemText>
                 </Select.Item>
 
                 <Select.Item value="privacy" className="select-item">
                   <Select.ItemIndicator className="select-item-indicator">
                     <Check />
                   </Select.ItemIndicator>
-                  <Select.ItemText>Public vs. Private</Select.ItemText>
+                  <Select.ItemText>{t['Public vs. Private']}</Select.ItemText>
                 </Select.Item> 
 
                 {showAssignmentOption && (
@@ -89,7 +91,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
                     <Select.ItemIndicator className="select-item-indicator">
                       <Check />
                     </Select.ItemIndicator>
-                    <Select.ItemText>Assignment</Select.ItemText>
+                    <Select.ItemText>{t['Assignment']}</Select.ItemText>
                   </Select.Item> 
                 )}
 
@@ -97,14 +99,14 @@ export const LayersPanel = (props: LayersPanelProps) => {
                   <Select.ItemIndicator className="select-item-indicator">
                     <Check />
                   </Select.ItemIndicator>
-                  <Select.ItemText>Creator</Select.ItemText>
+                  <Select.ItemText>{t['Creator']}</Select.ItemText>
                 </Select.Item> 
 
                 <Select.Item value="tag" className="select-item">
                   <Select.ItemIndicator className="select-item-indicator">
                     <Check />
                   </Select.ItemIndicator>
-                  <Select.ItemText>First Tag</Select.ItemText>
+                  <Select.ItemText>{t['First Tag']}</Select.ItemText>
                 </Select.Item> 
               </Select.Viewport>
             </Select.Content>
@@ -119,7 +121,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
               <li key={`${label}-${index}`}>
                 <span 
                   className="legend-color" 
-                  style={{ backgroundColor: color }}/> {label}
+                  style={{ backgroundColor: color }}/> {t[label] || label}
               </li>
             ))}
           </ul>

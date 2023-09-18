@@ -50,7 +50,7 @@ export const TagInput = (props: TagInputProps) => {
   return (
     <form className="annotation-tag-input-form" onSubmit={onSubmit}>
       <input 
-        placeholder="Add a tag..." 
+        placeholder={props.i18n.t['Add a tag...']}
         value={value} 
         onChange={onChange} />
     </form>

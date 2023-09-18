@@ -22,9 +22,11 @@ export enum Filter {
 
 export const FilterSelector = (props: FilterSelectorProps) => {
 
+  const { t } = props.i18n;
+
   return (
     <div className="annotation-list-filter">
-      <label>Show</label>
+      <label>{t['Show']}</label>
 
       <Select.Root defaultValue={Filter.NONE} onValueChange={props.onChange}>
         <Select.Trigger className="select-trigger" aria-label="Filter annotations by">
@@ -41,14 +43,14 @@ export const FilterSelector = (props: FilterSelectorProps) => {
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>all annotations</Select.ItemText>
+                <Select.ItemText>{t['all annotations']}</Select.ItemText>
               </Select.Item>
 
               <Select.Item value={Filter.VIEWPORT} className="select-item">
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>annotations on screen</Select.ItemText>
+                <Select.ItemText>{t['annotations in current view']}</Select.ItemText>
               </Select.Item> 
 
               {/*
