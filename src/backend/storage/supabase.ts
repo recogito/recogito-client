@@ -2,7 +2,7 @@ import Uppy, { UploadResult } from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = `https://${import.meta.env.PUBLIC_SUPABASE}`;
+const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE;
 
 export const uploadFile = (
   supabase: SupabaseClient, 

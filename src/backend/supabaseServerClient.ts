@@ -21,7 +21,7 @@ export async function createSupabaseServerClient(
     options?: SupabaseClientOptionsWithoutAuth;
     cookieOptions?: CookieOptions;
   } = {
-    supabaseUrl: `https://${import.meta.env.PUBLIC_SUPABASE}`,
+    supabaseUrl: import.meta.env.PUBLIC_SUPABASE,
     supabaseKey: import.meta.env.PUBLIC_SUPABASE_API_KEY,
     //@ts-ignore
     cookieOptions: {
