@@ -68,7 +68,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     filter === ProjectFilter.MINE ? 
       myProjects :
     // Am I one of the users in the groups?
-    filter === ProjectFilter.SHARED ? 
+    filter === ProjectFilter.SHARED ?  
       sharedProjects : 
     [];
 
@@ -143,7 +143,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onInvitationDeclined={onInvitationDeclined} 
           onError={onError} />
 
-        {filteredProjects.length === 0 ? policies && (
+        {allProjects.length === 0 ? policies && (
           <ProjectsEmpty 
             i18n={props.i18n} 
             canCreateProjects={policies.get('projects').has('INSERT')}
