@@ -31,6 +31,8 @@ export const LayersPanel = (props: LayersPanelProps) => {
 
   const { formatter, legend, setCoding } = useColorCoding();
 
+  const showAssignmentOption = props.layers && props.layers.length > 1;
+
   const onValueChange = (value: string) => {
     setValue(value);
 
@@ -82,12 +84,14 @@ export const LayersPanel = (props: LayersPanelProps) => {
                   <Select.ItemText>Public vs. Private</Select.ItemText>
                 </Select.Item> 
 
-                <Select.Item value="assignment" className="select-item">
-                  <Select.ItemIndicator className="select-item-indicator">
-                    <Check />
-                  </Select.ItemIndicator>
-                  <Select.ItemText>Assignment</Select.ItemText>
-                </Select.Item> 
+                {showAssignmentOption && (
+                  <Select.Item value="assignment" className="select-item">
+                    <Select.ItemIndicator className="select-item-indicator">
+                      <Check />
+                    </Select.ItemIndicator>
+                    <Select.ItemText>Assignment</Select.ItemText>
+                  </Select.Item> 
+                )}
 
                 <Select.Item value="creator" className="select-item">
                   <Select.ItemIndicator className="select-item-indicator">
