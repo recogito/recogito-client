@@ -82,9 +82,9 @@ export const ViewMenu = (props: ViewMenuProps) => {
             <StackSimple />
           </button>
 
-          <button>
+          {/* <button>
             <MagnifyingGlass />
-          </button>
+          </button> */}
         </section>
 
         {me && (
