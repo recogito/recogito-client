@@ -20,7 +20,10 @@
 
 .content-wrapper.text main {
   white-space: pre-line;
+}
 
+.content-wrapper.text main p.plaintext {
+  margin: 0;
 }
 
 .content-wrapper main img {

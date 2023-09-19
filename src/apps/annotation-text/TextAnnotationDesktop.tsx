@@ -124,7 +124,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               presence={{
                 font: "500 12px Inter, Arial, Helvetica, sans-serif"
               }}>
-              {text}
+              <p className="plaintext">{text}</p>
             </TextAnnotator>
           )}
         </main>
