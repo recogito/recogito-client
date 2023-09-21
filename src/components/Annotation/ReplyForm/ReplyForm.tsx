@@ -37,12 +37,14 @@ export const ReplyForm = (props: ReplyFormProps) => {
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
   useEffect(() => {
-    if (textarea.current && props.autofocus)
-      setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
-
     if (props.scrollIntoView)
       textarea.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
+
+  useEffect(() => {
+    if (textarea.current && props.autofocus)
+      setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
+  }, [props.autofocus])
 
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();

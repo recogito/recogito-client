@@ -44,6 +44,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const [filter, setFilter] = useState<Filter>(Filter.NONE);
 
+  const [autofocus, setAutofocus] = useState(false);
+
   const applyFilter = () => {
     if (filter === Filter.VIEWPORT) {
       return visible;
@@ -65,7 +67,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
-  const { selected } = useSelection();
+  const { selected, pointerEvent } = useSelection();
 
   const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
     event.stopPropagation();
@@ -107,7 +109,10 @@ export const AnnotationList = (props: AnnotationListProps) => {
      if (card)
       card.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [selected.map(s => s.annotation.id).join('-')]);
+
+    // Don't focus reply before pointer up, otherwise the selection breaks!
+    setAutofocus(pointerEvent?.type === 'pointerup');
+  }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
 
   return (
     <div className="anno-sidepanel annotation-list" >
@@ -127,7 +132,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                 isSelected(a) ? (
                   <div className={getReplyFormClass(a)}>
                     <Annotation.ReplyForm
-                      autofocus
+                      autofocus={autofocus}
                       scrollIntoView
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
