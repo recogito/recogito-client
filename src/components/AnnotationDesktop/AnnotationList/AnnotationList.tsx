@@ -127,6 +127,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
                 isSelected(a) ? (
                   <div className={getReplyFormClass(a)}>
                     <Annotation.ReplyForm
+                      autofocus
+                      scrollIntoView
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
                       me={me} />

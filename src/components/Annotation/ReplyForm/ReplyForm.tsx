@@ -14,6 +14,8 @@ export interface ReplyFormProps {
 
   autofocus?: boolean;
 
+  scrollIntoView?: boolean;
+
   placeholder: string;
 
   me: PresentUser | User;
@@ -37,6 +39,9 @@ export const ReplyForm = (props: ReplyFormProps) => {
   useEffect(() => {
     if (textarea.current && props.autofocus)
       setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
+
+    if (props.scrollIntoView)
+      textarea.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
   const onSubmit = (evt?: React.MouseEvent) => {
