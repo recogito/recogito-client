@@ -33,10 +33,12 @@ export const ProjectCard = (props: ProjectCardProps) => {
   // TODO needs more robustness for new content types 
   // in the future
   const documents = layers.reduce((documents, layer) => {
-    if (documents.some(d => d.id === layer.document.id))
+    if (documents.some(d => d.id === layer.document?.id))
       return [...documents];
-    else
+    else if (layer.document)
       return [...documents, layer.document];
+    else 
+      return documents;
   }, [] as {id: string, content_type?: ContentType }[]);
 
   const images = documents.filter(({ content_type }) => !content_type);
