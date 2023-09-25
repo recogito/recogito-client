@@ -11,9 +11,11 @@
 
   "Open document": "Dokument öffnen",
   "Open document in new tab": "In neuem Tab öffnen",
-  "Delete document": "Dokument löschen",
   "Export annotations as CSV": "Annotationen als CSV exportieren",
   "Edit document metadata": "Metadaten bearbeiten",
+  "Delete document": "Dokument löschen",
+  "Are you sure?": "Bist Du sicher?",
+  "Are you sure you want to delete this document?": "Bist Du sicher dass Du dieses Dokument löschen willst?",
 
   "Edit Document Metadata": "Dokumentmetadaten",
   "Title": "Titel",

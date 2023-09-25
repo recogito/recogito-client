@@ -38,11 +38,19 @@ interface ConfirmationDialogProps {
 }
 
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+  
+  const onClick = (evt: React.MouseEvent) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="dialog-overlay">
-        <Dialog.Content className="dialog-content">
+        <Dialog.Content 
+          className="dialog-content" 
+          onClick={onClick}>
+
           <Dialog.Title className="dialog-title">
             {props.title}
           </Dialog.Title>

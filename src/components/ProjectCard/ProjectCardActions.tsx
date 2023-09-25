@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { archiveProject } from '@backend/crud';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 import { ProjectDetailsForm } from './ProjectDetailsForm';
-import { archiveProject } from '@backend/crud';
-import { supabase } from '@backend/supabaseBrowserClient';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
