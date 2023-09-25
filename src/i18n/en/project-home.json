@@ -14,6 +14,17 @@
   "Delete document": "Delete document",
   "Rename document": "Rename document",
 
+  "Edit Document Metadata": "Edit Document Metadata",
+  "Title": "Title",
+  "Author": "Author",
+  "Publication date": "Publication date",
+  "License": "License",
+  "Version": "Version",
+  "Copyright": "Copyright",
+  "Language": "Language",
+  "Source": "Source",
+  "Notes": "Notes",
+
   "File upload": "File upload (supported formats: text, TEI, image)",
   "From IIIF image manifest": "From IIIF manifest",
   "No presentation manifests": "Please note that there is currently support for IMAGE manifest only, but not PRESENTATION manifests.",

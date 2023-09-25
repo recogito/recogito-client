@@ -14,6 +14,17 @@
   "Delete document": "Dokument löschen",
   "Rename document": "Dokument umbenennen",
 
+  "Edit Document Metadata": "Dokumentmetadaten",
+  "Title": "Titel",
+  "Author": "Autor",
+  "Publication date": "Publikationsdatum",
+  "License": "Lizenz",
+  "Version": "Version",
+  "Copyright": "Copyright",
+  "Language": "Sprache",
+  "Source": "Quelle",
+  "Notes": "Notizen",
+
   "File upload": "Datei hochladen (unterstützte Formate: Text, TEI, Bild)",
   "From IIIF image manifest": "IIIF Image Manifest importieren",
   "No presentation manifests": "Derzeit werden ausschließlich Einzelbilder unterstützt, keine Sammlungen nach dem IIIF Presentation Standard.",

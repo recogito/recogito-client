@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
-import { EditableText } from '@components/EditableText';
 import { DocumentCardActions } from './DocumentCardActions';
 import { ContentTypeIcon } from './ContentTypeIcon';
+import { MetadataModal } from './MetadataModal';
 
 import './DocumentCard.css';
 
@@ -71,15 +71,14 @@ export const DocumentCard = (props: DocumentCardProps) => {
       </div>
 
       <h1>
-        {editable ? (
-          <EditableText 
-            focus
-            value={document.name} 
-            onSubmit={onRename} />
-        ) : (
-          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
-        )}
+        <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
       </h1>
+
+      <MetadataModal 
+        open={editable} 
+        i18n={props.i18n} 
+        document={document}
+        onClose={() => setEditable(false)} />
     </article>
   )
 
