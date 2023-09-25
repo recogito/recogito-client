@@ -1,3 +1,4 @@
+import Papa from 'papaparse';
 import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
@@ -50,16 +51,25 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
   const findDocument = (layerId: string) =>
     layers.data.find(l => l.id === layerId)?.document.name;
 
-  const csv = annotations.data.map(a => ([
-    a.id,
-    findDocument(a.layer_id),
-    getComments(a.bodies).join('|'),
-    getTags(a.bodies).join('|'),
-    a.targets.toString()
-  ])).join('\r\n');
+  const getLastUpdated = (targets: { updated_at: string }[], bodies: { updated_at: string }[]) => {
+    const sorted = [...targets, ...bodies];
+    sorted.sort((a, b) => a.updated_at > b.updated_at ? -1 : 1 );
+    return sorted[0].updated_at;
+  }
+
+  const csv = annotations.data.map(a => ({
+    id: a.id,
+    document: findDocument(a.layer_id)!,
+    created: a.created_at,
+    updated: getLastUpdated(a.targets, a.bodies),
+    comments: getComments(a.bodies).join('|'),
+    tags: getTags(a.bodies).join('|')
+  }));
+
+  csv.sort((a, b) => a.document > b.document ? -1 : 1);
 
   return new Response(    
-    csv,
+    Papa.unparse(csv),
     { 
       headers: { 
         'Content-Type': 'text/csv',

@@ -8,6 +8,7 @@ export const getAnnotations = (
     .from('annotations')
     .select(`
       id,
+      created_at,
       layer_id,
       is_private,
       targets ( 
