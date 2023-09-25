@@ -1,6 +1,9 @@
+import { useEffect, useState } from 'react';
 import { X } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { useFormik } from 'formik';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { updateDocumentMetadata } from '@backend/crud';
 import { Button } from '@components/Button';
 import type { Document, Translations } from 'src/Types';
 
@@ -16,28 +19,59 @@ interface MetadataModalProps {
 
   onClose(): void;
 
+  onUpdated(document: Document): void;
+
+  onError(error: string): void;
+
 }
 
 export const MetadataModal = (props: MetadataModalProps) => {
 
   const { t } = props.i18n;
 
-  const formik = useFormik({
-    initialValues: { 
-      title: props.document.name,
-      author: '',
-      publication_date: '',
-      license: '',
-      version: '',
-      copyright: '',
-      language: '',
-      source: '',
-      notes: ''
-    },
-    onSubmit: values => {
+  const { id, name, meta_data } = props.document;
 
+  const meta: any = meta_data?.meta || {};
+
+  const [busy, setBusy] = useState(false);
+
+  const initialValues = { 
+    title: name,
+    author: meta.author || '',
+    publication_date: meta.publication_date || '',
+    license: meta.license || '',
+    version: meta.version || '',
+    copyright: meta.copyright || '',
+    language: meta.language || '',
+    source: meta.source || '',
+    notes: meta.notes || ''
+  }
+
+  const formik = useFormik({
+    initialValues,
+    onSubmit: ({ title, ...meta }) => {
+      setBusy(true);
+
+      updateDocumentMetadata(supabase, id, title, {
+        ...meta_data,
+        meta
+      }).then(({ error, data }) => {
+        setBusy(false);
+
+        if (error)
+          props.onError(error.details);
+        else
+          props.onUpdated(data);
+
+        props.onClose();
+      });
     }
   });
+
+  useEffect(() => {
+    if (props.open)
+      formik.setValues(initialValues);
+  }, [props.open, name]);
 
   const input = (label: string, id: keyof typeof formik.values, required?: boolean) => (
     <div className="field">
@@ -90,6 +124,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
 
               <Button 
                 className="primary" 
+                busy={busy}
                 type="submit">
                 <span>
                   {t['Save']}

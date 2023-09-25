@@ -63,7 +63,11 @@
   color: var(--font-light);
   padding-right: 7px;
   position: relative;
-  top: -1px;
+  top: -0.5px;
+}
+
+.dropdown-item svg.destructive {
+  color: var(--red-500);
 }
 
 .dropdown-item[data-highlighted],

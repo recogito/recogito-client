@@ -16,9 +16,11 @@ interface DocumentCardProps {
 
   readonly?: boolean;
 
-  onDelete?(): void;
+  onDelete(): void;
 
-  onRename?(name: string): void;
+  onUpdate(document: Document): void;
+
+  onError(error: string): void;
 
 }
 
@@ -44,11 +46,6 @@ export const DocumentCard = (props: DocumentCardProps) => {
       onOpen(true)
   }
 
-  const onRename = (name: string) => {
-    setEditable(false);
-    props.onRename!(name);
-  }
-
   return (
     <article className="document-card-container">
       <div 
@@ -65,7 +62,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
               i18n={props.i18n} 
               onOpen={onOpen}
               onDelete={props.onDelete} 
-              onRename={() => setEditable(true)} />
+              onEditMetadata={() => setEditable(true)} />
           )}
         </div>
       </div>
@@ -78,7 +75,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
         open={editable} 
         i18n={props.i18n} 
         document={document}
-        onClose={() => setEditable(false)} />
+        onClose={() => setEditable(false)}
+        onUpdated={props.onUpdate} 
+        onError={props.onError}/>
     </article>
   )
 

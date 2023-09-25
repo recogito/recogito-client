@@ -12,7 +12,7 @@ interface DocumentCardActionsProps {
 
   onDelete?(): void;
 
-  onRename?(): void;
+  onEditMetadata?(): void;
 
 }
 
@@ -45,12 +45,12 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Browsers size={16} /> <span>{t['Open document in new tab']}</span>
           </Item>
 
-          <Item className="dropdown-item" onSelect={props.onDelete}>
-            <Trash size={16} /> <span>{t['Delete document']}</span>
+          <Item className="dropdown-item" onSelect={props.onEditMetadata}>
+            <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
           </Item>
 
-          <Item className="dropdown-item" onSelect={props.onRename}>
-            <PencilSimple size={16} /> <span>{t['Rename document']}</span>
+          <Item className="dropdown-item" onSelect={props.onDelete}>
+            <Trash size={16} className="destructive" /> <span>{t['Delete document']}</span>
           </Item>
         </Content>
       </Portal>
