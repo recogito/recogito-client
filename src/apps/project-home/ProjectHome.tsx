@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CloudArrowUp } from '@phosphor-icons/react';
+import { CloudArrowUp, DownloadSimple } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -26,7 +26,7 @@ export interface ProjectHomeProps {
 
 export const ProjectHome = (props: ProjectHomeProps) => {
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const [project, setProject] = useState(props.project);
 
@@ -180,10 +180,18 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onError={error => onError(error, 'Error updating project description.')} />
           
           {canUpload && (
-            <UploadActions 
-              i18n={props.i18n} 
-              onUpload={open}
-              onImport={onImportRemote} />
+            <div className="admin-actions">
+              <UploadActions 
+                i18n={props.i18n} 
+                onUpload={open}
+                onImport={onImportRemote} />
+
+              <a 
+                href={`/${lang}/projects/${project.id}/export/csv`}
+                className="button">
+                <DownloadSimple size={20} /> <span>Export Annotations as CSV</span>
+              </a>
+            </div>
           )}
         </div>
 

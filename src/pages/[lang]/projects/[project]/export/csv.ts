@@ -60,7 +60,13 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
 
   return new Response(    
     csv,
-    { status: 200 }
+    { 
+      headers: { 
+        'Content-Type': 'text/csv',
+        'Content-Disposition': `attachment;filename=project-${projectId}.csv`
+      },
+      status: 200 
+    }
   );
 
 };

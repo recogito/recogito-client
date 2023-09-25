@@ -24,6 +24,10 @@
   cursor: pointer;
 }
 
+.project-home .admin-actions {
+  display: flex;
+}
+
 .project-home-grid-wrapper {
   flex-grow: 1;
   position: relative;

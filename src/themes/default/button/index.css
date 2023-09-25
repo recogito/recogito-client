@@ -60,7 +60,8 @@ button:focus-visible {
   box-shadow: 0 0 0 3px var(--button-focus-outline-color);
 }
 
-button > svg {
+button > svg,
+a[href].button > svg {
   color: var(--font-light);
   margin: 0 0.8em 0.1em 0.5em;
 }
