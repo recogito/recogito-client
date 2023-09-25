@@ -22,10 +22,28 @@ export const createDocument = (
       return { error, data: data as Document }
     });
 
-export const renameDocument = (supabase: SupabaseClient, documentId: string, name: string): Response<Document> =>
+export const renameDocument = (
+  supabase: SupabaseClient, 
+  documentId: string, 
+  name: string
+): Response<Document> =>
   supabase 
     .from('documents')
     .update({ name })
+    .eq('id', documentId)
+    .select()
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Document }));
+
+export const updateDocumentMetadata = (
+  supabase: SupabaseClient,
+  documentId: string,
+  name: string,
+  meta_data: object
+): Response<Document> => 
+  supabase
+    .from('documents')
+    .update({ name, meta_data })
     .eq('id', documentId)
     .select()
     .single()

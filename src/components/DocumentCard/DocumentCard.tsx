@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
-import { EditableText } from '@components/EditableText';
 import { DocumentCardActions } from './DocumentCardActions';
 import { ContentTypeIcon } from './ContentTypeIcon';
+import { MetadataModal } from './MetadataModal';
 
 import './DocumentCard.css';
 
@@ -18,9 +18,11 @@ interface DocumentCardProps {
 
   readonly?: boolean;
 
-  onDelete?(): void;
+  onDelete(): void;
 
-  onRename?(name: string): void;
+  onUpdate(document: Document): void;
+
+  onError(error: string): void;
 
 }
 
@@ -46,11 +48,6 @@ export const DocumentCard = (props: DocumentCardProps) => {
       onOpen(true)
   }
 
-  const onRename = (name: string) => {
-    setEditable(false);
-    props.onRename!(name);
-  }
-
   const onExportCSV = () =>
     window.location.href = `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}`;
 
@@ -71,22 +68,23 @@ export const DocumentCard = (props: DocumentCardProps) => {
               isAdmin={props.isAdmin}
               onOpen={onOpen}
               onDelete={props.onDelete} 
-              onRename={() => setEditable(true)} 
-              onExportCSV={onExportCSV} />
+              onExportCSV={onExportCSV}
+              onEditMetadata={() => setEditable(true)} />
           )}
         </div>
       </div>
 
       <h1>
-        {editable ? (
-          <EditableText 
-            focus
-            value={document.name} 
-            onSubmit={onRename} />
-        ) : (
-          <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
-        )}
+        <a target="_blank" href={`/${lang}/annotate/${context.id}/${document.id}`}>{document.name}</a>
       </h1>
+
+      <MetadataModal 
+        open={editable} 
+        i18n={props.i18n} 
+        document={document}
+        onClose={() => setEditable(false)}
+        onUpdated={props.onUpdate} 
+        onError={props.onError}/>
     </article>
   )
 

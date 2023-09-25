@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { CloudArrowUp, DownloadSimple } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
-import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useOrganizationPolicies, useProjectPolicies } from '@backend/hooks/usePolicies';
-import { archiveLayer, renameDocument } from '@backend/crud';
+import { archiveLayer } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { UploadActions, UploadFormat, UploadTracker, useUpload, useDragAndDrop } from './upload';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
-import type { DocumentInContext, ExtendedProjectData, Translations } from 'src/Types';
+import type { Document, DocumentInContext, ExtendedProjectData, Translations } from 'src/Types';
 
 import './ProjectHome.css';
 
@@ -130,36 +129,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       });
   }
 
-  const onRenameDocument = (document: DocumentInContext, name: string) => {
-    // Optimistic update
+  const onUpdateDocument = (document: Document) =>
     setDocuments(documents => documents.map(d => d.id === document.id ? ({
-      ...d, name
+      ...d,
+      ...document
     }) : d));
 
-    // Update on server
-    renameDocument(supabase, document.id, name)
-      .then(({ error, data }) => {
-        if (error || !data) {
-          // Show error and roll back name change
-          setToast({ 
-            title: t['Something went wrong'], 
-            description: t['Could not rename the document.'], 
-            type: 'error' 
-          });
-
-          setDocuments(documents => documents.map(d => d.id === document.id ? ({
-            ...d, name: document.name
-          }) : d));
-        }
-      });
-  }
-
-  const onError = (error: PostgrestError, message: string) => {
-    console.error(error);
-
+  const onError = (error: string) => {
     setToast({ 
       title: t['Something went wrong'], 
-      description: t[message] || message, 
+      description: t[error] || error, 
       type: 'error' 
     });
   }
@@ -177,7 +156,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             editable={isAdmin}
             project={project} 
             onChanged={setProject} 
-            onError={error => onError(error, 'Error updating project description.')} />
+            onError={() => onError('Error updating project description.')} />
           
           {canUpload && (
             <div className="admin-actions">
@@ -209,7 +188,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
                 document={document} 
                 context={defaultContext}
                 onDelete={() => onDeleteDocument(document)} 
-                onRename={name => onRenameDocument(document, name)} />
+                onUpdate={onUpdateDocument}
+                onError={onError}
+                />
             ))}
           </div>
 

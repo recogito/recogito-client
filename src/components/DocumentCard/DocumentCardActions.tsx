@@ -21,7 +21,7 @@ interface DocumentCardActionsProps {
 
   onDelete?(): void;
 
-  onRename?(): void;
+  onEditMetadata?(): void;
 
   onExportCSV?(): void;
 
@@ -58,16 +58,16 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
           {props.isAdmin && (
             <>
-              <Item className="dropdown-item" onSelect={props.onDelete}>
-                <Trash size={16} /> <span>{t['Delete document']}</span>
-              </Item>
-
-              <Item className="dropdown-item" onSelect={props.onRename}>
-                <PencilSimple size={16} /> <span>{t['Rename document']}</span>
+              <Item className="dropdown-item" onSelect={props.onEditMetadata}>
+                <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
               </Item>
 
               <Item className="dropdown-item" onSelect={props.onExportCSV}>
                 <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
+              </Item>
+
+              <Item className="dropdown-item" onSelect={props.onDelete}>
+                <Trash size={16} className="destructive" /> <span>{t['Delete document']}</span>
               </Item>
             </>
           )}
