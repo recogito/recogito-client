@@ -27,7 +27,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
-  const [value, setValue] = useState(comment);
+  const [value, setValue] = useState(comment.value);
 
   useEffect(() => {
     const { current } = textarea;
