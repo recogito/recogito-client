@@ -189,7 +189,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               <a 
                 href={`/${lang}/projects/${project.id}/export/csv`}
                 className="button">
-                <DownloadSimple size={20} /> <span>Export Annotations as CSV</span>
+                <DownloadSimple size={20} />
+                <span>{t['Export annotations as CSV']}</span>
               </a>
             </div>
           )}

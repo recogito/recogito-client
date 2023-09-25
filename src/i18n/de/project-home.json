@@ -13,6 +13,7 @@
   "Open document in new tab": "In neuem Tab öffnen",
   "Delete document": "Dokument löschen",
   "Rename document": "Dokument umbenennen",
+  "Export annotations as CSV": "Annotationen als CSV exportieren",
 
   "File upload": "Datei hochladen (unterstützte Formate: Text, TEI, Bild)",
   "From IIIF image manifest": "IIIF Image Manifest importieren",
