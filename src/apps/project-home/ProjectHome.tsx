@@ -37,7 +37,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const projectPolicies = useProjectPolicies(project.id);
 
-  const canEdit = projectPolicies?.get('projects').has('UPDATE');
+  const isAdmin = projectPolicies?.get('projects').has('UPDATE');
 
   const orgPolicies = useOrganizationPolicies();
 
@@ -169,12 +169,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <ToastProvider>
         <div>
           <ProjectTitle 
-            editable={canEdit}
+            editable={isAdmin}
             project={project} />
 
           <ProjectDescription 
             i18n={props.i18n}
-            editable={canEdit}
+            editable={isAdmin}
             project={project} 
             onChanged={setProject} 
             onError={error => onError(error, 'Error updating project description.')} />
@@ -203,6 +203,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             {documents.map(document => (
               <DocumentCard
                 key={document.id}
+                isAdmin={isAdmin}
                 i18n={props.i18n} 
                 document={document} 
                 context={defaultContext}

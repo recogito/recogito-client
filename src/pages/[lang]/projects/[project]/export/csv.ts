@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
+import { getAllDocumentLayersInProject, getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
@@ -12,7 +12,7 @@ const getComments = (bodies: BodyLike[]) =>
 const getTags = (bodies: BodyLike[]) =>
   bodies.filter(b => b.purpose === 'tagging').map(b => b.value);
 
-export const get: APIRoute = async ({ params, request, cookies }) => {
+export const get: APIRoute = async ({ params, request, cookies, url }) => {
   const supabase = await createSupabaseServerClient(request, cookies);
   if (!supabase)
     return new Response(
@@ -33,7 +33,14 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
     JSON.stringify({ error: 'Unauthorized'}),
     { status: 401 });
 
-  const layers = await getAllLayersInProject(supabase, projectId);
+  const documentId = url.searchParams.get('document');
+
+  // Retrieve all layers, or just for the selected document, based on
+  // URL query param
+  const layers = documentId ? 
+    await getAllDocumentLayersInProject(supabase, documentId, projectId) :
+    await getAllLayersInProject(supabase, projectId);
+
   if (layers.error)
     return new Response(
       JSON.stringify({ message: 'Error retrieving layers' }), 
@@ -49,7 +56,7 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
   }
   
   const findDocument = (layerId: string) =>
-    layers.data.find(l => l.id === layerId)?.document.name;
+    layers.data.find(l => l.id === layerId)?.document?.name;
 
   const getLastUpdated = (targets: { updated_at: string }[], bodies: { updated_at: string }[]) => {
     const sorted = [...targets, ...bodies];
@@ -63,7 +70,8 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
     created: a.created_at,
     updated: getLastUpdated(a.targets, a.bodies),
     comments: getComments(a.bodies).join('|'),
-    tags: getTags(a.bodies).join('|')
+    tags: getTags(a.bodies).join('|'),
+    is_private: a.is_private
   }));
 
   csv.sort((a, b) => a.document > b.document ? -1 : 1);

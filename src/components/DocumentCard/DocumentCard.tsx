@@ -10,6 +10,8 @@ interface DocumentCardProps {
 
   i18n: Translations;
 
+  isAdmin?: boolean;
+
   context: Context;
 
   document: Document;
@@ -49,6 +51,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
     props.onRename!(name);
   }
 
+  const onExportCSV = () =>
+    window.location.href = `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}`;
+
   return (
     <article className="document-card-container">
       <div 
@@ -63,9 +68,11 @@ export const DocumentCard = (props: DocumentCardProps) => {
           {!readonly && (
             <DocumentCardActions
               i18n={props.i18n} 
+              isAdmin={props.isAdmin}
               onOpen={onOpen}
               onDelete={props.onDelete} 
-              onRename={() => setEditable(true)} />
+              onRename={() => setEditable(true)} 
+              onExportCSV={onExportCSV} />
           )}
         </div>
       </div>

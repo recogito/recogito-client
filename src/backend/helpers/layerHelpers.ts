@@ -91,12 +91,15 @@ export const getAllDocumentLayersInProject = (
   supabase: SupabaseClient,
   documentId: string,
   projectId: string
-): Response<Layer[]> =>
+): Response<LayerWithDocument[]> =>
   supabase
     .from('layers')
     .select(`
       id, 
       document_id,
+      document:documents (
+        *
+      ),
       project_id, 
       name,
       description,
@@ -116,7 +119,7 @@ export const getAllDocumentLayersInProject = (
       } else {
         // @ts-ignore
         const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
-        return { error, data: flattened as unknown as Layer[] };
+        return { error, data: flattened as unknown as LayerWithDocument[] };
       }
     });
 
