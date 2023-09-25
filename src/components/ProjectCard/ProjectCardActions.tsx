@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
+import { DotsThreeVertical, PencilSimple, SignOut, Trash } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { archiveProject } from '@backend/crud';
+import { archiveProject, leaveGroup } from '@backend/crud';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { ProjectDetailsForm } from './ProjectDetailsForm';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
@@ -12,6 +12,8 @@ const { Content, Item, Portal, Root, Trigger } = Dropdown;
 export interface ProjectCardActionsProps {
 
   i18n: Translations;
+
+  me: MyProfile;
 
   project: ExtendedProjectData;
 
@@ -27,11 +29,15 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
 
   const { t } = props.i18n;
 
+  const { me } = props;
+
   const [editing, setEditing] = useState(false);
 
   const [confirming, setConfirming] = useState(false);
 
-  const [deleting, setDeleting] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const isMine = props.me.id === props.project.created_by?.id;
 
   const onDetailsSaved = (updated: ExtendedProjectData) => {
     setEditing(false);
@@ -44,18 +50,36 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   }
 
   const onDeleteProject = () => {
-    setDeleting(true);
+    setBusy(true);
 
     archiveProject(supabase, props.project.id)
       .then(() => {
         props.onDeleted();
-        setDeleting(false);
+        setBusy(false);
       })
       .catch(error => {
         console.error(error);
         props.onError('Could not delete the project.');
-        setDeleting(false);     
+        setBusy(false);     
       });
+  }
+
+  const onLeaveProject = () => {
+    setBusy(true);
+
+    const myGroup = props.project.groups.find(g => 
+      g.members.find(m => m.user.id === me.id))?.id;
+
+    if (myGroup) {
+      leaveGroup(supabase, me.id, myGroup).then(({ error }) => {
+        if (error)
+          props.onError(error.details);
+        else 
+          props.onDeleted();
+      });
+    } else {
+      props.onError('Error leaving the group');
+    }
   }
 
   return (
@@ -78,7 +102,11 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
 
             <ConfirmedAction.Trigger>
               <Item className="dropdown-item">
-                <Trash size={16} className="destructive" /> <span>{t['Delete project']}</span>
+                {isMine ? (
+                  <><Trash size={16} className="destructive" /> <span>{t['Delete project']}</span></>
+                ) : (
+                  <><SignOut size={16} className="destructive" /> <span>{t['Leave project']}</span></>
+                )}
               </Item>
             </ConfirmedAction.Trigger>
           </Content>
@@ -86,12 +114,19 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog 
-        busy={deleting}
+        busy={busy}
         title={t['Are you sure?']} 
-        description={t['Are you sure you want to delete this project permanently?']}
+        description={isMine ? 
+          t['Are you sure you want to delete this project permanently?'] : 
+          t['Are you sure you want to leave this project']}
         cancelLabel={t['Cancel']} 
-        confirmLabel={<><Trash size={16} /> <span>{t['Delete project']}</span></>}
-        onConfirm={onDeleteProject} />
+        confirmLabel={
+          <>
+            <Trash size={16} />
+            <span>{isMine ? t['Delete project'] : t['Leave project']}</span>
+          </>
+        }
+        onConfirm={isMine ? onDeleteProject : onLeaveProject} />
 
       <ProjectDetailsForm 
         i18n={props.i18n} 

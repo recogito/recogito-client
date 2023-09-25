@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Bell } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Invitation, MyProfile, Policies, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, MyProfile, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { archiveProject, getMyProfile } from '@backend/crud';
+import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
 import { AlertBanner } from '@components/AlertBanner';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
@@ -142,6 +142,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         ) : (
           <ProjectsGrid 
             i18n={props.i18n} 
+            me={me}
             projects={filteredProjects} 
             onProjectDeleted={onProjectDeleted} 
             onDetailsChanged={onDetailsChanged} 

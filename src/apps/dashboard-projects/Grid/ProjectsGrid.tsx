@@ -1,9 +1,11 @@
 import { ProjectCard } from '@components/ProjectCard';
-import type { ExtendedProjectData, Policies, Translations } from 'src/Types';
+import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 
 export interface ProjectsGridProps {
 
   i18n: Translations;
+
+  me: MyProfile;
 
   projects: ExtendedProjectData[];
 
@@ -25,6 +27,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
             <ProjectCard 
               key={project.id} 
               i18n={props.i18n}
+              me={props.me}
               project={project}
               onDeleted={() => props.onProjectDeleted(project)} 
               onDetailsChanged={props.onDetailsChanged} 

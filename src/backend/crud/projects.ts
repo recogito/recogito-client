@@ -173,6 +173,21 @@ export const updateUserProjectGroup = (
     .eq('type_id', oldTypeId)
     .then(({ error }) => ({ error, data: !error }));
 
+export const leaveGroup = (
+  supabase: SupabaseClient,
+  userId: string,
+  groupId: string
+): Response<Boolean> =>
+  supabase
+    .from('group_users')
+    .delete()
+    .match({ 
+      group_type: 'project', 
+      type_id: groupId, 
+      user_id: userId 
+    })
+    .then(({ error }) => ({ error, data: !error }));
+
 export const removeUserFromProject = (
   supabase: SupabaseClient, 
   userId: string, 
