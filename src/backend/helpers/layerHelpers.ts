@@ -111,8 +111,8 @@ export const getAllDocumentLayersInProject = (
         )
       )
     `)
-    .eq('documents.id', documentId)
     .eq('project_id', projectId)
+    .eq('document_id', documentId)
     .then(({ data, error }) => {
       if (error) {
         return { error, data: [] };
