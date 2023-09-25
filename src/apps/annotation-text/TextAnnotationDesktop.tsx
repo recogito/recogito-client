@@ -10,7 +10,7 @@ import {
   CETEIcean
 } from '@recogito/react-text-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getAllLayersInProject, isDefaultContext } from '@backend/helpers';
+import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
@@ -69,7 +69,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
       // If this is the default context, and the user has
       // sufficient privileges to create layers, load all layers
       if (isDefault && isAdmin) {
-        getAllLayersInProject(supabase, props.document.id, props.document.context.project_id)
+        getAllDocumentLayersInProject(supabase, props.document.id, props.document.context.project_id)
           .then(({ data, error }) => {
             if (error)
               console.error(error);

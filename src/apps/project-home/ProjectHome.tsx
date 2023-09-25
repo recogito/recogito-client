@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CloudArrowUp } from '@phosphor-icons/react';
+import { CloudArrowUp, DownloadSimple } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useOrganizationPolicies, useProjectPolicies } from '@backend/hooks/usePolicies';
@@ -25,7 +25,7 @@ export interface ProjectHomeProps {
 
 export const ProjectHome = (props: ProjectHomeProps) => {
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const [project, setProject] = useState(props.project);
 
@@ -36,7 +36,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const projectPolicies = useProjectPolicies(project.id);
 
-  const canEdit = projectPolicies?.get('projects').has('UPDATE');
+  const isAdmin = projectPolicies?.get('projects').has('UPDATE');
 
   const orgPolicies = useOrganizationPolicies();
 
@@ -148,21 +148,30 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <ToastProvider>
         <div>
           <ProjectTitle 
-            editable={canEdit}
+            editable={isAdmin}
             project={project} />
 
           <ProjectDescription 
             i18n={props.i18n}
-            editable={canEdit}
+            editable={isAdmin}
             project={project} 
             onChanged={setProject} 
             onError={() => onError('Error updating project description.')} />
           
           {canUpload && (
-            <UploadActions 
-              i18n={props.i18n} 
-              onUpload={open}
-              onImport={onImportRemote} />
+            <div className="admin-actions">
+              <UploadActions 
+                i18n={props.i18n} 
+                onUpload={open}
+                onImport={onImportRemote} />
+
+              <a 
+                href={`/${lang}/projects/${project.id}/export/csv`}
+                className="button">
+                <DownloadSimple size={20} />
+                <span>{t['Export annotations as CSV']}</span>
+              </a>
+            </div>
           )}
         </div>
 
@@ -174,6 +183,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             {documents.map(document => (
               <DocumentCard
                 key={document.id}
+                isAdmin={isAdmin}
                 i18n={props.i18n} 
                 document={document} 
                 context={defaultContext}

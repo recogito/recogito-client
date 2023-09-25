@@ -76,8 +76,7 @@ export const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
       <div className="project-assignment-document-grid">
         {documents.map(document => (
-          <DocumentCard 
-            readonly
+          <DocumentCard
             i18n={props.i18n}
             key={document.id}
             document={document} 

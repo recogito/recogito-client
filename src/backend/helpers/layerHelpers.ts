@@ -1,6 +1,6 @@
 import type { Response } from '@backend/Types';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Layer, UserProfile } from 'src/Types';
+import type { Layer, LayerWithDocument, UserProfile } from 'src/Types';
 
 export const createLayerInContext = (
   supabase: SupabaseClient, 
@@ -87,16 +87,19 @@ export const addUsersToLayer = (
     });
 });
 
-export const getAllLayersInProject = (
+export const getAllDocumentLayersInProject = (
   supabase: SupabaseClient,
   documentId: string,
   projectId: string
-): Response<Layer[]> =>
+): Response<LayerWithDocument[]> =>
   supabase
     .from('layers')
     .select(`
-      id,  
-      document_id, 
+      id, 
+      document_id,
+      document:documents (
+        *
+      ),
       project_id, 
       name,
       description,
@@ -108,7 +111,7 @@ export const getAllLayersInProject = (
         )
       )
     `)
-    .eq('document_id', documentId)
+    .eq('documents.id', documentId)
     .eq('project_id', projectId)
     .then(({ data, error }) => {
       if (error) {
@@ -116,7 +119,41 @@ export const getAllLayersInProject = (
       } else {
         // @ts-ignore
         const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
-        return { error, data: flattened as unknown as Layer[] };
+        return { error, data: flattened as unknown as LayerWithDocument[] };
       }
     });
 
+export const getAllLayersInProject = (
+  supabase: SupabaseClient,
+  projectId: string
+): Response<LayerWithDocument[]> =>
+  supabase
+    .from('layers')
+    .select(`
+      id,  
+      document_id, 
+      document:documents (
+        *
+      ),
+      project_id, 
+      name,
+      description,
+      contexts:layer_contexts (
+        ...contexts (
+          id,
+          name,        
+          project_id
+        )
+      )
+    `)
+    .eq('project_id', projectId)
+    .then(({ data, error }) => {
+      if (error) {
+        return { error, data: [] };
+      } else {
+        // @ts-ignore
+        const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
+        return { error, data: flattened as unknown as LayerWithDocument[] };
+      }
+    });
+    

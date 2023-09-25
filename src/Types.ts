@@ -203,6 +203,12 @@ export interface Layer {
 
 }
 
+export interface LayerWithDocument extends Layer {
+
+  document: Document
+
+}
+
 export interface ExtendedAssignmentData extends Context {
 
   layers: [{
