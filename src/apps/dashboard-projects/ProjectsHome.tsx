@@ -78,20 +78,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const onDetailsChanged = (project: ExtendedProjectData) =>
     setProjects(projects => projects.map(p => p.id === project.id ? project : p));
     
-  const onDeleteProject = (project: ExtendedProjectData) =>
-    archiveProject(supabase, project.id)
-      .then(() => {
-        setProjects(projects => projects.filter(p => p.id !== project.id));
-      })
-      .catch(error => {
-        console.error(error);
-        setError({
-          title: t['Something went wrong'],
-          description: t['Could not delete the project.'],
-          type: 'error'
-        });
-      });
-
+  const onProjectDeleted = (project: ExtendedProjectData) =>
+    setProjects(projects => projects.filter(p => p.id !== project.id));
+  
   const onError = (error: string) =>
     setError({
       title: t['Something went wrong'],
@@ -154,7 +143,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           <ProjectsGrid 
             i18n={props.i18n} 
             projects={filteredProjects} 
-            onProjectDeleted={onDeleteProject} 
+            onProjectDeleted={onProjectDeleted} 
             onDetailsChanged={onDetailsChanged} 
             onError={onError} />  
         )}

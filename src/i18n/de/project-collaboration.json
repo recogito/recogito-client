@@ -20,7 +20,7 @@
   "Leave Project?": "Projekt Verlassen?",
   "You are about to leave": "Diese Aktion kann nicht rückgängig gemacht werden. Wenn Du später wieder am Projekt teilnehmen willst, brauchst Du eine neue Einladung. Bist Du sicher dass Du das Projekt verlassen willst?",
   "Remove_name": "Bist Du sicher dass Du <strong>${name}</strong> aus dem Projekt entfernen willst?",
-  "Remove_anonymous": "Sind sie sicher dass sie diesen Benutzer aus dem Projekt entfernen wollen?",
+  "Remove_anonymous": "Bist Du sicher dass Du diesen Benutzer aus dem Projekt entfernen willst?",
   "Remove": "Löschen",
   "Yes, I want to leave": "Ja, Projekt verlassen",
   "Cancel": "Abbrechen"
