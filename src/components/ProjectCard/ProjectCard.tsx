@@ -1,7 +1,7 @@
 import { Article, GraduationCap, Image } from '@phosphor-icons/react';
 import { useProjectPolicies } from '@backend/hooks';
 import { Avatar } from '@components/Avatar';
-import type { ContentType, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
+import type { ContentType, ExtendedProjectData, MyProfile, Translations, UserProfile } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
 
 import './ProjectCard.css';
@@ -9,6 +9,8 @@ import './ProjectCard.css';
 interface ProjectCardProps {
 
   i18n: Translations;
+
+  me: MyProfile;
 
   project: ExtendedProjectData;
 
@@ -100,6 +102,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         {policies?.get('projects').has('UPDATE') && (
           <ProjectCardActions
             i18n={props.i18n}
+            me={props.me}
             project={props.project}
             onDeleted={props.onDeleted} 
             onDetailsChanged={props.onDetailsChanged}

@@ -21,8 +21,10 @@
 
   "Edit project details": "Projektinformationen bearbeiten",
   "Delete project": "Projekt löschen",
+  "Leave project": "Projekt verlassen",
   "Are you sure?": "Bist Du sicher?",
   "Are you sure you want to delete this project permanently?": "Bist Du sicher dass Du dieses Projekt löschen willst? Diese Operation ist nicht umkehrbar.",
+  "Are you sure you want to leave this project": "Bist Du sicher dass Du dieses Projekt verlassen willst?",
 
   "Project Details": "Projektinformationen",
   "Name": "Name",
