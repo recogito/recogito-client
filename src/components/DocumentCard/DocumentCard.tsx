@@ -16,19 +16,17 @@ interface DocumentCardProps {
 
   document: Document;
 
-  readonly?: boolean;
+  onDelete?(): void;
 
-  onDelete(): void;
+  onUpdate?(document: Document): void;
 
-  onUpdate(document: Document): void;
-
-  onError(error: string): void;
+  onError?(error: string): void;
 
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
 
-  const { context, document, readonly } = props;
+  const { context, document } = props;
 
   const { lang } = props.i18n;
 
@@ -62,15 +60,13 @@ export const DocumentCard = (props: DocumentCardProps) => {
         </div>
 
         <div className="document-card-footer">
-          {!readonly && (
-            <DocumentCardActions
-              i18n={props.i18n} 
-              isAdmin={props.isAdmin}
-              onOpen={onOpen}
-              onDelete={props.onDelete} 
-              onExportCSV={onExportCSV}
-              onEditMetadata={() => setEditable(true)} />
-          )}
+          <DocumentCardActions
+            i18n={props.i18n} 
+            isAdmin={props.isAdmin}
+            onOpen={onOpen}
+            onDelete={props.onDelete} 
+            onExportCSV={onExportCSV}
+            onEditMetadata={() => setEditable(true)} />
         </div>
       </div>
 
@@ -83,8 +79,8 @@ export const DocumentCard = (props: DocumentCardProps) => {
         i18n={props.i18n} 
         document={document}
         onClose={() => setEditable(false)}
-        onUpdated={props.onUpdate} 
-        onError={props.onError}/>
+        onUpdated={props.onUpdate!} 
+        onError={props.onError!}/>
     </article>
   )
 
