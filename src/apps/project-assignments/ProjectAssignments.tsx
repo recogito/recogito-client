@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
-import { archiveAssignment } from '@backend/helpers';
+import { archiveAssignment, getAllLayersInContext } from '@backend/helpers';
+import { archiveLayer } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { useProjectPolicies } from '@backend/hooks/usePolicies';
-import { useAssignments } from '@backend/hooks/useAssignments';
+import { useAssignments, useProjectPolicies } from '@backend/hooks';
 import { Button } from '@components/Button';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { AssignmentWizard } from './Wizard';
@@ -32,7 +32,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const [wizardOpen, setWizardOpen] = useState(false);
 
-  const [error, setError] = useState<ToastContent | null>(null);
+  const [toast, setToast] = useState<ToastContent | null>(null);
 
   const policies = useProjectPolicies(project.id);
 
@@ -51,20 +51,44 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
     // Optimistic update: remove assignment from the list
     setAssignments(assignments => (assignments || []).filter(a => a.id !== assignment.id));
 
-    archiveAssignment(supabase, assignment.id)
-      .then(() => {
-        // TODO toast?
-      })
-      .catch(() => {
-        // Roll back optimistic update in case of failure
+    getAllLayersInContext(supabase, assignment.id).then(({ error, data }) => {
+      if (error) {
+        // Roll back
         setAssignments(assignments => ([...(assignments || []), assignment]));
 
-        setError({
-          title: t['Something went wrong'],
-          description: t['Could not delete the assignment.'],
+        setToast({
+          title: 'Something went wrong',
+          description: 'Could not delete the document.',
           type: 'error'
         });
-      });
+      } else {
+        // Note this will get easier when (if) we get a single RPC call
+        // to archive a list of records
+        const chained = data.reduce((p, nextLayer) => 
+          p.then(() => archiveLayer(supabase, nextLayer.id)
+        ), Promise.resolve());
+
+        chained
+          .then(() => archiveAssignment(supabase, assignment.id))
+          .then(() => {
+            setToast({
+              title: 'Deleted',
+              description: 'Document deleted successfully.',
+              type: 'success'
+            });
+          })
+          .catch(() => {
+            // Roll back
+            setAssignments(assignments => ([...(assignments || []), assignment]));
+
+            setToast({
+              title: 'Something went wrong',
+              description: 'Could not delete the document.',
+              type: 'error'
+            });
+          });
+      }
+    });
   }
 
   return (
@@ -107,8 +131,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       </div>
 
       <Toast
-        content={error}
-        onOpenChange={open => !open && setError(null)} />
+        content={toast}
+        onOpenChange={open => !open && setToast(null)} />
     </ToastProvider>
   )
 

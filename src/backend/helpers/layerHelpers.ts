@@ -87,6 +87,10 @@ export const addUsersToLayer = (
     });
 });
 
+/**
+ * Retrieves all layers on the given documents
+ * in this project.
+ */
 export const getAllDocumentLayersInProject = (
   supabase: SupabaseClient,
   documentId: string,
@@ -123,6 +127,10 @@ export const getAllDocumentLayersInProject = (
       }
     });
 
+/**
+ * Returns ALL layers for ALL documents
+ * in this project.
+ */
 export const getAllLayersInProject = (
   supabase: SupabaseClient,
   projectId: string
@@ -157,3 +165,38 @@ export const getAllLayersInProject = (
       }
     });
     
+/**
+ * Returns ALL layers for ALL documents
+ * in the given context.
+ */
+export const getAllLayersInContext = (
+  supabase: SupabaseClient,
+  contextId: string
+): Response<Layer[]> =>
+  supabase
+    .from('layers')
+    .select(`
+      id,  
+      document_id, 
+      project_id, 
+      name,
+      description,
+      contexts:layer_contexts!inner (
+        context_id,
+        ...contexts (
+          id,
+          name,        
+          project_id
+        )
+      )
+    `)
+    .eq('layer_contexts.context_id', contextId)
+    .then(({ data, error }) => {
+      if (error) {
+        return { error, data: [] };
+      } else {
+        // @ts-ignore
+        const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
+        return { error, data: flattened as unknown as Layer[] };
+      }
+    });
