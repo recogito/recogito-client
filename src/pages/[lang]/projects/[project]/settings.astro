@@ -35,7 +35,8 @@ if (project.error || !project.data) {
 <ProjectLayout active="Settings" user={profile.data} project={project.data}>
   <ProjectSettings 
     client:load 
-    i18n={i18n} />
+    i18n={i18n} 
+    project={project.data} />
 </ProjectLayout>
 
 <style>
