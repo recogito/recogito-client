@@ -78,21 +78,20 @@ export const Autocomplete = (props: AutocompleteProps) => {
     if (evt.key === 'Enter') {
       onSubmit();
     } else if (evt.key === 'Escape') {
+      setSuggestions([]);
+      setHighlightedIndex(undefined);
       props.onCancel && props.onCancel();
     } else {
       // Neither enter nor cancel
-      console.log('key', evt.key);
       if (suggestions.length > 0) {
-        if (evt.which === 38) {
-          // Key up
+        if (evt.key === 'ArrowUp') {
           if (highlightedIndex === undefined) {
             setHighlightedIndex(0);
           } else {
             const prev = Math.max(0, highlightedIndex - 1);
             setHighlightedIndex(prev);
           }
-        } else if (evt.which === 40) {
-          // Key down
+        } else if (evt.key === 'ArrowDown') {
           if (highlightedIndex === undefined) {
             setHighlightedIndex(0);
           } else {
@@ -103,9 +102,8 @@ export const Autocomplete = (props: AutocompleteProps) => {
       } else {
         // No suggestions: key down shows all vocab 
         // options (only for hard-wired vocabs!)
-        if (evt.which === 40) {
-          if (Array.isArray(props.vocabulary))
-            setSuggestions(props.vocabulary);
+        if (evt.key === 'ArrowDown') {
+          setSuggestions(props.vocabulary);
         }
       }
     }
