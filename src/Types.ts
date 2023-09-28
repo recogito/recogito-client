@@ -249,7 +249,7 @@ export interface TagDefinition {
 
   name: string;
 
-  target_type: 'context' | 'document' | 'group' | 'layer' | 'profile' | 'project';
+  target_type?: 'context' | 'document' | 'group' | 'layer' | 'profile' | 'project';
 
   scope: 'organization' | 'project' | 'system';
 

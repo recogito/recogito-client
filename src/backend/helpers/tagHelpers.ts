@@ -1,7 +1,7 @@
 import type { Response } from '@backend/Types';
 import { createTag, findTagDefinition } from '@backend/crud/tags';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Tag } from 'src/Types';
+import type { Tag, TagDefinition } from 'src/Types';
 
 export const createSystemTag = (
   supabase: SupabaseClient, 
@@ -69,4 +69,60 @@ export const getTagsForContexts = (
     .eq('tag_definitions.scope', 'system')
     .then(({ error, data }) => error || !data ?
       ({ error, data: [] }) : ({ error, data: data as unknown as Tag[] }));
+
+export const getProjectTagVocabulary = (
+  supabase: SupabaseClient,
+  projectId: string
+): Response<TagDefinition[]> =>
+  supabase
+    .from('tag_definitions')
+    .select(`
+      id,
+      name,
+      target_type,
+      scope,  
+      scope_id
+    `)
+    .match({ scope: 'project', scope_id: projectId })
+    .then(({ error, data }) => error || !data ?
+      ({ error, data: [] }) : ({ error, data: data as unknown as TagDefinition[] }));
+
+export const clearProjectTagVocabulary = (
+  supabase: SupabaseClient,
+  projectId: string
+): Promise<void> => new Promise((resolve, reject) => {
+  supabase
+    .from('tag_definitions')
+    .delete()
+    .match({ scope: 'project', scope_id: projectId })
+    .then(({ error }) => {
+      if (error)
+        reject(error);
+      else 
+        resolve();
+    })
+});
+
+export const setProjectTagVocabulary = (
+  supabase: SupabaseClient,
+  projectId: string,
+  terms: string[]
+): Promise<void> => 
+  // Clear vocab first
+  clearProjectTagVocabulary(supabase, projectId)
+    .then(() => new Promise((resolve, reject) => {
+      supabase
+        .from('tag_definitions')
+        .insert(terms.map(term => ({
+          scope: 'project',
+          scope_id: projectId,
+          name: term
+        })))
+        .then(({ error }) => {
+          if (error)
+            reject(error)
+          else
+            resolve();
+        })
+    }));
 
