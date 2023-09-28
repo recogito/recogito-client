@@ -1,54 +1,55 @@
 
-form.annotation-tag-input-form input {
+.annotation-tagswidget .tag-autocomplete {
+  display: inline;
+  position: relative;
+}
+
+.annotation-tagswidget .tag-autocomplete input {
   background-color: transparent;
   border: none;
   border-radius: 3px;
   font-size: 12px;
   padding: 4px;
+  outline: none;
   transition: all 180ms;
 }
 
-form.annotation-tag-input-form input:focus {
-  background-color: var(--gray-300);
+.annotation-tagswidget .tag-autocomplete input:focus {
   box-shadow: none;
 }
 
-.tag-autocomplete {
-  display:inline;
-  position:relative;
+.annotation-tagswidget .tag-autocomplete ul {
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.25);
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  z-index: 9999;
 }
 
-.tag-autocomplete input {
-  outline:none;
-  border:none;
-  width:80px;
-  height:100%;
-  line-height:14px;
-  white-space:pre;
-  box-sizing:border-box;
-  background-color:transparent;
-  font-size:14px;
+.annotation-tagswidget .tag-autocomplete ul:empty {
+  display: none;
 }
 
-.tag-autocomplete ul {
-  position:absolute;
-  margin:0;
-  padding:0;
-  list-style-type:none;
-  background-color:#fff;
-  border-radius:3px;
-  border:1px solid #d6d7d9;
-  box-sizing:border-box;
-  box-shadow:0 0 20px rgba(0,0,0,0.25);
+.annotation-tagswidget .tag-autocomplete li {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-size: 12px;
+  padding: 8px 12px;
+  width: 100%;
 }
 
-.tag-autocomplete ul:empty {
-  display:none;
+.annotation-tagswidget .tag-autocomplete li.selected {
+  background-color: var(--button-focus-outline-color);
 }
 
-.tag-autocomplete li {
-  box-sizing:border-box;
-  padding:2px 12px;
-  width:100%;
-  cursor:pointer;
+.annotation-tagswidget .tag-autocomplete li:first-child {
+  border-radius: 3px 3px 0 0;
+}
+
+.annotation-tagswidget .tag-autocomplete li:last-child {
+  border-radius: 0 0 3px 3px;
 }

@@ -142,11 +142,7 @@ export const Autocomplete = (props: AutocompleteProps) => {
             key={`${item}-${index}`}
             onClick={onSubmit}
             onMouseEnter={() => setHighlightedIndex(index)}
-            style={
-                highlightedIndex === index
-                  ? { backgroundColor: '#bde4ff' }
-                  : {}
-              }>
+            className={highlightedIndex === index ? 'selected' : undefined}>
             {item}
           </li>
         ))}
