@@ -30,6 +30,8 @@ interface AnnotationListProps {
 
   sorting?: ((a: Anno, b: Anno) => number);
 
+  tagVocabulary?: string[];
+
   beforeSelect(a: SupabaseAnnotation | undefined): void;
 
 }
@@ -160,7 +162,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   showReplyForm={isSelected(a)}
                   i18n={props.i18n}
                   annotation={a} 
-                  present={props.present} />
+                  present={props.present}
+                  tagVocabulary={props.tagVocabulary} />
               ) : (
                 <Annotation.PublicCard 
                   className={isSelected(a) ? 'selected' : undefined}
@@ -168,7 +171,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   i18n={props.i18n}
                   annotation={a} 
                   present={props.present}
-                  policies={props.policies} />  
+                  policies={props.policies} 
+                  tagVocabulary={props.tagVocabulary} />  
               )
             )}
           </li>

@@ -11,7 +11,7 @@ import {
 } from '@recogito/react-text-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
-import { useLayerPolicies } from '@backend/hooks';
+import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
@@ -59,6 +59,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
+
+  const vocabulary = useTagVocabulary(props.document.context.project_id);
 
   useEffect(() => {
     if (policies) {
@@ -150,9 +152,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               popup={props => (
                 <Annotation.Popup 
                   {...props} 
+                  i18n={i18n} 
                   present={present} 
                   policies={policies}
-                  i18n={i18n} />
+                  tagVocabulary={vocabulary} />
               )} />
           )}
 
@@ -173,6 +176,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationDesktopProps) => {
               policies={policies}
               layers={layers}
               sorting={(a, b) => a.target.selector.start - b.target.selector.start}
+              tagVocabulary={vocabulary}
               onChangePanel={onChangeViewMenuPanel}
               onChangeFormatter={f => setFormatter(() => f)}
               beforeSelectAnnotation={beforeSelectAnnotation} />

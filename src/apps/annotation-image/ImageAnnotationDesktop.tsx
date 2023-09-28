@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DocumentInTaggedContext, Layer, Translations } from 'src/Types';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
-import { useLayerPolicies } from '@backend/hooks';
+import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Annotation } from '@components/Annotation';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
@@ -58,6 +58,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
   const [layers, setLayers] = useState<Layer[] | undefined>();
 
   const appearance = useMemo(() => createAppearenceProvider(), []);
+
+  const vocabulary = useTagVocabulary(props.document.context.project_id);
 
   useEffect(() => {
     if (policies) {
@@ -159,9 +161,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
                 popup ={props => (
                   <Annotation.Popup 
                     {...props} 
+                    i18n={i18n}
                     policies={policies}
                     present={present} 
-                    i18n={i18n} /> )} />
+                    tagVocabulary={vocabulary} /> )} />
             )}
 
             <div className="anno-desktop-left">
@@ -179,6 +182,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationDesktopProps) => {
                 present={present} 
                 policies={policies}
                 layers={layers}
+                tagVocabulary={vocabulary}
                 onChangePanel={onChangeViewMenuPanel} 
                 onChangeFormatter={f => setFormatter(() => f)}
                 beforeSelectAnnotation={beforeSelectAnnotation} />

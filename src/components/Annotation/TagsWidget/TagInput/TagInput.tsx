@@ -13,6 +13,8 @@ export interface TagInputProps {
 
   annotation: Annotation;
 
+  vocabulary?: string[];
+
   onCreate(tag: AnnotationBody): void;
 
 }

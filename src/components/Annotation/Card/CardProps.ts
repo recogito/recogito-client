@@ -15,6 +15,8 @@ export interface CardProps {
 
   showReplyForm?: boolean;
 
+  tagVocabulary?: string[];
+
   onReply?(body: AnnotationBody): void;
 
 }
