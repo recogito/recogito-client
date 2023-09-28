@@ -76,6 +76,7 @@ export const TagsWidget = (props: TagsWidgetProps) => {
           i18n={props.i18n} 
           annotation={props.annotation} 
           me={props.me} 
+          vocabulary={props.vocabulary}
           onCreate={onCreate} />
       )}
     </div>

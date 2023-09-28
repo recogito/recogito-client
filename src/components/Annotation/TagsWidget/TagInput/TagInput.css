@@ -1,7 +1,10 @@
+.tag-autocomplete {
+  position: relative;
+  z-index: 1;
+}
 
 .annotation-tagswidget .tag-autocomplete {
   display: inline;
-  position: relative;
 }
 
 .annotation-tagswidget .tag-autocomplete input {
@@ -14,29 +17,29 @@
   transition: all 180ms;
 }
 
-.annotation-tagswidget .tag-autocomplete input:focus {
+.tag-autocomplete input:focus {
   box-shadow: none;
 }
 
-.annotation-tagswidget .tag-autocomplete ul {
+.tag-autocomplete ul {
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 0 0 20px rgba(0,0,0,0.25);
   list-style-type: none;
   margin: 0;
   max-height: 200px;
-  min-width: 180px;
+  min-width: 172px;
   overflow-y: auto;
   padding: 0;
   position: absolute;
   z-index: 9999;
 }
 
-.annotation-tagswidget .tag-autocomplete ul:empty {
+.tag-autocomplete ul:empty {
   display: none;
 }
 
-.annotation-tagswidget .tag-autocomplete li {
+.tag-autocomplete li {
   box-sizing: border-box;
   cursor: pointer;
   display: block;
@@ -45,14 +48,18 @@
   width: 100%;
 }
 
-.annotation-tagswidget .tag-autocomplete li.selected {
+.annotation-tagswidget .tag-autocomplete li {
+  display: block;
+}
+
+.tag-autocomplete li.selected {
   background-color: var(--button-focus-outline-color);
 }
 
-.annotation-tagswidget .tag-autocomplete li:first-child {
+.tag-autocomplete li:first-child {
   border-radius: 3px 3px 0 0;
 }
 
-.annotation-tagswidget .tag-autocomplete li:last-child {
+.tag-autocomplete li:last-child {
   border-radius: 0 0 3px 3px;
 }
