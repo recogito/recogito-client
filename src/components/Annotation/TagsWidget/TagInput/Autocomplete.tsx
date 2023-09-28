@@ -41,6 +41,10 @@ export const Autocomplete = (props: AutocompleteProps) => {
     props.onChange && props.onChange(value);
   }, [value]);
 
+  useEffect(() => {
+    element.current?.querySelector('.selected')?.scrollIntoView({ block: 'nearest' });
+  }, [highlightedIndex]);
+
   const getSuggestions = (value: string) => {
     const suggestions = getVocabSuggestions(value, props.vocabulary);
     setSuggestions(suggestions);

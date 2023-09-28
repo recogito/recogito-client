@@ -57,13 +57,11 @@ if (document.data.content_type === 'text/plain') {
 ---
 <BaseLayout title="Annotation">
   {viewer === 'OPENSEADRAGON' ? (
-    <div class="container image">
-      <ImageAnnotation 
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-image')}
-        document={document.data}
-        channelId={channelId} />
-    </div>
+    <ImageAnnotation 
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-image')}
+      document={document.data}
+      channelId={channelId} />
   ) : (
     <TextAnnotation 
       client:only

@@ -35,7 +35,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const contentType = props.document.content_type;
 
-  const anno = useAnnotator<RecogitoTextAnnotator>();;
+  const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 

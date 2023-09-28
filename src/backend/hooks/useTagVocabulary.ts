@@ -19,11 +19,32 @@ export const useTagVocabulary = (projectId: string) => {
       });
   }, []);
 
+  const getUniqueTags = (annotations: Annotation[]): string[] => {
+    const tagBodies = annotations.reduce((tags, annotation) => {
+      const t = annotation.bodies.filter(b => b.purpose === 'tagging');
+      return [...tags, ...t.map(b => b.value)];
+    }, [] as string[]);
+
+    return Array.from(new Set(tagBodies));
+  }
+
+  const addToVocabulary = (tags: string[]) =>
+    setVocabulary(vocabulary => Array.from(new Set([...vocabulary, ...tags])));
+
   useEffect(() => {
     if (store) {
       const onChange = (event: StoreChangeEvent<Annotation>) => {
-        // TODO observe store changes and update the tag set dynamically!
-        console.log(event);
+        const { created, updated } = event.changes;
+
+        let tags: string[] = [];
+
+        if (created)
+          tags = getUniqueTags(created);
+
+        if (updated)
+          tags = [...tags, ...getUniqueTags(updated.map(u => u.newValue))];
+
+        addToVocabulary(tags);
       }
 
       store.observe(onChange);
