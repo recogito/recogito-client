@@ -7,7 +7,7 @@ import type { ExtendedProjectData, Invitation, MyProfile, Group, Translations } 
 
 import './ProjectCollaboration.css';
 
-interface ManageUsersProps {
+interface ProjectCollaborationProps {
 
   i18n: Translations;
 
@@ -19,7 +19,7 @@ interface ManageUsersProps {
 
 };
 
-export const ProjectCollaboration = (props: ManageUsersProps) => {
+export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const { t } = props.i18n;
 

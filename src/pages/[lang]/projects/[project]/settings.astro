@@ -2,10 +2,13 @@
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
-import { getLangFromUrl } from '@i18n';
+import { getLangFromUrl, getTranslations } from '@i18n';
 import { getProjectExtended } from '@backend/helpers';
+import { ProjectSettings } from '@apps/project-settings';
 
 const lang = getLangFromUrl(Astro.url);
+
+const i18n = getTranslations(Astro.request, 'project-settings');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase)
@@ -30,7 +33,9 @@ if (project.error || !project.data) {
 }
 ---
 <ProjectLayout active="Settings" user={profile.data} project={project.data}>
-  <h1>Settings</h1>
+  <ProjectSettings 
+    client:load 
+    i18n={i18n} />
 </ProjectLayout>
 
 <style>
