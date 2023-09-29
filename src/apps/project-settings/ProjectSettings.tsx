@@ -97,18 +97,14 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         <h1>{t['Project Settings']}</h1>
 
         <div className="tagging-vocabulary">
-          <h2>Tagging Vocabulary</h2>
+          <h2>{t['Tagging Vocabulary']}</h2>
 
           <p>
-            You can pre-define a tagging vocabulary for this project 
-            by copying and pasting terms into the text area below,
-            one term per line.
+            {t['You can pre-define a tagging vocabulary']}
           </p>
 
           <p>
-            The terms will appear as autocomplete options when users
-            create new tags in the annotation interface. Please note that
-            users will still be able to add their own tags, too.
+            {t['The terms will appear as autocomplete options']}
           </p>
 
           <textarea 
@@ -118,13 +114,13 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           <div className="buttons">
             <Button
               onClick={clearVocabulary}>
-              <span>Clear</span>
+              <span>{t['Clear']}</span>
             </Button>
             <Button
               busy={state === 'saving'}
               className="primary"
               onClick={saveVocabulary}>
-              <span>Save</span>
+              <span>{t['Save']}</span>
             </Button>
 
             <TinySaveIndicator 

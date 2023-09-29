@@ -23,7 +23,7 @@
 .project-settings .tagging-vocabulary textarea {
   height: 12em;
   line-height: 150%;
-  margin-bottom: 0.5em;
+  margin: 0.5em 0;
   max-width: 65ch;
   min-width: 30ch;
   resize: none;
