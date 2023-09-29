@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getProjectTagVocabulary, setProjectTagVocabulary } from '@backend/helpers';
+import { clearProjectTagVocabulary, getProjectTagVocabulary, setProjectTagVocabulary } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
@@ -47,7 +47,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
   }
 
   const saveVocabulary = () => {
-    setState('saving')
+    setState('saving');
 
     setProjectTagVocabulary(supabase, props.project.id, vocabulary)
       .then(() => { 
@@ -63,6 +63,31 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         });
 
         setState('failed');
+      });
+  }
+
+  const clearVocabulary = () => {
+    setState('saving');
+
+    const prev = vocabulary;
+
+    setVocabulary([]);
+
+    clearProjectTagVocabulary(supabase, props.project.id)
+      .then(() => {
+        setState('success');
+      })
+      .catch(() => {
+        setToast({ 
+          title: t['Something went wrong'], 
+          description: t['Error saving tag vocabulary.'], 
+          type: 'error' 
+        });
+
+        setState('failed');
+
+        // Roll back
+        setVocabulary(prev);
       });
   }
 
@@ -90,7 +115,11 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             value={vocabulary.join('\n')} 
             onChange={onChange} />
 
-          <div>
+          <div className="buttons">
+            <Button
+              onClick={clearVocabulary}>
+              <span>Clear</span>
+            </Button>
             <Button
               busy={state === 'saving'}
               className="primary"

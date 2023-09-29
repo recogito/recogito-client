@@ -19,3 +19,19 @@
   font-size: var(--font-small);
   line-height: 160%;
 }
+
+.project-settings .tagging-vocabulary textarea {
+  height: 12em;
+  line-height: 150%;
+  margin-bottom: 0.5em;
+  max-width: 65ch;
+  min-width: 30ch;
+  resize: none;
+  width: 45ch;
+}
+
+.project-settings .tagging-vocabulary .buttons {
+  display: flex;
+  gap: 0.2em;
+  align-items: center;
+} 
