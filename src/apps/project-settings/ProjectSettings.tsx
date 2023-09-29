@@ -71,26 +71,38 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
       <ToastProvider>
         <h1>{t['Project Settings']}</h1>
 
-        <h2>Tagging Vocabulary</h2>
-        <p>
-          One per line...
-        </p>
-        <textarea 
-          value={vocabulary.join('\n')} 
-          onChange={onChange} />
+        <div className="tagging-vocabulary">
+          <h2>Tagging Vocabulary</h2>
 
-        <div>
-          <Button
-            busy={state === 'saving'}
-            className="primary"
-            onClick={saveVocabulary}>
-            <span>Save</span>
-          </Button>
+          <p>
+            You can pre-define a tagging vocabulary for this project 
+            by copying and pasting terms into the text area below,
+            one term per line.
+          </p>
 
-          <TinySaveIndicator 
-            resultOnly
-            state={state} 
-            fadeOut={2500} />
+          <p>
+            The terms will appear as autocomplete options when users
+            create new tags in the annotation interface. Please note that
+            users will still be able to add their own tags, too.
+          </p>
+
+          <textarea 
+            value={vocabulary.join('\n')} 
+            onChange={onChange} />
+
+          <div>
+            <Button
+              busy={state === 'saving'}
+              className="primary"
+              onClick={saveVocabulary}>
+              <span>Save</span>
+            </Button>
+
+            <TinySaveIndicator 
+              resultOnly
+              state={state} 
+              fadeOut={2500} />
+          </div>
         </div>
 
         <Toast

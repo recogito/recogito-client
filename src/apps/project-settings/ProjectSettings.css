@@ -2,3 +2,20 @@
   padding: 20px 40px;
   width: 100%;
 }
+
+.project-settings .tagging-vocabulary {
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  max-width: 65ch;
+  padding: 20px;
+}
+
+.project-settings .tagging-vocabulary h2 {
+  margin-top: 0.2em;
+}
+
+.project-settings .tagging-vocabulary p {
+  font-size: var(--font-small);
+  line-height: 160%;
+}
