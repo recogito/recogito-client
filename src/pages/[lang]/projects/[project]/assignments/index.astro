@@ -38,7 +38,7 @@ const i18n = getTranslations(Astro.request, 'project-assignments');
 ---
 <ProjectLayout active="Assignments" user={profile.data} project={project.data}>
   <ProjectAssignments
-    client:load
+    client:only
     i18n={i18n}
     me={profile.data}
     project={project.data}
