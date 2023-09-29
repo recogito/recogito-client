@@ -1,1 +1,1 @@
-export * from './ImageAnnotationDesktop';
+export * from './ImageAnnotation';

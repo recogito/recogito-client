@@ -1,0 +1,13 @@
+{
+  "Project Settings": "Project Settings",
+
+  "Tagging Vocabulary": "Tagging Vocabulary",
+  "You can pre-define a tagging vocabulary": "You can pre-define a tagging vocabulary for this project by copying and pasting terms into the text area below, one term per line.",
+  "The terms will appear as autocomplete options": "The terms will appear as autocomplete options when users create new tags in the annotation interface. Please note that users will still be able to add their own tags, too.",
+  "Clear": "Clear",
+  "Save": "Save",
+  "Error loading tag vocabulary.": "Error loading tag vocabulary.",
+  "Error saving tag vocabulary.": "Error saving tag vocabulary.",
+
+  "Something went wrong": "Something went wrong"
+}

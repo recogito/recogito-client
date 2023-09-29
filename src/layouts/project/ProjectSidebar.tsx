@@ -106,13 +106,13 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 label={t['Add Ons']}
               link={link('addons')} /> */}
               
-              {/* isAdmin && (
+              {isAdmin && (
                 <NavItem
                   active={active === 'Settings'}
                   icon={Sliders}
                   label={t['Settings']}
                   link={link('settings')} />
-              ) */}
+              )}
             </ul>
           </li>
         </ul>

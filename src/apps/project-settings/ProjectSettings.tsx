@@ -1,0 +1,140 @@
+import { useEffect, useState } from 'react';
+import { clearProjectTagVocabulary, getProjectTagVocabulary, setProjectTagVocabulary } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { Button } from '@components/Button';
+import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import type { ExtendedProjectData, Translations } from 'src/Types';
+
+import './ProjectSettings.css';
+
+interface ProjectSettingsProps {
+
+  i18n: Translations;
+
+  project: ExtendedProjectData;
+
+};
+
+export const ProjectSettings = (props: ProjectSettingsProps) => {
+
+  const { t } = props.i18n;
+
+  const [toast, setToast] = useState<ToastContent | null>(null);
+
+  const [vocabulary, setVocabulary] = useState<string[]>([]);
+
+  const [state, setState] = useState<SaveState>('idle');
+
+  useEffect(() => {
+    getProjectTagVocabulary(supabase, props.project.id)
+      .then(({ error, data }) => {
+        if (error) {
+          setToast({ 
+            title: t['Something went wrong'], 
+            description: t['Error loading tag vocabulary.'], 
+            type: 'error' 
+          });
+        } else {
+          setVocabulary(data.map(t => t.name));
+        }
+      });
+  }, []);
+
+  const onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { value } = evt.target;
+    setVocabulary(value.split('\n'));
+  }
+
+  const saveVocabulary = () => {
+    setState('saving');
+
+    setProjectTagVocabulary(supabase, props.project.id, vocabulary)
+      .then(() => { 
+        setState('success');
+      })
+      .catch(error => {
+        console.error(error);
+
+        setToast({ 
+          title: t['Something went wrong'], 
+          description: t['Error saving tag vocabulary.'], 
+          type: 'error' 
+        });
+
+        setState('failed');
+      });
+  }
+
+  const clearVocabulary = () => {
+    setState('saving');
+
+    const prev = vocabulary;
+
+    setVocabulary([]);
+
+    clearProjectTagVocabulary(supabase, props.project.id)
+      .then(() => {
+        setState('success');
+      })
+      .catch(() => {
+        setToast({ 
+          title: t['Something went wrong'], 
+          description: t['Error saving tag vocabulary.'], 
+          type: 'error' 
+        });
+
+        setState('failed');
+
+        // Roll back
+        setVocabulary(prev);
+      });
+  }
+
+  return (
+    <div className="project-settings">
+      <ToastProvider>
+        <h1>{t['Project Settings']}</h1>
+
+        <div className="tagging-vocabulary">
+          <h2>{t['Tagging Vocabulary']}</h2>
+
+          <p>
+            {t['You can pre-define a tagging vocabulary']}
+          </p>
+
+          <p>
+            {t['The terms will appear as autocomplete options']}
+          </p>
+
+          <textarea 
+            value={vocabulary.join('\n')} 
+            onChange={onChange} />
+
+          <div className="buttons">
+            <Button
+              onClick={clearVocabulary}>
+              <span>{t['Clear']}</span>
+            </Button>
+            <Button
+              busy={state === 'saving'}
+              className="primary"
+              onClick={saveVocabulary}>
+              <span>{t['Save']}</span>
+            </Button>
+
+            <TinySaveIndicator 
+              resultOnly
+              state={state} 
+              fadeOut={2500} />
+          </div>
+        </div>
+
+        <Toast
+          content={toast}
+          onOpenChange={open => !open && setToast(null)} />
+      </ToastProvider>
+    </div>
+  )
+
+}

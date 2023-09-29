@@ -15,6 +15,8 @@ interface PopupProps {
 
   policies?: Policies;
 
+  tagVocabulary?: string[];
+
 }
 
 export const Popup = (props: PopupProps) => {

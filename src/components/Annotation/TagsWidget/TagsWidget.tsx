@@ -16,6 +16,8 @@ interface TagsWidgetProps {
 
   me: PresentUser | User;
 
+  vocabulary?: string[];
+
 }
 
 export const TagsWidget = (props: TagsWidgetProps) => {
@@ -58,6 +60,7 @@ export const TagsWidget = (props: TagsWidgetProps) => {
             i18n={props.i18n} 
             annotation={props.annotation}
             me={props.me}
+            vocabulary={props.vocabulary}
             onCreate={onCreate} />
         ) : more > 0 && (
           <MoreTags 
@@ -73,6 +76,7 @@ export const TagsWidget = (props: TagsWidgetProps) => {
           i18n={props.i18n} 
           annotation={props.annotation} 
           me={props.me} 
+          vocabulary={props.vocabulary}
           onCreate={onCreate} />
       )}
     </div>

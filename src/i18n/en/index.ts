@@ -13,6 +13,7 @@ import projectAssignmentDetails from './project-assignment-details.json';
 import projectAssignments from './project-assignments.json';
 import projectCollaboration from './project-collaboration.json';
 import projectHome from './project-home.json';
+import projectSettings from './project-settings.json';
 import projectSidedbar from './project-sidebar.json';
 
 export default {
@@ -28,5 +29,6 @@ export default {
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
   'project-home': projectHome,
+  'project-settings': projectSettings,
   'project-sidebar': { ...projectSidedbar, ...accountMenu }
 }

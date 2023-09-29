@@ -1,1 +1,1 @@
-export * from './TextAnnotationDesktop';
+export * from './TextAnnotation';

@@ -87,7 +87,8 @@ export const BaseCard = (props: BaseCardProps) => {
       <TagsWidget 
         i18n={props.i18n}
         annotation={props.annotation} 
-        me={me} />
+        me={me} 
+        vocabulary={props.tagVocabulary} />
 
       {comments.length > 0 && (
         <ul className="annotation-card-comments-container">

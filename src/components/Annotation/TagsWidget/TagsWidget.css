@@ -5,6 +5,7 @@
   line-height: 100%;
   padding: 10px;
   position: relative;
+  z-index: 999;
 }
 
 .annotation-tagswidget .tags {

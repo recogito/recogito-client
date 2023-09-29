@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { listPendingInvitations, getMyProfile } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { ProjectCollaboration } from '@apps/project-collaboration/ProjectCollaboration';
+import { ProjectCollaboration } from '@apps/project-collaboration';
 
 const lang = getLangFromUrl(Astro.url);
 

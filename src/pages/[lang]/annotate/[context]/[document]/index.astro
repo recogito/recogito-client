@@ -3,8 +3,8 @@ import crypto from 'crypto';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { ImageAnnotationDesktop } from '@apps/annotation-image';
-import { TextAnnotationDesktop } from '@apps/annotation-text';
+import { ImageAnnotation } from '@apps/annotation-image';
+import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
@@ -57,15 +57,13 @@ if (document.data.content_type === 'text/plain') {
 ---
 <BaseLayout title="Annotation">
   {viewer === 'OPENSEADRAGON' ? (
-    <div class="container image">
-      <ImageAnnotationDesktop 
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-image')}
-        document={document.data}
-        channelId={channelId} />
-    </div>
+    <ImageAnnotation 
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-image')}
+      document={document.data}
+      channelId={channelId} />
   ) : (
-    <TextAnnotationDesktop 
+    <TextAnnotation 
       client:only
       i18n={getTranslations(Astro.request, 'annotation-text')} 
       document={document.data}

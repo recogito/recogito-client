@@ -1,0 +1,37 @@
+.project-settings {
+  padding: 20px 40px;
+  width: 100%;
+}
+
+.project-settings .tagging-vocabulary {
+  background-color: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  max-width: 65ch;
+  padding: 20px;
+}
+
+.project-settings .tagging-vocabulary h2 {
+  margin-top: 0.2em;
+}
+
+.project-settings .tagging-vocabulary p {
+  font-size: var(--font-small);
+  line-height: 160%;
+}
+
+.project-settings .tagging-vocabulary textarea {
+  height: 12em;
+  line-height: 150%;
+  margin: 0.5em 0;
+  max-width: 65ch;
+  min-width: 30ch;
+  resize: none;
+  width: 45ch;
+}
+
+.project-settings .tagging-vocabulary .buttons {
+  display: flex;
+  gap: 0.2em;
+  align-items: center;
+} 

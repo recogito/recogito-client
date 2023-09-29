@@ -1,7 +1,7 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { Translations } from 'src/Types';
+import { Autocomplete } from './Autocomplete';
 
 import './TagInput.css';
 
@@ -13,6 +13,8 @@ export interface TagInputProps {
 
   annotation: Annotation;
 
+  vocabulary?: string[];
+
   onCreate(tag: AnnotationBody): void;
 
 }
@@ -21,14 +23,7 @@ export const TagInput = (props: TagInputProps) => {
 
   const { me } = props;
   
-  const [value, setValue] = useState('');
-
-  const onChange = (event: ChangeEvent<HTMLInputElement>) =>
-    setValue(event.target.value)
-
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-
+  const onSubmit = (value: string) => {
     const tag: AnnotationBody = {
       id: uuidv4(),
       annotation: props.annotation.id,
@@ -42,18 +37,14 @@ export const TagInput = (props: TagInputProps) => {
       value
     };
 
-    setValue('');
-
     props.onCreate(tag);
   }
 
   return (
-    <form className="annotation-tag-input-form" onSubmit={onSubmit}>
-      <input 
-        placeholder={props.i18n.t['Add a tag...']}
-        value={value} 
-        onChange={onChange} />
-    </form>
+    <Autocomplete
+      placeholder={props.i18n.t['Add a tag...']} 
+      onSubmit={onSubmit}
+      vocabulary={props.vocabulary || []} />
   )
 
 }

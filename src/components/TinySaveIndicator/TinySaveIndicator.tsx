@@ -7,6 +7,8 @@ import './TinySaveIndicator.css';
 export type SaveState = 'saving' | 'success' | 'failed' | 'idle';
 
 interface TinySaveIndicatorProps {
+
+  resultOnly?: boolean;
   
   state: SaveState;
 
@@ -46,7 +48,7 @@ export const TinySaveIndicator = (props: TinySaveIndicatorProps) => {
         <Check size={16} weight="bold" />
       ) : state === 'failed' ? (
         <X size={16} weight="bold" />
-      ) : (
+      ) : !props.resultOnly && (
         <Spinner className="button-busy-spinner" size={16} />
       )}
     </div>
