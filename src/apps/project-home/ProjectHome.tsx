@@ -29,8 +29,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [project, setProject] = useState(props.project);
 
-  // Temporary hack!
-  const defaultContext = project.contexts[0];
+  const defaultContext = project.contexts.find(c => c.name === null);
 
   const [documents, setDocuments] = useState<DocumentInContext[]>(props.documents);
 
@@ -63,7 +62,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         addUploads(accepted.map(file => ({
           name: file.name,
           projectId: project.id,
-          contextId: defaultContext.id,
+          contextId: defaultContext!.id,
           file
         })));
       } else if (typeof accepted === 'string') {
@@ -71,7 +70,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         addUploads([{
           name: accepted, // TODO find a better solution
           projectId: project.id,
-          contextId: defaultContext.id,
+          contextId: defaultContext!.id,
           url: accepted
         }]);
       }
@@ -91,7 +90,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     addUploads([{
       name: url, // TODO find a better solution
       projectId: project.id,
-      contextId: defaultContext.id,
+      contextId: defaultContext!.id,
       url
     }]);
   }
@@ -186,7 +185,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
                 isAdmin={isAdmin}
                 i18n={props.i18n} 
                 document={document} 
-                context={defaultContext}
+                context={defaultContext!}
                 onDelete={() => onDeleteDocument(document)} 
                 onUpdate={onUpdateDocument}
                 onError={onError}
