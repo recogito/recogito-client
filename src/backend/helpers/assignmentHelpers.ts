@@ -6,11 +6,16 @@ import type { Context, ExtendedAssignmentData } from 'src/Types';
 /**
  * An assignment is just an untagged context.
  */
-export const createAssignmentContext = (supabase: SupabaseClient, name: string, project_id: string) =>
+export const createAssignmentContext = (
+  supabase: SupabaseClient, 
+  name: string, 
+  description: string | undefined, 
+  project_id: string
+) =>
   supabase
     .from('contexts')
     .insert({
-      name, project_id
+      name, description, project_id
     })
     .select()
     .single()
@@ -54,6 +59,7 @@ export const getAssignment = (
       context:contexts (
         id,
         name,
+        description,
         project_id
       ),
       layer:layers (
@@ -108,7 +114,7 @@ export const getAssignment = (
             // Post-processing: create proper assignments data structure.
             // Note that the context is ALWAYS the same in each list entry
             // @ts-ignore
-            const { id, name, project_id } = layerContexts[0].context;
+            const { id, name, description, project_id } = layerContexts[0].context;
 
             const layers = 
               layerContexts.map(({ layer }) => ({ 
@@ -122,6 +128,7 @@ export const getAssignment = (
               data: {
                 id, 
                 name, 
+                description,
                 project_id,
                 layers
               } as unknown as ExtendedAssignmentData

@@ -61,6 +61,8 @@ export const AssignmentDetails = (props: AssignmentDetailsProps) => {
       <h1>Assignment Details</h1>
       <h2>{assignment.name}</h2>
 
+      <p className="project-assignment-description">{assignment.description}</p>
+
       <div className="project-assignment-team">
         <ul>
           {members.map(user => (

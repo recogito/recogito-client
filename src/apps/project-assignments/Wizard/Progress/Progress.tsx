@@ -33,13 +33,12 @@ export const Progress = (props: ProgressProps) => {
   const [state, setState] = useState<ProgressState>('idle');
   
   useEffect(() => {
-    // TODO just a hack for now!
     const projectId = props.project.id;
 
     setState('creating_assignment');
 
     // Step 1. Create a new context for this assignment
-    createAssignmentContext(supabase, name!, projectId)
+    createAssignmentContext(supabase, name!, description, projectId)
       .then(({ error, data }) => {
         if (error) {
           console.error(error);

@@ -177,6 +177,8 @@ export interface Context {
 
   name: string;
 
+  description?: string;
+
   project_id: string;
 
 }
