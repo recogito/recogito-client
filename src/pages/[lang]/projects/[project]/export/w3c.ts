@@ -1,6 +1,7 @@
 
 import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
+import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
@@ -42,6 +43,12 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
       JSON.stringify({ error: 'Unauthorized'}),
       { status: 401 });
 
+  const profile = await getMyProfile(supabase);
+  if (profile.error || !profile.data)
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized'}),
+      { status: 401 });
+
   const projectId = params.project!;
 
   const policies = await getProjectPolicies(supabase, projectId);
@@ -50,7 +57,7 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
       JSON.stringify({ error: 'Unauthorized'}),
       { status: 401 });
 
-  const isAdmin = policies.data.get('projects').has('UPDATE');
+  const isAdmin = policies.data.get('projects').has('UPDATE') || profile.data.isOrgAdmin;
   if (!isAdmin)
   return new Response(
     JSON.stringify({ error: 'Unauthorized'}),
