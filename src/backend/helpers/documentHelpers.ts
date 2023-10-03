@@ -117,7 +117,7 @@ export const listDocumentsInProject = (
         name,
         description,
         contexts:layer_contexts!inner (
-          ...contexts (
+          ...contexts!inner (
             id,
             name,
             project_id
@@ -126,8 +126,27 @@ export const listDocumentsInProject = (
       )
     `)
     .eq('layers.project_id', projectId)
-    .then(({ error, data }) => 
-      error ? ({ error, data: [] }) : ({ error, data: data as unknown as DocumentInContext[] }));
+    .then(({ error, data }) => {
+      if (error) {
+        return { error, data: [] };
+      } else {
+        // Simplify layers from list of contexts to single (default) context
+        const inDefaultContext = 
+          data.map(d => ({
+            // @ts-ignore
+            ...d,
+            // @ts-ignore
+            layers: d.layers.map(({ contexts, ...l }) => ({
+              ...l,
+              // @ts-ignore
+              context: contexts.find(c => c.name === null)
+            // @ts-ignore
+            })).filter(l => l.context)
+          })).filter(d => d.layers.length > 0);
+
+        return  { error, data: inDefaultContext as unknown as DocumentInContext[] };
+      }
+    });
 
 export const listDocumentsInContext = (
   supabase: SupabaseClient,
