@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
+import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 import { Polygon, Rectangle } from './Icons';
 import { Cursor, Trash } from '@phosphor-icons/react';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
@@ -8,6 +8,8 @@ import type { Translations } from 'src/Types';
 interface ToolbarProps {
 
   i18n: Translations;
+
+  isAdmin: boolean;
 
   privacy: PrivacyMode;
 
@@ -25,6 +27,8 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const anno = useAnnotator();
 
+  const me = anno?.getUser();
+
   const [tool, setTool] = useState<string>('cursor');
 
   const onChangeTool = (tool: string) => {
@@ -34,6 +38,10 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const onDeleteSelection = () =>
     store.bulkDeleteAnnotation(selected.map(s => s.annotation));
+
+  const isMine = (selected: { annotation: Annotation }[]) =>
+    selected.every(({ annotation }) =>
+      annotation.target.creator.id === me.id);
 
   useEffect(() => {
     if (anno) {
@@ -85,15 +93,17 @@ export const Toolbar = (props: ToolbarProps) => {
         </section>
       </div>
 
-      <div 
-        className={selected.length > 0 ? 
-          "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay" :
-          "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden"
-        }>
-        <button className="delete" onClick={onDeleteSelection}>
-          <Trash size={18} />
-        </button>
-      </div>
+      {(props.isAdmin || isMine(selected)) && (
+        <div 
+          className={selected.length > 0 ? 
+            "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay" :
+            "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden"
+          }>
+          <button className="delete" onClick={onDeleteSelection}>
+            <Trash size={18} />
+          </button>
+        </div>
+      )}
     </div>
   )
 

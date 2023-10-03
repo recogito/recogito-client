@@ -175,6 +175,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         <div className="anno-desktop-bottom">
           <Toolbar 
             i18n={props.i18n}
+            isAdmin={policies?.get('layers').has('INSERT')}
             privacy={privacy}
             onChangePrivacy={setPrivacy} />
         </div>

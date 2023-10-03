@@ -181,6 +181,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           <div className="anno-desktop-bottom">
             <Toolbar 
               i18n={props.i18n}
+              isAdmin={policies?.get('layers').has('INSERT')}
               privacy={privacy}
               onChangeTool={setTool} 
               onChangePrivacy={setPrivacy} />
