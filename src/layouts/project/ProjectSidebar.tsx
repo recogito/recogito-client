@@ -53,7 +53,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
 
   // Find the admin group and check if I'm in there
   const isAdmin = props.project.groups.find(g => 
-    g.name === 'Project Admins')?.members.some(m => m.user.id === me.id)
+    g.name === 'Project Admins')?.members.some(m => m.user.id === me.id) || me.isOrgAdmin;
 
   const [open, setOpen] = useState(!props.collapsed);
 
