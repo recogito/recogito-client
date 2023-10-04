@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Chats, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
-import { isMe } from '@annotorious/react';
+import { isMe } from '@recogito/annotorious-supabase';
 import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { LayersPanel } from '../LayersPanel';
@@ -35,7 +35,7 @@ interface ViewMenuProps {
 
 export const ViewMenu = (props: ViewMenuProps) => {
 
-  const me = props.present.find(isMe);
+  const me = props.present.find(isMe)!;
 
   const [panel, _setPanel] = useState<ViewMenuPanel | undefined>();
 

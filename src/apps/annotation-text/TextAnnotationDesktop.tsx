@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SupabasePlugin, useAnnotator } from '@annotorious/react';
+import { useAnnotator } from '@annotorious/react';
 import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
 import { 
   TEIAnnotator, 
@@ -18,6 +18,7 @@ import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop'
 import type { TextAnnotationProps } from './TextAnnotation';
 import { Toolbar } from './Toolbar';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from './useContent';
 import type { Layer } from 'src/Types';
 
@@ -165,7 +166,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             present={present} 
             policies={policies}
             layers={layers}
-            sorting={(a, b) => a.target.selector.start - b.target.selector.start}
+            sorting={(a, b) => 
+              // @ts-ignore
+              a.target.selector.start - b.target.selector.start}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
             onChangeFormatter={f => setFormatter(() => f)}

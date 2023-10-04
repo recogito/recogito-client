@@ -7,6 +7,7 @@ import { Annotation } from '@components/Annotation';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { SupabasePlugin } from '@components/SupabasePlugin';
 import { Toolbar } from './Toolbar';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { 
@@ -18,7 +19,6 @@ import {
   OpenSeadragonViewer,
   PointerSelectAction,
   PresentUser,
-  SupabasePlugin,
   useAnnotator
 } from '@annotorious/react';
 
@@ -32,6 +32,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const { i18n } = props;
 
+  // @ts-ignore
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
@@ -113,7 +114,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     <div className="anno-desktop ia-desktop">
       {policies && (
         <OpenSeadragonAnnotator 
-          adapter={null}
           pointerSelectAction={selectAction}
           tool={tool} 
           keepEnabled={true}
@@ -135,6 +135,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               privacyMode={privacy === 'PRIVATE'} />
           }
 
+          {/* @ts-ignore */}
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={{

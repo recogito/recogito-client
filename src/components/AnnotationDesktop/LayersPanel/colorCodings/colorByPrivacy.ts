@@ -1,5 +1,5 @@
-import { Visibility } from '@annotorious/react';
-import type { Formatter, SupabaseAnnotation } from '@annotorious/react';
+import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { Formatter } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { CarbonCategoricalDark14 } from '../ColorPalettes';
 

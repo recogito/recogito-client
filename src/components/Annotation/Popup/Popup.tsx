@@ -1,6 +1,7 @@
 import { Annotation } from '@components/Annotation';
-import { useAnnotator, useAnnotatorUser, Visibility } from '@annotorious/react';
+import { useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
+import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import type { Policies, Translations } from 'src/Types';
 
 import './Popup.css';
@@ -28,7 +29,7 @@ export const Popup = (props: PopupProps) => {
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
-  const selected = props.selected[0].annotation;
+  const selected = props.selected[0].annotation as SupabaseAnnotation;
 
   const isPrivate = selected.visibility === Visibility.PRIVATE;
 
