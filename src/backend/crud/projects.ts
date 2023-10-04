@@ -89,7 +89,7 @@ export const inviteUserToProject = (
   supabase
     .from('invites')
     .insert({ 
-      email, 
+      email: email.toLowerCase(), 
       project_id: project.id, 
       project_name: project.name,
       project_group_id: groupId, 
