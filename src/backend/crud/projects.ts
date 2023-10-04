@@ -128,6 +128,7 @@ export const listPendingInvitations = (
     `)
     .eq('project_id', projectId)
     .is('accepted', false)
+    .is('ignored', false)
     .then(({ error, data }) => ({ error, data: data as Invitation[] }));
 
 export const listProjectUsers = async (supabase: SupabaseClient, typeIds: string[]) => {
