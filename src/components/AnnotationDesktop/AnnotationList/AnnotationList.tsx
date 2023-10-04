@@ -1,22 +1,21 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
+import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { 
   Annotation as Anno,
-  AnnotoriousOpenSeadragonAnnotator,
   PresentUser, 
-  SupabaseAnnotation,
   useAnnotations,
   useAnnotator,
   useAnnotatorUser,
   useSelection,
   User,
-  Visibility,
   useViewportState
 } from '@annotorious/react';
 import { Filter, FilterSelector } from './FilterSelector';
 
 import './AnnotationList.css';
+import type { Annotator } from '@annotorious/react';
 
 interface AnnotationListProps {
 
@@ -67,7 +66,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
-  const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
+  const anno = useAnnotator<Annotator>();
 
   const { selected, pointerEvent } = useSelection();
 

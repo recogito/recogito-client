@@ -1,4 +1,4 @@
-import { isMe } from '@annotorious/react';
+import { isMe } from '@recogito/annotorious-supabase';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import { Avatar } from '@components/Avatar';
