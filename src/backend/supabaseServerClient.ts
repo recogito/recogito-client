@@ -7,6 +7,10 @@ import {
   SupabaseClientOptionsWithoutAuth
 } from '@supabase/auth-helpers-shared';
 
+const supabaseServerUrl = 
+  import.meta.env.SUPABASE_SERVERCLIENT_URL ||
+  import.meta.env.PUBLIC_SUPABASE;
+
 export async function createSupabaseServerClient(
   request: Request,
   cookies: AstroCookies,
@@ -21,7 +25,7 @@ export async function createSupabaseServerClient(
     options?: SupabaseClientOptionsWithoutAuth;
     cookieOptions?: CookieOptions;
   } = {
-    supabaseUrl: import.meta.env.PUBLIC_SUPABASE,
+    supabaseUrl: supabaseServerUrl,
     supabaseKey: import.meta.env.PUBLIC_SUPABASE_API_KEY,
     //@ts-ignore
     cookieOptions: {
