@@ -21,6 +21,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from './useContent';
 import type { Layer } from 'src/Types';
+import { PDFViewer } from './PDFViewer';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
@@ -112,7 +113,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             <CETEIcean tei={text} />
           </TEIAnnotator>
         ) : contentType === 'application/pdf' && text ? (
-          <div>{/* TODO */}</div>
+          <PDFViewer
+            document={props.document} />
         ) : text && (
           <TextAnnotator
             formatter={formatter}
