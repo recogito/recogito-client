@@ -47,6 +47,8 @@ if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
 } else if (document.data.content_type === 'text/xml') {
   viewer = 'TEI';
+} else if (document.data.content_type === 'application/pdf') {
+  viewer = 'PDF';
 } else if (document.data.meta_data?.protocol === 'IIIF_IMAGE') {
   viewer ='OPENSEADRAGON';
 } else {

@@ -1,6 +1,7 @@
-.content-wrapper {
+.content-wrapper.text {
   display: flex;
   justify-content: center;
+  min-height: 100vh;
 }
 
 .content-wrapper main {

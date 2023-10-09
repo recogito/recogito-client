@@ -111,6 +111,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             }}>
             <CETEIcean tei={text} />
           </TEIAnnotator>
+        ) : contentType === 'application/pdf' && text ? (
+          <div>{/* TODO */}</div>
         ) : text && (
           <TextAnnotator
             formatter={formatter}
