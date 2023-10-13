@@ -1,15 +1,22 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
-import { Login } from '@apps/auth-login';
-import { getTranslations } from '@i18n';
+import LoginLayout from "@layouts/login/LoginLayout.astro";
+import { Login } from "@apps/auth-login";
+import { getTranslations } from "@i18n";
+import type { LoginMethod } from "../../Types";
+import config from "../../config.json";
+
+const methods = config.authentication.methods;
 ---
-<BaseLayout title="Recogito | Login">
-  <div class="container">
-    <div class="column">
-      <Login i18n={getTranslations(Astro.request, 'auth-login')} client:load />
-    </div>
+
+<LoginLayout title='' i18n={getTranslations(Astro.request, "auth-login")}>
+  <div class='container'>
+    <Login
+      i18n={getTranslations(Astro.request, "auth-login")}
+      methods={methods as LoginMethod[]}
+      client:load
+    />
   </div>
-</BaseLayout>
+</LoginLayout>
 
 <style>
   .container {

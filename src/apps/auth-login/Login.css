@@ -4,12 +4,19 @@
   justify-content: center;
 }
 
-.login :is(button, a.button) + :is(button, a.button), 
-.login .input-wrapper + button, 
+.login :is(button, a.button) + :is(button, a.button),
+.login .input-wrapper + button,
 .login .input-wrapper + .input-wrapper,
-.login-magic-link .input-wrapper + button  {
+.login-magic-link .input-wrapper + button {
   margin-left: 0;
   margin-top: 1em;
+}
+
+.login,
+.login-magic-link {
+  background-color: var(--gray-100);
+  width: 400px;
+  padding: 30px;
 }
 
 .login .error,
@@ -35,7 +42,7 @@
 .login-separator::before,
 .login-separator::after {
   border-top: 1px solid var(--border-light-color);
-  content: '';
+  content: "";
   flex-grow: 1;
 }
 
@@ -61,4 +68,10 @@
 
 .login-magic-link.sent button svg {
   padding-top: 1px;
+}
+
+.login-selector {
+  position: absolute;
+  top: 0;
+  margin-top: -40px;
 }

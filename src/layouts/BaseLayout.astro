@@ -1,38 +1,38 @@
 ---
-import { getLangFromUrl } from '@i18n';
+import { getLangFromUrl } from "@i18n";
 
-import '@themes/default/index.css';
+import "@themes/default/index.css";
 
 export interface Props {
-
-	title: string;
-	
+  title: string;
 }
 
 const { title } = Astro.props;
-
 ---
+
 <!DOCTYPE html>
 <html lang={getLangFromUrl(Astro.url)}>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body>
-		<slot />
-		<script>
-			window.onUsersnapLoad = function(api) {
-			  api.init();
-			  api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
-			}
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width' />
+    <meta name='generator' content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+    <script>
+      window.onUsersnapLoad = function (api) {
+        api.init();
+        api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
+      };
 
-			var script = document.createElement('script');
-			script.defer = 1;
-			script.src = `https://widget.usersnap.com/global/load/${import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY}?onload=onUsersnapLoad`;
-			
-			document.getElementsByTagName('head')[0].appendChild(script);
-		</script>
-	</body>
+      var script = document.createElement("script");
+      script.defer = 1;
+      script.src = `https://widget.usersnap.com/global/load/${
+        import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY
+      }?onload=onUsersnapLoad`;
+
+      document.getElementsByTagName("head")[0].appendChild(script);
+    </script>
+  </body>
 </html>

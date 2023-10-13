@@ -1,0 +1,122 @@
+---
+import BaseLayout from "../BaseLayout.astro";
+import type {
+  ExtendedAssignmentData,
+  ExtendedProjectData,
+  MyProfile,
+  LoginMethod,
+} from "../../Types";
+import config from "../../config.json";
+import { LoginMethodSelector } from "@apps/auth-login/LoginMethodSelector";
+
+export interface Props {
+  title: string;
+  i18n: Node;
+}
+
+const { title, i18n } = Astro.props;
+
+const cookie = Astro.cookies.get("x-project-sidebar-collapsed");
+
+const siteColor = config.branding.site_color;
+const siteBanner = config.branding.home_banner;
+
+const backgroundStyle = `background: url(${siteBanner}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
+---
+
+<BaseLayout title={title}>
+  <div class='container'>
+    <header>
+      <div class='branding-container'>
+        <div class='platform'>
+          {config.branding.platform_name}
+        </div>
+        <div class='separator'></div>
+        <div class='site_name'>{config.branding.site_name}</div>
+      </div>
+    </header>
+    <main>
+      <div style={backgroundStyle}></div>
+      <slot />
+    </main>
+    <footer>
+      <div class='blurb'>
+        {config.branding.welcome_blurb}
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style define:vars={{ siteColor }}>
+  body {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 100%;
+    position: relative;
+  }
+
+  header {
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+    background-color: var(--gray-900);
+  }
+
+  footer {
+    border-top: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+    background-color: var(--gray-900);
+  }
+
+  main {
+    box-sizing: border-box;
+    display: flex;
+    flex-grow: 1;
+    padding: 0;
+    position: relative;
+    width: 100%;
+  }
+
+  .branding-container {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+
+  .platform {
+    color: white;
+  }
+
+  .separator {
+    width: 2px;
+    height: 20px;
+    margin-left: 5px;
+    background-color: white;
+  }
+
+  .site_name {
+    padding-left: 5px;
+    color: var(--siteColor);
+  }
+
+  .blurb {
+    color: white;
+    font-size: 14px;
+  }
+</style>

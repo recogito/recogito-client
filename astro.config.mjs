@@ -1,14 +1,14 @@
-import { defineConfig } from 'astro/config';
-import react from '@astrojs/react';
-import netlify from '@astrojs/netlify/functions';
+import { defineConfig } from "astro/config";
+import react from "@astrojs/react";
+import netlify from "@astrojs/netlify/functions";
 
 export default defineConfig({
   integrations: [react()],
-  output: 'server',
+  output: "server",
   adapter: netlify(),
   vite: {
     ssr: {
-      noExternal: [ '@radix-ui/*', '@phosphor-icons/*' ]
-    }
-  }
+      noExternal: ["@radix-ui/*", "@phosphor-icons/*"],
+    },
+  },
 });
