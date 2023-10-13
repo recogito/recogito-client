@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
 import { 
+  RecogitoTextAnnotator,
   TEIAnnotator, 
   TextAnnotator, 
-  RecogitoTextAnnotator, 
   TextAnnotatorPopup, 
   TextAnnotation,
-  CETEIcean
+  CETEIcean,
 } from '@recogito/react-text-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
@@ -37,6 +37,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const contentType = props.document.content_type;
 
+  // @ts-ignore
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
