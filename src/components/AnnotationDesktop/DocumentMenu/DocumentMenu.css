@@ -81,7 +81,3 @@
 .document-menu :is(button, a.button) + :is(button, a.button) {
   margin-left: 0;
 }
-
-.pdf-scale-selector {
-  z-index: 9999;
-}

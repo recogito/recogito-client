@@ -42,7 +42,7 @@ export const PDFScaleSelector = (props: PDFScaleSelectorProps) => {
       </Select.Trigger>
 
       <Select.Portal>
-        <Select.Content className="select-content pdf-scale-selector">
+        <Select.Content className="select-content">
           <Select.Viewport className="select-viewport">
             <Select.Item value="auto" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
