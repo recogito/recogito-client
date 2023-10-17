@@ -12,6 +12,7 @@ export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: Fil
     rootRef 
   } = useDropzone({ 
     accept: {
+      'application/pdf': ['.pdf'],
       'text/plain': ['.txt'],
       'text/xml': ['.xml'],
       'image/jpg': ['.jpg', '.jpeg'],
