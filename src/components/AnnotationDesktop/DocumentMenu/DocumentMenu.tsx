@@ -7,7 +7,7 @@ import {
   MagnifyingGlassPlus 
 } from '@phosphor-icons/react';
 import type { PDFScale, VanillaPDFAnnotator } from '@recogito/react-pdf-annotator';
-import { PDFSizeSelector } from './PDFSizeSelector';
+import { PDFScaleSelector } from './PDFScaleSelector';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 
 import './DocumentMenu.css';
@@ -34,14 +34,9 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
     `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` : 
     `/${props.i18n.lang}/projects/${project_id}`;
 
-  useEffect(() => { 
-    if (anno)
-      setCurrentScale(anno.currentScale);
-  }, [anno]);
-
   const onSetScale = (scale: PDFScale) => {
     const s = anno.setScale(scale);
-    setCurrentScale(s);
+    setCurrentScale(undefined);
   }
 
   const onZoomIn = () => {
@@ -79,10 +74,12 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
       )}
 
       {props.document.content_type === 'application/pdf' && (
-        <div className="pdf-size-controls">
-          <PDFSizeSelector 
+        <div className="pdf-scale-controls">
+          <div className="anno-desktop-overlay-divider" />
+
+          <PDFScaleSelector 
             currentScale={currentScale}
-            onSetSize={onSetScale}/>
+            onSetScale={onSetScale}/>
 
           <button onClick={onZoomIn}>
             <MagnifyingGlassPlus />
