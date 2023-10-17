@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
 import { 
+  RecogitoTextAnnotator,
   TEIAnnotator, 
   TextAnnotator, 
-  RecogitoTextAnnotator, 
   TextAnnotatorPopup, 
   TextAnnotation,
-  CETEIcean
+  CETEIcean,
 } from '@recogito/react-text-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
@@ -21,6 +21,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from './useContent';
 import type { Layer } from 'src/Types';
+import { PDFViewer } from './PDFViewer';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
@@ -36,6 +37,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const contentType = props.document.content_type;
 
+  // @ts-ignore
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
@@ -111,6 +113,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             }}>
             <CETEIcean tei={text} />
           </TEIAnnotator>
+        ) : contentType === 'application/pdf' && text ? (
+          <PDFViewer
+            document={props.document} />
         ) : text && (
           <TextAnnotator
             formatter={formatter}

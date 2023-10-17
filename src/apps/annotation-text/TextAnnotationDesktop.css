@@ -1,6 +1,7 @@
-.content-wrapper {
+.content-wrapper.text {
   display: flex;
   justify-content: center;
+  min-height: 100vh;
 }
 
 .content-wrapper main {
@@ -20,6 +21,14 @@
 
 .content-wrapper.text main {
   white-space: pre-line;
+
+  /** PDF **/
+  width: 90%;
+  background-color: transparent;
+}
+
+.a9s-popup {
+  z-index: 999;
 }
 
 .content-wrapper.text main p.plaintext {
@@ -28,6 +37,10 @@
 
 .content-wrapper main img {
   max-width: 100%;
+}
+
+.ta-desktop {
+  z-index: 9999;
 }
 
 .ta-desktop .presence-stack {
