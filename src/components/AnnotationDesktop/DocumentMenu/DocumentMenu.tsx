@@ -1,12 +1,13 @@
+import { useEffect, useState } from 'react';
+import { useAnnotator } from '@annotorious/react';
 import { 
-  ArrowsHorizontal,
   CaretLeft, 
-  File,
   GraduationCap,
   MagnifyingGlassMinus,
   MagnifyingGlassPlus 
 } from '@phosphor-icons/react';
-import type { PDFSize } from '@recogito/react-pdf-annotator';
+import type { PDFScale, VanillaPDFAnnotator } from '@recogito/react-pdf-annotator';
+import { PDFSizeSelector } from './PDFSizeSelector';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 
 import './DocumentMenu.css';
@@ -17,12 +18,6 @@ interface DocumentMenuProps {
 
   document: DocumentInTaggedContext;
 
-  onSetSize?(size: PDFSize): void;
-
-  onZoomIn?(): void;
-
-  onZoomOut?(): void;
-
 }
 
 export const DocumentMenu = (props: DocumentMenuProps) => {
@@ -31,9 +26,33 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
 
   const { id, project_id } = props.document.context;
 
+  const anno = useAnnotator<VanillaPDFAnnotator>();
+
+  const [currentScale, setCurrentScale] = useState<number | undefined>();
+
   const back = contextName ? 
     `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` : 
     `/${props.i18n.lang}/projects/${project_id}`;
+
+  useEffect(() => { 
+    if (anno)
+      setCurrentScale(anno.currentScale);
+  }, [anno]);
+
+  const onSetScale = (scale: PDFScale) => {
+    const s = anno.setScale(scale);
+    setCurrentScale(s);
+  }
+
+  const onZoomIn = () => {
+    const s = anno.zoomIn();
+    setCurrentScale(s);
+  }
+
+  const onZoomOut = () => {
+    const s = anno.zoomOut();
+    setCurrentScale(s);
+  }
 
   return (
     <div className="anno-menubar anno-desktop-overlay document-menu">
@@ -61,27 +80,15 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
 
       {props.document.content_type === 'application/pdf' && (
         <div className="pdf-size-controls">
-          <button onClick={() => props.onSetSize!('auto')}>
-            Auto
-          </button>
+          <PDFSizeSelector 
+            currentScale={currentScale}
+            onSetSize={onSetScale}/>
 
-          <button onClick={() => props.onSetSize!('page-actual')}>
-            1:1
-          </button>
- 
-          <button onClick={() => props.onSetSize!('page-fit')}>
-            <File />
-          </button>
-
-          <button onClick={() => props.onSetSize!('page-width')}>
-            <ArrowsHorizontal />
-          </button>
-
-          <button onClick={props.onZoomIn}>
+          <button onClick={onZoomIn}>
             <MagnifyingGlassPlus />
           </button>
 
-          <button onClick={props.onZoomOut}>
+          <button onClick={onZoomOut}>
             <MagnifyingGlassMinus />
           </button>
         </div>

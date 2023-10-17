@@ -9,11 +9,7 @@ import {
   TextAnnotation,
   CETEIcean,
 } from '@recogito/react-text-annotator';
-import type { 
-  PDFAnnotation, 
-  PDFSize,
-  VanillaPDFAnnotator
-} from '@recogito/react-pdf-annotator';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -115,15 +111,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
     (a: TextAnnotation, b: TextAnnotation) => 
       a.target.selector.start - b.target.selector.start;
-
-  const onSetPDFSize = (size: PDFSize | number) =>
-    (anno as unknown as VanillaPDFAnnotator).setSize(size);
-
-  const onZoomIn = () =>
-    (anno as unknown as VanillaPDFAnnotator).zoomIn()
-
-  const onZoomOut = () =>
-    (anno as unknown as VanillaPDFAnnotator).zoomOut();
     
   return (
     <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
@@ -181,10 +168,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         <div className="anno-desktop-left">
           <AnnotationDesktop.DocumentMenu
             i18n={props.i18n}
-            document={props.document} 
-            onSetSize={onSetPDFSize}
-            onZoomIn={onZoomIn}
-            onZoomOut={onZoomOut}/>
+            document={props.document} />
         </div>
 
         <div className="anno-desktop-right not-annotatable">
