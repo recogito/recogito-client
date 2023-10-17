@@ -1,4 +1,12 @@
-import { CaretLeft, GraduationCap } from '@phosphor-icons/react';
+import { 
+  ArrowsHorizontal,
+  CaretLeft, 
+  File,
+  GraduationCap,
+  MagnifyingGlassMinus,
+  MagnifyingGlassPlus 
+} from '@phosphor-icons/react';
+import type { PDFSize } from '@recogito/react-pdf-annotator';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 
 import './DocumentMenu.css';
@@ -8,6 +16,12 @@ interface DocumentMenuProps {
   i18n: Translations;
 
   document: DocumentInTaggedContext;
+
+  onSetSize?(size: PDFSize): void;
+
+  onZoomIn?(): void;
+
+  onZoomOut?(): void;
 
 }
 
@@ -43,6 +57,34 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
             <span>{props.document.name}</span>
           </h1>
         </>
+      )}
+
+      {props.document.content_type === 'application/pdf' && (
+        <div className="pdf-size-controls">
+          <button onClick={() => props.onSetSize!('auto')}>
+            Auto
+          </button>
+
+          <button onClick={() => props.onSetSize!('page-actual')}>
+            1:1
+          </button>
+ 
+          <button onClick={() => props.onSetSize!('page-fit')}>
+            <File />
+          </button>
+
+          <button onClick={() => props.onSetSize!('page-width')}>
+            <ArrowsHorizontal />
+          </button>
+
+          <button onClick={props.onZoomIn}>
+            <MagnifyingGlassPlus />
+          </button>
+
+          <button onClick={props.onZoomOut}>
+            <MagnifyingGlassMinus />
+          </button>
+        </div>
       )}
     </div>
   )

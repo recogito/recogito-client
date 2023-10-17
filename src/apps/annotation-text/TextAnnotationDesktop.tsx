@@ -9,6 +9,11 @@ import {
   TextAnnotation,
   CETEIcean,
 } from '@recogito/react-text-annotator';
+import type { 
+  PDFAnnotation, 
+  PDFSize,
+  VanillaPDFAnnotator
+} from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -26,7 +31,6 @@ import { PDFViewer } from './PDFViewer';
 import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -38,7 +42,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const contentType = props.document.content_type;
 
-  // @ts-ignore
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
@@ -112,6 +115,15 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
     (a: TextAnnotation, b: TextAnnotation) => 
       a.target.selector.start - b.target.selector.start;
+
+  const onSetPDFSize = (size: PDFSize | number) =>
+    (anno as unknown as VanillaPDFAnnotator).setSize(size);
+
+  const onZoomIn = () =>
+    (anno as unknown as VanillaPDFAnnotator).zoomIn()
+
+  const onZoomOut = () =>
+    (anno as unknown as VanillaPDFAnnotator).zoomOut();
     
   return (
     <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
@@ -169,7 +181,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         <div className="anno-desktop-left">
           <AnnotationDesktop.DocumentMenu
             i18n={props.i18n}
-            document={props.document} />
+            document={props.document} 
+            onSetSize={onSetPDFSize}
+            onZoomIn={onZoomIn}
+            onZoomOut={onZoomOut}/>
         </div>
 
         <div className="anno-desktop-right not-annotatable">

@@ -39,3 +39,18 @@
 .document-menu span {
   color: var(--font-light);
 }
+
+.document-menu button {
+  border-radius: 50%;
+  height: 36px;
+  vertical-align: bottom;
+  width: 36px;
+}
+
+.document-menu button svg {
+  color: var(--font-dark);
+}
+
+.document-menu :is(button, a.button) + :is(button, a.button) {
+  margin-left: 0;
+}
