@@ -9,6 +9,7 @@ import {
   TextAnnotation,
   CETEIcean,
 } from '@recogito/react-text-annotator';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -37,7 +38,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const contentType = props.document.content_type;
 
-  // @ts-ignore
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
@@ -102,8 +102,21 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }
 
+  const sorting = contentType === 'application/pdf' ?
+    (a: PDFAnnotation, b: PDFAnnotation) => {
+      const pages = a.target.selector.pageNumber - b.target.selector.pageNumber;
+      return pages === 0 ?
+        a.target.selector.start - b.target.selector.start : pages;
+    } :
+
+    (a: TextAnnotation, b: TextAnnotation) => 
+      a.target.selector.start - b.target.selector.start;
+    
   return (
-    <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
+    <div className={
+        contentType === 'text/xml' ? 'content-wrapper tei' : 
+        contentType === 'application/pdf' ? 'content-wrapper pdf' : 
+          'content-wrapper text'}>
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
@@ -171,9 +184,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             present={present} 
             policies={policies}
             layers={layers}
-            sorting={(a, b) => 
-              // @ts-ignore
-              a.target.selector.start - b.target.selector.start}
+            // @ts-ignore
+            sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
             onChangeFormatter={f => setFormatter(() => f)}

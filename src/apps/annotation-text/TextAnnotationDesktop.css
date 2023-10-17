@@ -1,4 +1,4 @@
-.content-wrapper.text {
+.content-wrapper {
   display: flex;
   justify-content: center;
   min-height: 100vh;
@@ -21,8 +21,9 @@
 
 .content-wrapper.text main {
   white-space: pre-line;
+}
 
-  /** PDF **/
+.content-wrapper.pdf main {
   width: 90%;
   background-color: transparent;
 }
