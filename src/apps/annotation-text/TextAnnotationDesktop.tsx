@@ -26,6 +26,7 @@ import { PDFViewer } from './PDFViewer';
 import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -102,6 +103,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }
 
+  const sorting = contentType === 'application/pdf' ?
+    (a: PDFAnnotation, b: PDFAnnotation) => {
+      const pages = a.target.selector.pageNumber - b.target.selector.pageNumber;
+      return pages === 0 ?
+        a.target.selector.start - b.target.selector.start : pages;
+    } :
+
+    (a: TextAnnotation, b: TextAnnotation) => 
+      a.target.selector.start - b.target.selector.start;
+    
   return (
     <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
       <main>
@@ -171,9 +182,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             present={present} 
             policies={policies}
             layers={layers}
-            sorting={(a, b) => 
-              // @ts-ignore
-              a.target.selector.start - b.target.selector.start}
+            // @ts-ignore
+            sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
             onChangeFormatter={f => setFormatter(() => f)}
