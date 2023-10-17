@@ -113,7 +113,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       a.target.selector.start - b.target.selector.start;
     
   return (
-    <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
+    <div className={
+        contentType === 'text/xml' ? 'content-wrapper tei' : 
+        contentType === 'application/pdf' ? 'content-wrapper pdf' : 
+          'content-wrapper text'}>
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
