@@ -1,5 +1,5 @@
 {
-  "_comment": "This is a default configuration file that can be replaced a build time",
+  "_comment": "This is a default configuration file that can be replaced at build time",
   "branding": {
     "platform_name": "Recogito",
     "site_name": "Default",

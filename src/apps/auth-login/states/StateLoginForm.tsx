@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Lock, MagicWand, WarningOctagon } from "@phosphor-icons/react";
-import { Button } from "@components/Button";
-import { TextInput } from "@components/TextInput";
-import { supabase } from "@backend/supabaseBrowserClient";
-import type { Translations } from "src/Types";
-import { isValidEmail } from "../validation";
+import { useEffect, useState } from 'react';
+import { Lock, MagicWand, WarningOctagon } from '@phosphor-icons/react';
+import { Button } from '@components/Button';
+import { TextInput } from '@components/TextInput';
+import { supabase } from '@backend/supabaseBrowserClient';
+import type { Translations } from 'src/Types';
+import { isValidEmail } from '../validation';
 
 export interface StateSignInFormProps {
   i18n: Translations;
@@ -17,13 +17,13 @@ export interface StateSignInFormProps {
 export const StateLoginForm = (props: StateSignInFormProps) => {
   const { t } = props.i18n;
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
 
   const [loading, setLoading] = useState(false);
 
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const onSignIn = (evt: React.MouseEvent) => {
     evt.preventDefault();
@@ -31,9 +31,9 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
     setLoading(true);
 
     if (!isValidEmail(email)) {
-      setError(t["Please enter a valid email address"]);
+      setError(t['Please enter a valid email address']);
     } else {
-      setError("");
+      setError('');
 
       supabase.auth
         .signInWithPassword({
@@ -41,20 +41,20 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           password,
         })
         .then(({ error }) => {
-          if (error) setError(t["Invalid email or password"]);
+          if (error) setError(t['Invalid email or password']);
         });
     }
   };
 
   useEffect(() => {
-    document.getElementById("email")?.focus();
+    document.getElementById('email')?.focus();
   }, []);
 
   return (
     <div className='login'>
       <main>
-        <h1>{t["Welcome Back"]}</h1>
-        <p>{t["Log into your account"]}</p>
+        <h1>{t['Welcome Back']}</h1>
+        <p>{t['Log into your account']}</p>
 
         <div className='login-email'>
           <form>
@@ -63,7 +63,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
               error={Boolean(error)}
               id='email'
               name='email'
-              label={t["Email"]}
+              label={t['Email']}
               className='lg w-full'
               onChange={setEmail}
             />
@@ -72,7 +72,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
               autoComplete={false}
               id='password'
               name='password'
-              label={t["Password"]}
+              label={t['Password']}
               type='password'
               className='lg w-full'
               onChange={setPassword}
@@ -84,7 +84,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
                   className='icon text-bottom'
                   size={18}
                   weight='fill'
-                />{" "}
+                />{' '}
                 {error}
               </p>
             )}
@@ -94,13 +94,13 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
               busy={loading}
               onClick={onSignIn}
             >
-              <span>{t["Sign In"]}</span>
+              <span>{t['Sign In']}</span>
             </Button>
           </form>
 
           <div className='forgot-password'>
             <a href={`/${props.i18n.lang}/forgot-password`}>
-              {t["Forgot password?"]}
+              {t['Forgot password?']}
             </a>
           </div>
         </div>
@@ -108,7 +108,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
       <footer>
         <p>
-          {t["Don't have an account?"]} <a href='#'>{t["Sign up now."]}</a>
+          {t["Don't have an account?"]} <a href='#'>{t['Sign up now.']}</a>
         </p>
       </footer>
     </div>

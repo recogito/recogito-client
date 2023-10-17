@@ -1,22 +1,14 @@
 ---
-import BaseLayout from "../BaseLayout.astro";
-import type {
-  ExtendedAssignmentData,
-  ExtendedProjectData,
-  MyProfile,
-  LoginMethod,
-} from "../../Types";
-import config from "../../config.json";
-import { LoginMethodSelector } from "@apps/auth-login/LoginMethodSelector";
+import BaseLayout from '../BaseLayout.astro';
+import config from '../../config.json';
+import type { Translations } from 'src/Types';
 
 export interface Props {
   title: string;
-  i18n: Node;
+  i18n: Translations;
 }
 
-const { title, i18n } = Astro.props;
-
-const cookie = Astro.cookies.get("x-project-sidebar-collapsed");
+const { title } = Astro.props;
 
 const siteColor = config.branding.site_color;
 const siteBanner = config.branding.home_banner;

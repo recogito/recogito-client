@@ -1,9 +1,7 @@
-import { ReactNode, forwardRef, useState } from "react";
-import * as Select from "@radix-ui/react-select";
-import { CaretDown, Check } from "@phosphor-icons/react";
-import { updateUserProjectGroup } from "@backend/crud";
-import { supabase } from "@backend/supabaseBrowserClient";
-import type { LoginMethod, Translations } from "src/Types";
+import { ReactNode, forwardRef } from 'react';
+import * as Select from '@radix-ui/react-select';
+import { CaretDown, Check } from '@phosphor-icons/react';
+import type { LoginMethod, Translations } from 'src/Types';
 
 interface LoginMethodSelectorProps {
   i18n: Translations;
@@ -51,7 +49,7 @@ export const LoginMethodSelector = (props: LoginMethodSelectorProps) => {
       onValueChange={onValueChange}
     >
       <Select.Trigger className='select-trigger' aria-label='Login method'>
-        <Select.Value placeholder={t["Sign In"]} />
+        <Select.Value placeholder={t['Sign In']} />
         <Select.Icon className='select-icon'>
           <CaretDown />
         </Select.Icon>

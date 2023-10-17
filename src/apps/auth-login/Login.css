@@ -42,7 +42,7 @@
 .login-separator::before,
 .login-separator::after {
   border-top: 1px solid var(--border-light-color);
-  content: "";
+  content: '';
   flex-grow: 1;
 }
 

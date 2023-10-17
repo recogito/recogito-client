@@ -1,17 +1,15 @@
-import { useEffect, useState } from "react";
-import type { Session } from "@supabase/supabase-js";
-import { supabase } from "@backend/supabaseBrowserClient";
-import { isLoggedIn } from "@backend/auth";
-import type { LoginMethod, Translations } from "src/Types";
-import { StateChecking, StateLoginForm, StateMagicLink } from "./states";
-import { LoginMethodSelector } from "@apps/auth-login/LoginMethodSelector";
+import { useEffect, useState } from 'react';
+import type { Session } from '@supabase/supabase-js';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { isLoggedIn } from '@backend/auth';
+import type { LoginMethod, Translations } from 'src/Types';
+import { StateChecking, StateLoginForm, StateMagicLink } from './states';
+import { LoginMethodSelector } from '@apps/auth-login/LoginMethodSelector';
 
-import "./Login.css";
-
-const SSO_DOMAIN = import.meta.env.PUBLIC_SSO_DOMAIN;
+import './Login.css';
 
 const setCookies = (session: Session | null) => {
-  if (!session) throw "SIGNED_IN event without session - should never happen";
+  if (!session) throw 'SIGNED_IN event without session - should never happen';
 
   const maxAge = 100 * 365 * 24 * 60 * 60; // 100 years, never expires
   document.cookie = `sb-access-token=${session?.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
@@ -38,9 +36,9 @@ export const Login = (props: {
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
-      if (event === "SIGNED_OUT") {
+      if (event === 'SIGNED_OUT') {
         clearCookies();
-      } else if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
         window.location.href = `/${props.i18n.lang}/projects`;
       }
@@ -74,13 +72,13 @@ export const Login = (props: {
 
   const onMethodChanged = (method: LoginMethod) => {
     setCurrentMethod(method);
-    if (method.type === "username_password") {
+    if (method.type === 'username_password') {
       setShowLogin(true);
       setSendLink(false);
-    } else if (method.type === "magic_link") {
+    } else if (method.type === 'magic_link') {
       setSendLink(true);
       setShowLogin(false);
-    } else if (method.type === "saml") {
+    } else if (method.type === 'saml') {
       setSendLink(false);
       setShowLogin(false);
       signInWithSSO(method.domain);

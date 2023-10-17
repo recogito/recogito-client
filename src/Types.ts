@@ -138,11 +138,11 @@ export interface DocumentInTaggedContext extends DocumentInContext {
   context: TaggedContext;
 }
 
-export const ContentTypes = ["text/plain", "text/xml"] as const;
+export const ContentTypes = ['text/plain', 'text/xml'] as const;
 
 export type ContentType = (typeof ContentTypes)[number];
 
-export const Protocols = ["IIIF_IMAGE"] as const;
+export const Protocols = ['IIIF_IMAGE'] as const;
 
 export type Protocol = (typeof Protocols)[number];
 
@@ -214,14 +214,14 @@ export interface TagDefinition {
   name: string;
 
   target_type?:
-    | "context"
-    | "document"
-    | "group"
-    | "layer"
-    | "profile"
-    | "project";
+    | 'context'
+    | 'document'
+    | 'group'
+    | 'layer'
+    | 'profile'
+    | 'project';
 
-  scope: "organization" | "project" | "system";
+  scope: 'organization' | 'project' | 'system';
 
   scope_id?: string;
 }
@@ -263,14 +263,14 @@ export interface Invitation {
 }
 
 export type TableName =
-  | "bodies"
-  | "documents"
-  | "contexts"
-  | "layers"
-  | "projects"
-  | "targets";
+  | 'bodies'
+  | 'documents'
+  | 'contexts'
+  | 'layers'
+  | 'projects'
+  | 'targets';
 
-export type OperationType = "SELECT" | "INSERT" | "UPDATE" | "DELETE";
+export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
 
 export type Policies = {
   get(t: TableName): { has: (operation: OperationType) => boolean };
@@ -278,6 +278,6 @@ export type Policies = {
 
 export type LoginMethod = {
   name: string;
-  type: "username_password" | "saml" | "oauth" | "magic_link";
+  type: 'username_password' | 'saml' | 'oauth' | 'magic_link';
   domain: string;
 };
