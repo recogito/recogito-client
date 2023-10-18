@@ -19,9 +19,9 @@ const crosswalkBody = ({
 }): SupabaseAnnotationBody => ({
   id,
   annotation: annotation_id,
-  created: created_at,
+  created: created_at ? new Date(created_at) : undefined,
   creator: created_by ? crosswalkUser(created_by) : undefined,
-  updated: updated_at,
+  updated: updated_at ? new Date(updated_at) : undefined,
   updatedBy: updated_by ? crosswalkUser(updated_by) : undefined,
   purpose, 
   value,
@@ -34,9 +34,9 @@ const crosswalkTarget = ({
 }): SupabaseAnnotationTarget => ({
   annotation: annotation_id,
   selector: JSON.parse(value),
-  created: created_at,
+  created: created_at ? new Date(created_at) : undefined,
   creator: created_by ? crosswalkUser(created_by) : undefined,
-  updated: updated_at,
+  updated: updated_at ? new Date(updated_at) : undefined,
   updatedBy: updated_by ? crosswalkUser(updated_by) : undefined
 })
 
