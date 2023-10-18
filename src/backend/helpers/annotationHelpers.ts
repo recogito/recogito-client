@@ -2,6 +2,43 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { Visibility } from '@recogito/annotorious-supabase';
 import type { SupabaseAnnotation, SupabaseAnnotationTarget, SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import type { Response } from '@backend/Types';
+import type { User } from '@annotorious/react';
+
+const crosswalkUser = ({ 
+  // @ts-ignore
+  id, nickname, avatar_url 
+}): User => ({
+  id,
+  name: nickname,
+  avatar: avatar_url
+})
+
+const crosswalkBody = ({ 
+  // @ts-ignore
+  id, annotation_id, created_by, created_at, updated_by, updated_at, version, purpose, value 
+}): SupabaseAnnotationBody => ({
+  id,
+  annotation: annotation_id,
+  created: created_at,
+  creator: created_by ? crosswalkUser(created_by) : undefined,
+  updated: updated_at,
+  updatedBy: updated_by ? crosswalkUser(updated_by) : undefined,
+  purpose, 
+  value,
+  version
+})
+
+const crosswalkTarget = ({ 
+  // @ts-ignore
+  annotation_id, created_at, created_by, updated_at, updated_by, value
+}): SupabaseAnnotationTarget => ({
+  annotation: annotation_id,
+  selector: JSON.parse(value),
+  created: created_at,
+  creator: created_by ? crosswalkUser(created_by) : undefined,
+  updated: updated_at,
+  updatedBy: updated_by ? crosswalkUser(updated_by) : undefined
+})
 
 export const getAnnotations = (
   supabase: SupabaseClient,
@@ -60,25 +97,6 @@ export const getAnnotations = (
       if (error) {
         return ({ error, data: undefined as unknown as SupabaseAnnotation[] })
       } else {
-        const crosswalkBody = ({ 
-          // @ts-ignore
-          id, annotation_id, created_at, updated_at, version, purpose, value, created_by, updated_by 
-        }): SupabaseAnnotationBody => ({
-          id,
-          annotation: annotation_id,
-          purpose, 
-          value,
-          version
-        })
-        
-        const crosswalkTarget = ({ 
-          // @ts-ignore
-          annotation_id, created_at, updated_at, value, updated_by 
-        }): SupabaseAnnotationTarget => ({
-          annotation: annotation_id,
-          selector: JSON.parse(value)
-        })
-
         return ({
           error,
           data: data.map(({ targets, created_at, is_private, bodies, ...annotation }) => ({
