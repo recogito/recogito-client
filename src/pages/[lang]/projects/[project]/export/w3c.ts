@@ -88,9 +88,9 @@ export const get: APIRoute = async ({ params, request, cookies }) => {
       value: b.value,
       // @ts-ignore
       creator: b.created_by.id,
-      created: b.created_at
+      // created: b.created_at
     })),
-    target: a.targets.map(crosswalkTarget)
+    target: crosswalkTarget(a.target)
   }));
 
   return new Response(    

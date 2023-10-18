@@ -1,9 +1,10 @@
 
-import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
+import { getAllDocumentLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
+import { mergeAnnotations } from 'src/util';
 
 const crosswalkTarget = (target: any) => {
 
@@ -76,15 +77,6 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       JSON.stringify({ message: 'Internal server error' }), 
       { status: 500 }); 
 
-  // At the project level, all layers in the project will be exported
-  const layers = await getAllLayersInProject(supabase, projectId);
-  if (layers.error)
-    return new Response(
-      JSON.stringify({ message: 'Internal server error' }), 
-      { status: 500 }); 
-
-  const layerIds = layers.data.map(l => l.id);
-
   // Download TEI from DB
   const content = await supabase.storage.from(document.data.bucket_id!).download(documentId);
   if (content.error)
@@ -94,35 +86,29 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
 
   const xml = await content.data.text();
 
-  const filename = document.data.name.endsWith('.xml') ?
-    document.data.name : `${document.data.name}.tei.xml`
+  // At the project level, all layers in the project will be exported
+  const layers = await getAllDocumentLayersInProject(supabase, documentId, projectId);
+  if (layers.error)
+    return new Response(
+      JSON.stringify({ message: 'Internal server error' }), 
+      { status: 500 }); 
 
-  /*
-  // TODO inline annotations as TEI standoff
+  const layerIds = layers.data.map(l => l.id);
+
+  // Download annotations on all layers
   const annotations = await getAnnotations(supabase, layerIds);
-  if (annotations.error) { 
+  if (annotations.error)
     return new Response(
       JSON.stringify({ message: 'Error retrieving annotations' }), 
       { status: 500 }); 
-  }
 
-  const w3c = annotations.data.map(a => ({
-    '@context': 'http://www.w3.org/ns/anno.jsonld',
-    id: a.id,
-    type: 'Annotation',
-    body: a.bodies.map(b => ({
-      purpose: b.purpose,
-      value: b.value,
-      // @ts-ignore
-      creator: b.created_by.id,
-      created: b.created_at
-    })),
-    target: a.targets.map(crosswalkTarget)
-  }));
-  */
+  const merged = mergeAnnotations(xml, annotations.data);
+
+  const filename = document.data.name.endsWith('.xml') ?
+    document.data.name : `${document.data.name}.tei.xml`
 
   return new Response(    
-    xml,
+    merged,
     { 
       headers: { 
         'Content-Type': 'text/xml',
