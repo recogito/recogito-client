@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import type { Translations } from 'src/Types';
+import type { Context, Document, Translations } from 'src/Types';
 import { 
   Browser, 
   Browsers, 
+  Code,
   DotsThreeVertical, 
   DownloadSimple,
   PencilSimple, 
@@ -19,6 +20,10 @@ interface DocumentCardActionsProps {
 
   isAdmin?: boolean;
 
+  context: Context;
+
+  document: Document;
+
   onOpen(tab: boolean): void;
 
   onDelete?(): void;
@@ -26,6 +31,8 @@ interface DocumentCardActionsProps {
   onEditMetadata?(): void;
 
   onExportCSV?(): void;
+
+  onExportTEI?(): void;
 
 }
 
@@ -66,12 +73,18 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
             {props.isAdmin && (
               <>
-                <Item className="dropdown-item" onSelect={props.onEditMetadata}>
-                  <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
-                </Item>
+                {props.document.content_type === 'text/xml' && (
+                  <Item className="dropdown-item" onSelect={props.onExportTEI}>
+                    <Code size={16} /> <span>{t['Export TEI file']}</span>
+                  </Item>
+                )}
 
                 <Item className="dropdown-item" onSelect={props.onExportCSV}>
                   <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
+                </Item>
+
+                <Item className="dropdown-item" onSelect={props.onEditMetadata}>
+                  <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
                 </Item>
 
                 <ConfirmedAction.Trigger>

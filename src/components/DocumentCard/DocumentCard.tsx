@@ -46,6 +46,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
       onOpen(true)
   }
 
+  const onExportTEI = () =>
+    window.location.href = `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}`;
+
   const onExportCSV = () =>
     window.location.href = `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}`;
 
@@ -63,8 +66,11 @@ export const DocumentCard = (props: DocumentCardProps) => {
           <DocumentCardActions
             i18n={props.i18n} 
             isAdmin={props.isAdmin}
+            context={context}
+            document={document}
             onOpen={onOpen}
             onDelete={props.onDelete} 
+            onExportTEI={onExportTEI}
             onExportCSV={onExportCSV}
             onEditMetadata={() => setEditable(true)} />
         </div>
