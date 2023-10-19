@@ -3,6 +3,7 @@ import { EmptyCard, PrivateCard, PublicCard } from './Card';
 import { LifecycleLogger } from './LifecycleLogger';
 import { Popup } from './Popup';
 import { ReplyForm } from './ReplyForm';
+import { TagsWidget } from './TagsWidget';
 
 export const Annotation = {
   
@@ -18,6 +19,8 @@ export const Annotation = {
 
   Popup,
 
-  ReplyForm
+  ReplyForm,
+
+  TagsWidget
 
 }
