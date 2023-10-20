@@ -8,6 +8,19 @@
   z-index: 999;
 }
 
+.private .annotation-tagswidget {
+  background-color: var(--private-bg-light);
+  color: var(--font-dark);
+}
+
+.private .annotation-tagswidget input {
+  color: var(--font-dark);
+}
+
+.private .annotation-tagswidget input::placeholder {
+  color: var(--font-light);
+}
+
 .annotation-tagswidget .tags {
   display: flex;
 }
@@ -17,6 +30,14 @@
   line-height: 100%;
 }
 
+.private .annotation-tagswidget ul {
+  background-color: var(--private-bg-light);
+}
+
 .annotation-tagswidget li {
   display: inline;
+}
+
+.annotation-tagswidget + .annotation-reply-form {
+  border-top: none;
 }

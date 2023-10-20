@@ -38,7 +38,7 @@
   "${n} documents": "${n} Dokumente",
   "1 team member": "1 Teammitglied",
   "${n} team members": "${n} Teammitglieder",
-  "Unnamed assignment.": "Unbenannter Arbeitsauftrag. Bitte gib ändere den Namen des Auftrags, so dass er leichter zu finden ist.",
+  "Unnamed assignment.": "Unbenannter Arbeitsauftrag. Bitte ändere den Namen des Auftrags, so dass er leichter zu finden ist.",
   "No documents.": "Keine Dokumente. Bitte wähle mindestens ein Dokument für den Arbeitsauftrag.",
   "No team members.": "Kein Team. Bitte weise mindestens ein Teammitglied zu.",
   "Instructions provided.": "Anweisungen vorhanden.",

@@ -163,7 +163,7 @@ export interface DocumentInTaggedContext extends DocumentInContext {
 
 }
 
-export const ContentTypes = ['text/plain', 'text/xml'] as const;
+export const ContentTypes = ['application/pdf', 'text/plain', 'text/xml'] as const;
 
 export type ContentType = typeof ContentTypes[number];
 

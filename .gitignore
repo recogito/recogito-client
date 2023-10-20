@@ -2,6 +2,7 @@ dist/
 .astro/
 .netlify/
 .vscode/
+.idea/
 node_modules/
 
 npm-debug.log*

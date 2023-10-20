@@ -1,4 +1,4 @@
-import { Code, TextAlignLeft } from '@phosphor-icons/react';
+import { Code, FilePdf, TextAlignLeft } from '@phosphor-icons/react';
 import type { Document } from 'src/Types';
 
 interface ContentTypeIconProps {
@@ -15,8 +15,10 @@ export const ContentTypeIcon = (props: ContentTypeIconProps) => {
     return <TextAlignLeft size={44} weight="thin" />;
   } else if (content_type === 'text/xml') {
     return <Code size={44} weight="thin" />;
+  } else if (content_type === 'application/pdf') {
+    return <FilePdf size={44} weight="thin" />;
   } else if (meta_data?.protocol === 'IIIF_IMAGE') {
-    return <img src="/img/iiif-logo.png" style={{ width: 52, height: 45 }} />
+    return <img src="/img/iiif-logo.png" style={{ width: 52, height: 45 }} />;
   } else {
     return null;
   }

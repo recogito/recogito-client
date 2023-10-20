@@ -44,3 +44,21 @@ export const uploadFile = (
     }
   });
 });
+
+export const getDownloadURL = (
+  supabase: SupabaseClient,
+  documentId: string
+): Promise<string> => new Promise((resolve, reject) => {
+  supabase
+    .storage
+    .from('documents')
+    .createSignedUrl(documentId, 60) // Valid for 60 seconds
+    .then(({ data, error }) => {
+      const url = data?.signedUrl;
+
+      if (url)
+        resolve(url)
+      else 
+        reject(error)
+    });
+});
