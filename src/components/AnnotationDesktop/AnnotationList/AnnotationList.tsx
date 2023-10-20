@@ -12,10 +12,10 @@ import {
   User,
   useViewportState
 } from '@annotorious/react';
+import type { Annotator } from '@annotorious/react';
 import { Filter, FilterSelector } from './FilterSelector';
 
 import './AnnotationList.css';
-import type { Annotator } from '@annotorious/react';
 
 interface AnnotationListProps {
 
@@ -132,6 +132,12 @@ export const AnnotationList = (props: AnnotationListProps) => {
               isMine(a) ? (              
                 isSelected(a) ? (
                   <div className={getReplyFormClass(a)}>
+                    <Annotation.TagsWidget 
+                      i18n={props.i18n} 
+                      me={me} 
+                      annotation={a}
+                      vocabulary={props.tagVocabulary} />
+
                     <Annotation.ReplyForm
                       autofocus={autofocus}
                       scrollIntoView

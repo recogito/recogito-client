@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
 import { 
+  RecogitoTextAnnotator,
   TEIAnnotator, 
   TextAnnotator, 
-  RecogitoTextAnnotator, 
   TextAnnotatorPopup, 
   TextAnnotation,
-  CETEIcean
+  CETEIcean,
 } from '@recogito/react-text-annotator';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -21,6 +22,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from './useContent';
 import type { Layer } from 'src/Types';
+import { PDFViewer } from './PDFViewer';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
@@ -100,8 +102,21 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }
 
+  const sorting = contentType === 'application/pdf' ?
+    (a: PDFAnnotation, b: PDFAnnotation) => {
+      const pages = a.target.selector.pageNumber - b.target.selector.pageNumber;
+      return pages === 0 ?
+        a.target.selector.start - b.target.selector.start : pages;
+    } :
+
+    (a: TextAnnotation, b: TextAnnotation) => 
+      a.target.selector.start - b.target.selector.start;
+    
   return (
-    <div className={contentType === 'text/xml' ? 'content-wrapper tei' : 'content-wrapper text'}>
+    <div className={
+        contentType === 'text/xml' ? 'content-wrapper tei' : 
+        contentType === 'application/pdf' ? 'content-wrapper pdf' : 
+          'content-wrapper text'}>
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
@@ -111,6 +126,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             }}>
             <CETEIcean tei={text} />
           </TEIAnnotator>
+        ) : contentType === 'application/pdf' && text ? (
+          <PDFViewer
+            document={props.document} />
         ) : text && (
           <TextAnnotator
             formatter={formatter}
@@ -166,9 +184,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             present={present} 
             policies={policies}
             layers={layers}
-            sorting={(a, b) => 
-              // @ts-ignore
-              a.target.selector.start - b.target.selector.start}
+            // @ts-ignore
+            sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
             onChangeFormatter={f => setFormatter(() => f)}

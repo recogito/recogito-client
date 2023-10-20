@@ -83,10 +83,6 @@ export const ViewMenu = (props: ViewMenuProps) => {
             onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
             <StackSimple />
           </button>
-
-          {/* <button>
-            <MagnifyingGlass />
-          </button> */}
         </section>
 
         {me && (
