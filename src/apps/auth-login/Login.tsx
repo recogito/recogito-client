@@ -2,35 +2,38 @@ import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
-import type { Translations } from 'src/Types';
+import type { LoginMethod, Translations } from 'src/Types';
 import { StateChecking, StateLoginForm, StateMagicLink } from './states';
+import { LoginMethodSelector } from '@apps/auth-login/LoginMethodSelector';
 
 import './Login.css';
 
-const SSO_DOMAIN = import.meta.env.PUBLIC_SSO_DOMAIN;
-
 const setCookies = (session: Session | null) => {
-  if (!session)
-    throw 'SIGNED_IN event without session - should never happen';
-  
+  if (!session) throw 'SIGNED_IN event without session - should never happen';
+
   const maxAge = 100 * 365 * 24 * 60 * 60; // 100 years, never expires
   document.cookie = `sb-access-token=${session?.access_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
   document.cookie = `sb-refresh-token=${session?.refresh_token}; path=/; max-age=${maxAge}; SameSite=Lax; secure`;
-}
+};
 
 const clearCookies = () => {
   const expires = new Date(0).toUTCString();
   document.cookie = `sb-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-}
+};
 
-export const Login = (props: { i18n: Translations }) => {
-
+export const Login = (props: {
+  i18n: Translations;
+  methods: LoginMethod[];
+}) => {
   const [isChecking, setIsChecking] = useState(true);
 
   const [sendLink, setSendLink] = useState(false);
-  
+  const [showLogin, setShowLogin] = useState(false);
+
+  const [currentMethod, setCurrentMethod] = useState<LoginMethod | undefined>();
+
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
@@ -40,46 +43,92 @@ export const Login = (props: { i18n: Translations }) => {
         window.location.href = `/${props.i18n.lang}/projects`;
       }
     });
-    
-    isLoggedIn(supabase).then(loggedIn => {
+
+    isLoggedIn(supabase).then((loggedIn) => {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
           window.location.href = `/${props.i18n.lang}/projects`;
-        })
+        });
       } else {
         setIsChecking(false);
       }
     });
   }, []);
 
-  const signInWithSSO = () => {
-    supabase.auth.signInWithSSO({
-      domain: SSO_DOMAIN
-    }).then(({ data, error }) => {
-      if (data?.url) {
-        window.location.href= data.url;
-      } else {
-        console.error(error);
-      }
-    });
-  }
+  const signInWithSSO = (domain: string) => {
+    supabase.auth
+      .signInWithSSO({
+        domain: domain,
+      })
+      .then(({ data, error }) => {
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          console.error(error);
+        }
+      });
+  };
+
+  const onMethodChanged = (method: LoginMethod) => {
+    setCurrentMethod(method);
+    if (method.type === 'username_password') {
+      setShowLogin(true);
+      setSendLink(false);
+    } else if (method.type === 'magic_link') {
+      setSendLink(true);
+      setShowLogin(false);
+    } else if (method.type === 'saml') {
+      setSendLink(false);
+      setShowLogin(false);
+      signInWithSSO(method.domain);
+    }
+  };
 
   if (isChecking) {
-    return (
-      <StateChecking />
-    )
+    return <StateChecking />;
   } else if (sendLink) {
     return (
-      <StateMagicLink i18n={props.i18n} />
+      <>
+        <div className='login-selector'>
+          <LoginMethodSelector
+            i18n={props.i18n}
+            availableMethods={props.methods}
+            currentMethod={currentMethod}
+            onChangeMethod={onMethodChanged}
+          />
+        </div>
+        <StateMagicLink i18n={props.i18n} />;
+      </>
+    );
+  } else if (showLogin) {
+    return (
+      <>
+        <div className='login-selector'>
+          <LoginMethodSelector
+            i18n={props.i18n}
+            availableMethods={props.methods}
+            currentMethod={currentMethod}
+            onChangeMethod={onMethodChanged}
+          />
+        </div>
+        <StateLoginForm
+          i18n={props.i18n}
+          onSendLink={() => setSendLink(true)}
+          onSignInWithSSO={signInWithSSO}
+        />
+      </>
     );
   } else {
     return (
-      <StateLoginForm 
-        i18n={props.i18n}
-        onSendLink={() => setSendLink(true)} 
-        onSignInWithSSO={signInWithSSO}/>
-    )
+      <div className='login-selector'>
+        <LoginMethodSelector
+          i18n={props.i18n}
+          availableMethods={props.methods}
+          currentMethod={currentMethod}
+          onChangeMethod={onMethodChanged}
+        />
+      </div>
+    );
   }
-
-}
+};
