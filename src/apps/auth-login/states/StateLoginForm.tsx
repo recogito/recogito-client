@@ -105,12 +105,6 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           </div>
         </div>
       </main>
-
-      <footer>
-        <p>
-          {t["Don't have an account?"]} <a href='#'>{t['Sign up now.']}</a>
-        </p>
-      </footer>
     </div>
   );
 };
