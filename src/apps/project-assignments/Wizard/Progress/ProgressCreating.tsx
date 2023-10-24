@@ -46,7 +46,7 @@ export const ProgressCreating = (props: ProgressProps) => {
                 addUsersToLayer(supabase, layer.id, 'Layer Student', team));
             }, Promise.resolve<void>(undefined)).then(() => {
               setState('success');
-              props.onCreated(context);
+              props.onSaved(context);
             })            
           }).catch(error => {
             console.error(error);

@@ -9,7 +9,7 @@ export interface ProgressProps {
 
   assignment: AssignmentSpec;
 
-  onCreated(assignment: Context): void;
+  onSaved(assignment: Context): void;
 
   onError(error: string): void;
 

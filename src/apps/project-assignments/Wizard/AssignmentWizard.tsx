@@ -27,7 +27,7 @@ interface AssignmentWizardProps {
 
   onClose(): void;
 
-  onCreated(assignment: Context): void;
+  onSaved(assignment: Context): void;
 
 }
 
@@ -86,9 +86,9 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
     setAssignment(assignment => ({ ...assignment, description })) :
     setAssignment(assignment => ({ ...assignment, description: undefined }));
   
-  const onCreated = (assignment: Context) => {
+  const onSaved = (assignment: Context) => {
     setComplete(true);
-    props.onCreated(assignment);
+    props.onSaved(assignment);
   }
 
   // Don't close this dialog when the user clicks outside!
@@ -112,14 +112,15 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                 i18n={props.i18n} 
                 project={props.project}
                 assignment={assignment} 
-                onCreated={onCreated}
+                previous={props.assignment}
+                onSaved={onSaved}
                 onError={() => setComplete(true)} />
             ) : (
               <ProgressCreating
                 i18n={props.i18n} 
                 project={props.project}
                 assignment={assignment} 
-                onCreated={onCreated}
+                onSaved={onSaved}
                 onError={() => setComplete(true)} />
             )
           ) : (

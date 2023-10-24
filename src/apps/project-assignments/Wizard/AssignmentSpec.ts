@@ -2,6 +2,8 @@ import type { DocumentInContext, ExtendedAssignmentData, UserProfile } from 'src
 
 export interface AssignmentSpec {
 
+  id?: string;
+
   name?: string;
 
   documents: DocumentInContext[];
@@ -14,6 +16,7 @@ export interface AssignmentSpec {
 
 // Utility crosswalk between ExtendedAssignmentData and AssignmentSpec
 export const toAssignmentSpec = (data: ExtendedAssignmentData): AssignmentSpec => ({
+  id: data.id,
   name: data.name,
   description: data.description,
   documents: data.layers.map(layer => ({
@@ -40,14 +43,5 @@ export const toAssignmentSpec = (data: ExtendedAssignmentData): AssignmentSpec =
       }
     }]
   })),
-  team: data.layers[0].groups.reduce((allUsers, { members }) => {
-    const usersInThisGroup = members.map(m => m.user);
-
-    const toAdd = usersInThisGroup.filter(u => {
-      const exists = allUsers.find(x => x.id === u.id);
-      return !exists;
-    });
-
-    return [...allUsers, ...toAdd];
-  }, [] as UserProfile[])          
+  team: data.layers[0].groups.find(g => g.name === 'Layer Student')?.members.map(m => m.user) || []
 });

@@ -44,8 +44,14 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const { assignments, setAssignments } = useAssignments(project);
 
-  const onAssignmentCreated = (assignment: Context) =>
-    setAssignments(assignments => ([...(assignments || []), assignment]));
+  const onAssignmentSaved = (assignment: Context) =>
+    setAssignments(assignments => {
+      const isUpdate = assignments?.find(a => a.id === assignment.id);
+
+      return isUpdate ? 
+        assignments!.map(a => a.id === assignment.id ? assignment : a) :
+        [...(assignments || []), assignment];
+    });
 
   const onEditAssignment = (assignment: Context) =>
     getAssignment(supabase, assignment.id).then(({ data, error }) => {
@@ -125,7 +131,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
                 project={props.project}
                 documents={props.documents}
                 assignment={editing}
-                onCreated={onAssignmentCreated}
+                onSaved={onAssignmentSaved}
                 onClose={() => setEditing(undefined)} />
             )}
           </>

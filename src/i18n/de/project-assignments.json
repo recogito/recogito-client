@@ -52,7 +52,7 @@
   "Delete assignment": "Arbeitsauftrag löschen",
 
   "Deleted": "Gelöscht",
-  "Assignment deleted successfully": "Der Arbeitsauftrag wurde gelöscht",
+  "Assignment deleted successfully.": "Der Arbeitsauftrag wurde gelöscht.",
 
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not delete the assignment.": "Der Arbeitsauftrag konnte nicht gelöscht werden.",
