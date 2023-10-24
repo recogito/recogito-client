@@ -12,5 +12,6 @@ pnpm-debug.log*
 
 .env
 .env.production
+.idea
 
 .DS_Store
