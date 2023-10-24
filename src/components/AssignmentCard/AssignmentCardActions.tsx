@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
@@ -18,6 +19,8 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
 
   const { t } = props.i18n;
 
+  const [open, setOpen] = useState(false);
+
   const stopEvent = (evt: React.MouseEvent) => {
     evt.preventDefault();
     evt.stopPropagation();
@@ -27,10 +30,11 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
     evt.preventDefault();
     evt.stopPropagation();
     fn();
+    setOpen(false);
   }
 
   return (
-    <Root>
+    <Root open={open} onOpenChange={setOpen}>
       <Trigger asChild>
         <button className="unstyled icon-only project-card-actions">
           <DotsThreeVertical weight="bold" size={20}/>
