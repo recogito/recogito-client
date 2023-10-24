@@ -12,8 +12,9 @@ interface AssignmentCardProps {
 
   canUpdate?: boolean;
 
-  // Just temporary, for hacking/testing
   assignment: Context;
+
+  onEdit(): void;
 
   onDelete(): void;
 
@@ -44,6 +45,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
         <div className="bottom">
           <AssignmentCardActions 
             i18n={props.i18n} 
+            onEdit={props.onEdit}
             onDelete={props.onDelete} />
         </div>
       )}

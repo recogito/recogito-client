@@ -46,6 +46,13 @@
 
   "The assignment was created successfully": "Der Arbeitsauftrag wurde erfolgreich erstellt, und dem Dashboard der Teammitglieder hinzugefügt.",
 
+  "Edit assignment": "Arbeitsauftrag ändern",
+  "Delete assignment": "Arbeitsauftrag löschen",
+
+  "Deleted": "Gelöscht",
+  "Assignment deleted successfully": "Der Arbeitsauftrag wurde gelöscht",
+
   "Something went wrong": "Etwas ist schiefgelaufen",
-  "Could not delete the assignment.": "Der Arbeitsauftrag konnte nicht gelöscht werden."
+  "Could not delete the assignment.": "Der Arbeitsauftrag konnte nicht gelöscht werden.",
+  "Could not open the assignment.": "Der Arbeitsauftrag konnte nicht geöffnet werden."
 }

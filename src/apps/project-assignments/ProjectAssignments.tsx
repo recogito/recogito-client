@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
-import { archiveAssignment, getAllLayersInContext } from '@backend/helpers';
+import { archiveAssignment, getAllLayersInContext, getAssignment } from '@backend/helpers';
 import { archiveLayer } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useAssignments, useProjectPolicies } from '@backend/hooks';
@@ -11,6 +11,7 @@ import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Transl
 import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
+import { AssignmentSpec } from './Wizard/AssignmentSpec';
 
 interface ProjectAssignmentsProps {
 
@@ -47,6 +48,20 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
   const onAssignmentCreated = (assignment: Context) =>
     setAssignments(assignments => ([...(assignments || []), assignment]));
 
+  const onEditAssignment = (assignment: Context) =>
+    getAssignment(supabase, assignment.id).then(({ data, error }) => {
+      if (error) {
+        setToast({
+          title: t['Something went wrong'],
+          description: t['Could not open the assignment.'],
+          type: 'error'
+        });
+      } else {
+        // TODO compile an AssignmentSpec object for the wizard
+        console.log('editing', data);
+      }
+    });
+
   const onDeleteAssignment = (assignment: Context) => {
     // Optimistic update: remove assignment from the list
     setAssignments(assignments => (assignments || []).filter(a => a.id !== assignment.id));
@@ -57,8 +72,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
         setAssignments(assignments => ([...(assignments || []), assignment]));
 
         setToast({
-          title: 'Something went wrong',
-          description: 'Could not delete the document.',
+          title: t['Something went wrong'],
+          description: t['Could not delete the assignment.'],
           type: 'error'
         });
       } else {
@@ -72,8 +87,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           .then(() => archiveAssignment(supabase, assignment.id))
           .then(() => {
             setToast({
-              title: 'Deleted',
-              description: 'Document deleted successfully.',
+              title: t['Deleted'],
+              description: t['Assignment deleted successfully.'],
               type: 'success'
             });
           })
@@ -82,8 +97,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
             setAssignments(assignments => ([...(assignments || []), assignment]));
 
             setToast({
-              title: 'Something went wrong',
-              description: 'Could not delete the document.',
+              title: t['Something went wrong'],
+              description: t['Could not delete the assignment.'],
               type: 'error'
             });
           });
@@ -124,6 +139,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
             canUpdate={canCreate}
             project={project}
             assignments={assignments} 
+            onEditAssignment={onEditAssignment}
             onDeleteAssignment={onDeleteAssignment} />
         ) : (
           <div />
