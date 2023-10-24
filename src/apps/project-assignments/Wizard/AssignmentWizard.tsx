@@ -9,13 +9,15 @@ import { Documents } from './Documents';
 import { Team } from './Team';
 import { Instructions } from './Instructions';
 import { Verify } from './Verify';
-import { Progress } from './Progress';
 
 import './AssignmentWizard.css';
+import { ProgressCreating, ProgressUpdating } from './Progress';
 
 interface AssignmentWizardProps {
 
   i18n: Translations;
+
+  assignment: AssignmentSpec;
 
   me: UserProfile;
 
@@ -28,6 +30,11 @@ interface AssignmentWizardProps {
   onCreated(assignment: Context): void;
 
 }
+
+export const NEW_ASSIGNMENT = {
+  documents: [],
+  team: []
+};
 
 const STEPS = [
   'documents',
@@ -42,14 +49,16 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
   const [step, setStep] = useState(0);
 
-  const [creating, setCreating] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   const [complete, setComplete] = useState(false);
 
-  const [assignment, setAssignment] = useState<AssignmentSpec>({
-    documents: [],
-    team: []
-  });
+  const [assignment, setAssignment] = useState(props.assignment);
+
+  // Flag indicating whether this is creating a new assignment
+  // or updating an existing one
+  const isUpdate = 
+    !(props.assignment.documents.length === 0 && props.assignment.team.length === 0);
 
   const validityScore = [
     assignment.name,
@@ -97,13 +106,22 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
           className="dialog-content assignment-wizard"
           onPointerDownOutside={onPointerDownOutside}>
 
-          {creating ? (
-            <Progress 
-              i18n={props.i18n} 
-              project={props.project}
-              assignment={assignment} 
-              onCreated={onCreated}
-              onError={() => setComplete(true)} />
+          {saving ? (
+            isUpdate ? (
+              <ProgressUpdating
+                i18n={props.i18n} 
+                project={props.project}
+                assignment={assignment} 
+                onCreated={onCreated}
+                onError={() => setComplete(true)} />
+            ) : (
+              <ProgressCreating
+                i18n={props.i18n} 
+                project={props.project}
+                assignment={assignment} 
+                onCreated={onCreated}
+                onError={() => setComplete(true)} />
+            )
           ) : (
             <>
               <h1>
@@ -179,9 +197,10 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                   <Verify 
                     i18n={props.i18n}
                     assignment={assignment}
+                    isUpdate={isUpdate}
                     onCancel={props.onClose}
                     onBack={onBack} 
-                    onCreateAssignment={() => setCreating(true)} />
+                    onSaveAssignment={() => setSaving(true)} />
                 </Tabs.Content>
               </Tabs.Root>
             </>

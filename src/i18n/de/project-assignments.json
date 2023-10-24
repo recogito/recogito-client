@@ -9,7 +9,8 @@
   "Cancel": "Abbrechen",
   "Next": "Weiter",
   "Back": "Zurück",
-  "Create Assignment": "Arbeitsauftrag Erstellen",
+  "Create Assignment": "Arbeitsauftrag erstellen",
+  "Update Assignment": "Arbeitsauftrag aktualisieren",
 
   "Step": "Schritt",
 
@@ -45,6 +46,7 @@
   "Please consider adding instructions.": "Keine Anweisungen.",
 
   "The assignment was created successfully": "Der Arbeitsauftrag wurde erfolgreich erstellt, und dem Dashboard der Teammitglieder hinzugefügt.",
+  "The assignment was updated successfully": "Der Arbeitsauftrag wurde erfolgreich aktualisiert.",
 
   "Edit assignment": "Arbeitsauftrag ändern",
   "Delete assignment": "Arbeitsauftrag löschen",

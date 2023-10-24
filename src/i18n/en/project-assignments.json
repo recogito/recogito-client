@@ -10,6 +10,7 @@
   "Next": "Next",
   "Back": "Back",
   "Create Assignment": "Create Assignment",
+  "Update Assignment": "Update Assignment",
 
   "Step": "Step",
 
@@ -45,6 +46,7 @@
   "Please consider adding instructions.": "Please consider adding instructions.",
 
   "The assignment was created successfully": "The assignment was created successfully and was added to the team members' dashboards.",
+  "The assignment was updated successfully": "The assignment was updated successfully.",
 
   "Edit assignment": "Edit assignment",
   "Delete assignment": "Delete assignment",

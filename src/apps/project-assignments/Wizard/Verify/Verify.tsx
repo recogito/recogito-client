@@ -10,11 +10,13 @@ interface VerifyProps {
 
   assignment: AssignmentSpec;
 
+  isUpdate: boolean;
+
   onCancel(): void;
 
   onBack(): void;
 
-  onCreateAssignment(): void;
+  onSaveAssignment(): void;
 
 }
 
@@ -99,7 +101,9 @@ export const Verify = (props: VerifyProps) => {
         <button 
           className="primary"
           disabled={!isValid}
-          onClick={props.onCreateAssignment}>{t['Create Assignment']}</button>
+          onClick={props.onSaveAssignment}>
+          {props.isUpdate ? t['Update Assignment'] :  t['Create Assignment']}
+        </button>
       </section>
     </>
   )

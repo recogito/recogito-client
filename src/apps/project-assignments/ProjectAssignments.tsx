@@ -6,12 +6,11 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { useAssignments, useProjectPolicies } from '@backend/hooks';
 import { Button } from '@components/Button';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
-import { AssignmentWizard } from './Wizard';
-import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
+import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations, UserProfile } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
-import { AssignmentSpec } from './Wizard/AssignmentSpec';
 
 interface ProjectAssignmentsProps {
 
@@ -31,7 +30,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const { project } = props;
 
-  const [wizardOpen, setWizardOpen] = useState(false);
+  const [editing, setEditing] = useState<AssignmentSpec | undefined>();
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -50,15 +49,15 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const onEditAssignment = (assignment: Context) =>
     getAssignment(supabase, assignment.id).then(({ data, error }) => {
-      if (error) {
+      if (error || !data) {
         setToast({
           title: t['Something went wrong'],
           description: t['Could not open the assignment.'],
           type: 'error'
         });
       } else {
-        // TODO compile an AssignmentSpec object for the wizard
-        console.log('editing', data);
+        const spec = toAssignmentSpec(data);
+        setEditing(spec);
       }
     });
 
@@ -115,18 +114,19 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           <>
             <Button 
               className="primary"
-              onClick={() => setWizardOpen(true)}>
+              onClick={() => setEditing(NEW_ASSIGNMENT)}>
               <GraduationCap size={20} /> <span>New Assignment</span>
             </Button>
 
-            {wizardOpen && (
+            {editing && (
               <AssignmentWizard
                 i18n={props.i18n} 
                 me={props.me}
                 project={props.project}
                 documents={props.documents}
+                assignment={editing}
                 onCreated={onAssignmentCreated}
-                onClose={() => setWizardOpen(false)} />
+                onClose={() => setEditing(undefined)} />
             )}
           </>
         )}
