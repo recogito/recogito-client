@@ -22,6 +22,23 @@ export const createAssignmentContext = (
     .then(({ error, data }) => 
       ({ error, data: data as Context }));
 
+export const updateAssignmentContext = (
+  supabase: SupabaseClient,
+  contextId: string,
+  name: string,
+  description?: string
+) =>
+  supabase
+    .from('contexts')
+    .update({
+      name, description
+    })
+    .eq('id', contextId)
+    .select()
+    .single()
+    .then(({ error, data }) =>
+      ({ error, data: data as Context }));
+
 /**
  * Archives an assigment context and all associated entities.
  */
@@ -70,6 +87,9 @@ export const getAssignment = (
           id,
           created_at,
           created_by,
+          updated_at,
+          updated_by,
+          bucket_id,
           name,
           content_type,
           meta_data
