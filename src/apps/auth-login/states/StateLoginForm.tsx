@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Lock, MagicWand, WarningOctagon } from '@phosphor-icons/react';
+import React, { useEffect, useState } from 'react';
+import { WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { TextInput } from '@components/TextInput';
 import { supabase } from '@backend/supabaseBrowserClient';

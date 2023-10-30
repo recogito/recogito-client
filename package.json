@@ -15,6 +15,7 @@
     "@astrojs/netlify": "^2.2.3",
     "@astrojs/node": "^5.3.3",
     "@astrojs/react": "^2.2.0",
+    "@lexical/react": "^0.12.2",
     "@phosphor-icons/react": "^2.0.9",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -38,6 +39,7 @@
     "confetti-explosion-react": "^0.1.2",
     "crypto-js": "^4.1.1",
     "formik": "^2.4.1",
+    "lexical": "^0.12.2",
     "openseadragon": "^3.1.0",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
@@ -56,6 +58,10 @@
     "@types/papaparse": "^5.3.9",
     "@types/react": "^18.2.6",
     "@types/react-dom": "^18.2.4",
-    "@types/uuid": "^9.0.1"
+    "@types/uuid": "^9.0.1",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-plugin-react": "^7.33.2"
   }
 }
