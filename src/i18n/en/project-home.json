@@ -3,12 +3,9 @@
   "Cancel": "Cancel",
   "Save": "Save",
   "Clear": "Clear",
-
   "Add a project description": "Add a project description",
   "Add a project description...": "Add a project description...",
- 
   "Import Document": "Import Document",
-  
   "Open document": "Open document",
   "Open document in new tab": "Open document in new tab",
   "Export annotations as CSV": "Export annotations as CSV",
@@ -16,7 +13,6 @@
   "Delete document": "Delete document",
   "Are you sure?": "Are you sure?",
   "Are you sure you want to delete this document?": "Are you sure you want to delete this document?",
-
   "Edit Document Metadata": "Edit Document Metadata",
   "Title": "Title",
   "Author": "Author",
@@ -27,14 +23,12 @@
   "Language": "Language",
   "Source": "Source",
   "Notes": "Notes",
-
-  "File upload": "File upload (supported formats: text, TEI, image)",
+  "File upload": "File upload (supported formats: text, TEI, PDF, image)",
   "From IIIF image manifest": "From IIIF manifest",
   "No presentation manifests": "Please note that there is currently support for IMAGE manifest only, but not PRESENTATION manifests.",
   "Import IIIF": "Import IIIF",
   "Paste URL to a IIIF image manifest": "Paste URL to a IIIF image manifest",
   "Please enter a valid IIIF manifest URL": "Please enter a valid IIIF manifest URL",
-
   "Something went wrong": "Something went wrong",
   "Could not create the document.": "Could not create the document.",
   "Could not rename the document.": "Could not rename the document."
