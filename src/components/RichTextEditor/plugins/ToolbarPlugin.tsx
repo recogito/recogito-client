@@ -332,7 +332,8 @@ export default function ToolbarPlugin() {
   }, [editor, isLink]);
 
   const insertPhoto = () => {
-    editor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
+    editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
+    //editor.dispatchCommand(INSERT_IMAGE_COMMAND, payload);
     setIsImage(true);
   };
 
