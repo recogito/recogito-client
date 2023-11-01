@@ -4,46 +4,62 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
-import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
+import {
+  getProjectExtended,
+  listDocumentsInProject,
+  listAllDocuments,
+} from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
 
 const profile = await getMyProfile(supabase);
-if (profile.error || !profile.data) { 
+if (profile.error || !profile.data) {
   const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
 const projectId = Astro.params.project;
 
 const project = await getProjectExtended(supabase, projectId as string);
-if (project.error || !project.data) { 
+if (project.error || !project.data) {
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { 
+  return new Response(error.body, {
     headers: { 'Content-Type': 'text/html;charset=utf-8' },
-    status: 404, 
-    statusText: 'Not Found' 
-  }); 
+    status: 404,
+    statusText: 'Not Found',
+  });
 }
 
 const documents = await listDocumentsInProject(supabase, projectId as string);
 
-if (documents.error) { 
+if (documents.error) {
   const path = Astro.url.protocol + '//' + Astro.url.host;
   const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+
+//const orgDocuments = [];
+const orgDocuments = await listAllDocuments(supabase);
+
+if (orgDocuments.error) {
+  const path = Astro.url.protocol + '//' + Astro.url.host;
+  const error = await fetch(`${path}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
 const i18n = getTranslations(Astro.request, 'project-home');
 ---
-<ProjectLayout active="Documents" user={profile.data} project={project.data}>
-  <ProjectHome 
+
+<ProjectLayout active='Documents' user={profile.data} project={project.data}>
+  <ProjectHome
     client:only
     i18n={i18n}
-    project={project.data} 
-    documents={documents.data} />
+    project={project.data}
+    documents={documents.data}
+    orgDocuments={orgDocuments.data || []}
+    user={profile.data}
+  />
 </ProjectLayout>
