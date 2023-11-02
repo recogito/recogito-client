@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+//import { RichTextEditor } from '@components/RichTextEditor';
 import { RichTextEditor } from '@components/RichTextEditor';
+//import { RichTextEditorT } from '@components/RichTextEditorT';
 import { AnnotationBody, useAnnotationStore } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
@@ -24,7 +26,9 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
-  const [value, setValue] = useState<string | undefined>();
+  const [value, setValue] = useState<string | undefined>(
+    JSON.parse(comment.value)
+  );
 
   useEffect(() => {
     const { current } = textarea;
@@ -56,25 +60,19 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const onCancelChange = () => {
     props.onCanceled();
-    setValue(comment.value);
+    setValue(JSON.parse(comment.value));
   };
 
   return editable ? (
     <form onSubmit={onSaveChange}>
-      {/* <TextareaAutosize
-        className='no-drag'
-        ref={textarea}
-        value={value}
-        onChange={(evt) => setValue(evt.target.value)}
-        rows={1}
-        maxRows={10}
-      /> */}
       <RichTextEditor
-        initialValue={comment.value}
-        onChange={(val) => setValue(val)}
+        initialValue={JSON.parse(comment.value)}
+        value={value}
+        // @ts-ignore
+        onChange={setValue}
         editable={true}
+        i18n={props.i18n}
       />
-
       <div className='buttons'>
         <button
           disabled={value === comment.value}
@@ -91,9 +89,12 @@ export const EditableComment = (props: EditableCommentProps) => {
     </form>
   ) : (
     <RichTextEditor
-      initialValue={comment.value}
+      initialValue={JSON.parse(comment.value)}
+      value={value || ''}
+      // @ts-ignore
+      onChange={setValue}
       editable={false}
-      onChange={() => {}}
+      i18n={props.i18n}
     />
   );
 };

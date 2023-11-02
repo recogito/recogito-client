@@ -8,6 +8,7 @@ import { Avatar } from '../../Avatar';
 import { RichTextEditor } from '@components/RichTextEditor';
 
 import './ReplyForm.css';
+import type { Translations } from 'src/Types';
 
 export interface ReplyFormProps {
   annotation: SupabaseAnnotation;
@@ -23,12 +24,14 @@ export interface ReplyFormProps {
   beforeSubmit?(body: AnnotationBody): void;
 
   onSubmit?(body: AnnotationBody): void;
+
+  i18n: Translations;
 }
 
 export const ReplyForm = (props: ReplyFormProps) => {
   const { me } = props;
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<string | undefined>();
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
@@ -60,8 +63,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
         },
         created: new Date(),
         purpose: 'commenting',
-        value: value,
-        render_type: 'lexical',
+        value: JSON.stringify(value),
+        render_type: 'quill',
       };
 
       setValue('');
@@ -72,11 +75,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
       props.onSubmit && props.onSubmit(body);
     }
-  };
-
-  const onKeyDown = (evt: React.KeyboardEvent) => {
-    if (evt.ctrlKey && evt.key === 'Enter') onSubmit();
-    else if (evt.key === 'Delete') evt.stopPropagation();
   };
 
   return (
@@ -90,20 +88,14 @@ export const ReplyForm = (props: ReplyFormProps) => {
       ) : (
         <Detective className='anonymous' size={20} weight='light' />
       )}
-
       <RichTextEditor
-        placeholder={props.placeholder}
-        onChange={(val) => setValue(JSON.stringify(val))}
+        initialValue={''}
+        value={value || ''}
+        // @ts-ignore
+        onChange={setValue}
         editable={true}
+        i18n={props.i18n}
       />
-
-      {/* <TextareaAutosize 
-        ref={textarea}
-        rows={1} 
-        maxRows={10}
-        placeholder={props.placeholder}
-        onKeyDownCapture={onKeyDown} /> */}
-
       <button className='send icon-only' onClick={onSubmit}>
         <ArrowRight size={18} />
       </button>
