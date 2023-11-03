@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-//import { RichTextEditor } from '@components/RichTextEditor';
 import { RichTextEditor } from '@components/RichTextEditor';
-//import { RichTextEditorT } from '@components/RichTextEditorT';
+import TextareaAutosize from 'react-textarea-autosize';
 import { AnnotationBody, useAnnotationStore } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
@@ -27,8 +26,12 @@ export const EditableComment = (props: EditableCommentProps) => {
   const textarea = useRef<HTMLTextAreaElement>(null);
 
   const [value, setValue] = useState<string | undefined>(
-    JSON.parse(comment.value)
+    // Hack for now
+    comment.value.length > 0 && comment.value.charAt(0) === '{'
+      ? JSON.parse(comment.value)
+      : comment.value
   );
+  const [renderType, setRenderType] = useState<'text' | 'quill'>('text');
 
   useEffect(() => {
     const { current } = textarea;
@@ -47,12 +50,23 @@ export const EditableComment = (props: EditableCommentProps) => {
     }
   }, [editable]);
 
+  useEffect(() => {
+    if (comment.value && comment.value.length > 0) {
+      if (comment.value.charAt(0) === '{') {
+        setRenderType('quill');
+      } else {
+        setRenderType('text');
+      }
+    }
+  }, []);
+
   const onSaveChange = (evt: React.FormEvent) => {
     evt.preventDefault();
 
     store.updateBody(comment, {
       ...comment,
-      value: JSON.stringify(value),
+      render_type: renderType,
+      value: renderType === 'text' ? (value as string) : JSON.stringify(value),
     });
 
     props.onChanged();
@@ -65,14 +79,25 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   return editable ? (
     <form onSubmit={onSaveChange}>
-      <RichTextEditor
-        initialValue={JSON.parse(comment.value)}
-        value={value}
-        // @ts-ignore
-        onChange={setValue}
-        editable={true}
-        i18n={props.i18n}
-      />
+      {renderType === 'text' ? (
+        <TextareaAutosize
+          className='no-drag'
+          ref={textarea}
+          value={value}
+          onChange={(evt) => setValue(evt.target.value)}
+          rows={1}
+          maxRows={10}
+        />
+      ) : (
+        <RichTextEditor
+          initialValue={JSON.parse(comment.value)}
+          value={value}
+          // @ts-ignore
+          onChange={setValue}
+          editable={true}
+          i18n={props.i18n}
+        />
+      )}
       <div className='buttons'>
         <button
           disabled={value === comment.value}
@@ -87,6 +112,8 @@ export const EditableComment = (props: EditableCommentProps) => {
         </button>
       </div>
     </form>
+  ) : renderType === 'text' ? (
+    <p className='no-drag'>{comment.value}</p>
   ) : (
     <RichTextEditor
       initialValue={JSON.parse(comment.value)}
