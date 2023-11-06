@@ -5,6 +5,7 @@ import type { Context, Document, Translations } from 'src/Types';
 import { 
   Browser, 
   Browsers, 
+  CaretRight,
   Code,
   DotsThreeVertical, 
   DownloadSimple,
@@ -12,7 +13,7 @@ import {
   Trash 
 } from '@phosphor-icons/react';
 
-const { Content, Item, Portal, Root, Trigger } = Dropdown;
+const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
 interface DocumentCardActionsProps {
 
@@ -72,9 +73,29 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             </Item>
 
             {props.document.content_type === 'text/xml' && (
-              <Item className="dropdown-item" onSelect={props.onExportTEI}>
-                <Code size={16} /> <span>{t['Export TEI file']}</span>
-              </Item>
+              <Sub>
+                <SubTrigger className="dropdown-subtrigger">
+                  <Code size={16} /> <span>{t['Export TEI file']}</span>
+                  <div className="right-slot">
+                    <CaretRight size={16} />
+                  </div>
+                </SubTrigger>
+
+                <Portal>
+                  <SubContent
+                    className="dropdown-subcontent"
+                    alignOffset={-5}>
+
+                    <Item className="dropdown-item" onSelect={props.onExportTEI}>
+                      Include Private
+                    </Item>
+
+                    <Item className="dropdown-item" onSelect={props.onExportTEI}>
+                      Exclude Private
+                    </Item>
+                  </SubContent>
+                </Portal>
+              </Sub>
             )}
 
             {props.isAdmin && (
