@@ -1,9 +1,9 @@
-
+import type { APIRoute } from 'astro';
+import { Visibility } from '@recogito/annotorious-supabase';
 import { getAllDocumentLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import type { APIRoute } from 'astro';
 import { mergeAnnotations } from 'src/util';
 
 export const get: APIRoute = async ({ params, request, cookies, url }) => {
@@ -47,7 +47,6 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       JSON.stringify({ message: 'Internal server error' }), 
       { status: 500 }); 
 
-  // Download TEI from DB
   const content = await supabase.storage.from(document.data.bucket_id!).download(documentId);
   if (content.error)
     return new Response(
@@ -72,7 +71,12 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       JSON.stringify({ message: 'Error retrieving annotations' }), 
       { status: 500 }); 
 
-  const merged = mergeAnnotations(xml, annotations.data);
+  // Exclude private, if necessary
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const merged = includePrivate ? 
+    mergeAnnotations(xml, annotations.data) : 
+    mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
 
   const filename = document.data.name.endsWith('.xml') ?
     document.data.name : `${document.data.name}.tei.xml`

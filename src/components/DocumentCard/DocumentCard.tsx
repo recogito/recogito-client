@@ -42,17 +42,19 @@ export const DocumentCard = (props: DocumentCardProps) => {
   }
   
   const onClick = (evt: React.MouseEvent) => {
-    const isClickOnMenu = (evt.target as Element).closest('.dropdown-content');
+    const isClickOnMenu = 
+      (evt.target as Element).closest('.dropdown-content') ||
+      (evt.target as Element).closest('.dropdown-subcontent');
     
     if (!isClickOnMenu)
       onOpen(true)
   }
 
-  const onExportTEI = () =>
+  const onExportTEI = (includePrivate: boolean) => 
     window.location.href =
       props.isDefaultContext ? 
-        `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}` :
-        `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}` 
+        `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}` :
+        `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}&private=${includePrivate}`; 
 
   const onExportCSV = () =>
     window.location.href = `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}`;

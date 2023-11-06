@@ -7,10 +7,12 @@ import {
   Browsers, 
   CaretRight,
   Code,
+  Detective,
   DotsThreeVertical, 
   DownloadSimple,
   PencilSimple, 
-  Trash 
+  Trash,
+  UsersThree
 } from '@phosphor-icons/react';
 
 const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
@@ -33,7 +35,7 @@ interface DocumentCardActionsProps {
 
   onExportCSV?(): void;
 
-  onExportTEI?(): void;
+  onExportTEI?(includePrivate?: boolean): void;
 
 }
 
@@ -49,6 +51,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
     props.onOpen(tab);
   }
+
+  const onExportTEI = (includePrivate: boolean) => (evt: Event) =>
+    props.onExportTEI && props.onExportTEI(includePrivate);
 
   return (
     <ConfirmedAction.Root
@@ -86,12 +91,12 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     className="dropdown-subcontent"
                     alignOffset={-5}>
 
-                    <Item className="dropdown-item" onSelect={props.onExportTEI}>
-                      Include Private
+                    <Item className="dropdown-item" onSelect={onExportTEI(false)}>
+                      <UsersThree size={16} /> Export public annotations only
                     </Item>
 
-                    <Item className="dropdown-item" onSelect={props.onExportTEI}>
-                      Exclude Private
+                    <Item className="dropdown-item" onSelect={onExportTEI(true)}>
+                      <Detective size={16} /> Include my private annotations
                     </Item>
                   </SubContent>
                 </Portal>
