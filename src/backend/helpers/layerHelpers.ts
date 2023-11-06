@@ -77,7 +77,7 @@ export const addUsersToLayer = (
         supabase
           .from('group_users')
           .insert(records)
-          .then(({ data, error }) => {
+          .then(({ error }) => {
             if (error)
               reject(error)
             else 
@@ -86,6 +86,44 @@ export const addUsersToLayer = (
       }
     });
 });
+
+export const removeUsersFromLayer = (
+  supabase: SupabaseClient,
+  layerId: string,
+  groupName: string,
+  users: UserProfile[]
+): Promise<void> => new Promise((resolve, reject) => {
+  // Step 1. get layer group with the given name
+  supabase
+    .from('layer_groups')
+    .select(`
+      id,
+      name
+    `)
+    .eq('layer_id', layerId)
+    .eq('name', groupName)
+    .then(({ error, data }) => {
+      if (error || data?.length !== 1) {
+        reject(error);
+      } else {
+        const groupId = data[0].id;
+        const userIds = users.map(user => user.id);
+
+        // Step 2. remove users from this group
+        supabase
+          .from('group_users')
+          .delete()
+          .in('user_id', userIds)
+          .then(({ error }) => {
+            if (error)
+              reject(error)
+            else 
+              resolve();
+          });
+      }
+    });
+});
+
 
 /**
  * Retrieves all layers on the given documents

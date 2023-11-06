@@ -2,6 +2,7 @@ import { Annotation } from '@components/Annotation';
 import { useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import { TagsWidget } from '../TagsWidget';
 import type { Policies, Translations } from 'src/Types';
 
 import './Popup.css';
@@ -64,6 +65,12 @@ export const Popup = (props: PopupProps) => {
       ) : isMine ? (
         isPrivate ? (
           <div className="annotation-card private">
+            <TagsWidget 
+              i18n={props.i18n} 
+              me={me} 
+              annotation={selected}
+              vocabulary={props.tagVocabulary} />
+
             <Annotation.ReplyForm 
               {...props}
               autofocus
@@ -74,6 +81,12 @@ export const Popup = (props: PopupProps) => {
           </div>
         ) : (
           <div className="annotation-card">
+            <TagsWidget 
+              i18n={props.i18n} 
+              me={me} 
+              annotation={selected}
+              vocabulary={props.tagVocabulary} />
+
             <Annotation.ReplyForm 
               {...props}
               autofocus

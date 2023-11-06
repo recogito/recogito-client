@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
-import { archiveAssignment, getAllLayersInContext } from '@backend/helpers';
+import { archiveAssignment, getAllLayersInContext, getAssignment } from '@backend/helpers';
 import { archiveLayer } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useAssignments, useProjectPolicies } from '@backend/hooks';
 import { Button } from '@components/Button';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
-import { AssignmentWizard } from './Wizard';
-import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
+import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations, UserProfile } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
@@ -30,7 +30,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const { project } = props;
 
-  const [wizardOpen, setWizardOpen] = useState(false);
+  const [editing, setEditing] = useState<AssignmentSpec | undefined>();
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -44,8 +44,28 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
   const { assignments, setAssignments } = useAssignments(project);
 
-  const onAssignmentCreated = (assignment: Context) =>
-    setAssignments(assignments => ([...(assignments || []), assignment]));
+  const onAssignmentSaved = (assignment: Context) =>
+    setAssignments(assignments => {
+      const isUpdate = assignments?.find(a => a.id === assignment.id);
+
+      return isUpdate ? 
+        assignments!.map(a => a.id === assignment.id ? assignment : a) :
+        [...(assignments || []), assignment];
+    });
+
+  const onEditAssignment = (assignment: Context) =>
+    getAssignment(supabase, assignment.id).then(({ data, error }) => {
+      if (error || !data) {
+        setToast({
+          title: t['Something went wrong'],
+          description: t['Could not open the assignment.'],
+          type: 'error'
+        });
+      } else {
+        const spec = toAssignmentSpec(data);
+        setEditing(spec);
+      }
+    });
 
   const onDeleteAssignment = (assignment: Context) => {
     // Optimistic update: remove assignment from the list
@@ -57,8 +77,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
         setAssignments(assignments => ([...(assignments || []), assignment]));
 
         setToast({
-          title: 'Something went wrong',
-          description: 'Could not delete the document.',
+          title: t['Something went wrong'],
+          description: t['Could not delete the assignment.'],
           type: 'error'
         });
       } else {
@@ -72,8 +92,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           .then(() => archiveAssignment(supabase, assignment.id))
           .then(() => {
             setToast({
-              title: 'Deleted',
-              description: 'Document deleted successfully.',
+              title: t['Deleted'],
+              description: t['Assignment deleted successfully.'],
               type: 'success'
             });
           })
@@ -82,8 +102,8 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
             setAssignments(assignments => ([...(assignments || []), assignment]));
 
             setToast({
-              title: 'Something went wrong',
-              description: 'Could not delete the document.',
+              title: t['Something went wrong'],
+              description: t['Could not delete the assignment.'],
               type: 'error'
             });
           });
@@ -100,18 +120,19 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
           <>
             <Button 
               className="primary"
-              onClick={() => setWizardOpen(true)}>
+              onClick={() => setEditing(NEW_ASSIGNMENT)}>
               <GraduationCap size={20} /> <span>New Assignment</span>
             </Button>
 
-            {wizardOpen && (
+            {editing && (
               <AssignmentWizard
                 i18n={props.i18n} 
                 me={props.me}
                 project={props.project}
                 documents={props.documents}
-                onCreated={onAssignmentCreated}
-                onClose={() => setWizardOpen(false)} />
+                assignment={editing}
+                onSaved={onAssignmentSaved}
+                onClose={() => setEditing(undefined)} />
             )}
           </>
         )}
@@ -124,6 +145,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
             canUpdate={canCreate}
             project={project}
             assignments={assignments} 
+            onEditAssignment={onEditAssignment}
             onDeleteAssignment={onDeleteAssignment} />
         ) : (
           <div />

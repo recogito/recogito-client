@@ -1,0 +1,29 @@
+{
+  "_comment": "This is a default configuration file that can be replaced at build time",
+  "branding": {
+    "platform_name": "Recogito",
+    "site_name": "Default",
+    "welcome_blurb": "Recogito is the premier Text and Image Annotation system",
+    "site_color": "orange",
+    "home_banner": "https://iiif-staging.archivengine.com/iiif/3/ezzvwzdd3kug71gf0tj6vxxx9ihu;1/full/1200,/0/default.jpg"
+  },
+  "authentication": {
+    "methods": [
+      {
+        "name": "Username and Password",
+        "type": "username_password",
+        "domain": ""
+      },
+      {
+        "name": "Sign in with SSO",
+        "type": "saml",
+        "domain": "example.com"
+      },
+      {
+        "name": "Send Magic Link",
+        "type": "magic_link",
+        "domain": ""
+      }
+    ]
+  }
+}

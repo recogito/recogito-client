@@ -3,28 +3,12 @@ import { addUsersToLayer, createAssignmentContext, createLayerInContext } from '
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Layer, ExtendedProjectData, Translations, Context } from 'src/Types';
-import type { AssignmentSpec } from '../AssignmentSpec';
+import type { Layer } from 'src/Types';
+import type { ProgressProps, ProgressState } from './Progress';
 
 import './Progress.css';
 
-interface ProgressProps {
-
-  i18n: Translations;
-
-  project: ExtendedProjectData;
-
-  assignment: AssignmentSpec;
-
-  onCreated(assignment: Context): void;
-
-  onError(error: string): void;
-
-}
-
-type ProgressState = 'idle' | 'creating_assignment' | 'success' | 'failed';
-
-export const Progress = (props: ProgressProps) => {
+export const ProgressCreating = (props: ProgressProps) => {
 
   const { t } = props.i18n;
 
@@ -62,7 +46,7 @@ export const Progress = (props: ProgressProps) => {
                 addUsersToLayer(supabase, layer.id, 'Layer Student', team));
             }, Promise.resolve<void>(undefined)).then(() => {
               setState('success');
-              props.onCreated(context);
+              props.onSaved(context);
             })            
           }).catch(error => {
             console.error(error);
@@ -75,7 +59,7 @@ export const Progress = (props: ProgressProps) => {
   }, []);
 
   return (
-    <div className="creating-assignment">
+    <div className="saving-assignment">
       {state === 'idle' || state === 'creating_assignment' ? (
         <Spinner />
       ) : state === 'success' ? (
@@ -86,7 +70,7 @@ export const Progress = (props: ProgressProps) => {
           </p>
         </>
       ) : (
-        <p>Something went wrong</p>
+        <p>{t['Something went wrong']}</p>
       )}
     </div>
   )

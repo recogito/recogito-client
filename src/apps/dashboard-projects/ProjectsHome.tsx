@@ -105,20 +105,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-projects-home">
-        <AlertBanner id="welcome-to-the-beta">
-          <h1>Herzlich Willkommen zum Beta-Test!</h1>
-          <p>
-            Ihre Projektliste ist im Moment wahrscheinlich noch leer. {invitations.length > 0 ? (
-              <> In ihren Benachrichtigungen <Bell className="text-bottom swing" size={16} /> wartet bereits eine Einladung zu unserem Musterprojekt.</>
-            ) : (
-              <> In ihren Benachrichtigungen <Bell className="text-bottom swing" size={16} /> sollte bereits eine Einladung zu unserem Musterprojekt auf Sie warten.</>
-            )} Dort finden Sie alles, was sie für den Start benötigen. 
-          </p>
-          <p>
-            Viel Spaß beim Erkunden - wir freuen uns auf Ihr Feedback!
-          </p>
-        </AlertBanner>
-
         <Header 
           i18n={props.i18n} 
           me={me}
