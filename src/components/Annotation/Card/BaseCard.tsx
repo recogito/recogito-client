@@ -13,8 +13,6 @@ import type { Translations } from 'src/Types';
 
 type BaseCardProps = CardProps & {
   comment(props: CommentProps): ReactNode;
-
-  i18n: Translations;
 };
 
 export const BaseCard = (props: BaseCardProps) => {
