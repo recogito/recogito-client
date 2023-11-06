@@ -12,8 +12,15 @@ import {
   CompactTable,
   Column,
 } from '@table-library/react-table-library/compact';
+import { useRowSelect } from '@table-library/react-table-library/select';
 import './DocumentLibrary.css';
 import type { TableNode } from '@table-library/react-table-library';
+import { useTheme } from '@table-library/react-table-library/theme';
+import { getTheme } from '@table-library/react-table-library/baseline';
+import type {
+  Action,
+  MiddlewareFunction,
+} from '@table-library/react-table-library/types/common';
 
 export interface DocumentLibraryProps {
   open: boolean;
@@ -24,6 +31,7 @@ export interface DocumentLibraryProps {
   onAddDocument(document: DocumentInContext): void;
   onCancel(): void;
   UploadActions: React.ReactNode;
+  onDocumentsSelected(documentIds: string[]): void;
 }
 
 export const DocumentLibrary = (props: DocumentLibraryProps) => {
@@ -33,6 +41,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const [view, setView] = useState<'mine' | 'all'>('mine');
 
   const [documents, setDocuments] = useState<Document[] | null>(null);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+
+  const theme = useTheme([
+    getTheme(),
+    {
+      Table: `
+        --data-table-library_grid-template-columns:  44px repeat(3, minmax(0, 1fr));
+      `,
+    },
+  ]);
 
   useEffect(() => {
     async function getDocuments() {
@@ -58,10 +76,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     {
       label: t['Title'],
       renderCell: (item) => item.name,
+      select: true,
+      pinLeft: true,
     },
     {
       label: t['Document Type'],
-      renderCell: (item) => item.meta_data.protocol,
+      renderCell: (item) => item.content_type,
     },
     {
       label: t['URL'],
@@ -72,7 +92,29 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     ? documents.filter((d) => d.created_by === props.user.id)
     : [];
 
-  const allDocuments = documents || [];
+  const allDocuments = documents ? documents : [];
+
+  const selectAll = useRowSelect(
+    { nodes: allDocuments },
+    {
+      onChange: onSelectChange,
+    }
+  );
+
+  const selectMine = useRowSelect(
+    { nodes: myDocuments },
+    {
+      onChange: onSelectChange,
+    }
+  );
+
+  function onSelectChange(action: Action, state: any) {
+    if (action.type === 'ADD_BY_IDS') {
+      setSelectedIds([...selectedIds, ...action.payload.ids]);
+    } else {
+      setSelectedIds(selectedIds.filter((i) => i !== action.payload.ids[0]));
+    }
+  }
 
   return (
     <Dialog.Root open={props.open}>
@@ -121,20 +163,44 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           </header>
           <section className='doc-lib-section-content'>
             {view === 'mine' ? (
-              <CompactTable columns={columns} data={{ nodes: myDocuments }} />
+              myDocuments.length > 0 ? (
+                <CompactTable
+                  columns={columns}
+                  data={{ nodes: myDocuments }}
+                  select={selectMine}
+                  theme={theme}
+                  layout={{ custom: true }}
+                />
+              ) : (
+                'No Documents'
+              )
+            ) : allDocuments.length > 0 ? (
+              <CompactTable
+                columns={columns}
+                data={{ nodes: allDocuments }}
+                select={selectAll}
+                theme={theme}
+                layout={{ custom: true }}
+              />
             ) : (
-              <CompactTable columns={columns} data={{ nodes: allDocuments }} />
+              'No Documents'
             )}
           </section>
-          <div className='buttons'>
+          <div className='doc-lib-buttons'>
             {UploadActions}
-            <Button type='button' className='sm' onClick={props.onCancel}>
-              {t['Cancel']}
-            </Button>
-
-            <Button type='submit' className='primary sm'>
-              {t['Ok']}
-            </Button>
+            <div>
+              <Button type='button' onClick={props.onCancel}>
+                {t['Cancel']}
+              </Button>
+              <Button
+                type='submit'
+                className='primary'
+                disabled={selectedIds.length === 0}
+                onClick={() => props.onDocumentsSelected(selectedIds)}
+              >
+                {t['Add Selected Documents']}
+              </Button>
+            </div>
           </div>
         </Dialog.Content>
       </Dialog.Portal>

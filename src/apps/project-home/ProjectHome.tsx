@@ -16,6 +16,7 @@ import {
   useUpload,
   useDragAndDrop,
 } from './upload';
+import { useDocumentList } from './useDocumentList';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
 import { DocumentLibrary } from '../../components/DocumentLibrary';
@@ -67,6 +68,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [showUploads, setShowUploads] = useState(false);
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
+    (document) => setDocuments((d) => [...d, document])
+  );
+
+  const { addDocumentIds } = useDocumentList(
+    project.id,
+    defaultContext!.id,
     (document) => setDocuments((d) => [...d, document])
   );
 
@@ -179,6 +186,11 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const onDocumentSelected = (document: DocumentInContext) => {};
 
+  const onDocumentsSelected = (documentIds: string[]) => {
+    addDocumentIds(documentIds);
+    setAddOpen(false);
+  };
+
   return (
     <div className='project-home'>
       <ToastProvider>
@@ -198,13 +210,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               <button className='primary' onClick={onAddDocument}>
                 <Plus size={20} /> <span>{t['Add Document']}</span>
               </button>
-
-              <UploadActions
-                i18n={props.i18n}
-                onUpload={open}
-                onImport={onImportRemote}
-              />
-
               <a
                 href={`/${lang}/projects/${project.id}/export/csv`}
                 className='button'
@@ -270,6 +275,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               onImport={onImportRemote}
             />
           }
+          onDocumentsSelected={onDocumentsSelected}
         />
         <UploadTracker
           show={showUploads}

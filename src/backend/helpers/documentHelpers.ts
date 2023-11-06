@@ -11,6 +11,12 @@ import type {
   TaggedContext,
 } from 'src/Types';
 import { getTagsForContext } from './tagHelpers';
+import { supabase } from '@backend/supabaseBrowserClient';
+
+export type DbResult<T> = T extends PromiseLike<infer U> ? U : never;
+export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }>
+  ? Exclude<U, null>
+  : never;
 
 /**
  * Initializes a new Document in a Context. Process differs for
@@ -102,6 +108,34 @@ const _initDocument = (
     } else {
       return { ...document, layers: [defaultLayer] };
     }
+  });
+};
+
+export const addDocumentToProject = (
+  supabase: SupabaseClient,
+  projectId: string,
+  contextId: string,
+  documentId: string
+): Promise<DocumentInContext> => {
+  // First promise: select the document
+  const a: Promise<Document> = new Promise((resolve, reject) =>
+    supabase
+      .from('documents')
+      .select()
+      .eq('id', documentId)
+      .then(({ error, data }) => {
+        if (error) reject(error);
+        else resolve(data[0]);
+      })
+  );
+
+  // Second promise: create layer in the default context
+  const b: Promise<Layer> = a.then((document) =>
+    createLayerInContext(supabase, document.id, projectId, contextId)
+  );
+
+  return Promise.all([a, b]).then(([document, defaultLayer]) => {
+    return { ...document, layers: [defaultLayer] };
   });
 };
 

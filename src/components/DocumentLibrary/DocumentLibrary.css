@@ -98,3 +98,9 @@
 .doc-lib-section-content {
   padding: 30px;
 }
+
+.doc-lib-buttons {
+  display: flex;
+  justify-content: space-between;
+  padding: 30;
+}
