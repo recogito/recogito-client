@@ -92,11 +92,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     alignOffset={-5}>
 
                     <Item className="dropdown-item" onSelect={onExportTEI(false)}>
-                      <UsersThree size={16} /> Export public annotations only
+                      <UsersThree size={16} /> {t['Public annotations only']}
                     </Item>
 
                     <Item className="dropdown-item" onSelect={onExportTEI(true)}>
-                      <Detective size={16} /> Include my private annotations
+                      <Detective size={16} /> {t['Include my private annotations']}
                     </Item>
                   </SubContent>
                 </Portal>
