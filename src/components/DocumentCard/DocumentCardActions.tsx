@@ -71,14 +71,14 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               <Browsers size={16} /> <span>{t['Open document in new tab']}</span>
             </Item>
 
+            {props.document.content_type === 'text/xml' && (
+              <Item className="dropdown-item" onSelect={props.onExportTEI}>
+                <Code size={16} /> <span>{t['Export TEI file']}</span>
+              </Item>
+            )}
+
             {props.isAdmin && (
               <>
-                {props.document.content_type === 'text/xml' && (
-                  <Item className="dropdown-item" onSelect={props.onExportTEI}>
-                    <Code size={16} /> <span>{t['Export TEI file']}</span>
-                  </Item>
-                )}
-
                 <Item className="dropdown-item" onSelect={props.onExportCSV}>
                   <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
                 </Item>

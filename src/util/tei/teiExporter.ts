@@ -1,5 +1,5 @@
-import type { SupabaseAnnotation, SupabaseAnnotationBody, SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
 import { DOMParser } from 'linkedom';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   const elements = [ annotation.target, ...annotation.bodies ];
@@ -13,9 +13,6 @@ const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   }
 }
 
-/**
- * Experimental!
- */
 export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[]): string => {
 
   const document = (new DOMParser).parseFromString(xml, 'text/xml');
@@ -94,7 +91,13 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     listAnnotationEl.appendChild(annotationEl);
   });
 
-  document.querySelector('teiHeader').appendChild(standOffEl);
+  let teiHeader = document.querySelector('teiHeader');
+  if (!teiHeader) {
+    teiHeader = document.createElement('teiHeader');
+    document.querySelector('TEI').prepend(teiHeader);
+  }
+  
+  teiHeader.appendChild(standOffEl);
   
   return document.toString();
 }

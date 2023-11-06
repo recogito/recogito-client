@@ -1,5 +1,5 @@
 
-import { getAllDocumentLayersInProject, getProjectPolicies } from '@backend/helpers';
+import { getAllDocumentLayersInProject, getAssignment, getProjectExtended, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
@@ -22,18 +22,27 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
 
   const projectId = params.project!;
 
-  const policies = await getProjectPolicies(supabase, projectId);
-  if (policies.error)
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized'}),
-      { status: 401 });
-
-  // At the project level, only admins can export annotations
-  const isAdmin = policies.data.get('projects').has('UPDATE') || profile.data.isOrgAdmin;
-  if (!isAdmin)
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized'}),
-      { status: 401 });
+  const project = await getProjectExtended(supabase, projectId as string);
+  if (project.error || !project.data) { 
+    const error = await fetch(`${url}/404`);
+    return new Response(error.body, { 
+      headers: { 'Content-Type': 'text/html;charset=utf-8' },
+      status: 404, 
+      statusText: 'Not Found' 
+     }); 
+  }
+  
+  const assignmentId = params.assignment!;
+  
+  const assignment = await getAssignment(supabase, assignmentId);
+  if (assignment.error || !assignment.data) {
+    const error = await fetch(`${url}/404`);
+    return new Response(error.body, { 
+      headers: { 'Content-Type': 'text/html;charset=utf-8' },
+      status: 404, 
+      statusText: 'Not Found' 
+     }); 
+  }
 
   const documentId = url.searchParams.get('document');
   if (!documentId)
@@ -56,17 +65,8 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
 
   const xml = await content.data.text();
 
-  // At the project level, all layers in the project will be exported
-  const layers = await getAllDocumentLayersInProject(supabase, documentId, projectId);
-  if (layers.error)
-    return new Response(
-      JSON.stringify({ message: 'Internal server error' }), 
-      { status: 500 }); 
-
-  const layerIds = layers.data.map(l => l.id);
-
-  // Download annotations on all layers
-  const annotations = await getAnnotations(supabase, layerIds);
+  // At the assignment level, only the assignment layer will be exported
+  const annotations = await getAnnotations(supabase, assignment.data.layers.map(l => l.id));
   if (annotations.error)
     return new Response(
       JSON.stringify({ message: 'Error retrieving annotations' }), 
@@ -75,7 +75,7 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
   const merged = mergeAnnotations(xml, annotations.data);
 
   const filename = document.data.name.endsWith('.xml') ?
-    document.data.name : `${document.data.name}.tei.xml`
+    document.data.name : `${document.data.name}-${assignment.data.name}.tei.xml`
 
   return new Response(    
     merged,

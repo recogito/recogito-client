@@ -12,6 +12,8 @@ interface DocumentCardProps {
 
   isAdmin?: boolean;
 
+  isDefaultContext?: boolean;
+
   context: Context;
 
   document: Document;
@@ -47,7 +49,10 @@ export const DocumentCard = (props: DocumentCardProps) => {
   }
 
   const onExportTEI = () =>
-    window.location.href = `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}`;
+    window.location.href =
+      props.isDefaultContext ? 
+        `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}` :
+        `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}` 
 
   const onExportCSV = () =>
     window.location.href = `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}`;
