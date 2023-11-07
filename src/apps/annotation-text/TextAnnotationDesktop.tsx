@@ -54,6 +54,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
 
+  // Default layer is either the first layer in the project context, 
+  // or the first layer in the list, if no project context
+  const defaultLayer = layers && layers.length > 0 ? 
+    layers.find(l => !l.context.name) || layers[0] : undefined;
+
   const vocabulary = useTagVocabulary(props.document.context.project_id);
 
   useEffect(() => {
@@ -149,7 +154,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             supabaseUrl={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
             channel={props.channelId}
-            defaultLayer={props.document.layers[0].id} 
+            defaultLayer={defaultLayer?.id} 
             layerIds={layers.map(layer => layer.id)}
             appearanceProvider={createAppearenceProvider()}
             onPresence={setPresent} 
@@ -182,8 +187,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           <AnnotationDesktop.ViewMenu 
             i18n={i18n}
             present={present} 
+            privacy={privacy}
             policies={policies}
             layers={layers}
+            defaultLayer={defaultLayer?.id} 
             // @ts-ignore
             sorting={sorting}
             tagVocabulary={vocabulary}

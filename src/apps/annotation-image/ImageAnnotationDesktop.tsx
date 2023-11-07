@@ -49,6 +49,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
 
+  // Default layer is either the first layer in the project context, 
+  // or the first layer in the list, if no project context
+  const defaultLayer = layers && layers.length > 0 ? 
+    layers.find(l => !l.context.name) || layers[0] : undefined;
+
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
   const vocabulary = useTagVocabulary(props.document.context.project_id);
@@ -127,7 +132,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               supabaseUrl={SUPABASE}
               apiKey={SUPABASE_API_KEY} 
               channel={props.channelId}
-              defaultLayer={props.document.layers[0].id} 
+              defaultLayer={defaultLayer?.id} 
               layerIds={layers.map(layer => layer.id)}
               appearanceProvider={appearance}
               onPresence={setPresent} 
@@ -171,8 +176,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             <AnnotationDesktop.ViewMenu 
               i18n={i18n}
               present={present} 
+              privacy={privacy}
               policies={policies}
               layers={layers}
+              defaultLayer={defaultLayer?.id} 
               tagVocabulary={vocabulary}
               onChangePanel={onChangeViewMenuPanel} 
               onChangeFormatter={f => setFormatter(() => f)}

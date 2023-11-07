@@ -1,10 +1,16 @@
+import { useState } from 'react';
+import { ArrowRight, Detective } from '@phosphor-icons/react';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
-import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { supabase } from '@backend/supabaseBrowserClient';
+import TextareaAutosize from 'react-textarea-autosize';
 import { Annotation } from '@components/Annotation';
+import type { PrivacyMode } from '@components/PrivacySelector';
+import { Avatar } from '@components/Avatar';
 import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
+import type { DocumentNote } from './DocumentNote';
+
+import './DocumentNotesList.css';
 
 interface DocumentNotesListProps {
 
@@ -13,6 +19,10 @@ interface DocumentNotesListProps {
   present: PresentUser[];
 
   me: PresentUser;
+  
+  privacy: PrivacyMode;
+
+  defaultLayer: string;
 
   policies?: Policies;
 
@@ -22,17 +32,21 @@ interface DocumentNotesListProps {
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
+  const [addNew, setAddNew] = useState(false);
+
   const user = useAnnotatorUser();
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
-  const notes = useNotes(supabase);
+  const { notes } = useNotes(me, props.defaultLayer);
 
-  const isMine = (a: SupabaseAnnotation) =>
-    me.id === a.target.creator?.id;
+  const isPublic = props.privacy === 'PUBLIC';
 
-  const isPrivate = (a: SupabaseAnnotation) =>
-    a.visibility === Visibility.PRIVATE;
+  const isMine = (n: DocumentNote) => me.id === n.created_by.id;
+
+  const onSubmit = (evt: React.MouseEvent) => {
+    evt.preventDefault();
+  }
 
   return (
     <div className="anno-sidepanel document-notes-list">
@@ -42,7 +56,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
             {note.bodies.length === 0 ? (
               isMine(note) ? (              
                 <Annotation.EmptyCard
-                  private={isPrivate(note)}
+                  private={note.is_private}
                   i18n={props.i18n}
                   annotation={note} 
                   present={props.present} />
@@ -54,7 +68,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
                   present={props.present} />              
               )
             ) : (
-              isPrivate(note) ? (
+              note.is_private ? (
                 <Annotation.PrivateCard 
                   showReplyForm
                   i18n={props.i18n}
@@ -74,6 +88,32 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
           </li>
         ))}
       </ul>
+
+      {addNew ? (
+        <form 
+          className="annotation-reply-form no-drag">
+            {isPublic ? (
+              <Avatar 
+                id={me.id} 
+                name={me.name || (me as PresentUser).appearance?.label}
+                avatar={me.avatar || (me as PresentUser).appearance?.avatar} />
+            ) : (
+              <Detective className="anonymous" size={20} weight="light" />  
+            )}
+      
+            <TextareaAutosize
+              rows={1} 
+              maxRows={10} />
+      
+            <button 
+              className="send icon-only"
+              onClick={onSubmit}>
+              <ArrowRight size={18} />
+            </button>
+          </form>
+      ) : (
+        <button onClick={() => setAddNew(true)}>Add a note</button>
+      )}
     </div>
   )
 

@@ -4,6 +4,7 @@ import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@recogito/annotorious-supabase';
 import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
+import type { PrivacyMode } from '@components/PrivacySelector';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
@@ -18,9 +19,13 @@ interface ViewMenuProps {
 
   present: PresentUser[];
 
+  privacy: PrivacyMode;
+
   policies?: Policies;
 
   layers?: Layer[];
+
+  defaultLayer?: string;
 
   sorting?: ((a: Annotation, b: Annotation) => number);
 
@@ -128,11 +133,13 @@ export const ViewMenu = (props: ViewMenuProps) => {
               layers={props.layers}
               present={props.present}
               onChange={props.onChangeFormatter} />
-          ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? (
+          ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
             <DocumentNotesList 
               i18n={props.i18n}
               present={props.present} 
               me={me}
+              privacy={props.privacy}
+              defaultLayer={props.defaultLayer}
               policies={props.policies} 
               tagVocabulary={props.tagVocabulary} />
           ) : undefined}
