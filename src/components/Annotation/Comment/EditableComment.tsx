@@ -65,7 +65,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
     store.updateBody(comment, {
       ...comment,
-      render_type: renderType,
+      format: renderType === 'quill' ? 'application/json' : 'text/plain',
       value: renderType === 'text' ? (value as string) : JSON.stringify(value),
     });
 
