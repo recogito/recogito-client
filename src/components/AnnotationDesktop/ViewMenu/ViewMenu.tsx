@@ -133,7 +133,8 @@ export const ViewMenu = (props: ViewMenuProps) => {
               i18n={props.i18n}
               present={props.present} 
               me={me}
-              policies={props.policies} />
+              policies={props.policies} 
+              tagVocabulary={props.tagVocabulary} />
           ) : undefined}
         </animated.aside>
       ))}

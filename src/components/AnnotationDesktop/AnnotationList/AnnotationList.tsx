@@ -89,7 +89,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
     me.id === a.target.creator?.id;
 
   const isPrivate = (a: SupabaseAnnotation) =>
-    a.visibility === Visibility.PRIVATE
+    a.visibility === Visibility.PRIVATE;
 
   const getReplyFormClass = (a: SupabaseAnnotation) => {
     const classes = ['annotation-card'];
