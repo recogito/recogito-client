@@ -95,12 +95,16 @@
   box-shadow: none;
 }
 
-.doc-lib-section-content {
-  padding: 30px;
-}
+/* .doc-lib-section-content {
+} */
 
 .doc-lib-buttons {
   display: flex;
   justify-content: space-between;
   padding: 30;
+  align-items: center;
+}
+
+.doc-lib-search {
+  margin-left: 10px;
 }

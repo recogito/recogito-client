@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { CloudArrowUp, DownloadSimple, Plus } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -70,6 +70,10 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
     (document) => setDocuments((d) => [...d, document])
   );
+
+  const documentIds = useMemo(() => {
+    return documents.map((d) => d.id);
+  }, [documents]);
 
   const { addDocumentIds } = useDocumentList(
     project.id,
@@ -276,6 +280,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             />
           }
           onDocumentsSelected={onDocumentsSelected}
+          disabledIds={documentIds}
         />
         <UploadTracker
           show={showUploads}
