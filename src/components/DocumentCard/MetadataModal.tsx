@@ -10,8 +10,7 @@ import type { Document, Translations } from 'src/Types';
 import './MetadataModal.css';
 
 interface MetadataModalProps {
-
-  i18n: Translations
+  i18n: Translations;
 
   document: Document;
 
@@ -23,10 +22,10 @@ interface MetadataModalProps {
 
   onError(error: string): void;
 
+  readOnly?: boolean;
 }
 
 export const MetadataModal = (props: MetadataModalProps) => {
-
   const { t } = props.i18n;
 
   const { id, name, meta_data } = props.document;
@@ -35,7 +34,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
 
   const [busy, setBusy] = useState(false);
 
-  const initialValues = { 
+  const initialValues = {
     title: name,
     author: meta.author || '',
     publication_date: meta.publication_date || '',
@@ -44,8 +43,8 @@ export const MetadataModal = (props: MetadataModalProps) => {
     copyright: meta.copyright || '',
     language: meta.language || '',
     source: meta.source || '',
-    notes: meta.notes || ''
-  }
+    notes: meta.notes || '',
+  };
 
   const formik = useFormik({
     initialValues,
@@ -54,44 +53,48 @@ export const MetadataModal = (props: MetadataModalProps) => {
 
       updateDocumentMetadata(supabase, id, title, {
         ...meta_data,
-        meta
+        meta,
       }).then(({ error, data }) => {
         setBusy(false);
 
-        if (error)
-          props.onError(error.details);
-        else
-          props.onUpdated(data);
+        if (error) props.onError(error.details);
+        else props.onUpdated(data);
 
         props.onClose();
       });
-    }
+    },
   });
 
   useEffect(() => {
-    if (props.open)
-      formik.setValues(initialValues);
+    if (props.open) formik.setValues(initialValues);
   }, [props.open, name]);
 
-  const input = (label: string, id: keyof typeof formik.values, required?: boolean) => (
-    <div className="field">
+  const input = (
+    label: string,
+    id: keyof typeof formik.values,
+    required?: boolean
+  ) => (
+    <div className='field'>
       <label>{t[label]}</label>
+
       <input
         id={id}
         name={id}
         onChange={formik.handleChange}
         value={formik.values[id]}
-        required={required} />
+        required={required}
+        readOnly={props.readOnly}
+      />
     </div>
-  )
+  );
 
   return (
     <Dialog.Root open={props.open} onOpenChange={props.onClose}>
       <Dialog.Portal>
-        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className="dialog-content document-metadata">
-          <Dialog.Title className="dialog-title">
+        <Dialog.Content className='dialog-content document-metadata'>
+          <Dialog.Title className='dialog-title'>
             {t['Edit Document Metadata']}
           </Dialog.Title>
 
@@ -106,41 +109,45 @@ export const MetadataModal = (props: MetadataModalProps) => {
               {input('Language', 'language')}
               {input('Source', 'source')}
 
-              <div className="field">
+              <div className='field'>
                 <label>{t['Notes']}</label>
                 <textarea
-                  id="notes"
-                  name="notes"
+                  id='notes'
+                  name='notes'
                   rows={5}
                   onChange={formik.handleChange}
-                  value={formik.values.notes} />
+                  value={formik.values.notes}
+                  readOnly={props.readOnly}
+                />
               </div>
             </fieldset>
 
-            <div className="actions">
-              <Button onClick={props.onClose}>
-                {t['Cancel']}
-              </Button>
+            <div className='actions'>
+              <Button onClick={props.onClose}>{t['Cancel']}</Button>
 
-              <Button 
-                className="primary" 
-                busy={busy}
-                type="submit">
-                <span>
-                  {t['Save']}
-                </span>
-              </Button>
+              {!props.readOnly && (
+                <Button
+                  className='primary'
+                  busy={busy}
+                  type='submit'
+                  disabled={props.readOnly}
+                >
+                  <span>{t['Save']}</span>
+                </Button>
+              )}
             </div>
           </form>
 
           <Dialog.Close asChild>
-            <button className="dialog-close icon-only unstyled" aria-label="Close">
+            <button
+              className='dialog-close icon-only unstyled'
+              aria-label='Close'
+            >
               <X size={16} />
             </button>
           </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
-  )
-
-}
+  );
+};

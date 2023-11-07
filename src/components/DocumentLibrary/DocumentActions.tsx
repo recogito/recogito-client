@@ -2,14 +2,7 @@ import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import type { Translations } from 'src/Types';
-import {
-  Browser,
-  Browsers,
-  DotsThreeVertical,
-  DownloadSimple,
-  PencilSimple,
-  Trash,
-} from '@phosphor-icons/react';
+import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
@@ -22,7 +15,7 @@ interface DocumentActionsProps {
 
   onEditMetadata?(): void;
 
-  onExportCSV?(): void;
+  onViewMetadata?(): void;
 }
 
 export const DocumentActions = (props: DocumentActionsProps) => {
@@ -45,7 +38,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
             sideOffset={5}
             align='start'
           >
-            {props.isAdmin && (
+            {props.isAdmin ? (
               <>
                 <Item className='dropdown-item' onSelect={props.onEditMetadata}>
                   <PencilSimple size={16} />{' '}
@@ -57,6 +50,13 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                     <span>{t['Delete document']}</span>
                   </Item>
                 </ConfirmedAction.Trigger>
+              </>
+            ) : (
+              <>
+                <Item className='dropdown-item' onSelect={props.onViewMetadata}>
+                  <PencilSimple size={16} />{' '}
+                  <span>{t['View Document Metadata']}</span>
+                </Item>
               </>
             )}
           </Content>

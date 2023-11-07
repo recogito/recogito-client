@@ -66,6 +66,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showUploads, setShowUploads] = useState(false);
+  const [documentUpdated, setDocumentUpdated] = useState(false);
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
     (document) => setDocuments((d) => [...d, document])
@@ -137,6 +138,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const onDeleteDocument = (document: DocumentInContext) => {
     // Optimistic update: remove document from the list
     setDocuments((documents) => documents.filter((d) => d.id !== document.id));
+    setDocumentUpdated(true);
 
     // Note this will get easier when (if) we get a single RPC call
     // to archive a list of records
@@ -164,7 +166,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       });
   };
 
-  const onUpdateDocument = (document: Document) =>
+  const onUpdateDocument = (document: Document) => {
     setDocuments((documents) =>
       documents.map((d) =>
         d.id === document.id
@@ -176,6 +178,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       )
     );
 
+    setDocumentUpdated(true);
+  };
   const onError = (error: string) => {
     setToast({
       title: t['Something went wrong'],
@@ -188,7 +192,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     setAddOpen(true);
   };
 
-  const onDocumentSelected = (document: DocumentInContext) => {};
+  const onDocumentSelected = (_document: DocumentInContext) => {};
 
   const onDocumentsSelected = (documentIds: string[]) => {
     addDocumentIds(documentIds);
@@ -263,25 +267,33 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             </div>
           )}
         </div>
-
-        <DocumentLibrary
-          open={addOpen}
-          i18n={props.i18n}
-          onAddDocument={onDocumentSelected}
-          onCancel={() => setAddOpen(false)}
-          user={props.user}
-          dataDirty={dataDirty}
-          clearDirtyFlag={clearDirtyFlag}
-          UploadActions={
-            <UploadActions
-              i18n={props.i18n}
-              onUpload={open}
-              onImport={onImportRemote}
-            />
-          }
-          onDocumentsSelected={onDocumentsSelected}
-          disabledIds={documentIds}
-        />
+        <div style={isDragActive ? { pointerEvents: 'none' } : undefined}>
+          <DocumentLibrary
+            open={addOpen}
+            i18n={props.i18n}
+            onAddDocument={onDocumentSelected}
+            onCancel={() => setAddOpen(false)}
+            user={props.user}
+            dataDirty={dataDirty || documentUpdated}
+            clearDirtyFlag={() => {
+              clearDirtyFlag();
+              setDocumentUpdated(false);
+            }}
+            UploadActions={
+              <UploadActions
+                i18n={props.i18n}
+                onUpload={open}
+                onImport={onImportRemote}
+              />
+            }
+            onDocumentsSelected={onDocumentsSelected}
+            disabledIds={documentIds}
+            onUpdated={onUpdateDocument}
+            onError={onError}
+            onDelete={onDeleteDocument}
+            isAdmin={isAdmin}
+          />
+        </div>
         <UploadTracker
           show={showUploads}
           closable={isIdle}
