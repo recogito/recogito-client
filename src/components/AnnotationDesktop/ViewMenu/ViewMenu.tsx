@@ -4,7 +4,6 @@ import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@recogito/annotorious-supabase';
 import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
-import type { PrivacyMode } from '@components/PrivacySelector';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
@@ -18,8 +17,6 @@ interface ViewMenuProps {
   i18n: Translations;
 
   present: PresentUser[];
-
-  privacy: PrivacyMode;
 
   policies?: Policies;
 
@@ -138,7 +135,6 @@ export const ViewMenu = (props: ViewMenuProps) => {
               i18n={props.i18n}
               present={props.present} 
               me={me}
-              privacy={props.privacy}
               defaultLayer={props.defaultLayer}
               policies={props.policies} 
               tagVocabulary={props.tagVocabulary} />

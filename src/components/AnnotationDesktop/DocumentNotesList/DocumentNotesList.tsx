@@ -4,7 +4,6 @@ import { useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
 import TextareaAutosize from 'react-textarea-autosize';
 import { Annotation } from '@components/Annotation';
-import type { PrivacyMode } from '@components/PrivacySelector';
 import { Avatar } from '@components/Avatar';
 import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
@@ -19,8 +18,6 @@ interface DocumentNotesListProps {
   present: PresentUser[];
 
   me: PresentUser;
-  
-  privacy: PrivacyMode;
 
   defaultLayer: string;
 
@@ -38,14 +35,23 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
-  const { notes } = useNotes(me, props.defaultLayer);
+  const { notes, createNote } = useNotes(me, props.defaultLayer);
 
-  const isPublic = props.privacy === 'PUBLIC';
+  const [value, setValue] = useState('');
+
+  // TODO add different buttons for 'add a note' vs. 'add a private note'
+  const isPublic = true;
 
   const isMine = (n: DocumentNote) => me.id === n.created_by.id;
 
   const onSubmit = (evt: React.MouseEvent) => {
     evt.preventDefault();
+
+    console.log('saving!');
+
+    createNote(value).then(note => {
+      console.log('created note', note);
+    });
   }
 
   return (
@@ -103,7 +109,9 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       
             <TextareaAutosize
               rows={1} 
-              maxRows={10} />
+              maxRows={10} 
+              value={value} 
+              onChange={evt => setValue(evt.target.value)} />
       
             <button 
               className="send icon-only"

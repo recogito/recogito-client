@@ -187,7 +187,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           <AnnotationDesktop.ViewMenu 
             i18n={i18n}
             present={present} 
-            privacy={privacy}
             policies={policies}
             layers={layers}
             defaultLayer={defaultLayer?.id} 

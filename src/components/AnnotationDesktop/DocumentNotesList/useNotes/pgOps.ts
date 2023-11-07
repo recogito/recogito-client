@@ -1,37 +1,17 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import { supabase } from '@backend/supabaseBrowserClient';
 import type { DocumentNote } from '../DocumentNote';
 
 // Shorthand
 const toDate = (str: string) => str ? new Date(str) : null;
 
-export const fetchNotes = (supabase: SupabaseClient, layerId: string) =>
-  supabase
-    .from('annotations')
-    .select(`
-      id,
-      created_at,
-      created_by:profiles!annotations_created_by_fkey(
+export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
+  new Promise((resolve, reject) => {
+    supabase
+      .from('annotations')
+      .select(`
         id,
-        nickname,
-        first_name,
-        last_name,
-        avatar_url
-      ),
-      updated_at,
-      updated_by:profiles!annotations_updated_by_fkey(
-        id,
-        nickname,
-        first_name,
-        last_name,
-        avatar_url
-      ),
-      is_private,
-      layer_id,
-      bodies ( 
-        id,
-        annotation_id,
         created_at,
-        created_by:profiles!bodies_created_by_fkey(
+        created_by:profiles!annotations_created_by_fkey(
           id,
           nickname,
           first_name,
@@ -39,42 +19,67 @@ export const fetchNotes = (supabase: SupabaseClient, layerId: string) =>
           avatar_url
         ),
         updated_at,
-        updated_by:profiles!bodies_updated_by_fkey(
+        updated_by:profiles!annotations_updated_by_fkey(
           id,
           nickname,
           first_name,
           last_name,
           avatar_url
         ),
-        purpose,
-        value,
-        layer_id
-      )
-    `)
-    .eq('layer_id', layerId)
-    .then(({ data, error }) => {
-      if (error) {
-        return { data, error };
-      } else {
-        // 'data' already complies to the DocumentNote type, with one 
-        // exception: dates are still strings -> revive!
-        // @ts-ignore
-        const revived: DocumentNote[] = data.map(note => ({
-          ...note,
-          created_at: toDate(note.created_at)!,
-          updated_at: toDate(note.updated_at),
-          bodies: note.bodies.map(body => ({
-            ...body,
+        is_private,
+        layer_id,
+        bodies ( 
+          id,
+          annotation_id,
+          created_at,
+          created_by:profiles!bodies_created_by_fkey(
+            id,
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          ),
+          updated_at,
+          updated_by:profiles!bodies_updated_by_fkey(
+            id,
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          ),
+          purpose,
+          value,
+          layer_id
+        ),
+        targets ( id ) 
+      `)
+      .eq('layer_id', layerId)
+      .is('targets', null)
+      .then(({ data, error }) => {
+        console.log(data);
+        if (error) {
+          reject(error);
+        } else {
+          // 'data' already complies to the DocumentNote type, with one 
+          // exception: dates are still strings -> revive!
+          // @ts-ignore
+          const revived: DocumentNote[] = data.map(note => ({
+            ...note,
             created_at: toDate(note.created_at)!,
-            updated_at: toDate(note.updated_at)
-          }))
-        }));
+            updated_at: toDate(note.updated_at),
+            bodies: note.bodies.map(body => ({
+              ...body,
+              created_at: toDate(note.created_at)!,
+              updated_at: toDate(note.updated_at)
+            }))
+          }));
 
-        return { data: revived, error };
-      }
-    });
+          resolve(revived);
+        }
+      });
+  });
 
-export const createNote = (supabase: SupabaseClient, note: DocumentNote) => {
+export const insertNote = (note: DocumentNote) => {
   const createAnnotation = () =>
     supabase
       .from('annotations')
