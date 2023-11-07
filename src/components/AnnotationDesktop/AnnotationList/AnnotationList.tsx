@@ -116,7 +116,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
 
   return (
-    <div className="anno-sidepanel annotation-list" >
+    <div className="anno-sidepanel annotation-list">
       <FilterSelector 
         i18n={props.i18n} 
         onChange={setFilter} />

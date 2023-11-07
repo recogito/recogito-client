@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import { Chats, StackSimple, X } from '@phosphor-icons/react';
+import { Chats, NotePencil, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@recogito/annotorious-supabase';
 import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
 import type { Layer, Policies, Translations } from 'src/Types';
-import { LayersPanel } from '../LayersPanel';
-import { AnnotationList } from '../AnnotationList';
 import { ViewMenuPanel } from './ViewMenuPanel';
+import { AnnotationList } from '../AnnotationList';
+import { LayersPanel } from '../LayersPanel';
+import { DocumentNotesList } from '../DocumentNotesList';
 
 import './ViewMenu.css';
 
@@ -83,6 +84,12 @@ export const ViewMenu = (props: ViewMenuProps) => {
             onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
             <StackSimple />
           </button>
+
+          <button
+            className={panel === ViewMenuPanel.DOCUMENT_NOTES ? 'active' : undefined}
+            onClick={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)}>
+            <NotePencil />
+          </button>
         </section>
 
         {me && (
@@ -121,6 +128,12 @@ export const ViewMenu = (props: ViewMenuProps) => {
               layers={props.layers}
               present={props.present}
               onChange={props.onChangeFormatter} />
+          ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? (
+            <DocumentNotesList 
+              i18n={props.i18n}
+              present={props.present} 
+              me={me}
+              policies={props.policies} />
           ) : undefined}
         </animated.aside>
       ))}

@@ -3,7 +3,7 @@ export enum ViewMenuPanel {
   ANNOTATIONS = 'ANNOTATIONS', 
   
   LAYERS = 'LAYERS', 
-  
-  SEARCH = 'SEARCH'
+
+  DOCUMENT_NOTES = 'DOCUMENT_NOTES'
 
 }
