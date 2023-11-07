@@ -30,13 +30,6 @@ export const DocumentActions = (props: DocumentActionsProps) => {
 
   const [confirming, setConfirming] = useState(false);
 
-  const onOpen = (tab: boolean) => (evt: Event) => {
-    evt.preventDefault();
-    evt.stopPropagation();
-
-    props.onOpen(tab);
-  };
-
   return (
     <ConfirmedAction.Root open={confirming} onOpenChange={setConfirming}>
       <Root>
