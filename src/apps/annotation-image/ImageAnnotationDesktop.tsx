@@ -117,7 +117,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           pointerSelectAction={selectAction}
           tool={tool} 
           keepEnabled={true}
-          formatter={formatter}>
+          style={formatter}>
         
           <AnnotationDesktop.UndoStack 
             undoEmpty={true} />
