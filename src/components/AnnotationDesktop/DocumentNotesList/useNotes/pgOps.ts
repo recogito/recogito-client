@@ -30,17 +30,17 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
         layer_id,
         bodies ( 
           id,
-          annotation_id,
-          created_at,
-          created_by:profiles!bodies_created_by_fkey(
+          annotation:annotation_id,
+          created:created_at,
+          creator:profiles!bodies_created_by_fkey(
             id,
             nickname,
             first_name,
             last_name,
             avatar_url
           ),
-          updated_at,
-          updated_by:profiles!bodies_updated_by_fkey(
+          updated:updated_at,
+          updatedBy:profiles!bodies_updated_by_fkey(
             id,
             nickname,
             first_name,
@@ -72,8 +72,8 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
             updated_at: toDate(note.updated_at),
             bodies: note.bodies.map(body => ({
               ...body,
-              created_at: toDate(note.created_at)!,
-              updated_at: toDate(note.updated_at)
+              created: toDate(body.created)!,
+              updated: toDate(body.updated)
             }))
           }));
 

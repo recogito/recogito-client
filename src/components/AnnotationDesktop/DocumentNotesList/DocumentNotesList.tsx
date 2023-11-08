@@ -3,11 +3,11 @@ import { ArrowRight, Detective } from '@phosphor-icons/react';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { Annotation } from '@components/Annotation';
 import { Avatar } from '@components/Avatar';
 import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
 import type { DocumentNote } from './DocumentNote';
+import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
 
@@ -61,38 +61,10 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       <ul>
         {notes.map(note => (
           <li key={note.id}>
-            {note.bodies.length === 0 ? (
-              isMine(note) ? (              
-                <Annotation.EmptyCard
-                  private={note.is_private}
-                  i18n={props.i18n}
-                  annotation={note} 
-                  present={props.present} />
-              ) : (
-                <Annotation.EmptyCard 
-                  typing
-                  i18n={props.i18n} 
-                  annotation={note} 
-                  present={props.present} />              
-              )
-            ) : (
-              note.is_private ? (
-                <Annotation.PrivateCard 
-                  showReplyForm
-                  i18n={props.i18n}
-                  annotation={note} 
-                  present={props.present}
-                  tagVocabulary={props.tagVocabulary} />
-              ) : (
-                <Annotation.PublicCard 
-                  showReplyForm
-                  i18n={props.i18n}
-                  annotation={note} 
-                  present={props.present}
-                  policies={props.policies} 
-                  tagVocabulary={props.tagVocabulary} />  
-              )
-            )}
+            <DocumentNotesListItem 
+              i18n={props.i18n}
+              note={note} 
+              present={props.present} />
           </li>
         ))}
       </ul>
