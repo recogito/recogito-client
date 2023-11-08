@@ -1,6 +1,11 @@
 import { DOMParser } from 'linkedom';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { User } from '@annotorious/react';
+import dist from '@astrojs/react';
 
+/**
+ * Returns the target or body that was changed most recently.
+ */
 const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   const elements = [ annotation.target, ...annotation.bodies ];
   const timestamped = elements.filter(el => el.created || el.updated);
@@ -13,6 +18,39 @@ const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   }
 }
 
+/**
+ * Returns the list of all distinct users that contributed to the annotation.
+ */
+const getContributors = (annotation: SupabaseAnnotation) => {
+  const elements = [ annotation.target, ...annotation.bodies ];
+  const withContributor = elements.filter(el => el.creator || el.updatedBy);
+
+  return withContributor.reduce((distinct, el) => {
+    const isNewCreator = 
+      // Creator exists
+      el.creator && 
+      // Creator is not yet in 'distinct' array
+      !distinct.find(user => user.id === el.creator?.id);
+
+    const isNewContributor = 
+      // Contributor exists
+      el.updatedBy && 
+      // Contributors is not yet in 'distinct' array
+      !distinct.find(user => user.id === el.creator?.id) &&
+      // Contributor is not the same as Creator
+      el.updatedBy.id !== el.creator?.id;
+
+    if (isNewCreator && isNewContributor)
+      return [...distinct, el.creator!, el.updatedBy!];
+    else if (isNewCreator) 
+      return [...distinct, el.creator!]
+    else if (isNewContributor)
+      return [...distinct, el.updatedBy!]
+    else
+      return distinct;
+  }, [] as User[]);
+}
+
 export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[]): string => {
 
   const document = (new DOMParser).parseFromString(xml, 'text/xml');
@@ -23,22 +61,33 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
   const listAnnotationEl = document.createElement('listAnnotation');
   standOffEl.appendChild(listAnnotationEl);
 
-  // Helper
+  // Helpers
   const createChangeEl = (change: string, timestamp: Date, by?: string) => {
     const changeEl = document.createElement('change');
     changeEl.setAttribute('status', change);
     changeEl.setAttribute('when', timestamp.toISOString());
 
     if (by)
-      changeEl.setAttribute('who', `#${by}`);
+      changeEl.setAttribute('who', `#uid-${by}`);
 
     return changeEl;
+  }
+
+  const createRespStmtEl = (user: User) => {
+    const respStmtEl = document.createElement('respStmt');
+    respStmtEl.setAttribute('xml:id', `uid-${user.id}`);
+    
+    const nameEl = document.createElement('name');
+    nameEl.innerHTML = user.name || 'Anonymous';
+    respStmtEl.appendChild(nameEl);
+
+    return respStmtEl;
   }
 
   annotations.forEach(a => {
     // See https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-annotation.html
     const annotationEl = document.createElement('annotation');
-    annotationEl.setAttribute('xml:id', `#${a.id}`);
+    annotationEl.setAttribute('xml:id', `uid-${a.id}`);
 
     // See https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-annotation.html#tei_att.target
     // @ts-ignore
@@ -57,7 +106,7 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
 
     // Created
     if  (a.target.created && a.target.creator)
-      revisionDescEl.appendChild(createChangeEl('created', a.target.created, a.target.creator.name));
+      revisionDescEl.appendChild(createChangeEl('created', a.target.created, a.target.creator.id));
 
     // Get most recent change
     const lastChanged = getLastChangedAt(a);
@@ -67,7 +116,7 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
       revisionDescEl.appendChild(createChangeEl(
         'modified', 
         (isUpdate ? lastChanged.updated : lastChanged.created)!, 
-        isUpdate ? lastChanged.updatedBy?.name : lastChanged.creator?.name))
+        isUpdate ? lastChanged.updatedBy?.id : lastChanged.creator?.id))
     }
 
     annotationEl.appendChild(revisionDescEl);
@@ -76,6 +125,11 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     const comments = a.bodies.filter(b => b.purpose === 'commenting');
     comments.forEach(b => {
       const noteEl = document.createElement('note');
+      
+      const contributors = 
+        Array.from(new Set([b.creator, b.updatedBy].filter(Boolean).map(user => `#uid-${user!.id}`)));
+      noteEl.setAttribute('resp', contributors.join(' '));
+
       noteEl.appendChild(document.createTextNode(b.value));
       annotationEl.appendChild(noteEl);
     });
@@ -87,6 +141,11 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
       rsEl.setAttribute('ana', tags.map(b => b.value).join(' '))
       annotationEl.appendChild(rsEl);
     }
+
+    // Append respStmt elements for each contributing user
+    const contributors = getContributors(a);
+    contributors.forEach(user =>
+      annotationEl.appendChild(createRespStmtEl(user)));
 
     listAnnotationEl.appendChild(annotationEl);
   });
