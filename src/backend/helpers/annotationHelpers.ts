@@ -87,7 +87,8 @@ export const getAnnotations = (
         purpose,
         value
       )
-    `);
+    `)
+    .not('targets', 'is', null)
 
     return (
       Array.isArray(layerIds) ?
