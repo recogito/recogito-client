@@ -190,6 +190,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             policies={policies}
             layers={layers}
             defaultLayer={defaultLayer?.id} 
+            channel={props.channelId}
             // @ts-ignore
             sorting={sorting}
             tagVocabulary={vocabulary}

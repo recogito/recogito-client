@@ -22,6 +22,8 @@ interface ViewMenuProps {
 
   layers?: Layer[];
 
+  channel: string;
+
   defaultLayer?: string;
 
   sorting?: ((a: Annotation, b: Annotation) => number);
@@ -136,6 +138,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
               present={props.present} 
               me={me}
               defaultLayer={props.defaultLayer}
+              channel={props.channel}
               policies={props.policies} 
               tagVocabulary={props.tagVocabulary} />
           ) : undefined}

@@ -51,12 +51,15 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
           value,
           layer_id
         ),
-        targets ( id ) 
+        targets ( 
+          id,
+          annotation_id,
+          layer_id
+        ) 
       `)
       .eq('layer_id', layerId)
-      .is('targets', null)
+      .is('targets.value', null)
       .then(({ data, error }) => {
-        console.log(data);
         if (error) {
           reject(error);
         } else {
@@ -89,6 +92,14 @@ export const insertNote = (note: DocumentNote) => {
         layer_id: note.layer_id
       });
 
+  const createTarget = () => 
+    supabase
+      .from('targets')
+      .insert({
+        annotation_id: note.id,
+        layer_id: note.layer_id
+      });
+
   const createBodies = () => 
     supabase
     .from('bodies')
@@ -105,13 +116,16 @@ export const insertNote = (note: DocumentNote) => {
       if (error) {
         reject(error)
       } else {
-        createBodies().then(({ error }) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve();
-          }
-        })
+        Promise.all([createTarget(), createBodies()])
+          .then(([a, b]) => {  
+            if (a.error) {
+              reject(error);
+            } else if (b.error) {
+              reject(error);
+            } else {
+              resolve();
+            }
+          });
       }
     })
   });

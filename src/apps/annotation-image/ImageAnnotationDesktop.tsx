@@ -179,6 +179,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               policies={policies}
               layers={layers}
               defaultLayer={defaultLayer?.id} 
+              channel={props.channelId}
               tagVocabulary={vocabulary}
               onChangePanel={onChangeViewMenuPanel} 
               onChangeFormatter={f => setFormatter(() => f)}

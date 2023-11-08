@@ -21,6 +21,8 @@ interface DocumentNotesListProps {
 
   defaultLayer: string;
 
+  channel: string;
+
   policies?: Policies;
 
   tagVocabulary?: string[];
@@ -35,7 +37,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
-  const { notes, createNote } = useNotes(me, props.defaultLayer);
+  const { notes, createNote } = useNotes(me, props.defaultLayer, props.channel);
 
   const [value, setValue] = useState('');
 
