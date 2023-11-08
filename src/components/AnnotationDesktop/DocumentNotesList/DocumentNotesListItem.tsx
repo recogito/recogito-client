@@ -16,10 +16,8 @@ interface DocumentNotesListItemProps {
 
 export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
 
-  console.log('note', props.note);
-
   return (
-    <div className="document-notes-list-item">
+    <div className="document-notes-list-item annotation-card public">
       <BaseCard 
         annotation={props.note}
         i18n={props.i18n}
