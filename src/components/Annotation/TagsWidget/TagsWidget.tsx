@@ -1,4 +1,3 @@
-import { useAnnotationStore } from '@annotorious/react';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 import { MoreTags } from './MoreTags';
@@ -18,11 +17,13 @@ interface TagsWidgetProps {
 
   vocabulary?: string[];
 
+  onCreateTag(tag: AnnotationBody): void;
+
+  onDeleteTag(tag: AnnotationBody): void;
+
 }
 
 export const TagsWidget = (props: TagsWidgetProps) => {
-
-  const store = useAnnotationStore();
 
   const tags = props.annotation.bodies.filter((b: AnnotationBody) => b.purpose === 'tagging');
 
@@ -30,15 +31,11 @@ export const TagsWidget = (props: TagsWidgetProps) => {
 
   const more = Math.max(0, tags.length - displayed.length);
 
-  const onCreate = (tag: AnnotationBody) => {
-    // Don't add tags that exist already
+  const onCreateTag = (tag: AnnotationBody) => {
+    // Don't add a tag that exist already
     const exists = tags.some((t: AnnotationBody) => t.value === tag.value);
     if (!exists)
-      store.addBody(tag);
-  }
-
-  const onDelete = (tag: AnnotationBody) => {
-    store.deleteBody(tag);
+      props.onCreateTag(tag);
   }
 
   return (
@@ -50,7 +47,7 @@ export const TagsWidget = (props: TagsWidgetProps) => {
               <Tag 
                 i18n={props.i18n} 
                 tag={t} 
-                onDelete={() => onDelete(t)} />
+                onDelete={() => props.onDeleteTag(t)} />
             </li>
           ))}
         </ul>
@@ -61,13 +58,13 @@ export const TagsWidget = (props: TagsWidgetProps) => {
             annotation={props.annotation}
             me={props.me}
             vocabulary={props.vocabulary}
-            onCreate={onCreate} />
+            onCreate={onCreateTag} />
         ) : more > 0 && (
           <MoreTags 
             i18n={props.i18n}
             displayed={3} 
             tags={tags} 
-            onDelete={onDelete} />
+            onDelete={props.onDeleteTag} />
         )}
       </div>
 
@@ -77,7 +74,7 @@ export const TagsWidget = (props: TagsWidgetProps) => {
           annotation={props.annotation} 
           me={props.me} 
           vocabulary={props.vocabulary}
-          onCreate={onCreate} />
+          onCreate={onCreateTag} />
       )}
     </div>
   )

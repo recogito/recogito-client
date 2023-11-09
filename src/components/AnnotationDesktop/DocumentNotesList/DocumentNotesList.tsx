@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { ArrowRight, Detective } from '@phosphor-icons/react';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
-import TextareaAutosize from 'react-textarea-autosize';
-import { Avatar } from '@components/Avatar';
 import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
 import { Sorter, Sorting, SortSelector } from './SortSelector';
-import { NewNote } from './NewNote';
+import { NewNote, NewNoteForm } from './NewNote';
 import type { DocumentNote } from './DocumentNote';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
@@ -76,29 +73,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       </div>
 
       {addNew && (
-        <form 
-          className="annotation-reply-form no-drag">
-            {isPublic ? (
-              <Avatar 
-                id={me.id} 
-                name={me.name || (me as PresentUser).appearance?.label}
-                avatar={me.avatar || (me as PresentUser).appearance?.avatar} />
-            ) : (
-              <Detective className="anonymous" size={20} weight="light" />  
-            )}
-      
-            <TextareaAutosize
-              rows={1} 
-              maxRows={10} 
-              value={value} 
-              onChange={evt => setValue(evt.target.value)} />
-      
-            <button 
-              className="send icon-only"
-              onClick={onSubmit}>
-              <ArrowRight size={18} />
-            </button>
-          </form>
+        <NewNoteForm isPublic={isPublic} />
       )}
 
       <ul>

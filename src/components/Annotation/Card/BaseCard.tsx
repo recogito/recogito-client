@@ -45,6 +45,12 @@ export const BaseCard = (props: BaseCardProps) => {
   const onDeleteAnnotation = () => 
     store.deleteAnnotation(props.annotation);
 
+  const onCreateBody = (body: AnnotationBody) =>
+    store.addBody(body);
+
+  const onDeleteBody = (body: AnnotationBody) =>
+    store.deleteBody(body);
+
   const transition = useTransition(collapsed ? 
     [] : comments.slice(1, comments.length - 1), {
       from: { 
@@ -88,7 +94,9 @@ export const BaseCard = (props: BaseCardProps) => {
         i18n={props.i18n}
         annotation={props.annotation} 
         me={me} 
-        vocabulary={props.tagVocabulary} />
+        vocabulary={props.tagVocabulary} 
+        onCreateTag={onCreateBody} 
+        onDeleteTag={onDeleteBody} />
 
       {comments.length > 0 && (
         <ul className="annotation-card-comments-container">
