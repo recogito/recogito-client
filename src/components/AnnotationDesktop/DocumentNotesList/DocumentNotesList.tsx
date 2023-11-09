@@ -10,6 +10,8 @@ import type { DocumentNote } from './DocumentNote';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
+import { SortSelector } from './SortSelector';
+import { NewNote } from './NewNote';
 
 interface DocumentNotesListProps {
 
@@ -46,6 +48,10 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const isMine = (n: DocumentNote) => me.id === n.created_by.id;
 
+  const setSorting = () => {
+
+  }
+
   const onSubmit = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
@@ -58,18 +64,16 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   return (
     <div className="anno-sidepanel document-notes-list">
-      <ul>
-        {notes.map(note => (
-          <li key={note.id}>
-            <DocumentNotesListItem 
-              i18n={props.i18n}
-              note={note} 
-              present={props.present} />
-          </li>
-        ))}
-      </ul>
+      <div className="document-notes-list-header">
+        <NewNote 
+          i18n={props.i18n} />
 
-      {addNew ? (
+        <SortSelector 
+          i18n={props.i18n}
+          onChange={setSorting} />
+      </div>
+
+      {addNew && (
         <form 
           className="annotation-reply-form no-drag">
             {isPublic ? (
@@ -93,9 +97,18 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               <ArrowRight size={18} />
             </button>
           </form>
-      ) : (
-        <button onClick={() => setAddNew(true)}>Add a note</button>
       )}
+
+      <ul>
+        {notes.map(note => (
+          <li key={note.id}>
+            <DocumentNotesListItem 
+              i18n={props.i18n}
+              note={note} 
+              present={props.present} />
+          </li>
+        ))}
+      </ul>
     </div>
   )
 

@@ -26,6 +26,14 @@
   "all annotations": "all annotations",
   "annotations in current view": "annotations in current view",
 
+  "New Note": "New Note",
+  "Create new public note": "Create new public note",
+  "Create new private note": "Create new private note",
+
+  "Sort by": "Sort by",
+  "newest": "newest",
+  "oldest": "oldest",
+
   "Color by": "Color by",
   "No color coding": "No color coding",
   "Public vs. Private": "Public vs. Private",

@@ -29,3 +29,52 @@
 .anno-sidepanel.document-notes-list .annotation-tagswidget input::placeholder {
   color: #9f891e;
 }
+
+.anno-sidepanel.document-notes-list .document-notes-list-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.7em 8px 0.5em 2px;
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-create-new {
+  color: var(--font-light);
+  display: flex;
+  font-size: var(--font-tiny);
+  white-space: nowrap;
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-create-new button {
+  padding: 6px 8px 6px 6px;
+  margin: 0;
+  min-width: auto;
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-create-new button:first-child {
+  border-right-width: 0;
+  border-radius: var(--button-border-radius) 0 0 var(--button-border-radius);
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-create-new button:last-child {
+  border-radius: 0 var(--button-border-radius) var(--button-border-radius) 0;
+  padding: 6px 0 6px 4px;
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-create-new button > svg {
+  margin: 0 0.4em 0.1em 0.05em;
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-sorting {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-sorting label {
+  margin-right: 0.5ch;
+}
+
+.anno-sidepanel.document-notes-list .document-notes-list-sorting button {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline;
+}
