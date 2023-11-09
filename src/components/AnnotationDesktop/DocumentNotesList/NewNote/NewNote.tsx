@@ -6,6 +6,10 @@ interface NewNoteProps {
 
   i18n: Translations;
 
+  onCreatePublic(): void;
+
+  onCreatePrivate(): void;
+
 }
 
 export const NewNote = (props: NewNoteProps) => {
@@ -14,7 +18,7 @@ export const NewNote = (props: NewNoteProps) => {
 
   return (
     <div className="document-notes-list-create-new">
-      <button className="tiny flat">
+      <button className="tiny flat" onClick={props.onCreatePublic}>
         <PlusCircle size={16} /><span>{t['New Note']}</span>
       </button>
 
@@ -29,12 +33,12 @@ export const NewNote = (props: NewNoteProps) => {
           <Dropdown.Content
             align="center"
             className="dropdown-content">
-            <Dropdown.Item className="dropdown-item">
+            <Dropdown.Item className="dropdown-item" onSelect={props.onCreatePublic}>
               <PlusCircle size={16} />
               <span>{t['Create new public note']}</span>
             </Dropdown.Item>
 
-            <Dropdown.Item className="dropdown-item">
+            <Dropdown.Item className="dropdown-item" onSelect={props.onCreatePrivate}>
               <Detective size={16} />
               <span>{t['Create new private note']}</span>
             </Dropdown.Item>

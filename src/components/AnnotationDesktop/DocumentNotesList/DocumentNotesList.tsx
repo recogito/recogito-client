@@ -6,12 +6,12 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { Avatar } from '@components/Avatar';
 import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
+import { Sorter, Sorting, SortSelector } from './SortSelector';
+import { NewNote } from './NewNote';
 import type { DocumentNote } from './DocumentNote';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
-import { SortSelector } from './SortSelector';
-import { NewNote } from './NewNote';
 
 interface DocumentNotesListProps {
 
@@ -41,16 +41,16 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const { notes, createNote } = useNotes(me, props.defaultLayer, props.channel);
 
+  const [sorter, setSorter] = useState<Sorter>(() => Sorting.Newest);
+
+  const sorted = notes.sort(sorter);
+
   const [value, setValue] = useState('');
 
   // TODO add different buttons for 'add a note' vs. 'add a private note'
   const isPublic = true;
 
   const isMine = (n: DocumentNote) => me.id === n.created_by.id;
-
-  const setSorting = () => {
-
-  }
 
   const onSubmit = (evt: React.MouseEvent) => {
     evt.preventDefault();
@@ -66,11 +66,13 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     <div className="anno-sidepanel document-notes-list">
       <div className="document-notes-list-header">
         <NewNote 
-          i18n={props.i18n} />
+          i18n={props.i18n} 
+          onCreatePublic={() => setAddNew(true)} 
+          onCreatePrivate={() => console.log('todo')} />
 
         <SortSelector 
           i18n={props.i18n}
-          onChange={setSorting} />
+          onChange={sorter => setSorter(() => sorter)} />
       </div>
 
       {addNew && (
@@ -100,7 +102,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       )}
 
       <ul>
-        {notes.map(note => (
+        {sorted.map(note => (
           <li key={note.id}>
             <DocumentNotesListItem 
               i18n={props.i18n}
