@@ -51,10 +51,11 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
           value,
           layer_id
         ),
-        targets ( 
+        targets!inner ( 
           id,
           annotation_id,
-          layer_id
+          layer_id,
+          value
         ) 
       `)
       .eq('layer_id', layerId)
