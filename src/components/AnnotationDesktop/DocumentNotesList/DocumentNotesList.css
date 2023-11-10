@@ -16,9 +16,15 @@
 }
 
 .anno-sidepanel.document-notes-list .annotation-card {
+  --border-color: #ffee05;
   border: 1px solid var(--gray-300);
   border-radius: 6px;
   margin: 8px 0;
+}
+
+.anno-sidepanel.document-notes-list .annotation-card-comments-interstitial .label {
+  background-color: #fffbc6;
+  border: 1px solid var(--border-color);
 }
 
 .anno-sidepanel.document-notes-list .annotation-card-comments-container {
