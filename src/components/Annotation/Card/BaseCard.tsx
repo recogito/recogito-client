@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTransition, animated } from '@react-spring/web';
-import { useAnnotatorUser, useAnnotationStore } from '@annotorious/react';
+import { useAnnotatorUser } from '@annotorious/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
@@ -17,8 +17,6 @@ type BaseCardProps = CardProps & {
 }
 
 export const BaseCard = (props: BaseCardProps) => {
-
-  const store = useAnnotationStore();
 
   const { annotation } = props;
 
@@ -41,15 +39,6 @@ export const BaseCard = (props: BaseCardProps) => {
 
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
-
-  const onDeleteAnnotation = () => 
-    store.deleteAnnotation(props.annotation);
-
-  const onCreateBody = (body: AnnotationBody) =>
-    store.addBody(body);
-
-  const onDeleteBody = (body: AnnotationBody) =>
-    store.deleteBody(body);
 
   const transition = useTransition(collapsed ? 
     [] : comments.slice(1, comments.length - 1), {
@@ -92,11 +81,11 @@ export const BaseCard = (props: BaseCardProps) => {
     <>
       <TagsWidget 
         i18n={props.i18n}
-        annotation={props.annotation} 
+        annotation={annotation} 
         me={me} 
         vocabulary={props.tagVocabulary} 
-        onCreateTag={onCreateBody} 
-        onDeleteTag={onDeleteBody} />
+        onCreateTag={props.onCreateBody} 
+        onDeleteTag={props.onDeleteBody} />
 
       {comments.length > 0 && (
         <ul className="annotation-card-comments-container">
@@ -110,7 +99,7 @@ export const BaseCard = (props: BaseCardProps) => {
               present: props.present,
               emphasizeOnEntry: !dontEmphasise.current.has(comments[0].id),
               editable: isMine(comments[0]),
-              onDeleteAnnotation
+              onDeleteAnnotation: props.onDeleteAnnotation
             })}
           </li>
 
@@ -138,7 +127,7 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(item.id),
                 editable: isMine(item),
-                onDeleteAnnotation
+                onDeleteAnnotation: props.onDeleteAnnotation
               })}
             </animated.li>
           ))}
@@ -153,7 +142,7 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(comments[comments.length - 1].id),
                 editable: isMine(comments[comments.length - 1]),
-                onDeleteAnnotation
+                onDeleteAnnotation: props.onDeleteAnnotation
               })}
             </li>
           )}

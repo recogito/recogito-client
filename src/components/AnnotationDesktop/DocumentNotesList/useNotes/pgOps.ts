@@ -1,7 +1,7 @@
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { DocumentNote } from '../DocumentNote';
+import type { User } from '@annotorious/react';
+import type { DocumentNote, DocumentNoteBody } from '../DocumentNote';
 
-// Shorthand
 const toDate = (str: string) => str ? new Date(str) : null;
 
 export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
@@ -34,18 +34,18 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
           created:created_at,
           creator:profiles!bodies_created_by_fkey(
             id,
-            nickname,
+            name:nickname,
             first_name,
             last_name,
-            avatar_url
+            avatar:avatar_url
           ),
           updated:updated_at,
           updatedBy:profiles!bodies_updated_by_fkey(
             id,
-            nickname,
+            name:nickname,
             first_name,
             last_name,
-            avatar_url
+            avatar:avatar_url
           ),
           purpose,
           value,
@@ -83,7 +83,7 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
       });
   });
 
-export const insertNote = (note: DocumentNote) => {
+export const insertNote = (note: DocumentNote, me: User) => {
   const createAnnotation = () =>
     supabase
       .from('annotations')
@@ -103,14 +103,16 @@ export const insertNote = (note: DocumentNote) => {
 
   const createBodies = () => 
     supabase
-    .from('bodies')
-    .insert(note.bodies.map(n => ({
-      id: n.id,
-      annotation_id: n.annotation_id,
-      purpose: n.purpose,
-      value: n.value,
-      layer_id: n.layer_id
-    })));
+      .from('bodies')
+      .insert(note.bodies.map(b => ({
+        id: b.id,
+        annotation_id: b.annotation,
+        created_at: b.created,
+        created_by: b.creator.id,
+        purpose: b.purpose,
+        value: b.value,
+        layer_id: b.layer_id
+      })));
 
   return new Promise<void>((resolve, reject) => {
     createAnnotation().then(({ error }) => {
@@ -132,3 +134,39 @@ export const insertNote = (note: DocumentNote) => {
   });
 
 }
+
+export const archiveNote = (id: string) => new Promise<void>((resolve, reject) =>
+  supabase
+    .rpc('archive_record_rpc', {
+      _table_name: 'annotations',
+      _id: id
+    })
+    .then(({ error }) => {
+      if (error)
+        reject(error);
+      else
+        resolve();
+    }));
+
+export const upsertBody = (b: DocumentNoteBody) =>
+  supabase
+    .from('bodies')
+    .upsert({
+      id: b.id,
+      created_at: b.created,
+      created_by: b.creator.id,
+      updated_at: b.created,
+      updated_by: b.updatedBy,
+      annotation_id: b.annotation,
+      format: b.format,
+      purpose: b.purpose,
+      value: b.value,
+      layer_id: b.layer_id
+    });
+
+export const archiveBody = (b: DocumentNoteBody) =>
+  supabase
+    .rpc('archive_record_rpc', {
+      _table_name: 'bodies',
+      _id: b.id
+    });

@@ -5,7 +5,6 @@ import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
 import { Sorter, Sorting, SortSelector } from './SortSelector';
 import { NewNote, NewNoteForm } from './NewNote';
-import type { DocumentNote } from './DocumentNote';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
@@ -34,13 +33,22 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
-  const { notes, createNote } = useNotes(me, props.defaultLayer, props.channel);
+  const { 
+    notes,
+    createBody,
+    createNote: _createNote,
+    deleteBody,
+    deleteNote
+  } = useNotes(me, props.defaultLayer, props.channel);
 
   const [sorter, setSorter] = useState<Sorter>(() => Sorting.Newest);
 
   const sorted = notes.sort(sorter);
 
   const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
+
+  const createNote = (text: string, isPrivate: boolean) =>
+    _createNote(text, isPrivate).then(() => setNewNote(undefined))
 
   return (
     <div className="anno-sidepanel document-notes-list">
@@ -59,6 +67,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
         <NewNoteForm 
           i18n={props.i18n}
           isPrivate={newNote === 'private'} 
+          onCreateNote={createNote}
           onCancel={() => setNewNote(undefined)} />
       )}
 
@@ -68,7 +77,10 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
             <DocumentNotesListItem 
               i18n={props.i18n}
               note={note} 
-              present={props.present} />
+              present={props.present} 
+              onCreateBody={createBody}
+              onDeleteBody={deleteBody}
+              onDeleteNote={() => deleteNote(note.id)} />
           </li>
         ))}
       </ul>

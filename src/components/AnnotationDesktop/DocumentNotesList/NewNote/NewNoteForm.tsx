@@ -8,6 +8,8 @@ interface NewNoteFormProps {
 
   isPrivate: boolean;
 
+  onCreateNote(text: string, isPrivate: boolean): void;
+
   onCancel(): void;
 
 }
@@ -20,9 +22,7 @@ export const NewNoteForm = (props: NewNoteFormProps) => {
 
   const onSubmit = (evt: FormEvent) => {
     evt.preventDefault();
-
-    // TODO
-
+    props.onCreateNote(value, props.isPrivate);
   }
 
   return (

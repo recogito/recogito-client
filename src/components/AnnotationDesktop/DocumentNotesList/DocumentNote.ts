@@ -1,3 +1,5 @@
+import type { User } from '@annotorious/react';
+
 export interface DocumentNote {
 
   id: string;
@@ -22,15 +24,17 @@ export interface DocumentNoteBody {
 
   id: string;
 
-  annotation_id: string;
+  annotation: string;
 
-  created_at: Date;
+  created: Date;
 
-  created_by: ProfileRecord;
+  creator: User;
 
-  updated_at?: Date;
+  updated?: Date;
 
-  updated_by?: ProfileRecord;
+  updatedBy?: User;
+
+  format?: string;
 
   purpose?: string;
   

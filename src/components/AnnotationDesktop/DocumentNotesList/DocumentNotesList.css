@@ -102,6 +102,7 @@
 .anno-sidepanel.document-notes-list .create-new-note-form.private textarea {
   background-color: #404f5e;
   border: none;
+  color: var(--gray-100);
 }
 
 .anno-sidepanel.document-notes-list .create-new-note-form .privacy-label {
