@@ -1,5 +1,5 @@
 import type { PresentUser, User } from '@annotorious/react';
-import type { DocumentNote } from '../DocumentNote';
+import type { DocumentNote, DocumentNoteBody } from '../DocumentNote';
 
 export const toDate = (str?: string) => str ? new Date(str) : null;
 
@@ -31,3 +31,15 @@ export const findUser = (id: string | undefined, presentUsers: PresentUser[], no
   // Last resort: check if this user is present
   return presentUsers.find(user => user.id === id);
 }
+
+export const parseBodyRecord = (record: any, present: PresentUser[], note?: DocumentNote): DocumentNoteBody => ({
+  id: record.id,
+  annotation: record.annotation_id,
+  created: toDate(record.created_at)!,
+  creator: findUser(record.created_by, present, note)!,
+  updated: toDate(record.updated_at),
+  updatedBy: findUser(record.updated_by, present, note),
+  purpose: record.purpose,
+  value: record.value,
+  layer_id: record.layer_id
+} as DocumentNoteBody)

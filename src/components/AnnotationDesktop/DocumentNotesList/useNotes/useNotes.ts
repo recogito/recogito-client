@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { ChangeEvent } from '@recogito/annotorious-supabase';
-import type { DocumentNote, DocumentNoteBody } from '../DocumentNote';
+import type { DocumentNote } from '../DocumentNote';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { findUser, toDate } from './utils';
+import { findUser, parseBodyRecord } from './utils';
 import { 
   archiveBody, 
   archiveNote, 
@@ -38,16 +38,16 @@ export const useNotes = (me: User, present: PresentUser[], layerId: string, chan
 
         // Ignore, unless 'value' is null (= note!)
         if (!target.value) {
-          const exists = notes.find(n => n.id === target.annotation_id);
-          if (!exists) { // New annotation!
-            setNotes(notes => [...notes, {
+          setNotes(notes => {
+            const exists = notes.find(n => n.id === target.annotation_id);
+            return exists ? notes : [...notes, {
               id: target.annotation_id,
               created_at: new Date(target.created_at),
               created_by: findUser(target.created_by, present),
               layer_id: target.layer_id,
               bodies: []
-            }]);
-          }
+            }];
+          });
         }
       } else if (table === 'bodies' && eventType === 'INSERT') {
         const body = event.new;
@@ -64,28 +64,18 @@ export const useNotes = (me: User, present: PresentUser[], layerId: string, chan
             return notes.map(note =>
               (note.id === body.annotation_id) ? ({
                 ...note,
-                bodies: [...note.bodies, {
-                  id: body.id,
-                  annotation: body.annotation_id,
-                  created: toDate(body.created_at)!,
-                  creator: findUser(body.created_by, present, note)!,
-                  updated: toDate(body.updated_at),
-                  updatedBy: findUser(body.updated_by, present, note),
-                  purpose: body.purpose,
-                  value: body.value,
-                  // @ts-ignore
-                  layer_id: body.layer_id
-                } as DocumentNoteBody]
+                bodies: [...note.bodies, parseBodyRecord(body, present, note)]
               }) : note) 
           });
         }, 250);        
       } else if (table === 'bodies' && eventType === 'UPDATE') {
-        
+        const body = event.new;
+
+        setNotes(notes => notes.map(note => note.id === body.annotation_id ? ({
+          ...note,
+          bodies: note.bodies.map(b => b.id === body.id ? parseBodyRecord(body, present, note) : b)
+        }) : note));
       }
-
-      // TODO how to handle archive deletes?
-
-      console.log('CDC Event', event);
     }
 
     const channel = supabase.channel(channelId);
