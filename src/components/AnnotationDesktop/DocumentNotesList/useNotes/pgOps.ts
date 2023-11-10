@@ -1,8 +1,7 @@
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { User } from '@annotorious/react';
 import type { DocumentNote, DocumentNoteBody } from '../DocumentNote';
-
-const toDate = (str: string) => str ? new Date(str) : null;
+import { toDate } from './utils';
 
 export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
   new Promise((resolve, reject) => {

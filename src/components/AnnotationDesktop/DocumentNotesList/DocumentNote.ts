@@ -12,7 +12,7 @@ export interface DocumentNote {
 
   updated_by?: ProfileRecord;
 
-  is_private: boolean;
+  is_private?: boolean;
   
   layer_id: string;
 

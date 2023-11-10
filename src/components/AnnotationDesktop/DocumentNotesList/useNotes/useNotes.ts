@@ -1,10 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { useEffect, useState } from 'react';
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-import type { AnnotationBody, User } from '@annotorious/react';
+import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { ChangeEvent } from '@recogito/annotorious-supabase';
-import type { DocumentNote } from '../DocumentNote';
+import type { DocumentNote, DocumentNoteBody } from '../DocumentNote';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { findUser, toDate } from './utils';
 import { 
   archiveBody, 
   archiveNote, 
@@ -13,7 +14,7 @@ import {
   upsertBody 
 } from './pgOps';
 
-export const useNotes = (me: User, layerId: string, channelId: string) => {
+export const useNotes = (me: User, present: PresentUser[], layerId: string, channelId: string) => {
 
   const [notes, setNotes] = useState<DocumentNote[]>([]);
 
@@ -30,7 +31,59 @@ export const useNotes = (me: User, layerId: string, channelId: string) => {
     // then serves everything down to the child components.
     const onEvent = (evt: RealtimePostgresChangesPayload<ChangeEvent>) => {
       const event = evt as unknown as ChangeEvent;
-      // const { table, eventType } = event;
+      const { table, eventType } = event;
+
+      if (table === 'targets' && eventType === 'INSERT') {
+        const target = event.new;
+
+        // Ignore, unless 'value' is null (= note!)
+        if (!target.value) {
+          const exists = notes.find(n => n.id === target.annotation_id);
+          if (!exists) { // New annotation!
+            setNotes(notes => [...notes, {
+              id: target.annotation_id,
+              created_at: new Date(target.created_at),
+              created_by: findUser(target.created_by, present),
+              layer_id: target.layer_id,
+              bodies: []
+            }]);
+          }
+        }
+      } else if (table === 'bodies' && eventType === 'INSERT') {
+        const body = event.new;
+
+        // Insert a little wait time, to make sure setNotes has
+        // completed, in case this was a new note!
+        setTimeout(() => {
+          setNotes(notes => {
+            // CDC will report our own INSERTs, too - don't create duplicates!
+            const exists = notes.some(note => note.bodies.some(b => b.id === body.id));
+            if (exists)
+              return notes;
+
+            return notes.map(note =>
+              (note.id === body.annotation_id) ? ({
+                ...note,
+                bodies: [...note.bodies, {
+                  id: body.id,
+                  annotation: body.annotation_id,
+                  created: toDate(body.created_at)!,
+                  creator: findUser(body.created_by, present, note)!,
+                  updated: toDate(body.updated_at),
+                  updatedBy: findUser(body.updated_by, present, note),
+                  purpose: body.purpose,
+                  value: body.value,
+                  // @ts-ignore
+                  layer_id: body.layer_id
+                } as DocumentNoteBody]
+              }) : note) 
+          });
+        }, 250);        
+      } else if (table === 'bodies' && eventType === 'UPDATE') {
+        
+      }
+
+      // TODO how to handle archive deletes?
 
       console.log('CDC Event', event);
     }

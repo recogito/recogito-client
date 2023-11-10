@@ -21,6 +21,10 @@
   margin: 8px 0;
 }
 
+.anno-sidepanel.document-notes-list .annotation-card-comments-container {
+  max-height: none;
+}
+
 .anno-sidepanel.document-notes-list .annotation-tagswidget {
   background-color: #fffbc7;
   border-color: #ffee05;
