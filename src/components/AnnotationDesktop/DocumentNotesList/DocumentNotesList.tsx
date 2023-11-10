@@ -5,6 +5,7 @@ import type { Policies, Translations } from 'src/Types';
 import { useNotes } from './useNotes';
 import { Sorter, Sorting, SortSelector } from './SortSelector';
 import { NewNote, NewNoteForm } from './NewNote';
+import type { DocumentNote } from './DocumentNote';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
@@ -33,6 +34,8 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
+  const [selected, setSelected] = useState<DocumentNote | undefined>();
+
   const { 
     notes,
     createBody,
@@ -49,7 +52,12 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
 
   const createNote = (text: string, isPrivate: boolean) =>
-    _createNote(text, isPrivate).then(() => setNewNote(undefined))
+    _createNote(text, isPrivate).then(() => setNewNote(undefined));
+
+  const onSelect = (note: DocumentNote) => (evt: React.MouseEvent) => {    
+    evt.stopPropagation();
+    setSelected(note);
+  }
 
   return (
     <div className="anno-sidepanel document-notes-list">
@@ -74,10 +82,11 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
       <ul>
         {sorted.map(note => (
-          <li key={note.id}>
+          <li key={note.id} onClick={onSelect(note)}>
             <DocumentNotesListItem 
               i18n={props.i18n}
               note={note} 
+              showReplyForm={selected === note}
               present={props.present} 
               onCreateBody={createBody}
               onDeleteBody={deleteBody}

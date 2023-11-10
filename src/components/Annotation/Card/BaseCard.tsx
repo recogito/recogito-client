@@ -59,6 +59,11 @@ export const BaseCard = (props: BaseCardProps) => {
   const beforeReply = (b: AnnotationBody) =>
     dontEmphasise.current = new Set([...dontEmphasise.current, b.id]);
 
+  const onReply = (b: AnnotationBody) => {
+    props.onCreateBody(b);
+    props.onReply && props.onReply(b);
+  }
+
   useEffect(() => {
     const eqSet = (x: Set<any>, y: Set<any>) => 
       x.size === y.size && [...x].every(x => y.has(x));
@@ -165,7 +170,7 @@ export const BaseCard = (props: BaseCardProps) => {
           me={me}
           placeholder={props.i18n.t['Reply...']}
           beforeSubmit={beforeReply} 
-          onSubmit={props.onReply} />
+          onSubmit={onReply} />
       )}
     </>
   )

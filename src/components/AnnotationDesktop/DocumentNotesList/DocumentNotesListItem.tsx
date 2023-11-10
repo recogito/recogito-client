@@ -12,6 +12,8 @@ interface DocumentNotesListItemProps {
 
   present: PresentUser;
 
+  showReplyForm?: boolean;
+
   onDeleteNote(): void;
 
   onCreateBody(body: DocumentNoteBody): void;
@@ -27,6 +29,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
   return (
     <div className="document-notes-list-item annotation-card public">
       <BaseCard 
+        showReplyForm={props.showReplyForm}
         annotation={props.note}
         i18n={props.i18n}
         present={props.present}

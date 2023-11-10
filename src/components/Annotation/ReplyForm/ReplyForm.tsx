@@ -2,7 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { useAnnotationStore } from '@annotorious/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Avatar } from '../../Avatar';
@@ -23,7 +22,7 @@ export interface ReplyFormProps {
 
   beforeSubmit?(body: AnnotationBody): void;
 
-  onSubmit?(body: AnnotationBody): void;
+  onSubmit(body: AnnotationBody): void;
 
 }
 
@@ -32,8 +31,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
   const { me } = props;
 
   const textarea = useRef<HTMLTextAreaElement>(null);
-  
-  const store = useAnnotationStore();
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
@@ -67,8 +64,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
       textarea.current.value = '';
 
       props.beforeSubmit && props.beforeSubmit(body);
-
-      store.addBody(body);
 
       props.onSubmit && props.onSubmit(body);
     }

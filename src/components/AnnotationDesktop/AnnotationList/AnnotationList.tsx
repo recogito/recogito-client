@@ -118,7 +118,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
     store.updateBody(oldValue, newValue);
-
+    
   useEffect(() => {
     // Scroll the first selected card into view
     if (selected?.length > 0) {
@@ -161,7 +161,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
                       scrollIntoView
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
-                      me={me} />
+                      me={me} 
+                      onSubmit={onCreateBody} />
                   </div>
                 ) : (
                   <Annotation.EmptyCard
