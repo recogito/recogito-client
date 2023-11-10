@@ -1,8 +1,10 @@
 import { FormEvent, useState } from 'react';
 import { Detective } from '@phosphor-icons/react';
-import TextareaAutosize from 'react-textarea-autosize';
+import type { Translations } from 'src/Types';
 
 interface NewNoteFormProps {
+
+  i18n: Translations;
 
   isPrivate: boolean;
 
@@ -11,6 +13,8 @@ interface NewNoteFormProps {
 }
 
 export const NewNoteForm = (props: NewNoteFormProps) => {
+
+  const { t } = props.i18n;
 
   const [value, setValue] = useState('');
 
@@ -30,7 +34,7 @@ export const NewNoteForm = (props: NewNoteFormProps) => {
       {props.isPrivate && (
         <div className="privacy-label">
           <Detective className="anonymous" size={18} weight="light" /> 
-          <span>Private Note</span>
+          <span>{t['Private note']}</span>
         </div>
       )}
 

@@ -30,8 +30,6 @@ interface DocumentNotesListProps {
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
-  const [addNew, setAddNew] = useState(false);
-
   const user = useAnnotatorUser();
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
@@ -42,40 +40,26 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const sorted = notes.sort(sorter);
 
-  const [value, setValue] = useState('');
-
-  // TODO add different buttons for 'add a note' vs. 'add a private note'
-  const isPrivate = true;
-
-  const isMine = (n: DocumentNote) => me.id === n.created_by.id;
-
-  const onSubmit = (evt: React.MouseEvent) => {
-    evt.preventDefault();
-
-    console.log('saving!');
-
-    createNote(value).then(note => {
-      console.log('created note', note);
-    });
-  }
+  const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
 
   return (
     <div className="anno-sidepanel document-notes-list">
       <div className="document-notes-list-header">
         <NewNote 
           i18n={props.i18n} 
-          onCreatePublic={() => setAddNew(true)} 
-          onCreatePrivate={() => console.log('todo')} />
+          onCreatePublic={() => setNewNote('public')} 
+          onCreatePrivate={() => setNewNote('private')} />
 
         <SortSelector 
           i18n={props.i18n}
           onChange={sorter => setSorter(() => sorter)} />
       </div>
 
-      {addNew && (
+      {newNote && (
         <NewNoteForm 
-          isPrivate={isPrivate} 
-          onCancel={() => setAddNew(false)} />
+          i18n={props.i18n}
+          isPrivate={newNote === 'private'} 
+          onCancel={() => setNewNote(undefined)} />
       )}
 
       <ul>

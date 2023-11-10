@@ -83,17 +83,25 @@
   margin: 0.2em 0 1.8em 0;
 }
 
-/*
-  --private-bg: #2e3c4a;
-  --private-bg-light: #404f5e;
-  --font-dark: rgba(255, 255, 255, 0.85);
-  --font-light: rgba(255, 255, 255, 0.55);
-*/
+.anno-sidepanel.document-notes-list .create-new-note-form textarea {
+  resize: vertical;
+  width: 100%;
+}
 
 .anno-sidepanel.document-notes-list .create-new-note-form.private {
   background-color: #2e3c4a;
   border-radius: var(--border-radius);
   padding: 0.35em 0.5em 0.5em 0.5em;
+}
+
+.anno-sidepanel.document-notes-list .create-new-note-form-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.anno-sidepanel.document-notes-list .create-new-note-form.private textarea {
+  background-color: #404f5e;
+  border: none;
 }
 
 .anno-sidepanel.document-notes-list .create-new-note-form .privacy-label {
@@ -105,20 +113,8 @@
   margin-bottom: 0.4em;
 }
 
-.anno-sidepanel.document-notes-list .create-new-note-form textarea {
-  background-color: #404f5e;
-  border: none;
-  resize: vertical;
-  width: 100%;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form-footer {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form-footer button.cancel {
+.anno-sidepanel.document-notes-list .create-new-note-form.private button.cancel {
   background-color: transparent;
   border-color: var(--gray-500);
-  color: var(--gray-400)
+  color: var(--gray-400);
 }
