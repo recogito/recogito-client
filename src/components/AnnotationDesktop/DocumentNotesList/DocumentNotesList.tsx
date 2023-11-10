@@ -45,7 +45,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   const [value, setValue] = useState('');
 
   // TODO add different buttons for 'add a note' vs. 'add a private note'
-  const isPublic = true;
+  const isPrivate = true;
 
   const isMine = (n: DocumentNote) => me.id === n.created_by.id;
 
@@ -73,7 +73,9 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       </div>
 
       {addNew && (
-        <NewNoteForm isPublic={isPublic} />
+        <NewNoteForm 
+          isPrivate={isPrivate} 
+          onCancel={() => setAddNew(false)} />
       )}
 
       <ul>

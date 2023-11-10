@@ -4,7 +4,9 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 interface NewNoteFormProps {
 
-  isPublic: boolean;
+  isPrivate: boolean;
+
+  onCancel(): void;
 
 }
 
@@ -21,25 +23,34 @@ export const NewNoteForm = (props: NewNoteFormProps) => {
 
   return (
     <form 
-      className="create-new-note-form"
+      className={props.isPrivate ? 
+        'create-new-note-form private' : 'create-new-note-form'}
       onSubmit={onSubmit}>
-      {!props.isPublic && (
-        <Detective className="anonymous" size={20} weight="light" />  
+
+      {props.isPrivate && (
+        <div className="privacy-label">
+          <Detective className="anonymous" size={18} weight="light" /> 
+          <span>Private Note</span>
+        </div>
       )}
 
-      <TextareaAutosize
-        rows={1} 
-        maxRows={10} 
+      <textarea
+        rows={4} 
         value={value} 
         onChange={evt => setValue(evt.target.value)} />
 
       <div className="create-new-note-form-footer">
-        <button className="sm primary" type="submit">
-          Save
+        <button 
+          className="cancel sm flat outline" 
+          type="button"
+          onClick={props.onCancel}>
+          Cancel
         </button>
 
-        <button className="sm flat outline" type="button">
-          Cancel
+        <button 
+          className="sm primary" 
+          type="submit">
+          Save
         </button>
       </div>
     </form>
