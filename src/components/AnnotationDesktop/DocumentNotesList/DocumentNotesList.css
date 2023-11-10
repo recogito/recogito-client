@@ -22,6 +22,16 @@
   margin: 8px 0;
 }
 
+.anno-sidepanel.document-notes-list .annotation-tag {
+  background-color: #998200;
+  border-color: #8a8100;
+  color: #fff;
+}
+
+.anno-sidepanel.document-notes-list .annotation-tagswidget .add-tag button svg {
+  color: #8a8100;
+}
+
 .anno-sidepanel.document-notes-list .annotation-card-comments-interstitial .label {
   background-color: #fffbc6;
   border: 1px solid var(--border-color);
