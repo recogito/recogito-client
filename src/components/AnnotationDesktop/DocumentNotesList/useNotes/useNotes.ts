@@ -59,8 +59,7 @@ export const useNotes = (me: User, layerId: string, channelId: string) => {
         onEvent
       ); 
 
-      channel.subscribe(); 
-
+      channel.subscribe();
   }, []);
 
   const createNote = (text: string, isPrivate = false) => {

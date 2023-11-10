@@ -156,7 +156,7 @@ export const upsertBody = (b: DocumentNoteBody) =>
       created_at: b.created,
       created_by: b.creator.id,
       updated_at: b.created,
-      updated_by: b.updatedBy,
+      updated_by: b.updatedBy?.id,
       annotation_id: b.annotation,
       format: b.format,
       purpose: b.purpose,
