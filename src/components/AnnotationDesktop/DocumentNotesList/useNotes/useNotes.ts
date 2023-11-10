@@ -11,6 +11,7 @@ import {
   archiveNote, 
   fetchNotes, 
   insertNote, 
+  updateVisibility, 
   upsertBody 
 } from './pgOps';
 
@@ -125,9 +126,8 @@ export const useNotes = (me: User, present: PresentUser[], layerId: string, chan
       }]
     };
 
-    return insertNote(note, me)
+    return insertNote(note)
       .then(() => {
-        console.log('created', note)
         setNotes(notes => [...notes, note]);
       })
       .catch(error => {
@@ -145,6 +145,20 @@ export const useNotes = (me: User, present: PresentUser[], layerId: string, chan
         console.error(error);
         // TODO UI feedback
       });
+  }
+
+  const makePublic = (note: DocumentNote) => {
+    const publicNote: DocumentNote = {...note, is_private: false };
+
+    updateVisibility(publicNote)
+      .then(({ error }) => {
+        if (error) {
+          console.error(error);
+          // TODO UI feedback
+        } else {
+          setNotes(notes => notes.map(n => n.id === note.id ? publicNote : n));
+        }
+      })
   }
 
   const createBody = (body: AnnotationBody) => {
@@ -222,6 +236,7 @@ export const useNotes = (me: User, present: PresentUser[], layerId: string, chan
     notes,
     createNote,
     deleteNote,
+    makePublic,
     createBody,
     deleteBody,
     updateBody

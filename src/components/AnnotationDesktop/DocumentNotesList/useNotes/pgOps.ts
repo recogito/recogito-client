@@ -82,7 +82,7 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
       });
   });
 
-export const insertNote = (note: DocumentNote, me: User) => {
+export const insertNote = (note: DocumentNote) => {
   const createAnnotation = () =>
     supabase
       .from('annotations')
@@ -131,8 +131,15 @@ export const insertNote = (note: DocumentNote, me: User) => {
       }
     })
   });
-
 }
+
+export const updateVisibility = (note: DocumentNote) => 
+  supabase
+    .from('annotations')
+    .update({
+      is_private: note.is_private
+    })
+    .eq('id', note.id); 
 
 export const archiveNote = (id: string) => new Promise<void>((resolve, reject) =>
   supabase

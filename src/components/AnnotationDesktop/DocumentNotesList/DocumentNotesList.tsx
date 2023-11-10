@@ -42,6 +42,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     createNote: _createNote,
     deleteBody,
     deleteNote,
+    makePublic,
     updateBody
   } = useNotes(me, props.present, props.defaultLayer, props.channel);
 
@@ -91,7 +92,8 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               onCreateBody={createBody}
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}
-              onDeleteNote={() => deleteNote(note.id)} />
+              onDeleteNote={() => deleteNote(note.id)} 
+              onMakePublic={() => makePublic(note)} />
           </li>
         ))}
       </ul>

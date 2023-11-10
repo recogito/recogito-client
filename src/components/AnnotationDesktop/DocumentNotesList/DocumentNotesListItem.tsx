@@ -2,7 +2,7 @@ import type { PresentUser } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from './DocumentNote';
 import { BaseCard } from '@components/Annotation/Card/BaseCard';
-import { PublicComment } from '@components/Annotation/Comment';
+import { PrivateComment, PublicComment } from '@components/Annotation/Comment';
 
 interface DocumentNotesListItemProps {
 
@@ -22,20 +22,30 @@ interface DocumentNotesListItemProps {
 
   onUpdateBody(oldValue: DocumentNoteBody, newValue: DocumentNoteBody): void;
 
+  onMakePublic(): void;
+
 }
 
 export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
 
+  const { onMakePublic } = props;
+
+  const isPrivate = props.note.is_private;
+
   return (
-    <div className="document-notes-list-item annotation-card public">
+    <div className={isPrivate ? 
+      'document-notes-list-item annotation-card private' :
+      'document-notes-list-item annotation-card public'}>
       <BaseCard 
         showReplyForm={props.showReplyForm}
         annotation={props.note}
         i18n={props.i18n}
         present={props.present}
-        comment={props => (
-          <PublicComment {...props} />
-        )} 
+        comment={props => isPrivate ? (
+            <PrivateComment {...props} onMakePublic={onMakePublic} />
+          ) : (
+            <PublicComment {...props} />
+          )} 
         onCreateBody={props.onCreateBody}
         onDeleteBody={props.onDeleteBody}
         onUpdateBody={props.onUpdateBody}

@@ -15,14 +15,14 @@
   box-shadow: 1px 2px 3px -1px rgba(0, 0, 0, 0.08);
 }
 
-.anno-sidepanel.document-notes-list .annotation-card {
+.anno-sidepanel.document-notes-list .annotation-card:not(.private) {
   --border-color: #ffee05;
   border: 1px solid var(--gray-300);
   border-radius: 6px;
   margin: 8px 0;
 }
 
-.anno-sidepanel.document-notes-list .annotation-tag {
+.anno-sidepanel.document-notes-list .annotation-card:not(.private) .annotation-tag {
   background-color: #998200;
   border-color: #8a8100;
   color: #fff;
@@ -41,12 +41,12 @@
   max-height: none;
 }
 
-.anno-sidepanel.document-notes-list .annotation-tagswidget {
+.anno-sidepanel.document-notes-list .annotation-card:not(.private) .annotation-tagswidget {
   background-color: #fffbc7;
   border-color: #ffee05;
 }
 
-.anno-sidepanel.document-notes-list .annotation-tagswidget input::placeholder {
+.anno-sidepanel.document-notes-list .annotation-card:not(.private) .annotation-tagswidget input::placeholder {
   color: #9f891e;
 }
 
