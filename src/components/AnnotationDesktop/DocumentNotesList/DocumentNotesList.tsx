@@ -38,7 +38,8 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     createBody,
     createNote: _createNote,
     deleteBody,
-    deleteNote
+    deleteNote,
+    updateBody
   } = useNotes(me, props.defaultLayer, props.channel);
 
   const [sorter, setSorter] = useState<Sorter>(() => Sorting.Newest);
@@ -80,6 +81,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               present={props.present} 
               onCreateBody={createBody}
               onDeleteBody={deleteBody}
+              onUpdateBody={updateBody}
               onDeleteNote={() => deleteNote(note.id)} />
           </li>
         ))}

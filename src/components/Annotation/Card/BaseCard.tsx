@@ -99,7 +99,10 @@ export const BaseCard = (props: BaseCardProps) => {
               present: props.present,
               emphasizeOnEntry: !dontEmphasise.current.has(comments[0].id),
               editable: isMine(comments[0]),
-              onDeleteAnnotation: props.onDeleteAnnotation
+              onDeleteAnnotation: props.onDeleteAnnotation,
+              onCreateBody: props.onCreateBody,
+              onDeleteBody: props.onDeleteBody,
+              onUpdateBody: props.onUpdateBody
             })}
           </li>
 
@@ -127,7 +130,10 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(item.id),
                 editable: isMine(item),
-                onDeleteAnnotation: props.onDeleteAnnotation
+                onDeleteAnnotation: props.onDeleteAnnotation,
+                onCreateBody: props.onCreateBody,
+                onDeleteBody: props.onDeleteBody,
+                onUpdateBody: props.onUpdateBody
               })}
             </animated.li>
           ))}
@@ -142,7 +148,10 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(comments[comments.length - 1].id),
                 editable: isMine(comments[comments.length - 1]),
-                onDeleteAnnotation: props.onDeleteAnnotation
+                onDeleteAnnotation: props.onDeleteAnnotation,
+                onCreateBody: props.onCreateBody,
+                onDeleteBody: props.onDeleteBody,
+                onUpdateBody: props.onUpdateBody
               })}
             </li>
           )}

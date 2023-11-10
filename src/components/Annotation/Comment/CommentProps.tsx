@@ -18,5 +18,12 @@ export interface CommentProps {
   policies?: Policies;
   
   onDeleteAnnotation(): void;
+
+  onCreateBody(body: AnnotationBody): void;
+
+  onDeleteBody(body: AnnotationBody): void;
+
+  onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
+
   
 }

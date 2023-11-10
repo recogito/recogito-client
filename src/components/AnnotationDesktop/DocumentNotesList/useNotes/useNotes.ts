@@ -147,9 +147,33 @@ export const useNotes = (me: User, layerId: string, channelId: string) => {
           setNotes(notes => notes.map(n => n.id === body.annotation ? ({
             ...n,
             bodies
-          }) : n))
+          }) : n));
         }
       });
+  }
+
+  const updateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => {
+    if (oldValue.annotation !== newValue.annotation || oldValue.id !== newValue.id)
+      throw 'Integrity violation: body update with different body IDs';
+
+    const bodies = [ ...(notes.find(n => n.id === oldValue.annotation)?.bodies || [])];
+
+    setNotes(notes => notes.map(n => n.id === oldValue.annotation ? ({
+      ...n,
+      bodies: n.bodies.map(b => b.id === oldValue.id ? newValue : b)
+    }) : n));
+
+    upsertBody(newValue).then(({ error }) => {
+      if (error) {
+        console.error(error);
+        // TODO UI feedback
+
+        setNotes(notes => notes.map(n => n.id === oldValue.annotation ? ({
+          ...n,
+          bodies
+        }) : n));
+      }
+    })
   }
 
   return {
@@ -157,7 +181,8 @@ export const useNotes = (me: User, layerId: string, channelId: string) => {
     createNote,
     deleteNote,
     createBody,
-    deleteBody
+    deleteBody,
+    updateBody
   }
 
 }

@@ -116,6 +116,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
   const onDeleteBody = (body: AnnotationBody) =>
     store.deleteBody(body);
 
+  const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
+    store.updateBody(oldValue, newValue);
+
   useEffect(() => {
     // Scroll the first selected card into view
     if (selected?.length > 0) {
@@ -186,6 +189,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   tagVocabulary={props.tagVocabulary} 
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
+                  onUpdateBody={onUpdateBody}
                   onDeleteAnnotation={() => onDeleteAnnotation(a)} />
               ) : (
                 <Annotation.PublicCard 
@@ -198,6 +202,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   tagVocabulary={props.tagVocabulary} 
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
+                  onUpdateBody={onUpdateBody}
                   onDeleteAnnotation={() => onDeleteAnnotation(a)} />  
               )
             )}

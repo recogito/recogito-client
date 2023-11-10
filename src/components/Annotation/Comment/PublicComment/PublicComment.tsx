@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAnnotationStore, useAnnotatorUser } from '@annotorious/react';
+import { type AnnotationBody, useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
 import { Creator } from '../../Creator';
 import type { CommentProps } from '../CommentProps';
@@ -14,8 +14,6 @@ export const PublicComment = (props: CommentProps) => {
 
   const me = useAnnotatorUser();
 
-  const store = useAnnotationStore();
-
   const [editable, setEditable] = useState(false);
 
   const creator: PresentUser | User | undefined = 
@@ -26,7 +24,10 @@ export const PublicComment = (props: CommentProps) => {
   // Comments are editable if they are mine, or I'm a layer admin
   const canEdit = isMine || props.policies?.get('layers').has('INSERT');
 
-  const onDeleteComment = () => store.deleteBody(comment);
+  const onChange = (oldValue: AnnotationBody, newValue: AnnotationBody) => {
+    props.onUpdateBody(oldValue, newValue);
+    setEditable(false)
+  }
 
   return (
     <article
@@ -43,7 +44,7 @@ export const PublicComment = (props: CommentProps) => {
         editable={editable}
         i18n={props.i18n} 
         comment={comment} 
-        onChanged={() => setEditable(false)} 
+        onChange={onChange} 
         onCanceled={() => setEditable(false)} />
 
       {canEdit && (
@@ -52,7 +53,7 @@ export const PublicComment = (props: CommentProps) => {
           isFirst={props.index === 0}
           isMine={isMine}
           onDeleteAnnotation={props.onDeleteAnnotation}
-          onDeleteComment={onDeleteComment}
+          onDeleteComment={() => props.onDeleteBody(comment)}
           onEditComment={() => setEditable(true)} />
       )}
     </article>

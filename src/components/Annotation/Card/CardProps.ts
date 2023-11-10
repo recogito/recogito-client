@@ -25,4 +25,6 @@ export interface CardProps {
 
   onDeleteBody(body: AnnotationBody): void;
 
+  onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
+
 }

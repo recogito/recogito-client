@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { AnnotationBody, useAnnotationStore } from '@annotorious/react';
+import type { AnnotationBody } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 interface EditableCommentProps {
@@ -11,7 +11,7 @@ interface EditableCommentProps {
 
   comment: AnnotationBody;
 
-  onChanged(): void;
+  onChange(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
   onCanceled(): void;
 
@@ -22,8 +22,6 @@ export const EditableComment = (props: EditableCommentProps) => {
   const { t } = props.i18n;
 
   const { comment, editable } = props;
-
-  const store = useAnnotationStore();
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
@@ -48,13 +46,10 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const onSaveChange = (evt: React.FormEvent) => {
     evt.preventDefault();
-
-    store.updateBody(comment, {
+    props.onChange(comment, {
       ...comment,
       value: textarea.current!.value
     });
-
-    props.onChanged();
   }
 
   const onCancelChange = () => {

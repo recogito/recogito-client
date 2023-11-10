@@ -18,6 +18,8 @@ interface DocumentNotesListItemProps {
 
   onDeleteBody(body: DocumentNoteBody): void;
 
+  onUpdateBody(oldValue: DocumentNoteBody, newValue: DocumentNoteBody): void;
+
 }
 
 export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
@@ -33,6 +35,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
         )} 
         onCreateBody={props.onCreateBody}
         onDeleteBody={props.onDeleteBody}
+        onUpdateBody={props.onUpdateBody}
         onDeleteAnnotation={props.onDeleteNote} />
     </div>
   )
