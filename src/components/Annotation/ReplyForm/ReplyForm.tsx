@@ -64,7 +64,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
         created: new Date(),
         purpose: 'commenting',
         value: JSON.stringify(value),
-        render_type: 'quill',
+        format: 'Quill'
       };
 
       setValue('');
