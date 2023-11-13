@@ -48,3 +48,24 @@ export const updateDocumentMetadata = (
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Document }));
+
+export const getDocument = (
+  supabase: SupabaseClient,
+  documentId: string
+): Response<Document> =>
+  supabase
+    .from('documents')
+    .select(`
+      id,
+      created_at,
+      created_by,
+      updated_at,
+      updated_by,
+      name,
+      bucket_id,
+      content_type,
+      meta_data
+    `)
+    .eq('id', documentId)
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Document }));

@@ -38,6 +38,7 @@
     "confetti-explosion-react": "^0.1.2",
     "crypto-js": "^4.1.1",
     "formik": "^2.4.1",
+    "linkedom": "^0.15.6",
     "openseadragon": "^3.1.0",
     "papaparse": "^5.4.1",
     "react": "^18.2.0",
