@@ -182,6 +182,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             {documents.map(document => (
               <DocumentCard
                 key={document.id}
+                isDefaultContext
                 isAdmin={isAdmin}
                 i18n={props.i18n} 
                 document={document} 

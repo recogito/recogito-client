@@ -78,7 +78,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  //max number of avatars displayed in the top right
+  // max number of avatars displayed in the top right
   const limit = 5;
 
   const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {

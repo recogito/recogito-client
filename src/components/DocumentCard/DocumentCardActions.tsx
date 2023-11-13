@@ -1,23 +1,31 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import type { Translations } from 'src/Types';
+import type { Context, Document, Translations } from 'src/Types';
 import { 
   Browser, 
   Browsers, 
+  CaretRight,
+  Code,
+  Detective,
   DotsThreeVertical, 
   DownloadSimple,
   PencilSimple, 
-  Trash 
+  Trash,
+  UsersThree
 } from '@phosphor-icons/react';
 
-const { Content, Item, Portal, Root, Trigger } = Dropdown;
+const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
 interface DocumentCardActionsProps {
 
   i18n: Translations;
 
   isAdmin?: boolean;
+
+  context: Context;
+
+  document: Document;
 
   onOpen(tab: boolean): void;
 
@@ -26,6 +34,8 @@ interface DocumentCardActionsProps {
   onEditMetadata?(): void;
 
   onExportCSV?(): void;
+
+  onExportTEI?(includePrivate?: boolean): void;
 
 }
 
@@ -41,6 +51,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
     props.onOpen(tab);
   }
+
+  const onExportTEI = (includePrivate: boolean) => (evt: Event) =>
+    props.onExportTEI && props.onExportTEI(includePrivate);
 
   return (
     <ConfirmedAction.Root
@@ -64,14 +77,40 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               <Browsers size={16} /> <span>{t['Open document in new tab']}</span>
             </Item>
 
+            {props.document.content_type === 'text/xml' && (
+              <Sub>
+                <SubTrigger className="dropdown-subtrigger">
+                  <Code size={16} /> <span>{t['Export TEI file']}</span>
+                  <div className="right-slot">
+                    <CaretRight size={16} />
+                  </div>
+                </SubTrigger>
+
+                <Portal>
+                  <SubContent
+                    className="dropdown-subcontent"
+                    alignOffset={-5}>
+
+                    <Item className="dropdown-item" onSelect={onExportTEI(false)}>
+                      <UsersThree size={16} /> {t['Public annotations only']}
+                    </Item>
+
+                    <Item className="dropdown-item" onSelect={onExportTEI(true)}>
+                      <Detective size={16} /> {t['Include my private annotations']}
+                    </Item>
+                  </SubContent>
+                </Portal>
+              </Sub>
+            )}
+
             {props.isAdmin && (
               <>
-                <Item className="dropdown-item" onSelect={props.onEditMetadata}>
-                  <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
-                </Item>
-
                 <Item className="dropdown-item" onSelect={props.onExportCSV}>
                   <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
+                </Item>
+
+                <Item className="dropdown-item" onSelect={props.onEditMetadata}>
+                  <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
                 </Item>
 
                 <ConfirmedAction.Trigger>

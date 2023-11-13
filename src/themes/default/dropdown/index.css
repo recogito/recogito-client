@@ -29,7 +29,8 @@
   animation-name: slideRightAndFade;
 }
 
-.dropdown-item {
+.dropdown-item,
+.dropdown-subtrigger {
   align-items: center;
   border-radius: calc(var(--border-radius) - 1px);
   color: var(--font-dark);
@@ -59,7 +60,8 @@
   padding: 5px 5px 5px 0;
 }
 
-.dropdown-item svg {
+.dropdown-item svg,
+.dropdown-subtrigger svg {
   color: var(--font-light);
   padding-right: 7px;
   position: relative;
@@ -73,7 +75,7 @@
 .dropdown-item[data-highlighted],
 .dropdown-checkbox-item[data-highlighted],
 .dropdown-radio-item[data-highlighted],
-.dropdown-sub-trigger[data-highlighted] {
+.dropdown-subtrigger[data-highlighted] {
   background-color: rgba(0, 0, 0, 0.08);  
 }
 
@@ -82,6 +84,18 @@
 .dropdown-radio-item[data-disabled],
 .dropdown-sub-trigger[data-disabled] {
   pointer-events: none;
+}
+
+.right-slot {
+  display: flex;
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.right-slot svg {
+  color: var(--font-dark);
+  margin-right: -5px;
+  padding-right: 0;
 }
 
 .dropdown-indicator {

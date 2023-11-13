@@ -1,4 +1,4 @@
-import React, { RefObject, useMemo, useRef, useState } from 'react';
+import { RefObject, useMemo, useRef, useState } from 'react';
 import ReactQuill, { Range } from 'react-quill';
 import {
   ArrowCounterClockwise,
