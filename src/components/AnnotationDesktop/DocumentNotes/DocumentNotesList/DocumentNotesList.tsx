@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { useAnnotatorUser } from '@annotorious/react';
-import type { PresentUser, User } from '@annotorious/react';
+import type { PresentUser } from '@annotorious/react';
 import type { Policies, Translations } from 'src/Types';
-import { useNotes } from './useNotes';
-import { Sorter, Sorting, SortSelector } from './SortSelector';
-import { NewNote, NewNoteForm } from './NewNote';
-import type { DocumentNote } from './DocumentNote';
+import { useNotes } from '../DocumentNotes';
+import { Sorter, Sorting, SortSelector } from '../SortSelector';
+import { NewNote, NewNoteForm } from '../NewNote';
+import type { DocumentNote } from '../Types';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
@@ -16,12 +15,6 @@ interface DocumentNotesListProps {
 
   present: PresentUser[];
 
-  me: PresentUser;
-
-  defaultLayer: string;
-
-  channel: string;
-
   policies?: Policies;
 
   tagVocabulary?: string[];
@@ -29,10 +22,6 @@ interface DocumentNotesListProps {
 }
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
-
-  const user = useAnnotatorUser();
-
-  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   const [selected, setSelected] = useState<DocumentNote | undefined>();
 
@@ -44,7 +33,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     deleteNote,
     makePublic,
     updateBody
-  } = useNotes(me, props.present, props.defaultLayer, props.channel);
+  } = useNotes();
 
   const [sorter, setSorter] = useState<Sorter>(() => Sorting.Newest);
 
@@ -88,6 +77,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               i18n={props.i18n}
               note={note} 
               showReplyForm={selected === note}
+              policies={props.policies}
               present={props.present} 
               onCreateBody={createBody}
               onDeleteBody={deleteBody}

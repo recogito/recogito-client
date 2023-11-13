@@ -1,6 +1,6 @@
 import type { PresentUser } from '@annotorious/react';
-import type { Translations } from 'src/Types';
-import type { DocumentNote, DocumentNoteBody } from './DocumentNote';
+import type { Policies, Translations } from 'src/Types';
+import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { BaseCard } from '@components/Annotation/Card/BaseCard';
 import { PrivateComment, PublicComment } from '@components/Annotation/Comment';
 
@@ -9,6 +9,8 @@ interface DocumentNotesListItemProps {
   i18n: Translations;
 
   note: DocumentNote;
+
+  policies?: Policies;
 
   present: PresentUser;
 

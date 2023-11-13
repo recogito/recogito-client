@@ -1,5 +1,5 @@
 import type { PresentUser, User } from '@annotorious/react';
-import type { DocumentNote, DocumentNoteBody } from '../DocumentNote';
+import type { DocumentNote, DocumentNoteBody } from '../../Types';
 
 export const toDate = (str?: string) => str ? new Date(str) : null;
 
@@ -42,4 +42,4 @@ export const parseBodyRecord = (record: any, present: PresentUser[], note?: Docu
   purpose: record.purpose,
   value: record.value,
   layer_id: record.layer_id
-} as DocumentNoteBody)
+} as DocumentNoteBody);

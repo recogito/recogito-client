@@ -8,9 +8,10 @@ import type { Layer, Policies, Translations } from 'src/Types';
 import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
 import { LayersPanel } from '../LayersPanel';
-import { DocumentNotesList } from '../DocumentNotesList';
+import { DocumentNotes, DocumentNotesList } from '../DocumentNotes';
 
 import './ViewMenu.css';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 interface ViewMenuProps {
 
@@ -70,80 +71,91 @@ export const ViewMenu = (props: ViewMenuProps) => {
   const togglePanel = (p: ViewMenuPanel) =>
     panel === p ? setPanel(undefined) : setPanel(p);
 
+  const onError = (error: Error | PostgrestError) => {
+    console.error(error);
+    // TODO UI feedback
+  }
+
   return (
     <div 
       className="anno-sidebar-container"
       data-collapsed={panel ? undefined : 'true'}>
-      <div 
-        className="anno-menubar anno-desktop-overlay view-menu">
-        <section>
-          <button 
-            className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
-            onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
-            <Chats />
-          </button>
 
-          <button
-            className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
-            onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
-            <StackSimple />
-          </button>
+      <DocumentNotes
+        channelId={props.channel}
+        layerId={props.defaultLayer}
+        present={props.present}
+        onError={onError}>
 
-          <button
-            className={panel === ViewMenuPanel.DOCUMENT_NOTES ? 'active' : undefined}
-            onClick={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)}>
-            <NotePencil />
-          </button>
-        </section>
-
-        {me && (
+        <div 
+          className="anno-menubar anno-desktop-overlay view-menu">
           <section>
-            <Avatar 
-              id={me.id}
-              name={me.appearance.label}
-              color={me.appearance.color} 
-              avatar={me.appearance.avatar} />
-          </section>
-        )}
-
-        {headerTransition((style, panel) => panel && (
-          <animated.section className="close" style={style }>
-            <button onClick={() => setPanel(undefined)}>
-              <X />
+            <button 
+              className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
+              onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
+              <Chats />
             </button>
-          </animated.section>
-        ))}
-      </div>
 
-      {panelTransition((style, panel) => panel && (
-        <animated.aside style={style}>
-          {panel === ViewMenuPanel.ANNOTATIONS ? (
-            <AnnotationList 
-              i18n={props.i18n}
-              present={props.present} 
-              me={me}
-              policies={props.policies}
-              sorting={props.sorting}
-              tagVocabulary={props.tagVocabulary}
-              beforeSelect={props.beforeSelectAnnotation} />
-          ) : panel === ViewMenuPanel.LAYERS ? (
-            <LayersPanel
-              i18n={props.i18n}
-              layers={props.layers}
-              present={props.present}
-              onChange={props.onChangeFormatter} />
-          ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
-            <DocumentNotesList 
-              i18n={props.i18n}
-              present={props.present} 
-              me={me}
-              defaultLayer={props.defaultLayer}
-              channel={props.channel}
-              policies={props.policies} 
-              tagVocabulary={props.tagVocabulary} />
-          ) : undefined}
-        </animated.aside>
-      ))}
+            <button
+              className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
+              onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
+              <StackSimple />
+            </button>
+
+            <button
+              className={panel === ViewMenuPanel.DOCUMENT_NOTES ? 'active' : undefined}
+              onClick={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)}>
+              <NotePencil />
+            </button>
+          </section>
+
+          {me && (
+            <section>
+              <Avatar 
+                id={me.id}
+                name={me.appearance.label}
+                color={me.appearance.color} 
+                avatar={me.appearance.avatar} />
+            </section>
+          )}
+
+          {headerTransition((style, panel) => panel && (
+            <animated.section className="close" style={style }>
+              <button onClick={() => setPanel(undefined)}>
+                <X />
+              </button>
+            </animated.section>
+          ))}
+        </div>
+
+        {panelTransition((style, panel) => panel && (
+          <animated.aside style={style}>
+            {panel === ViewMenuPanel.ANNOTATIONS ? (
+              <AnnotationList 
+                i18n={props.i18n}
+                present={props.present} 
+                me={me}
+                policies={props.policies}
+                sorting={props.sorting}
+                tagVocabulary={props.tagVocabulary}
+                beforeSelect={props.beforeSelectAnnotation} />
+            ) : panel === ViewMenuPanel.LAYERS ? (
+              <LayersPanel
+                i18n={props.i18n}
+                layers={props.layers}
+                present={props.present}
+                onChange={props.onChangeFormatter} />
+            ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
+              <DocumentNotesList 
+                i18n={props.i18n}
+                present={props.present}
+                policies={props.policies} 
+                tagVocabulary={props.tagVocabulary} />
+            ) : undefined}
+          </animated.aside>
+        ))}
+        
+      </DocumentNotes>
     </div>
   )
 

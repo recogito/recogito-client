@@ -1,4 +1,4 @@
-import type { DocumentNote } from '../DocumentNote';
+import type { DocumentNote } from '../Types';
 
 export type Sorter = (a: DocumentNote, b: DocumentNote) => number;
 

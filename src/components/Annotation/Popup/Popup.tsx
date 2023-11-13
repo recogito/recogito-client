@@ -41,7 +41,10 @@ export const Popup = (props: PopupProps) => {
   const hasBodies = selected.bodies.length > 0;
 
   // Close the popup after a reply
-  const onReply = () => anno.state.selection.clear();
+  const onReply = (body: AnnotationBody) => { 
+    store.addBody(body);
+    anno.state.selection.clear();
+  }
 
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
