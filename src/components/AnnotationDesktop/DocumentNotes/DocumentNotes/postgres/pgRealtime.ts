@@ -1,7 +1,7 @@
 import type { PresentUser } from '@annotorious/react';
 import type { ChangeEvent } from '@recogito/annotorious-supabase';
-import type { RealtimeMessage, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-import type { BroadcastEvent, BroadcastMessage, DocumentNote } from '../../Types';
+import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
+import type { BroadcastMessage, DocumentNote } from '../../Types';
 import { findUser, parseBodyRecord } from './utils';
 
 export const handleCDCEvent = (
@@ -27,7 +27,7 @@ export const handleCDCEvent = (
           created_by: findUser(target.created_by, present),
           layer_id: target.layer_id,
           bodies: []
-        }];
+        } as DocumentNote];
       });
     }
   } else if (table === 'bodies' && eventType === 'INSERT') {
