@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser, DrawingStyle } from '@annotorious/react';
 import { 
   RecogitoTextAnnotator,
   TEIAnnotator, 
@@ -46,7 +46,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
+  const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -83,7 +83,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  //max number of avatars displayed in the top right
+  // max number of avatars displayed in the top right
   const limit = 5;
 
   const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
@@ -125,7 +125,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
-            formatter={formatter}
+            formatter={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
             }}>
@@ -136,7 +136,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             document={props.document} />
         ) : text && (
           <TextAnnotator
-            formatter={formatter}
+            formatter={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
             }}>
@@ -195,7 +195,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
-            onChangeFormatter={f => setFormatter(() => f)}
+            onChangeFormatter={s => setStyle(() => s)}
             beforeSelectAnnotation={beforeSelectAnnotation} />
         </div>
 
