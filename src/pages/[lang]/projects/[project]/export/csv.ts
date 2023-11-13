@@ -4,13 +4,12 @@ import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
+import { Visibility, type SupabaseAnnotationBody, type SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
 
-type BodyLike = { value: string, purpose: string };
-
-const getComments = (bodies: BodyLike[]) =>
+const getComments = (bodies: SupabaseAnnotationBody[]) =>
   bodies.filter(b => b.purpose === 'commenting').map(b => b.value);
 
-const getTags = (bodies: BodyLike[]) =>
+const getTags = (bodies: SupabaseAnnotationBody[]) =>
   bodies.filter(b => b.purpose === 'tagging').map(b => b.value);
 
 export const get: APIRoute = async ({ params, request, cookies, url }) => {
@@ -65,20 +64,20 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
   const findDocument = (layerId: string) =>
     layers.data.find(l => l.id === layerId)?.document?.name;
 
-  const getLastUpdated = (targets: { updated_at: string }[], bodies: { updated_at: string }[]) => {
-    const sorted = [...targets, ...bodies];
-    sorted.sort((a, b) => a.updated_at > b.updated_at ? -1 : 1 );
-    return sorted[0].updated_at;
+  const getLastUpdated = (target: SupabaseAnnotationTarget, bodies: SupabaseAnnotationBody[]) => {
+    const sorted = [target, ...bodies];
+    sorted.sort((a, b) => a.updated && b.updated ? a.updated > b.updated ? -1 : 1 : 0);
+    return sorted[0].updated;
   }
 
   const csv = annotations.data.map(a => ({
     id: a.id,
-    document: findDocument(a.layer_id)!,
-    created: a.created_at,
-    updated: getLastUpdated(a.targets, a.bodies),
+    document: findDocument(a.layer_id!)!,
+    created: a.target.created,
+    updated: getLastUpdated(a.target, a.bodies),
     comments: getComments(a.bodies).join('|'),
     tags: getTags(a.bodies).join('|'),
-    is_private: a.is_private
+    is_private: a.visibility === Visibility.PRIVATE
   }));
 
   csv.sort((a, b) => a.document > b.document ? -1 : 1);

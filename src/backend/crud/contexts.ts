@@ -19,29 +19,5 @@ export const deleteContext = (supabase: SupabaseClient, id: string) =>
     .delete()
     .match({ id })
     .select();
-/*
-export const getContext = (supabase: SupabaseClient, contextId: string): Response<Context> => 
-  supabase
-    .from('contexts')
-    .select()
-    .eq('id', contextId)
-    .single()
-    .then(({ error, data}) => ({ error, data: data as Context }));
-
-export const getContextsForProject = (supabase: SupabaseClient, project_id: string): Response<Context[]> => 
-  supabase
-    .from('contexts')
-    .select(`
-      id,
-      project_id,
-      created_at,  
-      created_by,
-      updated_at,
-      updated_by,  
-      name
-    `)
-    .eq('project_id', project_id)
-    .then(({ error, data }) => ({ error, data: data as Context[] }));
-*/
 
     

@@ -3,12 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import { useAnnotationStore } from '@annotorious/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
-import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { Avatar } from '../../Avatar';
+import { Visibility, SupabaseAnnotation, SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { RichTextEditor } from '@components/RichTextEditor';
+import { Avatar } from '../../Avatar';
+import type { Translations } from 'src/Types';
 
 import './ReplyForm.css';
-import type { Translations } from 'src/Types';
 
 export interface ReplyFormProps {
   annotation: SupabaseAnnotation;
@@ -53,7 +53,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
     evt?.preventDefault();
 
     if (value) {
-      const body: AnnotationBody = {
+      const body: SupabaseAnnotationBody = {
         id: uuidv4(),
         annotation: props.annotation.id,
         creator: {

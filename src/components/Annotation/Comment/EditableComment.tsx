@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { RichTextEditor } from '@components/RichTextEditor';
 import TextareaAutosize from 'react-textarea-autosize';
-import { AnnotationBody, useAnnotationStore } from '@annotorious/react';
+import { useAnnotationStore } from '@annotorious/react';
+import type { SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import type { Translations } from 'src/Types';
 
 interface EditableCommentProps {
@@ -9,7 +10,7 @@ interface EditableCommentProps {
 
   editable: boolean;
 
-  comment: AnnotationBody;
+  comment: SupabaseAnnotationBody;
 
   onChanged(): void;
 
@@ -27,7 +28,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const [value, setValue] = useState<string | undefined>(
     // Hack for now
-    comment.value.length > 0 && comment.value.charAt(0) === '{'
+    comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
       ? JSON.parse(comment.value)
       : comment.value
   );
@@ -45,7 +46,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
         // This trick sets the cursor to the end of the text
         current.value = '';
-        current.value = comment.value;
+        current.value = comment.value || '';
       }, 1);
     }
   }, [editable]);
@@ -65,6 +66,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
     store.updateBody(comment, {
       ...comment,
+      // @ts-ignore
       format: renderType === 'quill' ? 'Quill' : 'TextPlain',
       value: renderType === 'text' ? (value as string) : JSON.stringify(value),
     });
@@ -74,7 +76,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const onCancelChange = () => {
     props.onCanceled();
-    setValue(JSON.parse(comment.value));
+    setValue(JSON.parse(comment.value!));
   };
 
   return editable ? (
@@ -90,7 +92,7 @@ export const EditableComment = (props: EditableCommentProps) => {
         />
       ) : (
         <RichTextEditor
-          initialValue={JSON.parse(comment.value)}
+          initialValue={JSON.parse(comment.value!)}
           value={value}
           // @ts-ignore
           onChange={setValue}
@@ -116,7 +118,7 @@ export const EditableComment = (props: EditableCommentProps) => {
     <p className='no-drag'>{comment.value}</p>
   ) : (
     <RichTextEditor
-      initialValue={JSON.parse(comment.value)}
+      initialValue={JSON.parse(comment.value!)}
       value={value || ''}
       // @ts-ignore
       onChange={setValue}

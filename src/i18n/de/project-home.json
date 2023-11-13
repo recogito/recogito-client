@@ -3,20 +3,19 @@
   "Cancel": "Abbrechen",
   "Save": "Speichern",
   "Clear": "Löschen",
-
   "Add a project description": "Projektbeschreibung hinzufügen",
   "Add a project description...": "Projektbeschreibung hinzufügen...",
-
   "Import Document": "Dokument Importieren",
-
   "Open document": "Dokument öffnen",
   "Open document in new tab": "In neuem Tab öffnen",
+  "Export TEI file": "TEI/XML exportieren",
+  "Public annotations only": "Nur öffentliche Annotationen",
+  "Include my private annotations": "Inkl. meiner privaten Annotationen",
   "Export annotations as CSV": "Annotationen als CSV exportieren",
   "Edit document metadata": "Metadaten bearbeiten",
   "Delete document": "Dokument löschen",
   "Are you sure?": "Bist Du sicher?",
   "Are you sure you want to delete this document?": "Bist Du sicher dass Du dieses Dokument löschen willst?",
-
   "Edit Document Metadata": "Dokumentmetadaten",
   "Title": "Titel",
   "Author": "Autor",
@@ -27,14 +26,12 @@
   "Language": "Sprache",
   "Source": "Quelle",
   "Notes": "Notizen",
-
-  "File upload": "Datei hochladen (unterstützte Formate: Text, TEI, Bild)",
+  "File upload": "Datei hochladen (unterstützte Formate: Text, TEI, PDF, Bild)",
   "From IIIF image manifest": "IIIF Image Manifest importieren",
   "No presentation manifests": "Derzeit werden ausschließlich Einzelbilder unterstützt, keine Sammlungen nach dem IIIF Presentation Standard.",
   "Import IIIF": "IIIF Importieren",
   "Paste URL to a IIIF image manifest": "URL zu einem IIIF Bild-Manifest",
   "Please enter a valid IIIF manifest URL": "Bitte eine gültige IIIF Manifest URL eingeben",
-
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the document.": "Das Dokument konnte nicht erstellt werden.",
   "Could not rename the document.": "Das Dokument konnte nicht umbenannt werden."

@@ -140,6 +140,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
                     <Annotation.ReplyForm
                       autofocus={autofocus}
+                      i18n={props.i18n}
                       scrollIntoView
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
