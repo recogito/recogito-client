@@ -1,4 +1,4 @@
-import type { PresentUser } from '@annotorious/react';
+import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Policies, Translations } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { BaseCard } from '@components/Annotation/Card/BaseCard';
@@ -12,7 +12,7 @@ interface DocumentNotesListItemProps {
 
   policies?: Policies;
 
-  present: PresentUser;
+  present: PresentUser[];
 
   showReplyForm?: boolean;
 
@@ -40,8 +40,9 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
       'document-notes-list-item annotation-card public'}>
       <BaseCard 
         showReplyForm={props.showReplyForm}
-        annotation={props.note}
+        annotation={props.note as unknown as Annotation}
         i18n={props.i18n}
+        policies={props.policies}
         present={props.present}
         comment={props => isPrivate ? (
             <PrivateComment {...props} onMakePublic={onMakePublic} />
