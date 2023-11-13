@@ -1,4 +1,4 @@
-.creating-assignment {
+.saving-assignment {
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -9,11 +9,11 @@
   padding: 30px;
 }
 
-.creating-assignment .spinner {
+.saving-assignment .spinner {
   color: var(--bright-blue);
 }
 
-.creating-assignment p {
+.saving-assignment p {
   max-width: 50ch;
   text-align: center;
 }

@@ -11,8 +11,9 @@ interface AssignmentsGridProps {
 
   project: ExtendedProjectData;
 
-  // Just temporary, for hacking/testing
   assignments: Context[];
+
+  onEditAssignment(assignment: Context): void;
 
   onDeleteAssignment(assignment: Context): void;
 
@@ -29,6 +30,7 @@ export const AssignmentsGrid = (props: AssignmentsGridProps) => {
           canUpdate={props.canUpdate}
           project={props.project}
           assignment={assignment} 
+          onEdit={() => props.onEditAssignment(assignment)}
           onDelete={() => props.onDeleteAssignment(assignment)} />
       ))}
     </div>

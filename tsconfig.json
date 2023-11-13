@@ -13,6 +13,11 @@
       "@layouts/*": ["src/layouts/*"],
       "@themes/*": ["src/themes/*"]
     },
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ]
   }
 }
