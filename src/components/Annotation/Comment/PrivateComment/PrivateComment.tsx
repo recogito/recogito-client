@@ -10,13 +10,10 @@ import '../Comment.css';
 import './PrivateComment.css';
 
 type PrivateCommentProps = CommentProps & {
-
   onMakePublic(): void;
-
-}
+};
 
 export const PrivateComment = (props: PrivateCommentProps) => {
-
   const { comment } = props;
 
   const store = useAnnotationStore();
@@ -26,32 +23,31 @@ export const PrivateComment = (props: PrivateCommentProps) => {
   const onDeleteComment = () => store.deleteBody(comment);
 
   return (
-    <article
-      key={comment.id}
-      className="annotation-comment private">
-      <Detective className="anonymous" size={20} weight="light" />
-      
-      <div className="comment-body">
+    <article key={comment.id} className='annotation-comment private'>
+      <Detective className='anonymous' size={20} weight='light' />
+
+      <div className='comment-body'>
         {comment.created && (
           <TimeAgo datetime={comment.created} locale={props.i18n.lang} />
         )}
-        
-        <EditableComment 
+
+        <EditableComment
           i18n={props.i18n}
           editable={editable}
-          comment={comment} 
-          onChanged={() => setEditable(false)} 
-          onCanceled={() => setEditable(false)} />
+          comment={comment}
+          onChanged={() => setEditable(false)}
+          onCanceled={() => setEditable(false)}
+        />
       </div>
 
-      <PrivateCommentActions 
+      <PrivateCommentActions
         i18n={props.i18n}
         isFirst={props.index === 0}
         onMakePublic={props.onMakePublic}
         onEditComment={() => setEditable(true)}
         onDeleteAnnotation={props.onDeleteAnnotation}
-        onDeleteComment={onDeleteComment} />
+        onDeleteComment={onDeleteComment}
+      />
     </article>
-  )
-
-}
+  );
+};
