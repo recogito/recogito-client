@@ -1,6 +1,6 @@
 ## Manually updating the Recogito client - Docker
 
-When self-hosting the Recigito platform client, use the folling steps.
+When self-hosting the Recogito platform client, use the following steps.
 
 1. Pull the latest version of this repository.
 
