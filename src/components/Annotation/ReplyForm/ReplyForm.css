@@ -7,7 +7,7 @@
 
 .annotation-reply-form:first-child {
   border-top: none;
-} 
+}
 
 .annotation-reply-form .avatar {
   position: absolute;
@@ -79,7 +79,7 @@
 }
 
 .private .annotation-reply-form button.send {
-  background-color: var(--border-color)
+  background-color: var(--border-color);
 }
 
 .private .annotation-reply-form button.send:hover {

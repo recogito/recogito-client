@@ -9,25 +9,27 @@ import { TagsWidget } from '../TagsWidget';
 import type { CardProps } from './CardProps';
 
 import './BaseCard.css';
+import type { Translations } from 'src/Types';
 
 type BaseCardProps = CardProps & {
-
   comment(props: CommentProps): ReactNode;
-
-}
+};
 
 export const BaseCard = (props: BaseCardProps) => {
 
   const { annotation } = props;
 
-  const comments = annotation.bodies
-    .filter((b: AnnotationBody) => !b.purpose || b.purpose === 'commenting');
+  const comments = annotation.bodies.filter(
+    (b: AnnotationBody) => !b.purpose || b.purpose === 'commenting'
+  );
 
-  // Keep a list of comments that should not be color-highlighted 
-  // on render, either because they were already in the annotation, or they 
+  // Keep a list of comments that should not be color-highlighted
+  // on render, either because they were already in the annotation, or they
   // are new additions created by the current user. We're using a
   // ref, because we don't want to re-render when this list changes.
-  const dontEmphasise = useRef(new Set(comments.map((b: AnnotationBody) => b.id))); 
+  const dontEmphasise = useRef(
+    new Set(comments.map((b: AnnotationBody) => b.id))
+  );
 
   const [collapsed, setCollapsed] = useState(comments.length > 3);
 
@@ -35,7 +37,8 @@ export const BaseCard = (props: BaseCardProps) => {
 
   const user = useAnnotatorUser();
 
-  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
+  const me: PresentUser | User =
+    props.present.find((p) => p.id === user.id) || user;
 
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
@@ -47,17 +50,18 @@ export const BaseCard = (props: BaseCardProps) => {
       },
       enter: { maxHeight: '80vh' },
       leave: { maxHeight: '0vh' },
-      config: { duration: animate.current ? 350 : 0 }
-    });
+      config: { duration: animate.current ? 350 : 0 },
+    }
+  );
 
-  useEffect(() => { 
+  useEffect(() => {
     animate.current = true;
   }, []);
 
   // When this user creates a reply, add the comment to the list,
   // so it doesn't get emphasised like additions from the other users
   const beforeReply = (b: AnnotationBody) =>
-    dontEmphasise.current = new Set([...dontEmphasise.current, b.id]);
+    (dontEmphasise.current = new Set([...dontEmphasise.current, b.id]));
 
   const onReply = (b: AnnotationBody) => {
     props.onCreateBody(b);
@@ -65,8 +69,8 @@ export const BaseCard = (props: BaseCardProps) => {
   }
 
   useEffect(() => {
-    const eqSet = (x: Set<any>, y: Set<any>) => 
-      x.size === y.size && [...x].every(x => y.has(x));
+    const eqSet = (x: Set<any>, y: Set<any>) =>
+      x.size === y.size && [...x].every((x) => y.has(x));
 
     const commentIds = comments.map((c: AnnotationBody) => c.id);
     if (eqSet(new Set(commentIds), dontEmphasise.current || new Set()))
@@ -77,14 +81,15 @@ export const BaseCard = (props: BaseCardProps) => {
 
     // ...and remove 'is-new' CSS class instantly for fading effect
     setTimeout(() => {
-      document.querySelectorAll('.is-new')
-        .forEach(el => el.classList.remove('is-new'));
+      document
+        .querySelectorAll('.is-new')
+        .forEach((el) => el.classList.remove('is-new'));
     }, 100);
   }, [comments]);
 
   return (
     <>
-      <TagsWidget 
+      <TagsWidget
         i18n={props.i18n}
         annotation={annotation} 
         me={me} 
@@ -93,9 +98,8 @@ export const BaseCard = (props: BaseCardProps) => {
         onDeleteTag={props.onDeleteBody} />
 
       {comments.length > 0 && (
-        <ul className="annotation-card-comments-container">
-          <li 
-            style={{ zIndex: comments.length + 1 }}>
+        <ul className='annotation-card-comments-container'>
+          <li style={{ zIndex: comments.length + 1 }}>
             {props.comment({
               i18n: props.i18n,
               index: 0,
@@ -113,20 +117,21 @@ export const BaseCard = (props: BaseCardProps) => {
 
           {collapsed && (
             <li style={{ zIndex: comments.length }}>
-              <Interstitial 
-                label={`Show ${comments.length - 2} more replies`} 
-                onClick={() => setCollapsed(false)} />
+              <Interstitial
+                label={`Show ${comments.length - 2} more replies`}
+                onClick={() => setCollapsed(false)}
+              />
             </li>
           )}
 
           {transition((style, item, _, index) => (
-            <animated.li 
+            <animated.li
               key={item.id}
               style={{
                 ...style,
-                zIndex: comments.length - index - 1
-              }}>
-
+                zIndex: comments.length - index - 1,
+              }}
+            >
               {props.comment({
                 i18n: props.i18n,
                 index: index + 1,
@@ -151,7 +156,9 @@ export const BaseCard = (props: BaseCardProps) => {
                 comment: comments[comments.length - 1],
                 policies: props.policies,
                 present: props.present,
-                emphasizeOnEntry: !dontEmphasise.current.has(comments[comments.length - 1].id),
+                emphasizeOnEntry: !dontEmphasise.current.has(
+                  comments[comments.length - 1].id
+                ),
                 editable: isMine(comments[comments.length - 1]),
                 onDeleteAnnotation: props.onDeleteAnnotation,
                 onCreateBody: props.onCreateBody,
@@ -164,7 +171,8 @@ export const BaseCard = (props: BaseCardProps) => {
       )}
 
       {props.showReplyForm && (
-        <ReplyForm 
+        <ReplyForm
+          i18n={props.i18n}
           autofocus
           annotation={props.annotation}
           me={me}
@@ -173,6 +181,5 @@ export const BaseCard = (props: BaseCardProps) => {
           onSubmit={onReply} />
       )}
     </>
-  )
-
-}
+  );
+};

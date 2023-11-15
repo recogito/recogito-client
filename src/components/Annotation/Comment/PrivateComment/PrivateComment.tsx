@@ -10,13 +10,10 @@ import '../Comment.css';
 import './PrivateComment.css';
 
 type PrivateCommentProps = CommentProps & {
-
   onMakePublic(): void;
-
-}
+};
 
 export const PrivateComment = (props: PrivateCommentProps) => {
-
   const { comment } = props;
 
   const [editable, setEditable] = useState(false);
@@ -27,17 +24,15 @@ export const PrivateComment = (props: PrivateCommentProps) => {
   }
 
   return (
-    <article
-      key={comment.id}
-      className="annotation-comment private">
-      <Detective className="anonymous" size={20} weight="light" />
-      
-      <div className="comment-body">
+    <article key={comment.id} className='annotation-comment private'>
+      <Detective className='anonymous' size={20} weight='light' />
+
+      <div className='comment-body'>
         {comment.created && (
           <TimeAgo datetime={comment.created} locale={props.i18n.lang} />
         )}
-        
-        <EditableComment 
+
+        <EditableComment
           i18n={props.i18n}
           editable={editable}
           comment={comment} 
@@ -45,7 +40,7 @@ export const PrivateComment = (props: PrivateCommentProps) => {
           onCanceled={() => setEditable(false)} />
       </div>
 
-      <PrivateCommentActions 
+      <PrivateCommentActions
         i18n={props.i18n}
         isFirst={props.index === 0}
         onMakePublic={props.onMakePublic}
@@ -53,6 +48,5 @@ export const PrivateComment = (props: PrivateCommentProps) => {
         onDeleteAnnotation={props.onDeleteAnnotation}
         onDeleteComment={props.onDeleteAnnotation} />
     </article>
-  )
-
-}
+  );
+};

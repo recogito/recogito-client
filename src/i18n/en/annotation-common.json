@@ -1,17 +1,14 @@
 {
   "Anonymous": "Anonymous",
-
   "Public": "Public",
   "Private": "Private",
   "Public_Hint_01": "Public annotations are visible to anyone with access to this document. This may include",
   "Public_Hint_02": "invited users or the general public.",
   "Private_Hint_01": "Annotations you create in Private mode will be visible to",
   "Private_Hint_02": "no-one except you.",
-
   "Comment...": "Comment...",
   "Reply...": "Reply...",
   "Add a tag...": "Add a tag...",
-
   "Edit comment": "Edit comment",
   "Delete annotation": "Delete annotation",
   "Delete comment": "Delete comment",
@@ -21,7 +18,6 @@
   "With Great Power...": "With Great Power...",
   "...comes great responsibility.": "...comes great responsibility. You can change other users' annotations because you have administrator privileges on this document. Use your powers responsibly.",
   "Proceed": "Proceed",
-
   "Show": "Show",
   "all annotations": "all annotations",
   "annotations in current view": "annotations in current view",
@@ -44,5 +40,10 @@
   "No Assignment": "No Assignment",
   "Creator": "Creator",
   "First Tag": "First Tag",
-  "No tag": "No tag"
+  "No tag": "No tag",
+  "Enter Image URL": "Enter Image URL",
+  "Enter a publicly available URL to embed the image into your annotation": "Enter a publicly available URL to embed the image into your annotation",
+  "Enter YouTube video URL": "Enter YouTube video URL",
+  "Enter a publicly available YouTube URL to embed the video into your annotation": "Enter a publicly available YouTube URL to embed the video into your annotation",
+  "URL": "URL"
 }
