@@ -125,7 +125,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
-            formatter={style}
+            style={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
             }}>
@@ -133,10 +133,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           </TEIAnnotator>
         ) : contentType === 'application/pdf' && text ? (
           <PDFViewer
-            document={props.document} />
+            document={props.document} 
+            style={style} />
         ) : text && (
           <TextAnnotator
-            formatter={style}
+            style={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
             }}>

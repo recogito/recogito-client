@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 import { Polygon, Rectangle } from './Icons';
 import { Cursor, Trash } from '@phosphor-icons/react';
@@ -41,20 +41,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const isMine = (selected: { annotation: Annotation }[]) =>
     selected.every(({ annotation }) =>
-      annotation.target.creator.id === me.id);
-
-  useEffect(() => {
-    if (anno) {
-      // Switch back to nav mode after annotation was created
-      const onCreate = () => onChangeTool('cursor');
-
-      anno.on('createAnnotation', onCreate);
-
-      return () => {
-        anno.off('createAnnotation', onCreate);
-      }
-    }
-  }, [anno]);
+      annotation.target.creator?.id === me.id);
 
   return (
     <div className="ia-toolbar-container">

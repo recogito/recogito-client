@@ -40,7 +40,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [tool, setTool] = useState<string | null>(null);
+  const [tool, setTool] = useState<string>('rectangle');
+
+  const [drawingEnabled, setDrawingEnabled] = useState(false);
 
   const [style, setStyle] = useState<((a: Anno) => DrawingStyle) | undefined>(undefined);
 
@@ -84,6 +86,17 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
+  const onChangeTool = (tool: string | null) => {
+    console.log('changing tool');
+    
+    if (tool) {
+      if (!drawingEnabled) setDrawingEnabled(true);
+      setTool(tool);
+    } else {
+      setDrawingEnabled(false);
+    }
+  }
+
   const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
     if (panel === ViewMenuPanel.ANNOTATIONS) {
       // Don't use the popup if the annotation list is open
@@ -113,16 +126,18 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     const canEdit = annotation.target.creator?.id === me ||
       policies?.get('layers').has('INSERT');
 
-    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.HIGHLIGHT;
+    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }
 
   return (
     <div className="anno-desktop ia-desktop">
       {policies && (
-        <OpenSeadragonAnnotator 
+        <OpenSeadragonAnnotator
+          autoSave
+          drawingMode="click"
+          drawingEnabled={drawingEnabled}
           pointerSelectAction={selectAction}
           tool={tool} 
-          keepEnabled={true}
           style={style}>
         
           <AnnotationDesktop.UndoStack 
@@ -141,7 +156,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               privacyMode={privacy === 'PRIVATE'} />
           }
 
-          {/* @ts-ignore */}
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={{
@@ -192,7 +206,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               i18n={props.i18n}
               isAdmin={policies?.get('layers').has('INSERT')}
               privacy={privacy}
-              onChangeTool={setTool} 
+              onChangeTool={onChangeTool} 
               onChangePrivacy={setPrivacy} />
           </div>
         </OpenSeadragonAnnotator>
