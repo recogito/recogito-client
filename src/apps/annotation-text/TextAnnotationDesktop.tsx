@@ -133,7 +133,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           </TEIAnnotator>
         ) : contentType === 'application/pdf' && text ? (
           <PDFViewer
-            document={props.document} />
+            document={props.document} 
+            style={style} />
         ) : text && (
           <TextAnnotator
             style={style}
