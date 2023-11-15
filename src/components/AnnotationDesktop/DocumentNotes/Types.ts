@@ -18,6 +18,8 @@ export interface DocumentNote {
 
   bodies: DocumentNoteBody[];
 
+  unread?: boolean;
+
 }
 
 export interface DocumentNoteBody {

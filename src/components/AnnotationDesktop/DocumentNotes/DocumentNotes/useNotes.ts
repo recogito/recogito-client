@@ -15,9 +15,17 @@ export const useNotes = () => {
 
   const { notes, setNotes, channel, layerId, present, onError } = useContext(DocumentNotesContext);
 
+  const unread = notes.filter(n => n.unread);
+
   const user = useAnnotatorUser();
 
   const me: PresentUser | User = useMemo(() => present.find(p => p.id === user.id) || user, [user]);
+
+  const markAllAsRead = () => 
+    setNotes(notes => notes.map(n => ({...n, unread: undefined })));
+
+  const markAsRead = (id: string) => 
+    setNotes(notes => notes.map(n => n.id === id ? ({ ...n, unread: undefined }) : n));
 
   const createNote = (text: string, isPrivate = false) => {
     const before = notes;
@@ -168,6 +176,9 @@ export const useNotes = () => {
 
   return {
     notes,
+    unread,
+    markAllAsRead,
+    markAsRead,
     createNote,
     deleteNote,
     makePublic,

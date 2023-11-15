@@ -195,7 +195,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
-            onChangeFormatter={s => setStyle(() => s)}
+            onChangeAnnotationStyle={s => setStyle(() => s)}
             beforeSelectAnnotation={beforeSelectAnnotation} />
         </div>
 

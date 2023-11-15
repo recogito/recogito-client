@@ -3,12 +3,12 @@ import { Chats, NotePencil, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@recogito/annotorious-supabase';
-import type { Annotation, Formatter, PresentUser } from '@annotorious/react';
+import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
 import { LayersPanel } from '../LayersPanel';
-import { DocumentNotes, DocumentNotesList } from '../DocumentNotes';
+import { DocumentNotes, DocumentNotesList, DocumentNotesMenuIcon } from '../DocumentNotes';
 
 import './ViewMenu.css';
 import type { PostgrestError } from '@supabase/supabase-js';
@@ -35,7 +35,7 @@ interface ViewMenuProps {
 
   beforeSelectAnnotation(a?: Annotation): void;
 
-  onChangeFormatter(formatter?: Formatter): void;
+  onChangeAnnotationStyle(fn: ((a: Annotation) => DrawingStyle)): void;
 
 }
 
@@ -102,11 +102,9 @@ export const ViewMenu = (props: ViewMenuProps) => {
               <StackSimple />
             </button>
 
-            <button
-              className={panel === ViewMenuPanel.DOCUMENT_NOTES ? 'active' : undefined}
-              onClick={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)}>
-              <NotePencil />
-            </button>
+            <DocumentNotesMenuIcon
+              active={panel === ViewMenuPanel.DOCUMENT_NOTES}
+              onSelect={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)} />
           </section>
 
           {me && (
@@ -144,7 +142,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
                 i18n={props.i18n}
                 layers={props.layers}
                 present={props.present}
-                onChange={props.onChangeFormatter} />
+                onChange={props.onChangeAnnotationStyle} />
             ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
               <DocumentNotesList 
                 i18n={props.i18n}

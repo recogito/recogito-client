@@ -139,3 +139,11 @@
   border-color: var(--gray-500);
   color: var(--gray-400);
 }
+.anno-sidepanel.document-notes-list li .document-notes-list-item {
+  outline: solid 2px transparent;
+  transition: outline 2s ease-out;
+}
+
+.anno-sidepanel.document-notes-list li.unread .document-notes-list-item {
+  outline: solid 2px var(--bright-blue);
+}

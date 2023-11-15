@@ -26,7 +26,8 @@ export const handleCDCEvent = (
           created_at: new Date(target.created_at),
           created_by: findUser(target.created_by, present),
           layer_id: target.layer_id,
-          bodies: []
+          bodies: [],
+          unread: true
         } as DocumentNote];
       });
     }
@@ -45,7 +46,8 @@ export const handleCDCEvent = (
         return notes.map(note =>
           (note.id === body.annotation_id) ? ({
             ...note,
-            bodies: [...note.bodies, parseBodyRecord(body, present, note)]
+            bodies: [...note.bodies, parseBodyRecord(body, present, note)],
+            unread: true
           }) : note) 
       });
     }, 250);        
@@ -54,7 +56,8 @@ export const handleCDCEvent = (
 
     setNotes(notes => notes.map(note => note.id === body.annotation_id ? ({
       ...note,
-      bodies: note.bodies.map(b => b.id === body.id ? parseBodyRecord(body, present, note) : b)
+      bodies: note.bodies.map(b => b.id === body.id ? parseBodyRecord(body, present, note) : b),
+      unread: true
     }) : note));
   }
 }
@@ -83,11 +86,12 @@ export const handleBroadcastEvent = (
     if (event.type === 'DELNOTE') {
       setNotes(notes => notes.filter(n => n.id !== event.id));
     } else if (event.type === 'PUBNOTE') {
-      setNotes(notes => ([...notes, reviveNote(event.note)]));
+      setNotes(notes => ([...notes, { ...reviveNote(event.note), unread: true }]));
     } else if (event.type === 'DELNOTEBDY') {
       setNotes(notes => notes.map(n => n.id === event.annotation ? ({
         ...n,
-        bodies: n.bodies.filter(b => b.id !== event.id)
+        bodies: n.bodies.filter(b => b.id !== event.id),
+        unread: true
       }) : n));
     }
   });

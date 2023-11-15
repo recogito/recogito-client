@@ -11,6 +11,7 @@ import { SupabasePlugin } from '@components/SupabasePlugin';
 import { Toolbar } from './Toolbar';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { 
+  Annotation as Anno,
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
   ImageAnnotation, 
@@ -41,7 +42,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [tool, setTool] = useState<string | null>(null);
 
-  const [style, setStyle] = useState<((a: ImageAnnotation) => DrawingStyle) | undefined>(undefined);
+  const [style, setStyle] = useState<((a: Anno) => DrawingStyle) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -182,7 +183,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               channel={props.channelId}
               tagVocabulary={vocabulary}
               onChangePanel={onChangeViewMenuPanel} 
-              onChangeFormatter={s => setStyle(() => s)}
+              onChangeAnnotationStyle={s => setStyle(() => s)}
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
 

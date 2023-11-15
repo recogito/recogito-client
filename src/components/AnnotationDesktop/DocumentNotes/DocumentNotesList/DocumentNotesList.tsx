@@ -27,6 +27,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const { 
     notes,
+    markAsRead,
     createBody,
     createNote: _createNote,
     deleteBody,
@@ -74,7 +75,12 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
       <ul>
         {sorted.map(note => (
-          <li key={note.id} onClick={onSelect(note)}>
+          <li
+            className={note.unread ? 'unread' : undefined}
+            key={note.id} 
+            onClick={onSelect(note)}
+            onPointerEnter={() => markAsRead(note.id)}>
+              
             <DocumentNotesListItem 
               i18n={props.i18n}
               note={note} 
