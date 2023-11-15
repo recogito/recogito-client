@@ -1,8 +1,8 @@
 import { useContext, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { AnnotationBody, PresentUser, User, useAnnotatorUser } from '@annotorious/react';
+import { PresentUser, User, useAnnotatorUser } from '@annotorious/react';
 import { DocumentNotesContext } from './DocumentNotes';
-import type { DocumentNote } from '../Types';
+import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { 
   archiveBody, 
   archiveNote,
@@ -91,14 +91,14 @@ export const useNotes = () => {
       })
   }
 
-  const createBody = (body: AnnotationBody) => {
+  const createBody = (body: DocumentNoteBody) => {
     setNotes(notes => notes.map(n => n.id === body.annotation ? 
       ({
         ...n,
         bodies: [...n.bodies, body]
       }) : n));
     
-    upsertBody({...body, layer_id: layerId })
+    upsertBody({...body, layer_id: layerId! })
       .then(({ error }) => {
         if (error) {
           onError(error)
@@ -113,7 +113,7 @@ export const useNotes = () => {
       });      
   }
 
-  const deleteBody = (body: AnnotationBody) => {
+  const deleteBody = (body: DocumentNoteBody) => {
     const bodies = [ ...(notes.find(n => n.id === body.annotation)?.bodies || [])];
 
     setNotes(notes => notes.map(n => n.id === body.annotation ? ({
@@ -143,7 +143,7 @@ export const useNotes = () => {
       });
   }
 
-  const updateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => {
+  const updateBody = (oldValue: DocumentNoteBody, newValue: DocumentNoteBody) => {
     if (oldValue.annotation !== newValue.annotation || oldValue.id !== newValue.id)
       throw 'Integrity violation: body update with different body IDs';
 
@@ -152,7 +152,7 @@ export const useNotes = () => {
     setNotes(notes => notes.map(n => n.id === oldValue.annotation ? ({
       ...n,
       bodies: n.bodies.map(b => b.id === oldValue.id ? newValue : b)
-    }) : n));
+    } as DocumentNote) : n));
 
     upsertBody(newValue).then(({ error }) => {
       if (error) {
