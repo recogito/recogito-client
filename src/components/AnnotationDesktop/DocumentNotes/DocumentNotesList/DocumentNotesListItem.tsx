@@ -34,6 +34,14 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
 
   const isPrivate = props.note.is_private;
 
+  const i18n = {
+    ...props.i18n,
+    t: {
+      ...props.i18n.t,
+      'Delete annotation': props.i18n.t['Delete note']
+    }
+  }
+
   return (
     <div className={isPrivate ? 
       'document-notes-list-item annotation-card private' :
@@ -41,7 +49,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
       <BaseCard 
         showReplyForm={props.showReplyForm}
         annotation={props.note as unknown as Annotation}
-        i18n={props.i18n}
+        i18n={i18n}
         policies={props.policies}
         present={props.present}
         comment={props => isPrivate ? (
