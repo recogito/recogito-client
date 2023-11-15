@@ -1,28 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { RichTextEditor } from '@components/RichTextEditor';
 import TextareaAutosize from 'react-textarea-autosize';
-import { useAnnotationStore } from '@annotorious/react';
-import type { SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
+import type { AnnotationBody } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 interface EditableCommentProps {
+
   i18n: Translations;
 
   editable: boolean;
 
-  comment: SupabaseAnnotationBody;
+  comment: AnnotationBody;
 
-  onChanged(): void;
+  onChange(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
   onCanceled(): void;
+
 }
 
 export const EditableComment = (props: EditableCommentProps) => {
+  
   const { t } = props.i18n;
 
   const { comment, editable } = props;
-
-  const store = useAnnotationStore();
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
@@ -63,16 +63,13 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const onSaveChange = (evt: React.FormEvent) => {
     evt.preventDefault();
-
-    store.updateBody(comment, {
+    props.onChange(comment, {
       ...comment,
       // @ts-ignore
       format: renderType === 'quill' ? 'Quill' : 'TextPlain',
       value: renderType === 'text' ? (value as string) : JSON.stringify(value),
     });
-
-    props.onChanged();
-  };
+  }
 
   const onCancelChange = () => {
     props.onCanceled();

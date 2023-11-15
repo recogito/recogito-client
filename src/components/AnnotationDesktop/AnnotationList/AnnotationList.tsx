@@ -2,18 +2,20 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import { Filter, FilterSelector } from './FilterSelector';
 import { 
   Annotation as Anno,
+  AnnotationBody,
+  type Annotator,
   PresentUser, 
   useAnnotations,
   useAnnotator,
   useAnnotatorUser,
   useSelection,
   User,
-  useViewportState
+  useViewportState,
+  useAnnotationStore
 } from '@annotorious/react';
-import type { Annotator } from '@annotorious/react';
-import { Filter, FilterSelector } from './FilterSelector';
 
 import './AnnotationList.css';
 
@@ -68,6 +70,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const anno = useAnnotator<Annotator>();
 
+  const store = useAnnotationStore();
+
   const { selected, pointerEvent } = useSelection();
 
   const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
@@ -89,7 +93,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
     me.id === a.target.creator?.id;
 
   const isPrivate = (a: SupabaseAnnotation) =>
-    a.visibility === Visibility.PRIVATE
+    a.visibility === Visibility.PRIVATE;
 
   const getReplyFormClass = (a: SupabaseAnnotation) => {
     const classes = ['annotation-card'];
@@ -103,6 +107,18 @@ export const AnnotationList = (props: AnnotationListProps) => {
     return classes.join(' ');
   }
 
+  const onDeleteAnnotation = (annotation: Anno) => 
+    store.deleteAnnotation(annotation);
+
+  const onCreateBody = (body: AnnotationBody) =>
+    store.addBody(body);
+
+  const onDeleteBody = (body: AnnotationBody) =>
+    store.deleteBody(body);
+
+  const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
+    store.updateBody(oldValue, newValue);
+    
   useEffect(() => {
     // Scroll the first selected card into view
     if (selected?.length > 0) {
@@ -116,7 +132,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
 
   return (
-    <div className="anno-sidepanel annotation-list" >
+    <div className="anno-sidepanel annotation-list">
       <FilterSelector 
         i18n={props.i18n} 
         onChange={setFilter} />
@@ -136,7 +152,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
                       i18n={props.i18n} 
                       me={me} 
                       annotation={a}
-                      vocabulary={props.tagVocabulary} />
+                      vocabulary={props.tagVocabulary} 
+                      onCreateTag={onCreateBody} 
+                      onDeleteTag={onDeleteBody} />
 
                     <Annotation.ReplyForm
                       autofocus={autofocus}
@@ -144,7 +162,8 @@ export const AnnotationList = (props: AnnotationListProps) => {
                       scrollIntoView
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
-                      me={me} />
+                      me={me} 
+                      onSubmit={onCreateBody} />
                   </div>
                 ) : (
                   <Annotation.EmptyCard
@@ -169,7 +188,11 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   i18n={props.i18n}
                   annotation={a} 
                   present={props.present}
-                  tagVocabulary={props.tagVocabulary} />
+                  tagVocabulary={props.tagVocabulary} 
+                  onCreateBody={onCreateBody} 
+                  onDeleteBody={onDeleteBody} 
+                  onUpdateBody={onUpdateBody}
+                  onDeleteAnnotation={() => onDeleteAnnotation(a)} />
               ) : (
                 <Annotation.PublicCard 
                   className={isSelected(a) ? 'selected' : undefined}
@@ -178,7 +201,11 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   annotation={a} 
                   present={props.present}
                   policies={props.policies} 
-                  tagVocabulary={props.tagVocabulary} />  
+                  tagVocabulary={props.tagVocabulary} 
+                  onCreateBody={onCreateBody} 
+                  onDeleteBody={onDeleteBody} 
+                  onUpdateBody={onUpdateBody}
+                  onDeleteAnnotation={() => onDeleteAnnotation(a)} />  
               )
             )}
           </li>

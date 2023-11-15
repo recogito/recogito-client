@@ -1,5 +1,5 @@
 import { Annotation } from '@components/Annotation';
-import { useAnnotator, useAnnotatorUser } from '@annotorious/react';
+import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { TagsWidget } from '../TagsWidget';
@@ -20,12 +20,14 @@ interface PopupProps {
 }
 
 export const Popup = (props: PopupProps) => {
+  
   const anno = useAnnotator();
 
   const user = useAnnotatorUser();
 
-  const me: PresentUser | User =
-    props.present.find((p) => p.id === user.id) || user;
+  const store = useAnnotationStore();
+
+  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
   const selected = props.selected[0].annotation as SupabaseAnnotation;
@@ -37,9 +39,22 @@ export const Popup = (props: PopupProps) => {
   const hasBodies = selected.bodies.length > 0;
 
   // Close the popup after a reply
-  const onReply = () => {
+  const onReply = (body: AnnotationBody) => {
+    store.addBody(body);
     anno.state.selection.clear();
-  };
+  }
+
+  const onDeleteAnnotation = (annotation: Anno) => 
+    store.deleteAnnotation(annotation);
+
+  const onCreateBody = (body: AnnotationBody) =>
+    store.addBody(body);
+
+  const onDeleteBody = (body: AnnotationBody) =>
+    store.deleteBody(body);
+
+  const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
+    store.updateBody(oldValue, newValue);
 
   return (
     <div
@@ -55,17 +70,23 @@ export const Popup = (props: PopupProps) => {
           <Annotation.PrivateCard
             {...props}
             showReplyForm
-            annotation={selected}
-            onReply={onReply}
-          />
+            annotation={selected} 
+            onReply={onReply} 
+            onDeleteAnnotation={() => onDeleteAnnotation(selected)}
+            onCreateBody={onCreateBody} 
+            onDeleteBody={onDeleteBody} 
+            onUpdateBody={onUpdateBody} />
         ) : (
           <Annotation.PublicCard
             {...props}
             showReplyForm
             annotation={selected}
             policies={props.policies}
-            onReply={onReply}
-          />
+            onReply={onReply} 
+            onDeleteAnnotation={() => onDeleteAnnotation(selected)}
+            onCreateBody={onCreateBody} 
+            onDeleteBody={onDeleteBody}
+            onUpdateBody={onUpdateBody} />
         )
       ) : isMine ? (
         isPrivate ? (
@@ -74,8 +95,9 @@ export const Popup = (props: PopupProps) => {
               i18n={props.i18n}
               me={me}
               annotation={selected}
-              vocabulary={props.tagVocabulary}
-            />
+              vocabulary={props.tagVocabulary} 
+              onCreateTag={onCreateBody} 
+              onDeleteTag={onDeleteBody} />
 
             <Annotation.ReplyForm
               {...props}
@@ -93,7 +115,8 @@ export const Popup = (props: PopupProps) => {
               me={me}
               annotation={selected}
               vocabulary={props.tagVocabulary}
-            />
+              onCreateTag={onCreateBody} 
+              onDeleteTag={onDeleteBody} />
 
             <Annotation.ReplyForm
               {...props}

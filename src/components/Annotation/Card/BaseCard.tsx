@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTransition, animated } from '@react-spring/web';
-import { useAnnotatorUser, useAnnotationStore } from '@annotorious/react';
+import { useAnnotatorUser } from '@annotorious/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
@@ -16,7 +16,6 @@ type BaseCardProps = CardProps & {
 };
 
 export const BaseCard = (props: BaseCardProps) => {
-  const store = useAnnotationStore();
 
   const { annotation } = props;
 
@@ -44,13 +43,10 @@ export const BaseCard = (props: BaseCardProps) => {
   // Shorthand for readability
   const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
 
-  const onDeleteAnnotation = () => store.deleteAnnotation(props.annotation);
-
-  const transition = useTransition(
-    collapsed ? [] : comments.slice(1, comments.length - 1),
-    {
-      from: {
-        maxHeight: animate.current ? '0vh' : '80vh',
+  const transition = useTransition(collapsed ? 
+    [] : comments.slice(1, comments.length - 1), {
+      from: { 
+        maxHeight: animate.current ? '0vh' : '80vh' 
       },
       enter: { maxHeight: '80vh' },
       leave: { maxHeight: '0vh' },
@@ -66,6 +62,11 @@ export const BaseCard = (props: BaseCardProps) => {
   // so it doesn't get emphasised like additions from the other users
   const beforeReply = (b: AnnotationBody) =>
     (dontEmphasise.current = new Set([...dontEmphasise.current, b.id]));
+
+  const onReply = (b: AnnotationBody) => {
+    props.onCreateBody(b);
+    props.onReply && props.onReply(b);
+  }
 
   useEffect(() => {
     const eqSet = (x: Set<any>, y: Set<any>) =>
@@ -90,10 +91,11 @@ export const BaseCard = (props: BaseCardProps) => {
     <>
       <TagsWidget
         i18n={props.i18n}
-        annotation={props.annotation}
-        me={me}
-        vocabulary={props.tagVocabulary}
-      />
+        annotation={annotation} 
+        me={me} 
+        vocabulary={props.tagVocabulary} 
+        onCreateTag={props.onCreateBody} 
+        onDeleteTag={props.onDeleteBody} />
 
       {comments.length > 0 && (
         <ul className='annotation-card-comments-container'>
@@ -106,7 +108,10 @@ export const BaseCard = (props: BaseCardProps) => {
               present: props.present,
               emphasizeOnEntry: !dontEmphasise.current.has(comments[0].id),
               editable: isMine(comments[0]),
-              onDeleteAnnotation,
+              onDeleteAnnotation: props.onDeleteAnnotation,
+              onCreateBody: props.onCreateBody,
+              onDeleteBody: props.onDeleteBody,
+              onUpdateBody: props.onUpdateBody
             })}
           </li>
 
@@ -135,7 +140,10 @@ export const BaseCard = (props: BaseCardProps) => {
                 present: props.present,
                 emphasizeOnEntry: !dontEmphasise.current.has(item.id),
                 editable: isMine(item),
-                onDeleteAnnotation,
+                onDeleteAnnotation: props.onDeleteAnnotation,
+                onCreateBody: props.onCreateBody,
+                onDeleteBody: props.onDeleteBody,
+                onUpdateBody: props.onUpdateBody
               })}
             </animated.li>
           ))}
@@ -152,7 +160,10 @@ export const BaseCard = (props: BaseCardProps) => {
                   comments[comments.length - 1].id
                 ),
                 editable: isMine(comments[comments.length - 1]),
-                onDeleteAnnotation,
+                onDeleteAnnotation: props.onDeleteAnnotation,
+                onCreateBody: props.onCreateBody,
+                onDeleteBody: props.onDeleteBody,
+                onUpdateBody: props.onUpdateBody
               })}
             </li>
           )}
@@ -161,14 +172,13 @@ export const BaseCard = (props: BaseCardProps) => {
 
       {props.showReplyForm && (
         <ReplyForm
+          i18n={props.i18n}
           autofocus
           annotation={props.annotation}
           me={me}
           placeholder={props.i18n.t['Reply...']}
-          beforeSubmit={beforeReply}
-          onSubmit={props.onReply}
-          i18n={props.i18n}
-        />
+          beforeSubmit={beforeReply} 
+          onSubmit={onReply} />
       )}
     </>
   );

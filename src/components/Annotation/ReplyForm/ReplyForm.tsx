@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
-import { useAnnotationStore } from '@annotorious/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, SupabaseAnnotation, SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { RichTextEditor } from '@components/RichTextEditor';
@@ -11,6 +10,9 @@ import type { Translations } from 'src/Types';
 import './ReplyForm.css';
 
 export interface ReplyFormProps {
+
+  i18n: Translations;
+
   annotation: SupabaseAnnotation;
 
   autofocus?: boolean;
@@ -23,19 +25,17 @@ export interface ReplyFormProps {
 
   beforeSubmit?(body: AnnotationBody): void;
 
-  onSubmit?(body: AnnotationBody): void;
+  onSubmit(body: AnnotationBody): void;
 
-  i18n: Translations;
 }
 
 export const ReplyForm = (props: ReplyFormProps) => {
+  
   const { me } = props;
 
   const [value, setValue] = useState<string | undefined>();
 
   const textarea = useRef<HTMLTextAreaElement>(null);
-
-  const store = useAnnotationStore();
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
@@ -71,8 +71,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
       props.beforeSubmit && props.beforeSubmit(body);
 
-      store.addBody(body);
-
       props.onSubmit && props.onSubmit(body);
     }
   };
@@ -91,7 +89,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
       <RichTextEditor
         initialValue={''}
         value={value || ''}
-        // @ts-ignore
         onChange={setValue}
         editable={true}
         i18n={props.i18n}

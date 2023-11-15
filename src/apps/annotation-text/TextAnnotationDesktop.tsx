@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { Annotation as Anno, Formatter, PresentUser } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser, DrawingStyle } from '@annotorious/react';
 import { 
   RecogitoTextAnnotator,
   TEIAnnotator, 
@@ -46,13 +46,18 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
+  const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
+
+  // Default layer is either the first layer in the project context, 
+  // or the first layer in the list, if no project context
+  const defaultLayer = layers && layers.length > 0 ? 
+    layers.find(l => !l.context.name) || layers[0] : undefined;
 
   const vocabulary = useTagVocabulary(props.document.context.project_id);
 
@@ -120,7 +125,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
-            formatter={formatter}
+            formatter={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
             }}>
@@ -131,7 +136,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             document={props.document} />
         ) : text && (
           <TextAnnotator
-            formatter={formatter}
+            formatter={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
             }}>
@@ -149,7 +154,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             supabaseUrl={SUPABASE}
             apiKey={SUPABASE_API_KEY} 
             channel={props.channelId}
-            defaultLayer={props.document.layers[0].id} 
+            defaultLayer={defaultLayer?.id} 
             layerIds={layers.map(layer => layer.id)}
             appearanceProvider={createAppearenceProvider()}
             onPresence={setPresent} 
@@ -184,11 +189,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             present={present} 
             policies={policies}
             layers={layers}
+            defaultLayer={defaultLayer?.id} 
+            channel={props.channelId}
             // @ts-ignore
             sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
-            onChangeFormatter={f => setFormatter(() => f)}
+            onChangeAnnotationStyle={s => setStyle(() => s)}
             beforeSelectAnnotation={beforeSelectAnnotation} />
         </div>
 
