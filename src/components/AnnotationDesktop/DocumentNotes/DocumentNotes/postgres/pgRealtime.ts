@@ -2,7 +2,7 @@ import type { PresentUser } from '@annotorious/react';
 import type { ChangeEvent } from '@recogito/annotorious-supabase';
 import type { RealtimePostgresChangesPayload } from '@supabase/supabase-js';
 import type { BroadcastMessage, DocumentNote } from '../../Types';
-import { findUser, parseBodyRecord } from './utils';
+import { findUser, parseBodyRecord, toDate } from './utils';
 
 export const handleCDCEvent = (
   present: PresentUser[],
@@ -59,6 +59,17 @@ export const handleCDCEvent = (
   }
 }
 
+const reviveNote = (note: DocumentNote): DocumentNote => ({
+  ...note,
+  created_at: toDate(note.created_at)!,
+  updated_at: toDate(note.updated_at),
+  bodies: note.bodies.map(body => ({
+    ...body,
+    created: toDate(body.created)!,
+    updated: toDate(body.updated) 
+  }))
+});
+
 export const handleBroadcastEvent = (
   setNotes: React.Dispatch<React.SetStateAction<DocumentNote[]>>
 ) => (event: {
@@ -72,7 +83,7 @@ export const handleBroadcastEvent = (
     if (event.type === 'DELNOTE') {
       setNotes(notes => notes.filter(n => n.id !== event.id));
     } else if (event.type === 'PUBNOTE') {
-      setNotes(notes => ([...notes, event.note]));
+      setNotes(notes => ([...notes, reviveNote(event.note)]));
     } else if (event.type === 'DELNOTEBDY') {
       setNotes(notes => notes.map(n => n.id === event.annotation ? ({
         ...n,

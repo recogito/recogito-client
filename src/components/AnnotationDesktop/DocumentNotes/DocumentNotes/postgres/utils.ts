@@ -1,20 +1,20 @@
 import type { PresentUser, User } from '@annotorious/react';
 import type { DocumentNote, DocumentNoteBody } from '../../Types';
 
-export const toDate = (str?: string) => str ? new Date(str) : null;
+export const toDate = (str?: string | Date) => str ? new Date(str) : undefined;
 
 export const getContributors = (note: DocumentNote): User[] => {
   const { created_by, updated_by } = note;
 
   const bodyCollaborators = note.bodies.reduce((users, body) =>  (
-    [...users, body.creator, body.updatedBy]
+    [...users, body.creator as User, body.updatedBy as User].filter(Boolean)
   ), [] as User[]);
 
   return [
     created_by,
     updated_by,
     ...bodyCollaborators
-  ].filter(u => u); // Remove undefined
+  ].filter(Boolean) as User[]; // Remove undefined
 }
 
 export const findUser = (id: string | undefined, presentUsers: PresentUser[], note?: DocumentNote) => {

@@ -41,8 +41,10 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
 
-  const createNote = (text: string, isPrivate: boolean) =>
-    _createNote(text, isPrivate).then(() => setNewNote(undefined));
+  const createNote = (text: string, isPrivate: boolean) => {
+    setNewNote(undefined);
+    _createNote(text, isPrivate);
+  }
 
   const onSelect = (note: DocumentNote) => (evt: React.MouseEvent) => {    
     evt.stopPropagation();

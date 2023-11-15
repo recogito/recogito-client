@@ -83,7 +83,7 @@ export const useNotes = () => {
           channel?.send({
             type: 'broadcast',
             event: 'change',
-            payload: { from: me, events: [{ type: 'PUBNOTE', note }] }
+            payload: { from: me, events: [{ type: 'PUBNOTE', note: publicNote }] }
           });
 
           setNotes(notes => notes.map(n => n.id === note.id ? publicNote : n));
