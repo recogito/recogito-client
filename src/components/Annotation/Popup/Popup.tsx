@@ -1,5 +1,5 @@
 import { Annotation } from '@components/Annotation';
-import { useAnnotator, useAnnotatorUser } from '@annotorious/react';
+import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { TagsWidget } from '../TagsWidget';
@@ -8,8 +8,7 @@ import type { Policies, Translations } from 'src/Types';
 import './Popup.css';
 
 interface PopupProps {
-
-  selected: { annotation: Anno, editable?: boolean }[];
+  selected: { annotation: Anno; editable?: boolean }[];
 
   i18n: Translations;
 
@@ -18,14 +17,15 @@ interface PopupProps {
   policies?: Policies;
 
   tagVocabulary?: string[];
-
 }
 
 export const Popup = (props: PopupProps) => {
-
+  
   const anno = useAnnotator();
 
   const user = useAnnotatorUser();
+
+  const store = useAnnotationStore();
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
@@ -39,71 +39,103 @@ export const Popup = (props: PopupProps) => {
   const hasBodies = selected.bodies.length > 0;
 
   // Close the popup after a reply
-  const onReply = () => anno.state.selection.clear();
+  const onReply = (body: AnnotationBody) => {
+    store.addBody(body);
+    anno.state.selection.clear();
+  }
+
+  const onDeleteAnnotation = (annotation: Anno) => 
+    store.deleteAnnotation(annotation);
+
+  const onCreateBody = (body: AnnotationBody) =>
+    store.addBody(body);
+
+  const onDeleteBody = (body: AnnotationBody) =>
+    store.deleteBody(body);
+
+  const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
+    store.updateBody(oldValue, newValue);
 
   return (
-    <div 
+    <div
       key={selected.id}
-      className={isPrivate ? 
-        'annotation-popup private not-annotatable' : 'annotation-popup not-annotatable'}>
-    
+      className={
+        isPrivate
+          ? 'annotation-popup private not-annotatable'
+          : 'annotation-popup not-annotatable'
+      }
+    >
       {hasBodies ? (
         isPrivate ? (
-          <Annotation.PrivateCard 
-            {...props} 
+          <Annotation.PrivateCard
+            {...props}
             showReplyForm
             annotation={selected} 
-            onReply={onReply} />
+            onReply={onReply} 
+            onDeleteAnnotation={() => onDeleteAnnotation(selected)}
+            onCreateBody={onCreateBody} 
+            onDeleteBody={onDeleteBody} 
+            onUpdateBody={onUpdateBody} />
         ) : (
           <Annotation.PublicCard
-            {...props} 
+            {...props}
             showReplyForm
-            annotation={selected} 
+            annotation={selected}
             policies={props.policies}
-            onReply={onReply} />
+            onReply={onReply} 
+            onDeleteAnnotation={() => onDeleteAnnotation(selected)}
+            onCreateBody={onCreateBody} 
+            onDeleteBody={onDeleteBody}
+            onUpdateBody={onUpdateBody} />
         )
       ) : isMine ? (
         isPrivate ? (
-          <div className="annotation-card private">
-            <TagsWidget 
-              i18n={props.i18n} 
-              me={me} 
+          <div className='annotation-card private'>
+            <TagsWidget
+              i18n={props.i18n}
+              me={me}
               annotation={selected}
-              vocabulary={props.tagVocabulary} />
+              vocabulary={props.tagVocabulary} 
+              onCreateTag={onCreateBody} 
+              onDeleteTag={onDeleteBody} />
 
-            <Annotation.ReplyForm 
+            <Annotation.ReplyForm
               {...props}
               autofocus
               me={me}
               annotation={selected}
               placeholder={props.i18n.t['Comment...']}
-              onSubmit={onReply} />
+              onSubmit={onReply}
+            />
           </div>
         ) : (
-          <div className="annotation-card">
-            <TagsWidget 
-              i18n={props.i18n} 
-              me={me} 
+          <div className='annotation-card'>
+            <TagsWidget
+              i18n={props.i18n}
+              me={me}
               annotation={selected}
-              vocabulary={props.tagVocabulary} />
+              vocabulary={props.tagVocabulary}
+              onCreateTag={onCreateBody} 
+              onDeleteTag={onDeleteBody} />
 
-            <Annotation.ReplyForm 
+            <Annotation.ReplyForm
               {...props}
               autofocus
               me={me}
               annotation={selected}
               placeholder={props.i18n.t['Comment...']}
-              onSubmit={onReply} />
+              onSubmit={onReply}
+            />
           </div>
         )
       ) : (
-        <Annotation.EmptyCard 
-          {...props} 
+        <Annotation.EmptyCard
+          {...props}
           typing
           annotation={selected}
-          selected />
+          selected
+        />
       )}
     </div>
-  )
-
-}
+  );
+};

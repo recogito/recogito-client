@@ -19,4 +19,12 @@ export interface CardProps {
 
   onReply?(body: AnnotationBody): void;
 
+  onDeleteAnnotation(): void;
+
+  onCreateBody(body: AnnotationBody): void;
+
+  onDeleteBody(body: AnnotationBody): void;
+
+  onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
+
 }

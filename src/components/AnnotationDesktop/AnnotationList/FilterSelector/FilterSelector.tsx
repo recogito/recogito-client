@@ -6,7 +6,7 @@ interface FilterSelectorProps {
 
   i18n: Translations;
 
-  onChange(filer: Filter): void;
+  onChange(filter: Filter): void;
 
 }
 

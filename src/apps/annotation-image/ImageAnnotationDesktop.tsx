@@ -11,8 +11,9 @@ import { SupabasePlugin } from '@components/SupabasePlugin';
 import { Toolbar } from './Toolbar';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { 
+  Annotation as Anno,
   AnnotoriousOpenSeadragonAnnotator,
-  Formatter,
+  DrawingStyle,
   ImageAnnotation, 
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
@@ -39,15 +40,22 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [tool, setTool] = useState<string | null>(null);
+  const [tool, setTool] = useState<string>('rectangle');
 
-  const [formatter, setFormatter] = useState<Formatter | undefined>(undefined);
+  const [drawingEnabled, setDrawingEnabled] = useState(false);
+
+  const [style, setStyle] = useState<((a: Anno) => DrawingStyle) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
+
+  // Default layer is either the first layer in the project context, 
+  // or the first layer in the list, if no project context
+  const defaultLayer = layers && layers.length > 0 ? 
+    layers.find(l => !l.context.name) || layers[0] : undefined;
 
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
@@ -78,6 +86,17 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
+  const onChangeTool = (tool: string | null) => {
+    console.log('changing tool');
+    
+    if (tool) {
+      if (!drawingEnabled) setDrawingEnabled(true);
+      setTool(tool);
+    } else {
+      setDrawingEnabled(false);
+    }
+  }
+
   const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
     if (panel === ViewMenuPanel.ANNOTATIONS) {
       // Don't use the popup if the annotation list is open
@@ -107,17 +126,19 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     const canEdit = annotation.target.creator?.id === me ||
       policies?.get('layers').has('INSERT');
 
-    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.HIGHLIGHT;
+    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }
 
   return (
     <div className="anno-desktop ia-desktop">
       {policies && (
-        <OpenSeadragonAnnotator 
+        <OpenSeadragonAnnotator
+          autoSave
+          drawingMode="click"
+          drawingEnabled={drawingEnabled}
           pointerSelectAction={selectAction}
           tool={tool} 
-          keepEnabled={true}
-          style={formatter}>
+          style={style}>
         
           <AnnotationDesktop.UndoStack 
             undoEmpty={true} />
@@ -127,7 +148,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               supabaseUrl={SUPABASE}
               apiKey={SUPABASE_API_KEY} 
               channel={props.channelId}
-              defaultLayer={props.document.layers[0].id} 
+              defaultLayer={defaultLayer?.id} 
               layerIds={layers.map(layer => layer.id)}
               appearanceProvider={appearance}
               onPresence={setPresent} 
@@ -135,7 +156,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               privacyMode={privacy === 'PRIVATE'} />
           }
 
-          {/* @ts-ignore */}
           <OpenSeadragonViewer
             className="ia-osd-container"
             options={{
@@ -173,9 +193,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               present={present} 
               policies={policies}
               layers={layers}
+              defaultLayer={defaultLayer?.id} 
+              channel={props.channelId}
               tagVocabulary={vocabulary}
               onChangePanel={onChangeViewMenuPanel} 
-              onChangeFormatter={f => setFormatter(() => f)}
+              onChangeAnnotationStyle={s => setStyle(() => s)}
               beforeSelectAnnotation={beforeSelectAnnotation} />
           </div>
 
@@ -184,7 +206,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               i18n={props.i18n}
               isAdmin={policies?.get('layers').has('INSERT')}
               privacy={privacy}
-              onChangeTool={setTool} 
+              onChangeTool={onChangeTool} 
               onChangePrivacy={setPrivacy} />
           </div>
         </OpenSeadragonAnnotator>
