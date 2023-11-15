@@ -93,7 +93,7 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
         setChannel(undefined);
       }
     }
-  }, [layerId]);
+  }, [layerId, props.present]);
 
   return (
     <DocumentNotesContext.Provider value={{ 

@@ -13,7 +13,7 @@ import {
 
 export const useNotes = () => {
 
-  const { notes, setNotes, channel, layerId, present, onError } = useContext(DocumentNotesContext)
+  const { notes, setNotes, channel, layerId, present, onError } = useContext(DocumentNotesContext);
 
   const user = useAnnotatorUser();
 
