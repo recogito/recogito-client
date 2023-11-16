@@ -9,7 +9,6 @@ import { TagsWidget } from '../TagsWidget';
 import type { CardProps } from './CardProps';
 
 import './BaseCard.css';
-import type { Translations } from 'src/Types';
 
 type BaseCardProps = CardProps & {
   comment(props: CommentProps): ReactNode;
