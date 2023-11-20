@@ -1,10 +1,15 @@
-import { useState } from 'react';
-import type { Color, DrawingStyle } from '@annotorious/react';
+import { useEffect, useState } from 'react';
+import { useAnnotations } from '@annotorious/react';
+import type { Color, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export interface ColorCoding {
 
-  createFormatter(setLegend: (legend: ColorLegendValue[]) => void): ((a: SupabaseAnnotation) => DrawingStyle);
+  getStyle(): ((a: SupabaseAnnotation, selected?: boolean) => DrawingStyle);
+
+  getLegend(): ColorLegendValue[];
+
+  update(annotations: SupabaseAnnotation[], present?: PresentUser[]): ColorLegendValue[];
 
 }
 
@@ -18,22 +23,38 @@ export interface ColorLegendValue {
 
 }
 
-export const useColorCoding = () => {
+export const useColorCoding = (initial: PresentUser[]) => {
+
+  const [coding, _setCoding] = useState<ColorCoding | undefined>();
+
+  const [style, setStyle] = useState<((a: SupabaseAnnotation) => DrawingStyle) | undefined>();
 
   const [legend, setLegend] = useState<ColorLegendValue[]>([]);
 
-  const [formatter, setFormatter] = useState<((a: SupabaseAnnotation) => DrawingStyle) | undefined>();
+  const [present, setPresent] = useState<PresentUser[]>(initial);
 
-  const setCoding = (coding?: ColorCoding) => {
-    if (coding) {
-      const formatter = coding.createFormatter(setLegend);
-      setFormatter(() => formatter);
+  const annotations = useAnnotations();
+
+  const setCoding = (fn?: (annotations: SupabaseAnnotation[], present?: PresentUser[]) => ColorCoding) => {
+    if (fn) {
+      const coding = fn(annotations, present);
+      _setCoding(coding);
+      setStyle(() => coding.getStyle());
+      setLegend(coding.getLegend());
     } else {
+      _setCoding(undefined);
+      setStyle(undefined);
       setLegend([]);
-      setFormatter(undefined);
     }
   }
 
-  return { formatter, legend, setCoding };
+  useEffect(() => {
+    if (coding) {
+      const legend = coding.update(annotations, present);
+      setLegend(legend);
+    }
+  }, [annotations, present]);
+
+  return { style, legend, setCoding, setPresent };
 
 }

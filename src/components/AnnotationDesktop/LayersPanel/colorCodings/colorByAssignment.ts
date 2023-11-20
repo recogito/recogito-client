@@ -17,7 +17,7 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
   const getNextAvailableColor = () =>
     PALETTE[assignedColors.size % PALETTE.length];
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void) =>
+  const createStyle = (setLegend: (legend: ColorLegendValue[]) => void) =>
     (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
       const assignedColor = assignedColors.get(annotation.layer_id!);
       if (assignedColor) {

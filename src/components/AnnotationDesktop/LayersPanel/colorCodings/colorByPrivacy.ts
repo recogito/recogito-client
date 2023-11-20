@@ -7,23 +7,21 @@ const PALETTE = CarbonCategoricalDark14;
 
 export const colorByPrivacy = (): ColorCoding => {
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void) => {
-    setLegend([{
-      color: PALETTE[4] , label: 'Your private annotations'
-    }, {
-      color: PALETTE[7] , label: 'All public annotations'
-    }])
+  const getStyle = () => (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
+    const color = annotation.visibility === Visibility.PRIVATE ?
+      PALETTE[4] : PALETTE[7];
 
-    return (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
-      const color = annotation.visibility === Visibility.PRIVATE ?
-        PALETTE[4] : PALETTE[7];
-
-      return { fill: color, fillOpacity: selected ? 0.45: 0.14 };
-    };
-
+    return { fill: color, fillOpacity: selected ? 0.5: 0.24 };
   }
 
-  return { createFormatter };
+  const getLegend = () => [{
+    color: PALETTE[4] , label: 'Your private annotations'
+  }, {
+    color: PALETTE[7] , label: 'All public annotations'
+  }];
 
+  const update = (annotations: SupabaseAnnotation[]) => getLegend();
+
+  return { getLegend, getStyle, update };
 
 }

@@ -32,7 +32,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
 
   const [value, setValue] = useState('none');
 
-  const { formatter, legend, setCoding } = useColorCoding();
+  const { legend, style, setCoding, setPresent } = useColorCoding(props.present);
 
   const showAssignmentOption = props.layers && props.layers.length > 1;
 
@@ -42,20 +42,25 @@ export const LayersPanel = (props: LayersPanelProps) => {
     if (value === 'none') {
       setCoding();
     } else if (value === 'privacy') {
-      setCoding(colorByPrivacy());
+      setCoding(colorByPrivacy);
     } else if (value === 'assignment') {
+      /*
       if (props.layers)
-        setCoding(colorByAssignment(props.layers));
+        setCoding(colorByAssignment(props.layers));*/
     } else if (value === 'creator') {
-      setCoding(colorByCreator(props.present));
+      setCoding(colorByCreator);
     } else if (value === 'tag') {
-      setCoding(colorByFirstTag());
+      setCoding(colorByFirstTag);
     }
   }
 
   useEffect(() => {
-    props.onChange(formatter);
-  }, [formatter]);
+    props.onChange(style);
+  }, [style]);
+
+  useEffect(() => {
+    setPresent(props.present);
+  }, [props.present]);
 
   return (
     <div className="anno-sidepanel layer-configuration">
