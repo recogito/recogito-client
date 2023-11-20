@@ -159,10 +159,10 @@ export const AnnotationList = (props: AnnotationListProps) => {
                     <Annotation.ReplyForm
                       autofocus={autofocus}
                       i18n={props.i18n}
+                      me={me} 
                       scrollIntoView
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
-                      me={me} 
                       onSubmit={onCreateBody} />
                   </div>
                 ) : (
@@ -189,6 +189,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   annotation={a} 
                   present={props.present}
                   tagVocabulary={props.tagVocabulary} 
+                  onReply={onCreateBody}
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
                   onUpdateBody={onUpdateBody}
@@ -202,6 +203,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   present={props.present}
                   policies={props.policies} 
                   tagVocabulary={props.tagVocabulary} 
+                  onReply={onCreateBody}
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
                   onUpdateBody={onUpdateBody}
