@@ -30,6 +30,8 @@ interface HeaderProps {
 
   onChangeSort(sortFn: SortFunction): void;
 
+  onChangeSearch(value: string): void;
+
   onProjectCreated(project: ExtendedProjectData): void;
 
   onInvitationAccepted(invitation: Invitation, project: ExtendedProjectData): void;
@@ -141,7 +143,8 @@ export const Header = (props: HeaderProps) => {
         <ul className="dashboard-header-bottom-actions">
           <li>
             <HeaderSearchAction 
-              i18n={props.i18n} />
+              i18n={props.i18n} 
+              onChangeSearch={props.onChangeSearch} />
           </li>
 
           <li>

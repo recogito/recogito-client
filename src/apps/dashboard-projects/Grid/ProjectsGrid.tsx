@@ -10,6 +10,8 @@ export interface ProjectsGridProps {
 
   projects: ExtendedProjectData[];
 
+  search: string;
+
   sort?: SortFunction;
 
   onProjectDeleted(project: ExtendedProjectData): void;
@@ -20,15 +22,24 @@ export interface ProjectsGridProps {
 
 }
 
+const filterBySearch = (projects: ExtendedProjectData[], search: string) => {
+  const regex = new RegExp(search, 'i');
+
+  return projects.filter(p =>
+    regex.test(p.name) || (p.description && regex.test(p.description)));
+}
+
 export const ProjectsGrid = (props: ProjectsGridProps) => {
 
   const sorted = props.sort ? props.projects.slice().sort(props.sort) : props.projects;
+
+  const filteredBySearch = props.search ? filterBySearch(sorted, props.search) : sorted;
 
   return (
     <main>
       <section>
         <div className="dashboard-projects-grid">
-          {sorted.map(project => (
+          {filteredBySearch.map(project => (
             <ProjectCard 
               key={project.id} 
               i18n={props.i18n}

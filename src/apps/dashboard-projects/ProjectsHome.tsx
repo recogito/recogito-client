@@ -40,6 +40,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [filter, setFilter] = useState(ProjectFilter.ALL);
 
+  const [search, setSearch] = useState('');
+
   const [sort, setSort] = useState<SortFunction | undefined>();
 
   useEffect(() => {
@@ -113,6 +115,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           invitations={invitations} 
           filter={filter}
           onChangeFilter={setFilter}
+          onChangeSearch={setSearch}
           onChangeSort={fn => setSort(() => fn)}
           onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}
@@ -131,6 +134,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             i18n={props.i18n} 
             me={me}
             projects={filteredProjects} 
+            search={search}
             sort={sort}
             onProjectDeleted={onProjectDeleted} 
             onDetailsChanged={onDetailsChanged} 
