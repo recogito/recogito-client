@@ -2,10 +2,9 @@ import { Check, FunnelSimple } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { useState } from 'react';
 import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { SortFunction } from './SortFunction';
 
-export type SortFunction = (a: ExtendedProjectData, b: ExtendedProjectData) => number;
-
-interface HeaderActionSortProps {
+interface HeaderSortActionProps {
 
   i18n: Translations;
 
@@ -23,7 +22,7 @@ const Sorters = {
 
 }
 
-export const HeaderActionSort = (props: HeaderActionSortProps) => {
+export const HeaderSortAction = (props: HeaderSortActionProps) => {
 
   const { t } = props.i18n;
 

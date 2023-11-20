@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Kanban, MagnifyingGlass, Plus } from '@phosphor-icons/react';
+import { Kanban, Plus } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { initProject } from '@backend/helpers';
 import { AccountActions } from '@components/AccountActions';
@@ -7,7 +7,8 @@ import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
 import type { Invitation, MyProfile, ExtendedProjectData, Translations, Policies } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
-import { HeaderActionSort, SortFunction } from './HeaderActionSort';
+import { HeaderSearchAction } from './Search';
+import { HeaderSortAction, SortFunction } from './Sort';
 
 import './Header.css';
 
@@ -139,13 +140,12 @@ export const Header = (props: HeaderProps) => {
 
         <ul className="dashboard-header-bottom-actions">
           <li>
-            <button>
-              <MagnifyingGlass size={16} /> <span>{t['Search']}</span>
-            </button>
+            <HeaderSearchAction 
+              i18n={props.i18n} />
           </li>
 
           <li>
-            <HeaderActionSort 
+            <HeaderSortAction 
               i18n={props.i18n}
               onChangeSort={props.onChangeSort} />
           </li>
