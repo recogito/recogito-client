@@ -62,10 +62,8 @@ export const BaseCard = (props: BaseCardProps) => {
   const beforeReply = (b: AnnotationBody) =>
     (dontEmphasise.current = new Set([...dontEmphasise.current, b.id]));
 
-  const onReply = (b: AnnotationBody) => {
-    props.onCreateBody(b);
+  const onReply = (b: AnnotationBody) =>
     props.onReply && props.onReply(b);
-  }
 
   useEffect(() => {
     const eqSet = (x: Set<any>, y: Set<any>) =>
@@ -84,7 +82,7 @@ export const BaseCard = (props: BaseCardProps) => {
         .querySelectorAll('.is-new')
         .forEach((el) => el.classList.remove('is-new'));
     }, 100);
-  }, [comments]);
+  }, [comments.map(c => c.id).join(',')]);
 
   return (
     <>
