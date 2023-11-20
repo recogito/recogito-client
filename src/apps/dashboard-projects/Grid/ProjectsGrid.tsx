@@ -1,5 +1,6 @@
 import { ProjectCard } from '@components/ProjectCard';
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import type { SortFunction } from '../Header/HeaderActionSort';
 
 export interface ProjectsGridProps {
 
@@ -8,6 +9,8 @@ export interface ProjectsGridProps {
   me: MyProfile;
 
   projects: ExtendedProjectData[];
+
+  sort?: SortFunction;
 
   onProjectDeleted(project: ExtendedProjectData): void;
 
@@ -19,11 +22,13 @@ export interface ProjectsGridProps {
 
 export const ProjectsGrid = (props: ProjectsGridProps) => {
 
+  const sorted = props.sort ? props.projects.slice().sort(props.sort) : props.projects;
+
   return (
     <main>
       <section>
         <div className="dashboard-projects-grid">
-          {props.projects.map(project => (
+          {sorted.map(project => (
             <ProjectCard 
               key={project.id} 
               i18n={props.i18n}

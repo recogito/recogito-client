@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Bell } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, MyProfile, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
-import { AlertBanner } from '@components/AlertBanner';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
-import { Header } from './Header';
+import { Header, type SortFunction } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 
@@ -41,6 +39,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const [error, setError] = useState<ToastContent | null>(null);
 
   const [filter, setFilter] = useState(ProjectFilter.ALL);
+
+  const [sort, setSort] = useState<SortFunction | undefined>();
 
   useEffect(() => {
     getMyProfile(supabase)
@@ -113,6 +113,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           invitations={invitations} 
           filter={filter}
           onChangeFilter={setFilter}
+          onChangeSort={fn => setSort(() => fn)}
           onProjectCreated={onProjectCreated} 
           onInvitationAccepted={onInvitationAccepted}
           onInvitationDeclined={onInvitationDeclined} 
@@ -130,6 +131,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             i18n={props.i18n} 
             me={me}
             projects={filteredProjects} 
+            sort={sort}
             onProjectDeleted={onProjectDeleted} 
             onDetailsChanged={onDetailsChanged} 
             onError={onError} />  
