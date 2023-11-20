@@ -1,6 +1,7 @@
-import type { Color, Formatter, SupabaseAnnotation } from '@annotorious/react';
+import type { Color, DrawingStyle } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { shuffle, TailwindSequential17 } from '../ColorPalettes';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const PALETTE = shuffle(TailwindSequential17);
 
@@ -13,9 +14,8 @@ export const colorByFirstTag = (): ColorCoding => {
   const getNextAvailableColor = () =>
     PALETTE[assignedColors.size % PALETTE.length];
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
-
-    (annotation: SupabaseAnnotation, selected?: boolean) => {
+  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void) =>
+    (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
       const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
 
       const assignedColor = assignedColors.get(firstTag);

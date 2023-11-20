@@ -1,5 +1,5 @@
 import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { Formatter } from '@annotorious/react';
+import type { DrawingStyle } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { CarbonCategoricalDark14 } from '../ColorPalettes';
 
@@ -7,14 +7,14 @@ const PALETTE = CarbonCategoricalDark14;
 
 export const colorByPrivacy = (): ColorCoding => {
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter => {
+  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void) => {
     setLegend([{
       color: PALETTE[4] , label: 'Your private annotations'
     }, {
       color: PALETTE[7] , label: 'All public annotations'
     }])
 
-    return (annotation: SupabaseAnnotation, selected?: boolean) => {
+    return (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
       const color = annotation.visibility === Visibility.PRIVATE ?
         PALETTE[4] : PALETTE[7];
 

@@ -1,6 +1,7 @@
-import type { Annotation, Color, Formatter, PresentUser, SupabaseAnnotation, User } from '@annotorious/react';
+import type { Annotation, Color, DrawingStyle, PresentUser, User } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { AdobeCategorical12 } from '../ColorPalettes';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const PALETTE = AdobeCategorical12;
 
@@ -26,9 +27,9 @@ export const colorByCreator = (present: PresentUser[]): ColorCoding => {
   const getNextAvailableColor = () =>
     PALETTE[assignedColors.size % PALETTE.length];
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
+  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void) =>
 
-    (annotation: SupabaseAnnotation, selected?: boolean) => {
+    (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
       const creatorId = annotation.target.creator?.id;
 
       if (creatorId) {

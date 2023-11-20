@@ -1,4 +1,5 @@
-import type { Color, Formatter, SupabaseAnnotation } from '@annotorious/react';
+import type { Color, DrawingStyle } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { ColorBrewerDark2_8 } from '../ColorPalettes';
@@ -16,9 +17,8 @@ export const colorByAssignment = (layers: Layer[]): ColorCoding => {
   const getNextAvailableColor = () =>
     PALETTE[assignedColors.size % PALETTE.length];
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
-
-    (annotation: SupabaseAnnotation, selected?: boolean) => {
+  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void) =>
+    (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
       const assignedColor = assignedColors.get(annotation.layer_id!);
       if (assignedColor) {
         return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.14 };
