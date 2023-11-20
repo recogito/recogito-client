@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import type { Formatter, PresentUser } from '@annotorious/react';
+import type { DrawingStyle, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useColorCoding } from './ColorCoding';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { 
   colorByAssignment, 
   colorByCreator,
@@ -21,7 +22,7 @@ interface LayersPanelProps {
 
   present: PresentUser[];
 
-  onChange(formatter?: Formatter): void;
+  onChange(style?: ((a: SupabaseAnnotation) => DrawingStyle)): void;
   
 }
 

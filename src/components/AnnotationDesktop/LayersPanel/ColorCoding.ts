@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import type { Color, Formatter } from '@annotorious/react';
+import type { Color, DrawingStyle } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export interface ColorCoding {
 
-  createFormatter(setLegend: (legend: ColorLegendValue[]) => void): Formatter;
+  createFormatter(setLegend: (legend: ColorLegendValue[]) => void): ((a: SupabaseAnnotation) => DrawingStyle);
 
 }
 
@@ -21,7 +22,7 @@ export const useColorCoding = () => {
 
   const [legend, setLegend] = useState<ColorLegendValue[]>([]);
 
-  const [formatter, setFormatter] = useState<Formatter | undefined>();
+  const [formatter, setFormatter] = useState<((a: SupabaseAnnotation) => DrawingStyle) | undefined>();
 
   const setCoding = (coding?: ColorCoding) => {
     if (coding) {
