@@ -1,2 +1,2 @@
 export * from './Header';
-export type { SortFunction } from './HeaderActionSort'; 
+export type { SortFunction } from './Sort'; 
