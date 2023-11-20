@@ -292,6 +292,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onError={onError}
             onDelete={onDeleteDocument}
             isAdmin={isAdmin}
+            key={Math.random()}
           />
         </div>
         <UploadTracker

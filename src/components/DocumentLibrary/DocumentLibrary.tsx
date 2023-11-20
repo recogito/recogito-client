@@ -218,6 +218,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     setSearch(event.target.value);
   };
 
+  const handleCancel = () => {
+    setSelectedIds([]);
+    props.onCancel();
+  };
+
   return (
     <>
       <Dialog.Root open={props.open}>
@@ -313,7 +318,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             <div className='doc-lib-buttons'>
               {UploadActions}
               <div>
-                <Button type='button' onClick={props.onCancel}>
+                <Button type='button' onClick={handleCancel}>
                   {t['Cancel']}
                 </Button>
                 <Button
