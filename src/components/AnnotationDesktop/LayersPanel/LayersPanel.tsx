@@ -44,9 +44,8 @@ export const LayersPanel = (props: LayersPanelProps) => {
     } else if (value === 'privacy') {
       setCoding(colorByPrivacy);
     } else if (value === 'assignment') {
-      /*
       if (props.layers)
-        setCoding(colorByAssignment(props.layers));*/
+        setCoding(colorByAssignment(props.layers));
     } else if (value === 'creator') {
       setCoding(colorByCreator);
     } else if (value === 'tag') {
