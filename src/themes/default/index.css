@@ -14,6 +14,7 @@
 @import './tabs/index.css';
 @import './toast/index.css';
 @import './tooltip/index.css';
+@import './scroll-area/index.css';
 
 @font-face {
   font-family: Inter;
@@ -115,11 +116,11 @@
   --sand: #987116;
   --mud-gray: #808073;
   --orange: #e9b44a;
-  
+
   --gray-900: #202125;
-  --gray-700: #6f747c; 
+  --gray-700: #6f747c;
   --gray-600: #818992;
-  --gray-500: #93989f; 
+  --gray-500: #93989f;
   --gray-400: #cbd0d7;
   --gray-300: #dadee2;
   --gray-200: #e2e5e9;
@@ -132,7 +133,7 @@
   --green-500: #11a011;
 
   /** Global constants **/
-  --border-radius: 3px; 
+  --border-radius: 3px;
   --link-color: var(--brighter-blue);
 
   /** Font styles **/
@@ -164,7 +165,8 @@
   --input-text-color: var(--font-dark);
 }
 
-html, body {
+html,
+body {
   background-color: var(--gray-100);
   color: var(--gray-900);
   font-family: Inter, Arial, Helvetica, sans-serif;
@@ -186,7 +188,7 @@ a[href]:hover {
 }
 
 a:focus-visible {
-  background-color:rgb(22, 97, 202, 0.15);
+  background-color: rgb(22, 97, 202, 0.15);
   border-radius: var(--border-radius);
   outline: none;
 }
@@ -214,6 +216,7 @@ p {
   padding: 0;
 }
 
-input, textarea {
+input,
+textarea {
   font-family: Inter;
 }
