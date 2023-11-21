@@ -57,6 +57,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
           ) : (
             <PublicComment {...props} />
           )} 
+        onReply={props.onCreateBody}
         onCreateBody={props.onCreateBody}
         onDeleteBody={props.onDeleteBody}
         onUpdateBody={props.onUpdateBody}
