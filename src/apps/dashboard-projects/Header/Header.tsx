@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FunnelSimple, Kanban, MagnifyingGlass, Plus, User } from '@phosphor-icons/react';
+import { Kanban, Plus } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { initProject } from '@backend/helpers';
 import { AccountActions } from '@components/AccountActions';
@@ -7,6 +7,8 @@ import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
 import type { Invitation, MyProfile, ExtendedProjectData, Translations, Policies } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
+import { HeaderSearchAction } from './Search';
+import { HeaderSortAction, SortFunction } from './Sort';
 
 import './Header.css';
 
@@ -25,6 +27,10 @@ interface HeaderProps {
   filter: ProjectFilter;
 
   onChangeFilter(f: ProjectFilter): void;
+
+  onChangeSort(sortFn: SortFunction): void;
+
+  onChangeSearch(value: string): void;
 
   onProjectCreated(project: ExtendedProjectData): void;
 
@@ -134,19 +140,19 @@ export const Header = (props: HeaderProps) => {
           </li>
         </ul>
 
-        {/* <ul className="dashboard-header-bottom-actions">
+        <ul className="dashboard-header-bottom-actions">
           <li>
-            <button>
-              <MagnifyingGlass size={16} /> <span>{t['Search']}</span>
-            </button>
+            <HeaderSearchAction 
+              i18n={props.i18n} 
+              onChangeSearch={props.onChangeSearch} />
           </li>
 
           <li>
-            <button>
-              <FunnelSimple size={16} /> <span>{t['Sort']}</span>
-            </button>
+            <HeaderSortAction 
+              i18n={props.i18n}
+              onChangeSort={props.onChangeSort} />
           </li>
-        </ul> */}
+        </ul>
       </section>
     </header>
   )

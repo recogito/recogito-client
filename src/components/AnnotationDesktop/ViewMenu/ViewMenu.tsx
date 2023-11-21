@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chats, NotePencil, StackSimple, X } from '@phosphor-icons/react';
+import { Chats, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@recogito/annotorious-supabase';
@@ -118,7 +118,7 @@ export const ViewMenu = (props: ViewMenuProps) => {
           )}
 
           {headerTransition((style, panel) => panel && (
-            <animated.section className="close" style={style }>
+            <animated.section className="close" style={style}>
               <button onClick={() => setPanel(undefined)}>
                 <X />
               </button>
