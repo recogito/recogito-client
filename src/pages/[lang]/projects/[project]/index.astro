@@ -41,15 +41,6 @@ if (documents.error) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
-//const orgDocuments = [];
-const orgDocuments = await listAllDocuments(supabase);
-
-if (orgDocuments.error) {
-  const path = Astro.url.protocol + '//' + Astro.url.host;
-  const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 });
-}
-
 const i18n = getTranslations(Astro.request, 'project-home');
 ---
 
@@ -59,7 +50,6 @@ const i18n = getTranslations(Astro.request, 'project-home');
     i18n={i18n}
     project={project.data}
     documents={documents.data}
-    orgDocuments={orgDocuments.data || []}
     user={profile.data}
   />
 </ProjectLayout>

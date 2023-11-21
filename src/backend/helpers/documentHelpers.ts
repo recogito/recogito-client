@@ -11,12 +11,6 @@ import type {
   TaggedContext,
 } from 'src/Types';
 import { getTagsForContext } from './tagHelpers';
-import { supabase } from '@backend/supabaseBrowserClient';
-
-export type DbResult<T> = T extends PromiseLike<infer U> ? U : never;
-export type DbResultOk<T> = T extends PromiseLike<{ data: infer U }>
-  ? Exclude<U, null>
-  : never;
 
 /**
  * Initializes a new Document in a Context. Process differs for
