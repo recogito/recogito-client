@@ -10,7 +10,7 @@
 .anno-desktop-left {
   left: 0;
   position: absolute;
-  top: 0;
+  top: 50px;
   z-index: 2;
 }
 
@@ -19,14 +19,14 @@
   flex-direction: row;
   position: absolute;
   right: 0;
-  top: 0;
+  top: 50px;
   bottom: 0;
   pointer-events: none;
   z-index: 2;
 }
 
 .anno-desktop-bottom {
-  bottom: 0;
+  bottom: 50px;
   display: flex;
   justify-content: center;
   left: 0;
@@ -38,13 +38,11 @@
 }
 
 .anno-desktop-overlay {
-  background-color: #fff; 
+  background-color: #fff;
   border-radius: var(--border-radius);
-  box-shadow:
-    0px 0px 16px -1px rgba(0, 0, 0, 0.15),
-    0px 0px 16px -8px rgba(0, 0, 0, 0.25), 
-    0px 0px 16px -12px rgba(0, 0, 0, 0.32),
-    0px 0px 2px 0px rgba(0, 0, 0, 0.28);
+  box-shadow: 0px 0px 16px -1px rgba(0, 0, 0, 0.15),
+    0px 0px 16px -8px rgba(0, 0, 0, 0.25),
+    0px 0px 16px -12px rgba(0, 0, 0, 0.32), 0px 0px 2px 0px rgba(0, 0, 0, 0.28);
   pointer-events: all;
   transition: background-color 250ms;
 }
@@ -73,11 +71,11 @@
 .anno-desktop-overlay-divider {
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.08);
-  border-width: 0 2px 0 0; 
+  border-width: 0 2px 0 0;
   display: inline-block;
   height: 16px;
   margin: 0 8px;
-  right: 0; 
+  right: 0;
 }
 
 .anno-menubar section {

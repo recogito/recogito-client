@@ -1,13 +1,14 @@
 .dashboard-projects-home {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  max-height: calc(100vh - 100px);
+  overflow-y: scroll;
 }
 
 .dashboard-projects-empty {
   align-items: center;
   display: flex;
-  height: 100%; 
+  height: 100%;
   justify-content: center;
   padding: 30px;
   text-align: center;
@@ -52,7 +53,8 @@
 }
 
 @keyframes swing {
-  0%, 12.5% {
+  0%,
+  12.5% {
     transform: rotate(0deg);
   }
   2.5% {
@@ -77,10 +79,10 @@
   flex-grow: 1;
 }
 
-.dashboard-projects-home .dashboard-projects-grid  {
+.dashboard-projects-home .dashboard-projects-grid {
   display: grid;
   gap: 1rem;
-  grid-auto-rows: 1fr;  
+  grid-auto-rows: 1fr;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   padding: 30px 0 40px 0;
 }

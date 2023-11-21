@@ -1,0 +1,138 @@
+---
+import { getLangFromUrl } from '@i18n';
+
+import '@themes/default/index.css';
+import config from '../config.json';
+
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const siteColor = config.branding.site_color;
+const siteBanner = config.branding.home_banner;
+---
+
+<!DOCTYPE html>
+<html lang={getLangFromUrl(Astro.url)}>
+  <head>
+    <meta charset='UTF-8' />
+    <meta name='viewport' content='width=device-width' />
+    <meta name='generator' content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header>
+      <div class='branding-container'>
+        <div class='platform'>
+          {config.branding.platform_name}
+        </div>
+        <div class='separator'></div>
+        <div class='site_name'>{config.branding.site_name}</div>
+      </div>
+    </header>
+    <div class='slot-container'>
+      <slot />
+    </div>
+    <footer>
+      <div class='blurb'>
+        {config.branding.welcome_blurb}
+      </div>
+    </footer>
+    <script>
+      window.onUsersnapLoad = function (api: any) {
+        api.init();
+        api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
+      };
+
+      var script = document.createElement('script');
+      script.defer = 1;
+      script.src = `https://widget.usersnap.com/global/load/${
+        import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY
+      }?onload=onUsersnapLoad`;
+
+      document.getElementsByTagName('head')[0].appendChild(script);
+    </script>
+  </body>
+</html>
+<style define:vars={{ siteColor }}>
+  body {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .slot-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: calc(100% - 100px);
+    position: relative;
+  }
+
+  header {
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+    background-color: var(--gray-900);
+    z-index: 1000;
+    position: sticky;
+    top: 0;
+    left: 0;
+  }
+
+  footer {
+    border-top: 1px solid var(--gray-200);
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    height: 50px;
+    padding: 0 40px;
+    background-color: var(--gray-900);
+    z-index: 1000;
+    position: sticky;
+    bottom: 0;
+    left: 0;
+  }
+
+  main {
+    box-sizing: border-box;
+    display: flex;
+    flex-grow: 1;
+    padding: 0;
+    position: relative;
+    width: 100%;
+  }
+
+  .branding-container {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+
+  .platform {
+    color: white;
+  }
+
+  .separator {
+    width: 2px;
+    height: 20px;
+    margin-left: 5px;
+    background-color: white;
+  }
+
+  .site_name {
+    padding-left: 5px;
+    color: var(--siteColor);
+  }
+
+  .blurb {
+    color: white;
+    font-size: 14px;
+  }
+</style>

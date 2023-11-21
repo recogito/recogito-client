@@ -1,22 +1,22 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import ProjectsLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile, listMyInvites } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
   const path = Astro.url.protocol + '//' + Astro.url.host;
   const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
 const projects = await listMyProjectsExtended(supabase);
@@ -26,17 +26,18 @@ const invitations = await listMyInvites(supabase);
 if (!projects.data || !invitations.data) {
   const path = Astro.url.protocol + '//' + Astro.url.host;
   const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-<BaseLayout title="Dashboard">
-  <div class="container">
-    <ProjectsHome 
+
+<ProjectsLayout title='Dashboard'>
+  <div class='container'>
+    <ProjectsHome
       client:only
       me={me.data}
-      projects={projects.data} 
+      projects={projects.data}
       invitations={invitations.data}
-      i18n={getTranslations(Astro.request, 'dashboard-projects')} />
-
+      i18n={getTranslations(Astro.request, 'dashboard-projects')}
+    />
   </div>
-</BaseLayout>
+</ProjectsLayout>
