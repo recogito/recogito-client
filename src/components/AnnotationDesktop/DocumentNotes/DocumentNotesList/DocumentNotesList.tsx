@@ -23,7 +23,7 @@ interface DocumentNotesListProps {
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
-  const [selected, setSelected] = useState<DocumentNote | undefined>();
+  const [selected, setSelected] = useState<string | undefined>();
 
   const { 
     notes,
@@ -49,7 +49,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const onSelect = (note: DocumentNote) => (evt: React.MouseEvent) => {    
     evt.stopPropagation();
-    setSelected(note);
+    setSelected(note.id);
   }
 
   return (
@@ -79,12 +79,12 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
             className={note.unread ? 'unread' : undefined}
             key={note.id} 
             onClick={onSelect(note)}
-            onPointerEnter={() => markAsRead(note.id)}>
+            onPointerEnter={() => note.unread && markAsRead(note.id)}>
               
             <DocumentNotesListItem 
               i18n={props.i18n}
               note={note} 
-              showReplyForm={selected === note}
+              showReplyForm={selected === note.id}
               policies={props.policies}
               present={props.present} 
               onCreateBody={createBody}
