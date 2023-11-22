@@ -8,9 +8,14 @@ export interface Props {
   title: string;
 }
 
+import Footer from '../dynamic-elements/Footer';
+
 const { title } = Astro.props;
 const siteColor = config.branding.site_color;
+const textColor = config.branding.contrast_color;
 const siteBanner = config.branding.home_banner;
+const useFooter = config.branding.bottom_logos_enabled;
+const footerMessage = config.branding.footer_message;
 ---
 
 <!DOCTYPE html>
@@ -36,16 +41,21 @@ const siteBanner = config.branding.home_banner;
     </div>
     <footer>
       <div class='blurb'>
-        {config.branding.welcome_blurb}
+        {footerMessage || ''}
+      </div>
+      <div class='bottom_links'>
+        {useFooter && <Footer contrastColor={textColor} />}
       </div>
     </footer>
     <script>
+      // @ts-ignore
       window.onUsersnapLoad = function (api: any) {
         api.init();
         api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
       };
 
       var script = document.createElement('script');
+      // @ts-ignore
       script.defer = 1;
       script.src = `https://widget.usersnap.com/global/load/${
         import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY
@@ -66,7 +76,7 @@ const siteBanner = config.branding.home_banner;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: calc(100% - 100px);
+    height: calc(100% - 105px);
     position: relative;
   }
 
@@ -98,6 +108,7 @@ const siteBanner = config.branding.home_banner;
     position: sticky;
     bottom: 0;
     left: 0;
+    justify-content: space-between;
   }
 
   main {
@@ -134,5 +145,15 @@ const siteBanner = config.branding.home_banner;
   .blurb {
     color: white;
     font-size: 14px;
+  }
+
+  .bottom_links {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .link {
+    width: 45px;
+    height: 45px;
   }
 </style>

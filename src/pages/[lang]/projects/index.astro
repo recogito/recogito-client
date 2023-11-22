@@ -1,5 +1,4 @@
 ---
-import ProjectsLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile, listMyInvites } from '@backend/crud';
@@ -30,7 +29,7 @@ if (!projects.data || !invitations.data) {
 }
 ---
 
-<ProjectsLayout title='Dashboard'>
+<HeaderLayout title='Dashboard'>
   <div class='container'>
     <ProjectsHome
       client:only
@@ -40,4 +39,4 @@ if (!projects.data || !invitations.data) {
       i18n={getTranslations(Astro.request, 'dashboard-projects')}
     />
   </div>
-</ProjectsLayout>
+</HeaderLayout>
