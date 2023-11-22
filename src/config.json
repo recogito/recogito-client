@@ -9,6 +9,7 @@
     "background_color": "black",
     "contrast_color": "white",
     "bottom_logos_enabled": false,
+    "top_logos_enabled": false,
     "footer_message": "Powered by Recogito"
   },
   "authentication": {

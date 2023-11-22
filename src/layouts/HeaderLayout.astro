@@ -6,16 +6,17 @@ import config from '../config.json';
 
 export interface Props {
   title: string;
+  message: string;
 }
 
 import Footer from '../dynamic-elements/Footer';
+import Header from '../dynamic-elements/Header';
 
-const { title } = Astro.props;
+const { title, message } = Astro.props;
 const siteColor = config.branding.site_color;
 const textColor = config.branding.contrast_color;
-const siteBanner = config.branding.home_banner;
 const useFooter = config.branding.bottom_logos_enabled;
-const footerMessage = config.branding.footer_message;
+const useHeader = config.branding.top_logos_enabled;
 ---
 
 <!DOCTYPE html>
@@ -35,13 +36,16 @@ const footerMessage = config.branding.footer_message;
         <div class='separator'></div>
         <div class='site_name'>{config.branding.site_name}</div>
       </div>
+      <div class='bottom_links'>
+        {useHeader && <Header contrastColor={textColor} />}
+      </div>
     </header>
     <div class='slot-container'>
       <slot />
     </div>
     <footer>
       <div class='blurb'>
-        {footerMessage || ''}
+        {message || ''}
       </div>
       <div class='bottom_links'>
         {useFooter && <Footer contrastColor={textColor} />}
@@ -70,14 +74,16 @@ const footerMessage = config.branding.footer_message;
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow-y: hidden;
+    height: calc(100% - 105px);
   }
 
   .slot-container {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    height: calc(100% - 105px);
     position: relative;
+    width: 100%;
   }
 
   header {
@@ -147,6 +153,10 @@ const footerMessage = config.branding.footer_message;
     font-size: 14px;
   }
 
+  .top_links {
+    display: flex;
+    flex-direction: row;
+  }
   .bottom_links {
     display: flex;
     flex-direction: row;

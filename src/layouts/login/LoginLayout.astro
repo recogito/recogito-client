@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '../BaseLayout.astro';
+import HeaderLayout from '../HeaderLayout.astro';
 import config from '../../config.json';
 import type { Translations } from 'src/Types';
 
@@ -11,46 +11,25 @@ const { title } = Astro.props;
 
 const siteColor = config.branding.site_color;
 const siteBanner = config.branding.home_banner;
+const message = config.branding.welcome_blurb;
 
 const backgroundStyle = `background: url(${siteBanner}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
 ---
 
-<BaseLayout title={title}>
-  <div class='container'>
-    <header>
-      <div class='branding-container'>
-        <div class='platform'>
-          {config.branding.platform_name}
-        </div>
-        <div class='separator'></div>
-        <div class='site_name'>{config.branding.site_name}</div>
-      </div>
-    </header>
-    <main>
-      <div style={backgroundStyle}></div>
-      <slot />
-    </main>
-    <footer>
-      <div class='blurb'>
-        {config.branding.welcome_blurb}
-      </div>
-    </footer>
-  </div>
-</BaseLayout>
+<HeaderLayout title={title} message={message}>
+  <div class='background' style={backgroundStyle}></div>
+  <slot />
+</HeaderLayout>
 
 <style define:vars={{ siteColor }}>
-  body {
-    display: flex;
-    flex-direction: row;
-    position: relative;
-  }
-
-  .container {
+  .background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    min-height: 100%;
-    position: relative;
+    min-height: calc(100vh - 100px);
   }
 
   header {
