@@ -1,57 +1,32 @@
-import type { Color, Formatter, SupabaseAnnotation } from '@annotorious/react';
+import type { Color, DrawingStyle } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { ColorBrewerDark2_8 } from '../ColorPalettes';
 
 const PALETTE = ColorBrewerDark2_8;
 
-export const colorByAssignment = (layers: Layer[]): ColorCoding => {
+const NO_ASSIGNMENT: Color = '#727272';
 
-  const assignedColors = new Map<string, Color>();
+export const colorByAssignment = (layers: Layer[]) => (): ColorCoding => {
 
-  // Resolves layer ID to context name
-  const getLabel = (layerId: string) =>
-    layers?.find(l => l.id === layerId)?.context?.name;
+  const legend = new Map(layers.map((layer, idx) => 
+    ([layer.id, { color: PALETTE[idx], label: layer.context?.name || 'No Assignment' }])));
 
-  const getNextAvailableColor = () =>
-    PALETTE[assignedColors.size % PALETTE.length];
+  const getStyle = () => (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
+    const assignedColor = legend.get(annotation.layer_id!);
+    if (assignedColor) {
+      return { fill: assignedColor.color, fillOpacity: selected ? 0.5 : 0.24 };
+    } else {
+      return { fill: NO_ASSIGNMENT, fillOpacity: selected ? 0.5 : 0.24 };
+    }
+  }
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
+  const getLegend = () => 
+    Array.from(legend.entries()).map(([_, { color, label }]) => ({ color, label } as ColorLegendValue));
 
-    (annotation: SupabaseAnnotation, selected?: boolean) => {
-      const assignedColor = assignedColors.get(annotation.layer_id!);
-      if (assignedColor) {
-        return { fill: assignedColor, fillOpacity: selected ? 0.45 : 0.14 };
-      } else {
-        const color = getNextAvailableColor();
-        assignedColors.set(annotation.layer_id!, color);
+  const update = (annotations: SupabaseAnnotation[]) => getLegend();
 
-        // New color assigned - update legend
-        const legend: ColorLegendValue[] = 
-          Array.from(assignedColors.entries())
-            .map(([ id, color ]) => { 
-              // Assignment name or undefined for default context
-              const label = getLabel(id);
-
-              const className = label ? undefined : 'default-value';
-
-              return { color, label: label!, className };
-            });
-
-        // Sort the legend so that the default value is always at the bottom
-        const sorted = legend.filter(({ label }) => label);
-        sorted.sort((a, b) => a.label! < b.label! ? -1 : (a.label! > b.label!) ? 1 : 0);
-
-        const noAssignment = legend
-          .filter(({ label }) => !label)
-          .map(({ color, className}) => ({ color, label: 'No Assignment', className }));
-
-        setLegend([ ...sorted, ...noAssignment ]);
-
-        return { fill: color, fillOpacity: selected ? 0.45 : 0.14 };
-      }
-    };
-
-  return { createFormatter };
+  return { getLegend, getStyle, update };
 
 }
