@@ -1,5 +1,5 @@
 import { getGroupMembers, zipMembers } from '@backend/crud';
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
 import type { Context, ExtendedAssignmentData } from 'src/Types';
 
@@ -131,27 +131,32 @@ export const getAssignment = (
           if (error) {
             return { error, data: undefined };
           } else {
-            // Post-processing: create proper assignments data structure.
-            // Note that the context is ALWAYS the same in each list entry
             // @ts-ignore
-            const { id, name, description, project_id } = layerContexts[0].context;
+            if (layerContexts.some(l => l.layer.document === null)) {
+              return { error: { message: 'Documents returned empty' } as PostgrestError, data: undefined };
+            } else {
+              // Post-processing: create proper assignments data structure.
+              // Note that the context is ALWAYS the same in each list entry
+              // @ts-ignore
+              const { id, name, description, project_id } = layerContexts[0].context;
 
-            const layers = 
-              layerContexts.map(({ layer }) => ({ 
-                ...layer,
-                // @ts-ignore
-                groups: zipMembers(layer.groups, data)
-              }));
+              const layers = 
+                layerContexts.map(({ layer }) => ({ 
+                  ...layer,
+                  // @ts-ignore
+                  groups: zipMembers(layer.groups, data)
+                }));
 
-            return { 
-              error: null,
-              data: {
-                id, 
-                name, 
-                description,
-                project_id,
-                layers
-              } as unknown as ExtendedAssignmentData
+              return { 
+                error: null,
+                data: {
+                  id, 
+                  name, 
+                  description,
+                  project_id,
+                  layers
+                } as unknown as ExtendedAssignmentData
+              }
             }
           }
         });        
