@@ -133,6 +133,8 @@ export const getAssignment = (
           } else {
             // @ts-ignore
             if (layerContexts.some(l => l.layer.document === null)) {
+              // Just a bit of defensive programming - if any of the documents are not
+              // visible to this users, something's wrong.
               return { error: { message: 'Documents returned empty' } as PostgrestError, data: undefined };
             } else {
               // Post-processing: create proper assignments data structure.
