@@ -15,7 +15,7 @@ const crosswalkUser = ({
 
 const crosswalkBody = ({ 
   // @ts-ignore
-  id, annotation_id, created_by, created_at, updated_by, updated_at, version, purpose, value 
+  id, annotation_id, created_by, created_at, updated_by, updated_at, version, format, purpose, value 
 }): SupabaseAnnotationBody => ({
   id,
   annotation: annotation_id,
@@ -23,6 +23,7 @@ const crosswalkBody = ({
   creator: created_by ? crosswalkUser(created_by) : undefined,
   updated: updated_at ? new Date(updated_at) : undefined,
   updatedBy: updated_by ? crosswalkUser(updated_by) : undefined,
+  format,
   purpose, 
   value,
   version
@@ -84,6 +85,7 @@ export const getAnnotations = (
           avatar_url
         ),
         version,
+        format,
         purpose,
         value
       )

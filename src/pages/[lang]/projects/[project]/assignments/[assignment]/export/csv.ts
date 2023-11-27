@@ -1,9 +1,8 @@
-import Papa from 'papaparse';
 import type { APIRoute } from 'astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getAnnotations, getAssignment, getProjectPolicies } from '@backend/helpers';
-import { Visibility } from '@recogito/annotorious-supabase';
+import { annotationsToCSV } from 'src/util/export/csv';
 
 export const get: APIRoute = async ({ params, request, cookies, url }) => {
   // Verify if the user is logged in
@@ -52,21 +51,10 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       JSON.stringify({ message: 'Error retrieving annotations' }), 
       { status: 500 }); 
 
-  // TODO
-  const csv = annotations.data.map(a => ({
-    id: a.id,
-    // document: findDocument(a.layer_id!)!,
-    created: a.target.created,
-    // updated: getLastUpdated(a.target, a.bodies),
-    // comments: getComments(a.bodies).join('|'),
-    // tags: getTags(a.bodies).join('|'),
-    is_private: a.visibility === Visibility.PRIVATE
-  }));
-
-  // csv.sort((a, b) => a.document > b.document ? -1 : 1);
+  const csv = annotationsToCSV(annotations.data, assignment.data.layers);
 
   return new Response(    
-    Papa.unparse(csv),
+    csv,
     { 
       headers: { 
         'Content-Type': 'text/csv',
