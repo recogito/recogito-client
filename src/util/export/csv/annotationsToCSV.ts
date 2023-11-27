@@ -28,8 +28,6 @@ export const annotationsToCSV = (annotations: SupabaseAnnotation[], layers: { id
   const findDocument = (layerId: string) =>
     layers.find(l => l.id === layerId)?.document;
 
-  console.log(JSON.stringify(annotations, null, 2));
-
   const csv = annotations.map(a => {
     const doc = findDocument(a.layer_id!)!;
     return {
