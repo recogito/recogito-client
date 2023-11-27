@@ -1,29 +1,20 @@
 import Papa from 'papaparse';
-import type { DeltaStatic, DeltaOperation } from 'quill';
 import { Visibility } from '@recogito/annotorious-supabase';
 import type { SupabaseAnnotation, SupabaseAnnotationBody, SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
 import type { Document } from 'src/Types';
+import { serializeQuill } from '../serializeQuillComment';
 
 /** Helpers **/
 const getComments = (bodies: SupabaseAnnotationBody[]) =>
   bodies.filter(b => b.purpose === 'commenting').map(b => b.value 
-    ? b.format === 'Quill' ? serializeQuillJSON(JSON.parse(b.value)) : b.value 
+    ? b.format === 'Quill' ? serializeQuill(b.value) : b.value 
     : undefined).filter(Boolean);
-
-const serializeQuillJSON = (input: DeltaStatic) => {
-  let serialized = '';
-
-  input.ops?.forEach((op: DeltaOperation) => {
-    if (typeof op.insert === "string") {
-      serialized += op.insert;
-    }
-  })
-
-  return serialized;
-}
 
 const getTags = (bodies: SupabaseAnnotationBody[]) =>
   bodies.filter(b => b.purpose === 'tagging').map(b => b.value);
+
+const getContributors = (bodies: SupabaseAnnotationBody[]): string[] => 
+  bodies.filter(b => b.creator?.name).map(b => b.creator!.name!);
 
 const getLastUpdated = (target: SupabaseAnnotationTarget, bodies: SupabaseAnnotationBody[]) => {
   const sorted = [target, ...bodies];
@@ -37,6 +28,8 @@ export const annotationsToCSV = (annotations: SupabaseAnnotation[], layers: { id
   const findDocument = (layerId: string) =>
     layers.find(l => l.id === layerId)?.document;
 
+  console.log(JSON.stringify(annotations, null, 2));
+
   const csv = annotations.map(a => {
     const doc = findDocument(a.layer_id!)!;
     return {
@@ -47,6 +40,7 @@ export const annotationsToCSV = (annotations: SupabaseAnnotation[], layers: { id
       updated: getLastUpdated(a.target, a.bodies),
       comments: getComments(a.bodies).join('|'),
       tags: getTags(a.bodies).join('|'),
+      contributors: getContributors(a.bodies).join('|'),
       is_private: a.visibility === Visibility.PRIVATE
     }
   });
