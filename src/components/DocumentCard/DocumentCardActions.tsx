@@ -103,12 +103,12 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Sub>
             )}
 
+            <Item className="dropdown-item" onSelect={props.onExportCSV}>
+              <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
+            </Item>
+
             {props.isAdmin && (
               <>
-                <Item className="dropdown-item" onSelect={props.onExportCSV}>
-                  <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
-                </Item>
-
                 <Item className="dropdown-item" onSelect={props.onEditMetadata}>
                   <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
                 </Item>

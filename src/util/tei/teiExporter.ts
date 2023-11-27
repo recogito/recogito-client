@@ -1,7 +1,6 @@
 import { DOMParser } from 'linkedom';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { User } from '@annotorious/react';
-import dist from '@astrojs/react';
 
 /**
  * Returns the target or body that was changed most recently.

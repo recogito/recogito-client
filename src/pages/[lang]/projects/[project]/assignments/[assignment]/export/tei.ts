@@ -94,4 +94,4 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
     }
   );
 
-};
+}
