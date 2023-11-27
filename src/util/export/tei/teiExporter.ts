@@ -2,9 +2,7 @@ import { DOMParser } from 'linkedom';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { User } from '@annotorious/react';
 
-/**
- * Returns the target or body that was changed most recently.
- */
+/** Returns the target or body that was changed most recently **/
 const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   const elements = [ annotation.target, ...annotation.bodies ];
   const timestamped = elements.filter(el => el.created || el.updated);
@@ -17,9 +15,7 @@ const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   }
 }
 
-/**
- * Returns the list of all distinct users that contributed to the annotation.
- */
+/** Returns the list of all distinct users that contributed to the annotation **/
 const getContributors = (annotation: SupabaseAnnotation) => {
   const elements = [ annotation.target, ...annotation.bodies ];
   const withContributor = elements.filter(el => el.creator || el.updatedBy);
