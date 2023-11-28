@@ -4,16 +4,17 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
-import {
-  getProjectExtended,
-  listDocumentsInProject,
-  listAllDocuments,
-} from '@backend/helpers';
+import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
+import { setRedirectUrl } from '../../../../backend/urlRedirect';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
+
+if (!supabase) {
+  setRedirectUrl(Astro.url.pathname);
+  return Astro.redirect(`/${lang}/sign-in`);
+}
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {

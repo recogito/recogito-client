@@ -1,0 +1,22 @@
+---
+import { $redirectUrl } from '@backend/urlRedirect';
+
+const redirectUrl = $redirectUrl.get();
+const { url = redirectUrl } = Astro.props;
+---
+
+<astro-store data-url={url}></astro-store>
+
+<script>
+  import { setClientRedirect } from '@backend/urlRedirect';
+
+  class ClientRedirect extends HTMLElement {
+    constructor() {
+      super();
+
+      setClientRedirect(this.dataset.url);
+    }
+  }
+
+  customElements.define('astro-store', ClientRedirect);
+</script>

@@ -5,6 +5,8 @@ import { isLoggedIn } from '@backend/auth';
 import type { LoginMethod, Translations } from 'src/Types';
 import { StateChecking, StateLoginForm, StateMagicLink } from './states';
 import { LoginMethodSelector } from '@apps/auth-login/LoginMethodSelector';
+import { useStore } from '@nanostores/react';
+import { $clientRedirect } from '@backend/urlRedirect';
 
 import './Login.css';
 
@@ -34,13 +36,19 @@ export const Login = (props: {
 
   const [currentMethod, setCurrentMethod] = useState<LoginMethod | undefined>();
 
+  const redirectUrl = useStore($clientRedirect);
+
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         clearCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
-        window.location.href = `/${props.i18n.lang}/projects`;
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+        } else {
+          window.location.href = `/${props.i18n.lang}/projects`;
+        }
       }
     });
 
@@ -48,7 +56,11 @@ export const Login = (props: {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
-          window.location.href = `/${props.i18n.lang}/projects`;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            window.location.href = `/${props.i18n.lang}/projects`;
+          }
         });
       } else {
         setIsChecking(false);
@@ -63,7 +75,11 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          window.location.href = data.url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            window.location.href = data.url;
+          }
         } else {
           console.error(error);
         }
@@ -80,7 +96,11 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          window.location.href = data.url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+          } else {
+            window.location.href = data.url;
+          }
         } else {
           console.error(error);
         }

@@ -4,19 +4,23 @@ import { Login } from '@apps/auth-login';
 import { getTranslations } from '@i18n';
 import type { LoginMethod } from '../../Types';
 import config from '../../config.json';
+import { $redirectUrl } from '@backend/urlRedirect';
 
 const methods = config.authentication.methods;
+
+import ClientRedirect from '../redirect.astro';
 ---
 
 <LoginLayout title='' i18n={getTranslations(Astro.request, 'auth-login')}>
   <div class='container'>
+    <ClientRedirect />
     <Login
       i18n={getTranslations(Astro.request, 'auth-login')}
       methods={methods as LoginMethod[]}
       client:load
     />
   </div>
-</LoginLayout>
+</LoginLayout>;
 
 <style>
   .container {
