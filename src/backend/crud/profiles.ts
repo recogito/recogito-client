@@ -57,7 +57,7 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
                 } else {
                   return { error, data: { 
                     ...profile, 
-                    isOrgAdmin: data.some(r => r.name === 'Org Admin') 
+                    isOrgAdmin: data.some(r => r.name === 'Org Admins') 
                   } as MyProfile };
                 }
               });
