@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { DownloadSimple } from '@phosphor-icons/react';
 import { Avatar, formatName } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
 import type { Document, ExtendedAssignmentData, Translations, UserProfile } from 'src/Types';
@@ -74,6 +75,16 @@ export const AssignmentDetails = (props: AssignmentDetailsProps) => {
             </li>
           ))}
         </ul>
+      </div>
+
+      <div className="project-assignment-export">
+      <a
+        href={`/${props.i18n.lang}/projects/${assignment.project_id}/assignments/${assignment.id}/export/csv`}
+        className='button'
+      >
+        <DownloadSimple size={20} />
+        <span>{props.i18n.t['Export annotations as CSV']}</span>
+      </a>
       </div>
 
       <div className="project-assignment-document-grid">
