@@ -1,11 +1,9 @@
 import { DOMParser } from 'linkedom';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { User } from '@annotorious/react';
-import dist from '@astrojs/react';
+import { serializeQuill } from '../serializeQuillComment';
 
-/**
- * Returns the target or body that was changed most recently.
- */
+/** Returns the target or body that was changed most recently **/
 const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   const elements = [ annotation.target, ...annotation.bodies ];
   const timestamped = elements.filter(el => el.created || el.updated);
@@ -18,9 +16,7 @@ const getLastChangedAt = (annotation: SupabaseAnnotation) => {
   }
 }
 
-/**
- * Returns the list of all distinct users that contributed to the annotation.
- */
+/** Returns the list of all distinct users that contributed to the annotation **/
 const getContributors = (annotation: SupabaseAnnotation) => {
   const elements = [ annotation.target, ...annotation.bodies ];
   const withContributor = elements.filter(el => el.creator || el.updatedBy);
@@ -124,14 +120,17 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     // Add one <note> for each comment
     const comments = a.bodies.filter(b => b.purpose === 'commenting');
     comments.forEach(b => {
-      const noteEl = document.createElement('note');
-      
-      const contributors = 
-        Array.from(new Set([b.creator, b.updatedBy].filter(Boolean).map(user => `#uid-${user!.id}`)));
-      noteEl.setAttribute('resp', contributors.join(' '));
+      if (b.value) {
+        const noteEl = document.createElement('note');
+        
+        const contributors = 
+          Array.from(new Set([b.creator, b.updatedBy].filter(Boolean).map(user => `#uid-${user!.id}`)));
+        noteEl.setAttribute('resp', contributors.join(' '));
 
-      noteEl.appendChild(document.createTextNode(b.value));
-      annotationEl.appendChild(noteEl);
+        const text = b.format === 'Quill' ? serializeQuill(b.value) : b.value;
+        noteEl.appendChild(document.createTextNode(text));
+        annotationEl.appendChild(noteEl);
+      }
     });
 
     // If there are any tags, create one rs element and add them as the ana attribute

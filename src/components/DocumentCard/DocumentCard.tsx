@@ -51,8 +51,10 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}&private=${includePrivate}`);
 
-  const onExportCSV = () =>
-    (window.location.href = `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}`);
+  const onExportCSV = (includePrivate: boolean) =>
+    (window.location.href = props.isDefaultContext 
+      ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/csv?document=${document.id}&private=${includePrivate}`);
 
   return (
     <article className='document-card-container'>
