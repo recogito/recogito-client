@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { Visibility } from '@recogito/annotorious-supabase';
 import { getAllDocumentLayersInProject, getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
-import { getMyProfile } from '@backend/crud';
+import { getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { annotationsToCSV } from 'src/util/export/csv';
 
@@ -20,6 +20,12 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       { status: 401 });
 
   const projectId = params.project!;
+
+  const project = await getProject(supabase, projectId);
+  if (project.error || !project.data)
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized'}),
+      { status: 401 });
 
   const policies = await getProjectPolicies(supabase, projectId);
   if (policies.error)
@@ -40,8 +46,8 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
   const layers = documentId ? 
     await getAllDocumentLayersInProject(supabase, documentId, projectId) :
     await getAllLayersInProject(supabase, projectId);
-
-  if (layers.error)
+  
+  if (layers.error || !layers.data || layers.data.length === 0)
     return new Response(
       JSON.stringify({ message: 'Error retrieving layers' }), 
       { status: 500 }); 
@@ -66,7 +72,9 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
     { 
       headers: { 
         'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment;filename=project-${projectId}.csv`
+        'Content-Disposition': documentId 
+          ? `attachment;filename=${layers.data[0].document.name}.csv` 
+          : `attachment;filename=project-${project.data.name}.csv`
       },
       status: 200 
     }

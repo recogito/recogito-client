@@ -52,7 +52,7 @@ const sortRows = (a: any, b: any): number => {
  if (byDocument !== 0)
    return byDocument;
 
- const byTarget = a.target.localeCompare(b.target);
+ const byTarget = (a.target || '').localeCompare(b.target);
  if (byTarget !== 0)
    return byTarget;
 

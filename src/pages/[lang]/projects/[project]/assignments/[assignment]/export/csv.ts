@@ -47,6 +47,12 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
     ? assignment.data.layers.filter(l => l.document.id === documentId) 
     : assignment.data.layers;
 
+  // Should never happen
+  if (layers.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 });
+
   // At the assignment level, only the assignment layer will be exported
   const annotations = await getAnnotations(supabase, layers.map(l => l.id));
   if (annotations.error)
@@ -65,7 +71,9 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
     { 
       headers: { 
         'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment;filename=project-${projectId}.csv`
+        'Content-Disposition': documentId
+          ? `attachment;filename=${layers[0].document.name}-assignment-${assignment.data.name}.csv` 
+          : `attachment;filename=assignment-${assignment.data.name}.csv` 
       },
       status: 200 
     }
