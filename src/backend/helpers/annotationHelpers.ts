@@ -6,10 +6,13 @@ import type { User } from '@annotorious/react';
 
 const crosswalkUser = ({ 
   // @ts-ignore
-  id, nickname, avatar_url 
+  id, nickname, first_name, last_name, avatar_url 
 }): User => ({
   id,
-  name: nickname,
+  name: nickname 
+    ? nickname 
+    : first_name || last_name 
+      ? [first_name, last_name].join(' ') : 'Anonymous',
   avatar: avatar_url
 })
 
@@ -58,12 +61,16 @@ export const getAnnotations = (
         created_by:profiles!targets_created_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         updated_at,
         updated_by:profiles!targets_updated_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         version,
@@ -76,12 +83,16 @@ export const getAnnotations = (
         created_by:profiles!bodies_created_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         updated_at,
         updated_by:profiles!bodies_updated_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         version,
