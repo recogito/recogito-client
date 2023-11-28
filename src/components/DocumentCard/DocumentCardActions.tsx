@@ -33,7 +33,7 @@ interface DocumentCardActionsProps {
 
   onEditMetadata?(): void;
 
-  onExportCSV?(): void;
+  onExportCSV?(includePrivate?: boolean): void;
 
   onExportTEI?(includePrivate?: boolean): void;
 
@@ -52,8 +52,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
     props.onOpen(tab);
   }
 
-  const onExportTEI = (includePrivate: boolean) => (evt: Event) =>
+  const onExportTEI = (includePrivate: boolean) => () =>
     props.onExportTEI && props.onExportTEI(includePrivate);
+
+  const onExportCSV = (includePrivate: boolean) => () =>
+    props.onExportCSV && props.onExportCSV(includePrivate);
 
   return (
     <ConfirmedAction.Root
@@ -103,9 +106,29 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Sub>
             )}
 
-            <Item className="dropdown-item" onSelect={props.onExportCSV}>
-              <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
-            </Item>
+            <Sub>
+              <SubTrigger className="dropdown-subtrigger">
+                <DownloadSimple size={16} /> <span>{t['Export annotations as CSV']}</span>
+                <div className="right-slot">
+                  <CaretRight size={16} />
+                </div>
+              </SubTrigger>
+
+              <Portal>
+                <SubContent
+                  className="dropdown-subcontent"
+                  alignOffset={-5}>
+
+                  <Item className="dropdown-item" onSelect={onExportCSV(false)}>
+                      <UsersThree size={16} /> {t['Public annotations only']}
+                    </Item>
+
+                    <Item className="dropdown-item" onSelect={onExportCSV(true)}>
+                      <Detective size={16} /> {t['Include my private annotations']}
+                    </Item>
+                </SubContent>
+              </Portal>
+            </Sub>
 
             {props.isAdmin && (
               <>
