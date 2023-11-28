@@ -39,13 +39,15 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
   }
 
   const documentId = url.searchParams.get('document');
-  if (!documentId)
-    return new Response(
-      JSON.stringify({ error: 'Missing query arg: document' }),
-      { status: 400 });
+
+  // Retrieve all layers, or just for the selected document, based on
+  // URL query param
+  const layers = documentId 
+    ? assignment.data.layers.filter(l => l.document.id === documentId) 
+    : assignment.data.layers;
 
   // At the assignment level, only the assignment layer will be exported
-  const annotations = await getAnnotations(supabase, assignment.data.layers.map(l => l.id));
+  const annotations = await getAnnotations(supabase, layers.map(l => l.id));
   if (annotations.error)
     return new Response(
       JSON.stringify({ message: 'Error retrieving annotations' }), 
