@@ -1,12 +1,16 @@
-import Test from './Test';
+import COVESingleColor from './COVESingleColor';
+import NEH from './NEH';
 
 interface FooterProps {
   contrastColor: string;
 }
 const Footer = (props: FooterProps) => {
   return (
-    <div style={{ flexDirection: 'row' }}>
-      <Test contrastColor={props.contrastColor} />
+    <div style={{ display: 'flex', flexDirection: 'row' }}>
+      <COVESingleColor contrastColor={props.contrastColor} />
+      <div style={{ paddingLeft: 5 }}>
+        <NEH contrastColor={props.contrastColor} href='https://www.neh.gov/' />
+      </div>
     </div>
   );
 };
