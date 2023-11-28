@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { Visibility } from '@recogito/annotorious-supabase';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getAnnotations, getAssignment, getProjectPolicies } from '@backend/helpers';
@@ -53,7 +54,11 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       JSON.stringify({ message: 'Error retrieving annotations' }), 
       { status: 500 }); 
 
-  const csv = annotationsToCSV(annotations.data, assignment.data.layers);
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const csv = includePrivate 
+    ? annotationsToCSV(annotations.data, assignment.data.layers)
+    : annotationsToCSV(annotations.data.filter(a => a.visibility !== Visibility.PRIVATE), assignment.data.layers);
 
   return new Response(    
     csv,
