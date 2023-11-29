@@ -28,7 +28,6 @@ if (!projects.data || !invitations.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-
 <HeaderLayout title='Dashboard'>
   <ProjectsHome
     client:only

@@ -25,6 +25,10 @@
   margin-left: -7px;
 }
 
+.project-assignment-details .project-assignment-export {
+  margin-top: 2em;
+}
+
 .project-assignment-details .project-assignment-document-grid {
   display: grid;
   gap: 1rem;

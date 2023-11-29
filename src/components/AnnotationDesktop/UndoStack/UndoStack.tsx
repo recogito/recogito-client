@@ -1,10 +1,5 @@
-/**
- * Experimental code to a) prevent creation of empty annotations
- * and b) think about how we can implement undo functionality in 
- * the future.
- */
 import { useEffect, useRef } from 'react';
-import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
+import { Annotation, Annotator, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 
 interface UndoStackProps {
 
@@ -16,7 +11,7 @@ export const UndoStack = (props: UndoStackProps) => {
 
   const { undoEmpty } = props;
 
-  const anno = useAnnotator();
+  const anno = useAnnotator<Annotator>();
 
   const store = useAnnotationStore();
 
@@ -59,13 +54,24 @@ export const UndoStack = (props: UndoStackProps) => {
     if (!undoEmpty || !created.current)
       return;
 
-    // Don't run for the initial selection of the 'created'
-    // annotation
+    // Don't run for the initial selection of the 'created' annotation
     if (selected.length === 1 && selected[0].annotation.id === created.current.id)
       return;
 
     deleteIfEmpty(created.current);
-  }, [selected.map(s => s.annotation.id).join('-'), created]);
+  }, [selected.map(s => s.annotation.id).join(','), created]);
+
+  useEffect(() => {
+    const onUnload = () => {
+      if (created.current) deleteIfEmpty(created.current);
+    };
+
+    window.addEventListener('beforeunload', onUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', onUnload);
+    }
+  }, [selected.map(s => s.annotation.id).join(',')]);
 
   return null;
 

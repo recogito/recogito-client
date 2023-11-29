@@ -1,1 +1,1 @@
-export * from './tei';
+export * from './export/tei';

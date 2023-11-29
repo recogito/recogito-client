@@ -1,16 +1,10 @@
-import Papa from 'papaparse';
+import type { APIRoute } from 'astro';
+import { Visibility } from '@recogito/annotorious-supabase';
 import { getAllDocumentLayersInProject, getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
-import { getMyProfile } from '@backend/crud';
+import { getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import type { APIRoute } from 'astro';
-import { Visibility, type SupabaseAnnotationBody, type SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
-
-const getComments = (bodies: SupabaseAnnotationBody[]) =>
-  bodies.filter(b => b.purpose === 'commenting').map(b => b.value);
-
-const getTags = (bodies: SupabaseAnnotationBody[]) =>
-  bodies.filter(b => b.purpose === 'tagging').map(b => b.value);
+import { annotationsToCSV } from 'src/util/export/csv';
 
 export const get: APIRoute = async ({ params, request, cookies, url }) => {
   const supabase = await createSupabaseServerClient(request, cookies);
@@ -26,6 +20,12 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       { status: 401 });
 
   const projectId = params.project!;
+
+  const project = await getProject(supabase, projectId);
+  if (project.error || !project.data)
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized'}),
+      { status: 401 });
 
   const policies = await getProjectPolicies(supabase, projectId);
   if (policies.error)
@@ -46,8 +46,8 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
   const layers = documentId ? 
     await getAllDocumentLayersInProject(supabase, documentId, projectId) :
     await getAllLayersInProject(supabase, projectId);
-
-  if (layers.error)
+  
+  if (layers.error || !layers.data || layers.data.length === 0)
     return new Response(
       JSON.stringify({ message: 'Error retrieving layers' }), 
       { status: 500 }); 
@@ -60,34 +60,21 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
       JSON.stringify({ message: 'Error retrieving annotations' }), 
       { status: 500 }); 
   }
-  
-  const findDocument = (layerId: string) =>
-    layers.data.find(l => l.id === layerId)?.document?.name;
 
-  const getLastUpdated = (target: SupabaseAnnotationTarget, bodies: SupabaseAnnotationBody[]) => {
-    const sorted = [target, ...bodies];
-    sorted.sort((a, b) => a.updated && b.updated ? a.updated > b.updated ? -1 : 1 : 0);
-    return sorted[0].updated;
-  }
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
 
-  const csv = annotations.data.map(a => ({
-    id: a.id,
-    document: findDocument(a.layer_id!)!,
-    created: a.target.created,
-    updated: getLastUpdated(a.target, a.bodies),
-    comments: getComments(a.bodies).join('|'),
-    tags: getTags(a.bodies).join('|'),
-    is_private: a.visibility === Visibility.PRIVATE
-  }));
-
-  csv.sort((a, b) => a.document > b.document ? -1 : 1);
+  const csv = includePrivate 
+    ? annotationsToCSV(annotations.data, layers.data)
+    : annotationsToCSV(annotations.data.filter(a => a.visibility !== Visibility.PRIVATE), layers.data);
 
   return new Response(    
-    Papa.unparse(csv),
+    csv,
     { 
       headers: { 
         'Content-Type': 'text/csv',
-        'Content-Disposition': `attachment;filename=project-${projectId}.csv`
+        'Content-Disposition': documentId 
+          ? `attachment;filename=${layers.data[0].document.name}.csv` 
+          : `attachment;filename=project-${project.data.name}.csv`
       },
       status: 200 
     }

@@ -1,15 +1,14 @@
 ---
 import { getLangFromUrl } from '@i18n';
 import config from 'src/config.json';
+import Footer from './Footer';
+import Header from './Header';
 
 import '@themes/default/index.css';
 
 export interface Props {
   title: string;
 }
-
-import Footer from './Footer';
-import Header from './Header';
 
 const { title } = Astro.props;
 

@@ -68,6 +68,13 @@
   top: -0.5px;
 }
 
+.dropdown-item.no-icon::before {
+  content: '';
+  display: inline-block;
+  width: 23px;
+  height: 16px;
+}
+
 .dropdown-item svg.destructive {
   color: var(--red-500);
 }
