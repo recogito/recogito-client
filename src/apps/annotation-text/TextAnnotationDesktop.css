@@ -29,6 +29,11 @@
   height: fit-content;
 }
 
+.content-wrapper.pdf {
+  display: block;
+  width: 100%;
+}
+
 .content-wrapper.pdf main {
   background-color: transparent;
   height: 100%;

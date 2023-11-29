@@ -1,4 +1,3 @@
-import React from 'react';
 interface propType {
   width?: number;
   height?: number;
@@ -6,6 +5,7 @@ interface propType {
   contrastColor?: string;
   href?: string;
 }
+
 const Test = (props: propType) => {
   return (
     <div
