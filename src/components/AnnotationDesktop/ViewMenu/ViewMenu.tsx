@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { Chats, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
@@ -11,7 +12,6 @@ import { LayersPanel } from '../LayersPanel';
 import { DocumentNotes, DocumentNotesList, DocumentNotesMenuIcon } from '../DocumentNotes';
 
 import './ViewMenu.css';
-import type { PostgrestError } from '@supabase/supabase-js';
 
 interface ViewMenuProps {
 
@@ -34,6 +34,8 @@ interface ViewMenuProps {
   onChangePanel(panel: ViewMenuPanel | undefined): void;
 
   beforeSelectAnnotation(a?: Annotation): void;
+
+  onChangeAnnotationFilter(fn: ((a: Annotation) => boolean)): void;
 
   onChangeAnnotationStyle(fn: ((a: Annotation) => DrawingStyle)): void;
 
@@ -142,7 +144,8 @@ export const ViewMenu = (props: ViewMenuProps) => {
                 i18n={props.i18n}
                 layers={props.layers}
                 present={props.present}
-                onChange={props.onChangeAnnotationStyle} />
+                onChangeStyle={props.onChangeAnnotationStyle} 
+                onChangeFilter={props.onChangeAnnotationFilter} />
             ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
               <DocumentNotesList 
                 i18n={props.i18n}

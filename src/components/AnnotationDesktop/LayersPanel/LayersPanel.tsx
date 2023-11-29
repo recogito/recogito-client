@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import type { DrawingStyle, PresentUser } from '@annotorious/react';
+import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useColorCoding } from './ColorCoding';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { 
   colorByAssignment, 
   colorByCreator,
@@ -22,7 +21,9 @@ interface LayersPanelProps {
 
   present: PresentUser[];
 
-  onChange(style?: ((a: SupabaseAnnotation) => DrawingStyle)): void;
+  onChangeStyle(style?: ((a: Annotation) => DrawingStyle)): void;
+
+  onChangeFilter(filter?: ((a: Annotation) => boolean)): void;
   
 }
 
@@ -53,13 +54,18 @@ export const LayersPanel = (props: LayersPanelProps) => {
     }
   }
 
-  useEffect(() => {
-    props.onChange(style);
-  }, [style]);
+  useEffect(() => props.onChangeStyle(style), [style]);
 
   useEffect(() => {
     setPresent(props.present);
   }, [props.present]);
+
+  const setDummyFilter = () => {
+    const dummyFilter = (a: Annotation) =>
+      Boolean(a.bodies.find(b => b.purpose === 'tagging' && b.value === 'Foo'));
+
+    props.onChangeFilter(dummyFilter);
+  }
 
   return (
     <div className="anno-sidepanel layer-configuration">
@@ -132,6 +138,10 @@ export const LayersPanel = (props: LayersPanelProps) => {
           </ul>
         )}
       </div>
+
+      <button onClick={setDummyFilter}>
+        Filter by Tag 
+      </button>
     </div>
   )
 
