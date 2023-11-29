@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { ProjectSidebar } from './ProjectSidebar';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import type { ExtendedAssignmentData, ExtendedProjectData, MyProfile } from 'src/Types';
@@ -24,7 +24,7 @@ const i18n = getTranslations(Astro.request, 'project-sidebar');
 
 const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
 ---
-<BaseLayout title={project.name}>	
+<HeaderLayout title={project.name}>	
   <ProjectSidebar 
     client:load 
     active={active} 
@@ -67,7 +67,7 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
       <slot />
     </main>
   </div>
-</BaseLayout>
+</HeaderLayout>
 
 <style>
   body {

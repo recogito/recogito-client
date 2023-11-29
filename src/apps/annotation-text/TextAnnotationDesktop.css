@@ -13,7 +13,7 @@
   font-family: Lora;
   font-size: 17px;
   line-height: 190%;
-  padding: 70px 85px 90px 85px;
+  padding: 70px 85px 140px 85px;
   pointer-events: all;
   position: relative;
   width: 60ch;
@@ -23,6 +23,10 @@
 .content-wrapper.text main {
   height: fit-content;
   white-space: pre-line;
+}
+
+.content-wrapper.tei main {
+  height: fit-content;
 }
 
 .content-wrapper.pdf main {
