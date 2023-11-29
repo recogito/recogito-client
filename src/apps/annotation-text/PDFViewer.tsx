@@ -28,9 +28,9 @@ export const PDFViewer = (props: PDFViewerProps) => {
   }, []);
 
   return downloadURL && (
-      <PDFAnnotator 
-        pdfUrl={downloadURL} 
-        style={props.style} />
+    <PDFAnnotator 
+      pdfUrl={downloadURL} 
+      style={props.style} />
   )
   
 }
