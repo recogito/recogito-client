@@ -17,7 +17,7 @@ export interface CardProps {
 
   tagVocabulary?: string[];
 
-  onReply?(body: AnnotationBody): void;
+  onReply(body: AnnotationBody): void;
 
   onDeleteAnnotation(): void;
 

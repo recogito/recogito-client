@@ -23,6 +23,11 @@
         "name": "Send Magic Link",
         "type": "magic_link",
         "domain": ""
+      },
+      {
+        "name": "Sign in with Keycloak",
+        "type": "keycloak",
+        "domain": ""
       }
     ]
   }

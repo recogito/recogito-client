@@ -138,7 +138,11 @@ export interface DocumentInTaggedContext extends DocumentInContext {
   context: TaggedContext;
 }
 
-export const ContentTypes = ['application/pdf', 'text/plain', 'text/xml'] as const;
+export const ContentTypes = [
+  'application/pdf',
+  'text/plain',
+  'text/xml',
+] as const;
 
 export type ContentType = (typeof ContentTypes)[number];
 
@@ -278,6 +282,6 @@ export type Policies = {
 
 export type LoginMethod = {
   name: string;
-  type: 'username_password' | 'saml' | 'oauth' | 'magic_link';
+  type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
   domain: string;
 };

@@ -6,16 +6,19 @@ import type { User } from '@annotorious/react';
 
 const crosswalkUser = ({ 
   // @ts-ignore
-  id, nickname, avatar_url 
+  id, nickname, first_name, last_name, avatar_url 
 }): User => ({
   id,
-  name: nickname,
+  name: nickname 
+    ? nickname 
+    : first_name || last_name 
+      ? [first_name, last_name].join(' ') : 'Anonymous',
   avatar: avatar_url
 })
 
 const crosswalkBody = ({ 
   // @ts-ignore
-  id, annotation_id, created_by, created_at, updated_by, updated_at, version, purpose, value 
+  id, annotation_id, created_by, created_at, updated_by, updated_at, version, format, purpose, value 
 }): SupabaseAnnotationBody => ({
   id,
   annotation: annotation_id,
@@ -23,6 +26,7 @@ const crosswalkBody = ({
   creator: created_by ? crosswalkUser(created_by) : undefined,
   updated: updated_at ? new Date(updated_at) : undefined,
   updatedBy: updated_by ? crosswalkUser(updated_by) : undefined,
+  format,
   purpose, 
   value,
   version
@@ -57,12 +61,16 @@ export const getAnnotations = (
         created_by:profiles!targets_created_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         updated_at,
         updated_by:profiles!targets_updated_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         version,
@@ -75,15 +83,20 @@ export const getAnnotations = (
         created_by:profiles!bodies_created_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         updated_at,
         updated_by:profiles!bodies_updated_by_fkey(
           id,
           nickname,
+          first_name,
+          last_name,
           avatar_url
         ),
         version,
+        format,
         purpose,
         value
       )

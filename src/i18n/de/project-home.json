@@ -34,5 +34,16 @@
   "Please enter a valid IIIF manifest URL": "Bitte eine gültige IIIF Manifest URL eingeben",
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the document.": "Das Dokument konnte nicht erstellt werden.",
-  "Could not rename the document.": "Das Dokument konnte nicht umbenannt werden."
+  "Could not rename the document.": "Das Dokument konnte nicht umbenannt werden.",
+  "Document Library": "Document Library",
+  "Select a document or upload a new one.": "Select a document or upload a new one.",
+  "Add Document": "Add Document",
+  "My Documents": "My Documents",
+  "All Documents": "All Documents",
+  "Document Type": "Document Type",
+  "URL": "URL",
+  "Add Selected Documents": "Add Selected Documents",
+  "No Documents": "No Documents",
+  "Search": "Search",
+  "View Document Metadata": "View Document Metadata"
 }

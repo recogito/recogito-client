@@ -1,44 +1,54 @@
-import type { Color, Formatter, SupabaseAnnotation } from '@annotorious/react';
+import type { AnnotationBody, Color, DrawingStyle } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
-import { shuffle, TailwindSequential17 } from '../ColorPalettes';
+import { AdobeCategorical12 } from '../ColorPalettes';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
-const PALETTE = shuffle(TailwindSequential17);
+const PALETTE = AdobeCategorical12;
 
 const NO_TAG: Color = '#727272';
 
-export const colorByFirstTag = (): ColorCoding => {
+/** Creates an ordered list of tags by time of first creation */
+const enumerateTags = (annotations: SupabaseAnnotation[]) => 
+  annotations.reduce((enumerated, annotation) => {
+    const tags = annotation.bodies.filter(b => b.purpose === 'tagging');
+    return [...enumerated, ...tags];
+  }, [] as AnnotationBody[])
+  .sort((a, b) => a.created! > b.created! ? 1 : -1)
+  .reduce((firstOccurrences, body) => {
+    if (body.value) {
+      return firstOccurrences.indexOf(body.value) < 0 ? [...firstOccurrences, body.value] : firstOccurrences;
+    } else {
+      return firstOccurrences;
+    }
+  }, [] as string[]);
 
-  const assignedColors = new Map<string | undefined, Color>();
+const buildLegend = (annotations: SupabaseAnnotation[]) => 
+  new Map<string | undefined, Color>(new Map(
+    enumerateTags(annotations).map((tag, idx) => ([tag, PALETTE[idx]]))
+  ));
 
-  const getNextAvailableColor = () =>
-    PALETTE[assignedColors.size % PALETTE.length];
+export const colorByFirstTag = (annotations: SupabaseAnnotation[]): ColorCoding => {
 
-  const createFormatter = (setLegend: (legend: ColorLegendValue[]) => void): Formatter =>
+  let legend = buildLegend(annotations);
 
-    (annotation: SupabaseAnnotation, selected?: boolean) => {
-      const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
+  const getStyle = () => (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
+    const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
+    const assignedColor = legend.get(firstTag);
+    if (assignedColor) {
+      return { fill: assignedColor, fillOpacity: selected ? 0.5: 0.24 };
+    } else {
+      return { fill: NO_TAG, fillOpacity: selected ? 0.5: 0.24 };
+    }
+  };
 
-      const assignedColor = assignedColors.get(firstTag);
-      if (assignedColor) {
-        return { fill: assignedColor, fillOpacity: selected ? 0.45: 0.14 };
-      } else {
-        const color = firstTag ? getNextAvailableColor() : NO_TAG;
-        assignedColors.set(firstTag, color);
+  const getLegend = () => 
+    Array.from(legend.entries()).map(([tag, value]) => ({ color: value, label: tag } as ColorLegendValue));
 
-        // New color assigned - update legend
-        const legend = 
-          Array.from(assignedColors.entries())
-            .map(([ label, color ]) => ({ color, label: label || 'No tag' })); 
+  const update = (annotations: SupabaseAnnotation[]): ColorLegendValue[] => {
+    legend = buildLegend(annotations);
+    return getLegend();
+  }
 
-        // Sort tags alphabetically
-        legend.sort((a, b) => a.label < b.label ? -1 : (a.label > b.label) ? 1 : 0);
-
-        setLegend(legend);
-
-        return { fill: color, fillOpacity: selected ? 0.45: 0.14 };
-      }
-    };
-
-  return { createFormatter };
+  return { getLegend, getStyle, update };
 
 }

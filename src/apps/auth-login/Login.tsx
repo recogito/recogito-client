@@ -70,6 +70,23 @@ export const Login = (props: {
       });
   };
 
+  const signInWithKeycloak = () => {
+    supabase.auth
+      .signInWithOAuth({
+        provider: 'keycloak',
+        options: {
+          scopes: 'openid',
+        },
+      })
+      .then(({ data, error }) => {
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          console.error(error);
+        }
+      });
+  };
+
   const onMethodChanged = (method: LoginMethod) => {
     setCurrentMethod(method);
     if (method.type === 'username_password') {
@@ -82,6 +99,10 @@ export const Login = (props: {
       setSendLink(false);
       setShowLogin(false);
       signInWithSSO(method.domain);
+    } else if (method.type === 'keycloak') {
+      setSendLink(false);
+      setShowLogin(false);
+      signInWithKeycloak();
     }
   };
 
