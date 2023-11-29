@@ -4,9 +4,9 @@ import { TextInput } from '@components/TextInput';
 import type { Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { AnimatedCheck } from '@components/AnimatedIcons';
 
 import './ResetPassword.css';
-import { AnimatedCheck } from '@components/AnimatedIcons';
 
 interface ResetPasswordProps {
 
