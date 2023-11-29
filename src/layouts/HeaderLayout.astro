@@ -1,18 +1,19 @@
 ---
 import { getLangFromUrl } from '@i18n';
+import config from 'src/config.json';
 
 import '@themes/default/index.css';
-import config from '../config.json';
 
 export interface Props {
   title: string;
-  message: string;
 }
 
 import Footer from '../dynamic-elements/Footer';
 import Header from '../dynamic-elements/Header';
 
-const { title, message } = Astro.props;
+const { title } = Astro.props;
+
+const message = config.branding.footer_message;
 const siteColor = config.branding.site_color;
 const textColor = config.branding.contrast_color;
 const useFooter = config.branding.bottom_logos_enabled;

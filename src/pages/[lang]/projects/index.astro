@@ -5,7 +5,6 @@ import { getMyProfile, listMyInvites } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
 import HeaderLayout from '@layouts/HeaderLayout.astro';
-import config from '../../../config.json';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -28,11 +27,9 @@ if (!projects.data || !invitations.data) {
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
-
-const message = config.branding.footer_message;
 ---
 
-<HeaderLayout title='Dashboard' message={message}>
+<HeaderLayout title='Dashboard'>
   <ProjectsHome
     client:only
     me={me.data}

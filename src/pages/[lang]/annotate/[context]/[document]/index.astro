@@ -6,7 +6,6 @@ import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
-import config from 'src/config.json';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -34,8 +33,6 @@ if (document.error || !document.data) {
   });
 }
 
-const message = config.branding.footer_message;
-
 // Compute realtime channel key
 const secret = import.meta.env.ROOM_SECRET || '';
 const hash = crypto.createHash('sha256');
@@ -60,7 +57,7 @@ if (document.data.content_type === 'text/plain') {
 }
 ---
 
-<HeaderLayout title='Annotation' message={message}>
+<HeaderLayout title='Annotation'>
   {
     viewer === 'OPENSEADRAGON' ? (
       <ImageAnnotation
