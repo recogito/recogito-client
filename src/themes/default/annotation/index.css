@@ -1,3 +1,7 @@
+.anno-desktop {
+  pointer-events: none;
+}
+
 .anno-desktop-left {
   left: 0;
   position: absolute;

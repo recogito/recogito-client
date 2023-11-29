@@ -30,8 +30,19 @@
 }
 
 .content-wrapper.pdf main {
-  width: 90%;
   background-color: transparent;
+  height: 100%;
+  left: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.content-wrapper.pdf main .r6o-pdf-container {
+  top: 0;
+  left: 0;
+  height: auto;
 }
 
 .a9s-popup {
