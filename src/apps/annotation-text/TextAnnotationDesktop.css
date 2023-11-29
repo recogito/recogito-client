@@ -1,7 +1,8 @@
 .content-wrapper {
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .content-wrapper main {
@@ -20,6 +21,7 @@
 }
 
 .content-wrapper.text main {
+  height: fit-content;
   white-space: pre-line;
 }
 
@@ -41,6 +43,11 @@
 }
 
 .ta-desktop {
+  bottom: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  margin: 50px 0;
   z-index: 9999;
 }
 
