@@ -63,9 +63,7 @@ export const get: APIRoute = async ({ params, request, cookies, url }) => {
 
   const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
 
-  const csv = includePrivate 
-    ? annotationsToCSV(annotations.data, layers.data)
-    : annotationsToCSV(annotations.data.filter(a => a.visibility !== Visibility.PRIVATE), layers.data);
+  const csv = annotationsToCSV(annotations.data, layers.data, includePrivate);
 
   return new Response(    
     csv,
