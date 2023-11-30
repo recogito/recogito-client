@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { CaretDown, Check } from '@phosphor-icons/react';
+import { CaretDown, Check, CheckSquare, Square } from '@phosphor-icons/react';
+import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Select from '@radix-ui/react-select';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
@@ -22,14 +23,19 @@ export const FilterSettings = (props: FilterSettingsProps) => {
 
   const { t } = props.i18n;
 
-  const [value, setValue] = useState('none');
+  const [filterBy, setFilterBy] = useState('none');
 
-  const { filter, values, setConfig, setPresent } = useFiltering(props.present);
+  const { 
+    filter, 
+    values, 
+    setConfig, 
+    setPresent, 
+    setValue } = useFiltering(props.present);
 
   const showAssignmentOption = props.layers && props.layers.length > 1;
 
   const onValueChange = (value: string) => {
-    setValue(value);
+    setFilterBy(value);
 
     if (value === 'none') {
       setConfig();
@@ -45,14 +51,7 @@ export const FilterSettings = (props: FilterSettingsProps) => {
     }
   }
 
-  /*
-  const setDummyFilter = () => {
-    const dummyFilter = (a: Annotation) =>
-      Boolean(a.bodies.find(b => b.purpose === 'tagging' && b.value === 'Foo'));
-
-    props.onChangeFilter(dummyFilter);
-  }
-  */
+  useEffect(() => props.onChangeFilter(filter), [filter]);
 
   useEffect(() => setPresent(props.present), [props.present]);
 
@@ -61,7 +60,7 @@ export const FilterSettings = (props: FilterSettingsProps) => {
       <form>
         <label>{t['Filter by']}</label>
 
-        <Select.Root value={value} onValueChange={onValueChange}>
+        <Select.Root value={filterBy} onValueChange={onValueChange}>
           <Select.Trigger className="select-trigger" aria-label="Filter annotations by">
             <Select.Value />
             <Select.Icon className="select-icon">
@@ -117,9 +116,23 @@ export const FilterSettings = (props: FilterSettingsProps) => {
       <div className="layer-configuration-legend filter-settings-legend">
         {values && (
           <ul>
-            {values.map(({ label, selected }, index) => (
+            {values.map(({ id, label, selected }, index) => (
               <li key={`${label}-${index}`}>
-                {t[label] || label} {selected}
+                <Checkbox.Root 
+                  className="checkbox-root"
+                  checked={selected}
+                  onCheckedChange={checked => setValue(id, checked as boolean)}>
+
+                  <Checkbox.Indicator>
+                    <CheckSquare size={20} weight="fill" /> 
+                  </Checkbox.Indicator>
+
+                  {!selected && (
+                    <span><Square size={20} /></span>
+                  )}
+                </Checkbox.Root>
+
+                {t[label] || label}
               </li>
             ))}
           </ul>

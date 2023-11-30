@@ -3,20 +3,20 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { enumerateCreators, getDisplayName } from '../../utils';
 import type { FilterConfig, FilterConfigValue } from '../useFiltering';
 
-const buildOptions = (present: PresentUser[], annotations: SupabaseAnnotation[]) => 
-  new Map<string | undefined, { label: string, selected: boolean }>(new Map(
+const buildValues = (annotations: SupabaseAnnotation[], present: PresentUser[] = []) => 
+  new Map<string, { label: string, selected: boolean }>(new Map(
     enumerateCreators(present, annotations)
       .map(user => ([user.id, { label: getDisplayName(user), selected: true }]))
   ));
 
 export const filterByCreator = (annotations: SupabaseAnnotation[], present?: PresentUser[]): FilterConfig => {
 
-  let options = buildOptions(present || [], annotations);
+  let values = buildValues(annotations, present);
   
   const getFilter = () => (annotation: SupabaseAnnotation): boolean => {
     const creatorId = annotation.target.creator?.id;
     if (creatorId) {
-      const setting = options.get(creatorId);
+      const setting = values.get(creatorId);
       return setting ? setting.selected : false;
     } else {
       return false;
@@ -24,13 +24,31 @@ export const filterByCreator = (annotations: SupabaseAnnotation[], present?: Pre
   }
 
   const getValues = (): FilterConfigValue[] => 
-    Array.from(options.entries()).map(([_, label]) => label);
+    Array.from(values.entries()).map(([id, { label, selected }]) => ({ id, label, selected }));
 
-  const updateValues = (annotations: SupabaseAnnotation[], present: PresentUser[]) => {
-    options = buildOptions(present, annotations);
-    return getValues();
+  const setValue = (id: string, selected: boolean)=> {
+    const entry = values.get(id);
+
+    if (entry)
+      values.set(id, { label: entry.label , selected });
+
+    return { values: getValues(), filter: getFilter() };
   }
 
-  return { getValues, getFilter, updateValues };
+  const updateValues = (annotations: SupabaseAnnotation[], present?: PresentUser[]) => {
+    const next = buildValues(annotations, present);
+
+    Array.from(values.entries()).forEach(([id, { selected }]) => {
+      const existing = next.get(id);
+      if (existing)
+        next.set(id, { label: existing.label, selected });
+    });
+
+    values = next;
+
+    return { values: getValues(), filter: getFilter() };
+  }
+
+  return { getValues, getFilter, setValue, updateValues };
 
 }

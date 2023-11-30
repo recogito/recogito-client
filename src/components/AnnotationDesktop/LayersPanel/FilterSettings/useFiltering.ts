@@ -8,12 +8,16 @@ export interface FilterConfig {
 
   getFilter(): ((a: Annotation) => boolean);
 
-  updateValues(annotations: SupabaseAnnotation[], present?: PresentUser[]): FilterConfigValue[];
+  setValue(id: string, selected: boolean): { filter: ((a: Annotation) => boolean), values: FilterConfigValue[] };
+
+  updateValues(annotations: SupabaseAnnotation[], present?: PresentUser[]): { filter: ((a: Annotation) => boolean), values: FilterConfigValue[] };
 
 }
 
 export interface FilterConfigValue {
   
+  id: string, 
+
   label: string;
 
   selected: boolean;
@@ -47,11 +51,20 @@ export const useFiltering = (initial: PresentUser[]) => {
 
   useEffect(() => {
     if (config) {
-      const values = config.updateValues(annotations, present);
+      const { values, filter } = config.updateValues(annotations, present);
       setValues(values);
+      setFilter(() => filter);
     }
   }, [annotations, present]);
 
-  return { filter, values, setConfig, setPresent };
+  const setValue = (id: string, selected: boolean) => {
+    if (config) {
+      const { values, filter } = config.setValue(id, selected);
+      setValues(values);
+      setFilter(() => filter);
+    }
+  }
+
+  return { filter, values, setConfig, setPresent, setValue };
 
 }
