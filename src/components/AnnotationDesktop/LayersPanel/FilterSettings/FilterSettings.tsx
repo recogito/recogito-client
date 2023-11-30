@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import * as Select from '@radix-ui/react-select';
-import type { Annotation } from '@annotorious/react';
+import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
+import { useFiltering } from './useFiltering';
+import { filterByCreator } from './filters';
 
 interface FilterSettingsProps {
 
   i18n: Translations;
 
   layers?: Layer[];
+
+  present: PresentUser[];
 
   onChangeFilter(filter?: ((a: Annotation) => boolean)): void;
   
@@ -20,11 +24,25 @@ export const FilterSettings = (props: FilterSettingsProps) => {
 
   const [value, setValue] = useState('none');
 
+  const { filter, values, setConfig, setPresent } = useFiltering(props.present);
+
   const showAssignmentOption = props.layers && props.layers.length > 1;
 
   const onValueChange = (value: string) => {
-    // TODO
     setValue(value);
+
+    if (value === 'none') {
+      setConfig();
+    } else if (value === 'privacy') {
+      // 
+    } else if (value === 'assignment') {
+      // if (props.layers)
+      //   setCoding(colorByAssignment(props.layers));
+    } else if (value === 'creator') {
+      setConfig(filterByCreator);
+    } else if (value === 'tag') {
+      // setCoding(colorByFirstTag);
+    }
   }
 
   /*
@@ -35,6 +53,8 @@ export const FilterSettings = (props: FilterSettingsProps) => {
     props.onChangeFilter(dummyFilter);
   }
   */
+
+  useEffect(() => setPresent(props.present), [props.present]);
 
   return (
     <div className="layer-configuration-filter-settings">
@@ -93,6 +113,18 @@ export const FilterSettings = (props: FilterSettingsProps) => {
           </Select.Portal>
         </Select.Root>
       </form>
+
+      <div className="layer-configuration-legend filter-settings-legend">
+        {values && (
+          <ul>
+            {values.map(({ label, selected }, index) => (
+              <li key={`${label}-${index}`}>
+                {t[label] || label} {selected}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   )
 

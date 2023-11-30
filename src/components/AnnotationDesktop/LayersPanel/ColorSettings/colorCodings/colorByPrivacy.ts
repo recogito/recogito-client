@@ -1,6 +1,6 @@
 import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { DrawingStyle } from '@annotorious/react';
-import type { ColorCoding } from '../ColorCoding';
+import type { ColorCoding } from '../useColorCoding';
 import { CarbonCategoricalDark14 } from '../ColorPalettes';
 
 const PALETTE = CarbonCategoricalDark14;

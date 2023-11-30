@@ -3,7 +3,7 @@ import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
-import { useColorCoding } from './ColorCoding';
+import { useColorCoding } from './useColorCoding';
 import { 
   colorByAssignment, 
   colorByCreator,
@@ -112,7 +112,7 @@ export const ColorSettings = (props: ColorSettingsProps) => {
         </Select.Root>
       </form>
 
-      <div className="layer-configuration-legend">
+      <div className="layer-configuration-legend color-settings-legend">
         {legend && (
           <ul>
             {legend.map(({ label, color }, index) => (
