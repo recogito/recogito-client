@@ -33,8 +33,9 @@
   "oldest": "oldest",
 
   "Color by": "Color by",
-  "Filter by": "Filter by",
   "No color coding": "No color coding",
+  "Filter by": "Filter by",
+  "Show all annotations": "Show all annotations", 
   "Public vs. Private": "Public vs. Private",
   "Your private annotations": "Your private annotation",
   "All public annotations": "All public annotations",

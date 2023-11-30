@@ -31,6 +31,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
 
       <FilterSettings 
         i18n={props.i18n}
+        layers={props.layers}
         onChangeFilter={props.onChangeFilter} />
     </div>
   )
