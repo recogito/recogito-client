@@ -5,7 +5,7 @@ import * as Select from '@radix-ui/react-select';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useFiltering } from './useFiltering';
-import { filterByCreator } from './filters';
+import { filterByCreator, filterByTag } from './filters';
 
 interface FilterSettingsProps {
 
@@ -47,7 +47,7 @@ export const FilterSettings = (props: FilterSettingsProps) => {
     } else if (value === 'creator') {
       setConfig(filterByCreator);
     } else if (value === 'tag') {
-      // setCoding(colorByFirstTag);
+      setConfig(filterByTag);
     }
   }
 
