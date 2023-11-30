@@ -4,14 +4,12 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
 import { AccountPreferences } from '@apps/dashboard-account/AccountPreferences';
-import { setRedirectUrl } from '@backend/urlRedirect';
 
 const i18n = getTranslations(Astro.request, 'dashboard-account');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase) {
-  setRedirectUrl(Astro.url.pathname);
-  return Astro.redirect(`/${i18n.lang}/sign-in`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
 
 const { error, data } = await getMyProfile(supabase);
