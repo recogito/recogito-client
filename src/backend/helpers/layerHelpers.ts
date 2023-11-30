@@ -3,13 +3,13 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Layer, LayerWithDocument, UserProfile } from 'src/Types';
 
 export const createLayerInContext = (
-  supabase: SupabaseClient, 
-  document_id: string, 
+  supabase: SupabaseClient,
+  document_id: string,
   project_id: string,
   context_id: string,
   name?: string,
   description?: string
-): Promise<Layer> => 
+): Promise<Layer> =>
   new Promise((resolve, reject) => {
     supabase
       .from('layers')
@@ -17,7 +17,7 @@ export const createLayerInContext = (
         document_id,
         project_id,
         name,
-        description
+        description,
       })
       .select()
       .single()
@@ -31,7 +31,7 @@ export const createLayerInContext = (
             .from('layer_contexts')
             .insert({
               layer_id: layer.id,
-              context_id
+              context_id,
             })
             .select()
             .single()
@@ -49,81 +49,81 @@ export const createLayerInContext = (
 export const addUsersToLayer = (
   supabase: SupabaseClient,
   layerId: string,
-  groupName: string,
+  adminOrDefault: 'admin' | 'default',
   users: UserProfile[]
-): Promise<void> => new Promise((resolve, reject) => {
-  // Step 1. get layer group with the given name
-  supabase
-    .from('layer_groups')
-    .select(`
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    // Step 1. get layer group with the given name
+    supabase
+      .from('layer_groups')
+      .select(
+        `
       id,
       name
-    `)
-    .eq('layer_id', layerId)
-    .eq('name', groupName)
-    .then(({ error, data }) => {
-      if (error || data?.length !== 1) {
-        reject(error);
-      } else {
-        const groupId = data[0].id;
+    `
+      )
+      .eq('layer_id', layerId)
+      .eq(adminOrDefault === 'admin' ? 'is_admin' : 'is_default', true)
+      .then(({ error, data }) => {
+        if (error || data?.length !== 1) {
+          reject(error);
+        } else {
+          const groupId = data[0].id;
 
-        const records = users.map(user => ({
-          user_id: user.id,
-          group_type: 'layer',
-          type_id: groupId
-        }));
+          const records = users.map((user) => ({
+            user_id: user.id,
+            group_type: 'layer',
+            type_id: groupId,
+          }));
 
-        // Step 2. add users to this group
-        supabase
-          .from('group_users')
-          .insert(records)
-          .then(({ error }) => {
-            if (error)
-              reject(error)
-            else 
-              resolve();
-          });
-      }
-    });
-});
+          // Step 2. add users to this group
+          supabase
+            .from('group_users')
+            .insert(records)
+            .then(({ error }) => {
+              if (error) reject(error);
+              else resolve();
+            });
+        }
+      });
+  });
 
 export const removeUsersFromLayer = (
   supabase: SupabaseClient,
   layerId: string,
-  groupName: string,
+  adminOrDefault: 'admin' | 'default',
   users: UserProfile[]
-): Promise<void> => new Promise((resolve, reject) => {
-  // Step 1. get layer group with the given name
-  supabase
-    .from('layer_groups')
-    .select(`
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    // Step 1. get layer group with the given name
+    supabase
+      .from('layer_groups')
+      .select(
+        `
       id,
       name
-    `)
-    .eq('layer_id', layerId)
-    .eq('name', groupName)
-    .then(({ error, data }) => {
-      if (error || data?.length !== 1) {
-        reject(error);
-      } else {
-        const groupId = data[0].id;
-        const userIds = users.map(user => user.id);
+    `
+      )
+      .eq('layer_id', layerId)
+      .eq(adminOrDefault === 'admin' ? 'is_admin' : 'is_default', true)
+      .then(({ error, data }) => {
+        if (error || data?.length !== 1) {
+          reject(error);
+        } else {
+          const userIds = users.map((user) => user.id);
 
-        // Step 2. remove users from this group
-        supabase
-          .from('group_users')
-          .delete()
-          .in('user_id', userIds)
-          .then(({ error }) => {
-            if (error)
-              reject(error)
-            else 
-              resolve();
-          });
-      }
-    });
-});
-
+          // Step 2. remove users from this group
+          supabase
+            .from('group_users')
+            .delete()
+            .in('user_id', userIds)
+            .then(({ error }) => {
+              if (error) reject(error);
+              else resolve();
+            });
+        }
+      });
+  });
 
 /**
  * Retrieves all layers on the given documents
@@ -136,7 +136,8 @@ export const getAllDocumentLayersInProject = (
 ): Response<LayerWithDocument[]> =>
   supabase
     .from('layers')
-    .select(`
+    .select(
+      `
       id, 
       document_id,
       document:documents (
@@ -152,7 +153,8 @@ export const getAllDocumentLayersInProject = (
           project_id
         )
       )
-    `)
+    `
+    )
     .eq('project_id', projectId)
     .eq('document_id', documentId)
     .then(({ data, error }) => {
@@ -160,7 +162,10 @@ export const getAllDocumentLayersInProject = (
         return { error, data: [] };
       } else {
         // @ts-ignore
-        const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
+        const flattened = data?.map(({ contexts, ...layer }) => ({
+          ...layer,
+          context: contexts[0],
+        }));
         return { error, data: flattened as unknown as LayerWithDocument[] };
       }
     });
@@ -175,7 +180,8 @@ export const getAllLayersInProject = (
 ): Response<LayerWithDocument[]> =>
   supabase
     .from('layers')
-    .select(`
+    .select(
+      `
       id,  
       document_id, 
       document:documents (
@@ -191,18 +197,22 @@ export const getAllLayersInProject = (
           project_id
         )
       )
-    `)
+    `
+    )
     .eq('project_id', projectId)
     .then(({ data, error }) => {
       if (error) {
         return { error, data: [] };
       } else {
         // @ts-ignore
-        const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
+        const flattened = data?.map(({ contexts, ...layer }) => ({
+          ...layer,
+          context: contexts[0],
+        }));
         return { error, data: flattened as unknown as LayerWithDocument[] };
       }
     });
-    
+
 /**
  * Returns ALL layers for ALL documents
  * in the given context.
@@ -213,7 +223,8 @@ export const getAllLayersInContext = (
 ): Response<Layer[]> =>
   supabase
     .from('layers')
-    .select(`
+    .select(
+      `
       id,  
       document_id, 
       project_id, 
@@ -227,14 +238,18 @@ export const getAllLayersInContext = (
           project_id
         )
       )
-    `)
+    `
+    )
     .eq('layer_contexts.context_id', contextId)
     .then(({ data, error }) => {
       if (error) {
         return { error, data: [] };
       } else {
         // @ts-ignore
-        const flattened = data?.map(({ contexts, ...layer}) => ({ ...layer, context: contexts[0] }));
+        const flattened = data?.map(({ contexts, ...layer }) => ({
+          ...layer,
+          context: contexts[0],
+        }));
         return { error, data: flattened as unknown as Layer[] };
       }
     });
