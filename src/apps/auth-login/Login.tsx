@@ -5,8 +5,6 @@ import { isLoggedIn } from '@backend/auth';
 import type { LoginMethod, Translations } from 'src/Types';
 import { StateChecking, StateLoginForm, StateMagicLink } from './states';
 import { LoginMethodSelector } from '@apps/auth-login/LoginMethodSelector';
-import { useStore } from '@nanostores/react';
-import { $clientRedirect } from '@backend/urlRedirect';
 
 import './Login.css';
 
@@ -36,7 +34,16 @@ export const Login = (props: {
 
   const [currentMethod, setCurrentMethod] = useState<LoginMethod | undefined>();
 
-  const redirectUrl = useStore($clientRedirect);
+  const url = new URLSearchParams(window.location.search);
+  let redirectUrl = url.get('redirect-to');
+  if (redirectUrl) {
+    localStorage.setItem('redirect-to', redirectUrl);
+  } else {
+    redirectUrl = localStorage.getItem('redirect-to');
+    if (redirectUrl && redirectUrl.length === 0) {
+      redirectUrl = null;
+    }
+  }
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -46,6 +53,7 @@ export const Login = (props: {
         setCookies(session);
         if (redirectUrl) {
           window.location.href = redirectUrl;
+          localStorage.setItem('redirect-to', '');
         } else {
           window.location.href = `/${props.i18n.lang}/projects`;
         }
@@ -58,6 +66,7 @@ export const Login = (props: {
           setCookies(session);
           if (redirectUrl) {
             window.location.href = redirectUrl;
+            localStorage.setItem('redirect-to', '');
           } else {
             window.location.href = `/${props.i18n.lang}/projects`;
           }
@@ -77,6 +86,7 @@ export const Login = (props: {
         if (data?.url) {
           if (redirectUrl) {
             window.location.href = redirectUrl;
+            localStorage.setItem('redirect-to', '');
           } else {
             window.location.href = data.url;
           }
@@ -98,6 +108,7 @@ export const Login = (props: {
         if (data?.url) {
           if (redirectUrl) {
             window.location.href = redirectUrl;
+            localStorage.setItem('redirect-to', '');
           } else {
             window.location.href = data.url;
           }

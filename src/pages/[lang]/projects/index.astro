@@ -5,14 +5,12 @@ import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile, listMyInvites } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
-import { setRedirectUrl } from '../../../backend/urlRedirect';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 if (!supabase) {
-  setRedirectUrl(Astro.url.pathname);
-  return Astro.redirect(`/${lang}/sign-in`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
 
 const me = await getMyProfile(supabase);
