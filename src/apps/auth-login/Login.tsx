@@ -84,12 +84,7 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          if (redirectUrl) {
-            window.location.href = redirectUrl;
-            localStorage.setItem('redirect-to', '');
-          } else {
-            window.location.href = data.url;
-          }
+          window.location.href = data.url;
         } else {
           console.error(error);
         }
