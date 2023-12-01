@@ -58,12 +58,14 @@ export const PDFScaleSelector = (props: PDFScaleSelectorProps) => {
               <Select.ItemText>Original size</Select.ItemText>
             </Select.Item> 
 
+            {/*
             <Select.Item value="page-fit" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
               <Select.ItemText>Fit page</Select.ItemText>
             </Select.Item> 
+            */}
 
             <Select.Item value="page-width" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
