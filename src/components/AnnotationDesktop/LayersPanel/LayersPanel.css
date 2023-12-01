@@ -1,15 +1,15 @@
 .layer-configuration {
   height: 100%;
   overflow-y: scroll;
-  padding: 10px;
+  padding: 8px;
   font-size: var(--font-tiny);
 }
 
 .layer-configuration .layer-configuration-section {
   background-color: #fff;
   border: 1px solid var(--gray-200);
-  border-radius: var(--border-radius);
-  margin-bottom: 10px;
+  border-radius: 6px;
+  margin-bottom: 8px;
   padding: 10px 20px;
 }
 
@@ -47,7 +47,7 @@
 }
 
 .layer-configuration-legend li .legend-color {
-  border-radius: var(--border-radius);
+  border-radius: 2px;
   display: inline-block;
   height: 16px;
   width: 16px;
