@@ -1,6 +1,6 @@
 ---
 import crypto from 'crypto';
-import BaseLayout from '@layouts/BaseLayout.astro';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
@@ -59,7 +59,7 @@ if (document.data.content_type === 'text/plain') {
 }
 ---
 
-<BaseLayout title='Annotation'>
+<HeaderLayout title='Annotation'>
   {
     viewer === 'OPENSEADRAGON' ? (
       <ImageAnnotation
@@ -77,15 +77,8 @@ if (document.data.content_type === 'text/plain') {
       />
     )
   }
-</BaseLayout>
+</HeaderLayout>
 
 <style>
-  .container.image {
-    bottom: 0;
-    left: 0;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
+
 </style>

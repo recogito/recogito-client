@@ -62,27 +62,40 @@ const sortRows = (a: any, b: any): number => {
 }
 
 /** Crosswalks a list of annotations to CSV using Papaparse **/
-export const annotationsToCSV = (annotations: SupabaseAnnotation[], layers: { id: string, document: Document }[]) => {
+export const annotationsToCSV = (
+  annotations: SupabaseAnnotation[], 
+  layers: { id: string, document: Document }[],
+  includePrivate: boolean
+) => {
+  const filtered = includePrivate 
+    ? annotations
+    : annotations.filter(a => a.visibility !== Visibility.PRIVATE);
 
   const findDocument = (layerId: string) =>
     layers.find(l => l.id === layerId)?.document;
 
-  const csv = annotations.reduce((csv, a) => {
+  const csv = filtered.reduce((csv, a) => {
     const doc = findDocument(a.layer_id!)!;
 
-    return [...csv, ...a.bodies.map(body => ({
-      annotation_id: a.id,
-      document: doc.name,
-      text_quote: a.target.selector ? 'quote' in a.target.selector ? a.target.selector.quote : '' : '', 
-      target: serializeTarget(a.target),
-      body_purpose: body.purpose,
-      body_value: serializeBodyValue(body),
-      created: body.created,
-      updated: body.updated,
-      created_by: body.creator?.name,
-      updated_by: body.updatedBy?.name,
-      is_private: a.visibility === Visibility.PRIVATE
-    }))]
+    return [...csv, ...a.bodies.map(body => {
+      const row: any = {
+        annotation_id: a.id,
+        document: doc.name,
+        text_quote: a.target.selector ? 'quote' in a.target.selector ? a.target.selector.quote : '' : '', 
+        target: serializeTarget(a.target),
+        body_purpose: body.purpose,
+        body_value: serializeBodyValue(body),
+        created: body.created,
+        updated: body.updated,
+        created_by: body.creator?.name,
+        updated_by: body.updatedBy?.name
+      }
+
+      if (includePrivate)
+        row.is_private =  a.visibility === Visibility.PRIVATE;
+
+      return row;
+    })]
   }, [] as any[]);
 
   csv.sort(sortRows);
