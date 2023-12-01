@@ -1,5 +1,5 @@
 import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { FilterConfig, FilterConfigValue } from '../useFiltering';
+import type { FilterConfig, FilterConfigValue } from '../FilterConfig';
 
 export const filterByPrivacy = (): FilterConfig => {
 

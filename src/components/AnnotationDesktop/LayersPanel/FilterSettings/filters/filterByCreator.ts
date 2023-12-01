@@ -1,7 +1,7 @@
 import type { PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { enumerateCreators, getDisplayName } from '../../utils';
-import type { FilterConfig, FilterConfigValue } from '../useFiltering';
+import type { FilterConfig, FilterConfigValue } from '../FilterConfig';
 
 const buildValues = (annotations: SupabaseAnnotation[], present: PresentUser[] = []) => 
   new Map<string, { label: string, selected: boolean }>(new Map(

@@ -1,5 +1,5 @@
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { FilterConfig, FilterConfigValue } from '../useFiltering';
+import type { FilterConfig, FilterConfigValue } from '../FilterConfig';
 import { enumerateTags } from '../../utils';
 
 const buildValues = (annotations: SupabaseAnnotation[]) => 

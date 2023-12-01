@@ -4,16 +4,14 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Select from '@radix-ui/react-select';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
-import { useFiltering } from './useFiltering';
 import { filterByAssignment, filterByCreator, filterByPrivacy, filterByTag } from './filters';
+import { useFilterSettings } from './FilterState';
 
 interface FilterSettingsProps {
 
   i18n: Translations;
 
   layers?: Layer[];
-
-  present: PresentUser[];
 
   onChangeFilter(filter?: ((a: Annotation) => boolean)): void;
   
@@ -25,12 +23,7 @@ export const FilterSettings = (props: FilterSettingsProps) => {
 
   const [filterBy, setFilterBy] = useState('none');
 
-  const { 
-    filter, 
-    values, 
-    setConfig, 
-    setPresent, 
-    setValue } = useFiltering(props.present);
+  const { filter, values, setConfig, setValue } = useFilterSettings();
 
   const showAssignmentOption = props.layers && props.layers.length > 1;
 
@@ -52,8 +45,6 @@ export const FilterSettings = (props: FilterSettingsProps) => {
   }
 
   useEffect(() => props.onChangeFilter(filter), [filter]);
-
-  useEffect(() => setPresent(props.present), [props.present]);
 
   return (
     <div className="layer-configuration-filter-settings layer-configuration-section">

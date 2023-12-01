@@ -1,6 +1,6 @@
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
-import type { FilterConfig, FilterConfigValue } from '../useFiltering';
+import type { FilterConfig, FilterConfigValue } from '../FilterConfig';
 
 const buildValues = (layers: Layer[]) => 
   new Map(layers.map((layer, idx) => 
@@ -11,7 +11,7 @@ export const filterByAssignment = (layers: Layer[]) => (): FilterConfig => {
   const values = buildValues(layers);
 
   const getFilter = () => (annotation: SupabaseAnnotation): boolean =>
-    values.get(annotation.layer_id!)!.selected;
+    Boolean(values.get(annotation.layer_id!)?.selected);
 
   const getValues = (): FilterConfigValue[] => 
     Array.from(values.entries()).map(([id, { label, selected }]) => ({ id, label, selected }));
