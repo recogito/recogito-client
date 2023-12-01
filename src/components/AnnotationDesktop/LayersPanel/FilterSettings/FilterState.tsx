@@ -16,7 +16,7 @@ interface FilterStateContextValue {
 }
 
 // @ts-ignore
-export const FilterStateContext = createContext<FilterStateContextValue>(); 
+const FilterStateContext = createContext<FilterStateContextValue>(); 
 
 interface FilterStateProps {
 

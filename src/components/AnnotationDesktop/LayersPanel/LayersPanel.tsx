@@ -26,7 +26,6 @@ export const LayersPanel = (props: LayersPanelProps) => {
       <ColorSettings
         i18n={props.i18n}
         layers={props.layers}
-        present={props.present} 
         onChangeStyle={props.onChangeStyle} />
 
       <FilterSettings 

@@ -1,5 +1,5 @@
-import type { AnnotationBody, Color, DrawingStyle } from '@annotorious/react';
-import type { ColorCoding, ColorLegendValue } from '../useColorCoding';
+import type { Color, DrawingStyle } from '@annotorious/react';
+import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { AdobeCategorical12 } from '../ColorPalettes';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { enumerateTags } from '../../utils';

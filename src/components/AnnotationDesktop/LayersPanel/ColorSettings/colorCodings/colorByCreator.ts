@@ -1,5 +1,5 @@
-import type { Color, DrawingStyle, PresentUser, User } from '@annotorious/react';
-import type { ColorCoding, ColorLegendValue } from '../useColorCoding';
+import type { Color, DrawingStyle, PresentUser } from '@annotorious/react';
+import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { AdobeCategorical12 } from '../ColorPalettes';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { getDisplayName, enumerateCreators } from '../../utils';

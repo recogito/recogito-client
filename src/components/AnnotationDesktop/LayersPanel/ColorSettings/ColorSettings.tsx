@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
+import type { Annotation, DrawingStyle } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
-import { useColorCoding } from './useColorCoding';
+import { useColorCoding } from './ColorState';
 import { 
   colorByAssignment, 
   colorByCreator,
@@ -17,8 +17,6 @@ interface ColorSettingsProps {
 
   layers?: Layer[];
 
-  present: PresentUser[];
-
   onChangeStyle(style?: ((a: Annotation) => DrawingStyle)): void;
   
 }
@@ -29,7 +27,7 @@ export const ColorSettings = (props: ColorSettingsProps) => {
 
   const [value, setValue] = useState('none');
 
-  const { legend, style, setCoding, setPresent } = useColorCoding(props.present);
+  const { legend, style, setCoding } = useColorCoding();
 
   const showAssignmentOption = props.layers && props.layers.length > 1;
 
@@ -51,8 +49,6 @@ export const ColorSettings = (props: ColorSettingsProps) => {
   }
 
   useEffect(() => props.onChangeStyle(style), [style]);
-
-  useEffect(() => setPresent(props.present), [props.present]);
 
   return (
     <div className="layer-configuration-color-settings layer-configuration-section">

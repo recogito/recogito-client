@@ -1,7 +1,7 @@
 import type { Color, DrawingStyle } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
-import type { ColorCoding, ColorLegendValue } from '../useColorCoding';
+import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { ColorBrewerDark2_8 } from '../ColorPalettes';
 
 const PALETTE = ColorBrewerDark2_8;
