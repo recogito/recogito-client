@@ -55,62 +55,62 @@ export const ColorSettings = (props: ColorSettingsProps) => {
   useEffect(() => setPresent(props.present), [props.present]);
 
   return (
-    <div className="layer-configuration-color-settings">
-      <form>
-        <label>{t['Color by']}</label>
+    <div className="layer-configuration-color-settings layer-configuration-section">
+      <Select.Root value={value} onValueChange={onValueChange}>
+        <div className="layer-configuration-selection">
+          <label>{t['Color by']}</label>
 
-        <Select.Root value={value} onValueChange={onValueChange}>
           <Select.Trigger className="select-trigger" aria-label="Annotation color by">
             <Select.Value />
             <Select.Icon className="select-icon">
               <CaretDown />
             </Select.Icon>
           </Select.Trigger>
+        </div>
 
-          <Select.Portal>
-            <Select.Content className="select-content">
-              <Select.Viewport className="select-viewport">
-                <Select.Item value="none" className="select-item">
+        <Select.Portal>
+          <Select.Content className="select-content">
+            <Select.Viewport className="select-viewport">
+              <Select.Item value="none" className="select-item">
+                <Select.ItemIndicator className="select-item-indicator">
+                  <Check />
+                </Select.ItemIndicator>
+                <Select.ItemText>{t['No color coding']}</Select.ItemText>
+              </Select.Item>
+
+              <Select.Item value="privacy" className="select-item">
+                <Select.ItemIndicator className="select-item-indicator">
+                  <Check />
+                </Select.ItemIndicator>
+                <Select.ItemText>{t['Public vs. Private']}</Select.ItemText>
+              </Select.Item> 
+
+              {showAssignmentOption && (
+                <Select.Item value="assignment" className="select-item">
                   <Select.ItemIndicator className="select-item-indicator">
                     <Check />
                   </Select.ItemIndicator>
-                  <Select.ItemText>{t['No color coding']}</Select.ItemText>
-                </Select.Item>
-
-                <Select.Item value="privacy" className="select-item">
-                  <Select.ItemIndicator className="select-item-indicator">
-                    <Check />
-                  </Select.ItemIndicator>
-                  <Select.ItemText>{t['Public vs. Private']}</Select.ItemText>
+                  <Select.ItemText>{t['Assignment']}</Select.ItemText>
                 </Select.Item> 
+              )}
 
-                {showAssignmentOption && (
-                  <Select.Item value="assignment" className="select-item">
-                    <Select.ItemIndicator className="select-item-indicator">
-                      <Check />
-                    </Select.ItemIndicator>
-                    <Select.ItemText>{t['Assignment']}</Select.ItemText>
-                  </Select.Item> 
-                )}
+              <Select.Item value="creator" className="select-item">
+                <Select.ItemIndicator className="select-item-indicator">
+                  <Check />
+                </Select.ItemIndicator>
+                <Select.ItemText>{t['Creator']}</Select.ItemText>
+              </Select.Item> 
 
-                <Select.Item value="creator" className="select-item">
-                  <Select.ItemIndicator className="select-item-indicator">
-                    <Check />
-                  </Select.ItemIndicator>
-                  <Select.ItemText>{t['Creator']}</Select.ItemText>
-                </Select.Item> 
-
-                <Select.Item value="tag" className="select-item">
-                  <Select.ItemIndicator className="select-item-indicator">
-                    <Check />
-                  </Select.ItemIndicator>
-                  <Select.ItemText>{t['First Tag']}</Select.ItemText>
-                </Select.Item> 
-              </Select.Viewport>
-            </Select.Content>
-          </Select.Portal>
-        </Select.Root>
-      </form>
+              <Select.Item value="tag" className="select-item">
+                <Select.ItemIndicator className="select-item-indicator">
+                  <Check />
+                </Select.ItemIndicator>
+                <Select.ItemText>{t['First Tag']}</Select.ItemText>
+              </Select.Item> 
+            </Select.Viewport>
+          </Select.Content>
+        </Select.Portal>
+      </Select.Root>
 
       <div className="layer-configuration-legend color-settings-legend">
         {legend && (
