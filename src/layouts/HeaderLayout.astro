@@ -1,16 +1,23 @@
 ---
 import { getLangFromUrl } from '@i18n';
+import config from 'src/config.json';
+import Footer from '../branding/Footer';
+import Header from '../branding/Header';
 
 import '@themes/default/index.css';
-import config from '../config.json';
 
 export interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+
+const message = config.branding.footer_message;
 const siteColor = config.branding.site_color;
-const siteBanner = config.branding.home_banner;
+const textColor = config.branding.contrast_color;
+const useFooter = config.branding.bottom_logos_enabled;
+const useHeader = config.branding.top_logos_enabled;
+const backgroundColor = config.branding.background_color;
 ---
 
 <!DOCTYPE html>
@@ -30,13 +37,19 @@ const siteBanner = config.branding.home_banner;
         <div class='separator'></div>
         <div class='site_name'>{config.branding.site_name}</div>
       </div>
+      <div class='bottom_links'>
+        {useHeader && <Header contrastColor={textColor} />}
+      </div>
     </header>
     <div class='slot-container'>
       <slot />
     </div>
     <footer>
       <div class='blurb'>
-        {config.branding.welcome_blurb}
+        {message || ''}
+      </div>
+      <div class='bottom_links'>
+        {useFooter && <Footer contrastColor={textColor} />}
       </div>
     </footer>
     <script>
@@ -57,58 +70,47 @@ const siteBanner = config.branding.home_banner;
     </script>
   </body>
 </html>
-<style define:vars={{ siteColor }}>
+<style define:vars={{ siteColor, backgroundColor, textColor }}>
   body {
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    height: 100%;
   }
 
   .slot-container {
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    height: calc(100% - 100px);
-    position: relative;
+    margin: 50px 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 
   header {
-    width: 100%;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--gray-200);
+    align-items: center;
+    background-color: var(--backgroundColor);
+    border-bottom: 1px solid var(--textColor);
     box-sizing: border-box;
     display: flex;
-    align-items: center;
     height: 50px;
+    justify-content: space-between;
     padding: 0 40px;
-    background-color: var(--gray-900);
-    z-index: 1000;
-    position: sticky;
-    top: 0;
-    left: 0;
+    position: fixed;
+    width: 100%;
+    z-index: 9999;
   }
 
   footer {
-    border-top: 1px solid var(--gray-200);
-    box-sizing: border-box;
-    display: flex;
     align-items: center;
-    height: 50px;
-    padding: 0 40px;
-    background-color: var(--gray-900);
-    z-index: 1000;
-    position: sticky;
+    background-color: var(--backgroundColor);
+    border-top: 1px solid var(--textColor);
     bottom: 0;
-    left: 0;
-  }
-
-  main {
-    box-sizing: border-box;
     display: flex;
-    flex-grow: 1;
-    padding: 0;
-    position: relative;
+    height: 50px;
+    justify-content: space-between;
+    padding: 0 40px;
+    position: fixed;
     width: 100%;
+    z-index: 1000;
   }
 
   .branding-container {
@@ -118,14 +120,14 @@ const siteBanner = config.branding.home_banner;
   }
 
   .platform {
-    color: white;
+    color: var(--textColor);
   }
 
   .separator {
     width: 2px;
     height: 20px;
     margin-left: 5px;
-    background-color: white;
+    background-color: var(--textColor);
   }
 
   .site_name {
@@ -134,7 +136,22 @@ const siteBanner = config.branding.home_banner;
   }
 
   .blurb {
-    color: white;
+    color: var(--textColor);
     font-size: 14px;
   }
+
+  .top_links {
+    display: flex;
+    flex-direction: row;
+  }
+  .bottom_links {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .link {
+    width: 45px;
+    height: 45px;
+  }
 </style>
+../branding/Header

@@ -31,12 +31,10 @@ export const PDFViewer = (props: PDFViewerProps) => {
   }, []);
 
   return downloadURL && (
-    <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-      <PDFAnnotator 
-        pdfUrl={downloadURL} 
-        filter={props.filter}
-        style={props.style} />
-    </div>
+    <PDFAnnotator 
+      pdfUrl={downloadURL} 
+      filter={props.filter}
+      style={props.style} />
   )
   
 }

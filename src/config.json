@@ -5,7 +5,12 @@
     "site_name": "Default",
     "welcome_blurb": "Recogito is the premier Text and Image Annotation system",
     "site_color": "orange",
-    "home_banner": "https://iiif-staging.archivengine.com/iiif/3/ezzvwzdd3kug71gf0tj6vxxx9ihu;1/full/1200,/0/default.jpg"
+    "home_banner": "https://iiif-staging.archivengine.com/iiif/3/ezzvwzdd3kug71gf0tj6vxxx9ihu;1/full/1200,/0/default.jpg",
+    "background_color": "black",
+    "contrast_color": "white",
+    "bottom_logos_enabled": false,
+    "top_logos_enabled": false,
+    "footer_message": "Powered by Recogito"
   },
   "authentication": {
     "methods": [

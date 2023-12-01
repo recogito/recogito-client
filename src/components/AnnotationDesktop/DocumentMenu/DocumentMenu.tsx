@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import { 
   CaretLeft, 
