@@ -27,9 +27,8 @@ export const filterByPrivacy = (): FilterConfig => {
   }
 
   const updateValues = (annotations: SupabaseAnnotation[]) => {
-    // Nothing to do
+    // Do nothing
     return { values: getValues(), filter: getFilter() };
-
   }
 
   return { getValues, getFilter, setValue, updateValues };

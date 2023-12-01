@@ -5,7 +5,7 @@ import * as Select from '@radix-ui/react-select';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { useFiltering } from './useFiltering';
-import { filterByCreator, filterByPrivacy, filterByTag } from './filters';
+import { filterByAssignment, filterByCreator, filterByPrivacy, filterByTag } from './filters';
 
 interface FilterSettingsProps {
 
@@ -42,8 +42,8 @@ export const FilterSettings = (props: FilterSettingsProps) => {
     } else if (value === 'privacy') {
       setConfig(filterByPrivacy);
     } else if (value === 'assignment') {
-      // if (props.layers)
-      //   setCoding(colorByAssignment(props.layers));
+      if (props.layers)
+        setConfig(filterByAssignment(props.layers));
     } else if (value === 'creator') {
       setConfig(filterByCreator);
     } else if (value === 'tag') {
