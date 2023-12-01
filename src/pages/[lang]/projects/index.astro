@@ -9,7 +9,9 @@ import HeaderLayout from '@layouts/HeaderLayout.astro';
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {

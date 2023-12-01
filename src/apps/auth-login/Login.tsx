@@ -34,13 +34,29 @@ export const Login = (props: {
 
   const [currentMethod, setCurrentMethod] = useState<LoginMethod | undefined>();
 
+  const url = new URLSearchParams(window.location.search);
+  let redirectUrl = url.get('redirect-to');
+  if (redirectUrl) {
+    localStorage.setItem('redirect-to', redirectUrl);
+  } else {
+    redirectUrl = localStorage.getItem('redirect-to');
+    if (redirectUrl && redirectUrl.length === 0) {
+      redirectUrl = null;
+    }
+  }
+
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         clearCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
-        window.location.href = `/${props.i18n.lang}/projects`;
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+          localStorage.setItem('redirect-to', '');
+        } else {
+          window.location.href = `/${props.i18n.lang}/projects`;
+        }
       }
     });
 
@@ -48,7 +64,12 @@ export const Login = (props: {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
-          window.location.href = `/${props.i18n.lang}/projects`;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+            localStorage.setItem('redirect-to', '');
+          } else {
+            window.location.href = `/${props.i18n.lang}/projects`;
+          }
         });
       } else {
         setIsChecking(false);
@@ -63,7 +84,12 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          window.location.href = data.url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+            localStorage.setItem('redirect-to', '');
+          } else {
+            window.location.href = data.url;
+          }
         } else {
           console.error(error);
         }
@@ -80,7 +106,12 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          window.location.href = data.url;
+          if (redirectUrl) {
+            window.location.href = redirectUrl;
+            localStorage.setItem('redirect-to', '');
+          } else {
+            window.location.href = data.url;
+          }
         } else {
           console.error(error);
         }

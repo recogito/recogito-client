@@ -13,10 +13,10 @@ const methods = config.authentication.methods;
     <Login
       i18n={getTranslations(Astro.request, 'auth-login')}
       methods={methods as LoginMethod[]}
-      client:load
+      client:only='react'
     />
   </div>
-</LoginLayout>
+</LoginLayout>;
 
 <style>
   .container {
