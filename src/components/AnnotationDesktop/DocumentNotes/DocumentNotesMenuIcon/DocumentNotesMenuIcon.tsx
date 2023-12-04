@@ -23,7 +23,7 @@ export const DocumentNotesMenuIcon = (props: DocumentNotesMenuIconProps) => {
       className={props.active ? 'document-notes-menu-icon active' : 'document-notes-menu-icon'}>
       <button
         className={props.active ? 'active' : undefined}
-        aria-label="Show document notes"
+        aria-label={props.i18n.t['Show document notes']}
         onClick={props.onSelect}>
         <NotePencil />
       </button>
