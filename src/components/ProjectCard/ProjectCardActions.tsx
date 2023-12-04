@@ -116,6 +116,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog 
+        i18n={props.i18n}
         busy={busy}
         title={t['Are you sure?']} 
         description={isMine ? 

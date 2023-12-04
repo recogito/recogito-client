@@ -67,7 +67,7 @@ export const LayersPanel = (props: LayersPanelProps) => {
         <label>{t['Color by']}</label>
 
         <Select.Root value={value} onValueChange={onValueChange}>
-          <Select.Trigger className="select-trigger" aria-label="Annotation color by">
+          <Select.Trigger className="select-trigger" aria-label={t['Color by']}>
             <Select.Value />
             <Select.Icon className="select-icon">
               <CaretDown />

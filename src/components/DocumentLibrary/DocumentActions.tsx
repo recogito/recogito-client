@@ -64,6 +64,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog
+        i18n={props.i18n}
         title={t['Are you sure?']}
         description={t['Are you sure you want to delete this document?']}
         cancelLabel={t['Cancel']}

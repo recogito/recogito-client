@@ -67,7 +67,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
         <Trigger asChild>
           <button 
             className="unstyled icon-only"
-            aria-label={`Menu actions for document: ${props.document.name}`}>
+            aria-label={`${t['Menu actions for document:']} ${props.document.name}`}>
             <DotsThreeVertical weight="bold" size={20}/>
           </button>
         </Trigger>
@@ -150,6 +150,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog
+        i18n={props.i18n}
         title={t['Are you sure?']} 
         description={t['Are you sure you want to delete this document?']}
         cancelLabel={t['Cancel']} 
