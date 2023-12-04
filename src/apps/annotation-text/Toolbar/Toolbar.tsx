@@ -27,7 +27,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const isMine = (selected: { annotation: Annotation }[]) =>
     selected.every(({ annotation }) =>
-      annotation.target.creator.id === me.id);
+      annotation.target.creator?.id === me.id);
 
   const onDeleteSelection = () =>
     store.bulkDeleteAnnotation(selected.map(s => s.annotation));
@@ -55,7 +55,7 @@ export const Toolbar = (props: ToolbarProps) => {
           }>
           <button 
             className="delete" 
-            aria-label="Delete selected annotation"
+            aria-label={props.i18n.t['Delete selected annotation']}
             onClick={onDeleteSelection}>
             <Trash size={18} />
           </button>

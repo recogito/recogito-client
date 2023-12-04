@@ -1,9 +1,12 @@
 import { NotePencil } from '@phosphor-icons/react';
 import { useNotes } from '../DocumentNotes/useNotes';
+import type { Translations } from 'src/Types';
 
 import './DocumentNotesMenuIcon.css';
 
 interface DocumentNotesMenuIconProps {
+
+  i18n: Translations;
 
   active?: boolean;
 

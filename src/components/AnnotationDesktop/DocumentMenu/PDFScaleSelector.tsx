@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import type { PDFScale } from '@recogito/react-pdf-annotator';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import * as Select from '@radix-ui/react-select';
+import type { Translations } from 'src/Types';
 
 interface PDFScaleSelectorProps {
+
+  i18n: Translations;
 
   currentScale?: number;
 
@@ -29,7 +32,7 @@ export const PDFScaleSelector = (props: PDFScaleSelectorProps) => {
     <Select.Root value={selected} onValueChange={setSelected}>
       <Select.Trigger 
         className="select-trigger"
-        aria-label="PDF zoom level">
+        aria-label={props.i18n.t['PDF zoom level']}>
         {props.currentScale ? (
           <span className="custom-scale" >
             <Select.Value /> 

@@ -100,7 +100,7 @@ export const DeleteMember = (props: DeleteMemberProps) => {
             </footer>
 
             <Dialog.Close asChild>
-              <button className="unstyled icon-only dialog-close" aria-label="Close">
+              <button className="unstyled icon-only dialog-close" aria-label={t['Close']}>
                 <X />
               </button>
             </Dialog.Close>

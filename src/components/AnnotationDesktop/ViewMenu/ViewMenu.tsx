@@ -9,9 +9,9 @@ import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
 import { LayersPanel } from '../LayersPanel';
 import { DocumentNotes, DocumentNotesList, DocumentNotesMenuIcon } from '../DocumentNotes';
+import type { PostgrestError } from '@supabase/supabase-js';
 
 import './ViewMenu.css';
-import type { PostgrestError } from '@supabase/supabase-js';
 
 interface ViewMenuProps {
 
@@ -40,6 +40,8 @@ interface ViewMenuProps {
 }
 
 export const ViewMenu = (props: ViewMenuProps) => {
+
+  const { t } = props.i18n;
 
   const me = props.present.find(isMe)!;
 
@@ -92,19 +94,20 @@ export const ViewMenu = (props: ViewMenuProps) => {
           <section>
             <button 
               className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
-              aria-label="Show annotation list"
+              aria-label={t['Show annotation list']}
               onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
               <Chats />
             </button>
 
             <button
               className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
-              aria-label="Show annotation filter and color configuration"
+              aria-label={t['Show annotation filter and color configuration']}
               onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
               <StackSimple />
             </button>
 
             <DocumentNotesMenuIcon
+              i18n={props.i18n}
               active={panel === ViewMenuPanel.DOCUMENT_NOTES}
               onSelect={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)} />
           </section>

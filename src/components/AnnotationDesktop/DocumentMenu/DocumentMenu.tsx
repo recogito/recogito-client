@@ -22,6 +22,8 @@ interface DocumentMenuProps {
 
 export const DocumentMenu = (props: DocumentMenuProps) => {
 
+  const { t } = props.i18n;
+
   const contextName = props.document.context.name;
 
   const { id, project_id } = props.document.context;
@@ -84,18 +86,19 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
           <div className="anno-desktop-overlay-divider" />
 
           <PDFScaleSelector 
+            i18n={props.i18n}
             currentScale={currentScale}
             onSetScale={onSetScale}/>
 
           <button 
             onClick={onZoomIn}
-            aria-label="zoom in">
+            aria-label={t['Zoom in']}>
             <MagnifyingGlassPlus />
           </button>
 
           <button
             onClick={onZoomOut}
-            aria-label="zoom out">
+            aria-label={t['Zoom out']}>
             <MagnifyingGlassMinus />
           </button>
         </div>

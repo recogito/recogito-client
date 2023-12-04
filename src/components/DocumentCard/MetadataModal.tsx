@@ -141,7 +141,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
           <Dialog.Close asChild>
             <button
               className='dialog-close icon-only unstyled'
-              aria-label='Close'
+              aria-label={t['Close']}
             >
               <X size={16} />
             </button>
