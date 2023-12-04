@@ -65,7 +65,7 @@ export const Avatar = (props: AvatarProps) => {
       {avatar && (
         <RadixAvatar.Image
           className="avatar-image"
-          title={`${name} avatar image`} 
+          title={`${name} avatar`} 
           src={avatar} />
       )}
       
