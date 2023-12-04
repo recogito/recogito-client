@@ -13,13 +13,17 @@ export interface NavItemProps {
 
   link?: string;
 
+  tabIndex?: number;
+
 }
 
 export const NavItem = (props: NavItemProps) => {
   const cls = props.active ? 'project-sidebar-row active' : 'project-sidebar-row';
 
   return (
-    <li className={props.className ? `${cls} ${props.className}` : cls}>
+    <li
+      tabIndex={props.tabIndex}
+      className={props.className ? `${cls} ${props.className}` : cls}>
       <a href={props.link}>
         <span className="project-sidebar-col fixed">
           {React.createElement(props.icon, { size: 21 })}

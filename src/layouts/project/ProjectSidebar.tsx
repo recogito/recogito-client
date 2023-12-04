@@ -12,8 +12,7 @@ import {
 import { AccountActions } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
 import { NavItem } from './NavItem';
-import type { 
-  ExtendedAssignmentData,
+import type {
   ExtendedProjectData, 
   MyProfile,
   Translations 
@@ -70,11 +69,12 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
   return (
     <aside 
       className={open ? 'project-sidebar open' : 'project-sidebar collapsed'}>
-      <nav className="project-primary-nav">
+      <nav className="project-primary-nav" aria-label="project navigation">
         <ul>
           <li>
             <ul>
               <NavItem 
+                tabIndex={-1}
                 className="no-hover"
                 icon={GooglePodcastsLogo}
                 label="Recogito"
@@ -123,7 +123,9 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
       <section className="project-sidebar-actions">
         <ul>
           <li className="project-sidebar-toggle project-sidebar-row">
-            <button onClick={() => setOpen(!open)}>
+            <button 
+              onClick={() => setOpen(!open)}
+              aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}>
               <span className="project-sidebar-col fixed">
                 <ArrowLineLeft size={20} />
               </span>
