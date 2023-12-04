@@ -65,7 +65,7 @@ export const Notifications = (props: NotificationsProps) => {
         <Trigger asChild >
           <button 
             className="unstyled icon-only notification-actions-trigger actions-trigger"
-            aria-label="Show notifications"
+            aria-label={t['Show notifications']}
             disabled={false}>
 
             <Bell 
