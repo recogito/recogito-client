@@ -65,7 +65,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
       <Root>
         <Trigger asChild>
-          <button className="unstyled icon-only">
+          <button 
+            className="unstyled icon-only"
+            aria-label={`Menu actions for document: ${props.document.name}`}>
             <DotsThreeVertical weight="bold" size={20}/>
           </button>
         </Trigger>
@@ -120,12 +122,12 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                   alignOffset={-5}>
 
                   <Item className="dropdown-item" onSelect={onExportCSV(false)}>
-                      <UsersThree size={16} /> {t['Public annotations only']}
-                    </Item>
+                    <UsersThree size={16} /> {t['Public annotations only']}
+                  </Item>
 
-                    <Item className="dropdown-item" onSelect={onExportCSV(true)}>
-                      <Detective size={16} /> {t['Include my private annotations']}
-                    </Item>
+                  <Item className="dropdown-item" onSelect={onExportCSV(true)}>
+                    <Detective size={16} /> {t['Include my private annotations']}
+                  </Item>
                 </SubContent>
               </Portal>
             </Sub>

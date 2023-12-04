@@ -65,13 +65,13 @@ export const Avatar = (props: AvatarProps) => {
       {avatar && (
         <RadixAvatar.Image
           className="avatar-image"
-          title={name} 
+          title={`${name} avatar image`} 
           src={avatar} />
       )}
       
       <RadixAvatar.Fallback 
         className="avatar-fallback"
-        title={name} 
+        title={`${name} avatar image`} 
         style={{ backgroundColor }}>
         {name ? getInitials(name) : (
           <User size={16} />

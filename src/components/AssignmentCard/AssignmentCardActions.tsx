@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import type { Context, Translations } from 'src/Types';
 
 interface AssignmentCardActionsProps {
 
   i18n: Translations;
+
+  assignment: Context;
 
   onEdit(): void;
 
@@ -36,7 +38,9 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
   return (
     <Root open={open} onOpenChange={setOpen}>
       <Trigger asChild>
-        <button className="unstyled icon-only project-card-actions">
+        <button 
+          className="unstyled icon-only project-card-actions"
+          aria-label={`Menu actions for document: ${props.assignment.name}`}>
           <DotsThreeVertical weight="bold" size={20}/>
         </button>
       </Trigger>
