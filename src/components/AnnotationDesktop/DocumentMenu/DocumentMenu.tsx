@@ -53,7 +53,10 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
     <div className="anno-menubar anno-desktop-overlay document-menu">
       {contextName ? (
         <>
-          <a href={back} className="assignment-icon">
+          <a 
+            href={back} 
+            className="assignment-icon"
+            title="Back to assignment overview">
             <GraduationCap size={20} />
           </a>
 
@@ -63,7 +66,10 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
         </>
       ) : (
         <>
-          <a href={back} className="back-to-project">
+          <a 
+            href={back} 
+            className="back-to-project"
+            title="Back to project overview">
             <CaretLeft size={20} />
           </a>
 
@@ -81,11 +87,15 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
             currentScale={currentScale}
             onSetScale={onSetScale}/>
 
-          <button onClick={onZoomIn}>
+          <button 
+            onClick={onZoomIn}
+            aria-label="zoom in">
             <MagnifyingGlassPlus />
           </button>
 
-          <button onClick={onZoomOut}>
+          <button
+            onClick={onZoomOut}
+            aria-label="zoom out">
             <MagnifyingGlassMinus />
           </button>
         </div>

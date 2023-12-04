@@ -53,7 +53,10 @@ export const Toolbar = (props: ToolbarProps) => {
             "ta-toolbar-context ta-toolbar-context-right anno-desktop-overlay" :
             "ta-toolbar-context ta-toolbar-context-right anno-desktop-overlay hidden"
           }>
-          <button className="delete" onClick={onDeleteSelection}>
+          <button 
+            className="delete" 
+            aria-label="Delete selected annotation"
+            onClick={onDeleteSelection}>
             <Trash size={18} />
           </button>
         </div>

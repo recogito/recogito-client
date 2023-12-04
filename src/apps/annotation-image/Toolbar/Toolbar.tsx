@@ -53,18 +53,21 @@ export const Toolbar = (props: ToolbarProps) => {
         <section>
           <button 
             className={tool === 'cursor' ? 'active' : undefined}
+            aria-label="Pan and zoom the image, select annotations"
             onClick={() => onChangeTool('cursor')}>
             <Cursor size={18} />
           </button>
 
           <button 
             className={tool === 'rectangle' ? 'active' : undefined}
+            aria-label="Create rectangle annotations"
             onClick={() => onChangeTool('rectangle')}>
             <Rectangle />
           </button>
 
           <button 
             className={tool === 'polygon' ? 'active' : undefined}
+            aria-label="Create polygon annotations"
             onClick={() => onChangeTool('polygon')}>
             <Polygon />
           </button>
@@ -86,7 +89,10 @@ export const Toolbar = (props: ToolbarProps) => {
             "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay" :
             "ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden"
           }>
-          <button className="delete" onClick={onDeleteSelection}>
+          <button 
+            className="delete" 
+            aria-label="Delete selected annotation"
+            onClick={onDeleteSelection}>
             <Trash size={18} />
           </button>
         </div>

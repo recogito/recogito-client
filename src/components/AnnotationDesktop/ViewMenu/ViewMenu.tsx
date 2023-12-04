@@ -92,12 +92,14 @@ export const ViewMenu = (props: ViewMenuProps) => {
           <section>
             <button 
               className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
+              aria-label="Show annotation list"
               onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
               <Chats />
             </button>
 
             <button
               className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
+              aria-label="Show annotation filter and color configuration"
               onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
               <StackSimple />
             </button>

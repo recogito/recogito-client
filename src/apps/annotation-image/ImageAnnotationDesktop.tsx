@@ -129,6 +129,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }
 
+  const options = useMemo(() => ({
+    tileSources: props.document.meta_data?.url,
+    gestureSettingsMouse: {
+      clickToZoom: false
+    },
+    showNavigationControl: false,
+    crossOriginPolicy: 'Anonymous'
+  }), [props.document.meta_data?.url]);
+
   return (
     <div className="anno-desktop ia-desktop">
       {policies && (
@@ -158,14 +167,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
           <OpenSeadragonViewer
             className="ia-osd-container"
-            options={{
-              tileSources: props.document.meta_data?.url,
-              gestureSettingsMouse: {
-                clickToZoom: false
-              },
-              showNavigationControl: false,
-              crossOriginPolicy: 'Anonymous'
-            }} />
+            // @ts-ignore
+            options={options} />
 
           {usePopup && (
             <OpenSeadragonPopup
