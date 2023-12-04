@@ -58,7 +58,7 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
           <a 
             href={back} 
             className="assignment-icon"
-            title="Back to assignment overview">
+            title={t['Back to assignment overview']}>
             <GraduationCap size={20} />
           </a>
 
@@ -71,7 +71,7 @@ export const DocumentMenu = (props: DocumentMenuProps) => {
           <a 
             href={back} 
             className="back-to-project"
-            title="Back to project overview">
+            title={t['Back to project overview']}>
             <CaretLeft size={20} />
           </a>
 
