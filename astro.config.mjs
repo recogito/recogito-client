@@ -10,5 +10,8 @@ export default defineConfig({
     ssr: {
       noExternal: ['@radix-ui/*', '@phosphor-icons/*'],
     },
+    optimizeDeps: {
+      exclude: ['react-dropzone', 'uuid', 'react-table-library'],
+    },
   },
 });

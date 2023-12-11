@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createDocument } from '@backend/crud';
+import { createDocument, createProjectDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
@@ -83,8 +83,19 @@ const _initDocument = (
       protocol: 'IIIF_IMAGE',
       url,
     }).then(({ error, data }) => {
-      if (error) reject(error);
-      else resolve(data);
+      if (error) {
+        reject(error);
+      } else {
+        createProjectDocument(supabase, data.id, projectId).then(
+          ({ error: pdError, data: _projectDocument }) => {
+            if (pdError) {
+              reject(error);
+            } else {
+              resolve(data);
+            }
+          }
+        );
+      }
     })
   );
 

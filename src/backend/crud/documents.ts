@@ -1,10 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
-import type { Document } from 'src/Types';
+import type { Document, ProjectDocument } from 'src/Types';
 
 export const createDocument = (
-  supabase: SupabaseClient, 
-  name: string, 
+  supabase: SupabaseClient,
+  name: string,
   content_type?: string,
   meta_data?: object
 ): Response<Document> =>
@@ -14,20 +14,37 @@ export const createDocument = (
       name,
       content_type,
       bucket_id: content_type ? 'documents' : undefined,
-      meta_data
+      meta_data,
     })
     .select()
     .single()
     .then(({ error, data }) => {
-      return { error, data: data as Document }
+      return { error, data: data as Document };
+    });
+
+export const createProjectDocument = (
+  supabase: SupabaseClient,
+  documentId: string,
+  projectId: string
+): Response<ProjectDocument> =>
+  supabase
+    .from('project_documents')
+    .insert({
+      project_id: projectId,
+      document_id: documentId,
+    })
+    .select()
+    .single()
+    .then(({ error, data }) => {
+      return { error, data: data as ProjectDocument };
     });
 
 export const renameDocument = (
-  supabase: SupabaseClient, 
-  documentId: string, 
+  supabase: SupabaseClient,
+  documentId: string,
   name: string
 ): Response<Document> =>
-  supabase 
+  supabase
     .from('documents')
     .update({ name })
     .eq('id', documentId)
@@ -40,7 +57,7 @@ export const updateDocumentMetadata = (
   documentId: string,
   name: string,
   meta_data: object
-): Response<Document> => 
+): Response<Document> =>
   supabase
     .from('documents')
     .update({ name, meta_data })
@@ -55,7 +72,8 @@ export const getDocument = (
 ): Response<Document> =>
   supabase
     .from('documents')
-    .select(`
+    .select(
+      `
       id,
       created_at,
       created_by,
@@ -65,7 +83,8 @@ export const getDocument = (
       bucket_id,
       content_type,
       meta_data
-    `)
+    `
+    )
     .eq('id', documentId)
     .single()
     .then(({ error, data }) => ({ error, data: data as Document }));
