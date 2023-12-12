@@ -1,6 +1,6 @@
 {
   "Ok": "Ok",
-  "Cancel": "Abbrechen",
+  "Done": "Done",
   "Save": "Speichern",
   "Clear": "Löschen",
   "Add a project description": "Projektbeschreibung hinzufügen",
@@ -45,5 +45,11 @@
   "Add Selected Documents": "Add Selected Documents",
   "No Documents": "No Documents",
   "Search": "Search",
-  "View Document Metadata": "View Document Metadata"
+  "View Document Metadata": "View Document Metadata",
+  "Private": "Private",
+  "Make Private": "Make Private",
+  "Make Public": "Make Public",
+  "Cancel": "Cancel",
+  "Make Document Public": "Make Document Public",
+  "Public Document Warning Message": "By making this document Public, you are asserting that you have sufficient rights, licensing, or permission to do so."
 }

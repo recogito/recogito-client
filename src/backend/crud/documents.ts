@@ -66,6 +66,19 @@ export const updateDocumentMetadata = (
     .single()
     .then(({ error, data }) => ({ error, data: data as Document }));
 
+export const setDocumentPrivacy = (
+  supabase: SupabaseClient,
+  documentId: string,
+  isPrivate: boolean
+): Response<Document> =>
+  supabase
+    .from('documents')
+    .update({ is_private: isPrivate })
+    .eq('id', documentId)
+    .select()
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Document }));
+
 export const getDocument = (
   supabase: SupabaseClient,
   documentId: string
@@ -82,7 +95,8 @@ export const getDocument = (
       name,
       bucket_id,
       content_type,
-      meta_data
+      meta_data,
+      is_private
     `
     )
     .eq('id', documentId)

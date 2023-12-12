@@ -121,6 +121,8 @@ export interface Document {
 
   content_type?: ContentType;
 
+  is_private: boolean;
+
   meta_data?: {
     protocol: Protocol;
 

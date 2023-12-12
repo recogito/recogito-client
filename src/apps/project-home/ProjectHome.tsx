@@ -6,7 +6,7 @@ import {
   useOrganizationPolicies,
   useProjectPolicies,
 } from '@backend/hooks/usePolicies';
-import { archiveLayer } from '@backend/crud';
+import { archiveLayer, setDocumentPrivacy } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import {
@@ -164,6 +164,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       });
   };
 
+  const onTogglePrivate = (document: Document) => {
+    setDocumentPrivacy(supabase, document.id, !document.is_private).then(() =>
+      setDocumentUpdated(true)
+    );
+  };
+
   const onUpdateDocument = (document: Document) => {
     setDocuments((documents) =>
       documents.map((d) =>
@@ -289,6 +295,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onUpdated={onUpdateDocument}
             onError={onError}
             onDelete={onDeleteDocument}
+            onTogglePrivate={onTogglePrivate}
             isAdmin={isAdmin}
           />
         </div>
