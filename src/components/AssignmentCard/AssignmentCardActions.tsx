@@ -40,7 +40,7 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
       <Trigger asChild>
         <button 
           className="unstyled icon-only project-card-actions"
-          aria-label={`Menu actions for document: ${props.assignment.name}`}>
+          aria-label={`${t['Menu actions for assignment:']} ${props.assignment.name}`}>
           <DotsThreeVertical weight="bold" size={20}/>
         </button>
       </Trigger>

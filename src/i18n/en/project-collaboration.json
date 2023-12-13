@@ -24,5 +24,6 @@
   "Remove_anonymous": "Are you sure you want to remove this user from the project?",
   "Remove": "Remove",
   "Yes, I want to leave": "Yes, I want to leave",
-  "Cancel": "Cancel"
+  "Cancel": "Cancel",
+  "Close": "Close"
 }

@@ -1,4 +1,6 @@
 {
+  "Show annotation list": "Show annotation list",
+  "Show annotation filter and color configuration": "Show annotation filter and color configuration",
   "Anonymous": "Anonymous",
   "Public": "Public",
   "Private": "Private",
@@ -6,6 +8,7 @@
   "Public_Hint_02": "invited users or the general public.",
   "Private_Hint_01": "Annotations you create in Private mode will be visible to",
   "Private_Hint_02": "no-one except you.",
+  "Delete selected annotation": "Delete selected annotation",
   "Comment...": "Comment...",
   "Reply...": "Reply...",
   "Add a tag...": "Add a tag...",
@@ -15,13 +18,16 @@
   "Make annotation public": "Make this annotation public",
   "Save": "Save",
   "Cancel": "Cancel",
+  "Close": "Close",
   "With Great Power...": "With Great Power...",
   "...comes great responsibility.": "...comes great responsibility. You can change other users' annotations because you have administrator privileges on this document. Use your powers responsibly.",
   "Proceed": "Proceed",
   "Show": "Show",
+  "Filter annotations by": "Filter annotations by",
+  "Sort annotations by": "Sort annotations by",
   "all annotations": "all annotations",
   "annotations in current view": "annotations in current view",
-
+  "Show document notes": "Show document notes",
   "New Note": "New Note",
   "Create new public note": "Create new public note",
   "Create new private note": "Create new private note",
@@ -49,5 +55,9 @@
   "Enter a publicly available URL to embed the image into your annotation": "Enter a publicly available URL to embed the image into your annotation",
   "Enter YouTube video URL": "Enter YouTube video URL",
   "Enter a publicly available YouTube URL to embed the video into your annotation": "Enter a publicly available YouTube URL to embed the video into your annotation",
-  "URL": "URL"
+  "URL": "URL",
+  "Back to assignment overview": "Back to assignment overview",
+  "Back to project overview": "Back to project overview",
+  "Zoom in": "Zoom in",
+  "Zoom out": "Zoom out"
 }

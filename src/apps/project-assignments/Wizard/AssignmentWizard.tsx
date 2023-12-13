@@ -209,7 +209,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
           {complete && (
             <Dialog.Close asChild>
-              <button className="dialog-close icon-only unstyled" aria-label="Close">
+              <button className="dialog-close icon-only unstyled" aria-label={t['Close']}>
                 <X size={16} />
               </button>
             </Dialog.Close>

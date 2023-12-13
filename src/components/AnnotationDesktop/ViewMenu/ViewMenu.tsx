@@ -14,7 +14,6 @@ import { ColorState, FilterState } from '../LayersPanel';
 
 import './ViewMenu.css';
 
-
 interface ViewMenuProps {
 
   i18n: Translations;
@@ -44,6 +43,8 @@ interface ViewMenuProps {
 }
 
 export const ViewMenu = (props: ViewMenuProps) => {
+
+  const { t } = props.i18n;
 
   const me = props.present.find(isMe)!;
 
@@ -91,24 +92,27 @@ export const ViewMenu = (props: ViewMenuProps) => {
             channelId={props.channel}
             layerId={props.defaultLayer}
             present={props.present}
-            onError={onError}>
+            onError={onError}>  
 
             <div 
               className="anno-menubar anno-desktop-overlay view-menu">
               <section>
                 <button 
                   className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
+                  aria-label={t['Show annotation list']}
                   onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
                   <Chats />
                 </button>
 
                 <button
                   className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
+                  aria-label={t['Show annotation filter and color configuration']}
                   onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
                   <StackSimple />
                 </button>
 
                 <DocumentNotesMenuIcon
+                  i18n={props.i18n}
                   active={panel === ViewMenuPanel.DOCUMENT_NOTES}
                   onSelect={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)} />
               </section>

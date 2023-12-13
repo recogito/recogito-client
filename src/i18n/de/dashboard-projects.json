@@ -12,6 +12,8 @@
   "Untitled Project": "Unbenanntes Projekt",
   "No description.": "Keine Projektbeschreibung.",
 
+  "Show notifications": "Benachrichtigungen anzeigen",
+
   "All": "Alle",
   "My Projects": "Meine Projekte",
   "Shared with me": "Mit mir geteilt",
@@ -21,6 +23,7 @@
   "Newest": "Neuestes Projekt",
   "Oldest": "Ältestes Projekt",
 
+  "Show menu actions menu for project:": "Menüoptionen für Projekt:",
   "Edit project details": "Projektinformationen bearbeiten",
   "Delete project": "Projekt löschen",
   "Leave project": "Projekt verlassen",
@@ -36,6 +39,7 @@
 
   "Ok": "Ok",
   "Cancel": "Abbrechen",
+  "Close": "Schließen",
 
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the project.": "Das Projekt konnte nicht erstellt werden.",

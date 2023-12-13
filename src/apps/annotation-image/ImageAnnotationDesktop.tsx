@@ -86,18 +86,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   }, [policies]);
 
-  // TODO since Annotorious 3.0.0-rc.2 this needs to be 
-  // memo-ized which is a pain - need to fix this inside
-  // Annotorious!
-  const options: OpenSeadragon.Options = useMemo(() => ({
-    tileSources: props.document.meta_data?.url,
-    gestureSettingsMouse: {
-      clickToZoom: false
-    },
-    showNavigationControl: false,
-    crossOriginPolicy: 'Anonymous'
-  }), [props.document.meta_data?.url])
-
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
@@ -142,6 +130,18 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }
 
+  // TODO since Annotorious 3.0.0-rc.2 this needs to be 
+  // memo-ized which is a pain - need to fix this inside
+  // Annotorious!
+  const options = useMemo(() => ({
+    tileSources: props.document.meta_data?.url,
+    gestureSettingsMouse: {
+      clickToZoom: false
+    },
+    showNavigationControl: false,
+    crossOriginPolicy: 'Anonymous'
+  }), [props.document.meta_data?.url]);
+
   return (
     <div className="anno-desktop ia-desktop">
       {policies && (
@@ -172,6 +172,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
           <OpenSeadragonViewer
             className="ia-osd-container"
+            // @ts-ignore
             options={options} />
 
           {usePopup && (

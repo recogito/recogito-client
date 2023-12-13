@@ -1,11 +1,13 @@
 {
   "Ok": "Ok",
   "Cancel": "Cancel",
+  "Close": "Close",
   "Save": "Save",
   "Clear": "Clear",
   "Add a project description": "Add a project description",
   "Add a project description...": "Add a project description...",
   "Import Document": "Import Document",
+  "Menu actions for document:": "Menu actions for document:",
   "Open document": "Open document",
   "Open document in new tab": "Open document in new tab",
   "Export TEI file": "Export TEI file",

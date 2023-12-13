@@ -29,7 +29,7 @@ export const FilterSelector = (props: FilterSelectorProps) => {
       <label>{t['Show']}</label>
 
       <Select.Root defaultValue={Filter.NONE} onValueChange={props.onChange}>
-        <Select.Trigger className="select-trigger" aria-label="Filter annotations by">
+        <Select.Trigger className="select-trigger" aria-label={t['Filter annotations by']}>
           <Select.Value />
           <Select.Icon className="select-icon">
             <CaretDown />
