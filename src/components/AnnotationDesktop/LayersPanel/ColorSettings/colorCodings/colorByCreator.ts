@@ -1,36 +1,17 @@
-import type { Color, DrawingStyle, PresentUser, User } from '@annotorious/react';
+import type { Color, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { AdobeCategorical12 } from '../ColorPalettes';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { getDisplayName, enumerateCreators } from '../../utils';
 
 const PALETTE = AdobeCategorical12;
 
 const UNKNOWN_CREATOR: Color = '#727272';
 
-const enumerateCreators = (present: PresentUser[], annotations: SupabaseAnnotation[]) => 
-  annotations.reduce((enumerated, a) => {
-    const creator = present.find(p => p.id === a.target.creator?.id || a.target.creator);
-    if (creator) {
-      const exists = enumerated.find(u => u.id === creator.id);
-      return exists ? enumerated : [...enumerated, creator];
-    } else {
-      return enumerated;
-    }
-  }, [] as User[]);
-
-const getName = (user?: PresentUser | User) => {
-  if (user) {
-    return 'appearance' in user ? 
-      (user as PresentUser).appearance.label : user.name || 'Anonymous';
-  } else {
-    return 'Anonymous';
-  }
-}
-
 const buildLegend = (present: PresentUser[], annotations: SupabaseAnnotation[]) => 
   new Map<string | undefined, { color: Color, label: string }>(new Map(
     enumerateCreators(present, annotations)
-      .map((user, idx) => ([user.id, { color: PALETTE[idx], label: getName(user) }]))
+      .map((user, idx) => ([user.id, { color: PALETTE[idx], label: getDisplayName(user) }]))
   ));
 
 export const colorByCreator = (annotations: SupabaseAnnotation[], present?: PresentUser[]): ColorCoding => {

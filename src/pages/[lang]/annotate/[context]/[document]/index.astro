@@ -10,7 +10,9 @@ import { getDocumentInContext } from '@backend/helpers';
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
 
 const contextId = Astro.params.context;
 const documentId = Astro.params.document;
