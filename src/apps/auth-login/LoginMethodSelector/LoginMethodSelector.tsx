@@ -51,7 +51,7 @@ export const LoginMethodSelector = (props: LoginMethodSelectorProps) => {
       value={props.currentMethod?.name}
       onValueChange={onValueChange}
     >
-      <Select.Trigger className='select-trigger' aria-label='Login method'>
+      <Select.Trigger className='select-trigger' aria-label={t['Login method']}>
         <Select.Value placeholder={t['Sign In']} />
         <Select.Icon className='select-icon'>
           <CaretDown />

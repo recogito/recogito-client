@@ -7,6 +7,7 @@
   "4. Verify": "4. Verify",
 
   "Cancel": "Cancel",
+  "Close": "Close",
   "Next": "Next",
   "Back": "Back",
   "Create Assignment": "Create Assignment",
@@ -48,6 +49,7 @@
   "The assignment was created successfully": "The assignment was created successfully and was added to the team members' dashboards.",
   "The assignment was updated successfully": "The assignment was updated successfully.",
 
+  "Menu actions for assignment:": "Menu actions for assignment:",
   "Edit assignment": "Edit assignment",
   "Delete assignment": "Delete assignment",
 

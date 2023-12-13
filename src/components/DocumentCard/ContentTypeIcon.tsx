@@ -18,7 +18,7 @@ export const ContentTypeIcon = (props: ContentTypeIconProps) => {
   } else if (content_type === 'application/pdf') {
     return <FilePdf size={44} weight="thin" />;
   } else if (meta_data?.protocol === 'IIIF_IMAGE') {
-    return <img src="/img/iiif-logo.png" style={{ width: 52, height: 45 }} />;
+    return <img src="/img/iiif-logo.png" alt="IIIF logo" style={{ width: 52, height: 45 }} />;
   } else {
     return null;
   }

@@ -1,11 +1,14 @@
 {
   "Ok": "Ok",
   "Done": "Done",
+  "Cancel": "Abbrechen",
+  "Close": "Schließen",
   "Save": "Speichern",
   "Clear": "Löschen",
   "Add a project description": "Projektbeschreibung hinzufügen",
   "Add a project description...": "Projektbeschreibung hinzufügen...",
   "Import Document": "Dokument Importieren",
+  "Menu actions for document:": "Menüoptionen für Dokument:",
   "Open document": "Dokument öffnen",
   "Open document in new tab": "In neuem Tab öffnen",
   "Export TEI file": "TEI/XML exportieren",
@@ -49,7 +52,6 @@
   "Private": "Private",
   "Make Private": "Make Private",
   "Make Public": "Make Public",
-  "Cancel": "Cancel",
   "Make Document Public": "Make Document Public",
   "Public Document Warning Message": "By making this document Public, you are asserting that you have sufficient rights, licensing, or permission to do so."
 }

@@ -40,7 +40,7 @@ const cookie = Astro.cookies.get('x-project-sidebar-collapsed');
 
     <div class='container'>
       <header>
-        <nav class='breadcrumbs'>
+        <nav class='breadcrumbs' aria-label='breadcrumbs'>
           <ol>
             <li>
               <a href=`/${lang}/projects`>{i18n.t['Projects']}</a>

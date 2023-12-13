@@ -70,7 +70,7 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
           <form onSubmit={formik.handleSubmit}>
             <fieldset>
               <div className="field">
-                <label>{t['E-Mail']}</label>
+                <label htmlFor="email">{t['E-Mail']}</label>
                 <input 
                   readOnly
                   id="email"
