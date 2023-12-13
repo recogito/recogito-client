@@ -10,7 +10,11 @@ import {
 import { AccountActions } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
 import { NavItem } from './NavItem';
-import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import type {
+  ExtendedProjectData, 
+  MyProfile,
+  Translations 
+} from 'src/Types';
 
 import './ProjectSidebar.css';
 
@@ -60,15 +64,15 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
       : undefined;
 
   return (
-    <aside
-      className={open ? 'project-sidebar open' : 'project-sidebar collapsed'}
-    >
-      <nav className='project-primary-nav'>
+    <aside 
+      className={open ? 'project-sidebar open' : 'project-sidebar collapsed'}>
+      <nav className="project-primary-nav" aria-label="project navigation">
         <ul>
           <li>
             <ul>
-              <NavItem
-                className='no-hover'
+              <NavItem 
+                tabIndex={-1}
+                className="no-hover"
                 icon={GooglePodcastsLogo}
                 label='Recogito'
                 link={`/${lang}/projects`}
@@ -120,9 +124,11 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
 
       <section className='project-sidebar-actions'>
         <ul>
-          <li className='project-sidebar-toggle project-sidebar-row'>
-            <button onClick={() => setOpen(!open)}>
-              <span className='project-sidebar-col fixed'>
+          <li className="project-sidebar-toggle project-sidebar-row">
+            <button 
+              onClick={() => setOpen(!open)}
+              aria-label={open ? 'Collapse sidebar' : 'Expand sidebar'}>
+              <span className="project-sidebar-col fixed">
                 <ArrowLineLeft size={20} />
               </span>
             </button>

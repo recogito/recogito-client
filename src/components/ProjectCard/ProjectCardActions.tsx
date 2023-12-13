@@ -89,7 +89,9 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       
       <Root>
         <Trigger asChild>
-          <button className="unstyled icon-only project-card-actions">
+          <button 
+            className="unstyled icon-only project-card-actions"
+            aria-label={`Show menu actions menu for project: ${props.project.name}`}>
             <DotsThreeVertical weight="bold" size={20}/>
           </button>
         </Trigger>

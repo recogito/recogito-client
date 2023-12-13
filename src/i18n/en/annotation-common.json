@@ -34,6 +34,8 @@
 
   "Color by": "Color by",
   "No color coding": "No color coding",
+  "Filter by": "Filter by",
+  "Show all annotations": "Show all annotations", 
   "Public vs. Private": "Public vs. Private",
   "Your private annotations": "Your private annotation",
   "All public annotations": "All public annotations",
@@ -41,6 +43,7 @@
   "No Assignment": "No Assignment",
   "Creator": "Creator",
   "First Tag": "First Tag",
+  "Tag": "Tag",
   "No tag": "No tag",
   "Enter Image URL": "Enter Image URL",
   "Enter a publicly available URL to embed the image into your annotation": "Enter a publicly available URL to embed the image into your annotation",

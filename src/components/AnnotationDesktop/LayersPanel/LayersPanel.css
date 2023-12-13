@@ -1,8 +1,27 @@
 .layer-configuration {
   height: 100%;
   overflow-y: scroll;
-  padding: 15px 20px;
+  padding: 8px;
   font-size: var(--font-tiny);
+}
+
+.layer-configuration .layer-configuration-section {
+  background-color: #fff;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  padding: 10px 20px;
+}
+
+.layer-configuration .layer-configuration-section .layer-configuration-selection {
+  display: flex;
+  justify-content: space-between;
+}
+
+.layer-configuration .layer-configuration-section button.select-trigger {
+  all: unset;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 .layer-configuration label {
@@ -11,7 +30,7 @@
 }
 
 .layer-configuration-legend {
-  font-size: var(--font-small);
+  font-size: var(--font-tiny);
   padding: 15px 0;
 }
 
@@ -28,10 +47,8 @@
 }
 
 .layer-configuration-legend li .legend-color {
-  border-radius: var(--border-radius);
+  border-radius: 2px;
   display: inline-block;
-  height: 17px;
-  position: relative;
-  top: -1px;
-  width: 17px;
+  height: 16px;
+  width: 16px;
 }
