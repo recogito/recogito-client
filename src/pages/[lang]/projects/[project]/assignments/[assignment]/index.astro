@@ -1,7 +1,7 @@
 ---
 import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getMyProfile} from '@backend/crud';
+import { getMyProfile } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { AssignmentDetails } from '@apps/project-assignment-details';
 import { getAssignment, getProjectExtended } from '@backend/helpers';
@@ -9,25 +9,26 @@ import { getAssignment, getProjectExtended } from '@backend/helpers';
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
 
 const profile = await getMyProfile(supabase);
-if (profile.error || !profile.data) { 
+if (profile.error || !profile.data) {
   const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
 const projectId = Astro.params.project!;
 
 const project = await getProjectExtended(supabase, projectId as string);
-if (project.error || !project.data) { 
+if (project.error || !project.data) {
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { 
+  return new Response(error.body, {
     headers: { 'Content-Type': 'text/html;charset=utf-8' },
-    status: 404, 
-    statusText: 'Not Found' 
-   }); 
+    status: 404,
+    statusText: 'Not Found',
+  });
 }
 
 const assignmentId = Astro.params.assignment!;
@@ -35,23 +36,21 @@ const assignmentId = Astro.params.assignment!;
 const assignment = await getAssignment(supabase, assignmentId);
 if (assignment.error || !assignment.data) {
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { 
+  return new Response(error.body, {
     headers: { 'Content-Type': 'text/html;charset=utf-8' },
-    status: 404, 
-    statusText: 'Not Found' 
-   }); 
+    status: 404,
+    statusText: 'Not Found',
+  });
 }
 
 const i18n = getTranslations(Astro.request, 'project-assignment-details');
 ---
-<ProjectLayout 
-  active="Assignments" 
-  user={profile.data} 
+
+<ProjectLayout
+  active='Assignments'
+  user={profile.data}
   project={project.data}
-  assignment={assignment.data}>
-  
-  <AssignmentDetails
-    client:load
-    i18n={i18n}
-    assignment={assignment.data} />
+  assignment={assignment.data}
+>
+  <AssignmentDetails client:load i18n={i18n} assignment={assignment.data} />
 </ProjectLayout>

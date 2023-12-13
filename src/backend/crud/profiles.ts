@@ -18,10 +18,11 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
 
 export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
   getUser(supabase)
-    .then(user =>
+    .then((user) =>
       supabase
         .from('profiles')
-        .select(`
+        .select(
+          `
           id,
           created_at,
           nickname,
@@ -32,7 +33,8 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
             group_type,
             type_id
           )
-        `)
+        `
+        )
         .eq('id', user?.id)
         .eq('group_users.group_type', 'organization')
         .single()
@@ -41,36 +43,54 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
             return { error, data: data as unknown as MyProfile };
           } else {
             // Keep profile fields + add email
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { group_users, ...profile } = { ...data, email: user.email };
 
             return supabase
               .from('organization_groups')
-              .select(`
+              .select(
+                `
                 id,
                 name,
-                description
-              `)
-              .in('id', data.group_users.map(r => r.type_id))
-              .then(({ error, data}) => {
-                if (error ) {
+                description,
+                is_admin
+              `
+              )
+              .in(
+                'id',
+                data.group_users.map((r) => r.type_id)
+              )
+              .then(({ error, data }) => {
+                if (error) {
                   return { error, data: data as unknown as MyProfile };
                 } else {
-                  return { error, data: { 
-                    ...profile, 
-                    isOrgAdmin: data.some(r => r.name === 'Org Admins') 
-                  } as MyProfile };
+                  return {
+                    error,
+                    data: {
+                      ...profile,
+                      isOrgAdmin: data.some((r) => r.is_admin === true),
+                    } as MyProfile,
+                  };
                 }
               });
           }
-        }))
-    .catch(error => ({ error: error as PostgrestError, data: null as unknown as MyProfile }));
+        })
+    )
+    .catch((error) => ({
+      error: error as PostgrestError,
+      data: null as unknown as MyProfile,
+    }));
 
-export const updateMyProfile = (supabase: SupabaseClient, values: {[key: string]: string}): Response<MyProfile> =>
-  getUser(supabase).then(user =>
+export const updateMyProfile = (
+  supabase: SupabaseClient,
+  values: { [key: string]: string }
+): Response<MyProfile> =>
+  getUser(supabase).then((user) =>
     supabase
       .from('profiles')
       .update(values)
       .eq('id', user?.id)
       .select()
       .single()
-      .then(({ error, data }) => ({ error, data: data as MyProfile})));
+      .then(({ error, data }) => ({ error, data: data as MyProfile }))
+  );
