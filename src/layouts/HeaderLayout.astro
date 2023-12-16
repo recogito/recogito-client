@@ -18,6 +18,8 @@ const textColor = config.branding.contrast_color;
 const useFooter = config.branding.bottom_logos_enabled;
 const useHeader = config.branding.top_logos_enabled;
 const backgroundColor = config.branding.background_color;
+
+const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 ---
 
 <!DOCTYPE html>
@@ -26,6 +28,7 @@ const backgroundColor = config.branding.background_color;
     <meta charset='UTF-8' />
     <meta name='viewport' content='width=device-width' />
     <meta name='generator' content={Astro.generator} />
+    <link rel="icon" type="image/x-icon" href={favicon}>
     <title>{title}</title>
   </head>
   <body>
