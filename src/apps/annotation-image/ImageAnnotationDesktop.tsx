@@ -4,6 +4,7 @@ import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helper
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Annotation } from '@components/Annotation';
+import { LoadingOverlay } from '@components/LoadingOverlay';
 import { createAppearenceProvider, PresenceStack } from '@components/Presence';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -38,6 +39,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
+
+  const [loading, setLoading] = useState(true);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -133,7 +136,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   // TODO since Annotorious 3.0.0-rc.2 this needs to be 
   // memo-ized which is a pain - need to fix this inside
   // Annotorious!
-  const options = useMemo(() => ({
+  const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.document.meta_data?.url,
     gestureSettingsMouse: {
       clickToZoom: false
@@ -144,6 +147,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   return (
     <div className="anno-desktop ia-desktop">
+      {loading && (
+        <LoadingOverlay />
+      )}
+
       {policies && (
         <OpenSeadragonAnnotator
           autoSave
@@ -165,6 +172,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               defaultLayer={defaultLayer?.id} 
               layerIds={layers.map(layer => layer.id)}
               appearanceProvider={appearance}
+              onInitialLoad={() => setLoading(false)}
               onPresence={setPresent} 
               onConnectError={onConnectError}
               privacyMode={privacy === 'PRIVATE'} />
@@ -172,7 +180,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
           <OpenSeadragonViewer
             className="ia-osd-container"
-            // @ts-ignore
             options={options} />
 
           {usePopup && (
