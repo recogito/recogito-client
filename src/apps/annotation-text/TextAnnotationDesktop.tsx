@@ -45,7 +45,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const text = useContent(props.document);
 
-  const [loading, setLoading] = useState(true);
+  const [annotationsLoading, setAnnotationsLoading] = useState(true);
+
+  const [pdfLoading, setPDFLoading] = useState(contentType === 'application/pdf');
+
+  const loading = annotationsLoading || pdfLoading || (!text);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -128,7 +132,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         contentType === 'application/pdf' ? 'content-wrapper pdf' : 
           'content-wrapper text'}>
 
-      {loading && !text && (
+      {loading && (
         <LoadingOverlay />
       )}
 
@@ -146,7 +150,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           <PDFViewer
             document={props.document} 
             filter={filter}
-            style={style} />
+            style={style} 
+            onRendered={() => setPDFLoading(false)} />
         ) : text && (
           <TextAnnotator
             filter={filter}
@@ -171,7 +176,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             defaultLayer={defaultLayer?.id} 
             layerIds={layers.map(layer => layer.id)}
             appearanceProvider={createAppearenceProvider()}
-            onInitialLoad={() => setLoading(false)}
+            onInitialLoad={() => setAnnotationsLoading(false)}
             onPresence={setPresent} 
             privacyMode={privacy === 'PRIVATE'}/>
         }
