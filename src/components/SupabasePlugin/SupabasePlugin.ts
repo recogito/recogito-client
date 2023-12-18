@@ -58,9 +58,6 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
     }
   }, [
     anno, 
-    props.onInitialLoad,
-    props.onInitialLoadError,
-    props.onIntegrityError,
     props.onPresence,
     props.onSaveError,
     props.onSelectionChange
