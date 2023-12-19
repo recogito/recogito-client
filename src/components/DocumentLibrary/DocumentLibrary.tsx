@@ -24,6 +24,7 @@ import type { Action } from '@table-library/react-table-library/types/common';
 import { useSort } from '@table-library/react-table-library/sort';
 import { DocumentActions } from './DocumentActions';
 import { MetadataModal } from '@components/DocumentCard/MetadataModal';
+import { PublicWarningMessage } from './PublicWarningMessage';
 
 export interface DocumentLibraryProps {
   open: boolean;
@@ -38,6 +39,7 @@ export interface DocumentLibraryProps {
   onDocumentsSelected(documentIds: string[]): void;
   onUpdated(document: Document): void;
   onDelete(document: Document): void;
+  onTogglePrivate(document: Document): void;
   onError(error: string): void;
   isAdmin: boolean | undefined;
 }
@@ -56,8 +58,49 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   >();
   const [metaOpen, setMetaOpen] = useState(false);
   const [metaReadOnly, setMetaReadOnly] = useState(false);
+  const [publicToggleDoc, setPublicToggleDoc] = useState<
+    Document | undefined
+  >();
+  const [publicWarningOpen, setPublicWarningOpen] = useState(false);
 
-  const theme = useTheme([
+  const handleTogglePrivate = (document: Document) => {
+    if (document.is_private) {
+      setPublicToggleDoc(document);
+      setPublicWarningOpen(true);
+    } else {
+      props.onTogglePrivate(document);
+    }
+  };
+
+  const handleWarningCancel = () => {
+    setPublicToggleDoc(undefined);
+    setPublicWarningOpen(false);
+  };
+
+  const handleWarningConfirm = () => {
+    if (publicToggleDoc) {
+      props.onTogglePrivate(publicToggleDoc);
+    }
+    setPublicWarningOpen(false);
+  };
+
+  const themeMine = useTheme([
+    getTheme(),
+    {
+      Table: `
+        --data-table-library_grid-template-columns:  44px repeat(4, minmax(0, 1fr)) 60px !important;
+      `,
+      HeaderRow: `
+        font-size: 13px;
+      `,
+      Row: `
+        font-size: 13px;
+        margin-top: 10px;
+      `,
+    },
+  ]);
+
+  const themeAll = useTheme([
     getTheme(),
     {
       Table: `
@@ -77,7 +120,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       const resp = await supabase
         .from('documents')
         .select(
-          'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data'
+          'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private'
         );
 
       setDocuments(resp.data);
@@ -92,7 +135,59 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     }
   }, [documents, props.dataDirty, props.clearDirtyFlag]);
 
-  const columns: Column<TableNode>[] = [
+  const columnsMine: Column<TableNode>[] = [
+    {
+      label: t['Title'],
+      renderCell: (item) => item.name,
+      select: true,
+      pinLeft: true,
+      sort: { sortKey: 'TITLE' },
+    },
+    {
+      label: t['Document Type'],
+      renderCell: (item) => item.content_type,
+      sort: { sortKey: 'TYPE' },
+    },
+    {
+      label: t['URL'],
+      renderCell: (item) => item.meta_data.url,
+      sort: { sortKey: 'URL' },
+    },
+    {
+      label: t['Private'],
+      renderCell: (item) => (item.is_private ? 'TRUE' : 'FALSE'),
+      sort: { sortKey: 'PRIVATE' },
+    },
+    {
+      label: '',
+      renderCell: (item) => (
+        <>
+          <DocumentActions
+            i18n={props.i18n}
+            onDelete={() =>
+              currentDocument ? props.onDelete(currentDocument) : {}
+            }
+            showPrivate={true}
+            isPrivate={item.is_private}
+            onTogglePrivate={() => handleTogglePrivate(item as Document)}
+            isAdmin={item.created_by === props.user.id}
+            onEditMetadata={() => {
+              setCurrentDocument(item as Document);
+              setMetaOpen(true);
+              setMetaReadOnly(false);
+            }}
+            onViewMetadata={() => {
+              setCurrentDocument(item as Document);
+              setMetaOpen(true);
+              setMetaReadOnly(true);
+            }}
+          />
+        </>
+      ),
+    },
+  ];
+
+  const columnsAll: Column<TableNode>[] = [
     {
       label: t['Title'],
       renderCell: (item) => item.name,
@@ -199,6 +294,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         TITLE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
         TYPE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
         URL: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        PRIVATE: (array) =>
+          array.sort((a, b) => a.is_private.localeCompare(b.is_private)),
       },
     }
   );
@@ -287,11 +384,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                     {!currentDocument && (
                       <CompactTable
                         layout={{ isDiv: true, fixedHeader: true }}
-                        columns={columns}
+                        columns={columnsMine}
                         data={{ nodes: myDocuments }}
                         virtualizedOptions={VIRTUALIZED_OPTIONS}
                         select={selectMine}
-                        theme={theme}
+                        theme={themeMine}
                         sort={sortMine}
                       />
                     )}
@@ -303,11 +400,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                 <div style={{ height: 300 }}>
                   <CompactTable
                     layout={{ isDiv: true, fixedHeader: true }}
-                    columns={columns}
+                    columns={columnsAll}
                     data={{ nodes: allDocuments }}
                     virtualizedOptions={VIRTUALIZED_OPTIONS}
                     select={selectAll}
-                    theme={theme}
+                    theme={themeAll}
                     sort={sortAll}
                   />
                 </div>
@@ -319,7 +416,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
               {UploadActions}
               <div>
                 <Button type='button' onClick={handleCancel}>
-                  {t['Cancel']}
+                  {t['Done']}
                 </Button>
                 <Button
                   type='submit'
@@ -348,6 +445,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           readOnly={metaReadOnly}
         />
       )}
+      <PublicWarningMessage
+        open={publicWarningOpen}
+        message={t['Public Document Warning Message']}
+        i18n={props.i18n}
+        onCancel={handleWarningCancel}
+        onConfirm={handleWarningConfirm}
+      />
     </>
   );
 };

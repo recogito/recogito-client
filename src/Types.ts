@@ -125,6 +125,8 @@ export interface Document {
 
   content_type?: ContentType;
 
+  is_private: boolean;
+
   meta_data?: {
     protocol: Protocol;
 
@@ -133,7 +135,6 @@ export interface Document {
     meta?: object;
   };
 }
-
 export interface DocumentInContext extends Document {
   layers: Layer[];
 }

@@ -1,5 +1,6 @@
 {
   "Ok": "Ok",
+  "Done": "Done",
   "Cancel": "Cancel",
   "Close": "Close",
   "Save": "Save",
@@ -46,5 +47,10 @@
   "URL": "URL",
   "Add Selected Documents": "Add Selected Documents",
   "Search": "Search",
-  "View Document Metadata": "View Document Metadata"
+  "View Document Metadata": "View Document Metadata",
+  "Private": "Private",
+  "Make Private": "Make Private",
+  "Make Public": "Make Public",
+  "Make Document Public": "Make Document Public",
+  "Public Document Warning Message": "By making this document Public, you are asserting that you have sufficient rights, licensing, or permission to do so."
 }

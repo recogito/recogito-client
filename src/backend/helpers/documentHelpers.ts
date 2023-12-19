@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createDocument } from '@backend/crud';
+import { createDocument, createProjectDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
@@ -83,8 +83,19 @@ const _initDocument = (
       protocol: 'IIIF_IMAGE',
       url,
     }).then(({ error, data }) => {
-      if (error) reject(error);
-      else resolve(data);
+      if (error) {
+        reject(error);
+      } else {
+        createProjectDocument(supabase, data.id, projectId).then(
+          ({ error: pdError, data: _projectDocument }) => {
+            if (pdError) {
+              reject(error);
+            } else {
+              resolve(data);
+            }
+          }
+        );
+      }
     })
   );
 
@@ -150,6 +161,7 @@ export const listDocumentsInProject = (
       bucket_id,
       content_type,
       meta_data,
+      is_private,
       layers!inner (
         id,
         document_id,
@@ -213,6 +225,7 @@ export const listDocumentsInContext = (
       bucket_id,
       content_type,
       meta_data,
+      is_private,
       layers!inner (
         id,
         document_id,
@@ -254,6 +267,7 @@ export const getDocumentInContext = (
       bucket_id,
       content_type,
       meta_data,
+      is_private,
       layers!inner (
         id,
         document_id,
@@ -314,6 +328,7 @@ export const getDocumentInContext = (
 export const listAllDocuments = (
   supabase: SupabaseClient
 ): Response<Document[] | null> =>
+  // @ts-ignore
   supabase
     .from('documents')
     .select(
