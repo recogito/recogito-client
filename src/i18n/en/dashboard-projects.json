@@ -12,6 +12,8 @@
   "Untitled Project": "Untitled Project",
   "No description.": "No description.",
 
+  "Show notifications": "Show notifications",
+
   "All": "All",
   "My Projects": "My Projects",
   "Shared with me": "Shared with me",
@@ -21,6 +23,7 @@
   "Newest": "Newest",
   "Oldest": "Oldest",
 
+  "Show menu actions menu for project:": "Show menu actions menu for project:",
   "Edit project details": "Edit project details",
   "Delete project": "Delete project",
   "Leave project": "Leave project",
@@ -36,6 +39,7 @@
 
   "Ok": "Ok",
   "Cancel": "Cancel",
+  "Close": "Close",
 
   "Something went wrong": "Something went wrong",
   "Could not create the project.": "Could not create the project.",

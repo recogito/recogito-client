@@ -48,6 +48,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
 
+  const [filter, setFilter] = useState<((a: Anno) => boolean) | undefined>(undefined);
+
   const [usePopup, setUsePopup] = useState(true);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
@@ -125,6 +127,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
+            filter={filter}
             style={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
@@ -134,9 +137,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         ) : contentType === 'application/pdf' && text ? (
           <PDFViewer
             document={props.document} 
+            filter={filter}
             style={style} />
         ) : text && (
           <TextAnnotator
+            filter={filter}
             style={style}
             presence={{
               font: "500 12px Inter, Arial, Helvetica, sans-serif"
@@ -196,6 +201,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             sorting={sorting}
             tagVocabulary={vocabulary}
             onChangePanel={onChangeViewMenuPanel}
+            onChangeAnnotationFilter={f => setFilter(() => f)}
             onChangeAnnotationStyle={s => setStyle(() => s)}
             beforeSelectAnnotation={beforeSelectAnnotation} />
         </div>

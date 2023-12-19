@@ -30,7 +30,7 @@ export const SortSelector = (props: SortSelectorProps) => {
       <Select.Root 
         defaultValue="newest" 
         onValueChange={value => props.onChange(SORTINGS[value])}>
-        <Select.Trigger className="select-trigger" aria-label="Filter annotations by">
+        <Select.Trigger className="select-trigger" aria-label={t['Sort annotations by']}>
           <Select.Value />
           <Select.Icon className="select-icon">
             <CaretDown />

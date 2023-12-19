@@ -89,6 +89,10 @@ export interface Group {
 
   name: string;
 
+  is_admin: boolean;
+
+  is_default: boolean;
+
   members: Array<{
     user: UserProfile;
 
@@ -201,6 +205,10 @@ export interface ExtendedAssignmentData extends Context {
           name: string;
 
           description?: string;
+
+          is_admin: boolean;
+
+          is_default: boolean;
 
           members: Array<{
             user: UserProfile;

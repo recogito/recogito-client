@@ -55,7 +55,7 @@ export const UrlDialog = (props: UrlDialogProps) => {
           <Dialog.Close asChild>
             <button
               className='icon-button'
-              aria-label='Close'
+              aria-label={t['Close']}
               onClick={props.onClose}
             >
               <X />

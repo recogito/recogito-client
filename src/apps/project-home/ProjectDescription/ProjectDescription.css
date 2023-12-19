@@ -13,7 +13,6 @@
 }
 
 .project-description p {
-  color: var(--font-light);
   max-width: 60ch;
   transition: all 250ms;
   white-space: pre-line;

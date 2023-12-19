@@ -43,6 +43,7 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
             return { error, data: data as unknown as MyProfile };
           } else {
             // Keep profile fields + add email
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { group_users, ...profile } = { ...data, email: user.email };
 
             return supabase
@@ -51,7 +52,8 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
                 `
                 id,
                 name,
-                description
+                description,
+                is_admin
               `
               )
               .in(
@@ -66,7 +68,7 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
                     error,
                     data: {
                       ...profile,
-                      isOrgAdmin: data.some((r) => r.name === 'Org Admins'),
+                      isOrgAdmin: data.some((r) => r.is_admin === true),
                     } as MyProfile,
                   };
                 }
