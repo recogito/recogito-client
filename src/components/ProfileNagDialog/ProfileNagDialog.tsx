@@ -16,9 +16,7 @@ interface ProfileNagDialogProps {
 }
 
 export const ProfileNagDialog = (props: ProfileNagDialogProps) => {
-  const { open } = props;
-  
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   return (
     <Dialog.Root open={props.open}>
@@ -35,10 +33,9 @@ export const ProfileNagDialog = (props: ProfileNagDialogProps) => {
           </Dialog.Description>
 
           <div className="nag-dialog-button-container">
-            <button className='danger'
-              onClick={props.onRedirect}>
+            <a className='button danger' href={`/${lang}/account/me`}>
               {t['Complete Profile']}
-            </button>
+            </a>
           </div>
 
           <Dialog.Close asChild>
