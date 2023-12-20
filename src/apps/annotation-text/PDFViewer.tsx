@@ -16,6 +16,8 @@ interface PDFViewerProps {
 
   style?: ((a: TextAnnotation) => DrawingStyle);
 
+  onRendered?(): void;
+
   onError?(): void;
 
 }
@@ -34,7 +36,8 @@ export const PDFViewer = (props: PDFViewerProps) => {
     <PDFAnnotator 
       pdfUrl={downloadURL} 
       filter={props.filter}
-      style={props.style} />
+      style={props.style}
+      onRendered={props.onRendered} />
   )
   
 }

@@ -16,13 +16,14 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
 import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
-import type { TextAnnotationProps } from './TextAnnotation';
-import { Toolbar } from './Toolbar';
+import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from './useContent';
-import type { Layer } from 'src/Types';
 import { PDFViewer } from './PDFViewer';
+import type { TextAnnotationProps } from './TextAnnotation';
+import { Toolbar } from './Toolbar';
+import type { Layer } from 'src/Types';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
@@ -43,6 +44,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const policies = useLayerPolicies(props.document.layers[0].id);
 
   const text = useContent(props.document);
+
+  const [annotationsLoading, setAnnotationsLoading] = useState(true);
+
+  const [pdfLoading, setPDFLoading] = useState(contentType === 'application/pdf');
+
+  const loading = annotationsLoading || pdfLoading || (!text);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
@@ -124,6 +131,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         contentType === 'text/xml' ? 'content-wrapper tei' : 
         contentType === 'application/pdf' ? 'content-wrapper pdf' : 
           'content-wrapper text'}>
+
+      {loading && (
+        <LoadingOverlay />
+      )}
+
       <main>
         {contentType === 'text/xml' && text ? (
           <TEIAnnotator
@@ -138,7 +150,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           <PDFViewer
             document={props.document} 
             filter={filter}
-            style={style} />
+            style={style} 
+            onRendered={() => setPDFLoading(false)} />
         ) : text && (
           <TextAnnotator
             filter={filter}
@@ -163,6 +176,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             defaultLayer={defaultLayer?.id} 
             layerIds={layers.map(layer => layer.id)}
             appearanceProvider={createAppearenceProvider()}
+            onInitialLoad={() => setAnnotationsLoading(false)}
             onPresence={setPresent} 
             privacyMode={privacy === 'PRIVATE'}/>
         }

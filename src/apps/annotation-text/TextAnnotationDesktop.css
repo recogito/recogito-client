@@ -13,6 +13,7 @@
   font-family: Lora;
   font-size: 17px;
   line-height: 190%;
+  min-height: 100%;
   padding: 70px 85px 140px 85px;
   pointer-events: all;
   position: relative;
