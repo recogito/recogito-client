@@ -69,8 +69,8 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const onInvitationSent = (invitation: Invitation) => {
     setToast({ 
-      title: 'Invitation Sent', 
-      description: `Invitation was sent to ${invitation.email}`, 
+      title: t['Invitation Sent'], 
+      description: t['Invitation was sent to'].replace('${user}', invitation.email), 
       type: 'success'
     });
 
@@ -80,7 +80,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
   const onInvitationError = () =>
     setToast({ 
       title: t['Something went wrong'], 
-      description: t['Could not sent invitation.'], 
+      description: t['Could not send invitation.'], 
       type: 'error' 
     });
     

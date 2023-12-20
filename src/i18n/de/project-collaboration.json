@@ -10,6 +10,8 @@
   "Anonymous team member": "Anonymes Teammitglied",
   "This user has not provided a profile name.": "Dieses Teammitglied hat keinen Profilnamen angegeben.",
 
+  "You must set a name": "Du musst einen Namen oder Nickname in Deinen <a href=\"${url}\">Profileinstellungen</a> angeben, bevor Du andere Benutzer einladen kannst.",
+
   "Invite User to Project": "Benutzer Einladen",
   "Enter e-mail and access level.": "Bitte gib die E-mail Adresse und Berechtigungsstufe an.",
   "Send invitation": "Einladung abschicken",
@@ -24,5 +26,11 @@
   "Remove": "Löschen",
   "Yes, I want to leave": "Ja, Projekt verlassen",
   "Cancel": "Abbrechen",
-  "Close": "Schließen"
+  "Close": "Schließen",
+
+  "Invitation Sent": "Einladung abgeschickt",
+  "Invitation was sent to": "Die Einladung wurde an ${user} verschickt",
+  "Something went wrong": "Etwas ist schiefgelaufen",
+  "Could not delete user.": "Benutzer konnte konnte nicht entfernt werden.",
+  "Could not send invitation.": "Einladung konnte nicht abgeschickt werden."
 }
