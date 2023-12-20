@@ -39,7 +39,7 @@
   "Error saving project details": "Fehler beim Speichern der Projektdetails.",
   "We're working on it!": "Wir arbeiten dran!",
   "This feature will become available soon.": "Diese Funktion wird bald verfügbar sein.",
-  "User Profile Message": "Please complete your User Profile",
-  "Complete Profile": "Complete Profile",
-  "User Profile": "User Profile"
+  "User Profile Message": "Bitte vervollständige Dein Benutzerprofil. Ohne Nickname oder vollständigen Namen erscheinst Du für andere Benutzer anonym.",
+  "Complete Profile": "Zum Profil",
+  "User Profile": "Unvollständiges Benutzerprofil"
 }

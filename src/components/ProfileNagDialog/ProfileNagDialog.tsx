@@ -9,8 +9,6 @@ interface ProfileNagDialogProps {
 
   i18n: Translations;
 
-  onRedirect(): void;
-
   onClose(): void;
 
 }

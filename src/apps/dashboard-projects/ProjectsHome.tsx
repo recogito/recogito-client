@@ -13,7 +13,6 @@ import { Header, type SortFunction } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
-import { getLangFromUrl } from '@i18n';
 
 import './ProjectsHome.css';
 
@@ -56,25 +55,17 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [sort, setSort] = useState<SortFunction | undefined>();
 
-  const [showProfileNag, setShowProfileNag] = useState(false);
+  const [showProfileNag, setShowProfileNag] = useState(
+    !me.first_name ||
+    !me.first_name.length ||
+    !me.last_name ||
+    !me.last_name.length);
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
       if (error) window.location.href = `/${props.i18n.lang}/sign-in`;
     });
   }, []);
-
-  useEffect(() => {
-    if (
-      me &&
-      (!me.first_name ||
-        !me.first_name.length ||
-        !me.last_name ||
-        !me.last_name.length)
-    ) {
-      setShowProfileNag(true);
-    }
-  }, [me]);
 
   // Filtered projects
   const myProjects = projects.filter((p) => p.created_by?.id === me.id);
@@ -137,12 +128,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     ]);
   };
 
-  const onNagRedirect = () => {
-    const url = new URL(window.location.href);
-    const lang = getLangFromUrl(url);
-    window.location.href = `/${lang}/account/me`;
-  };
-
   const onInvitationDeclined = (invitation: Invitation) =>
     setInvitations((invitations) =>
       invitations.filter((i) => i.id !== invitation.id)
@@ -189,10 +174,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             onError={onError}
           />
         )}
+
         <ProfileNagDialog
           open={showProfileNag}
           i18n={props.i18n}
-          onRedirect={onNagRedirect}
           onClose={() => setShowProfileNag(false)}
         />
       </div>
