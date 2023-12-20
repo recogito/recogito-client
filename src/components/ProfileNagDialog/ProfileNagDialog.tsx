@@ -4,35 +4,48 @@ import './ProfileNagDialog.css';
 import { X } from '@phosphor-icons/react';
 
 interface ProfileNagDialogProps {
+
   open: boolean;
+
   i18n: Translations;
+
   onRedirect(): void;
+
   onClose(): void;
+
 }
 
 export const ProfileNagDialog = (props: ProfileNagDialogProps) => {
   const { open } = props;
+  
   const { t } = props.i18n;
+
   return (
-    <Dialog.Root open={open} modal={false}>
+    <Dialog.Root open={props.open}>
       <Dialog.Portal>
-        <Dialog.Overlay className='nag-dialog-overlay' />
-        <Dialog.Content className='nag-dialog-content'>
-          <Dialog.Title className='nag-dialog-title'>
+        <Dialog.Overlay className='dialog-overlay' />
+
+        <Dialog.Content className='dialog-content'>
+          <Dialog.Title className='dialog-title'>
             {t['User Profile']}
-            <X onClick={props.onClose} className='nag-dialog-close' />
           </Dialog.Title>
-          <Dialog.Description className='nag-dialog-description'>
+
+          <Dialog.Description className='dialog-description'>
             {t['User Profile Message']}
           </Dialog.Description>
-          <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
-            <button
-              className='nag-dialog-button-red'
-              onClick={props.onRedirect}
-            >
+
+          <div className="nag-dialog-button-container">
+            <button className='danger'
+              onClick={props.onRedirect}>
               {t['Complete Profile']}
             </button>
           </div>
+
+          <Dialog.Close asChild>
+            <button className="dialog-close icon-only unstyled" aria-label={t['Close']}>
+              <X onClick={props.onClose}  />
+            </button>
+          </Dialog.Close>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
