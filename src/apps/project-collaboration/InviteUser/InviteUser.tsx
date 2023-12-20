@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { inviteUserToProject } from '@backend/crud';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, Invitation, MyProfile, Translations, UserProfile } from 'src/Types';
+import type { ExtendedProjectData, Invitation, MyProfile, Translations } from 'src/Types';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 interface InviteUserProps {
@@ -26,7 +26,7 @@ interface InviteUserProps {
 
 export const InviteUser = (props: InviteUserProps) => {
 
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const { me, project } = props;
 
@@ -36,6 +36,11 @@ export const InviteUser = (props: InviteUserProps) => {
 
   const [error, setError] = useState<string | undefined>(undefined);
 
+  const invitedBy = me.nickname ? 
+    me.nickname : (me.first_name || me.last_name) ?
+    [me.first_name, me.last_name].join(' ') :
+    undefined;
+
   const setOpen = (open: boolean) => {
     formik.resetForm();
     setError(undefined);
@@ -43,11 +48,6 @@ export const InviteUser = (props: InviteUserProps) => {
   }
 
   const sendInvitation = (email: string, group: string) => {
-    const invitedBy = me.nickname ? 
-      me.nickname : (me.first_name || me.last_name) ?
-      [me.first_name, me.last_name].join(' ') :
-      undefined;
-
     setBusy(true);
 
     // Waits until the invite was processed in the backend
@@ -110,10 +110,19 @@ export const InviteUser = (props: InviteUserProps) => {
 
   return (
     <>
-      <button className="primary" onClick={() => setOpen(true)}>
+      <button 
+        disabled={!invitedBy}
+        className="primary" 
+        onClick={() => setOpen(true)}>
         <UserPlus size={20} /> 
         <span>{t['Add a user']}</span>
       </button>
+
+      {!invitedBy && (
+        <p className="anonymous-warning">
+          <span dangerouslySetInnerHTML={{__html: t['You must set a name'].replace('${url}', `/${lang}/account/me`)}}></span>
+        </p>
+      )}
 
       <Dialog.Root open={open} onOpenChange={setOpen}>
         <Dialog.Portal>

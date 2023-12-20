@@ -10,6 +10,8 @@
   "Anonymous team member": "Anonymes Teammitglied",
   "This user has not provided a profile name.": "Dieses Teammitglied hat keinen Profilnamen angegeben.",
 
+  "You must set a name": "Du musst einen Namen oder Nickname in Deinen <a href=\"${url}\">Profileinstellungen</a> angeben, bevor Du andere Benutzer einladen kannst.",
+
   "Invite User to Project": "Benutzer Einladen",
   "Enter e-mail and access level.": "Bitte gib die E-mail Adresse und Berechtigungsstufe an.",
   "Send invitation": "Einladung abschicken",

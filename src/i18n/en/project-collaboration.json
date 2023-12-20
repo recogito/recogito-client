@@ -10,6 +10,8 @@
   "Anonymous team member": "Anonymous team member",
   "This user has not provided a profile name.": "This user has not provided a profile name.",
 
+  "You must set a name": "You must set a name or nickname in your <a href=\"${url}\">profile settings</a> before you can invite users to your project.",
+
   "Invite User to Project": "Invite User to Project",
   "Enter e-mail and access level.": "Enter e-mail and access level.",
   "E-Mail": "E-Mail",
