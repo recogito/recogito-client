@@ -137,7 +137,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   useEffect(() => {
     setSelectedIds([]);
-  }, []);
+  }, [props.disabledIds]);
 
   const columnsMine: Column<TableNode>[] = [
     {
