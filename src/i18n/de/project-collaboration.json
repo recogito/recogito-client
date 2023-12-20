@@ -24,5 +24,11 @@
   "Remove": "Löschen",
   "Yes, I want to leave": "Ja, Projekt verlassen",
   "Cancel": "Abbrechen",
-  "Close": "Schließen"
+  "Close": "Schließen",
+
+  "Invitation Sent": "Einladung abgeschickt",
+  "Invitation was sent to": "Die Einladung wurde an ${user} verschickt",
+  "Something went wrong": "Etwas ist schiefgelaufen",
+  "Could not delete user.": "Benutzer konnte konnte nicht entfernt werden.",
+  "Could not send invitation.": "Einladung konnte nicht abgeschickt werden."
 }
