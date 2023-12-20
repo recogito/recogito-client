@@ -1,13 +1,13 @@
 /* reset */
 
-.alert-dialog-overlay {
+.nag-dialog-overlay {
   background-color: var(--black-a9);
   position: fixed;
   inset: 0;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.alert-dialog-content {
+.nag-dialog-content {
   z-index: 10001;
   background-color: white;
   border-radius: 6px;
@@ -23,25 +23,29 @@
   padding: 25px;
   animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
-.alert-dialog-content:focus {
+.nag-dialog-content:focus {
   outline: none;
 }
 
-.alert-dialog-title {
+.nag-dialog-title {
   margin: 0;
   color: var(--font-light);
   font-size: 17px;
   font-weight: 500;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-.alert-dialog-description {
+.nag-dialog-description {
   margin-bottom: 20px;
   color: var(--font-light);
   font-size: 15px;
   line-height: 1.5;
 }
 
-.alert-dialog-button {
+.nag-dialog-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +56,7 @@
   font-weight: 500;
   height: 35px;
 }
-.alert-dialog-button-red {
+.nag-dialog-button-red {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -65,11 +69,15 @@
   background-color: var(--red-200);
   color: var(--red-11);
 }
-.alert-dialog-button-red:hover {
+.nag-dialog-button-red:hover {
   background-color: var(--red-200);
 }
-.alert-dialog-button-red:focus {
+.nag-dialog-button-red:focus {
   box-shadow: 0 0 0 2px var(--red-500);
+}
+
+.nag-dialog-close {
+  cursor: pointer;
 }
 
 @keyframes overlayShow {
