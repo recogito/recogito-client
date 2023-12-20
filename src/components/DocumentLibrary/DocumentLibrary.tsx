@@ -135,6 +135,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     }
   }, [documents, props.dataDirty, props.clearDirtyFlag]);
 
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [props.disabledIds]);
+
   const columnsMine: Column<TableNode>[] = [
     {
       label: t['Title'],
