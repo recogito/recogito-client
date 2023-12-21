@@ -22,7 +22,7 @@ export const useTagVocabulary = (projectId: string) => {
   const getUniqueTags = (annotations: Annotation[]): string[] => {
     const tagBodies = annotations.reduce((tags, annotation) => {
       const t = annotation.bodies.filter(b => b.purpose === 'tagging');
-      return [...tags, ...t.map(b => b.value)];
+      return [...tags, ...t.map(b => b.value!)];
     }, [] as string[]);
 
     return Array.from(new Set(tagBodies));
