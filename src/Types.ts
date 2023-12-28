@@ -127,12 +127,19 @@ export interface Document {
 
   is_private: boolean;
 
+  collection_id: number;
+
   meta_data?: {
     protocol: Protocol;
 
     url: string;
 
     meta?: object;
+  };
+
+  collection_metadata?: {
+    revision_number: number;
+    document_id: string;
   };
 }
 export interface DocumentInContext extends Document {
@@ -293,4 +300,9 @@ export type LoginMethod = {
   name: string;
   type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
   domain: string;
+};
+
+export type Collection = {
+  id: string;
+  name: string;
 };
