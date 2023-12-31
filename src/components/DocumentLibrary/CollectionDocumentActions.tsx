@@ -11,7 +11,6 @@ import {
 import type { LibraryDocument } from './DocumentLibrary';
 import type { Action } from '@table-library/react-table-library/types/common';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import './CollectionDocumentActions.css';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
@@ -43,9 +42,9 @@ export const CollectionDocumentActions = (
               </Tooltip.Trigger>
             </Trigger>
             <Tooltip.Portal>
-              <Tooltip.Content className='TooltipContent' sideOffset={5}>
+              <Tooltip.Content className='tooltip-content' sideOffset={5}>
                 {t['Select Revision']}
-                <Tooltip.Arrow className='TooltipArrow' />
+                <Tooltip.Arrow className='tooltip-arrow' />
               </Tooltip.Content>
             </Tooltip.Portal>
           </Tooltip.Root>
