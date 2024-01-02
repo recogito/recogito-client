@@ -1,0 +1,31 @@
+.popover-tooltip-content {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: var(--font-dark);
+  border-radius: var(--border-radius);
+  color: #fff;
+  font-size: var(--font-tiny);
+  line-height: 160%;
+  max-width: 200px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.popover-tooltip-content[data-state='open'] {
+  animation-name: slideUpTooltip;
+}
+
+.popover-tooltip-arrow {
+  fill: var(--font-dark);
+}
+
+@keyframes slideUpTooltip {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

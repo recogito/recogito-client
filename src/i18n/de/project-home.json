@@ -53,5 +53,10 @@
   "Make Private": "Make Private",
   "Make Public": "Make Public",
   "Make Document Public": "Make Document Public",
-  "Public Document Warning Message": "By making this document Public, you are asserting that you have sufficient rights, licensing, or permission to do so."
+  "Public Document Warning Message": "By making this document Public, you are asserting that you have sufficient rights, licensing, or permission to do so.",
+  "Revision": "Revision",
+  "Published Date": "Published Date",
+  "Revision Count": "Revision Count",
+  "Select Revision": "Select Revision",
+  "Latest Revision": "Latest Revision"
 }
