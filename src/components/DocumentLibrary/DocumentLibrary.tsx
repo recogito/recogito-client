@@ -158,6 +158,18 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     },
   ]);
 
+  const disabled = (item: LibraryDocument) => {
+    let disabled = props.disabledIds.includes(item.id);
+
+    item.revisions?.forEach((n) => {
+      if (props.disabledIds.includes(n.id)) {
+        disabled = true;
+      }
+    });
+
+    return disabled;
+  };
+
   useEffect(() => {
     async function getDocuments() {
       const resp = await supabase
@@ -372,10 +384,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) =>
         item.is_latest && props.disabledIds.includes(item.id as string) ? (
           <div style={{ width: '50%', margin: 'auto' }}>
-            <CheckCircle size={24} color='green' />
+            <CheckCircle size={24} />
+          </div>
+        ) : disabled(item as LibraryDocument) ? (
+          <div style={{ width: '50%', margin: 'auto' }}>
+            {item.revisions[0].collection_metadata.revision_number}
           </div>
         ) : (
-          ''
+          <div style={{ width: '50%', margin: 'auto' }}>
+            <CheckCircle size={24} color='green' />
+          </div>
         ),
       sort: { sortKey: 'LATEST' },
     },
