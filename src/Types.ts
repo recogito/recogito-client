@@ -127,7 +127,7 @@ export interface Document {
 
   is_private: boolean;
 
-  collection_id: number;
+  collection_id?: number;
 
   meta_data?: {
     protocol: Protocol;
