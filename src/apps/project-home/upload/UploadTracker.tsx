@@ -2,9 +2,9 @@ import * as RadixToast from '@radix-ui/react-toast';
 import { CheckCircle, X, XCircle } from '@phosphor-icons/react';
 import { ProgressCircle } from '@components/ProgressCircle';
 import type { UploadProgress } from './Upload';
+import type { Translations } from 'src/Types';
 
 import './UploadTracker.css';
-import type { Translations } from 'src/Types';
 
 const { Root, Title, Description, Viewport } = RadixToast;
 
