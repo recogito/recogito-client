@@ -268,6 +268,7 @@ export const getDocumentInContext = (
       content_type,
       meta_data,
       is_private,
+      collection_id,
       layers!inner (
         id,
         document_id,

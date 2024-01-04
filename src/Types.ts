@@ -127,7 +127,7 @@ export interface Document {
 
   is_private: boolean;
 
-  collection_id?: number;
+  collection_id?: string;
 
   meta_data?: {
     protocol: Protocol;
@@ -303,6 +303,13 @@ export type LoginMethod = {
 };
 
 export type Collection = {
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
   id: string;
   name: string;
+  extension_id?: string;
+  extension_metadata?: object;
+  custom_css?: string;
 };

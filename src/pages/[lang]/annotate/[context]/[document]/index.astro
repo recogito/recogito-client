@@ -6,6 +6,8 @@ import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
+import { getCollection } from '@backend/crud/collections';
+import type { Collection } from 'src/Types';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -33,6 +35,16 @@ if (document.error || !document.data) {
     status: 404,
     statusText: 'Not Found',
   });
+}
+
+// If the document is part of a collection, see if it has custom css
+let styleSheet;
+if (document.data.collection_id) {
+  console.info(`Collection found, id: ${document.data.collection_id}`);
+  const resp = await getCollection(supabase, document.data.collection_id);
+  if (!resp.error && resp.data) {
+    styleSheet = resp.data.custom_css;
+  }
 }
 
 // Compute realtime channel key
@@ -74,11 +86,10 @@ if (document.data.content_type === 'text/plain') {
         i18n={getTranslations(Astro.request, 'annotation-text')}
         document={document.data}
         channelId={channelId}
+        styleSheet={styleSheet}
       />
     )
   }
 </HeaderLayout>
 
-<style>
-
-</style>
+<style></style>
