@@ -2,10 +2,7 @@ import { useMemo, useState } from 'react';
 import { CloudArrowUp, DownloadSimple, Plus } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
-import {
-  useOrganizationPolicies,
-  useProjectPolicies,
-} from '@backend/hooks/usePolicies';
+import { useProjectPolicies } from '@backend/hooks/usePolicies';
 import { archiveLayer, setDocumentPrivacy } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
@@ -57,9 +54,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
 
-  const orgPolicies = useOrganizationPolicies();
-
-  const canUpload = orgPolicies?.get('documents').has('INSERT');
+  const canUpload = projectPolicies?.get('documents').has('INSERT');
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
