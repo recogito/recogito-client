@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { CaretDown, Check, CheckSquare, Square } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Select from '@radix-ui/react-select';
-import type { Annotation, PresentUser } from '@annotorious/react';
+import type { Annotation } from '@annotorious/react';
 import type { Layer, Translations } from 'src/Types';
 import { filterByAssignment, filterByCreator, filterByPrivacy, filterByTag } from './filters';
 import { useFilterSettings } from './FilterState';
@@ -21,9 +21,9 @@ export const FilterSettings = (props: FilterSettingsProps) => {
 
   const { t } = props.i18n;
 
-  const [filterBy, setFilterBy] = useState('none');
+  const { filterName, filter, values, setConfig, setValue } = useFilterSettings();
 
-  const { filter, values, setConfig, setValue } = useFilterSettings();
+  const [filterBy, setFilterBy] = useState(filterName || 'none');
 
   const showAssignmentOption = props.layers && props.layers.length > 1;
 

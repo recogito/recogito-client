@@ -62,28 +62,32 @@
   padding-right: 0;
 }
 
-.view-menu .has-notification {
+.view-menu .with-notification {
   display: inline-block;
   position: relative;
 }
 
 .view-menu .notification-bubble {
+  all: unset;
   align-items: center;
   background-color: var(--bright-blue);
-  border-radius: 50%;
+  border-radius: 999px;
   border: 1px solid #fff;
-  color: #fff;
+  color: #fff !important;
   display: flex;
+  gap: 1px;
   font-size: 9px;
   height: 13px;
   justify-content: center;
+  margin: 0;
+  padding: 0;
   position: absolute;
   right: 0;
-  top: 0;
+  top: -1px;
   width: 13px;
 }
 
-.view-menu .has-notification.active .notification-bubble {
+.view-menu .with-notification.active .notification-bubble {
   right: -2px;
   top: -2px;
 }

@@ -31,6 +31,6 @@ export const filterByPrivacy = (): FilterConfig => {
     return { values: getValues(), filter: getFilter() };
   }
 
-  return { getValues, getFilter, setValue, updateValues };
+  return { name: 'privacy', getValues, getFilter, setValue, updateValues };
 
 }

@@ -5,6 +5,8 @@ import type { FilterConfig, FilterConfigValue } from './FilterConfig';
 
 interface FilterStateContextValue {
 
+  filterName?: string;
+
   filter?: (a: SupabaseAnnotation) => boolean;
 
   values: FilterConfigValue[];
@@ -66,7 +68,7 @@ export const FilterState = (props: FilterStateProps) => {
   }
 
   return (
-    <FilterStateContext.Provider value={{ filter, values, setConfig, setValue }}>
+    <FilterStateContext.Provider value={{ filterName: config?.name, filter, values, setConfig, setValue }}>
       {props.children}
     </FilterStateContext.Provider>
   )

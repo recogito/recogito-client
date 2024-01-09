@@ -49,6 +49,6 @@ export const filterByCreator = (annotations: SupabaseAnnotation[], present?: Pre
     return { values: getValues(), filter: getFilter() };
   }
 
-  return { getValues, getFilter, setValue, updateValues };
+  return { name: 'creator', getValues, getFilter, setValue, updateValues };
 
 }

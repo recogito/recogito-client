@@ -1,4 +1,4 @@
-import { StackSimple } from '@phosphor-icons/react';
+import { StackSimple, X } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 import { useFilterSettings } from '../FilterSettings';
 
@@ -19,12 +19,21 @@ export const LayersPanelMenuIcon = (props: LayersPanelMenuIconProps) => {
   const { filter } = useFilterSettings();
 
   return (
-    <button
-      className={props.active ? 'active' : undefined}
-      aria-label={t['Show annotation filter and color configuration']}
-      onClick={() => props.onSelect()}>
-      <StackSimple />
-    </button>
+    <div 
+      className={props.active ? 'with-notification active' : 'with-notification '}>
+      <button
+        className={props.active ? 'active' : undefined}
+        aria-label={t['Show annotation filter and color configuration']}
+        onClick={() => props.onSelect()}>
+        <StackSimple />
+      </button>
+
+      {filter && (
+        <span className="notification-bubble">
+          <span>1</span>
+        </span>
+      )}
+    </div>
   )
 
 }

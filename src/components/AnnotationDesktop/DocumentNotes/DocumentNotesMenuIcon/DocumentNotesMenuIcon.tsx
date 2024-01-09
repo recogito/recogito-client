@@ -18,7 +18,7 @@ export const DocumentNotesMenuIcon = (props: DocumentNotesMenuIconProps) => {
 
   return (
     <div 
-      className={props.active ? 'has-notification active' : 'has-notification'}>
+      className={props.active ? 'with-notification active' : 'with-notification'}>
       <button
         className={props.active ? 'active' : undefined}
         aria-label={props.i18n.t['Show document notes']}

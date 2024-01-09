@@ -3,6 +3,8 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export interface FilterConfig {
 
+  name: string;
+
   getValues(): FilterConfigValue[];
 
   getFilter(): ((a: Annotation) => boolean);

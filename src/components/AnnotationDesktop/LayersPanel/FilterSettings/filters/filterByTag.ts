@@ -36,6 +36,6 @@ export const filterByTag = (annotations: SupabaseAnnotation[]): FilterConfig => 
 
   }
 
-  return { getValues, getFilter, setValue, updateValues };
+  return { name: 'tag', getValues, getFilter, setValue, updateValues };
 
 }
