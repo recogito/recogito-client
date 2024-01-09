@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
-import { Filter, FilterSelector } from './FilterSelector';
+import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import { 
   Annotation as Anno,
   AnnotationBody,
@@ -45,15 +45,13 @@ export const AnnotationList = (props: AnnotationListProps) => {
   
   const visible = useViewportState(150);
 
-  const [filter, setFilter] = useState<Filter>(Filter.NONE);
+  const [viewportFilter, setViewportFilter] = useState<ViewportFilter>(ViewportFilter.NONE);
 
   const [autofocus, setAutofocus] = useState(false);
 
   const applyFilter = () => {
-    if (filter === Filter.VIEWPORT) {
+    if (viewportFilter === ViewportFilter.VIEWPORT) {
       return visible;
-    } else if (filter === Filter.MINE) {
-      return all.filter(a => a.target.creator?.id === props.me.id);
     } else {
       return all;
     }
@@ -133,9 +131,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   return (
     <div className="anno-sidepanel annotation-list">
-      <FilterSelector 
+      <ViewportFilterToggle 
         i18n={props.i18n} 
-        onChange={setFilter} />
+        onChange={setViewportFilter} />
 
       <ul
         ref={el}
