@@ -3,6 +3,7 @@ import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
+import { useFilterSettings } from '../LayersPanel';
 import { 
   Annotation as Anno,
   AnnotationBody,
@@ -18,7 +19,6 @@ import {
 } from '@annotorious/react';
 
 import './AnnotationList.css';
-import { useFilterSettings } from '../LayersPanel';
 
 interface AnnotationListProps {
 
