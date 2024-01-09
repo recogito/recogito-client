@@ -8,7 +8,7 @@ import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
-import { LayersPanel } from '../LayersPanel';
+import { LayersPanel, LayersPanelMenuIcon } from '../LayersPanel';
 import { DocumentNotes, DocumentNotesList, DocumentNotesMenuIcon } from '../DocumentNotes';
 import { ColorState, FilterState } from '../LayersPanel';
 
@@ -104,12 +104,10 @@ export const ViewMenu = (props: ViewMenuProps) => {
                   <Chats />
                 </button>
 
-                <button
-                  className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
-                  aria-label={t['Show annotation filter and color configuration']}
-                  onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
-                  <StackSimple />
-                </button>
+                <LayersPanelMenuIcon
+                  i18n={props.i18n}
+                  active={panel === ViewMenuPanel.LAYERS}
+                  onSelect={() => togglePanel(ViewMenuPanel.LAYERS)} />
 
                 <DocumentNotesMenuIcon
                   i18n={props.i18n}

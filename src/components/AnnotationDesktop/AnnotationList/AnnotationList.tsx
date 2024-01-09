@@ -18,6 +18,7 @@ import {
 } from '@annotorious/react';
 
 import './AnnotationList.css';
+import { useFilterSettings } from '../LayersPanel';
 
 interface AnnotationListProps {
 
@@ -45,7 +46,11 @@ export const AnnotationList = (props: AnnotationListProps) => {
   
   const visible = useViewportState(150);
 
+  // 'Show all' vs. 'Show in viewport' setting
   const [viewportFilter, setViewportFilter] = useState<ViewportFilter>(ViewportFilter.NONE);
+
+  // Global annotation layer filter
+  const { filter } = useFilterSettings();
 
   const [autofocus, setAutofocus] = useState(false);
 
@@ -59,8 +64,10 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const annotations = applyFilter();
 
-  const sorted = useMemo(() => 
-    props.sorting ? [...annotations].sort(props.sorting) : annotations, [annotations]);
+  const sorted = useMemo(() => {
+    const filtered = filter ? annotations.filter(filter) : annotations;
+    return props.sorting ? [...filtered].sort(props.sorting) : filtered;
+  }, [annotations, filter]);
 
   const user = useAnnotatorUser();
 
