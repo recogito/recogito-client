@@ -35,6 +35,6 @@ export const colorByFirstTag = (annotations: SupabaseAnnotation[]): ColorCoding 
     return getLegend();
   }
 
-  return { getLegend, getStyle, update };
+  return { name: 'tag', getLegend, getStyle, update };
 
 }

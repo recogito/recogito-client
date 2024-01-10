@@ -25,9 +25,9 @@ export const ColorSettings = (props: ColorSettingsProps) => {
 
   const { t } = props.i18n;
 
-  const [value, setValue] = useState('none');
+  const { name, legend, style, setCoding } = useColorCoding();
 
-  const { legend, style, setCoding } = useColorCoding();
+  const [value, setValue] = useState(name || 'none');
 
   const showAssignmentOption = props.layers && props.layers.length > 1;
 

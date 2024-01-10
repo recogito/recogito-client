@@ -3,6 +3,8 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export interface ColorCoding {
 
+  name: string;
+
   getStyle(): ((a: SupabaseAnnotation, selected?: boolean) => DrawingStyle);
 
   getLegend(): ColorLegendValue[];
