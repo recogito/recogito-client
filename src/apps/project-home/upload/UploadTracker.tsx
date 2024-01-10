@@ -2,12 +2,15 @@ import * as RadixToast from '@radix-ui/react-toast';
 import { CheckCircle, X, XCircle } from '@phosphor-icons/react';
 import { ProgressCircle } from '@components/ProgressCircle';
 import type { UploadProgress } from './Upload';
+import type { Translations } from 'src/Types';
 
 import './UploadTracker.css';
 
 const { Root, Title, Description, Viewport } = RadixToast;
 
 interface UploadTrackerProps {
+
+  i18n: Translations;
 
   show: boolean;
 
@@ -21,6 +24,8 @@ interface UploadTrackerProps {
 
 export const UploadTracker = (props: UploadTrackerProps) => {
 
+  const { t } = props.i18n;
+
   return (
     <>
       <Root 
@@ -29,7 +34,7 @@ export const UploadTracker = (props: UploadTrackerProps) => {
         open={props.show}>
 
         <Title className="toast-title">
-          Importing {props.uploads.length} items
+          {t['Importing ${n} items'].replace('${n}', `${props.uploads.length}`)}
           {props.closable && (
             <button className="unstyled icon-only" onClick={props.onClose}>
               <X size={20} />

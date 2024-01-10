@@ -42,6 +42,7 @@ export const initDocument = (
         contextId,
         undefined,
         undefined,
+        'IIIF_IMAGE',
         iiif.manifest_iiif_url
       )
     );
@@ -53,6 +54,7 @@ export const initDocument = (
       contextId,
       onProgress,
       file,
+      undefined,
       url
     );
   }
@@ -75,14 +77,15 @@ const _initDocument = (
   contextId: string,
   onProgress?: (progress: number) => void,
   file?: File,
+  protocol?: 'IIIF_IMAGE',
   url?: string
 ): Promise<DocumentInContext> => {
+  
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) =>
-    createDocument(supabase, name, file?.type, {
-      protocol: 'IIIF_IMAGE',
-      url,
-    }).then(({ error, data }) => {
+    createDocument(supabase, name, file?.type, protocol ? {
+      protocol, url,
+    } : undefined).then(({ error, data }) => {
       if (error) {
         reject(error);
       } else {
