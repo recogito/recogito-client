@@ -5,6 +5,8 @@ import type { ColorCoding, ColorLegendValue } from './ColorCoding';
 
 interface ColorStateContextValue {
 
+  name?: string;
+
   style?: ((a: SupabaseAnnotation) => DrawingStyle);
 
   legend: ColorLegendValue[];
@@ -55,7 +57,7 @@ export const ColorState = (props: ColorStateProps) => {
   }, [annotations, props.present]);
 
   return (
-    <ColorStateContext.Provider value={{ style, legend, setCoding }}>
+    <ColorStateContext.Provider value={{ name: coding?.name, style, legend, setCoding }}>
       {props.children}
     </ColorStateContext.Provider>
   )

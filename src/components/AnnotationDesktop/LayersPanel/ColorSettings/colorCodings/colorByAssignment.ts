@@ -27,6 +27,6 @@ export const colorByAssignment = (layers: Layer[]) => (): ColorCoding => {
 
   const update = (annotations: SupabaseAnnotation[]) => getLegend();
 
-  return { getLegend, getStyle, update };
+  return { name: 'assignment', getLegend, getStyle, update };
 
 }

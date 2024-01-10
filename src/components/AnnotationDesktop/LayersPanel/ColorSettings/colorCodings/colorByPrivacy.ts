@@ -22,6 +22,6 @@ export const colorByPrivacy = (): ColorCoding => {
 
   const update = (annotations: SupabaseAnnotation[]) => getLegend();
 
-  return { getLegend, getStyle, update };
+  return { name: 'privacy', getLegend, getStyle, update };
 
 }

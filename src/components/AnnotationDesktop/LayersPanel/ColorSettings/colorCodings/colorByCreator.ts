@@ -40,6 +40,6 @@ export const colorByCreator = (annotations: SupabaseAnnotation[], present?: Pres
     return getLegend();
   }
 
-  return { getLegend, getStyle, update };
+  return { name:'creator', getLegend, getStyle, update };
 
 }
