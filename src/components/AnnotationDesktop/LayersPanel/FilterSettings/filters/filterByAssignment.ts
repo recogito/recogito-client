@@ -30,6 +30,6 @@ export const filterByAssignment = (layers: Layer[]) => (): FilterConfig => {
     return { values: getValues(), filter: getFilter() };
   }
 
-  return { getValues, getFilter, setValue, updateValues };
+  return { name: 'assignment', getValues, getFilter, setValue, updateValues };
 
 }
