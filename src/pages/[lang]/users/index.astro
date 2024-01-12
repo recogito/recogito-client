@@ -1,0 +1,63 @@
+---
+import crypto from 'crypto';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { getMyProfile } from '@backend/crud/profiles';
+import { UserManagement } from '@apps/user-management';
+import { getProfilesExtended } from '../../../backend/helpers/profileHelpers';
+import { getOrgGroups } from '../../../backend/crud/groups';
+import type { ExtendedUserProfile } from '../../../Types';
+import { changeOrgGroupMembership } from '@backend/crud/users';
+
+const lang = getLangFromUrl(Astro.url);
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
+
+const { error, data } = await getMyProfile(supabase);
+
+if (error) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+
+if (!data.isOrgAdmin) {
+  return Astro.redirect(`/${lang}/projects`);
+}
+
+const me = data;
+let profiles;
+
+const { error: errorProfiles, data: profData } = await getProfilesExtended(
+  supabase
+);
+
+if (errorProfiles) {
+  console.log(errorProfiles);
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+
+profiles = profData;
+
+const { error: groupsError, data: groups } = await getOrgGroups(supabase);
+
+if (groupsError) {
+  console.log(groupsError);
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+---
+
+<HeaderLayout title='User Management' />
+<UserManagement
+  i18n={getTranslations(Astro.request, 'user-management')}
+  profiles={profiles}
+  me={me}
+  groups={groups}
+  client:only
+/>
+<style></style>

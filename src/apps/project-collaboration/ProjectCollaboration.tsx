@@ -65,8 +65,8 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       ...project,
       groups: project.groups.map((group) => ({
         ...group,
-        members: group.members.filter((m) => m.user.id !== member.user.id),
-      })),
+        members: group.members.filter(m => m.user.id !== member.user.id)
+      }))
     }));
   };
 

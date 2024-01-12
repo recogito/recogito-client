@@ -10,6 +10,13 @@ export interface UserProfile {
   avatar_url?: string;
 }
 
+export interface ExtendedUserProfile extends UserProfile {
+  email_address: string;
+  last_sign_in_at: string;
+  org_group_id: string;
+  org_group_name: string;
+}
+
 export type MyProfile = UserProfile & {
   created_at: string;
 

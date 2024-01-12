@@ -1,0 +1,43 @@
+.users-table {
+  margin-top: 2em;
+  max-width: 1100px;
+}
+
+.users-table td button.select-trigger:disabled {
+  background-color: var(--button-background-color);
+  border-color: var(--button-border-color);
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0),
+    0 2px 3px -2px rgba(0, 0, 0, 0.12);
+  color: var(--button-font-color);
+  cursor: auto;
+}
+
+.users-table td button.owner {
+  min-width: 120px;
+  padding: 4px 8px;
+  font-weight: 500;
+}
+
+.users-table td .anonymous-member button {
+  height: 24px;
+  margin-left: 2px;
+  padding: 0;
+  vertical-align: sub;
+  width: 24px;
+}
+
+.users-table td .anonymous-member button svg {
+  left: 0;
+  position: relative;
+  top: 0;
+}
+
+.users-table td .anonymous-member button:hover svg {
+  color: var(--font-dark);
+}
+
+.users-table td .invitation-sent {
+  color: var(--font-light);
+  display: inline-block;
+  padding: 0 0.9em;
+}
