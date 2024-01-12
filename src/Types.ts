@@ -134,7 +134,9 @@ export interface Document {
 
     url: string;
 
-    meta?: object;
+    meta?: {
+      author?: string;
+    };
   };
 
   collection_metadata?: {
