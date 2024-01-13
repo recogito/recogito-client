@@ -54,7 +54,7 @@ export const initDocument = (
       contextId,
       onProgress,
       file,
-      undefined,
+      url ? 'IIIF_IMAGE' : undefined,
       url
     );
   }
