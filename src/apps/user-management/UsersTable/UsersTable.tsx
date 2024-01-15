@@ -5,8 +5,8 @@ import type {
   UserProfile,
   Group,
 } from 'src/Types';
-import { DeleteUser } from '../DeleteUser';
-import type { PostgrestError } from '@supabase/supabase-js';
+import { Trash } from '@phosphor-icons/react';
+import { Button } from '@components/Button';
 
 import './UsersTable.css';
 
@@ -20,8 +20,6 @@ interface UsersTableProps {
   groups: Group[];
 
   onDeleteUser(user: ExtendedUserProfile): void;
-
-  onDeleteUserError(error: PostgrestError): void;
 
   onChangeGroup(user: ExtendedUserProfile, newGroupId: string): void;
 }
@@ -76,13 +74,13 @@ export const UsersTable = (props: UsersTableProps) => {
 
             <td className='actions'>
               {!isMe(user) && (
-                <DeleteUser
-                  i18n={props.i18n}
-                  user={user}
-                  me={props.me}
-                  onDeleteUser={props.onDeleteUser}
-                  onDeleteError={props.onDeleteUserError}
-                />
+                <Button
+                  className='delete-button'
+                  onClick={() => props.onDeleteUser(user)}
+                >
+                  <Trash size={16} />
+                  <span>{t['Delete User']}</span>
+                </Button>
               )}
             </td>
           </tr>

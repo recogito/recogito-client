@@ -14,5 +14,9 @@
   "Something went wrong": "Something went wrong",
   "Could not change user group.": "Could not change user group.",
   "Success": "Success",
-  "User Access Level successfully changed.": "User Access Level successfully changed."
+  "User Access Level successfully changed.": "User Access Level successfully changed.",
+  "Delete User": "Delete User",
+  "Delete_Warning_Message": "Deleting a user in not reversible. The user will no longer be able to login and their content will be anonymized. Do you wish to proceed?",
+  "Cancel": "Cancel",
+  "User successfully deleted.": "User successfully deleted."
 }

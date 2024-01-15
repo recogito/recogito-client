@@ -41,3 +41,8 @@
   display: inline-block;
   padding: 0 0.9em;
 }
+
+.delete-button {
+  height: 30px;
+  border-color: red;
+}

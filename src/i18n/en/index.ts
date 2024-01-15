@@ -36,5 +36,5 @@ export default {
   'project-home': projectHome,
   'project-settings': projectSettings,
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
-  'user-management': userManagement,
+  'user-management': { ...userManagement, ...accountMenu },
 };

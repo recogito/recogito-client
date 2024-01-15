@@ -7,11 +7,12 @@ import type {
   ExtendedUserProfile,
   Group,
 } from 'src/Types';
-import { changeOrgGroupMembership } from '@backend/crud/users';
+import { changeOrgGroupMembership, deleteUser } from '@backend/crud/users';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { CheckFat, WarningDiamond } from '@phosphor-icons/react';
-
 import './UserManagement.css';
+import { AccountActions } from '@components/AccountActions';
+import { DeleteWarningMessage } from './DeleteWarningMessage';
 
 const changeGroupMembership = async (
   user: ExtendedUserProfile,
@@ -37,6 +38,10 @@ export const UserManagement = (props: UserManagementProps) => {
   const [filteredUsers, setFilteredUsers] = useState(props.profiles);
   const [toast, setToast] = useState<ToastContent | null>(null);
   const [search, setSearch] = useState<string>('');
+  const [deleteWarningOpen, setDeleteWarningOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<
+    ExtendedUserProfile | undefined
+  >();
 
   useEffect(() => {
     if (props.profiles) {
@@ -67,15 +72,47 @@ export const UserManagement = (props: UserManagementProps) => {
     }
   }, [search, users]);
 
-  const onDeleteUser = (_user: ExtendedUserProfile) => {};
+  const onDeleteUser = (user: ExtendedUserProfile) => {
+    setUserToDelete(user);
+    setDeleteWarningOpen(true);
+  };
 
-  const onDeleteError = () =>
-    setToast({
-      title: t['Something went wrong'],
-      description: t['Could not delete user.'],
-      type: 'error',
-      icon: <WarningDiamond color='red' />,
+  const onDeleteConfirm = () => {
+    setDeleteWarningOpen(false);
+    deleteUser(userToDelete as ExtendedUserProfile).then((result) => {
+      if (!result) {
+        setToast({
+          title: t['Something went wrong'],
+          description: t['Could not delete user.'],
+          type: 'error',
+          icon: <WarningDiamond color='red' />,
+        });
+      } else {
+        const copy: ExtendedUserProfile[] = [...users];
+
+        const idx = copy.findIndex(
+          (c) => c.id === (userToDelete as ExtendedUserProfile).id
+        );
+        if (idx > -1) {
+          copy.splice(idx, 1);
+          setUsers(copy);
+        }
+
+        setToast({
+          title: t['Success'],
+          description: t['User successfully deleted.'],
+          type: 'success',
+          icon: <CheckFat color='green' />,
+        });
+      }
+      setUserToDelete(undefined);
     });
+  };
+
+  const onCancelDelete = () => {
+    setDeleteWarningOpen(false);
+    setUserToDelete(undefined);
+  };
 
   const changeGroup = (user: ExtendedUserProfile, newGroupId: string) => {
     changeGroupMembership(user, newGroupId).then((result) => {
@@ -108,7 +145,12 @@ export const UserManagement = (props: UserManagementProps) => {
   return (
     <div className='user-management'>
       <ToastProvider>
-        <h1>{t['User Management']}</h1>
+        <div className='user-management-header'>
+          <h1>{t['User Management']}</h1>
+          <div>
+            <AccountActions i18n={props.i18n} profile={props.me} />
+          </div>
+        </div>
         <label htmlFor='search'>{t['Search Users']}</label>
         <input
           autoFocus
@@ -124,13 +166,18 @@ export const UserManagement = (props: UserManagementProps) => {
           users={filteredUsers}
           groups={props.groups}
           onDeleteUser={onDeleteUser}
-          onDeleteUserError={onDeleteError}
           onChangeGroup={changeGroup}
         />
 
         <Toast
           content={toast}
           onOpenChange={(open) => !open && setToast(null)}
+        />
+        <DeleteWarningMessage
+          open={deleteWarningOpen}
+          i18n={props.i18n}
+          onCancel={onCancelDelete}
+          onConfirm={onDeleteConfirm}
         />
       </ToastProvider>
     </div>
