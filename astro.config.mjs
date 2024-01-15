@@ -12,6 +12,11 @@ export default defineConfig({
     },
     resolve: {
       mainFields: [] // react-moment fails without this!
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: 'esnext'
+      }
     }
   },
 });
