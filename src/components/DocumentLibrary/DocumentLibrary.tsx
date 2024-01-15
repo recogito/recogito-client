@@ -394,7 +394,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     {
       label: t['Revision Count'],
       renderCell: (item) => item.revisions?.length,
-      sort: { sortKey: 'REVSION' },
+      sort: { sortKey: 'REVISION' },
     },
     {
       label: t['Latest Revision'],
