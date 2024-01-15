@@ -46,9 +46,10 @@
 }
 
 .content-wrapper.pdf main .r6o-pdf-container {
+  bottom: 0;
   top: 0;
   left: 0;
-  height: auto;
+  overflow-y: scroll;
 }
 
 .a9s-popup {
