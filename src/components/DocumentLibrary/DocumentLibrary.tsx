@@ -112,6 +112,17 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     setPublicWarningOpen(false);
   };
 
+  const matchesSearch = (document: Document) => {
+    return (
+      document.name.toLowerCase().includes(search.toLowerCase()) ||
+      (document.meta_data?.meta &&
+        document.meta_data.meta.author &&
+        document.meta_data.meta.author
+          .toLowerCase()
+          .includes(search.toLowerCase()))
+    );
+  };
+
   const themeMine = useTheme([
     getTheme(),
     {
@@ -230,7 +241,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
               }
               return 0;
             });
-            const obj: LibraryDocument = { ...map[key][0], revisions: [] };
+            const obj: LibraryDocument = {
+              ...map[key][0],
+              revisions: [],
+              revision_count: 0,
+            };
             for (let k = 0; k < map[key].length; k++) {
               const date = new Date(map[key][k].created_at);
               obj.revisions?.push({
@@ -249,6 +264,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                 obj.is_latest = true;
               }
             }
+
+            obj.revision_count = obj.revisions ? obj.revisions.length : 0;
             docs.push(obj);
           }
           arr.push({
@@ -395,7 +412,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             <CheckCircle size={24} color='green' />
           </div>
         ),
-      sort: { sortKey: 'LATEST' },
     },
     {
       label: '',
@@ -418,26 +434,21 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         (d) =>
           d.created_by === props.user.id &&
           !d.collection_id &&
-          (search.length > 0
-            ? d.name.toLowerCase().includes(search.toLowerCase())
-            : true)
+          (search.length > 0 ? matchesSearch(d) : true)
       )
     : [];
 
   const allDocuments = documents
     ? documents.filter((d) =>
         search.length > 0
-          ? d.name.toLowerCase().includes(search.toLowerCase()) &&
-            !d.collection_id
+          ? matchesSearch(d) && !d.collection_id
           : !d.collection_id
       )
     : [];
 
   const collectionDocuments = activeCollection
     ? collections[activeCollection - 1].documents.filter((d) =>
-        search.length > 0
-          ? d.name.toLowerCase().includes(search.toLowerCase())
-          : true
+        search.length > 0 ? matchesSearch(d) : true
       )
     : [];
 
@@ -543,7 +554,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           ),
         REVISION: (array) =>
           array.sort((a, b) =>
-            a.item.revisions?.length.localeCompare(b.item.revisions?.length)
+            a.item.revision_count.localeCompare(b.item.revisions?.length)
           ),
         LATEST: (array) =>
           array.sort((a, b) => a.is_private.localeCompare(b.is_private)),

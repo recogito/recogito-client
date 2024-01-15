@@ -66,14 +66,20 @@ export const DocumentTable = (props: DocumentTableProps) => {
             header={() => (
               <HeaderRow>
                 <HeaderCell />
-                {props.columns.map((c, idx) => (
-                  <HeaderCellSort
-                    sortKey={c.sort ? c.sort?.sortKey : ''}
-                    key={idx}
-                  >
-                    {c.label}
-                  </HeaderCellSort>
-                ))}
+                {props.columns.map((c, idx) => {
+                  if (c.sort) {
+                    return (
+                      <HeaderCellSort
+                        sortKey={c.sort ? c.sort?.sortKey : ''}
+                        key={idx}
+                      >
+                        {c.label}
+                      </HeaderCellSort>
+                    );
+                  } else {
+                    return <HeaderCell key={idx}>{c.label}</HeaderCell>;
+                  }
+                })}
               </HeaderRow>
             )}
             body={(item: LibraryDocument) => (

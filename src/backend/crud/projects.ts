@@ -3,57 +3,63 @@ import type { ExtendedProjectData, Invitation, Project } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 
-export const createProject = (supabase: SupabaseClient, name: string, description: string | null = null): Response<Project> =>
+export const createProject = (
+  supabase: SupabaseClient,
+  name: string,
+  description: string | null = null
+): Response<Project> =>
   supabase
     .from('projects')
     .insert({
-      name, description
+      name,
+      description,
     })
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
-// Note: users cannot normally delete projects, as soon as there are 
+// Note: users cannot normally delete projects, as soon as there are
 // other entities linked to them (projet -> context -> document etc.).
 // This method is only needed in case of error handling, when creating
 // of the default context fails, and the project can *actually* be safely
-// deleted from the DB. All other user actions will archive rather than 
+// deleted from the DB. All other user actions will archive rather than
 // delete.
 export const deleteProject = (supabase: SupabaseClient, id: string) =>
-  supabase
-    .from('projects')
-    .delete()
-    .match({ id })
-    .select();
+  supabase.from('projects').delete().match({ id }).select();
 
-export const archiveProject = (supabase: SupabaseClient, id: string): Promise<void> =>
+export const archiveProject = (
+  supabase: SupabaseClient,
+  id: string
+): Promise<void> =>
   new Promise((resolve, reject) => {
     supabase
       .rpc('archive_record_rpc', {
         _table_name: 'projects',
-        _id: id
+        _id: id,
       })
       .then(({ error }) => {
-        if (error)
-          reject(error);
-        else
-          resolve();
-      })
+        if (error) reject(error);
+        else resolve();
+      });
   });
 
-export const getProject = (supabase: SupabaseClient, id: string): Response<Project> =>
+export const getProject = (
+  supabase: SupabaseClient,
+  id: string
+): Response<Project> =>
   supabase
     .from('projects')
     .select()
     .eq('id', id)
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
-  
+
 export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
-  getUser(supabase).then(user =>
+  getUser(supabase).then((_user) =>
     supabase
       .from('projects')
-      .select(`
+      .select(
+        `
         id,
         created_at,
         created_by:profiles!projects_created_by_fkey(
@@ -67,55 +73,67 @@ export const listMyProjects = (supabase: SupabaseClient): Response<Project[]> =>
         updated_by,
         name,
         description
-      `)
-      .then(({ error, data }) => ({ error, data: data as unknown as Project[] })));
+      `
+      )
+      .then(({ error, data }) => ({
+        error,
+        data: data as unknown as Project[],
+      }))
+  );
 
-export const updateProject = (supabase: SupabaseClient, partial: { id: string, [key: string]: string | null }): Response<Project> =>
-  supabase 
+export const updateProject = (
+  supabase: SupabaseClient,
+  partial: { id: string; [key: string]: string | null }
+): Response<Project> =>
+  supabase
     .from('projects')
-    .update({...partial })
+    .update({ ...partial })
     .eq('id', partial.id)
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
 export const inviteUserToProject = (
-  supabase: SupabaseClient, 
-  email: string, 
-  project: Project | ExtendedProjectData, 
-  groupId: string, 
+  supabase: SupabaseClient,
+  email: string,
+  project: Project | ExtendedProjectData,
+  groupId: string,
   invitedBy?: string
 ): Response<Invitation> =>
   supabase
     .from('invites')
-    .insert({ 
-      email: email.toLowerCase(), 
-      project_id: project.id, 
+    .insert({
+      email: email.toLowerCase(),
+      project_id: project.id,
       project_name: project.name,
-      project_group_id: groupId, 
-      invited_by_name: invitedBy 
+      project_group_id: groupId,
+      invited_by_name: invitedBy,
     })
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Invitation }));
 
-export const retrievePendingInvites = async (supabase: SupabaseClient, email: string) => {
+export const retrievePendingInvites = async (
+  supabase: SupabaseClient,
+  email: string
+) => {
   const { count } = await supabase
     .from('invites')
     .select('*', { count: 'exact', head: true })
     .eq('email', email)
     .is('accepted', false)
-    .is('ignored', false)
+    .is('ignored', false);
   return count;
 };
 
 export const listPendingInvitations = (
-  supabase: SupabaseClient, 
+  supabase: SupabaseClient,
   projectId: string
-): Response<Invitation[]> => 
+): Response<Invitation[]> =>
   supabase
     .from('invites')
-    .select(`
+    .select(
+      `
       id,
       created_at,
       email,
@@ -125,16 +143,21 @@ export const listPendingInvitations = (
       project_group_id,
       accepted,
       ignored
-    `)
+    `
+    )
     .eq('project_id', projectId)
     .is('accepted', false)
     .is('ignored', false)
     .then(({ error, data }) => ({ error, data: data as Invitation[] }));
 
-export const listProjectUsers = async (supabase: SupabaseClient, typeIds: string[]) => {
+export const listProjectUsers = async (
+  supabase: SupabaseClient,
+  typeIds: string[]
+) => {
   const { data } = await supabase
     .from('group_users')
-    .select(`
+    .select(
+      `
       type_id,
       profiles!group_users_user_id_fkey (
         id,
@@ -143,32 +166,38 @@ export const listProjectUsers = async (supabase: SupabaseClient, typeIds: string
         nickname,
         email
       )
-    `)
+    `
+    )
     .in('type_id', typeIds);
-    return data;
+  return data;
 };
 
-export const getProjectGroups = async (supabase: SupabaseClient, projectId: string) => {
+export const getProjectGroups = async (
+  supabase: SupabaseClient,
+  projectId: string
+) => {
   const { error, data } = await supabase
     .from('project_groups')
-    .select(`
+    .select(
+      `
       id,
       name
-      `)
+      `
+    )
     .eq('project_id', projectId);
-    return { error, data };
-}
+  return { error, data };
+};
 
 export const updateUserProjectGroup = (
-  supabase: SupabaseClient, 
-  userId: string, 
-  oldTypeId: string, 
+  supabase: SupabaseClient,
+  userId: string,
+  oldTypeId: string,
   newTypeId: string
-): Response<Boolean> =>
-  supabase 
+): Response<boolean> =>
+  supabase
     .from('group_users')
     .update({
-      type_id: newTypeId
+      type_id: newTypeId,
     })
     .eq('user_id', userId)
     .eq('type_id', oldTypeId)
@@ -178,22 +207,22 @@ export const leaveGroup = (
   supabase: SupabaseClient,
   userId: string,
   groupId: string
-): Response<Boolean> =>
+): Response<boolean> =>
   supabase
     .from('group_users')
     .delete()
-    .match({ 
-      group_type: 'project', 
-      type_id: groupId, 
-      user_id: userId 
+    .match({
+      group_type: 'project',
+      type_id: groupId,
+      user_id: userId,
     })
     .then(({ error }) => ({ error, data: !error }));
 
 export const removeUserFromProject = (
-  supabase: SupabaseClient, 
-  userId: string, 
+  supabase: SupabaseClient,
+  userId: string,
   typeId: string
-): Response<Boolean> =>
+): Response<boolean> =>
   supabase
     .from('group_users')
     .delete()
