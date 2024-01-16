@@ -11,7 +11,12 @@ export default defineConfig({
       noExternal: ['@radix-ui/*', '@phosphor-icons/*'],
     },
     resolve: {
-      mainFields: [] // react-moment fails without this!
-    }
+      mainFields: [], // react-moment fails without this!
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        target: 'esnext',
+      },
+    },
   },
 });
