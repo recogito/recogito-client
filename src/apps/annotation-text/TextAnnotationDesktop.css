@@ -1,7 +1,3 @@
-.slot-container {
-  overflow-y: scroll;
-}
-
 .r6o-highlight-layer {
   box-sizing: border-box;
   border: 2px solid red;
