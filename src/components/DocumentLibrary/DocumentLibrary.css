@@ -113,7 +113,7 @@
 .doc-lib-buttons {
   display: flex;
   justify-content: space-between;
-  padding: 30;
+  padding: 30px;
   align-items: center;
 }
 
