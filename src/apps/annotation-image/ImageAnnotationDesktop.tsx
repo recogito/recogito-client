@@ -154,7 +154,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       {policies && (
         <OpenSeadragonAnnotator
           autoSave
-          drawingMode="click"
           drawingEnabled={drawingEnabled}
           pointerSelectAction={selectAction}
           tool={tool} 
