@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Detective } from '@phosphor-icons/react';
 import type { AnnotationBody } from '@annotorious/react';
-import { TimeAgo } from '@components/TimeAgo';
+import { Timestamp } from '@components/Timestamp';
 import { PrivateCommentActions } from './PrivateCommentActions';
 import { EditableComment } from '../EditableComment';
 import type { CommentProps } from '../CommentProps';
@@ -29,7 +29,7 @@ export const PrivateComment = (props: PrivateCommentProps) => {
 
       <div className='comment-body'>
         {comment.created && (
-          <TimeAgo datetime={comment.created} locale={props.i18n.lang} />
+          <Timestamp datetime={comment.created} locale={props.i18n.lang} />
         )}
 
         <EditableComment

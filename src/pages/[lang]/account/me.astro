@@ -8,21 +8,20 @@ import { AccountPreferences } from '@apps/dashboard-account/AccountPreferences';
 const i18n = getTranslations(Astro.request, 'dashboard-account');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${i18n.lang}/sign-in`);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
 
 const { error, data } = await getMyProfile(supabase);
 
-if (error) { 
+if (error) {
   const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
+
 <BaseLayout title={i18n.t['Account Preferences']}>
-  <AccountPreferences
-    client:load
-    i18n={i18n}
-    profile={data} />
+  <AccountPreferences client:load i18n={i18n} profile={data} />
 </BaseLayout>
 
 <style>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { PostgrestError } from '@supabase/supabase-js';
 import { Chats, StackSimple, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
@@ -7,11 +8,11 @@ import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { ViewMenuPanel } from './ViewMenuPanel';
 import { AnnotationList } from '../AnnotationList';
-import { LayersPanel } from '../LayersPanel';
+import { LayersPanel, LayersPanelMenuIcon } from '../LayersPanel';
 import { DocumentNotes, DocumentNotesList, DocumentNotesMenuIcon } from '../DocumentNotes';
+import { ColorState, FilterState } from '../LayersPanel';
 
 import './ViewMenu.css';
-import type { PostgrestError } from '@supabase/supabase-js';
 
 interface ViewMenuProps {
 
@@ -35,11 +36,15 @@ interface ViewMenuProps {
 
   beforeSelectAnnotation(a?: Annotation): void;
 
+  onChangeAnnotationFilter(fn: ((a: Annotation) => boolean)): void;
+
   onChangeAnnotationStyle(fn: ((a: Annotation) => DrawingStyle)): void;
 
 }
 
 export const ViewMenu = (props: ViewMenuProps) => {
+
+  const { t } = props.i18n;
 
   const me = props.present.find(isMe)!;
 
@@ -81,79 +86,84 @@ export const ViewMenu = (props: ViewMenuProps) => {
       className="anno-sidebar-container"
       data-collapsed={panel ? undefined : 'true'}>
 
-      <DocumentNotes
-        channelId={props.channel}
-        layerId={props.defaultLayer}
-        present={props.present}
-        onError={onError}>
+      <FilterState present={props.present}>
+        <ColorState present={props.present}>
+          <DocumentNotes
+            channelId={props.channel}
+            layerId={props.defaultLayer}
+            present={props.present}
+            onError={onError}>  
 
-        <div 
-          className="anno-menubar anno-desktop-overlay view-menu">
-          <section>
-            <button 
-              className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
-              onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
-              <Chats />
-            </button>
+            <div 
+              className="anno-menubar anno-desktop-overlay view-menu">
+              <section>
+                <button 
+                  className={panel === ViewMenuPanel.ANNOTATIONS ? 'active' : undefined}
+                  aria-label={t['Show annotation list']}
+                  onClick={() => togglePanel(ViewMenuPanel.ANNOTATIONS)}>
+                  <Chats />
+                </button>
 
-            <button
-              className={panel === ViewMenuPanel.LAYERS ? 'active' : undefined}
-              onClick={() => togglePanel(ViewMenuPanel.LAYERS)}>
-              <StackSimple />
-            </button>
+                <LayersPanelMenuIcon
+                  i18n={props.i18n}
+                  active={panel === ViewMenuPanel.LAYERS}
+                  onSelect={() => togglePanel(ViewMenuPanel.LAYERS)} />
 
-            <DocumentNotesMenuIcon
-              active={panel === ViewMenuPanel.DOCUMENT_NOTES}
-              onSelect={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)} />
-          </section>
+                <DocumentNotesMenuIcon
+                  i18n={props.i18n}
+                  active={panel === ViewMenuPanel.DOCUMENT_NOTES}
+                  onSelect={() => togglePanel(ViewMenuPanel.DOCUMENT_NOTES)} />
+              </section>
 
-          {me && (
-            <section>
-              <Avatar 
-                id={me.id}
-                name={me.appearance.label}
-                color={me.appearance.color} 
-                avatar={me.appearance.avatar} />
-            </section>
-          )}
+              {me && (
+                <section>
+                  <Avatar 
+                    id={me.id}
+                    name={me.appearance.label}
+                    color={me.appearance.color} 
+                    avatar={me.appearance.avatar} />
+                </section>
+              )}
 
-          {headerTransition((style, panel) => panel && (
-            <animated.section className="close" style={style}>
-              <button onClick={() => setPanel(undefined)}>
-                <X />
-              </button>
-            </animated.section>
-          ))}
-        </div>
+              {headerTransition((style, panel) => panel && (
+                <animated.section className="close" style={style}>
+                  <button onClick={() => setPanel(undefined)}>
+                    <X />
+                  </button>
+                </animated.section>
+              ))}
+            </div>
 
-        {panelTransition((style, panel) => panel && (
-          <animated.aside style={style}>
-            {panel === ViewMenuPanel.ANNOTATIONS ? (
-              <AnnotationList 
-                i18n={props.i18n}
-                present={props.present} 
-                me={me}
-                policies={props.policies}
-                sorting={props.sorting}
-                tagVocabulary={props.tagVocabulary}
-                beforeSelect={props.beforeSelectAnnotation} />
-            ) : panel === ViewMenuPanel.LAYERS ? (
-              <LayersPanel
-                i18n={props.i18n}
-                layers={props.layers}
-                present={props.present}
-                onChange={props.onChangeAnnotationStyle} />
-            ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
-              <DocumentNotesList 
-                i18n={props.i18n}
-                present={props.present}
-                policies={props.policies} 
-                tagVocabulary={props.tagVocabulary} />
-            ) : undefined}
-          </animated.aside>
-        ))}
-        
-      </DocumentNotes>
+            {panelTransition((style, panel) => panel && (
+              <animated.aside style={style}>
+                {panel === ViewMenuPanel.ANNOTATIONS ? (
+                  <AnnotationList 
+                    i18n={props.i18n}
+                    present={props.present} 
+                    me={me}
+                    policies={props.policies}
+                    sorting={props.sorting}
+                    tagVocabulary={props.tagVocabulary}
+                    beforeSelect={props.beforeSelectAnnotation} />
+                ) : panel === ViewMenuPanel.LAYERS ? (
+                  <LayersPanel
+                    i18n={props.i18n}
+                    layers={props.layers}
+                    present={props.present}
+                    onChangeStyle={props.onChangeAnnotationStyle} 
+                    onChangeFilter={props.onChangeAnnotationFilter} />
+                ) : panel === ViewMenuPanel.DOCUMENT_NOTES ? props.defaultLayer && (
+                  <DocumentNotesList 
+                    i18n={props.i18n}
+                    present={props.present}
+                    policies={props.policies} 
+                    tagVocabulary={props.tagVocabulary} />
+                ) : undefined}
+              </animated.aside>
+            ))}
+          </DocumentNotes>
+        </ColorState>
+      </FilterState>
     </div>
   )
 

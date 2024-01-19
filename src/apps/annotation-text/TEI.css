@@ -16,6 +16,11 @@ tei-div[subtype]::before, tei-div[subtype]::after {
   margin-right:3px;
 }
 
+[rend="blockquote"] {
+  display: block;
+  padding: 0.8em 6ch;
+}
+
 /* Choice elements */
 tei-choice tei-abbr + tei-expan:before,
 tei-choice tei-expan + tei-abbr:before,
@@ -573,7 +578,7 @@ tei-graph {
   /* Empty for now */
 }
 tei-graphic {
-  display:none;
+  /* Empty Rule Set */
 }
 tei-group {
   /* Empty Rule Set */

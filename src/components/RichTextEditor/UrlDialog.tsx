@@ -27,8 +27,9 @@ export const UrlDialog = (props: UrlDialogProps) => {
   return (
     <Dialog.Root open={props.open}>
       <Dialog.Portal>
-        <Dialog.Overlay className='dialog-overlay' />
-        <Dialog.Content className='dialog-content'>
+        <Dialog.Overlay className='dialog-overlay not-annotatable' />
+        
+        <Dialog.Content className='dialog-content not-annotatable'>
           <Dialog.Title className='dialog-title'>{props.title}</Dialog.Title>
           <Dialog.Description className='dialog-description'>
             {props.message}
@@ -55,7 +56,7 @@ export const UrlDialog = (props: UrlDialogProps) => {
           <Dialog.Close asChild>
             <button
               className='icon-button'
-              aria-label='Close'
+              aria-label={t['Close']}
               onClick={props.onClose}
             >
               <X />

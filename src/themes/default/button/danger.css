@@ -1,5 +1,7 @@
 button.danger,
-button.danger:disabled {
+button.danger:disabled,
+a[href].button.danger,
+a[href].button.danger:disabled {
   border-color: var(--red-500);
   background-color: var(--red-500);
   color: #fff;

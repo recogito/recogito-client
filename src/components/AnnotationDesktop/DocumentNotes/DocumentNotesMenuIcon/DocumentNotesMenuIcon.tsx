@@ -1,9 +1,10 @@
 import { NotePencil } from '@phosphor-icons/react';
 import { useNotes } from '../DocumentNotes/useNotes';
-
-import './DocumentNotesMenuIcon.css';
+import type { Translations } from 'src/Types';
 
 interface DocumentNotesMenuIconProps {
+
+  i18n: Translations;
 
   active?: boolean;
 
@@ -17,15 +18,16 @@ export const DocumentNotesMenuIcon = (props: DocumentNotesMenuIconProps) => {
 
   return (
     <div 
-      className={props.active ? 'document-notes-menu-icon active' : 'document-notes-menu-icon'}>
+      className={props.active ? 'with-notification active' : 'with-notification'}>
       <button
         className={props.active ? 'active' : undefined}
+        aria-label={props.i18n.t['Show document notes']}
         onClick={props.onSelect}>
         <NotePencil />
       </button>
 
       {unread.length > 0 && (
-        <span className="unread-notes">{unread.length}</span>
+        <span className="notification-bubble">{unread.length}</span>
       )}
     </div>
   )

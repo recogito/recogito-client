@@ -8,15 +8,15 @@ import config from '../../config.json';
 const methods = config.authentication.methods;
 ---
 
-<LoginLayout title='' i18n={getTranslations(Astro.request, 'auth-login')}>
+<LoginLayout title=''>
   <div class='container'>
     <Login
       i18n={getTranslations(Astro.request, 'auth-login')}
       methods={methods as LoginMethod[]}
-      client:load
+      client:only='react'
     />
   </div>
-</LoginLayout>
+</LoginLayout>;
 
 <style>
   .container {
@@ -24,15 +24,9 @@ const methods = config.authentication.methods;
     bottom: 0;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     position: absolute;
     top: 0;
-    width: 100%;
-  }
-
-  .column {
-    max-width: 360px;
-    padding: 0 20px;
-    position: relative;
     width: 100%;
   }
 </style>

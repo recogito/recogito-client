@@ -45,6 +45,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
         <div className="bottom">
           <AssignmentCardActions 
             i18n={props.i18n} 
+            assignment={assignment}
             onEdit={props.onEdit}
             onDelete={props.onDelete} />
         </div>

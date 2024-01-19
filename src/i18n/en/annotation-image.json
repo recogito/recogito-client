@@ -1,1 +1,5 @@
-{}
+{
+  "Pan and zoom the image, select annotations": "Pan and zoom the image, select annotations",
+  "Create rectangle annotations": "Create rectangle annotations",
+  "Create polygon annotations": "Create polygon annotations"
+}

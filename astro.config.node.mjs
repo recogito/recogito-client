@@ -7,11 +7,11 @@ export default defineConfig({
   integrations: [react()],
   output: 'server',
   adapter: node({
-    mode: 'standalone'
+    mode: 'standalone',
   }),
   vite: {
     ssr: {
-      noExternal: ['@radix-ui/*', '@phosphor-icons/*']
-    }
-  }
+      noExternal: ['@radix-ui/*', '@phosphor-icons/*'],
+    },
+  },
 });

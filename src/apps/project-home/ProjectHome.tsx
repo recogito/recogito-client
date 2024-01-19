@@ -2,11 +2,8 @@ import { useMemo, useState } from 'react';
 import { CloudArrowUp, DownloadSimple, Plus } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
-import {
-  useOrganizationPolicies,
-  useProjectPolicies,
-} from '@backend/hooks/usePolicies';
-import { archiveLayer } from '@backend/crud';
+import { useProjectPolicies } from '@backend/hooks/usePolicies';
+import { archiveLayer, setDocumentPrivacy } from '@backend/crud';
 import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import {
@@ -45,6 +42,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { lang, t } = props.i18n;
 
   const [project, setProject] = useState(props.project);
+
   const [addOpen, setAddOpen] = useState(false);
 
   const defaultContext = project.contexts.find((c) => c.name === null);
@@ -57,22 +55,19 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
 
-  const orgPolicies = useOrganizationPolicies();
-
-  const canUpload = orgPolicies?.get('documents').has('INSERT');
+  const canUpload = projectPolicies?.get('documents').has('INSERT');
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showUploads, setShowUploads] = useState(false);
+
   const [documentUpdated, setDocumentUpdated] = useState(false);
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
     (document) => setDocuments((d) => [...d, document])
   );
 
-  const documentIds = useMemo(() => {
-    return documents.map((d) => d.id);
-  }, [documents]);
+  const documentIds = useMemo(() => documents.map((d) => d.id), [documents]);
 
   const { addDocumentIds } = useDocumentList(
     project.id,
@@ -148,8 +143,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     chained
       .then(() => {
         setToast({
-          title: 'Deleted',
-          description: 'Document deleted successfully.',
+          title: t['Deleted'],
+          description: t['Document deleted successfully.'],
           type: 'success',
         });
       })
@@ -157,11 +152,17 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         // Roll back optimistic update in case of failure
         setDocuments((documents) => [...documents, document]);
         setToast({
-          title: 'Something went wrong',
-          description: 'Could not delete the document.',
+          title: t['Something went wrong'],
+          description: t['Could not delete the document.'],
           type: 'error',
         });
       });
+  };
+
+  const onTogglePrivate = (document: Document) => {
+    setDocumentPrivacy(supabase, document.id, !document.is_private).then(() =>
+      setDocumentUpdated(true)
+    );
   };
 
   const onUpdateDocument = (document: Document) => {
@@ -289,10 +290,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onUpdated={onUpdateDocument}
             onError={onError}
             onDelete={onDeleteDocument}
+            onTogglePrivate={onTogglePrivate}
             isAdmin={isAdmin}
           />
         </div>
         <UploadTracker
+          i18n={props.i18n}
           show={showUploads}
           closable={isIdle}
           uploads={uploads}

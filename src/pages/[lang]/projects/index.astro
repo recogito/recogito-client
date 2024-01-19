@@ -1,15 +1,17 @@
 ---
-import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile, listMyInvites } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
@@ -28,15 +30,12 @@ if (!projects.data || !invitations.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-
-<BaseLayout title='Dashboard'>
-  <div class='container'>
-    <ProjectsHome
-      client:only
-      me={me.data}
-      projects={projects.data}
-      invitations={invitations.data}
-      i18n={getTranslations(Astro.request, 'dashboard-projects')}
-    />
-  </div>
-</BaseLayout>
+<HeaderLayout title='Dashboard'>
+  <ProjectsHome
+    client:only
+    me={me.data}
+    projects={projects.data}
+    invitations={invitations.data}
+    i18n={getTranslations(Astro.request, 'dashboard-projects')}
+  />
+</HeaderLayout>

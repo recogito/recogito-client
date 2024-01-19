@@ -2,7 +2,13 @@ import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import type { Translations } from 'src/Types';
-import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
+import {
+  DotsThreeVertical,
+  PencilSimple,
+  Trash,
+  Eye,
+  EyeSlash,
+} from '@phosphor-icons/react';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
@@ -11,11 +17,17 @@ interface DocumentActionsProps {
 
   isAdmin?: boolean;
 
+  showPrivate?: boolean;
+
+  isPrivate?: boolean;
+
   onDelete?(): void;
 
   onEditMetadata?(): void;
 
   onViewMetadata?(): void;
+
+  onTogglePrivate?(): void;
 }
 
 export const DocumentActions = (props: DocumentActionsProps) => {
@@ -44,6 +56,21 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                   <PencilSimple size={16} />{' '}
                   <span>{t['Edit document metadata']}</span>
                 </Item>
+                {props.showPrivate && (
+                  <Item
+                    className='dropdown-item'
+                    onSelect={props.onTogglePrivate}
+                  >
+                    {props.isPrivate ? (
+                      <Eye size={16} />
+                    ) : (
+                      <EyeSlash size={16} />
+                    )}{' '}
+                    <span>
+                      {props.isPrivate ? t['Make Public'] : t['Make Private']}
+                    </span>
+                  </Item>
+                )}
                 <ConfirmedAction.Trigger>
                   <Item className='dropdown-item'>
                     <Trash size={16} className='destructive' />{' '}
@@ -57,6 +84,21 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                   <PencilSimple size={16} />{' '}
                   <span>{t['View Document Metadata']}</span>
                 </Item>
+                {props.showPrivate && (
+                  <Item
+                    className='dropdown-item'
+                    onSelect={props.onTogglePrivate}
+                  >
+                    {props.isPrivate ? (
+                      <Eye size={16} />
+                    ) : (
+                      <EyeSlash size={16} />
+                    )}{' '}
+                    <span>
+                      {props.isPrivate ? t['Make Public'] : t['Make Private']}
+                    </span>
+                  </Item>
+                )}
               </>
             )}
           </Content>
@@ -64,6 +106,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog
+        i18n={props.i18n}
         title={t['Are you sure?']}
         description={t['Are you sure you want to delete this document?']}
         cancelLabel={t['Cancel']}

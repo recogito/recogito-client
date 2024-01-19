@@ -6,5 +6,7 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const lang = getLangFromUrl(Astro.url);
 
-return supabase ? Astro.redirect(`/${lang}/projects`) : Astro.redirect(`${lang}/sign-in`);
+return supabase
+  ? Astro.redirect(`/${lang}/projects`)
+  : Astro.redirect(`${lang}/sign-in`);
 ---

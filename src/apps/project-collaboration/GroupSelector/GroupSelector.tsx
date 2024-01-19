@@ -75,7 +75,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
     <Select.Root value={props.member.inGroup.id} onValueChange={onValueChange}>
       <Select.Trigger 
         disabled={state === 'saving'}
-        className="select-trigger" aria-label="User access level">
+        className="select-trigger" aria-label={t['Access Level']}>
         <Select.Value />
         <Select.Icon className="select-icon">
           <CaretDown />

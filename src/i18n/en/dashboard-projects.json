@@ -6,42 +6,40 @@
   "Read the tutorial": "Why not visit our <a href=\"./help\">tutorial resources</a> while you wait for your first project invitation?",
   "Fret not one": "But fret not! A project invitation is already waiting. Check your ${icon} notifications to get started.",
   "Fret not more": "But fret not! ${count} project invitations are already waiting. Check your ${icon} notifications to get started.",
-
   "Projects": "Projects",
   "New Project": "New Project",
   "Untitled Project": "Untitled Project",
   "No description.": "No description.",
-
+  "Show notifications": "Show notifications",
   "All": "All",
   "My Projects": "My Projects",
   "Shared with me": "Shared with me",
-
   "Search": "Search",
   "Sort": "Sort",
   "Newest": "Newest",
   "Oldest": "Oldest",
-
+  "Show menu actions menu for project:": "Show menu actions menu for project:",
   "Edit project details": "Edit project details",
   "Delete project": "Delete project",
   "Leave project": "Leave project",
   "Are you sure?": "Are you sure?",
   "Are you sure you want to delete this project permanently?": "Are you sure you want to delete this project permanently? This action is not reversible.",
   "Are you sure you want to leave this project": "Are you sure you want to leave this project",
-
   "Project Details": "Project Details",
   "Name": "Name",
   "Description": "Description",
   "Project name...": "Project name...",
   "Project description...": "Project description...",
-
   "Ok": "Ok",
   "Cancel": "Cancel",
-
+  "Close": "Close",
   "Something went wrong": "Something went wrong",
   "Could not create the project.": "Could not create the project.",
   "Could not delete the project.": "Could not delete the project.",
   "Error saving project details": "Error saving project details.",
-
-  "We're working on it!": "We're working on it!", 
-  "This feature will become available soon.": "This feature will become available soon."
+  "We're working on it!": "We're working on it!",
+  "This feature will become available soon.": "This feature will become available soon.",
+  "User Profile Message": "Please complete your User Profile.",
+  "Complete Profile": "Complete Profile",
+  "User Profile": "User Profile"
 }

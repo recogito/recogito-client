@@ -1,6 +1,6 @@
 import type { PresentUser, User } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
-import { TimeAgo } from '@components/TimeAgo';
+import { Timestamp } from '@components/Timestamp';
 import type { Translations } from 'src/Types';
 
 import './Creator.css';
@@ -45,7 +45,7 @@ export const Creator = (props: CreatorProps) => {
 
             <div className="annotation-created-at">
               {createdAt && (
-                <TimeAgo datetime={createdAt} locale={lang} />
+                <Timestamp datetime={createdAt} locale={lang} />
               )}
             </div>
           </div>
@@ -64,7 +64,7 @@ export const Creator = (props: CreatorProps) => {
 
             <div className="annotation-created-at">
               {createdAt && (
-                <TimeAgo datetime={createdAt} locale={lang} />
+                <Timestamp datetime={createdAt} locale={lang} />
               )}
             </div>
           </div>

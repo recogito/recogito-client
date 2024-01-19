@@ -1,5 +1,10 @@
 @import '@annotorious/react/annotorious-react.css';
 
+.ia-desktop {
+  height: 100%;
+  width: 100%;
+}
+
 .ia-osd-container {
   height: 100%;
   position: relative;

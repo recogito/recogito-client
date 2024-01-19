@@ -89,6 +89,10 @@ export interface Group {
 
   name: string;
 
+  is_admin: boolean;
+
+  is_default: boolean;
+
   members: Array<{
     user: UserProfile;
 
@@ -121,15 +125,25 @@ export interface Document {
 
   content_type?: ContentType;
 
+  is_private: boolean;
+
+  collection_id?: string;
+
   meta_data?: {
     protocol: Protocol;
 
     url: string;
 
-    meta?: object;
+    meta?: {
+      author?: string;
+    };
+  };
+
+  collection_metadata?: {
+    revision_number: number;
+    document_id: string;
   };
 }
-
 export interface DocumentInContext extends Document {
   layers: Layer[];
 }
@@ -200,6 +214,10 @@ export interface ExtendedAssignmentData extends Context {
           name: string;
 
           description?: string;
+
+          is_admin: boolean;
+
+          is_default: boolean;
 
           members: Array<{
             user: UserProfile;
@@ -284,4 +302,16 @@ export type LoginMethod = {
   name: string;
   type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
   domain: string;
+};
+
+export type Collection = {
+  created_at?: string;
+  created_by?: string;
+  updated_at?: string;
+  updated_by?: string;
+  id: string;
+  name: string;
+  extension_id?: string;
+  extension_metadata?: object;
+  custom_css?: string;
 };

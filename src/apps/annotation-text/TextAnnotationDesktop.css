@@ -1,7 +1,14 @@
+.r6o-highlight-layer {
+  box-sizing: border-box;
+  border: 2px solid red;
+  z-index: 99999 !important;
+}
+
 .content-wrapper {
   display: flex;
   justify-content: center;
-  min-height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .content-wrapper main {
@@ -12,7 +19,8 @@
   font-family: Lora;
   font-size: 17px;
   line-height: 190%;
-  padding: 70px 85px 90px 85px;
+  min-height: 100%;
+  padding: 70px 85px 140px 85px;
   pointer-events: all;
   position: relative;
   width: 60ch;
@@ -20,12 +28,34 @@
 }
 
 .content-wrapper.text main {
+  height: fit-content;
   white-space: pre-line;
 }
 
+.content-wrapper.tei main {
+  height: fit-content;
+}
+
+.content-wrapper.pdf {
+  display: block;
+  width: 100%;
+}
+
 .content-wrapper.pdf main {
-  width: 90%;
   background-color: transparent;
+  height: 100%;
+  left: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.content-wrapper.pdf main .r6o-pdf-container {
+  bottom: 0;
+  top: 0;
+  left: 0;
+  overflow-y: scroll;
 }
 
 .a9s-popup {
@@ -41,6 +71,11 @@
 }
 
 .ta-desktop {
+  bottom: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  margin: 50px 0;
   z-index: 9999;
 }
 

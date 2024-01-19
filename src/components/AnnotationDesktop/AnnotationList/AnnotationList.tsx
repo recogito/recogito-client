@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
-import { Filter, FilterSelector } from './FilterSelector';
+import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
+import { useFilterSettings } from '../LayersPanel';
 import { 
   Annotation as Anno,
   AnnotationBody,
@@ -45,15 +46,17 @@ export const AnnotationList = (props: AnnotationListProps) => {
   
   const visible = useViewportState(150);
 
-  const [filter, setFilter] = useState<Filter>(Filter.NONE);
+  // 'Show all' vs. 'Show in viewport' setting
+  const [viewportFilter, setViewportFilter] = useState<ViewportFilter>(ViewportFilter.NONE);
+
+  // Global annotation layer filter
+  const { filter } = useFilterSettings();
 
   const [autofocus, setAutofocus] = useState(false);
 
   const applyFilter = () => {
-    if (filter === Filter.VIEWPORT) {
+    if (viewportFilter === ViewportFilter.VIEWPORT) {
       return visible;
-    } else if (filter === Filter.MINE) {
-      return all.filter(a => a.target.creator?.id === props.me.id);
     } else {
       return all;
     }
@@ -61,8 +64,10 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const annotations = applyFilter();
 
-  const sorted = useMemo(() => 
-    props.sorting ? [...annotations].sort(props.sorting) : annotations, [annotations]);
+  const sorted = useMemo(() => {
+    const filtered = filter ? annotations.filter(filter) : annotations;
+    return props.sorting ? [...filtered].sort(props.sorting) : filtered;
+  }, [annotations, filter]);
 
   const user = useAnnotatorUser();
 
@@ -133,9 +138,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   return (
     <div className="anno-sidepanel annotation-list">
-      <FilterSelector 
+      <ViewportFilterToggle 
         i18n={props.i18n} 
-        onChange={setFilter} />
+        onChange={setViewportFilter} />
 
       <ul
         ref={el}

@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import type { PDFScale } from '@recogito/react-pdf-annotator';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import * as Select from '@radix-ui/react-select';
+import type { Translations } from 'src/Types';
 
 interface PDFScaleSelectorProps {
+
+  i18n: Translations;
 
   currentScale?: number;
 
@@ -12,6 +15,8 @@ interface PDFScaleSelectorProps {
 }
 
 export const PDFScaleSelector = (props: PDFScaleSelectorProps) => {
+
+  const { t } = props.i18n;
 
   const [selected, _setSelected] = useState<PDFScale | undefined>('auto');
 
@@ -29,7 +34,7 @@ export const PDFScaleSelector = (props: PDFScaleSelectorProps) => {
     <Select.Root value={selected} onValueChange={setSelected}>
       <Select.Trigger 
         className="select-trigger"
-        aria-label="PDF zoom level">
+        aria-label={t['PDF zoom level']}>
         {props.currentScale ? (
           <span className="custom-scale" >
             <Select.Value /> 
@@ -48,28 +53,21 @@ export const PDFScaleSelector = (props: PDFScaleSelectorProps) => {
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>Automatic zoom</Select.ItemText>
+              <Select.ItemText>{t['Automatic zoom']}</Select.ItemText>
             </Select.Item>
 
             <Select.Item value="page-actual" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>Original size</Select.ItemText>
-            </Select.Item> 
-
-            <Select.Item value="page-fit" className="select-item">
-              <Select.ItemIndicator className="select-item-indicator">
-                <Check />
-              </Select.ItemIndicator>
-              <Select.ItemText>Fit page</Select.ItemText>
+              <Select.ItemText>{t['Original size']}</Select.ItemText>
             </Select.Item> 
 
             <Select.Item value="page-width" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>Fit width</Select.ItemText>
+              <Select.ItemText>{t['Fit width']}</Select.ItemText>
             </Select.Item> 
           </Select.Viewport>
         </Select.Content>

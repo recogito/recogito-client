@@ -1,6 +1,6 @@
 import { Visibility, SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { DrawingStyle } from '@annotorious/react';
-import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
+import type { ColorCoding } from '../ColorCoding';
 import { CarbonCategoricalDark14 } from '../ColorPalettes';
 
 const PALETTE = CarbonCategoricalDark14;
@@ -22,6 +22,6 @@ export const colorByPrivacy = (): ColorCoding => {
 
   const update = (annotations: SupabaseAnnotation[]) => getLegend();
 
-  return { getLegend, getStyle, update };
+  return { name: 'privacy', getLegend, getStyle, update };
 
 }

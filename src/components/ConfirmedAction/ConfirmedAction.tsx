@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
+import type { Translations } from 'src/Types';
 
 interface ConfirmedActionTriggerProps {
 
@@ -22,6 +23,8 @@ const Trigger = (props: ConfirmedActionTriggerProps) => {
 }
 
 interface ConfirmationDialogProps {
+  
+  i18n: Translations;
 
   busy?: boolean;
 
@@ -73,7 +76,9 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           </footer>
 
           <Dialog.Close asChild>
-            <button className="unstyled icon-only dialog-close" aria-label="Close">
+            <button 
+              className="unstyled icon-only dialog-close" 
+              aria-label={props.i18n.t['Close']}>
               <X />
             </button>
           </Dialog.Close>

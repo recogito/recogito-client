@@ -1,17 +1,20 @@
 ---
 import crypto from 'crypto';
-import BaseLayout from '@layouts/BaseLayout.astro';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
+import { getCollection } from '@backend/crud/collections';
+import type { Collection } from 'src/Types';
 
 const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
 
 const contextId = Astro.params.context;
 const documentId = Astro.params.document;
@@ -19,19 +22,29 @@ const documentId = Astro.params.document;
 if (!contextId || !documentId) {
   // Should never happen
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { headers: error.headers, status: 404 }); 
+  return new Response(error.body, { headers: error.headers, status: 404 });
 }
 
 // Will return empty if this user has no access priviliges
 const document = await getDocumentInContext(supabase, documentId, contextId);
-if (document.error || !document.data) {
+if (document.error || !document.data) {
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { 
+  return new Response(error.body, {
     headers: { 'Content-Type': 'text/html;charset=utf-8' },
-    status: 404, 
-    statusText: 'Not Found' 
-  }); 
+    status: 404,
+    statusText: 'Not Found',
+  });
+}
+
+// If the document is part of a collection, see if it has custom css
+let styleSheet;
+if (document.data.collection_id) {
+  console.info(`Collection found, id: ${document.data.collection_id}`);
+  const resp = await getCollection(supabase, document.data.collection_id);
+  if (!resp.error && resp.data) {
+    styleSheet = resp.data.custom_css;
+  }
 }
 
 // Compute realtime channel key
@@ -50,36 +63,33 @@ if (document.data.content_type === 'text/plain') {
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
 } else if (document.data.meta_data?.protocol === 'IIIF_IMAGE') {
-  viewer ='OPENSEADRAGON';
+  viewer = 'OPENSEADRAGON';
 } else {
   // Should never happen
   const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-<BaseLayout title="Annotation">
-  {viewer === 'OPENSEADRAGON' ? (
-    <ImageAnnotation 
-      client:only
-      i18n={getTranslations(Astro.request, 'annotation-image')}
-      document={document.data}
-      channelId={channelId} />
-  ) : (
-    <TextAnnotation 
-      client:only
-      i18n={getTranslations(Astro.request, 'annotation-text')} 
-      document={document.data}
-      channelId={channelId} />
-  )}
-</BaseLayout>
 
-<style>
-  .container.image {
-    bottom: 0;
-    left: 0;
-    overflow: hidden;
-    position: absolute;
-    right: 0;
-    top: 0;
+<HeaderLayout title='Annotation'>
+  {
+    viewer === 'OPENSEADRAGON' ? (
+      <ImageAnnotation
+        client:only
+        i18n={getTranslations(Astro.request, 'annotation-image')}
+        document={document.data}
+        channelId={channelId}
+      />
+    ) : (
+      <TextAnnotation
+        client:only
+        i18n={getTranslations(Astro.request, 'annotation-text')}
+        document={document.data}
+        channelId={channelId}
+        styleSheet={styleSheet}
+      />
+    )
   }
-</style>
+</HeaderLayout>
+
+<style></style>
