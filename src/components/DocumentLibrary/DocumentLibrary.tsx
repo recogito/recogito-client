@@ -515,13 +515,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           array.sort((a, b) =>
             (a.meta_data.url || '').localeCompare(b.meta_data.url || '')
           ),
-        PRIVATE: (array) =>
-          array.sort((a, b) => a.is_private.localeCompare(b.is_private)),
+        PRIVATE: (array) => array.sort((a, b) => a.is_private - b.is_private),
       },
     }
   );
   const sortAll = useSort(
-    { nodes: myDocuments },
+    { nodes: allDocuments },
     {},
     {
       sortFns: {
@@ -553,11 +552,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             (a.content_type || '').localeCompare(b.content_type || '')
           ),
         REVISION: (array) =>
-          array.sort((a, b) =>
-            a.item.revision_count.localeCompare(b.item.revisions?.length)
-          ),
-        LATEST: (array) =>
-          array.sort((a, b) => a.is_private.localeCompare(b.is_private)),
+          array.sort((a, b) => a.revision_count - b.revision_count),
       },
     }
   );
