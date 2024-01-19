@@ -553,8 +553,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           ),
         REVISION: (array) =>
           array.sort((a, b) => a.revision_count - b.revision_count),
-        LATEST: (array) =>
-          array.sort((a, b) => a.is_private.localeCompare(b.is_private)),
       },
     }
   );
