@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import {
   ArrowLineLeft,
   Folders,
+  GooglePodcastsLogo,
   GraduationCap,
   Sliders,
   UsersThree,
 } from '@phosphor-icons/react';
 import { AccountActions } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
-import { RecogitoCircleLogo } from '@components/RecogitoLogo';
 import { NavItem } from './NavItem';
 import type {
   ExtendedProjectData, 
@@ -73,14 +73,14 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem 
                 tabIndex={-1}
                 className="no-hover"
-                icon={<RecogitoCircleLogo className="recogito-logo-circle" />}
+                icon={GooglePodcastsLogo}
                 label='Recogito'
                 link={`/${lang}/projects`}
               />
 
               <NavItem
                 active={active === 'Documents'}
-                icon={<Folders size={21} />}
+                icon={Folders}
                 label={t['Documents']}
                 link={link()}
               />
@@ -88,7 +88,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               {isAdmin && (
                 <NavItem
                   active={active === 'Collaboration'}
-                  icon={<UsersThree size={21} />}
+                  icon={UsersThree}
                   label={t['Collaboration']}
                   link={link('collaboration')}
                 />
@@ -96,7 +96,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
 
               <NavItem
                 active={active === 'Assignments'}
-                icon={<GraduationCap size={21} />}
+                icon={GraduationCap}
                 label={t['Assignments']}
                 link={link('assignments')}
               />
@@ -110,7 +110,7 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               {isAdmin && (
                 <NavItem
                   active={active === 'Settings'}
-                  icon={<Sliders size={21} />}
+                  icon={Sliders}
                   label={t['Settings']}
                   link={link('settings')}
                 />

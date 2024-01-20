@@ -5,7 +5,6 @@ import { initProject } from '@backend/helpers';
 import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
 import { Notifications } from '@components/Notifications';
-import { RecogitoLogo } from '@components/RecogitoLogo';
 import type { Invitation, MyProfile, ExtendedProjectData, Translations, Policies } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
 import { HeaderSearchAction } from './Search';
@@ -76,7 +75,7 @@ export const Header = (props: HeaderProps) => {
     <header className="dashboard-header">
       <section className="dashboard-header-top">
         <h1>
-          <RecogitoLogo />
+          <Kanban size={32} weight="thin" />
           <span>{t['Projects']}</span>
         </h1>
 
