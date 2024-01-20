@@ -1,4 +1,4 @@
-import React from 'react';
+import type { ReactNode } from 'react';
 import type { Icon } from "@phosphor-icons/react";
 
 export interface NavItemProps {
@@ -7,7 +7,7 @@ export interface NavItemProps {
 
   className?: string;
 
-  icon: Icon;
+  icon: ReactNode;
 
   label: string;
 
@@ -26,7 +26,7 @@ export const NavItem = (props: NavItemProps) => {
       className={props.className ? `${cls} ${props.className}` : cls}>
       <a href={props.link}>
         <span className="project-sidebar-col fixed">
-          {React.createElement(props.icon, { size: 21 })}
+          {props.icon}
         </span>
 
         <span className="project-sidebar-col collapsible">

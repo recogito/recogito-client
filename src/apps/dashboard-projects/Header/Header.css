@@ -16,6 +16,7 @@
 
 .dashboard-header h1 {
   font-size: 1.4em;
+  display: flex;
   margin: 0;
   padding: 0;
 }
