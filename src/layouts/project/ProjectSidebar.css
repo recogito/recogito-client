@@ -9,6 +9,10 @@
   --light-blue: #cbd4e2;
 }
 
+.project-sidebar .recogito-logo-circle {
+  margin: 0 0.6em 0 0.3em;
+}
+
 .project-sidebar ul {
   list-style-type: none;
   margin: 0;
@@ -41,7 +45,7 @@
   transition: color 100ms ease-in-out;
   position: relative;
   top: -1px;
-  width: 40px;
+  width: 44px;
 }
 
 .project-sidebar-col.collapsible {
