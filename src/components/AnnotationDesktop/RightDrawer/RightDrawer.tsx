@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef } from 'react';
 import { useTransition, animated } from '@react-spring/web'
 import { isMe } from '@recogito/annotorious-supabase';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
@@ -35,49 +36,54 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
+  const previous = useRef<RightDrawerPanel | undefined>();
+
   const me = props.present.find(isMe)!;
 
   const drawerTransition = useTransition([props.currentPanel], {
-    from: { width: 0 },
-    enter: { width: 420 },
-    leave: { width: 0 }, 
+    from: previous.current ? { opacity: 0 } : { transform: 'translateX(420px)', opacity: 0 },
+    enter: { transform: 'translateX(0px)', opacity: 1 },
+    leave: props.currentPanel ? { opacity:0 } : { transform: 'translateX(420px)', opacity: 0 },
     config: {
-      duration: 100
+      duration: previous.current ? 0 : 250
     }
   });
 
-  return drawerTransition((style, panel) => panel && (
-      <animated.div style={style}
-        className="anno-drawer anno-right-drawer"
-        data-collapsed={props.currentPanel ? undefined : 'true'}>
+  useLayoutEffect(() => {
+    previous.current = props.currentPanel;
+  }, [props.currentPanel])
 
-        <aside>
-          {panel === RightDrawerPanel.ANNOTATIONS ? (
-            <AnnotationList 
-              i18n={props.i18n}
-              present={props.present} 
-              me={me}
-              policies={props.policies}
-              sorting={props.sorting}
-              tagVocabulary={props.tagVocabulary}
-              beforeSelect={props.beforeSelectAnnotation} />
-          ) : panel === RightDrawerPanel.LAYERS ? (
-            <LayerConfigurationPanel
-              i18n={props.i18n}
-              layers={props.layers}
-              present={props.present}
-              onChangeStyle={props.onChangeAnnotationStyle} 
-              onChangeFilter={props.onChangeAnnotationFilter} />
-          ) : panel === RightDrawerPanel.DOCUMENT_NOTES ? props.layers && (
-            <DocumentNotesList 
-              i18n={props.i18n}
-              present={props.present}
-              policies={props.policies} 
-              tagVocabulary={props.tagVocabulary} />
-          ) : undefined}
-        </aside>
-      </animated.div>
-    )
-  )
+  return drawerTransition((style, panel) => panel && (
+    <animated.div style={style}
+      className="anno-drawer anno-right-drawer"
+      data-collapsed={panel ? undefined : 'true'}>
+
+      <aside>
+        {panel === RightDrawerPanel.ANNOTATIONS ? (
+          <AnnotationList 
+            i18n={props.i18n}
+            present={props.present} 
+            me={me}
+            policies={props.policies}
+            sorting={props.sorting}
+            tagVocabulary={props.tagVocabulary}
+            beforeSelect={props.beforeSelectAnnotation} />
+        ) : panel === RightDrawerPanel.LAYERS ? (
+          <LayerConfigurationPanel
+            i18n={props.i18n}
+            layers={props.layers}
+            present={props.present}
+            onChangeStyle={props.onChangeAnnotationStyle} 
+            onChangeFilter={props.onChangeAnnotationFilter} />
+        ) : panel === RightDrawerPanel.DOCUMENT_NOTES ? props.layers && (
+          <DocumentNotesList 
+            i18n={props.i18n}
+            present={props.present}
+            policies={props.policies} 
+            tagVocabulary={props.tagVocabulary} />
+        ) : undefined}
+      </aside>
+    </animated.div>
+  ))
 
 }
