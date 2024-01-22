@@ -52,8 +52,7 @@ button:disabled svg {
 }
 
 button:hover:not(:disabled), a.button:hover {
-  box-shadow: 
-    inset 0 0 0 150px rgba(0, 0, 0, 0.06);
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.06);
 }
 
 button:focus-visible {

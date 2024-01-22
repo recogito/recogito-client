@@ -9,7 +9,7 @@
   justify-content: space-between;
   pointer-events: auto;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .ia-menubar .ia-menubar-left {
@@ -68,7 +68,7 @@
 }
 
 .ia-menubar :is(button, a.button) + :is(button, a.button) {
-  margin-left: 0;
+  margin-left: 2px;
 }
 
 .ia-menubar .ia-menubar-right {

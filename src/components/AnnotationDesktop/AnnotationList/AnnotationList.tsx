@@ -3,7 +3,7 @@ import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
-import { useFilterSettings } from '../LayersPanel';
+import { useFilterSettings } from '../LayerConfiguration';
 import { 
   Annotation as Anno,
   AnnotationBody,
@@ -137,7 +137,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
 
   return (
-    <div className="anno-sidepanel annotation-list">
+    <div className="anno-drawer-panel annotation-list">
       <ViewportFilterToggle 
         i18n={props.i18n} 
         onChange={setViewportFilter} />

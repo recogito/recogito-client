@@ -9,7 +9,7 @@ import {
   insertNote, 
   updateVisibility, 
   upsertBody 
-} from '../../DocumentNotes/DocumentNotes/postgres/pgCrud';
+} from './postgres/pgCrud';
 
 export const useNotes = () => {
 

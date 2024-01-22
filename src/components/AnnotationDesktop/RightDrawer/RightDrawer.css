@@ -1,0 +1,58 @@
+.anno-right-drawer {
+  overflow-y: scroll;
+  pointer-events: auto;
+  scroll-padding: 20px;
+  z-index: 1;
+}
+
+.anno-sidebar-container aside {
+  background-color: var(--gray-50);  
+  box-sizing: border-box;
+  border-top: 1px solid var(--gray-200);
+}
+
+.anno-right-drawer:not([data-collapsed]) {
+  box-shadow:
+    0px 0px 16px -1px rgba(0, 0, 0, 0.15),
+    0px 0px 16px -8px rgba(0, 0, 0, 0.25), 
+    0px 0px 16px -12px rgba(0, 0, 0, 0.32),
+    0px 0px 2px 0px rgba(0, 0, 0, 0.28);
+}
+
+
+
+
+.view-menu .close {
+  text-align: right;
+  padding-right: 0;
+}
+
+.view-menu .with-notification {
+  display: inline-block;
+  position: relative;
+}
+
+.view-menu .notification-bubble {
+  all: unset;
+  align-items: center;
+  background-color: var(--bright-blue);
+  border-radius: 999px;
+  border: 1px solid #fff;
+  color: #fff !important;
+  display: flex;
+  gap: 1px;
+  font-size: 9px;
+  height: 13px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: -1px;
+  width: 13px;
+}
+
+.view-menu .with-notification.active .notification-bubble {
+  right: -2px;
+  top: -2px;
+}

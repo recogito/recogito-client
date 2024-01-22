@@ -4,7 +4,7 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { BrandFooter, BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { ViewMenuPanel } from '@components/AnnotationDesktop';
+import { ColorState, DocumentNotes, FilterState, RightDrawer, RightDrawerPanel } from '@components/AnnotationDesktop';
 import type { Layer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
@@ -18,8 +18,6 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
-import { DrawerLeft } from './DrawerLeft';
-import { DrawerRight } from './DrawerRight';
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -30,6 +28,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const [loading, setLoading] = useState(true);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [rightPanel, setRightPanel] = useState<RightDrawerPanel | undefined>();
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
@@ -71,14 +71,16 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
-  const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
-    if (panel === ViewMenuPanel.ANNOTATIONS) {
+  const onSetRightPanel = (panel?: RightDrawerPanel) => {
+    if (panel === RightDrawerPanel.ANNOTATIONS) {
       // Don't use the popup if the annotation list is open
       setUsePopup(false);
     } else {
       if (!usePopup)
         setUsePopup(true)
     }
+
+    setRightPanel(panel);
   }
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
@@ -94,51 +96,78 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   }
 
+  const onError = (error: Error) => {
+    console.error(error);
+    // TODO UI feedback
+  }
+
   return (
-    <div className="anno-desktop ia-desktop">
-      {loading && (
-        <LoadingOverlay />
-      )}
+    <FilterState present={present}>
+      <ColorState present={present}>
+        <DocumentNotes
+          channelId={props.channelId}
+          layerId={defaultLayer?.id}
+          present={present}
+          onError={onError}>  
 
-      <div>
-        <BrandHeader />
-        
-        <Menubar 
-          i18n={props.i18n} 
-          document={props.document} 
-          present={present} />
-      </div>
+          <div className="anno-desktop ia-desktop">
+            {loading && (
+              <LoadingOverlay />
+            )}
 
-      <main>
-        <DrawerLeft />
+            <div className="header">
+              <BrandHeader />
+              
+              <Menubar 
+                i18n={props.i18n} 
+                document={props.document} 
+                present={present} 
+                rightPanel={rightPanel}
+                onSetRightDrawer={setRightPanel} />
+            </div>
 
-        <div className="ia-annotated-image-container">
-          {policies && (
-            <AnnotatedImage
-              channelId={props.channelId}
-              defaultLayer={defaultLayer}
-              document={props.document}
-              filter={filter}
-              i18n={props.i18n}
-              layers={layers}
-              policies={policies}
-              present={present}
-              style={style}        
-              tagVocabulary={tagVocabulary}
-              usePopup={usePopup}
-              onChangePresent={setPresent}
-              onConnectError={onConnectError}
-              onLoad={() => setLoading(false)} />
-          )}
-        </div>
+            <main>
+              <div className="ia-drawer ia-drawer-left" />
 
-        <DrawerRight />
-      </main>
+              <div className="ia-annotated-image-container">
+                {policies && (
+                  <AnnotatedImage
+                    channelId={props.channelId}
+                    defaultLayer={defaultLayer}
+                    document={props.document}
+                    filter={filter}
+                    i18n={props.i18n}
+                    layers={layers}
+                    policies={policies}
+                    present={present}
+                    style={style}        
+                    tagVocabulary={tagVocabulary}
+                    usePopup={usePopup}
+                    onChangePresent={setPresent}
+                    onConnectError={onConnectError}
+                    onLoad={() => setLoading(false)} />
+                )}
+              </div>
 
-      <div>
-        <BrandFooter />
-      </div>
-    </div>
+              <RightDrawer 
+                currentPanel={rightPanel}
+                i18n={props.i18n}
+                layers={layers}
+                policies={policies}
+                present={present}
+                tagVocabulary={tagVocabulary}
+                beforeSelectAnnotation={beforeSelectAnnotation}
+                onChangeAnnotationFilter={setFilter}
+                onChangeAnnotationStyle={setStyle} />
+            </main>
+
+            <div className="footer">
+              <BrandFooter />
+            </div>
+          </div>
+        </DocumentNotes>
+      </ColorState>
+    </FilterState>
   )
 
 }

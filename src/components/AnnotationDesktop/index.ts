@@ -1,15 +1,5 @@
-import { DocumentMenu } from './DocumentMenu';
-import { UndoStack } from './UndoStack';
-import { ViewMenu } from './ViewMenu';
-
-export const AnnotationDesktop = {
-
-  DocumentMenu, 
-
-  UndoStack,
-  
-  ViewMenu
-
-}
-
-export { ViewMenuPanel } from './ViewMenu'
+export * from './AnnotationList';
+export * from './DocumentNotes';
+export * from './LayerConfiguration';
+export * from './RightDrawer';
+export * from './UndoStack';

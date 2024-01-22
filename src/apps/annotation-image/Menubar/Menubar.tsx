@@ -1,4 +1,5 @@
 import { isMe } from '@recogito/annotorious-supabase';
+import { RightDrawerPanel } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { PresentUser } from '@annotorious/react';
@@ -25,6 +26,10 @@ interface MenubarProps {
 
   present: PresentUser[];
 
+  rightPanel?: RightDrawerPanel;
+
+  onSetRightDrawer(panel?: RightDrawerPanel): void;
+
 }
 
 export const Menubar = (props: MenubarProps) => {
@@ -40,6 +45,13 @@ export const Menubar = (props: MenubarProps) => {
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
+
+  const toggleRightDrawer = (panel: RightDrawerPanel) => {
+    if (panel === props.rightPanel)
+      props.onSetRightDrawer();
+    else
+     props.onSetRightDrawer(panel);
+  } 
 
   return (
     <div className="ia-menubar">
@@ -107,15 +119,24 @@ export const Menubar = (props: MenubarProps) => {
         <div className="anno-desktop-overlay-divider" />
 
         <div className="ia-menubar-section ia-menubar-actions-right">
-          <button>
+          <button
+            className={props.rightPanel === RightDrawerPanel.ANNOTATIONS ? 'active' : undefined}
+            aria-label={t['Show annotation list']}
+            onClick={() => toggleRightDrawer(RightDrawerPanel.ANNOTATIONS)}>
             <Chats />
           </button>
 
-          <button>
+          <button
+            className={props.rightPanel === RightDrawerPanel.LAYERS ? 'active' : undefined}
+            aria-label={t['Show annotation list']}
+            onClick={() => toggleRightDrawer(RightDrawerPanel.LAYERS)}>
             <StackSimple />
           </button>
 
-          <button>
+          <button
+            className={props.rightPanel === RightDrawerPanel.DOCUMENT_NOTES ? 'active' : undefined}
+            aria-label={t['Show annotation list']}
+            onClick={() => toggleRightDrawer(RightDrawerPanel.DOCUMENT_NOTES)}>
             <NotePencil />
           </button>
         </div>

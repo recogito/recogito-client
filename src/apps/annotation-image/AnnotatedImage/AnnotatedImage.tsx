@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Annotation } from '@components/Annotation';
-import { AnnotationDesktop } from '@components/AnnotationDesktop';
+import { UndoStack } from '@components/AnnotationDesktop';
 import { createAppearenceProvider } from '@components/Presence';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -105,7 +105,7 @@ export const AnnotatedImage = (props: AnnotatedImageProps) => {
       filter={props.filter}
       style={props.style}>
   
-      <AnnotationDesktop.UndoStack 
+      <UndoStack 
         undoEmpty={true} />
 
       {props.layers && 

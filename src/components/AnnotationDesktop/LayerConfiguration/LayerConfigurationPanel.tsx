@@ -3,9 +3,9 @@ import type { Layer, Translations } from 'src/Types';
 import { ColorSettings } from './ColorSettings';
 import { FilterSettings } from './FilterSettings';
 
-import './LayersPanel.css';
+import './LayerConfigurationPanel.css';
 
-interface LayersPanelProps {
+interface LayerConfigurationPanelProps {
 
   i18n: Translations;
 
@@ -19,7 +19,7 @@ interface LayersPanelProps {
   
 }
 
-export const LayersPanel = (props: LayersPanelProps) => {
+export const LayerConfigurationPanel = (props: LayerConfigurationPanelProps) => {
 
   return (
     <div className="anno-sidepanel layer-configuration">
