@@ -18,6 +18,8 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
+import { DrawerLeft } from './DrawerLeft';
+import { DrawerRight } from './DrawerRight';
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -108,23 +110,29 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       </div>
 
       <main>
-        {policies && (
-          <AnnotatedImage
-            channelId={props.channelId}
-            defaultLayer={defaultLayer}
-            document={props.document}
-            filter={filter}
-            i18n={props.i18n}
-            layers={layers}
-            policies={policies}
-            present={present}
-            style={style}        
-            tagVocabulary={tagVocabulary}
-            usePopup={usePopup}
-            onChangePresent={setPresent}
-            onConnectError={onConnectError}
-            onLoad={() => setLoading(false)} />
-        )}
+        <DrawerLeft />
+
+        <div className="ia-annotated-image-container">
+          {policies && (
+            <AnnotatedImage
+              channelId={props.channelId}
+              defaultLayer={defaultLayer}
+              document={props.document}
+              filter={filter}
+              i18n={props.i18n}
+              layers={layers}
+              policies={policies}
+              present={present}
+              style={style}        
+              tagVocabulary={tagVocabulary}
+              usePopup={usePopup}
+              onChangePresent={setPresent}
+              onConnectError={onConnectError}
+              onLoad={() => setLoading(false)} />
+          )}
+        </div>
+
+        <DrawerRight />
       </main>
 
       <div>

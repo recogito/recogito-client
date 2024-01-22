@@ -9,13 +9,21 @@
 }
 
 .ia-desktop main {
+  display: flex;
+  flex-direction: row;
   flex-grow: 1;
   position: relative;
 }
 
-.ia-osd-container {
+.ia-annotated-image-container {
+  flex-grow: 1;
   height: 100%;
   position: relative;
+  width: 100%;
+}
+
+.ia-osd-container {
+  height: 100%;
   width: 100%;
 }
 

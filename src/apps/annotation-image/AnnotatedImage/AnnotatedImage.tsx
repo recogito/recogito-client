@@ -122,7 +122,7 @@ export const AnnotatedImage = (props: AnnotatedImageProps) => {
           privacyMode={privacy === 'PRIVATE'} />
       }
 
-      <OpenSeadragonViewer
+      <OpenSeadragonViewer 
         className="ia-osd-container"
         options={options} />
 
