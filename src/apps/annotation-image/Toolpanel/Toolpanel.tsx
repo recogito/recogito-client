@@ -11,7 +11,9 @@ import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import type { Translations } from 'src/Types';
 import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
 
-interface ToolbarProps {
+import './Toolpanel.css';
+
+interface ToolpanelProps {
   i18n: Translations;
 
   isAdmin: boolean;
@@ -23,7 +25,8 @@ interface ToolbarProps {
   onChangePrivacy(mode: PrivacyMode): void;
 }
 
-export const Toolbar = (props: ToolbarProps) => {
+export const Toolpanel = (props: ToolpanelProps) => {
+
   const { t } = props.i18n;
 
   const { selected } = useSelection();
@@ -53,10 +56,10 @@ export const Toolbar = (props: ToolbarProps) => {
     selected.every(({ annotation }) => annotation.target.creator?.id === me.id);
 
   return (
-    <div className='ia-toolbar-container'>
-      <div className='ia-toolbar-context ia-toolbar-context-left'></div>
+    <div className='ia-toolpanel-container'>
+      <div className='ia-toolpanel-context ia-toolpanel-context-left'></div>
 
-      <div className='anno-desktop-overlay ia-toolbar'>
+      <div className='anno-desktop-overlay ia-toolpanel'>
         <section>
           <button
             className={tool === 'cursor' ? 'active' : undefined}
@@ -106,8 +109,8 @@ export const Toolbar = (props: ToolbarProps) => {
         <div
           className={
             selected.length > 0
-              ? 'ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay'
-              : 'ia-toolbar-context ia-toolbar-context-right anno-desktop-overlay hidden'
+              ? 'ia-toolpanel-context ia-toolpanel-context-right anno-desktop-overlay'
+              : 'ia-toolpanel-context ia-toolpanel-context-right anno-desktop-overlay hidden'
           }
         >
           <button

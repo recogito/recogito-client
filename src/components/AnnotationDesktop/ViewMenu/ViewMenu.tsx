@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { Chats, StackSimple, X } from '@phosphor-icons/react';
+import { Chats, X } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web'
 import { Avatar } from '@components/Avatar';
 import { isMe } from '@recogito/annotorious-supabase';

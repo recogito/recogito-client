@@ -1,6 +1,6 @@
 ---
 import crypto from 'crypto';
-import HeaderLayout from '@layouts/HeaderLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
@@ -70,26 +70,27 @@ if (document.data.content_type === 'text/plain') {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
+<BaseLayout title={document.data.name}>
+  {viewer === 'OPENSEADRAGON' ? (
+    <ImageAnnotation
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-image')}
+      document={document.data}
+      channelId={channelId}
+    />
+  ) : (
+    <TextAnnotation
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-text')}
+      document={document.data}
+      channelId={channelId}
+      styleSheet={styleSheet}
+    />
+  )}
+</BaseLayout>
 
-<HeaderLayout title='Annotation'>
-  {
-    viewer === 'OPENSEADRAGON' ? (
-      <ImageAnnotation
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-image')}
-        document={document.data}
-        channelId={channelId}
-      />
-    ) : (
-      <TextAnnotation
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-text')}
-        document={document.data}
-        channelId={channelId}
-        styleSheet={styleSheet}
-      />
-    )
+<style>
+  html, body {
+    height: 100%;
   }
-</HeaderLayout>
-
-<style></style>
+</style>

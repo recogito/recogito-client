@@ -1,8 +1,16 @@
 @import '@annotorious/react/annotorious-react.css';
 
 .ia-desktop {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+  overscroll-behavior: none;
   width: 100%;
+}
+
+.ia-desktop main {
+  flex-grow: 1;
+  position: relative;
 }
 
 .ia-osd-container {
@@ -13,70 +21,4 @@
 
 .openseadragon-canvas {
   outline: none;
-}
-
-.ia-toolbar-container {
-  align-items: center;
-  display: flex;
-}
-
-.ia-toolbar-context {
-  border: none;
-  border-radius: 50%;
-  margin: 0 6px;
-  transition: opacity 250ms ease-in-out;
-}
-
-.ia-toolbar-context.hidden {
-  opacity: 0;
-}
-
-.ia-toolbar-context button {
-  border-radius: 50%;
-}
-
-.ia-toolbar-context button.delete {
-  background-color: var(--red-500);
-}
-
-.ia-toolbar-context button.delete svg {
-  color: #fff;
-}
-
-.ia-toolbar {
-  align-items: center;
-  bottom: 30px;
-  border-radius: 9999px;
-  display: flex;
-  flex-direction: row;
-}
-
-.ia-toolbar button {
-  border-radius: 50%;
-  vertical-align: bottom;
-}
-
-.ia-toolbar button svg {
-  color: var(--font-dark);
-}
-
-.ia-toolbar :is(button, a.button) + :is(button, a.button) {
-  margin-left: 6px;
-}
-
-.ia-toolbar section {
-  padding: 6px;
-}
-
-.ia-toolbar section.privacy {
-  padding-left: 0;
-}
-
-.ia-desktop .presence-stack {
-  margin: 4px 8px;
-}
-
-.ia-desktop .presence-stack .avatar {
-  height: 36px;
-  width: 36px;
 }
