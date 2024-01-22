@@ -1,9 +1,11 @@
 import { isMe } from '@recogito/annotorious-supabase';
+import { Avatar } from '@components/Avatar';
+import { PresenceStack } from '@components/Presence';
+import type { PresentUser } from '@annotorious/react';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 import { 
   ArrowsOutSimple,
   CaretLeft, 
-  CaretUp, 
   Chats, 
   GraduationCap, 
   ListBullets, 
@@ -14,9 +16,6 @@ import {
 } from '@phosphor-icons/react';
 
 import './Menubar.css';
-import { PresenceStack } from '@components/Presence';
-import type { PresentUser } from '@annotorious/react';
-import { Avatar } from '@components/Avatar';
 
 interface MenubarProps {
 
