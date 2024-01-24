@@ -41,5 +41,15 @@
   "This feature will become available soon.": "This feature will become available soon.",
   "User Profile Message": "Please complete your User Profile.",
   "Complete Profile": "Complete Profile",
-  "User Profile": "User Profile"
+  "User Profile": "User Profile",
+  "Create Project": "Create Project",
+  "Create": "Create",
+  "Project Name": "Project Name",
+  "Name your project": "Name your project",
+  "Project Description": "Project Description",
+  "Describe your project": "Describe your project",
+  "Open Join": "Open Join",
+  "Open Edit": "Open Edit",
+  "open-join-info": "With 'Open Join' switched on, any registered user can join your project without an invitation.",
+  "open-edit-info": "With 'Open Edit' switched on, any member of your project can edit the default assignment"
 }
