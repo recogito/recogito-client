@@ -30,6 +30,8 @@ interface MenubarProps {
 
   rightPanel?: RightDrawerPanel;
 
+  onToggleBranding(): void;
+
   onSetRightDrawer(panel?: RightDrawerPanel): void;
 
 }
@@ -146,7 +148,7 @@ export const Menubar = (props: MenubarProps) => {
         <div className="anno-desktop-overlay-divider" />
 
         <div className="ia-menubar-section ia-menubar-collapse">
-          <button>
+          <button onClick={props.onToggleBranding}>
             <ArrowsOutSimple size={17} />
           </button>
         </div>

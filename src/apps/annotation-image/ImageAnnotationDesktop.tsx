@@ -27,6 +27,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [loading, setLoading] = useState(true);
 
+  const [showBranding, setShowBranding] = useState(true);
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [rightPanel, setRightPanel] = useState<RightDrawerPanel | undefined>();
@@ -113,13 +115,16 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             )}
 
             <div className="header">
-              <BrandHeader />
+              {showBranding && (
+                <BrandHeader />
+              )}
               
               <Menubar 
                 i18n={props.i18n} 
                 document={props.document} 
                 present={present} 
                 rightPanel={rightPanel}
+                onToggleBranding={() => setShowBranding(!showBranding)}
                 onSetRightDrawer={onSetRightPanel} />
             </div>
 
@@ -158,9 +163,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 onChangeAnnotationStyle={s => setStyle(() => s)} />
             </main>
 
-            <div className="footer">
-              <BrandFooter />
-            </div>
+            {showBranding && (
+              <div className="footer">
+                <BrandFooter />
+              </div>
+            )}
           </div>
         </DocumentNotes>
       </ColorState>
