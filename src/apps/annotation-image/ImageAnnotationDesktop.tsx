@@ -72,13 +72,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
   const onSetRightPanel = (panel?: RightDrawerPanel) => {
-    if (panel === RightDrawerPanel.ANNOTATIONS) {
-      // Don't use the popup if the annotation list is open
-      setUsePopup(false);
-    } else {
-      if (!usePopup)
-        setUsePopup(true)
-    }
+    if (panel === RightDrawerPanel.ANNOTATIONS)
+      setUsePopup(false); // Don't use the popup if annotation list is open
+    else if (!usePopup)
+      setUsePopup(true)
 
     setRightPanel(panel);
   }
@@ -97,8 +94,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   }
 
   const onError = (error: Error) => {
-    console.error(error);
     // TODO UI feedback
+    console.error(error);
   }
 
   return (
@@ -123,7 +120,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 document={props.document} 
                 present={present} 
                 rightPanel={rightPanel}
-                onSetRightDrawer={setRightPanel} />
+                onSetRightDrawer={onSetRightPanel} />
             </div>
 
             <main>
@@ -157,8 +154,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 present={present}
                 tagVocabulary={tagVocabulary}
                 beforeSelectAnnotation={beforeSelectAnnotation}
-                onChangeAnnotationFilter={setFilter}
-                onChangeAnnotationStyle={setStyle} />
+                onChangeAnnotationFilter={f => setFilter(() => f)}
+                onChangeAnnotationStyle={s => setStyle(() => s)} />
             </main>
 
             <div className="footer">

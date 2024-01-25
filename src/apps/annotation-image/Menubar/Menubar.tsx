@@ -46,6 +46,10 @@ export const Menubar = (props: MenubarProps) => {
 
   const me = props.present.find(isMe)!;
 
+  const onZoom = (factor: number) => {
+    // viewer.viewport.zoomBy(factor);
+  }
+
   const toggleRightDrawer = (panel: RightDrawerPanel) => {
     if (panel === props.rightPanel)
       props.onSetRightDrawer();
@@ -90,19 +94,19 @@ export const Menubar = (props: MenubarProps) => {
 
         <div>
           <button>
-            <ListBullets />
+            <ListBullets size={17} />
           </button>
         </div>
       </div>
 
       <div className="ia-menubar-right">
         <div className="ia-menubar-section ia-menubar-zoom">
-          <button>
-            <MagnifyingGlassPlus />
+          <button onClick={() => onZoom(2)}>
+            <MagnifyingGlassPlus size={18} />
           </button>
 
-          <button>
-            <MagnifyingGlassMinus />
+          <button onClick={() => onZoom(0.5)}>
+            <MagnifyingGlassMinus size={18} />
           </button>
         </div>
 
@@ -123,21 +127,21 @@ export const Menubar = (props: MenubarProps) => {
             className={props.rightPanel === RightDrawerPanel.ANNOTATIONS ? 'active' : undefined}
             aria-label={t['Show annotation list']}
             onClick={() => toggleRightDrawer(RightDrawerPanel.ANNOTATIONS)}>
-            <Chats />
+            <Chats size={17} />
           </button>
 
           <button
             className={props.rightPanel === RightDrawerPanel.LAYERS ? 'active' : undefined}
             aria-label={t['Show annotation list']}
             onClick={() => toggleRightDrawer(RightDrawerPanel.LAYERS)}>
-            <StackSimple />
+            <StackSimple size={17} />
           </button>
 
           <button
             className={props.rightPanel === RightDrawerPanel.DOCUMENT_NOTES ? 'active' : undefined}
             aria-label={t['Show annotation list']}
             onClick={() => toggleRightDrawer(RightDrawerPanel.DOCUMENT_NOTES)}>
-            <NotePencil />
+            <NotePencil size={17} />
           </button>
         </div>
 
@@ -145,7 +149,7 @@ export const Menubar = (props: MenubarProps) => {
 
         <div className="ia-menubar-section ia-menubar-collapse">
           <button>
-            <ArrowsOutSimple />
+            <ArrowsOutSimple size={17} />
           </button>
         </div>
 

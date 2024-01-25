@@ -127,11 +127,13 @@ export const AnnotationList = (props: AnnotationListProps) => {
   useEffect(() => {
     // Scroll the first selected card into view
     if (selected?.length > 0) {
-     const card = el.current?.querySelector('.selected');
-     if (card)
-      card.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        const card = el.current?.querySelector('.selected');
+        if (card)
+         card.scrollIntoView({ behavior: 'smooth' });  
+      }, 250);
     }
-
+    
     // Don't focus reply before pointer up, otherwise the selection breaks!
     setAutofocus(pointerEvent?.type === 'pointerup');
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
