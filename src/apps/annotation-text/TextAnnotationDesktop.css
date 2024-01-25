@@ -1,7 +1,6 @@
 .r6o-highlight-layer {
   box-sizing: border-box;
-  border: 2px solid red;
-  z-index: 99999 !important;
+  z-index: 99 !important;
 }
 
 .content-wrapper {

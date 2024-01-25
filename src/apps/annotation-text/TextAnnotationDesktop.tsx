@@ -22,10 +22,6 @@ import {
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { PresenceStack, createAppearenceProvider } from '@components/Presence';
 import { Annotation } from '@components/Annotation';
-import {
-  AnnotationDesktop,
-  ViewMenuPanel,
-} from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -39,6 +35,7 @@ import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
 import { DynamicStyle } from '@components/DynamicStyle';
+import { RightDrawerPanel, UndoStack } from '@components/AnnotationDesktop';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -114,8 +111,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   // max number of avatars displayed in the top right
   const limit = 5;
 
-  const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
-    if (panel === ViewMenuPanel.ANNOTATIONS) {
+  const onChangeViewMenuPanel = (panel: RightDrawerPanel | undefined) => {
+    if (panel === RightDrawerPanel.ANNOTATIONS) {
       // Don't use the popup if the annotation list is open
       setUsePopup(false);
     } else {
@@ -194,7 +191,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       </main>
 
       <div className='anno-desktop ta-desktop'>
-        <AnnotationDesktop.UndoStack undoEmpty={true} />
+        <UndoStack undoEmpty={true} />
 
         {layers && (
           <SupabasePlugin
@@ -225,13 +222,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         )}
 
         <div className='anno-desktop-left'>
-          <AnnotationDesktop.DocumentMenu
+            {/* <AnnotationDesktop.DocumentMenu
             i18n={props.i18n}
             document={props.document}
-          />
+            /> */}
         </div>
 
         <div className='anno-desktop-right not-annotatable'>
+          {/*
           <PresenceStack present={present} limit={limit} />
 
           <AnnotationDesktop.ViewMenu
@@ -249,6 +247,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             onChangeAnnotationStyle={(s) => setStyle(() => s)}
             beforeSelectAnnotation={beforeSelectAnnotation}
           />
+          */}
         </div>
 
         <div className='anno-desktop-bottom'>
