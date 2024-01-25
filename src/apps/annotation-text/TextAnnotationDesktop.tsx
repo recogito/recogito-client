@@ -9,7 +9,7 @@ import {
   isDefaultContext,
 } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { ColorState, DocumentNotes, FilterState, RightDrawerPanel } from '@components/AnnotationDesktop';
+import { ColorState, DocumentNotes, FilterState, RightDrawer, RightDrawerPanel } from '@components/AnnotationDesktop';
 import { BrandFooter, BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { TextAnnotationProps } from './TextAnnotation';
@@ -173,7 +173,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 )}
               </div>
 
-              <div className="ta-drawer ta-drawer-right" />
+              <RightDrawer 
+                currentPanel={rightPanel}
+                i18n={props.i18n}
+                layers={layers}
+                policies={policies}
+                present={present}
+                tagVocabulary={tagVocabulary}
+                beforeSelectAnnotation={beforeSelectAnnotation}
+                onChangeAnnotationFilter={f => setFilter(() => f)}
+                onChangeAnnotationStyle={s => setStyle(() => s)} />
             </main>
 
             {showBranding && (
