@@ -1,9 +1,13 @@
 import { isMe } from '@recogito/annotorious-supabase';
-import { RightDrawerPanel } from '@components/AnnotationDesktop';
+import type { PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
-import type { PresentUser } from '@annotorious/react';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import { 
+  DocumentNotesMenuIcon, 
+  LayersPanelMenuIcon,
+  RightDrawerPanel 
+} from '@components/AnnotationDesktop';
 import { 
   ArrowsOutSimple,
   CaretLeft, 
@@ -12,8 +16,6 @@ import {
   ListBullets, 
   MagnifyingGlassMinus, 
   MagnifyingGlassPlus, 
-  NotePencil, 
-  StackSimple 
 } from '@phosphor-icons/react';
 
 import './Menubar.css';
@@ -130,19 +132,15 @@ export const Menubar = (props: MenubarProps) => {
             <Chats size={17} />
           </button>
 
-          <button
-            className={props.rightPanel === RightDrawerPanel.LAYERS ? 'active' : undefined}
-            aria-label={t['Show annotation list']}
-            onClick={() => toggleRightDrawer(RightDrawerPanel.LAYERS)}>
-            <StackSimple size={17} />
-          </button>
+          <LayersPanelMenuIcon
+            i18n={props.i18n}
+            active={props.rightPanel === RightDrawerPanel.LAYERS}
+            onSelect={() => toggleRightDrawer(RightDrawerPanel.LAYERS)} />
 
-          <button
-            className={props.rightPanel === RightDrawerPanel.DOCUMENT_NOTES ? 'active' : undefined}
-            aria-label={t['Show annotation list']}
-            onClick={() => toggleRightDrawer(RightDrawerPanel.DOCUMENT_NOTES)}>
-            <NotePencil size={17} />
-          </button>
+          <DocumentNotesMenuIcon
+            i18n={props.i18n}
+            active={props.rightPanel === RightDrawerPanel.DOCUMENT_NOTES}
+            onSelect={() => toggleRightDrawer(RightDrawerPanel.DOCUMENT_NOTES)} />
         </div>
 
         <div className="anno-desktop-overlay-divider" />

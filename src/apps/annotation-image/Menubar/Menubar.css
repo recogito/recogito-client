@@ -67,7 +67,7 @@
   color: var(--font-dark);
 }
 
-.ia-menubar :is(button, a.button) + :is(button, a.button) {
+.ia-menubar :is(button, a.button, .with-notification) + :is(button, a.button, .with-notification) {
   margin-left: 2px;
 }
 

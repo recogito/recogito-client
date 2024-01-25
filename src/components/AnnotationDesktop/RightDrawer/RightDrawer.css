@@ -20,17 +20,12 @@
     0px 0px 2px 0px rgba(0, 0, 0, 0.28);
 }
 
-.view-menu .close {
-  text-align: right;
-  padding-right: 0;
-}
-
-.view-menu .with-notification {
+.with-notification {
   display: inline-block;
   position: relative;
 }
 
-.view-menu .notification-bubble {
+.notification-bubble {
   all: unset;
   align-items: center;
   background-color: var(--bright-blue);
@@ -45,12 +40,7 @@
   margin: 0;
   padding: 0;
   position: absolute;
-  right: 0;
-  top: -1px;
-  width: 13px;
-}
-
-.view-menu .with-notification.active .notification-bubble {
   right: -2px;
   top: -2px;
+  width: 13px;
 }
