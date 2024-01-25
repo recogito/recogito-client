@@ -1,18 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type {
-  Annotation as Anno,
-  PresentUser,
-  DrawingStyle,
-} from '@annotorious/react';
-import {
-  RecogitoTextAnnotator,
-  TEIAnnotator,
-  TextAnnotator,
-  TextAnnotatorPopup,
-  TextAnnotation,
-  CETEIcean,
-} from '@recogito/react-text-annotator';
+import type { PresentUser, DrawingStyle } from '@annotorious/react';
+import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
 import {
@@ -20,59 +9,37 @@ import {
   isDefaultContext,
 } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { PresenceStack, createAppearenceProvider } from '@components/Presence';
-import { Annotation } from '@components/Annotation';
+import { RightDrawerPanel } from '@components/AnnotationDesktop';
+import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import type { PrivacyMode } from '@components/PrivacySelector';
-import { SupabasePlugin } from '@components/SupabasePlugin';
-import { useContent } from './useContent';
-import { PDFViewer } from './PDFViewer';
 import type { TextAnnotationProps } from './TextAnnotation';
-import { Toolbar } from './Toolbar';
+import { Menubar } from './Menubar';
+import { AnnotatedText } from './AnnotatedText';
 import type { Layer } from 'src/Types';
 
 import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-import { DynamicStyle } from '@components/DynamicStyle';
-import { RightDrawerPanel, UndoStack } from '@components/AnnotationDesktop';
-
-const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
-
-const SUPABASE_API_KEY = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
-  const { i18n } = props;
-
-  const contentType = props.document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
-  const text = useContent(props.document);
+  const [loading, setLoading] = useState(true);
 
-  const [annotationsLoading, setAnnotationsLoading] = useState(true);
-
-  const [pdfLoading, setPDFLoading] = useState(
-    contentType === 'application/pdf'
-  );
-
-  const loading = annotationsLoading || pdfLoading || !text;
+  const [showBranding, setShowBranding] = useState(true);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [style, setStyle] = useState<
-    ((a: TextAnnotation) => DrawingStyle) | undefined
-  >(undefined);
+  const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [filter, setFilter] = useState<((a: Anno) => boolean) | undefined>(
-    undefined
-  );
+  const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
+
+  const [filter, setFilter] = useState<((a: TextAnnotation) => boolean) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
-
-  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
 
@@ -83,7 +50,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       ? layers.find((l) => !l.context.name) || layers[0]
       : undefined;
 
-  const vocabulary = useTagVocabulary(props.document.context.project_id);
 
   useEffect(() => {
     if (policies) {
@@ -120,18 +86,17 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   };
 
-  const beforeSelectAnnotation = (a?: Anno) => {
+  const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
-      const t = a as TextAnnotation;
       // Don't fit the view if the annotation is already selected
-      if (anno.state.selection.isSelected(t)) return;
+      if (anno.state.selection.isSelected(a)) return;
 
-      anno.scrollIntoView(t);
+      anno.scrollIntoView(a);
     }
   };
 
   const sorting =
-    contentType === 'application/pdf'
+    props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
           const pages =
             a.target.selector.pageNumber - b.target.selector.pageNumber;
@@ -143,122 +108,44 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           a.target.selector.start - b.target.selector.start;
 
   return (
-    <div
-      className={
-        contentType === 'text/xml'
-          ? 'content-wrapper tei'
-          : contentType === 'application/pdf'
-          ? 'content-wrapper pdf'
-          : 'content-wrapper text'
-      }
-    >
-      {loading && <LoadingOverlay />}
+    <div className="anno-desktop ta-desktop">
+      {loading && (
+        <LoadingOverlay />
+      )}
+
+      <div className="header">
+        {showBranding && (
+          <BrandHeader />
+        )}
+              
+        <Menubar />
+      </div>
 
       <main>
-        {contentType === 'text/xml' && text ? (
-          <>
-            <DynamicStyle style={props.styleSheet} />
-            <TEIAnnotator
-              filter={filter}
-              style={style}
-              presence={{
-                font: '500 12px Inter, Arial, Helvetica, sans-serif',
-              }}
-            >
-              <CETEIcean tei={text} />
-            </TEIAnnotator>
-          </>
-        ) : contentType === 'application/pdf' && text ? (
-          <PDFViewer
-            document={props.document}
-            filter={filter}
-            style={style}
-            onRendered={() => setPDFLoading(false)}
-          />
-        ) : (
-          text && (
-            <TextAnnotator
-              filter={filter}
-              style={style}
-              presence={{
-                font: '500 12px Inter, Arial, Helvetica, sans-serif',
-              }}
-            >
-              <p className='plaintext'>{text}</p>
-            </TextAnnotator>
-          )
-        )}
+        <div className="ta-drawer ta-drawer-left" />
+
+        <div className="ta-annotated-text-container">
+          {policies && (
+            <AnnotatedText 
+              channelId={props.channelId} 
+              defaultLayer={defaultLayer} 
+              document={props.document} 
+              filter={filter} 
+              i18n={props.i18n}
+              layers={layers}
+              policies={policies}
+              present={present}
+              style={style} 
+              tagVocabulary={tagVocabulary}
+              usePopup={usePopup} 
+              onChangePresent={setPresent}
+              onLoad={() => setLoading(false)} />
+          )}
+        </div>
+
+        <div className="ta-drawer ta-drawer-right" />
       </main>
-
-      <div className='anno-desktop ta-desktop'>
-        <UndoStack undoEmpty={true} />
-
-        {layers && (
-          <SupabasePlugin
-            supabaseUrl={SUPABASE}
-            apiKey={SUPABASE_API_KEY}
-            channel={props.channelId}
-            defaultLayer={defaultLayer?.id}
-            layerIds={layers.map((layer) => layer.id)}
-            appearanceProvider={createAppearenceProvider()}
-            onInitialLoad={() => setAnnotationsLoading(false)}
-            onPresence={setPresent}
-            privacyMode={privacy === 'PRIVATE'}
-          />
-        )}
-
-        {usePopup && (
-          <TextAnnotatorPopup
-            popup={(props) => (
-              <Annotation.Popup
-                {...props}
-                i18n={i18n}
-                present={present}
-                policies={policies}
-                tagVocabulary={vocabulary}
-              />
-            )}
-          />
-        )}
-
-        <div className='anno-desktop-left'>
-            {/* <AnnotationDesktop.DocumentMenu
-            i18n={props.i18n}
-            document={props.document}
-            /> */}
-        </div>
-
-        <div className='anno-desktop-right not-annotatable'>
-          {/*
-          <PresenceStack present={present} limit={limit} />
-
-          <AnnotationDesktop.ViewMenu
-            i18n={i18n}
-            present={present}
-            policies={policies}
-            layers={layers}
-            defaultLayer={defaultLayer?.id}
-            channel={props.channelId}
-            // @ts-ignore
-            sorting={sorting}
-            tagVocabulary={vocabulary}
-            onChangePanel={onChangeViewMenuPanel}
-            onChangeAnnotationFilter={(f) => setFilter(() => f)}
-            onChangeAnnotationStyle={(s) => setStyle(() => s)}
-            beforeSelectAnnotation={beforeSelectAnnotation}
-          />
-          */}
-        </div>
-
-        <div className='anno-desktop-bottom'>
-          <Toolbar
-            i18n={props.i18n}
-            isAdmin={policies?.get('layers').has('INSERT')}
-            privacy={privacy}
-            onChangePrivacy={setPrivacy}
-          />
-        </div>
-      </div>
     </div>
-  );
-};
+  )
+
+}
