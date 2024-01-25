@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { forwardRef, useMemo, useState } from 'react';
+import type OpenSeadragon from 'openseadragon';
 import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { createAppearenceProvider } from '@components/Presence';
@@ -54,7 +55,7 @@ interface AnnotatedImageProps {
 
 }
 
-export const AnnotatedImage = (props: AnnotatedImageProps) => {
+export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
   const { i18n, policies, present, tagVocabulary } = props;
 
@@ -126,6 +127,7 @@ export const AnnotatedImage = (props: AnnotatedImageProps) => {
       }
 
       <OpenSeadragonViewer 
+        ref={ref}
         className="ia-osd-container"
         options={options} />
 
@@ -149,4 +151,4 @@ export const AnnotatedImage = (props: AnnotatedImageProps) => {
     </OpenSeadragonAnnotator>
   )
 
-}
+});

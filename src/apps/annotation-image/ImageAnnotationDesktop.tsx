@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type OpenSeadragon from 'openseadragon';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -22,6 +23,8 @@ import './ImageAnnotationDesktop.css';
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
+
+  const viewer = useRef<OpenSeadragon.Viewer>(null);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -72,6 +75,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
+
+  const onZoom = (factor: number) => 
+    viewer.current?.viewport.zoomBy(factor);
 
   const onSetRightPanel = (panel?: RightDrawerPanel) => {
     if (panel === RightDrawerPanel.ANNOTATIONS)
@@ -124,6 +130,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 document={props.document} 
                 present={present} 
                 rightPanel={rightPanel}
+                onZoom={onZoom}
                 onToggleBranding={() => setShowBranding(!showBranding)}
                 onSetRightDrawer={onSetRightPanel} />
             </div>
@@ -134,6 +141,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               <div className="ia-annotated-image-container">
                 {policies && (
                   <AnnotatedImage
+                    ref={viewer}
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
                     document={props.document}

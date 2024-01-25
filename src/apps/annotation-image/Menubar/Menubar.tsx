@@ -30,6 +30,8 @@ interface MenubarProps {
 
   rightPanel?: RightDrawerPanel;
 
+  onZoom(factor: number): void;
+
   onToggleBranding(): void;
 
   onSetRightDrawer(panel?: RightDrawerPanel): void;
@@ -49,10 +51,6 @@ export const Menubar = (props: MenubarProps) => {
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
-
-  const onZoom = (factor: number) => {
-    // viewer.viewport.zoomBy(factor);
-  }
 
   const toggleRightDrawer = (panel: RightDrawerPanel) => {
     if (panel === props.rightPanel)
@@ -105,11 +103,11 @@ export const Menubar = (props: MenubarProps) => {
 
       <div className="ia-menubar-right">
         <div className="ia-menubar-section ia-menubar-zoom">
-          <button onClick={() => onZoom(2)}>
+          <button onClick={() => props.onZoom(2)}>
             <MagnifyingGlassPlus size={18} />
           </button>
 
-          <button onClick={() => onZoom(0.5)}>
+          <button onClick={() => props.onZoom(0.5)}>
             <MagnifyingGlassMinus size={18} />
           </button>
         </div>
