@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useTransition, animated } from '@react-spring/web'
 import { isMe } from '@recogito/annotorious-supabase';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
@@ -36,27 +36,34 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
+  // We need to keep the current panel until exit transition is done
   const previous = useRef<RightDrawerPanel | undefined>();
 
   const me = props.present.find(isMe)!;
 
+  const shouldAnimate = 
+    // Drawer closed, and should open
+    !previous.current && props.currentPanel ||
+    // Drawer open, and should close
+    previous.current && !props.currentPanel;
+
   const drawerTransition = useTransition([props.currentPanel], {
-    from: previous.current ? { opacity: 0 } : { transform: 'translateX(420px)', opacity: 0 },
+    from: { transform: 'translateX(180px)', opacity: 0 },
     enter: { transform: 'translateX(0px)', opacity: 1 },
-    leave: props.currentPanel ? { opacity:0 } : { transform: 'translateX(420px)', opacity: 0 },
+    leave: { transform: 'translateX(180px)', opacity: 0 },
     config: {
-      duration: previous.current ? 0 : 250
+      duration: shouldAnimate ? 120 : 0
     }
   });
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     previous.current = props.currentPanel;
   }, [props.currentPanel])
 
   return drawerTransition((style, panel) => panel && (
-    <animated.div style={style}
-      className="anno-drawer anno-right-drawer"
-      data-collapsed={panel ? undefined : 'true'}>
+    <animated.div
+      style={style}
+      className="ia-drawer ia-right-drawer">
 
       <aside>
         {panel === RightDrawerPanel.ANNOTATIONS ? (

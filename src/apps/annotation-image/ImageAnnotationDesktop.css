@@ -10,11 +10,9 @@
 }
 
 .ia-desktop main {
-  display: flex;
-  flex-direction: row;
   flex-grow: 1;
   position: relative;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .ia-annotated-image-container {
@@ -32,4 +30,12 @@
 
 .openseadragon-canvas {
   outline: none;
+}
+
+.ia-drawer {
+  height: 100%;
+  overflow-y: auto;
+  pointer-events: auto;
+  position: absolute;
+  z-index: 1;
 }

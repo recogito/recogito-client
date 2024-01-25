@@ -74,7 +74,8 @@ export const AnnotatedImage = (props: AnnotatedImageProps) => {
       clickToZoom: false
     },
     showNavigationControl: false,
-    crossOriginPolicy: 'Anonymous'
+    crossOriginPolicy: 'Anonymous',
+    minZoomLevel: 0.4
   }), [props.document.meta_data?.url]);
 
   const selectAction = (annotation: ImageAnnotation) => {
