@@ -18,8 +18,6 @@ import {
   MagnifyingGlassPlus, 
 } from '@phosphor-icons/react';
 
-import './Menubar.css';
-
 interface MenubarProps {
 
   i18n: Translations;
@@ -60,9 +58,9 @@ export const Menubar = (props: MenubarProps) => {
   } 
 
   return (
-    <div className="ia-menubar">
-      <div className="ia-menubar-left">
-        <div className="ia-menubar-section ia-menubar-title">
+    <div className="anno-menubar ia-menubar not-annotatable">
+      <div className="anno-menubar-left ia-menubar-left">
+        <div className="anno-menubar-section anno-menubar-title">
           {contextName ? (
             <>
               <a 
@@ -101,8 +99,8 @@ export const Menubar = (props: MenubarProps) => {
         </div>
       </div>
 
-      <div className="ia-menubar-right">
-        <div className="ia-menubar-section ia-menubar-zoom">
+      <div className="anno-menubar-right ia-menubar-right">
+        <div className="anno-menubar-section">
           <button onClick={() => props.onZoom(2)}>
             <MagnifyingGlassPlus size={18} />
           </button>
@@ -116,7 +114,7 @@ export const Menubar = (props: MenubarProps) => {
           <>
             <div className="anno-desktop-overlay-divider" />
           
-            <div className="ia-menubar-section ia-menubar-presence">
+            <div className="anno-menubar-section anno-menubar-presence">
               <PresenceStack present={props.present} />
             </div>
           </>
@@ -124,7 +122,7 @@ export const Menubar = (props: MenubarProps) => {
 
         <div className="anno-desktop-overlay-divider" />
 
-        <div className="ia-menubar-section ia-menubar-actions-right">
+        <div className="anno-menubar-section anno-menubar-actions-right">
           <button
             className={props.rightPanel === RightDrawerPanel.ANNOTATIONS ? 'active' : undefined}
             aria-label={t['Show annotation list']}
@@ -145,14 +143,14 @@ export const Menubar = (props: MenubarProps) => {
 
         <div className="anno-desktop-overlay-divider" />
 
-        <div className="ia-menubar-section ia-menubar-collapse">
+        <div className="anno-menubar-section">
           <button onClick={props.onToggleBranding}>
             <ArrowsOutSimple size={17} />
           </button>
         </div>
 
         {me && (
-          <div className="ia-menubar-me">
+          <div className="anno-menubar-me">
             <Avatar 
               id={me.id}
               name={me.appearance.label}

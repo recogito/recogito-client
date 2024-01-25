@@ -1,9 +1,4 @@
-import {
-  Annotation,
-  useAnnotationStore,
-  useAnnotator,
-  useSelection,
-} from '@annotorious/react';
+import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 import { Trash } from '@phosphor-icons/react';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import type { Translations } from 'src/Types';
@@ -11,6 +6,7 @@ import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment
 import { useState } from 'react';
 
 interface ToolbarProps {
+
   i18n: Translations;
 
   isAdmin?: boolean;
@@ -18,9 +14,11 @@ interface ToolbarProps {
   privacy: PrivacyMode;
 
   onChangePrivacy(mode: PrivacyMode): void;
+
 }
 
-export const Toolbar = (props: ToolbarProps) => {
+export const Toolpanel = (props: ToolbarProps) => {
+
   const { selected } = useSelection();
 
   const store = useAnnotationStore();
@@ -28,6 +26,7 @@ export const Toolbar = (props: ToolbarProps) => {
   const anno = useAnnotator();
 
   const me = anno?.getUser();
+
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const isMine = (selected: { annotation: Annotation }[]) =>
@@ -80,5 +79,7 @@ export const Toolbar = (props: ToolbarProps) => {
         </div>
       )}
     </div>
-  );
-};
+  
+  )
+
+}

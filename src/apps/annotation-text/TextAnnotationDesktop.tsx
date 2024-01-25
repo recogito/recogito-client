@@ -9,7 +9,7 @@ import {
   isDefaultContext,
 } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { RightDrawerPanel } from '@components/AnnotationDesktop';
+import { ColorState, DocumentNotes, FilterState, RightDrawerPanel } from '@components/AnnotationDesktop';
 import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { TextAnnotationProps } from './TextAnnotation';
@@ -32,6 +32,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const [showBranding, setShowBranding] = useState(true);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [rightPanel, setRightPanel] = useState<RightDrawerPanel | undefined>();
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
@@ -86,6 +88,15 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   };
 
+  const onSetRightPanel = (panel?: RightDrawerPanel) => {
+    if (panel === RightDrawerPanel.ANNOTATIONS)
+      setUsePopup(false); // Don't use the popup if annotation list is open
+    else if (!usePopup)
+      setUsePopup(true)
+
+    setRightPanel(panel);
+  }
+
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't fit the view if the annotation is already selected
@@ -107,45 +118,67 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       : (a: TextAnnotation, b: TextAnnotation) =>
           a.target.selector.start - b.target.selector.start;
 
+  const onError = (error: Error) => {
+    // TODO UI feedback
+    console.error(error);
+  }
+  
   return (
-    <div className="anno-desktop ta-desktop">
-      {loading && (
-        <LoadingOverlay />
-      )}
+    <FilterState present={present}>
+      <ColorState present={present}>
+        <DocumentNotes
+          channelId={props.channelId}
+          layerId={defaultLayer?.id}
+          present={present}
+          onError={onError}>  
 
-      <div className="header">
-        {showBranding && (
-          <BrandHeader />
-        )}
-              
-        <Menubar />
-      </div>
+          <div className="anno-desktop ta-desktop">
+            {loading && (
+              <LoadingOverlay />
+            )}
 
-      <main>
-        <div className="ta-drawer ta-drawer-left" />
+            <div className="header">
+              {showBranding && (
+                <BrandHeader />
+              )}
+                    
+              <Menubar 
+                i18n={props.i18n}
+                document={props.document}
+                present={present}
+                rightPanel={rightPanel}
+                onToggleBranding={() => setShowBranding(!showBranding)}
+                onSetRightDrawer={onSetRightPanel} />
+            </div>
 
-        <div className="ta-annotated-text-container">
-          {policies && (
-            <AnnotatedText 
-              channelId={props.channelId} 
-              defaultLayer={defaultLayer} 
-              document={props.document} 
-              filter={filter} 
-              i18n={props.i18n}
-              layers={layers}
-              policies={policies}
-              present={present}
-              style={style} 
-              tagVocabulary={tagVocabulary}
-              usePopup={usePopup} 
-              onChangePresent={setPresent}
-              onLoad={() => setLoading(false)} />
-          )}
-        </div>
+            <main>
+              <div className="ta-drawer ta-drawer-left" />
 
-        <div className="ta-drawer ta-drawer-right" />
-      </main>
-    </div>
+              <div className="ta-annotated-text-container">
+                {policies && (
+                  <AnnotatedText 
+                    channelId={props.channelId} 
+                    defaultLayer={defaultLayer} 
+                    document={props.document} 
+                    filter={filter} 
+                    i18n={props.i18n}
+                    layers={layers}
+                    policies={policies}
+                    present={present}
+                    style={style} 
+                    tagVocabulary={tagVocabulary}
+                    usePopup={usePopup} 
+                    onChangePresent={setPresent}
+                    onLoad={() => setLoading(false)} />
+                )}
+              </div>
+
+              <div className="ta-drawer ta-drawer-right" />
+            </main>
+          </div>
+        </DocumentNotes>
+      </ColorState>
+    </FilterState>
   )
 
 }
