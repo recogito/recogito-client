@@ -1,14 +1,5 @@
 @import '@annotorious/react/annotorious-react.css';
 
-.ia-desktop {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  overscroll-behavior: none;
-  width: 100%;
-}
-
 .ia-desktop main {
   flex-grow: 1;
   position: relative;

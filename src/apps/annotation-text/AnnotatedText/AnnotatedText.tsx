@@ -71,74 +71,75 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
   }, [loading]);
 
   return (
-    <div
-      className={
-        contentType === 'text/xml'
-          ? 'content-wrapper tei'
-          : contentType === 'application/pdf'
-          ? 'content-wrapper pdf'
-          : 'content-wrapper text'
-      }>
-        
-      {contentType === 'text/xml' && text ? (
-        <>
-          <DynamicStyle style={props.styleSheet} />
-        
-          <TEIAnnotator
+    <div className="content-wrapper">
+      <div
+        className={
+          contentType === 'text/xml'
+            ? 'tei'
+            : contentType === 'application/pdf'
+            ? 'pdf'
+            : 'text'
+        }>
+        {contentType === 'text/xml' && text ? (
+          <>
+            <DynamicStyle style={props.styleSheet} />
+          
+            <TEIAnnotator
+              filter={props.filter}
+              style={props.style}
+              presence={{
+                font: '500 12px Inter, Arial, Helvetica, sans-serif',
+              }}>
+              <CETEIcean tei={text} />
+            </TEIAnnotator>
+          </>
+        ) : contentType === 'application/pdf' && text ? (
+          <PDFViewer
+            document={props.document}
+            filter={props.filter}
+            style={props.style}
+            onRendered={() => setPDFLoading(false)} />
+        ) : text && (
+          <TextAnnotator
             filter={props.filter}
             style={props.style}
             presence={{
               font: '500 12px Inter, Arial, Helvetica, sans-serif',
             }}>
-            <CETEIcean tei={text} />
-          </TEIAnnotator>
-        </>
-      ) : contentType === 'application/pdf' && text ? (
-        <PDFViewer
-          document={props.document}
-          filter={props.filter}
-          style={props.style}
-          onRendered={() => setPDFLoading(false)} />
-      ) : text && (
-        <TextAnnotator
-          filter={props.filter}
-          style={props.style}
-          presence={{
-            font: '500 12px Inter, Arial, Helvetica, sans-serif',
-          }}>
-          <p className='plaintext'>{text}</p>
-        </TextAnnotator>
-      )}
+            <p className='plaintext'>{text}</p>
+          </TextAnnotator>
+        )}
 
-      <UndoStack undoEmpty={true} />
+        <UndoStack undoEmpty={true} />
 
-      {props.layers && (
-        <SupabasePlugin
-          supabaseUrl={SUPABASE}
-          apiKey={SUPABASE_API_KEY}
-          channel={props.channelId}
-          defaultLayer={props.defaultLayer?.id}
-          layerIds={props.layers.map((layer) => layer.id)}
-          appearanceProvider={createAppearenceProvider()}
-          onInitialLoad={() => setAnnotationsLoading(false)}
-          onPresence={props.onChangePresent}
-          privacyMode={privacy === 'PRIVATE'}
-        />
-      )}
+        {props.layers && (
+          <SupabasePlugin
+            supabaseUrl={SUPABASE}
+            apiKey={SUPABASE_API_KEY}
+            channel={props.channelId}
+            defaultLayer={props.defaultLayer?.id}
+            layerIds={props.layers.map((layer) => layer.id)}
+            appearanceProvider={createAppearenceProvider()}
+            onInitialLoad={() => setAnnotationsLoading(false)}
+            onPresence={props.onChangePresent}
+            privacyMode={privacy === 'PRIVATE'}
+          />
+        )}
 
-      {props.usePopup && (
-        <TextAnnotatorPopup
-          popup={(props) => (
-            <Annotation.Popup
-              {...props}
-              i18n={i18n}
-              present={present}
-              policies={policies}
-              tagVocabulary={tagVocabulary}
-            />
-          )}
-        />
-      )}
+        {props.usePopup && (
+          <TextAnnotatorPopup
+            popup={(props) => (
+              <Annotation.Popup
+                {...props}
+                i18n={i18n}
+                present={present}
+                policies={policies}
+                tagVocabulary={tagVocabulary}
+              />
+            )}
+          />
+        )}
+      </div>
     </div>
   )
 

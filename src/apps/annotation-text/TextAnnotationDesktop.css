@@ -1,16 +1,14 @@
-.r6o-highlight-layer {
-  box-sizing: border-box;
-  z-index: 99 !important;
+.ta-desktop main {
+  overflow: hidden;
 }
 
-.content-wrapper {
+.ta-desktop main .ta-annotated-text-container {
   display: flex;
   justify-content: center;
-  height: 100%;
-  width: 100%;
+  overflow-y: scroll;
 }
 
-.content-wrapper main {
+.ta-desktop main .ta-annotated-text-container .content-wrapper {
   background-color: #fff;
   border-color: var(--gray-300);
   border-style: solid;
@@ -25,6 +23,14 @@
   width: 60ch;
   word-wrap: break-word;
 }
+
+.r6o-highlight-layer {
+  box-sizing: border-box;
+  z-index: 99 !important;
+}
+
+
+
 
 .content-wrapper.text main {
   height: fit-content;
@@ -69,17 +75,9 @@
   max-width: 100%;
 }
 
-.ta-desktop {
-  bottom: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  margin: 50px 0;
-  z-index: 9999;
-}
-
-.ta-desktop .presence-stack {
-  margin: 4px 8px;
+.ta-desktop main {
+  flex-grow: 1;
+  position: relative;
 }
 
 .ta-toolbar-container {

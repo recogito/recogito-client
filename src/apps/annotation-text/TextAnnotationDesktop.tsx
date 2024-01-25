@@ -10,7 +10,7 @@ import {
 } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { ColorState, DocumentNotes, FilterState, RightDrawerPanel } from '@components/AnnotationDesktop';
-import { BrandHeader } from '@components/Branding';
+import { BrandFooter, BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { TextAnnotationProps } from './TextAnnotation';
 import { Menubar } from './Menubar';
@@ -175,6 +175,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
               <div className="ta-drawer ta-drawer-right" />
             </main>
+
+            {showBranding && (
+              <div className="footer">
+                <BrandFooter />
+              </div>
+            )}
           </div>
         </DocumentNotes>
       </ColorState>
