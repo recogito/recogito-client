@@ -57,9 +57,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [showProfileNag, setShowProfileNag] = useState(
     !me.first_name ||
-    !me.first_name.length ||
-    !me.last_name ||
-    !me.last_name.length);
+      !me.first_name.length ||
+      !me.last_name ||
+      !me.last_name.length
+  );
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
@@ -77,10 +78,14 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     )
   );
 
+  const openJoinProjects = projects.filter(
+    (p) => p.is_open_join && p.contexts.length === 0
+  );
+
   // All projects are different for admins vs. mere mortals
   const allProjects = me.isOrgAdmin
     ? projects
-    : [...myProjects, ...sharedProjects];
+    : [...myProjects, ...sharedProjects, ...openJoinProjects];
 
   const filteredProjects =
     // All projects

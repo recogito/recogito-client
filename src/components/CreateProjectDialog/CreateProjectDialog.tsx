@@ -31,7 +31,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
   const [openEdit, setOpenEdit] = useState(false);
 
   const handleCreateProject = () => {
-    props.onSaveProject(name, description, !!openJoin, !!openEdit);
+    props.onSaveProject(name, description, openJoin, openEdit);
   };
 
   return (
@@ -81,7 +81,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
               <Switch.Root
                 className='create-project-switch-root'
                 id='open-join'
-                onChange={() => setOpenJoin(!openJoin)}
+                onCheckedChange={() => {
+                  setOpenJoin(!openJoin);
+                }}
               >
                 <Switch.Thumb className='create-project-switch-thumb' />
               </Switch.Root>
@@ -97,7 +99,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
               <Switch.Root
                 className='create-project-switch-root'
                 id='open-edit'
-                onChange={() => setOpenEdit(!openEdit)}
+                onCheckedChange={() => setOpenEdit(!openEdit)}
               >
                 <Switch.Thumb className='create-project-switch-thumb' />
               </Switch.Root>

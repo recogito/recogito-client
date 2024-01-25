@@ -89,6 +89,7 @@ export const listMyProjectsExtended = (
       updated_by,
       name,
       description,
+      is_open_join,
       contexts (
         id,
         project_id,
@@ -116,6 +117,8 @@ export const listMyProjectsExtended = (
         return { error, data: [] as ExtendedProjectData[] };
       } else {
         const projects = data;
+
+        console.info(projects);
         // All group IDs of all projects in `data`
         const groupIds = projects.reduce(
           (ids, project) => [...ids, ...project.groups.map((g) => g.id)],
@@ -163,6 +166,7 @@ export const getProjectExtended = (
       updated_by,
       name,
       description,
+      is_open_join,
       contexts (
         id,
         project_id,
@@ -215,5 +219,19 @@ export const getProjectExtended = (
             return { error, data: projectExtended };
           }
         });
+      }
+    });
+
+export const joinProject = (supabase: SupabaseClient, projectId: string) =>
+  supabase
+    .rpc('join_project_rpc', {
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('Error joining project', error);
+        return false;
+      } else {
+        return data as unknown as boolean;
       }
     });
