@@ -152,24 +152,22 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             <main>
               <div className="ta-drawer ta-drawer-left" />
 
-              <div className="ta-annotated-text-container">
-                {policies && (
-                  <AnnotatedText 
-                    channelId={props.channelId} 
-                    defaultLayer={defaultLayer} 
-                    document={props.document} 
-                    filter={filter} 
-                    i18n={props.i18n}
-                    layers={layers}
-                    policies={policies}
-                    present={present}
-                    style={style} 
-                    tagVocabulary={tagVocabulary}
-                    usePopup={usePopup} 
-                    onChangePresent={setPresent}
-                    onLoad={() => setLoading(false)} />
-                )}
-              </div>
+              {policies && (
+                <AnnotatedText 
+                  channelId={props.channelId} 
+                  defaultLayer={defaultLayer} 
+                  document={props.document} 
+                  filter={filter} 
+                  i18n={props.i18n}
+                  layers={layers}
+                  policies={policies}
+                  present={present}
+                  style={style} 
+                  tagVocabulary={tagVocabulary}
+                  usePopup={usePopup} 
+                  onChangePresent={setPresent}
+                  onLoad={() => setLoading(false)} />
+              )}
 
               <RightDrawer
                 currentPanel={rightPanel}

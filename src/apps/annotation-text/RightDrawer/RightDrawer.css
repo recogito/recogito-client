@@ -1,4 +1,4 @@
-.ta-right-drawer {
+.ta-drawer.ta-right-drawer {
   background-color: var(--gray-100);
   box-shadow:
     0px 0px 16px -1px rgba(0, 0, 0, 0.15),
@@ -10,6 +10,7 @@
   flex-basis: 0;
   position: relative;
   scroll-padding: 40px;
+  z-index: 9;
 }
 
 .ta-right-drawer aside {

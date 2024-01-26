@@ -5,6 +5,8 @@ import type { Translations } from 'src/Types';
 import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
 import { useState } from 'react';
 
+import './Toolpanel.css';
+
 interface ToolbarProps {
 
   i18n: Translations;
@@ -40,8 +42,8 @@ export const Toolpanel = (props: ToolbarProps) => {
     store.bulkDeleteAnnotation(selected.map((s) => s.annotation));
 
   return (
-    <div className='ta-toolbar-container not-annotatable'>
-      <div className='ta-toolbar-context ta-toolbar-context-left'></div>
+    <div className='ta-toolpanel-container not-annotatable'>
+      <div className='ta-toolpanel-context ta-toolpanel-context-left'></div>
 
       <div className='anno-desktop-overlay ta-toolbar'>
         <section className='privacy'>
@@ -65,8 +67,8 @@ export const Toolpanel = (props: ToolbarProps) => {
         <div
           className={
             selected.length > 0
-              ? 'ta-toolbar-context ta-toolbar-context-right anno-desktop-overlay'
-              : 'ta-toolbar-context ta-toolbar-context-right anno-desktop-overlay hidden'
+              ? 'ta-toolpanel-context ta-toolpanel-context-right anno-desktop-overlay'
+              : 'ta-toolpanel-context ta-toolpanel-context-right anno-desktop-overlay hidden'
           }
         >
           <button
@@ -79,7 +81,6 @@ export const Toolpanel = (props: ToolbarProps) => {
         </div>
       )}
     </div>
-  
   )
 
 }
