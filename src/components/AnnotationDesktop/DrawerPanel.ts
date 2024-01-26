@@ -1,4 +1,4 @@
-export enum RightDrawerPanel { 
+export enum DrawerPanel { 
 
   ANNOTATIONS = 'ANNOTATIONS', 
   

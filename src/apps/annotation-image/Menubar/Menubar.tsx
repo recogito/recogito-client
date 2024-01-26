@@ -3,11 +3,7 @@ import type { PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
-import { 
-  DocumentNotesMenuIcon, 
-  LayersPanelMenuIcon,
-  RightDrawerPanel 
-} from '@components/AnnotationDesktop';
+import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel } from '@components/AnnotationDesktop';
 import { 
   ArrowsOutSimple,
   CaretLeft, 
@@ -26,13 +22,13 @@ interface MenubarProps {
 
   present: PresentUser[];
 
-  rightPanel?: RightDrawerPanel;
+  rightPanel?: DrawerPanel;
 
   onZoom(factor: number): void;
 
   onToggleBranding(): void;
 
-  onSetRightDrawer(panel?: RightDrawerPanel): void;
+  onSetRightDrawer(panel?: DrawerPanel): void;
 
 }
 
@@ -50,7 +46,7 @@ export const Menubar = (props: MenubarProps) => {
 
   const me = props.present.find(isMe)!;
 
-  const toggleRightDrawer = (panel: RightDrawerPanel) => {
+  const toggleRightDrawer = (panel: DrawerPanel) => {
     if (panel === props.rightPanel)
       props.onSetRightDrawer();
     else
@@ -124,21 +120,21 @@ export const Menubar = (props: MenubarProps) => {
 
         <div className="anno-menubar-section anno-menubar-actions-right">
           <button
-            className={props.rightPanel === RightDrawerPanel.ANNOTATIONS ? 'active' : undefined}
+            className={props.rightPanel === DrawerPanel.ANNOTATIONS ? 'active' : undefined}
             aria-label={t['Show annotation list']}
-            onClick={() => toggleRightDrawer(RightDrawerPanel.ANNOTATIONS)}>
+            onClick={() => toggleRightDrawer(DrawerPanel.ANNOTATIONS)}>
             <Chats size={17} />
           </button>
 
           <LayersPanelMenuIcon
             i18n={props.i18n}
-            active={props.rightPanel === RightDrawerPanel.LAYERS}
-            onSelect={() => toggleRightDrawer(RightDrawerPanel.LAYERS)} />
+            active={props.rightPanel === DrawerPanel.LAYERS}
+            onSelect={() => toggleRightDrawer(DrawerPanel.LAYERS)} />
 
           <DocumentNotesMenuIcon
             i18n={props.i18n}
-            active={props.rightPanel === RightDrawerPanel.DOCUMENT_NOTES}
-            onSelect={() => toggleRightDrawer(RightDrawerPanel.DOCUMENT_NOTES)} />
+            active={props.rightPanel === DrawerPanel.DOCUMENT_NOTES}
+            onSelect={() => toggleRightDrawer(DrawerPanel.DOCUMENT_NOTES)} />
         </div>
 
         <div className="anno-desktop-overlay-divider" />

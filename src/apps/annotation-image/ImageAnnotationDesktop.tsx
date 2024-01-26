@@ -5,11 +5,12 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { BrandFooter, BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { ColorState, DocumentNotes, FilterState, RightDrawer, RightDrawerPanel } from '@components/AnnotationDesktop';
+import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
 import type { Layer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { Menubar } from './Menubar';
+import { RightDrawer } from './RightDrawer';
 import { 
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
@@ -34,7 +35,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [rightPanel, setRightPanel] = useState<RightDrawerPanel | undefined>();
+  const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
@@ -79,11 +80,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onZoom = (factor: number) => 
     viewer.current?.viewport.zoomBy(factor);
 
-  const onSetRightPanel = (panel?: RightDrawerPanel) => {
-    if (panel === RightDrawerPanel.ANNOTATIONS)
+  const onSetRightPanel = (panel?: DrawerPanel) => {
+    if (panel === DrawerPanel.ANNOTATIONS)
       setUsePopup(false); // Don't use the popup if annotation list is open
     else if (!usePopup)
-      setUsePopup(true)
+      setUsePopup(true);
 
     setRightPanel(panel);
   }
@@ -159,7 +160,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 )}
               </div>
 
-              <RightDrawer 
+              <RightDrawer
                 currentPanel={rightPanel}
                 i18n={props.i18n}
                 layers={layers}

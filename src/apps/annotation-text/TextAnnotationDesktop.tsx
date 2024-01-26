@@ -4,17 +4,15 @@ import type { PresentUser, DrawingStyle } from '@annotorious/react';
 import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
-import {
-  getAllDocumentLayersInProject,
-  isDefaultContext,
-} from '@backend/helpers';
+import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { ColorState, DocumentNotes, FilterState, RightDrawer, RightDrawerPanel } from '@components/AnnotationDesktop';
+import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
 import { BrandFooter, BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { TextAnnotationProps } from './TextAnnotation';
 import { Menubar } from './Menubar';
 import { AnnotatedText } from './AnnotatedText';
+import { RightDrawer } from './RightDrawer';
 import type { Layer } from 'src/Types';
 
 import './TEI.css';
@@ -33,7 +31,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [rightPanel, setRightPanel] = useState<RightDrawerPanel | undefined>();
+  const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
@@ -79,8 +77,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   // max number of avatars displayed in the top right
   const limit = 5;
 
-  const onChangeViewMenuPanel = (panel: RightDrawerPanel | undefined) => {
-    if (panel === RightDrawerPanel.ANNOTATIONS) {
+  const onChangeViewMenuPanel = (panel: DrawerPanel | undefined) => {
+    if (panel === DrawerPanel.ANNOTATIONS) {
       // Don't use the popup if the annotation list is open
       setUsePopup(false);
     } else {
@@ -88,11 +86,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   };
 
-  const onSetRightPanel = (panel?: RightDrawerPanel) => {
-    if (panel === RightDrawerPanel.ANNOTATIONS)
+  const onSetRightPanel = (panel?: DrawerPanel) => {
+    if (panel === DrawerPanel.ANNOTATIONS)
       setUsePopup(false); // Don't use the popup if annotation list is open
     else if (!usePopup)
-      setUsePopup(true)
+      setUsePopup(true);
 
     setRightPanel(panel);
   }
@@ -173,16 +171,17 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 )}
               </div>
 
-              <RightDrawer 
+              <RightDrawer
                 currentPanel={rightPanel}
                 i18n={props.i18n}
                 layers={layers}
                 policies={policies}
                 present={present}
+                sorting={sorting}
                 tagVocabulary={tagVocabulary}
                 beforeSelectAnnotation={beforeSelectAnnotation}
                 onChangeAnnotationFilter={f => setFilter(() => f)}
-                onChangeAnnotationStyle={s => setStyle(() => s)} />
+                onChangeAnnotationStyle={s => setStyle(() => s)} /> 
             </main>
 
             {showBranding && (

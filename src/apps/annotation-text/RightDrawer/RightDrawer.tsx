@@ -1,12 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { useTransition, animated } from '@react-spring/web'
-import { isMe } from '@recogito/annotorious-supabase';
+import { useTransition, animated } from '@react-spring/web';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
+import { isMe } from '@recogito/annotorious-supabase';
+import { AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
 import type { Layer, Policies, Translations } from 'src/Types';
-import { RightDrawerPanel } from './RightDrawerPanel';
-import { AnnotationList } from '../AnnotationList';
-import { LayerConfigurationPanel } from '../LayerConfiguration';
-import { DocumentNotesList } from '../DocumentNotes';
 
 import './RightDrawer.css';
 
@@ -16,7 +13,7 @@ interface RightDrawerProps {
 
   present: PresentUser[];
 
-  currentPanel?: RightDrawerPanel;
+  currentPanel?: DrawerPanel;
 
   policies?: Policies;
 
@@ -36,37 +33,35 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
-  // We need to keep the current panel until exit transition is done
-  const previous = useRef<RightDrawerPanel | undefined>();
+  const previous = useRef<DrawerPanel | undefined>();
 
   const me = props.present.find(isMe)!;
 
   const shouldAnimate = 
-    // Drawer closed, and should open
+    // Drawer currently closed, and should open
     !previous.current && props.currentPanel ||
-    // Drawer open, and should close
+    // Drawer currently open, and should close
     previous.current && !props.currentPanel;
 
   const drawerTransition = useTransition([props.currentPanel], {
-    from: { transform: 'translateX(180px)', opacity: 0 },
-    enter: { transform: 'translateX(0px)', opacity: 1 },
-    leave: { transform: 'translateX(180px)', opacity: 0 },
+    from: { flexBasis: 0 },
+    enter: { flexBasis: 360 },
+    leave: { flexBasis: 0 },
     config: {
-      duration: shouldAnimate ? 120 : 0
+      duration: shouldAnimate ? 180 : 0
     }
   });
 
   useEffect(() => {
     previous.current = props.currentPanel;
-  }, [props.currentPanel])
+  }, [props.currentPanel]);
 
   return drawerTransition((style, panel) => panel && (
-    <animated.div
-      style={style}
-      className="ia-drawer ia-right-drawer">
-
+    <animated.div 
+      className="ta-drawer ta-right-drawer"
+      style={style}>
       <aside>
-        {panel === RightDrawerPanel.ANNOTATIONS ? (
+        {panel === DrawerPanel.ANNOTATIONS ? (
           <AnnotationList 
             i18n={props.i18n}
             present={props.present} 
@@ -75,14 +70,14 @@ export const RightDrawer = (props: RightDrawerProps) => {
             sorting={props.sorting}
             tagVocabulary={props.tagVocabulary}
             beforeSelect={props.beforeSelectAnnotation} />
-        ) : panel === RightDrawerPanel.LAYERS ? (
+        ) : panel === DrawerPanel.LAYERS ? (
           <LayerConfigurationPanel
             i18n={props.i18n}
             layers={props.layers}
             present={props.present}
             onChangeStyle={props.onChangeAnnotationStyle} 
             onChangeFilter={props.onChangeAnnotationFilter} />
-        ) : panel === RightDrawerPanel.DOCUMENT_NOTES ? props.layers && (
+        ) : panel === DrawerPanel.DOCUMENT_NOTES ? props.layers && (
           <DocumentNotesList 
             i18n={props.i18n}
             present={props.present}
