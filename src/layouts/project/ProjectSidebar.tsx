@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowLineLeft,
+  CaretCircleLeft,
+  CaretLeft,
   Folders,
   GraduationCap,
+  House,
   Sliders,
   UsersThree,
 } from '@phosphor-icons/react';
@@ -73,8 +76,8 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
               <NavItem 
                 tabIndex={-1}
                 className="no-hover"
-                icon={<RecogitoCircleLogo className="recogito-logo-circle" />}
-                label='Recogito'
+                icon={<House size={21} />}
+                label={t['Back to Projects']}
                 link={`/${lang}/projects`}
               />
 
