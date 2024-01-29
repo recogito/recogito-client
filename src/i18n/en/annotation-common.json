@@ -33,15 +33,13 @@
   "Create new private note": "Create new private note",
   "Private note": "Private note",
   "Delete note": "Delete note",
-
   "Sort by": "Sort by",
   "newest": "newest",
   "oldest": "oldest",
-
   "Color by": "Color by",
   "No color coding": "No color coding",
   "Filter by": "Filter by",
-  "Show all annotations": "Show all annotations", 
+  "Show all annotations": "Show all annotations",
   "Public vs. Private": "Public vs. Private",
   "Your private annotations": "Your private annotations",
   "All public annotations": "All public annotations",
@@ -59,5 +57,6 @@
   "Back to assignment overview": "Back to assignment overview",
   "Back to project overview": "Back to project overview",
   "Zoom in": "Zoom in",
-  "Zoom out": "Zoom out"
+  "Zoom out": "Zoom out",
+  "Add an annotation...": "Add an annotation..."
 }
