@@ -45,7 +45,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [addOpen, setAddOpen] = useState(false);
 
-  const defaultContext = project.contexts.find((c) => c.name === null);
+  const defaultContext = project.contexts.find((c) => c.is_default);
 
   const [documents, setDocuments] = useState<DocumentInContext[]>(
     props.documents

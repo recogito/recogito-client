@@ -205,7 +205,7 @@ export const listDocumentsInProject = (
               .map(({ contexts, ...l }) => ({
                 ...l,
                 // @ts-ignore
-                context: contexts.find((c) => c.name === null),
+                context: contexts.find((c) => c.is_default),
                 // @ts-ignore
               }))
               .filter((l: any) => l.context),

@@ -176,6 +176,8 @@ export interface Context {
   description?: string;
 
   project_id: string;
+
+  is_default: boolean;
 }
 
 export interface TaggedContext extends Context {
