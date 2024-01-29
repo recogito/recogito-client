@@ -80,12 +80,19 @@ const _initDocument = (
   protocol?: 'IIIF_IMAGE',
   url?: string
 ): Promise<DocumentInContext> => {
-  
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) =>
-    createDocument(supabase, name, file?.type, protocol ? {
-      protocol, url,
-    } : undefined).then(({ error, data }) => {
+    createDocument(
+      supabase,
+      name,
+      file?.type,
+      protocol
+        ? {
+            protocol,
+            url,
+          }
+        : undefined
+    ).then(({ error, data }) => {
       if (error) {
         reject(error);
       } else {
@@ -187,6 +194,7 @@ export const listDocumentsInProject = (
         return { error, data: [] };
       } else {
         // Simplify layers from list of contexts to single (default) context
+        console.log(data);
         const inDefaultContext = data
           .map((d) => ({
             // @ts-ignore
@@ -203,7 +211,6 @@ export const listDocumentsInProject = (
               .filter((l: any) => l.context),
           }))
           .filter((d) => d.layers.length > 0);
-
         return {
           error,
           data: inDefaultContext as unknown as DocumentInContext[],

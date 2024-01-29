@@ -90,6 +90,7 @@ export const listMyProjectsExtended = (
       name,
       description,
       is_open_join,
+      is_open_edit,
       contexts (
         id,
         project_id,
@@ -118,7 +119,6 @@ export const listMyProjectsExtended = (
       } else {
         const projects = data;
 
-        console.info(projects);
         // All group IDs of all projects in `data`
         const groupIds = projects.reduce(
           (ids, project) => [...ids, ...project.groups.map((g) => g.id)],
@@ -167,6 +167,7 @@ export const getProjectExtended = (
       name,
       description,
       is_open_join,
+      is_open_edit,
       contexts (
         id,
         project_id,
@@ -234,4 +235,26 @@ export const joinProject = (supabase: SupabaseClient, projectId: string) =>
       } else {
         return data as unknown as boolean;
       }
+    });
+
+export const updateProject = (
+  supabase: SupabaseClient,
+  id: string,
+  name: string,
+  description: string,
+  is_open_join: boolean,
+  is_open_edit: boolean
+) =>
+  supabase
+    .from('projects')
+    .update({
+      is_open_join: is_open_join,
+      is_open_edit: is_open_edit,
+      name: name,
+      description: description,
+    })
+    .eq('id', id)
+    .then(({ error }) => {
+      if (error) return false;
+      else return true;
     });

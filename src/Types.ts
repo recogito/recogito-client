@@ -55,6 +55,8 @@ export interface ExtendedProjectData {
 
   is_open_join?: boolean;
 
+  is_open_edit?: boolean;
+
   contexts: Context[];
 
   layers: [
