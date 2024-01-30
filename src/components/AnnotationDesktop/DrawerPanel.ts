@@ -1,4 +1,4 @@
-export enum ViewMenuPanel { 
+export enum DrawerPanel { 
 
   ANNOTATIONS = 'ANNOTATIONS', 
   

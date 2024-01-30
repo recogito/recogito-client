@@ -1,60 +1,49 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { Annotation } from '@components/Annotation';
+import { BrandFooter, BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { createAppearenceProvider, PresenceStack } from '@components/Presence';
-import { AnnotationDesktop, ViewMenuPanel } from '@components/AnnotationDesktop';
-import type { PrivacyMode } from '@components/PrivacySelector';
-import { SupabasePlugin } from '@components/SupabasePlugin';
+import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
 import type { Layer } from 'src/Types';
-import { Toolbar } from './Toolbar';
+import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
+import { Menubar } from './Menubar';
+import { RightDrawer } from './RightDrawer';
 import { 
-  Annotation as Anno,
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
   ImageAnnotation, 
-  OpenSeadragonAnnotator,
-  OpenSeadragonPopup,
-  OpenSeadragonViewer,
-  PointerSelectAction,
   PresentUser,
   useAnnotator
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
 
-const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
-
-const SUPABASE_API_KEY: string = import.meta.env.PUBLIC_SUPABASE_API_KEY;
-
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
-  const { i18n } = props;
-
-  // @ts-ignore
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
+
+  const viewer = useRef<OpenSeadragon.Viewer>(null);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
   const [loading, setLoading] = useState(true);
 
+  const [showBranding, setShowBranding] = useState(true);
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [tool, setTool] = useState<string>('rectangle');
+  const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
 
-  const [drawingEnabled, setDrawingEnabled] = useState(false);
+  const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [style, setStyle] = useState<((a: Anno) => DrawingStyle) | undefined>(undefined);
+  const [style, setStyle] = useState<((a: ImageAnnotation) => DrawingStyle) | undefined>(undefined);
 
-  const [filter, setFilter] = useState<((a: Anno) => boolean) | undefined>(undefined);
+  const [filter, setFilter] = useState<((a: ImageAnnotation) => boolean) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
-
-  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
 
@@ -62,10 +51,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   // or the first layer in the list, if no project context
   const defaultLayer = layers && layers.length > 0 ? 
     layers.find(l => !l.context.name) || layers[0] : undefined;
-
-  const appearance = useMemo(() => createAppearenceProvider(), []);
-
-  const vocabulary = useTagVocabulary(props.document.context.project_id);
 
   useEffect(() => {
     if (policies) {
@@ -92,23 +77,16 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
-  const onChangeTool = (tool: string | null) => {
-    if (tool) {
-      if (!drawingEnabled) setDrawingEnabled(true);
-      setTool(tool);
-    } else {
-      setDrawingEnabled(false);
-    }
-  }
+  const onZoom = (factor: number) => 
+    viewer.current?.viewport.zoomBy(factor);
 
-  const onChangeViewMenuPanel = (panel: ViewMenuPanel | undefined) => {
-    if (panel === ViewMenuPanel.ANNOTATIONS) {
-      // Don't use the popup if the annotation list is open
-      setUsePopup(false);
-    } else {
-      if (!usePopup)
-        setUsePopup(true)
-    }
+  const onSetRightPanel = (panel?: DrawerPanel) => {
+    if (panel === DrawerPanel.ANNOTATIONS)
+      setUsePopup(false); // Don't use the popup if annotation list is open
+    else if (!usePopup)
+      setUsePopup(true);
+
+    setRightPanel(panel);
   }
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
@@ -123,110 +101,86 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       anno.fitBounds(a, { padding: [vh / 2, vw / 2 + 600, vh / 2, (vw  - 600) / 2] });
     }
   }
-  
-  const selectAction = (annotation: ImageAnnotation) => {
-    // Annotation targets are editable for creators and admins
-    const me = anno?.getUser()?.id;
-    const canEdit = annotation.target.creator?.id === me ||
-      policies?.get('layers').has('INSERT');
 
-    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
+  const onError = (error: Error) => {
+    // TODO UI feedback
+    console.error(error);
   }
 
-  // TODO since Annotorious 3.0.0-rc.2 this needs to be 
-  // memo-ized which is a pain - need to fix this inside
-  // Annotorious!
-  const options: OpenSeadragon.Options = useMemo(() => ({
-    tileSources: props.document.meta_data?.url,
-    gestureSettingsMouse: {
-      clickToZoom: false
-    },
-    showNavigationControl: false,
-    crossOriginPolicy: 'Anonymous'
-  }), [props.document.meta_data?.url]);
-
   return (
-    <div className="anno-desktop ia-desktop">
-      {loading && (
-        <LoadingOverlay />
-      )}
+    <FilterState present={present}>
+      <ColorState present={present}>
+        <DocumentNotes
+          channelId={props.channelId}
+          layerId={defaultLayer?.id}
+          present={present}
+          onError={onError}>  
 
-      {policies && (
-        <OpenSeadragonAnnotator
-          autoSave
-          drawingEnabled={drawingEnabled}
-          pointerSelectAction={selectAction}
-          tool={tool} 
-          filter={filter}
-          style={style}>
-        
-          <AnnotationDesktop.UndoStack 
-            undoEmpty={true} />
+          <div className="anno-desktop ia-desktop">
+            {loading && (
+              <LoadingOverlay />
+            )}
 
-          {layers && 
-            <SupabasePlugin
-              supabaseUrl={SUPABASE}
-              apiKey={SUPABASE_API_KEY} 
-              channel={props.channelId}
-              defaultLayer={defaultLayer?.id} 
-              layerIds={layers.map(layer => layer.id)}
-              appearanceProvider={appearance}
-              onInitialLoad={() => setLoading(false)}
-              onPresence={setPresent} 
-              onConnectError={onConnectError}
-              privacyMode={privacy === 'PRIVATE'} />
-          }
+            <div className="header">
+              {showBranding && (
+                <BrandHeader />
+              )}
+              
+              <Menubar 
+                i18n={props.i18n} 
+                document={props.document} 
+                present={present} 
+                rightPanel={rightPanel}
+                onZoom={onZoom}
+                onToggleBranding={() => setShowBranding(!showBranding)}
+                onSetRightDrawer={onSetRightPanel} />
+            </div>
 
-          <OpenSeadragonViewer
-            className="ia-osd-container"
-            options={options} />
+            <main>
+              <div className="ia-drawer ia-drawer-left" />
 
-          {usePopup && (
-            <OpenSeadragonPopup
-              popup ={props => (
-                <Annotation.Popup 
-                  {...props} 
-                  i18n={i18n}
-                  policies={policies}
-                  present={present} 
-                  tagVocabulary={vocabulary} /> )} />
-          )}
+              <div className="ia-annotated-image-container">
+                {policies && (
+                  <AnnotatedImage
+                    ref={viewer}
+                    channelId={props.channelId}
+                    defaultLayer={defaultLayer}
+                    document={props.document}
+                    filter={filter}
+                    i18n={props.i18n}
+                    layers={layers}
+                    policies={policies}
+                    present={present}
+                    style={style}        
+                    tagVocabulary={tagVocabulary}
+                    usePopup={usePopup}
+                    onChangePresent={setPresent}
+                    onConnectError={onConnectError}
+                    onLoad={() => setLoading(false)} />
+                )}
+              </div>
 
-          <div className="anno-desktop-left">
-            <AnnotationDesktop.DocumentMenu
-              i18n={props.i18n}
-              document={props.document} />
+              <RightDrawer
+                currentPanel={rightPanel}
+                i18n={props.i18n}
+                layers={layers}
+                policies={policies}
+                present={present}
+                tagVocabulary={tagVocabulary}
+                beforeSelectAnnotation={beforeSelectAnnotation}
+                onChangeAnnotationFilter={f => setFilter(() => f)}
+                onChangeAnnotationStyle={s => setStyle(() => s)} />
+            </main>
+
+            {showBranding && (
+              <div className="footer">
+                <BrandFooter />
+              </div>
+            )}
           </div>
-
-          <div className="anno-desktop-right">
-            <PresenceStack 
-              present={present} />
-
-            <AnnotationDesktop.ViewMenu 
-              i18n={i18n}
-              present={present} 
-              policies={policies}
-              layers={layers}
-              defaultLayer={defaultLayer?.id} 
-              channel={props.channelId}
-              tagVocabulary={vocabulary}
-              onChangePanel={onChangeViewMenuPanel} 
-              onChangeAnnotationFilter={f => setFilter(() => f)}
-              onChangeAnnotationStyle={s => setStyle(() => s)}
-              beforeSelectAnnotation={beforeSelectAnnotation} />
-          </div>
-
-          <div className="anno-desktop-bottom">
-            <Toolbar 
-              i18n={props.i18n}
-              isAdmin={policies?.get('layers').has('INSERT')}
-              privacy={privacy}
-              onChangeTool={onChangeTool} 
-              onChangePrivacy={setPrivacy} />
-          </div>
-        </OpenSeadragonAnnotator>
-      )}
-    </div>
+        </DocumentNotes>
+      </ColorState>
+    </FilterState>
   )
 
 }

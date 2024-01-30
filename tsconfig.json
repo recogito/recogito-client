@@ -7,6 +7,7 @@
     "jsxImportSource": "react",
     "paths": {
       "@apps/*": ["src/apps/*"],
+      "@branding/*": ["src/branding/*"],
       "@backend/*": ["src/backend/*"],
       "@components/*": ["src/components/*"],
       "@i18n": ["src/i18n/index.ts"],

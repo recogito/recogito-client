@@ -10,6 +10,10 @@ export interface Props {
 
 const { title } = Astro.props;
 
+const siteColor = config.branding.site_color;
+const textColor = config.branding.contrast_color;
+const backgroundColor = config.branding.background_color;
+
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 ---
 
@@ -42,3 +46,5 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     </script>
   </body>
 </html>
+
+<style define:vars={{ siteColor, backgroundColor, textColor }}></style>

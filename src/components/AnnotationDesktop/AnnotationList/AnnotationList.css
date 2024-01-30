@@ -1,42 +1,41 @@
-.anno-sidepanel.annotation-list {
-  overflow-y: auto;
-  padding: 0 8px;
-  scroll-padding: 20px;
+.anno-drawer-panel.annotation-list {
+  box-sizing: border-box;
+  padding: 0 10px 40px 10px;
 }
 
-.anno-sidepanel.annotation-list > ul {
+.anno-drawer-panel.annotation-list > ul {
   height: 100%;
   list-style-type: none;  
   margin: 0;
   padding: 0;
 }
 
-.anno-sidepanel.annotation-list .annotation-card {
+.anno-drawer-panel.annotation-list .annotation-card {
   border: 1px solid var(--gray-300);
   border-radius: 6px;
   margin: 8px 0;
 }
 
-.anno-sidepanel.annotation-list .annotation-card:not(.private) {
+.anno-drawer-panel.annotation-list .annotation-card:not(.private) {
   background-color: #fff;
 }
 
-.anno-sidepanel.annotation-list .annotation-card.selected {
+.anno-drawer-panel.annotation-list .annotation-card.selected {
   box-shadow: 0 0 0 3px var(--button-focus-outline-color);
 }
 
-.anno-sidepanel.annotation-list .annotation-list-filter {
+.anno-drawer-panel.annotation-list .annotation-list-filter {
   color: var(--font-light);
   font-size: var(--font-tiny);
   padding: 0.5em 8px 0em 0;
   text-align: right;
 }
 
-.anno-sidepanel.annotation-list .annotation-list-filter label {
+.anno-drawer-panel.annotation-list .annotation-list-filter label {
   margin-right: 0.5ch;
 }
 
-.anno-sidepanel.annotation-list .annotation-list-filter button {
+.anno-drawer-panel.annotation-list .annotation-list-filter button {
   all: unset;
   cursor: pointer;
   text-decoration: underline;

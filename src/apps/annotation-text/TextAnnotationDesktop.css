@@ -1,23 +1,24 @@
-.r6o-highlight-layer {
-  box-sizing: border-box;
-  border: 2px solid red;
-  z-index: 99999 !important;
-}
-
-.content-wrapper {
+.ta-desktop main {
   display: flex;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+  flex-direction: row;
+  overflow: hidden;
 }
 
-.content-wrapper main {
+.ta-desktop main .ta-annotated-text-container {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  overflow-y: scroll;
+}
+
+.ta-desktop main .ta-annotated-text-container .content-wrapper {
   background-color: #fff;
   border-color: var(--gray-300);
   border-style: solid;
   border-width: 0 1px;
   font-family: Lora;
   font-size: 17px;
+  height: fit-content;
   line-height: 190%;
   min-height: 100%;
   padding: 70px 85px 140px 85px;
@@ -58,29 +59,21 @@
   overflow-y: scroll;
 }
 
-.a9s-popup {
-  z-index: 999;
-}
-
 .content-wrapper.text main p.plaintext {
   margin: 0;
+}
+
+.a9s-popup {
+  z-index: 999;
 }
 
 .content-wrapper main img {
   max-width: 100%;
 }
 
-.ta-desktop {
-  bottom: 0;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  margin: 50px 0;
-  z-index: 9999;
-}
-
-.ta-desktop .presence-stack {
-  margin: 4px 8px;
+.ta-desktop main {
+  flex-grow: 1;
+  position: relative;
 }
 
 .ta-toolbar-container {
@@ -134,4 +127,10 @@
 
 .ta-toolbar section {
   padding: 6px;
+}
+
+.ta-drawer {
+  overflow-y: auto;
+  pointer-events: auto;
+  z-index: 1;
 }

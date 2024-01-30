@@ -1,0 +1,13 @@
+.ia-right-drawer {
+  background-color: var(--gray-100);
+  box-shadow:
+    0px 0px 16px -1px rgba(0, 0, 0, 0.15),
+    0px 0px 16px -8px rgba(0, 0, 0, 0.25), 
+    0px 0px 16px -12px rgba(0, 0, 0, 0.32),
+    0px 0px 2px 0px rgba(0, 0, 0, 0.28);
+  right: 0;
+  scroll-padding: 40px;
+  top: 0;
+  transform: translateX(360px);
+  width: 360px;
+}

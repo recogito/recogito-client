@@ -1,16 +1,14 @@
-import {
-  Annotation,
-  useAnnotationStore,
-  useAnnotator,
-  useSelection,
-} from '@annotorious/react';
+import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 import { Trash } from '@phosphor-icons/react';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import type { Translations } from 'src/Types';
 import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
 import { useState } from 'react';
 
+import './Toolpanel.css';
+
 interface ToolbarProps {
+
   i18n: Translations;
 
   isAdmin?: boolean;
@@ -18,9 +16,11 @@ interface ToolbarProps {
   privacy: PrivacyMode;
 
   onChangePrivacy(mode: PrivacyMode): void;
+
 }
 
-export const Toolbar = (props: ToolbarProps) => {
+export const Toolpanel = (props: ToolbarProps) => {
+
   const { selected } = useSelection();
 
   const store = useAnnotationStore();
@@ -28,6 +28,7 @@ export const Toolbar = (props: ToolbarProps) => {
   const anno = useAnnotator();
 
   const me = anno?.getUser();
+
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const isMine = (selected: { annotation: Annotation }[]) =>
@@ -41,8 +42,8 @@ export const Toolbar = (props: ToolbarProps) => {
     store.bulkDeleteAnnotation(selected.map((s) => s.annotation));
 
   return (
-    <div className='ta-toolbar-container not-annotatable'>
-      <div className='ta-toolbar-context ta-toolbar-context-left'></div>
+    <div className='ta-toolpanel-container not-annotatable'>
+      <div className='ta-toolpanel-context ta-toolpanel-context-left'></div>
 
       <div className='anno-desktop-overlay ta-toolbar'>
         <section className='privacy'>
@@ -66,8 +67,8 @@ export const Toolbar = (props: ToolbarProps) => {
         <div
           className={
             selected.length > 0
-              ? 'ta-toolbar-context ta-toolbar-context-right anno-desktop-overlay'
-              : 'ta-toolbar-context ta-toolbar-context-right anno-desktop-overlay hidden'
+              ? 'ta-toolpanel-context ta-toolpanel-context-right anno-desktop-overlay'
+              : 'ta-toolpanel-context ta-toolpanel-context-right anno-desktop-overlay hidden'
           }
         >
           <button
@@ -80,5 +81,6 @@ export const Toolbar = (props: ToolbarProps) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+
+}
