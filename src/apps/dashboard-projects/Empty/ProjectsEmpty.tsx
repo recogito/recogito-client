@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Bell, RocketLaunch } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 import { Button } from '@components/Button';
-import { initProject } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { CreateProjectDialog } from '@components/CreateProjectDialog';
 
 export interface ProjectsEmptyProps {
-
   i18n: Translations;
 
   canCreateProjects: boolean;
@@ -16,59 +15,75 @@ export interface ProjectsEmptyProps {
   onProjectCreated(project: ExtendedProjectData): void;
 
   onError(error: string): void;
-
 }
 
 export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
-
   const { canCreateProjects, invitations } = props;
 
   const { t } = props.i18n;
 
   const [fetching, setFetching] = useState(false);
 
+  const [createProjectOpen, setCreateProjectOpen] = useState(false);
+
   const onCreateProject = () => {
-    if (fetching)
-      return;
+    if (fetching) return;
 
     setFetching(true);
 
-    initProject(supabase, t['Untitled Project'])
-      .then(project => {
-        props.onProjectCreated(project);
-        setFetching(false);
+    setCreateProjectOpen(true);
+  };
+
+  const handleSaveProject = (
+    name: string,
+    description: string,
+    openJoin: boolean,
+    openEdit: boolean
+  ) => {
+    supabase
+      .rpc('create_project_rpc', {
+        _description: description,
+        _is_open_edit: openEdit,
+        _is_open_join: openJoin,
+        _name: name,
       })
-      .catch(error => {
-        console.error(error);
-        setFetching(false);
-        props.onError('Something went wrong');
+      .then(({ data, error }) => {
+        if (error) {
+          setFetching(false);
+          props.onError('Something went wrong');
+        } else {
+          props.onProjectCreated(data);
+          window.location.href = `/${props.i18n.lang}/projects/${data[0].id}`;
+        }
       });
-  }
-  
+  };
+
   return (
-    <main className="dashboard-projects-empty">
-      <div className="container">
-        <h1 className="dashboard-projects-tagline">
-          {canCreateProjects ? (
-            t['Empty Dashboard? Infinite possibilities!']
-          ) : (
-            t['Empty Dashboard? Bear with us!']
-          )}
-          
+    <main className='dashboard-projects-empty'>
+      <div className='container'>
+        <h1 className='dashboard-projects-tagline'>
+          {canCreateProjects
+            ? t['Empty Dashboard? Infinite possibilities!']
+            : t['Empty Dashboard? Bear with us!']}
         </h1>
 
-        <div className="dashboard-projects-empty-cta">
+        <div className='dashboard-projects-empty-cta'>
           {canCreateProjects ? (
-            <Button 
-              className="primary lg" 
+            <Button
+              className='primary lg'
               onClick={onCreateProject}
-              busy={fetching}>
-              <RocketLaunch size={20} /> <span>{t['Start Your First Annotation Project']}</span>
-            </Button> 
+              busy={fetching}
+            >
+              <RocketLaunch size={20} />{' '}
+              <span>{t['Start Your First Annotation Project']}</span>
+            </Button>
           ) : (
-            <p className="no-creator-rights">
-              {t['You don\'t have creator rights']} {invitations === 0 ? (
-                <span dangerouslySetInnerHTML={{__html: t['Read the tutorial']}}></span>
+            <p className='no-creator-rights'>
+              {t["You don't have creator rights"]}{' '}
+              {invitations === 0 ? (
+                <span
+                  dangerouslySetInnerHTML={{ __html: t['Read the tutorial'] }}
+                ></span>
               ) : invitations === 1 ? (
                 <>
                   {t['Fret not one'].split('${icon}')[0]} <Bell size={18} />
@@ -76,7 +91,10 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
                 </>
               ) : (
                 <>
-                  {t['Fret not more'].split('${icon}')[0].replace('${count}', `${invitations}`)} <Bell size={18} />
+                  {t['Fret not more']
+                    .split('${icon}')[0]
+                    .replace('${count}', `${invitations}`)}{' '}
+                  <Bell size={18} />
                   {t['Fret not more'].split('${icon}')[1]}
                 </>
               )}
@@ -84,7 +102,12 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
           )}
         </div>
       </div>
+      <CreateProjectDialog
+        open={createProjectOpen}
+        onClose={() => setCreateProjectOpen(false)}
+        onSaveProject={handleSaveProject}
+        i18n={props.i18n}
+      />
     </main>
-  )
-
-}
+  );
+};
