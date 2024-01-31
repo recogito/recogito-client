@@ -6,6 +6,7 @@ import type {
   ContentType,
   ExtendedProjectData,
   MyProfile,
+  Policies,
   Translations,
   UserProfile,
 } from 'src/Types';
@@ -23,6 +24,8 @@ interface ProjectCardProps {
   me: MyProfile;
 
   project: ExtendedProjectData;
+
+  orgPolicies: Policies | undefined;
 
   onDeleted(): void;
 
@@ -148,6 +151,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
             onDeleted={props.onDeleted}
             onDetailsChanged={props.onDetailsChanged}
             onError={props.onError}
+            orgPolicies={props.orgPolicies}
           />
         )}
         {is_open_join && members.length === 0 && (

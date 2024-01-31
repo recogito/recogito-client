@@ -189,6 +189,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             onProjectDeleted={onProjectDeleted}
             onDetailsChanged={onDetailsChanged}
             onError={onError}
+            orgPolicies={policies}
           />
         )}
 
