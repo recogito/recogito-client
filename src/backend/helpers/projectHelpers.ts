@@ -94,7 +94,8 @@ export const listMyProjectsExtended = (
       contexts (
         id,
         project_id,
-        name
+        name,
+        is_project_default
       ),
       layers (
         id,
@@ -171,7 +172,8 @@ export const getProjectExtended = (
       contexts (
         id,
         project_id,
-        name
+        name,
+        is_project_default
       ),
       layers (
         id,

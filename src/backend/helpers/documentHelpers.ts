@@ -182,7 +182,8 @@ export const listDocumentsInProject = (
           ...contexts!inner (
             id,
             name,
-            project_id
+            project_id,
+            is_project_default
           )
         )
       )
