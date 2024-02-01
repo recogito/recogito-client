@@ -5,9 +5,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { X } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
-import './MobileReplyForm.css';
+import './MobileFallback.css';
 
-interface MobileReplyFormProps {
+interface MobileFallbackProps {
 
   i18n: Translations;
 
@@ -23,11 +23,9 @@ interface MobileReplyFormProps {
 
 }
 
-export const MobileReplyForm = (props: MobileReplyFormProps) => {
+export const MobileFallback = (props: MobileFallbackProps) => {
 
   const { me } = props;
-  
-  const [open, setOpen] = useState(false);
 
   const [value, setValue] = useState('');
 
@@ -48,17 +46,16 @@ export const MobileReplyForm = (props: MobileReplyFormProps) => {
       };
 
       setValue('');
-      setOpen(false);
 
       props.beforeSubmit && props.beforeSubmit(body);
       props.onSubmit && props.onSubmit(body);
     }
   }
 
-  return open ? createPortal(
+  return createPortal(
     <div className="mobile-reply-form not-annotatable">
       <div className="mobile-reply-form-close">
-        <button onClick={() => setOpen(false)}><X /></button>
+        <button><X /></button>
       </div>
 
       <textarea
@@ -68,15 +65,11 @@ export const MobileReplyForm = (props: MobileReplyFormProps) => {
 
       <div className="mobile-reply-form-footer">
         <button onClick={onSave}>Save</button>
-        <button onClick={() => setOpen(false)}>Cancel</button>
+        <button>Cancel</button>
       </div>
     </div>,
     
     document.body
-  ) : (
-    <button onClick={() => setOpen(true)}>
-      Reply...
-    </button>
   )
 
 }
