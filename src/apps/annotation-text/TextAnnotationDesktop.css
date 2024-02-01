@@ -12,10 +12,6 @@
 }
 
 .ta-desktop main .ta-annotated-text-container .content-wrapper {
-  background-color: #fff;
-  border-color: var(--gray-300);
-  border-style: solid;
-  border-width: 0 1px;
   font-family: Lora;
   font-size: 17px;
   height: fit-content;
@@ -23,7 +19,7 @@
   min-height: 100%;
   pointer-events: all;
   position: relative;
-  width: 78ch;
+  width: 100%;
   word-wrap: break-word;
 }
 
@@ -37,6 +33,12 @@
 }
 
 .content-wrapper .text {
+  background-color: #fff;
+  border-color: var(--gray-300);
+  border-style: solid;
+  border-width: 0 1px;
+  margin: 0 auto;
+  max-width: 65ch;
   padding: 70px 85px 140px 85px;
 }
 
@@ -44,17 +46,21 @@
   background-color: transparent;
   height: 100%;
   left: 0;
-  padding: 0;
   position: absolute;
   top: 0;
   width: 100%;
 }
 
-.content-wrapper.pdf main .r6o-pdf-container {
+.content-wrapper .r6o-pdf-container {
   bottom: 0;
   top: 0;
   left: 0;
   overflow-y: scroll;
+}
+
+.content-wrapper .r6o-pdf-container .page {
+  margin: 10px auto;
+  border: 1px solid var(--gray-300);
 }
 
 .a9s-popup {
