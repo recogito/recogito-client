@@ -14,7 +14,7 @@ import type { Translations } from 'src/Types';
 
 export interface RichTextEditorProps {
   initialValue?: string;
-  value: string | undefined;
+  value: string | DeltaStatic | undefined;
   onChange(value: DeltaStatic): void;
   placeholder?: string;
   editable?: boolean;
