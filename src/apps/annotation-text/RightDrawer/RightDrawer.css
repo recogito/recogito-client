@@ -15,7 +15,7 @@
 
 .ta-right-drawer aside {
   position: absolute;
-  top: 0;
+  top: 5px;
   left: 0;
-  width: 360px;
+  width: 345px;
 }
