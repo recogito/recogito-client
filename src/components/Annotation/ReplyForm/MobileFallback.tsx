@@ -38,6 +38,8 @@ export const MobileFallback = (props: MobileFallbackProps) => {
       const h = window.visualViewport?.height;
       if (h) setHeight(`${h}px`);
     }
+
+    onResize();
   
     window.visualViewport?.addEventListener('resize', onResize);
   
@@ -96,7 +98,7 @@ export const MobileFallback = (props: MobileFallbackProps) => {
       </div>
     </div>,
     
-    document.querySelector('.anno-desktop')!
+    document.body
   )
 
 }
