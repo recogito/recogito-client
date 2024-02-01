@@ -3,7 +3,7 @@
 .ia-desktop main {
   flex-grow: 1;
   position: relative;
-  overflow: hidden;
+  overflow: scroll;
 }
 
 .ia-annotated-image-container {
