@@ -18,8 +18,9 @@
 .mobile-reply-form textarea {
   border: none;
   border-radius: 0;
+  font-size: 2em;
   height: 100%;
-  padding: 5%;
+  padding: 2.5%;
   width: 100%;
 }
 
