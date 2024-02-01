@@ -43,7 +43,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
       {mode === 'desktop' ? (
         <DesktopReplyForm {...props} />
       ) : (
-        <MobileReplyForm />
+        <MobileReplyForm {...props} />
       )}
     </div>
   );
