@@ -35,8 +35,8 @@ export const MobileFallback = (props: MobileFallbackProps) => {
 
   useEffect(() => {
 
-      const h = window.visualViewport?.height;
-      if (h) setHeight(`${h}px`);
+      // const h = window.visualViewport?.height;
+      // if (h) setHeight(`${h}px`);
 
       
     // window.visualViewport?.addEventListener('resize', onResize);
