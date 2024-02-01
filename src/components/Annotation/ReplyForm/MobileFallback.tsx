@@ -96,7 +96,7 @@ export const MobileFallback = (props: MobileFallbackProps) => {
       </div>
     </div>,
     
-    document.body
+    document.querySelector('.anno-desktop')!
   )
 
 }
