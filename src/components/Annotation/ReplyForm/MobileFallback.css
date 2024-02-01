@@ -1,7 +1,7 @@
 .mobile-reply-form {
   display: flex;
   flex-direction: column;
-  bottom: 0;
+  height: 100%;
   left: 0;
   position: absolute;
   top: 0;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,6 +31,21 @@ export const MobileFallback = (props: MobileFallbackProps) => {
 
   const [value, setValue] = useState('');
 
+  const [height, setHeight] = useState('100%');
+
+  useEffect(() => {
+    const onResize = () => {
+      const h = window.visualViewport?.height;
+      if (h) setHeight(`${h}px`);
+    }
+
+    window.visualViewport?.addEventListener('resize', onResize);
+  
+    return () => {
+      window.visualViewport?.removeEventListener('resize', onResize);
+    }
+  }, [])
+
   const onSave = () => {
     if (value) {
       const body = {
@@ -57,7 +72,7 @@ export const MobileFallback = (props: MobileFallbackProps) => {
   }
 
   return createPortal(
-    <div className="mobile-reply-form not-annotatable">
+    <div className="mobile-reply-form not-annotatable" style={{ height }}>
       <div className="mobile-reply-form-close">
         <button 
           className="unstyled icon-only"
