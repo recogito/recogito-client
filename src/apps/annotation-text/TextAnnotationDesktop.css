@@ -32,7 +32,8 @@
   height: fit-content;
 }
 
-.content-wrapper .text {
+.content-wrapper .text,
+.content-wrapper .tei {
   background-color: #fff;
   border-color: var(--gray-300);
   border-style: solid;
