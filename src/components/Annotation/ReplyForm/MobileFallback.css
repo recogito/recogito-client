@@ -18,6 +18,13 @@
 .mobile-reply-form textarea {
   border: none;
   border-radius: 0;
-  width: 100%;
   height: 100%;
+  padding: 5%;
+  width: 100%;
+}
+
+.mobile-reply-form-footer {
+  background-color: #fff;
+  border-top: 1px solid var(--gray-200);
+  padding: 20px;
 }

@@ -31,45 +31,53 @@ export interface ReplyFormProps {
 
 }
 
+// minimum window height before using mobile fallback
+const MIN_HEIGHT = 512;
+
 export const ReplyForm = (props: ReplyFormProps) => {
   
   const { me } = props;
 
   const [value, setValue] = useState<string | DeltaStatic | undefined>();
 
-  const [mode, setMode] = useState<'desktop' | 'mobile'>('desktop');
+  const [showMobileFallback, setShowMobileFallback] = useState(false);
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
   const onResize = useCallback(() => {
-    console.log('resize!');
-    if (window.innerHeight < 512)
-      setMode('mobile')
+    if (window.innerHeight < MIN_HEIGHT)
+      setShowMobileFallback(true);
     else 
-      setMode('desktop');
+      setShowMobileFallback(false);
   }, []);
+
+  const onFocus = () => {
+    if (window.innerHeight < MIN_HEIGHT)
+      setShowMobileFallback(true);
+
+    window.addEventListener('resize', onResize);
+  }
+
+  const onBlur = () => {
+    window.removeEventListener('resize', onResize);
+  }
 
   useEffect(() => {
     if (props.scrollIntoView)
       textarea.current?.scrollIntoView({ behavior: 'smooth' });
+
+    return () => {
+      // Quill doesn't seem to fire onBlur reliably!
+      window.removeEventListener('resize', onResize);
+    }
   }, []);
 
   useEffect(() => {
     if (textarea.current && props.autofocus)
       setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
   }, [props.autofocus]);
-
-  const onFocus = () => {
-    console.log('adding event listener');
-    window.addEventListener('resize', onResize);
-  }
-
-  const onBlur = () => {
-    console.log('remove event listenre');
-    window.removeEventListener('resize', onResize);
-  }
 
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();
@@ -97,7 +105,11 @@ export const ReplyForm = (props: ReplyFormProps) => {
     }
   };
 
-  return mode === 'desktop' ? (
+  return showMobileFallback ? (
+    <MobileFallback 
+      {...props} 
+      onClose={() => setShowMobileFallback(false)} />
+  ) : (
     <form className='annotation-reply-form no-drag'>
       {isPublic ? (
         <Avatar
@@ -122,7 +134,5 @@ export const ReplyForm = (props: ReplyFormProps) => {
         <ArrowRight size={18} />
       </button>
     </form>
-  ) : (
-    <MobileFallback {...props} />
-  )
+  );
 };

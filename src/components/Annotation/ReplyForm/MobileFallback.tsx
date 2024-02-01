@@ -21,6 +21,8 @@ interface MobileFallbackProps {
 
   onSubmit(body: AnnotationBody): void;
 
+  onClose(): void;
+
 }
 
 export const MobileFallback = (props: MobileFallbackProps) => {
@@ -49,13 +51,19 @@ export const MobileFallback = (props: MobileFallbackProps) => {
 
       props.beforeSubmit && props.beforeSubmit(body);
       props.onSubmit && props.onSubmit(body);
+
+      props.onClose();
     }
   }
 
   return createPortal(
     <div className="mobile-reply-form not-annotatable">
       <div className="mobile-reply-form-close">
-        <button><X /></button>
+        <button 
+          className="unstyled icon-only"
+          onClick={props.onClose}>
+          <X/>
+        </button>
       </div>
 
       <textarea
@@ -64,8 +72,12 @@ export const MobileFallback = (props: MobileFallbackProps) => {
         onChange={evt => setValue(evt.target.value)} />
 
       <div className="mobile-reply-form-footer">
-        <button onClick={onSave}>Save</button>
-        <button>Cancel</button>
+        <button 
+          className="primary"
+          onClick={onSave}>Save</button>
+
+        <button 
+          onClick={props.onClose}>Cancel</button>
       </div>
     </div>,
     
