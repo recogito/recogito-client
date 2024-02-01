@@ -5,9 +5,9 @@ import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel } from '@compon
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import { PDFControls } from './PDFControls';
 
 import './Menubar.css';
-import { PDFControls } from './PDFControls';
 
 interface MenubarProps {
 
