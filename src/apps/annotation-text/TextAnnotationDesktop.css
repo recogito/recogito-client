@@ -21,10 +21,9 @@
   height: fit-content;
   line-height: 190%;
   min-height: 100%;
-  padding: 70px 85px 140px 85px;
   pointer-events: all;
   position: relative;
-  width: 60ch;
+  width: 78ch;
   word-wrap: break-word;
 }
 
@@ -37,12 +36,11 @@
   height: fit-content;
 }
 
-.content-wrapper.pdf {
-  display: block;
-  width: 100%;
+.content-wrapper .text {
+  padding: 70px 85px 140px 85px;
 }
 
-.content-wrapper.pdf main {
+.content-wrapper .pdf {
   background-color: transparent;
   height: 100%;
   left: 0;
@@ -57,10 +55,6 @@
   top: 0;
   left: 0;
   overflow-y: scroll;
-}
-
-.content-wrapper.text main p.plaintext {
-  margin: 0;
 }
 
 .a9s-popup {
