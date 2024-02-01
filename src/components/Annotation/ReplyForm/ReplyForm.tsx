@@ -47,7 +47,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
   const onResize = useCallback(() => {
     const h = window.visualViewport?.height || window.screen.height;
-    setShowMobileFallback(window.screen.height - MIN_KEYBOARD_HEIGHT > h);
+    setShowMobileFallback(h < 512);
   }, []);
 
   const onFocus = () => {
