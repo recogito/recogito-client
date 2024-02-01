@@ -74,6 +74,12 @@ export const ReplyForm = (props: ReplyFormProps) => {
       setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
   }, [props.autofocus]);
 
+  const onCloseMobileFallback = () => {
+    // Remove listener, otherwise it will re-open
+    window.removeEventListener('resize', onResize);
+    setShowMobileFallback(false);
+  }
+
   const onSubmit = (evt?: React.MouseEvent) => {
     evt?.preventDefault();
 
@@ -103,7 +109,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
   return showMobileFallback ? (
     <MobileFallback 
       {...props} 
-      onClose={() => setShowMobileFallback(false)} />
+      onClose={onCloseMobileFallback} />
   ) : (
     <form className='annotation-reply-form no-drag'>
       {isPublic ? (

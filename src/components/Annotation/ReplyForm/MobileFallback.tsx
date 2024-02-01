@@ -34,16 +34,16 @@ export const MobileFallback = (props: MobileFallbackProps) => {
   const [height, setHeight] = useState('100%');
 
   useEffect(() => {
-
-      // const h = window.visualViewport?.height;
-      // if (h) setHeight(`${h}px`);
-
-      
-    // window.visualViewport?.addEventListener('resize', onResize);
+    const onResize = () => {
+      const h = window.visualViewport?.height;
+      if (h) setHeight(`${h}px`);
+    }
   
-    // return () => {
-      // window.visualViewport?.removeEventListener('resize', onResize);
-    //}
+    window.visualViewport?.addEventListener('resize', onResize);
+  
+    return () => {
+      window.visualViewport?.removeEventListener('resize', onResize);
+    }
   }, []);
 
   const onSave = () => {
