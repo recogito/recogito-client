@@ -45,18 +45,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
-  /*
-  const listener = () => {
-  const MIN_KEYBOARD_HEIGHT = 300 // N.B.! this might not always be correct
-    
-  const isMobile = window.innerWidth < 768
-  const isKeyboardOpen = isMobile 
-    && window.screen.height - MIN_KEYBOARD_HEIGHT > window.visualViewport.height
-}
-
-window.visualViewport.addEventListener('resize', listener)
-  */
-
   const onResize = useCallback(() => {
     const h = window.visualViewport?.height || window.screen.height;
     setShowMobileFallback(window.screen.height - MIN_KEYBOARD_HEIGHT > h);
@@ -64,11 +52,11 @@ window.visualViewport.addEventListener('resize', listener)
 
   const onFocus = () => {
     onResize();
-    window.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
   }
 
   const onBlur = () => {
-    window.removeEventListener('resize', onResize);
+    window.visualViewport?.removeEventListener('resize', onResize);
   }
 
   useEffect(() => {
