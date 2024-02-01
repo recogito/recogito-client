@@ -31,8 +31,7 @@ export interface ReplyFormProps {
 
 }
 
-// minimum window height before using mobile fallback
-const MIN_HEIGHT = 512;
+const MIN_KEYBOARD_HEIGHT = 300;
 
 export const ReplyForm = (props: ReplyFormProps) => {
   
@@ -46,17 +45,25 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
+  /*
+  const listener = () => {
+  const MIN_KEYBOARD_HEIGHT = 300 // N.B.! this might not always be correct
+    
+  const isMobile = window.innerWidth < 768
+  const isKeyboardOpen = isMobile 
+    && window.screen.height - MIN_KEYBOARD_HEIGHT > window.visualViewport.height
+}
+
+window.visualViewport.addEventListener('resize', listener)
+  */
+
   const onResize = useCallback(() => {
-    if (window.innerHeight < MIN_HEIGHT)
-      setShowMobileFallback(true);
-    else 
-      setShowMobileFallback(false);
+    const h = window.visualViewport?.height || window.screen.height;
+    setShowMobileFallback(window.screen.height - MIN_KEYBOARD_HEIGHT > h);
   }, []);
 
   const onFocus = () => {
-    if (window.innerHeight < MIN_HEIGHT)
-      setShowMobileFallback(true);
-
+    onResize();
     window.addEventListener('resize', onResize);
   }
 
