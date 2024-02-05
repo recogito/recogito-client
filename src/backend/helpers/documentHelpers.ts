@@ -195,7 +195,6 @@ export const listDocumentsInProject = (
         return { error, data: [] };
       } else {
         // Simplify layers from list of contexts to single (default) context
-        console.log(data);
         const inDefaultContext = data
           .map((d) => ({
             // @ts-ignore
