@@ -14,9 +14,9 @@ export const InfoTooltip = (props: InfoTooltipProps) => {
           <Info className='info-tooltip-icon' />
         </Tooltip.Trigger>
         <Tooltip.Portal>
-          <Tooltip.Content className='info-tooltip-content' sideOffset={5}>
+          <Tooltip.Content className='tooltip-content' sideOffset={5}>
             {props.content}
-            <Tooltip.Arrow className='info-tooltip-arrow' />
+            <Tooltip.Arrow className='tooltip-arrow' />
           </Tooltip.Content>
         </Tooltip.Portal>
       </Tooltip.Root>
