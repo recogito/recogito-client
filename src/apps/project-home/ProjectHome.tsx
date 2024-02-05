@@ -45,7 +45,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [addOpen, setAddOpen] = useState(false);
 
-  const defaultContext = project.contexts.find((c) => c.name === null);
+  const defaultContext = project.contexts.find((c) => c.is_project_default);
 
   const [documents, setDocuments] = useState<DocumentInContext[]>(
     props.documents
@@ -54,8 +54,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const projectPolicies = useProjectPolicies(project.id);
 
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
-
-  const canUpload = projectPolicies?.get('documents').has('INSERT');
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -71,7 +69,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { addDocumentIds } = useDocumentList(
     project.id,
-    defaultContext!.id,
+    defaultContext?.id,
     (document) => setDocuments((d) => [...d, document])
   );
 
@@ -212,7 +210,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onError={() => onError('Error updating project description.')}
           />
 
-          {canUpload && (
+          {isAdmin && (
             <div className='admin-actions'>
               <button className='primary' onClick={onAddDocument}>
                 <Plus size={20} /> <span>{t['Add Document']}</span>
@@ -230,7 +228,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
         <div
           className='project-home-grid-wrapper'
-          {...(canUpload ? getRootProps() : {})}
+          {...(isAdmin ? getRootProps() : {})}
         >
           <div
             className='project-home-grid'

@@ -1,73 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import {
-  createContext,
-  createProject,
-  deleteContext,
-  deleteProject,
-  getGroupMembers,
-  zipMembers,
-} from '@backend/crud';
-import type { Context, ExtendedProjectData, Project } from 'src/Types';
+import { getGroupMembers, zipMembers } from '@backend/crud';
+import type { ExtendedProjectData } from 'src/Types';
 import type { Response } from '@backend/Types';
-import { createSystemTag } from './tagHelpers';
-
-/**
- * Initializes a new project.
- *
- * 1. creates the Project record.
- * 2. creates a new Context.
- * 3. TODO: tags the Context as a 'DEFAULT' context.
- */
-export const initProject = (
-  supabase: SupabaseClient,
-  name: string
-): Promise<ExtendedProjectData> => {
-  // First promise: create the project
-  const a: Promise<Project> = new Promise((resolve, reject) =>
-    createProject(supabase, name).then(({ error, data }) => {
-      if (error) reject(error);
-      else resolve(data);
-    })
-  );
-
-  // Follow-on promise: create a new context
-  const b: Promise<Context> = a.then(
-    (project) =>
-      new Promise((resolve, reject) =>
-        createContext(supabase, project.id).then(({ error, data }) => {
-          if (error) {
-            // If context creation failed, roll back the project
-            deleteProject(supabase, project.id).then(() => {
-              reject(error);
-            });
-          } else {
-            resolve(data);
-          }
-        })
-      )
-  );
-
-  // Wait for both promises to complete, tag the default context,
-  // and return the extended project data.
-  return Promise.all([a, b]).then(
-    ([project, defaultContext]) =>
-      new Promise((resolve, reject) =>
-        createSystemTag(supabase, 'DEFAULT_CONTEXT', defaultContext.id)
-          .then(() => {
-            getProjectExtended(supabase, project.id).then(({ error, data }) => {
-              if (error) reject(error);
-              else resolve(data);
-            });
-          })
-          .catch((error) => {
-            // Tag creation failed? Roll back context and project
-            deleteContext(supabase, defaultContext.id)
-              .then(() => deleteProject(supabase, project.id))
-              .then(() => reject(error));
-          })
-      )
-  );
-};
 
 export const listMyProjectsExtended = (
   supabase: SupabaseClient
@@ -89,10 +23,13 @@ export const listMyProjectsExtended = (
       updated_by,
       name,
       description,
+      is_open_join,
+      is_open_edit,
       contexts (
         id,
         project_id,
-        name
+        name,
+        is_project_default
       ),
       layers (
         id,
@@ -116,6 +53,7 @@ export const listMyProjectsExtended = (
         return { error, data: [] as ExtendedProjectData[] };
       } else {
         const projects = data;
+
         // All group IDs of all projects in `data`
         const groupIds = projects.reduce(
           (ids, project) => [...ids, ...project.groups.map((g) => g.id)],
@@ -163,10 +101,13 @@ export const getProjectExtended = (
       updated_by,
       name,
       description,
+      is_open_join,
+      is_open_edit,
       contexts (
         id,
         project_id,
-        name
+        name,
+        is_project_default
       ),
       layers (
         id,
@@ -216,4 +157,40 @@ export const getProjectExtended = (
           }
         });
       }
+    });
+
+export const joinProject = (supabase: SupabaseClient, projectId: string) =>
+  supabase
+    .rpc('join_project_rpc', {
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('Error joining project', error);
+        return false;
+      } else {
+        return data as unknown as boolean;
+      }
+    });
+
+export const updateProject = (
+  supabase: SupabaseClient,
+  id: string,
+  name: string,
+  description: string,
+  is_open_join: boolean,
+  is_open_edit: boolean
+) =>
+  supabase
+    .from('projects')
+    .update({
+      is_open_join: is_open_join,
+      is_open_edit: is_open_edit,
+      name: name,
+      description: description,
+    })
+    .eq('id', id)
+    .then(({ error }) => {
+      if (error) return false;
+      else return true;
     });

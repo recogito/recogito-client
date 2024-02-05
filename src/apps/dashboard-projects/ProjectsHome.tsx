@@ -55,17 +55,30 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [sort, setSort] = useState<SortFunction | undefined>();
 
-  const [showProfileNag, setShowProfileNag] = useState(
-    !me.first_name ||
-    !me.first_name.length ||
-    !me.last_name ||
-    !me.last_name.length);
+  const [showProfileNag, setShowProfileNag] = useState(false);
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
       if (error) window.location.href = `/${props.i18n.lang}/sign-in`;
     });
   }, []);
+
+  useEffect(() => {
+    const hasFirstName = me.first_name && me.first_name.length;
+    const hasLastName = me.last_name && me.last_name.length;
+    const hasNickname = me.nickname && me.nickname.length;
+
+    let show = true;
+    if (hasFirstName && hasLastName) {
+      show = false;
+    } else {
+      if (hasNickname) {
+        show = false;
+      }
+    }
+
+    setShowProfileNag(show);
+  }, [me]);
 
   // Filtered projects
   const myProjects = projects.filter((p) => p.created_by?.id === me.id);
@@ -77,10 +90,14 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     )
   );
 
+  const openJoinProjects = projects.filter(
+    (p) => p.is_open_join && p.contexts.length === 0
+  );
+
   // All projects are different for admins vs. mere mortals
   const allProjects = me.isOrgAdmin
     ? projects
-    : [...myProjects, ...sharedProjects];
+    : [...myProjects, ...sharedProjects, ...openJoinProjects];
 
   const filteredProjects =
     // All projects
@@ -172,6 +189,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             onProjectDeleted={onProjectDeleted}
             onDetailsChanged={onDetailsChanged}
             onError={onError}
+            orgPolicies={policies}
           />
         )}
 
