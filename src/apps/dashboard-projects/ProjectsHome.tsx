@@ -97,7 +97,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   // All projects are different for admins vs. mere mortals
   const allProjects = me.isOrgAdmin
     ? projects
-    : [...myProjects, ...sharedProjects, ...openJoinProjects];
+    : [...new Set([...myProjects, ...sharedProjects, ...openJoinProjects])];
 
   const filteredProjects =
     // All projects
