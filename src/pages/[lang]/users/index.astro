@@ -52,12 +52,13 @@ if (groupsError) {
 }
 ---
 
-<HeaderLayout title='User Management' />
-<UserManagement
-  i18n={getTranslations(Astro.request, 'user-management')}
-  profiles={profiles}
-  me={me}
-  groups={groups}
-  client:only
-/>
+<HeaderLayout title='User Management'>
+  <UserManagement
+    i18n={getTranslations(Astro.request, 'user-management')}
+    profiles={profiles}
+    me={me}
+    groups={groups}
+    client:only
+  />
+</HeaderLayout>
 <style></style>

@@ -9,7 +9,7 @@ import type {
 } from 'src/Types';
 import { changeOrgGroupMembership, deleteUser } from '@backend/crud/users';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { CheckFat, WarningDiamond } from '@phosphor-icons/react';
+import { CheckFat, WarningDiamond, ArrowLeft } from '@phosphor-icons/react';
 import './UserManagement.css';
 import { AccountActions } from '@components/AccountActions';
 import { DeleteWarningMessage } from './DeleteWarningMessage';
@@ -32,7 +32,7 @@ interface UserManagementProps {
 }
 
 export const UserManagement = (props: UserManagementProps) => {
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const [users, setUsers] = useState(props.profiles);
   const [filteredUsers, setFilteredUsers] = useState(props.profiles);
@@ -146,39 +146,50 @@ export const UserManagement = (props: UserManagementProps) => {
     <div className='user-management'>
       <ToastProvider>
         <div className='user-management-header'>
-          <h1>{t['User Management']}</h1>
+          <div>
+            <a
+              href={`/${lang}/projects`}
+              style={{ marginTop: 15, zIndex: 1000 }}
+            >
+              <ArrowLeft className='text-bottom' size={16} />
+              <span>{t['Back to Projects']}</span>
+            </a>
+            <h1>{t['User Management']}</h1>
+          </div>
           <div>
             <AccountActions i18n={props.i18n} profile={props.me} />
           </div>
         </div>
-        <label htmlFor='search'>{t['Search Users']}</label>
-        <input
-          autoFocus
-          id='search'
-          type='text'
-          className='user-management-search'
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <UsersTable
-          i18n={props.i18n}
-          me={props.me}
-          users={filteredUsers}
-          groups={props.groups}
-          onDeleteUser={onDeleteUser}
-          onChangeGroup={changeGroup}
-        />
+        <div className='user-management-content'>
+          <label htmlFor='search'>{t['Search Users']}</label>
+          <input
+            autoFocus
+            id='search'
+            type='text'
+            className='user-management-search'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <UsersTable
+            i18n={props.i18n}
+            me={props.me}
+            users={filteredUsers}
+            groups={props.groups}
+            onDeleteUser={onDeleteUser}
+            onChangeGroup={changeGroup}
+          />
 
-        <Toast
-          content={toast}
-          onOpenChange={(open) => !open && setToast(null)}
-        />
-        <DeleteWarningMessage
-          open={deleteWarningOpen}
-          i18n={props.i18n}
-          onCancel={onCancelDelete}
-          onConfirm={onDeleteConfirm}
-        />
+          <Toast
+            content={toast}
+            onOpenChange={(open) => !open && setToast(null)}
+          />
+          <DeleteWarningMessage
+            open={deleteWarningOpen}
+            i18n={props.i18n}
+            onCancel={onCancelDelete}
+            onConfirm={onDeleteConfirm}
+          />
+        </div>
       </ToastProvider>
     </div>
   );

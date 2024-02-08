@@ -38,7 +38,7 @@ export const UsersTable = (props: UsersTableProps) => {
         <tr>
           <th>{t['First Name']}</th>
           <th>{t['Last Name']}</th>
-          <th>{t['Nickname']}</th>
+          <th>{t['Display Name']}</th>
           <th>{t['Email']}</th>
           <th>{t['Last Sign In']}</th>
           <th>{t['User ID']}</th>
