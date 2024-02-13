@@ -1,6 +1,5 @@
 {
   "Project Settings": "Projekteinstellungen",
-
   "Tagging Vocabulary": "Tag-Vokabular",
   "You can pre-define a tagging vocabulary": "Füge Begriffe in das Textfeld ein, um ein Tag-Vokabular für dieses Projekt festzulegen (ein Begriff pro Zeile).",
   "The terms will appear as autocomplete options": "In der Annotations-Ansicht werden die Begriffe als Autocomplete-Optionen vorgeschlagen, wenn Benutzer neue Tags anlegen. Beachte dass Benutzer nach wie vor auch eigene Tags verwenden können.",
@@ -8,6 +7,12 @@
   "Save": "Speichern",
   "Error loading tag vocabulary.": "Fehler beim Laden des Tag-Vokabulars.",
   "Error saving tag vocabulary.": "Fehler beim Speichern des Tag-Vokabulars.",
-
-  "Something went wrong": "Etwas ist schiefgelaufen"
+  "Something went wrong": "Etwas ist schiefgelaufen",
+  "Name and Access Settings": "Name and Access Settings",
+  "Open Join": "Open Join",
+  "Open Edit": "Open Edit",
+  "open-join-info": "With 'Open Join' switched on, any registered user can join your project without an invitation.",
+  "open-edit-info": "With 'Open Edit' switched on, any member of your project can edit the default assignment",
+  "Project Name": "Project Name",
+  "Project Description": "Project Description"
 }

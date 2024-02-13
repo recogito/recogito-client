@@ -1,20 +1,16 @@
 {
   "Account Preferences": "Account Preferences",
-
   "Your User Profile": "Your User Profile",
   "E-Mail": "E-Mail",
   "We found a Gravatar for your address.": "We found a Gravatar for your address.",
   "Use as my Avatar.": "Use as my Avatar.",
-
   "Public Information": "Public Information",
-  "Other users can see this information about you. All fields are optional.":
-    "Other users can see this information about you. All fields are optional.",
-  "Nickname": "Nickname",
+  "Other users can see this information about you. All fields are optional.": "Other users can see this information about you. If you enter a Display Name, that will be shown as the author of an annotation, otherwise First Name and Last Name will be shown. You must fill out either a Display Name or First Name, Last Name.",
+  "Nickname": "Display Name",
   "First Name": "First Name",
   "Last Name": "Last Name",
   "Avatar URL": "Avatar URL",
-
   "Profile updated": "Profile updated",
   "Something went wrong": "Something went wrong",
-  "Could not update your profile information.": "Could not update your profile information." 
+  "Could not update your profile information.": "Could not update your profile information."
 }

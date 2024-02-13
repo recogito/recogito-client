@@ -2,7 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
-import { Visibility, SupabaseAnnotation, SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
+import {
+  Visibility,
+  SupabaseAnnotation,
+  SupabaseAnnotationBody,
+} from '@recogito/annotorious-supabase';
 import { RichTextEditor } from '@components/RichTextEditor';
 import { Avatar } from '../../Avatar';
 import type { Translations } from 'src/Types';
@@ -10,7 +14,6 @@ import type { Translations } from 'src/Types';
 import './ReplyForm.css';
 
 export interface ReplyFormProps {
-
   i18n: Translations;
 
   annotation: SupabaseAnnotation;
@@ -26,11 +29,9 @@ export interface ReplyFormProps {
   beforeSubmit?(body: AnnotationBody): void;
 
   onSubmit(body: AnnotationBody): void;
-
 }
 
 export const ReplyForm = (props: ReplyFormProps) => {
-  
   const { me } = props;
 
   const [value, setValue] = useState<string | undefined>();
@@ -64,7 +65,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
         created: new Date(),
         purpose: 'commenting',
         value: JSON.stringify(value),
-        format: 'Quill'
+        format: 'Quill',
       };
 
       setValue('');

@@ -53,6 +53,10 @@ export interface ExtendedProjectData {
 
   description?: string;
 
+  is_open_join?: boolean;
+
+  is_open_edit?: boolean;
+
   contexts: Context[];
 
   layers: [
@@ -172,6 +176,8 @@ export interface Context {
   description?: string;
 
   project_id: string;
+
+  is_project_default: boolean;
 }
 
 export interface TaggedContext extends Context {

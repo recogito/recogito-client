@@ -7,26 +7,30 @@ let queue = Promise.resolve();
 
 export const useDocumentList = (
   projectId: string,
-  contextId: string,
+  contextId: string | undefined,
   onAdded: (document: DocumentInContext) => void
 ) => {
   const [dataDirty, setDataDirty] = useState(false);
 
   const addDocumentId = (i: string) => {
-    queue = queue
-      .then(() =>
-        addDocumentToProject(supabase, projectId, contextId, i).then(
-          (document) => {
-            setDataDirty(true);
-            onAdded(document);
-          }
+    if (contextId) {
+      queue = queue
+        .then(() =>
+          addDocumentToProject(supabase, projectId, contextId, i).then(
+            (document) => {
+              setDataDirty(true);
+              onAdded(document);
+            }
+          )
         )
-      )
-      .catch((error) => {
-        console.log(error);
-      });
+        .catch((error) => {
+          console.log(error);
+        });
 
-    return i;
+      return i;
+    }
+
+    return 0;
   };
 
   const addDocumentIds = (documentIds: string[]) =>
