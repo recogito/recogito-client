@@ -5,6 +5,7 @@ import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel } from '@compon
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import { PDFControls } from './PDFControls';
 
 import './Menubar.css';
 
@@ -31,6 +32,8 @@ export const Menubar = (props: MenubarProps) => {
   const contextName = props.document.context.name;
 
   const { id, project_id } = props.document.context;
+
+  const isPDF = props.document.content_type === 'application/pdf';
   
   const back = contextName ? 
     `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` : 
@@ -83,6 +86,14 @@ export const Menubar = (props: MenubarProps) => {
             <ListBullets size={17} />
           </button>
         </div>
+
+        {isPDF && (
+          <>
+            <div className="anno-desktop-overlay-divider" />
+
+            <PDFControls i18n={props.i18n} />
+          </>
+        )}
       </div>
 
       <div className="anno-menubar-right ta-menubar-right">  
