@@ -1,0 +1,13 @@
+.open-join-bar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.open-join-button {
+  min-height: 34px;
+  height: 34px;
+  background-color: var(--dark-blue);
+  color: var(--gray-100);
+}

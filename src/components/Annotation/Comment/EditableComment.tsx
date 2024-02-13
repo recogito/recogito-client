@@ -5,7 +5,6 @@ import type { AnnotationBody } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 interface EditableCommentProps {
-
   i18n: Translations;
 
   editable: boolean;
@@ -15,11 +14,9 @@ interface EditableCommentProps {
   onChange(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
   onCanceled(): void;
-
 }
 
 export const EditableComment = (props: EditableCommentProps) => {
-  
   const { t } = props.i18n;
 
   const { comment, editable } = props;
@@ -69,7 +66,7 @@ export const EditableComment = (props: EditableCommentProps) => {
       format: renderType === 'quill' ? 'Quill' : 'TextPlain',
       value: renderType === 'text' ? (value as string) : JSON.stringify(value),
     });
-  }
+  };
 
   const onCancelChange = () => {
     props.onCanceled();
