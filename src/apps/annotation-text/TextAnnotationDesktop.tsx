@@ -50,7 +50,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       ? layers.find((l) => !l.context.name) || layers[0]
       : undefined;
 
-
   useEffect(() => {
     if (policies) {
       const isDefault = isDefaultContext(props.document.context);

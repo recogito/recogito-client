@@ -10,6 +10,7 @@ import { SupabasePlugin } from '@components/SupabasePlugin';
 import { PDFViewer } from '../PDFViewer';
 import { useContent } from '../useContent';
 import { Toolpanel } from '../Toolpanel';
+import { behaviors } from './teiBehaviors';
 import type { DocumentInTaggedContext, Layer, Policies, Translations } from 'src/Types';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
@@ -92,7 +93,9 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                 presence={{
                   font: '500 12px Inter, Arial, Helvetica, sans-serif',
                 }}>
-                <CETEIcean tei={text} />
+                <CETEIcean 
+                  tei={text} 
+                  behaviors={behaviors} />
               </TEIAnnotator>
             </>
           ) : contentType === 'application/pdf' && text ? (
