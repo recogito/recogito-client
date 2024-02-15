@@ -106,20 +106,20 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const sorting =
     props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
-          const pages =
-            a.target.selector.pageNumber - b.target.selector.pageNumber;
-          return pages === 0
-            ? a.target.selector.start - b.target.selector.start
-            : pages;
-        }
+        const pages =
+          a.target.selector.pageNumber - b.target.selector.pageNumber;
+        return pages === 0
+          ? a.target.selector.start - b.target.selector.start
+          : pages;
+      }
       : (a: TextAnnotation, b: TextAnnotation) =>
-          a.target.selector.start - b.target.selector.start;
+        a.target.selector.start - b.target.selector.start;
 
   const onError = (error: Error) => {
     // TODO UI feedback
     console.error(error);
   }
-  
+
   return (
     <FilterState present={present}>
       <ColorState present={present}>
@@ -127,7 +127,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           channelId={props.channelId}
           layerId={defaultLayer?.id}
           present={present}
-          onError={onError}>  
+          onError={onError}>
 
           <div className="anno-desktop ta-desktop">
             {loading && (
@@ -138,8 +138,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               {showBranding && (
                 <BrandHeader />
               )}
-                    
-              <Menubar 
+
+              <Menubar
                 i18n={props.i18n}
                 document={props.document}
                 present={present}
@@ -152,20 +152,22 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               <div className="ta-drawer ta-drawer-left" />
 
               {policies && (
-                <AnnotatedText 
-                  channelId={props.channelId} 
-                  defaultLayer={defaultLayer} 
-                  document={props.document} 
-                  filter={filter} 
+                <AnnotatedText
+                  channelId={props.channelId}
+                  defaultLayer={defaultLayer}
+                  document={props.document}
+                  filter={filter}
                   i18n={props.i18n}
                   layers={layers}
                   policies={policies}
                   present={present}
-                  style={style} 
+                  style={style}
                   tagVocabulary={tagVocabulary}
-                  usePopup={usePopup} 
+                  usePopup={usePopup}
                   onChangePresent={setPresent}
-                  onLoad={() => setLoading(false)} />
+                  onLoad={() => setLoading(false)}
+                  styleSheet={props.styleSheet}
+                />
               )}
 
               <RightDrawer
@@ -178,7 +180,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 tagVocabulary={tagVocabulary}
                 beforeSelectAnnotation={beforeSelectAnnotation}
                 onChangeAnnotationFilter={f => setFilter(() => f)}
-                onChangeAnnotationStyle={s => setStyle(() => s)} /> 
+                onChangeAnnotationStyle={s => setStyle(() => s)} />
             </main>
 
             {showBranding && (
