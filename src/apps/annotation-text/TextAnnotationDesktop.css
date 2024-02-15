@@ -3,6 +3,11 @@ html, body {
   overscroll-behavior: none;
 }
 
+.ta-desktop .header,
+.ta-desktop .footer {
+  z-index: 10;
+}
+
 .ta-desktop main {
   display: flex;
   flex-direction: row;
