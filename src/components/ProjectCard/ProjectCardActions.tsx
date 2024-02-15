@@ -7,7 +7,7 @@ import {
   Trash,
 } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { archiveProject, leaveGroup } from '@backend/crud';
+import { archiveProject, leaveProject } from '@backend/crud';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import type {
   ExtendedProjectData,
@@ -28,6 +28,8 @@ export interface ProjectCardActionsProps {
 
   onDeleted(): void;
 
+  onLeaveProject(): void;
+
   onDetailsChanged(updated: ExtendedProjectData): void;
 
   onError(error: string): void;
@@ -38,8 +40,6 @@ export interface ProjectCardActionsProps {
 export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   const { t } = props.i18n;
 
-  const { me } = props;
-
   const [editing, setEditing] = useState(false);
 
   const [confirming, setConfirming] = useState(false);
@@ -47,6 +47,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   const [busy, setBusy] = useState(false);
 
   const isMine = props.me.id === props.project.created_by?.id;
+  const isOrgAdmin = props.me.isOrgAdmin;
 
   const onDetailsSaved = (updated: ExtendedProjectData) => {
     setEditing(false);
@@ -76,18 +77,10 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   const onLeaveProject = () => {
     setBusy(true);
 
-    const myGroup = props.project.groups.find((g) =>
-      g.members.find((m) => m.user.id === me.id)
-    )?.id;
-
-    if (myGroup) {
-      leaveGroup(supabase, me.id, myGroup).then(({ error }) => {
-        if (error) props.onError(error.details);
-        else props.onDeleted();
-      });
-    } else {
-      props.onError('Error leaving the group');
-    }
+    leaveProject(supabase, props.project.id).then((result) => {
+      if (!result) props.onError('Failed to leave project.');
+      else props.onLeaveProject();
+    });
   };
 
   return (
@@ -108,16 +101,16 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
             sideOffset={5}
             align='start'
           >
-            <Item className='dropdown-item' onSelect={() => setEditing(true)}>
-              <PencilSimple size={16} />{' '}
-              <span>{t['Edit project details']}</span>
-            </Item>
+            {isMine || isOrgAdmin &&
+              <Item className='dropdown-item' onSelect={() => setEditing(true)}>
+                <PencilSimple size={16} />{' '}
+                <span>{t['Edit project details']}</span>
+              </Item>
+            }
 
             <ConfirmedAction.Trigger>
               <Item className='dropdown-item'>
-                {isMine ||
-                (props.orgPolicies &&
-                  props.orgPolicies.get('projects').has('UPDATE')) ? (
+                {isMine || isOrgAdmin ? (
                   <>
                     <Trash size={16} className='destructive' />{' '}
                     <span>{t['Delete project']}</span>
@@ -139,7 +132,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         busy={busy}
         title={t['Are you sure?']}
         description={
-          isMine
+          isMine || isOrgAdmin
             ? t['Are you sure you want to delete this project permanently?']
             : t['Are you sure you want to leave this project']
         }
@@ -150,7 +143,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
             <span>{isMine ? t['Delete project'] : t['Leave project']}</span>
           </>
         }
-        onConfirm={isMine ? onDeleteProject : onLeaveProject}
+        onConfirm={isMine || isOrgAdmin ? onDeleteProject : onLeaveProject}
       />
 
       <ProjectDetailsForm
