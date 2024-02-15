@@ -4,6 +4,12 @@
   overflow: hidden;
 }
 
+.ta-desktop main .r6o-annotatable canvas {
+  background-color: rgba(255, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid green;
+}
+
 .ta-desktop main .ta-annotated-text-container {
   display: flex;
   flex-grow: 1;
