@@ -9,13 +9,14 @@ html, body {
   overflow: hidden;
 }
 
-/*
 .ta-desktop main .r6o-annotatable canvas {
+  background-color: rgba(255, 0, 0, 0.1);
+  box-sizing: border-box;
+  border: 2px solid blue;
   height: 100dvh;  
   max-height: -webkit-fill-available;
   bottom: auto;
 }
-*/
 
 .ta-desktop main .ta-annotated-text-container {
   display: flex;
