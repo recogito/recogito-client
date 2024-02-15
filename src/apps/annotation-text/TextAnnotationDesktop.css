@@ -14,8 +14,8 @@ html, body {
   box-sizing: border-box;
   border: 2px solid blue;
   height: 100dvh;  
-  max-height: -webkit-fill-available;
-  bottom: auto;
+  /* max-height: -webkit-fill-available; */
+  /* bottom: auto; */
 }
 
 .ta-desktop main .ta-annotated-text-container {
