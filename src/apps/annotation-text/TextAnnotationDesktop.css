@@ -8,8 +8,7 @@
   background-color: rgba(255, 0, 0, 0.1);
   box-sizing: border-box;
   border: 2px solid green;
-  height: 100vh;  
-  height: 100dvh;
+  height: 80vh;  
   max-height: -webkit-fill-available;
   bottom: auto;
 }
