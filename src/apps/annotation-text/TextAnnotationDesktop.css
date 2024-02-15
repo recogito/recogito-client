@@ -1,7 +1,17 @@
+html, body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
 .ta-desktop main {
   display: flex;
   flex-direction: row;
   overflow: hidden;
+}
+
+.ta-desktop main .r6o-annotatable canvas {
+  height: 100%;
+  height: 100dvh;  
 }
 
 .ta-desktop main .ta-annotated-text-container {
