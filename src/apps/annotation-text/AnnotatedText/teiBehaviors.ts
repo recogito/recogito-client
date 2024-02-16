@@ -31,7 +31,7 @@ export const behaviors = {
         copyAttr('rendition', figure, img);
 
         const desc = figure.querySelector('[data-origname="desc"]');
-        if (desc)
+        if (desc?.innerHTML)
           img.setAttribute('alt', desc.innerHTML);
 
         graphic.appendChild(img);
