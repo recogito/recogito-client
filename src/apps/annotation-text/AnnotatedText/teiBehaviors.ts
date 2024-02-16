@@ -9,20 +9,49 @@ const copyAttr = (attr: string, from: Element, to: Element, defaultVal?: any) =>
 }
 
 export const behaviors = {
+  
+  tei: {
 
-  graphic: (elem: Element) => {
-    const content = new Image();
-    content.src = elem.getAttribute('url')?.trim()!;
+    desc: (elem: Element) => {
+      // @ts-ignore
+      elem.hidden = true;
+    },
 
-    copyAttr('width', elem, content);
-    copyAttr('height', elem, content);
-    copyAttr('rend', elem, content);
-    copyAttr('rendition', elem, content);
+    figure: (figure: Element) => {
+      const graphic = Array.from(figure.children).find(child => child.getAttribute('data-origname') === 'graphic');
 
-    const desc = elem.getAttribute('desc') || '';
-    content.setAttribute('alt', desc);
+      if (graphic) {
+        const img = new Image();
+        img.src = graphic.getAttribute('url')?.trim()!;
 
-    elem.appendChild(content);
+        copyAttr('width', graphic, img);
+        copyAttr('height', graphic, img);
+
+        copyAttr('rend', figure, img);
+        copyAttr('rendition', figure, img);
+
+        const desc = figure.querySelector('[data-origname="desc"]');
+        if (desc?.innerHTML)
+          img.setAttribute('alt', desc.innerHTML);
+
+        graphic.appendChild(img);
+      }
+    },
+
+    graphic: (elem: Element) => {
+      // Handle 'graphic' element only in case it wasn't aready 
+      // handled as a child of a figure already.
+      if (elem.parentElement?.getAttribute('data-origname') !== 'figure') {
+        const img = new Image();
+        img.src = elem.getAttribute('url')?.trim()!;
+
+        copyAttr('width', elem, img);
+        copyAttr('height', elem, img);
+
+        elem.appendChild(img);
+      }
+    }
+
   }
 
 }
