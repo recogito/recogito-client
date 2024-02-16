@@ -27,8 +27,10 @@ export const behaviors = {
         copyAttr('width', graphic, img);
         copyAttr('height', graphic, img);
 
-        copyAttr('rend', figure, img);
         copyAttr('rendition', figure, img);
+
+        copyAttr('rend', figure, img);
+        figure.removeAttribute('rend');
 
         const desc = figure.querySelector('[data-origname="desc"]');
         if (desc?.innerHTML)
