@@ -25,6 +25,7 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     <meta name='generator' content={Astro.generator} />
     <link rel="icon" type="image/x-icon" href={favicon}>
     <title>{title}</title>
+    <slot name="head" /> 
   </head>
   <body>
     <slot />
