@@ -15,7 +15,6 @@ import { AnnotatedText } from './AnnotatedText';
 import { RightDrawer } from './RightDrawer';
 import type { Layer } from 'src/Types';
 
-import './TEI.css';
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
 
