@@ -8,8 +8,12 @@ export const serializeQuill = (value: string) => {
   input.ops?.forEach((op: DeltaOperation) => {
     if (typeof op.insert === "string") {
       serialized += op.insert;
+    } else if ('image' in op.insert) {
+      serialized += op.insert.image;
+    } else if ('video' in op.insert) {
+      serialized += op.insert.video;
     }
   })
 
-  return serialized;
+  return serialized.trim();
 }

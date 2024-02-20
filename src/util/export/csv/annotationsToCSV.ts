@@ -14,7 +14,7 @@ const serializeTarget = (t: SupabaseAnnotationTarget) => {
   // Shorthand
   const round = (num: number) => Math.round(num * 100) / 100;
 
-  const { selector } = t;
+  const selector = t.selector && Array.isArray(t.selector) ? t.selector[0] : t.selector;
 
   // Notes don't have selectors!
   if (!selector)
@@ -61,6 +61,15 @@ const sortRows = (a: any, b: any): number => {
  return createdDate1 - createdDate2;
 }
 
+const getQuote = (t: SupabaseAnnotationTarget) => {
+  if (t.selector) {
+    const selector = Array.isArray(t.selector) ? t.selector[0] : t.selector;
+    return selector.quote;
+  } else {
+    return '';
+  }
+}
+
 /** Crosswalks a list of annotations to CSV using Papaparse **/
 export const annotationsToCSV = (
   annotations: SupabaseAnnotation[], 
@@ -81,7 +90,7 @@ export const annotationsToCSV = (
       const row: any = {
         annotation_id: a.id,
         document: doc.name,
-        text_quote: a.target.selector ? 'quote' in a.target.selector ? a.target.selector.quote : '' : '', 
+        text_quote: getQuote(a.target), 
         target: serializeTarget(a.target),
         body_purpose: body.purpose,
         body_value: serializeBodyValue(body),
