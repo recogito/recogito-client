@@ -29,7 +29,7 @@ interface AnnotatedImageProps {
 
   defaultLayer?: Layer;
 
-  document: DocumentInTaggedContext;
+  imageManifestURL: string;
 
   filter?: (a: ImageAnnotation) => boolean;
 
@@ -70,7 +70,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
   const options: OpenSeadragon.Options = useMemo(() => ({
-    tileSources: props.document.meta_data?.url,
+    tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
       clickToZoom: false
     },
@@ -79,7 +79,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     minZoomLevel: 0.4,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
-  }), [props.document.meta_data?.url]);
+  }), [props.imageManifestURL]);
 
   const selectAction = (annotation: ImageAnnotation) => {
     // Annotation targets are editable for creators and admins

@@ -25,7 +25,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
   const [invalid, setInvalid] = useState(false);
 
   const isValid = (url: string) => 
-    url && url.startsWith('http') && url.endsWith('/info.json');
+    url && url.startsWith('http') && url.endsWith('.json');
 
   const onSubmit = (evt: FormEvent) => {
     evt.preventDefault();

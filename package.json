@@ -50,6 +50,7 @@
     "eslint-plugin-react": "^7.33.2",
     "formik": "^2.4.1",
     "linkedom": "^0.15.6",
+    "manifesto.js": "^4.2.17",
     "moment": "^2.29.4",
     "openseadragon": "^3.1.0",
     "papaparse": "^5.4.1",

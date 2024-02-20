@@ -11,6 +11,7 @@ import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { Menubar } from './Menubar';
 import { RightDrawer } from './RightDrawer';
+import { useIIIFSource } from './useIIIFSource';
 import { 
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
@@ -26,6 +27,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
+
+  const imageManifestURL = useIIIFSource(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -140,12 +143,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               <div className="ia-drawer ia-drawer-left" />
 
               <div className="ia-annotated-image-container">
-                {policies && (
+                {policies && imageManifestURL && (
                   <AnnotatedImage
                     ref={viewer}
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
-                    document={props.document}
+                    imageManifestURL={imageManifestURL}
                     filter={filter}
                     i18n={props.i18n}
                     layers={layers}
