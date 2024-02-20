@@ -34,6 +34,7 @@ export const PDFViewer = (props: PDFViewerProps) => {
 
   return downloadURL && (
     <PDFAnnotator 
+      experimentalCSSRenderer
       pdfUrl={downloadURL} 
       filter={props.filter}
       style={props.style}
