@@ -28,7 +28,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
-  const imageManifestURL = useIIIFSource(props.document);
+  const { currentImage } = useIIIFSource(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -143,12 +143,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               <div className="ia-drawer ia-drawer-left" />
 
               <div className="ia-annotated-image-container">
-                {policies && imageManifestURL && (
+                {policies && currentImage && (
                   <AnnotatedImage
                     ref={viewer}
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
-                    imageManifestURL={imageManifestURL}
+                    imageManifestURL={currentImage}
                     filter={filter}
                     i18n={props.i18n}
                     layers={layers}
