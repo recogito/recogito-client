@@ -22,6 +22,8 @@ export interface ProjectsGridProps {
 
   onProjectDeleted(project: ExtendedProjectData): void;
 
+  onLeaveProject(project: ExtendedProjectData): void;
+
   onDetailsChanged(project: ExtendedProjectData): void;
 
   onError(error: string): void;
@@ -55,6 +57,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
               me={props.me}
               project={project}
               onDeleted={() => props.onProjectDeleted(project)}
+              onLeaveProject={() => props.onLeaveProject(project)}
               onDetailsChanged={props.onDetailsChanged}
               onError={props.onError}
               orgPolicies={props.orgPolicies}

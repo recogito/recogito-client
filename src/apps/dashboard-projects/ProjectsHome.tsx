@@ -105,11 +105,11 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       ? allProjects
       : // Am I the creator?
       filter === ProjectFilter.MINE
-      ? myProjects
-      : // Am I one of the users in the groups?
-      filter === ProjectFilter.SHARED
-      ? sharedProjects
-      : [];
+        ? myProjects
+        : // Am I one of the users in the groups?
+        filter === ProjectFilter.SHARED
+          ? sharedProjects
+          : [];
 
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
@@ -121,6 +121,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onProjectDeleted = (project: ExtendedProjectData) =>
     setProjects((projects) => projects.filter((p) => p.id !== project.id));
+
+  const onLeaveProject = (project: ExtendedProjectData) => {
+    project.contexts = [];
+    project.groups = [];
+
+    setProjects((projects) =>
+      projects.map((p) => (p.id === project.id ? project : p))
+    );
+  }
 
   const onError = (error: string) =>
     setError({
@@ -187,6 +196,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             search={search}
             sort={sort}
             onProjectDeleted={onProjectDeleted}
+            onLeaveProject={onLeaveProject}
             onDetailsChanged={onDetailsChanged}
             onError={onError}
             orgPolicies={policies}

@@ -1,5 +1,4 @@
 import { Article, GraduationCap, Image } from '@phosphor-icons/react';
-import { useProjectPolicies } from '@backend/hooks';
 import { joinProject } from '@backend/helpers';
 import { Avatar } from '@components/Avatar';
 import type {
@@ -29,6 +28,8 @@ interface ProjectCardProps {
 
   onDeleted(): void;
 
+  onLeaveProject(): void;
+
   onDetailsChanged(updated: ExtendedProjectData): void;
 
   onError(error: string): void;
@@ -37,8 +38,6 @@ interface ProjectCardProps {
 export const ProjectCard = (props: ProjectCardProps) => {
   const { contexts, description, layers, id, groups, name, is_open_join } =
     props.project;
-
-  const policies = useProjectPolicies(props.project.id);
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
 
@@ -134,21 +133,21 @@ export const ProjectCard = (props: ProjectCardProps) => {
                 user.nickname
                   ? user.nickname
                   : [user.first_name, user.last_name]
-                      .filter((str) => str)
-                      .join(' ')
-                      .trim()
+                    .filter((str) => str)
+                    .join(' ')
+                    .trim()
               }
               avatar={user.avatar_url}
             />
           ))}
         </div>
-
-        {policies?.get('projects').has('UPDATE') && (
+        {members.length > 0 && (
           <ProjectCardActions
             i18n={props.i18n}
             me={props.me}
             project={props.project}
             onDeleted={props.onDeleted}
+            onLeaveProject={props.onLeaveProject}
             onDetailsChanged={props.onDetailsChanged}
             onError={props.onError}
             orgPolicies={props.orgPolicies}
