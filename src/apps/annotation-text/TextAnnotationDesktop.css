@@ -79,6 +79,10 @@ html, body {
   border: 1px solid var(--gray-300);
 }
 
+.content-wrapper .r6o-pdf-container .pdfViewer .page .textLayer {
+  opacity: 1;
+}
+
 .a9s-popup {
   z-index: 999;
 }
