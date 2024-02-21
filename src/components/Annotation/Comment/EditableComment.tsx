@@ -60,6 +60,7 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const onSaveChange = (evt: React.FormEvent) => {
     evt.preventDefault();
+
     props.onChange(comment, {
       ...comment,
       // @ts-ignore
@@ -74,7 +75,7 @@ export const EditableComment = (props: EditableCommentProps) => {
   };
 
   return editable ? (
-    <form onSubmit={onSaveChange}>
+    <form>
       {renderType === 'text' ? (
         <TextareaAutosize
           className='no-drag'
@@ -98,7 +99,8 @@ export const EditableComment = (props: EditableCommentProps) => {
         <button
           disabled={value === comment.value}
           className='primary sm flat'
-          type='submit'
+          type='button'
+          onClick={onSaveChange}
         >
           {t['Save']}
         </button>
