@@ -1,0 +1,25 @@
+.ia-thumbnail-strip .thumbnail-wrapper {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  width: 100%;
+}
+
+.ia-thumbnail-strip .thumbnail {
+  padding: 5px;
+}
+
+.ia-thumbnail-strip .thumbnail:hover {
+  background-color: var(--gray-300);
+  border-radius: calc(var(--border-radius) + 2px);
+}
+
+.ia-thumbnail-strip .thumbnail img {
+  border-radius: var(--border-radius);
+  display: block;
+  height: 120px;
+  object-fit: cover;
+  width: 120px;
+}

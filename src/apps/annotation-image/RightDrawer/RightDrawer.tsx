@@ -1,8 +1,7 @@
-import { ReactNode, useEffect, useRef } from 'react';
-import { useTransition, animated } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import type { Annotation, DrawingStyle, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
+import { useDrawerTransition, AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
 import type { Layer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
@@ -31,28 +30,16 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
-  const previous = useRef<ReactNode | undefined>();
-
   const me = props.present.find(isMe)!;
 
-  const shouldAnimate = 
-    // Drawer currently closed, and should open
-    !previous.current && props.currentPanel ||
-    // Drawer currently open, and should close
-    previous.current && !props.currentPanel;
-
-  const drawerTransition = useTransition([props.currentPanel], {
+  const drawerTransition = useDrawerTransition(props.currentPanel, {
     from: { transform: 'translateX(180px)', opacity: 0 },
     enter: { transform: 'translateX(0px)', opacity: 1 },
     leave: { transform: 'translateX(180px)', opacity: 0 },
     config: {
-      duration: shouldAnimate ? 120 : 0
+      duration: 120
     }
   });
-
-  useEffect(() => {
-    previous.current = props.currentPanel;
-  }, [props.currentPanel]);
 
   return drawerTransition((style, panel) => panel && (
     <animated.div 

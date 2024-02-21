@@ -10,6 +10,7 @@ import type { Layer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { Menubar } from './Menubar';
+import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { useIIIF } from './IIIF/useIIIF';
 import { 
@@ -21,7 +22,6 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
-import { LeftDrawer } from './LeftDrawer';
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -29,7 +29,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
-  const { currentImage } = useIIIF(props.document);
+  const { images, currentImage, setCurrentImage } = useIIIF(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -146,7 +146,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
             <main>
               <LeftDrawer 
-                currentPanel={leftPanel} />
+                currentPanel={leftPanel} 
+                images={images} 
+                onSelectImage={resource => setCurrentImage(resource.id)} />
 
               <div className="ia-annotated-image-container">
                 {policies && currentImage && (

@@ -1,4 +1,4 @@
-.ia-left-drawer {
+.ia-drawer.ia-left-drawer {
   background-color: #fff;
   box-shadow:
     0px 0px 16px -1px rgba(0, 0, 0, 0.15),
@@ -6,8 +6,13 @@
     0px 0px 16px -12px rgba(0, 0, 0, 0.32),
     0px 0px 2px 0px rgba(0, 0, 0, 0.28);
   left: 0;
+  padding-top: 0;
   scroll-padding: 40px;
   top: 0;
-  transform: translateX(-180px);
-  width: 180px;
+  transform: translateX(-150px);
+  width: 150px;
+}
+
+.ia-left-drawer aside {
+  height: 100%;
 }
