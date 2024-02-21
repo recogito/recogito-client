@@ -88,7 +88,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               <DynamicStyle style={props.styleSheet} />
             
               <TEIAnnotator
-                experimentalCSSRenderer
                 filter={props.filter}
                 style={props.style}
                 presence={{
@@ -101,6 +100,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             </>
           ) : contentType === 'application/pdf' && text ? (
             <PDFViewer
+              experimentalCSSRenderer
               document={props.document}
               filter={props.filter}
               style={props.style}

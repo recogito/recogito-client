@@ -12,6 +12,8 @@ interface PDFViewerProps {
 
   document: DocumentInTaggedContext;
 
+  experimentalCSSRenderer?: boolean;
+
   filter?: ((a: TextAnnotation) => boolean);
 
   style?: ((a: TextAnnotation) => DrawingStyle);
@@ -34,7 +36,7 @@ export const PDFViewer = (props: PDFViewerProps) => {
 
   return downloadURL && (
     <PDFAnnotator 
-      experimentalCSSRenderer
+      experimentalCSSRenderer={props.experimentalCSSRenderer}
       pdfUrl={downloadURL} 
       filter={props.filter}
       style={props.style}
