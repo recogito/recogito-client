@@ -11,7 +11,7 @@ import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { Menubar } from './Menubar';
 import { RightDrawer } from './RightDrawer';
-import { useIIIFSource } from './useIIIFSource';
+import { useIIIF } from './IIIF/useIIIF';
 import { 
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
@@ -21,6 +21,7 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
+import { LeftDrawer } from './LeftDrawer';
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -28,7 +29,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
-  const { currentImage } = useIIIFSource(props.document);
+  const { currentImage } = useIIIF(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -37,6 +38,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const [showBranding, setShowBranding] = useState(true);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [leftPanel, setLeftPanel] = useState<DrawerPanel | undefined>();
 
   const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
 
@@ -133,14 +136,17 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 i18n={props.i18n} 
                 document={props.document} 
                 present={present} 
+                leftPanel={leftPanel}
                 rightPanel={rightPanel}
                 onZoom={onZoom}
                 onToggleBranding={() => setShowBranding(!showBranding)}
+                onSetLeftDrawer={setLeftPanel}
                 onSetRightDrawer={onSetRightPanel} />
             </div>
 
             <main>
-              <div className="ia-drawer ia-drawer-left" />
+              <LeftDrawer 
+                currentPanel={leftPanel} />
 
               <div className="ia-annotated-image-container">
                 {policies && currentImage && (

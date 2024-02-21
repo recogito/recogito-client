@@ -22,11 +22,15 @@ interface MenubarProps {
 
   present: PresentUser[];
 
+  leftPanel?: DrawerPanel;
+
   rightPanel?: DrawerPanel;
 
   onZoom(factor: number): void;
 
   onToggleBranding(): void;
+
+  onSetLeftDrawer(panel?: DrawerPanel): void;
 
   onSetRightDrawer(panel?: DrawerPanel): void;
 
@@ -45,6 +49,13 @@ export const Menubar = (props: MenubarProps) => {
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
+
+  const toggleLeftDrawer = () => {
+    if (props.leftPanel)
+      props.onSetLeftDrawer();
+    else
+      props.onSetLeftDrawer(DrawerPanel.TABLE_OF_CONTENTS);
+  }
 
   const toggleRightDrawer = (panel: DrawerPanel) => {
     if (panel === props.rightPanel)
@@ -89,7 +100,7 @@ export const Menubar = (props: MenubarProps) => {
         <div className="anno-desktop-overlay-divider" />
 
         <div>
-          <button>
+          <button onClick={toggleLeftDrawer}>
             <ListBullets size={17} />
           </button>
         </div>
