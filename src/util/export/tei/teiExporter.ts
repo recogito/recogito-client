@@ -86,8 +86,10 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     annotationEl.setAttribute('xml:id', `uid-${a.id}`);
 
     // See https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-annotation.html#tei_att.target
+    const selector = a.target.selector && Array.isArray(a.target.selector) ? a.target.selector[0] : a.target.selector;
+    
     // @ts-ignore
-    const { startSelector, endSelector } = a.target.selector;
+    const { startSelector, endSelector } = selector;
     annotationEl.setAttribute('target', `${startSelector.value} ${endSelector.value}`);
 
     // Add creation and last update timestamp
