@@ -100,14 +100,14 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             </>
           ) : contentType === 'application/pdf' && text ? (
             <PDFViewer
-              experimentalCSSRenderer
+              experimentalCSSRenderer={false}
               document={props.document}
               filter={props.filter}
               style={props.style}
               onRendered={() => setPDFLoading(false)} />
           ) : text && (
             <TextAnnotator
-              experimentalCSSRenderer
+              experimentalCSSRenderer={false}
               filter={props.filter}
               style={props.style}
               presence={{
