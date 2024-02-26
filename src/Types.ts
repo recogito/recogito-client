@@ -32,6 +32,10 @@ export interface Project {
   name: string;
 
   description?: string;
+
+  is_open_join: boolean;
+
+  is_open_edit: boolean;
 }
 
 /**

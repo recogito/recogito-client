@@ -7,6 +7,7 @@ import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
 import { getCollection } from '@backend/crud/collections';
+import { isOpenJoinEditFromContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -27,6 +28,16 @@ if (!contextId || !documentId) {
 // Will return empty if this user has no access priviliges
 const document = await getDocumentInContext(supabase, documentId, contextId);
 if (document.error || !document.data) {
+  // Lets check if this is an open join project
+  const resp = await isOpenJoinEditFromContext(supabase, contextId);
+  if (resp) {
+    console.log('is open!');
+    return Astro.redirect(
+      `/${lang}/projects/${resp}/join?redirect-to=${Astro.url.pathname}`
+    );
+  }
+
+  console.log('Error!');
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
@@ -70,31 +81,37 @@ if (document.data.content_type === 'text/plain') {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-<BaseLayout title={document.data.name}>
-  {viewer === 'TEI' && !styleSheet && (
-    <link rel="stylesheet" href="/tei.css" slot="head">
-  )}
 
-  {viewer === 'OPENSEADRAGON' ? (
-    <ImageAnnotation
-      client:only
-      i18n={getTranslations(Astro.request, 'annotation-image')}
-      document={document.data}
-      channelId={channelId}
-    />
-  ) : (
-    <TextAnnotation
-      client:only
-      i18n={getTranslations(Astro.request, 'annotation-text')}
-      document={document.data}
-      channelId={channelId}
-      styleSheet={styleSheet}
-    />
-  )}
+<BaseLayout title={document.data.name}>
+  {
+    viewer === 'TEI' && !styleSheet && (
+      <link rel='stylesheet' href='/tei.css' slot='head' />
+    )
+  }
+
+  {
+    viewer === 'OPENSEADRAGON' ? (
+      <ImageAnnotation
+        client:only
+        i18n={getTranslations(Astro.request, 'annotation-image')}
+        document={document.data}
+        channelId={channelId}
+      />
+    ) : (
+      <TextAnnotation
+        client:only
+        i18n={getTranslations(Astro.request, 'annotation-text')}
+        document={document.data}
+        channelId={channelId}
+        styleSheet={styleSheet}
+      />
+    )
+  }
 </BaseLayout>
 
 <style>
-  html, body {
+  html,
+  body {
     height: 100%;
   }
 </style>
