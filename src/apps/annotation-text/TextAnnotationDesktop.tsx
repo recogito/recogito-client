@@ -106,13 +106,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
         const pages =
-          a.target.selector.pageNumber - b.target.selector.pageNumber;
+          a.target.selector[0].pageNumber - b.target.selector[0].pageNumber;
         return pages === 0
-          ? a.target.selector.start - b.target.selector.start
+          ? a.target.selector[0].start - b.target.selector[0].start
           : pages;
       }
       : (a: TextAnnotation, b: TextAnnotation) =>
-        a.target.selector.start - b.target.selector.start;
+        a.target.selector[0].start - b.target.selector[0].start;
 
   const onError = (error: Error) => {
     // TODO UI feedback

@@ -203,6 +203,13 @@ export const updateUserProjectGroup = (
     .eq('type_id', oldTypeId)
     .then(({ error }) => ({ error, data: !error }));
 
+export const leaveProject = (
+    supabase: SupabaseClient,
+    projectId: string
+): Response<boolean> => 
+  supabase.rpc('leave_project_rpc', {_project_id: projectId})
+  .then((resp) => resp.data);
+
 export const leaveGroup = (
   supabase: SupabaseClient,
   userId: string,
