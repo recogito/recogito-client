@@ -20,7 +20,12 @@ export const BaseCard = (props: BaseCardProps) => {
 
   const comments = annotation.bodies.filter(
     (b: AnnotationBody) => !b.purpose || b.purpose === 'commenting'
-  );
+  ).slice().sort((a, b) => {
+    if (!a.created || !b.created)
+      return 0; // Should never be the case
+
+    return a.created.getTime() - b.created.getTime();
+  });
 
   // Keep a list of comments that should not be color-highlighted
   // on render, either because they were already in the annotation, or they
