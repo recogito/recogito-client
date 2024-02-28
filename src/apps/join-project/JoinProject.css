@@ -1,0 +1,22 @@
+.join-project-root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.join-project-title {
+  font-size: x-large;
+}
+
+.join-project-description {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.join-project-dialog-button-join {
+  background-color: var(--brighter-blue);
+  color: var(--gray-200);
+}
