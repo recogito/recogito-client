@@ -10,6 +10,8 @@ import './IIIFDialog.css';
 
 export interface IIIFManifest {
 
+  label?: string;
+
   url: string;
 
   protocol: Protocol;
@@ -37,13 +39,14 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
     isValid,
     lastError,
     result 
-  } = useIIIFValidation(value);
+  } = useIIIFValidation(value, props.i18n);
 
   const onSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
     if (value && isValid) {
       const manifest: IIIFManifest = {
+        label: result?.label,
         url: value,
         protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
       };

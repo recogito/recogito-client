@@ -109,12 +109,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { getRootProps, getInputProps, isDragActive, open } =
     useDragAndDrop(onDrop);
 
-  const onImportRemote = (protocol: Protocol, url: string) => {
+  const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
     setShowUploads(true);
 
     addUploads([
       {
-        name: url, // TODO find a better solution
+        name: label || url,
         projectId: project.id,
         contextId: defaultContext!.id,
         url,

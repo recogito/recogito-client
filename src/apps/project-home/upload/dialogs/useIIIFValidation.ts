@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { IIIF } from '@allmaps/iiif-parser';
+import { IIIF, LanguageString } from '@allmaps/iiif-parser';
+import type { Translations } from 'src/Types';
 
 /**
  * Some basic sanity checking on the URL string
@@ -26,11 +27,36 @@ interface ValidationResult {
 
   majorVersion: number;
 
+  label?: string;
+
 }
 
 type Error = 'invalid_url' | 'fetch_error' | 'invalid_manifest' | 'unsupported_manifest_type';
 
-export const useIIIFValidation = (url: string) => {
+const getDefaultLabel = (dict: LanguageString | undefined, lang: string) => {
+  if (!dict)
+    return;
+
+  const localized = dict[lang];
+  if (localized) {
+    return localized[0];
+  } else {
+    // Fallback #1
+    const en = dict['en'];
+    if (en) {
+      return en[0];
+    } else {
+      // Fallback #2
+      const values = Object.values(dict).reduce<string[]>((flattened, value) => {
+        return Array.isArray(value) ? [...flattened, ...value] : [...flattened, value]
+      }, []);
+
+      return values.length > 0 ? values[0] : undefined;
+    }
+  }
+}
+
+export const useIIIFValidation = (url: string, i18n: Translations) => {
 
   const [isFetching, setIsFetching] = useState(false);
 
@@ -57,9 +83,12 @@ export const useIIIFValidation = (url: string) => {
               setIsValid(true);
               setResult({ type: 'image', majorVersion: parsed.majorVersion });
             } else if (parsed.type === 'manifest') {
+
+              const label = getDefaultLabel(parsed.label, i18n.lang);
+
               setLastError(undefined);
               setIsValid(true);
-              setResult({ type: 'manifest', majorVersion: parsed.majorVersion });
+              setResult({ type: 'manifest', majorVersion: parsed.majorVersion, label });
             } else {
               setLastError('unsupported_manifest_type');
               setIsValid(false);

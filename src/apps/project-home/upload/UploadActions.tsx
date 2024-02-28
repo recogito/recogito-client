@@ -14,7 +14,7 @@ interface UploadActionsProps {
 
   onUpload(): void;
 
-  onImport(format: Protocol, url: string): void;
+  onImport(format: Protocol, url: string, label?: string): void;
 
 }
 
@@ -26,7 +26,7 @@ export const UploadActions = (props: UploadActionsProps) => {
   const onImportIIIF = () => {
     const onSubmit = (manifest: IIIFManifest) => {
       setDialog(undefined);
-      props.onImport(manifest.protocol, manifest.url);
+      props.onImport(manifest.protocol, manifest.url, manifest.label);
     };
 
     setDialog(
