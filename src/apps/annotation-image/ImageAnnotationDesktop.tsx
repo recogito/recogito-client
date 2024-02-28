@@ -146,6 +146,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
             <main>
               <LeftDrawer 
+                currentImage={currentImage}
                 currentPanel={leftPanel} 
                 iiifSequence={sequence} 
                 onSelectImage={resource => setCurrentImage(resource.id)} />

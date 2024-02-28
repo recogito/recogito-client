@@ -7,6 +7,8 @@ import './IIIFThumbnailStrip.css';
 
 interface IIIFThumbnailStripProps {
 
+  currentImage?: string;
+
   sequence?: Sequence;
 
   onClick(resource: Resource): void;
@@ -27,11 +29,16 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
     return [...all, ...canvas.getImages().map(i => ({ label: canvas.getLabel().getValue(), resource: i.getResource() }))];
   }, []) : [];
 
+  const isSelected = (resource: Resource) => resource.id === props.currentImage;
+
   const Row = ({ index, style }: { index: number, style: React.CSSProperties}) => {   
     const { resource, label } = thumbnails[index];
 
     return (
-      <div className="thumbnail-strip-item" style={style} onClick={() => props.onClick(resource)}>
+      <div 
+        className={`thumbnail-strip-item${isSelected(resource) ? ' selected': ''}`} 
+        style={style} 
+        onClick={() => props.onClick(resource)}>
         <IIIFThumbnail image={resource} />
         <span className="label">{label}</span>
       </div>

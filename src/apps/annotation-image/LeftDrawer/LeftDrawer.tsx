@@ -7,6 +7,8 @@ import './LeftDrawer.css';
 
 interface LeftDrawerProps {
 
+  currentImage?: string;
+
   currentPanel?: DrawerPanel;
 
   iiifSequence?: Sequence;
@@ -32,6 +34,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       style={style}>
       <aside>
         <IIIFThumbnailStrip 
+          currentImage={props.currentImage}
           sequence={props.iiifSequence} 
           onClick={props.onSelectImage} />
       </aside>
