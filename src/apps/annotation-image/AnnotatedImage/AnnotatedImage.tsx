@@ -123,7 +123,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           onInitialLoad={props.onLoad}
           onPresence={props.onChangePresent} 
           onConnectError={props.onConnectError}
-          privacyMode={privacy === 'PRIVATE'} />
+          privacyMode={privacy === 'PRIVATE'} 
+          source={props.imageManifestURL} />
       }
 
       <OpenSeadragonViewer 

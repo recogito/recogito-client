@@ -10,6 +10,8 @@ export type SupabasePluginProps = SupabasePluginConfig & {
 
   privacyMode: boolean,
 
+  source?: string,
+
   onConnected?(user: User): void,
 
   onConnectError?(error: string): void,
