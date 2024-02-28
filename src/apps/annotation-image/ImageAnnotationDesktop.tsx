@@ -29,7 +29,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
-  const { images, currentImage, setCurrentImage } = useIIIF(props.document);
+  const { isPresentationManifest, images, currentImage, setCurrentImage } = useIIIF(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -157,6 +157,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
                     imageManifestURL={currentImage}
+                    isPresentationManifest={isPresentationManifest}
                     filter={filter}
                     i18n={props.i18n}
                     layers={layers}

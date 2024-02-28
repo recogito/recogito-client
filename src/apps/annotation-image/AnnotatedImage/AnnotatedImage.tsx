@@ -31,6 +31,8 @@ interface AnnotatedImageProps {
 
   imageManifestURL: string;
 
+  isPresentationManifest?: boolean;
+
   filter?: (a: ImageAnnotation) => boolean;
 
   i18n: Translations;
@@ -124,7 +126,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           onPresence={props.onChangePresent} 
           onConnectError={props.onConnectError}
           privacyMode={privacy === 'PRIVATE'} 
-          source={props.imageManifestURL} />
+          source={props.isPresentationManifest ? props.imageManifestURL : undefined} />
       }
 
       <OpenSeadragonViewer 
