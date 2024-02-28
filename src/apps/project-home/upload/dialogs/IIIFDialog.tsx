@@ -64,7 +64,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
             <Dialog.Title className="dialog-title">{t['Import IIIF']}</Dialog.Title>
               <input 
                 type="text" 
-                className={lastError && value ? "invalid" : undefined}
+                className={lastError && value && !isFetching ? "invalid" : undefined}
                 value={value} 
                 placeholder={t['Paste URL to a IIIF image manifest']}
                 onChange={evt => setValue(evt.target.value)} /> 
