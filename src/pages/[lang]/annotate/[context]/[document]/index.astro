@@ -31,7 +31,6 @@ if (document.error || !document.data) {
   // Lets check if this is an open join project
   const resp = await isOpenJoinEditFromContext(supabase, contextId);
   if (resp) {
-    console.log('is open!');
     return Astro.redirect(
       `/${lang}/projects/${resp}/join?redirect-to=${Astro.url.pathname}`
     );
