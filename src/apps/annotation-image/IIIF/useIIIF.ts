@@ -12,11 +12,13 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
 
   const [sequence, setSequence] = useState<Sequence | undefined>();
 
-  const [images, setImages] = useState<Resource[]>([]);
-
   const [currentImage, setCurrentImage] = useState<string | undefined>();
 
   const [manifestType, setManifestType] = useState<ManifestType | undefined>();
+
+  const images = sequence ? sequence.getCanvases().reduce<Resource[]>((images, canvas) => {
+    return [...images, ...canvas.getImages().map(i => i.getResource())];
+  }, []) : [];
 
   useEffect(() => {
     if (document.meta_data?.url) {
@@ -29,13 +31,13 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
         Utils.loadManifest(url).then(manifest => {
           const sequence = (Utils.parseManifest(manifest) as Manifest).getSequences()[0];
 
-          const imageResources = sequence.getCanvases().reduce<Resource[]>((images, canvas) => {
-            return [...images, ...canvas.getImages().map(i => i.getResource())];
-          }, []);
+          // Hm... this makes a whole lot of assumptions about the manifest. 
+          // TODO run some kind of initial validation/sanity check and display
+          // a message to the user if this fails
+          const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
 
           setSequence(sequence);
-          setImages(imageResources);
-          setCurrentImage(imageResources[0].id);
+          setCurrentImage(firstImage);
           setManifestType('PRESENTATION');
         })
       }
@@ -67,7 +69,6 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
 
   return { 
     currentImage,
-    images,
     isPresentationManifest,
     isImageManifest,
     next,

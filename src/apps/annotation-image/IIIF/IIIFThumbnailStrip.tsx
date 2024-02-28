@@ -1,4 +1,4 @@
-import type { Resource } from 'manifesto.js';
+import type { Resource, Sequence } from 'manifesto.js';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { IIIFThumbnail } from './IIIFThumbnail';
@@ -7,20 +7,33 @@ import './IIIFThumbnailStrip.css';
 
 interface IIIFThumbnailStripProps {
 
-  images?: Resource[];
+  sequence?: Sequence;
 
   onClick(resource: Resource): void;
 
 }
 
+interface Thumbnail {
+
+  resource: Resource;
+
+  label: string | null;
+
+}
+
 export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
 
+  const thumbnails = props.sequence ? props.sequence.getCanvases().reduce<Thumbnail[]>((all, canvas) => {
+    return [...all, ...canvas.getImages().map(i => ({ label: canvas.getLabel().getValue(), resource: i.getResource() }))];
+  }, []) : [];
+
   const Row = ({ index, style }: { index: number, style: React.CSSProperties}) => {   
-    const resource = props.images![index];
+    const { resource, label } = thumbnails[index];
 
     return (
-      <div style={style} onClick={() => props.onClick(resource)}>
+      <div className="thumbnail-strip-item" style={style} onClick={() => props.onClick(resource)}>
         <IIIFThumbnail image={resource} />
+        <span className="label">{label}</span>
       </div>
     )
   }
@@ -30,9 +43,9 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
       {({ height, width }) => (
         <FixedSizeList
           height={height}
-          itemCount={props.images ? props.images.length : 0}
+          itemCount={thumbnails.length}
           width={width}
-          itemSize={140}>
+          itemSize={170}>
           {Row}
         </FixedSizeList>
       )}

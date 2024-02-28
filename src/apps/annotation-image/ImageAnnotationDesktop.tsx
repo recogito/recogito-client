@@ -29,7 +29,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
-  const { isPresentationManifest, images, currentImage, setCurrentImage } = useIIIF(props.document);
+  const { isPresentationManifest, sequence, currentImage, setCurrentImage } = useIIIF(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -147,7 +147,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             <main>
               <LeftDrawer 
                 currentPanel={leftPanel} 
-                images={images} 
+                iiifSequence={sequence} 
                 onSelectImage={resource => setCurrentImage(resource.id)} />
 
               <div className="ia-annotated-image-container">

@@ -1,10 +1,23 @@
+.ia-thumbnail-strip .thumbnail-strip-item {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-tiny);
+}
+
 .ia-thumbnail-strip .thumbnail-wrapper {
   box-sizing: border-box;
   cursor: pointer;
   display: flex;
   justify-content: center;
-  padding: 10px;
+  padding: 10px 10px 0px 10px;
   width: 100%;
+}
+
+.ia-thumbnail-strip .thumbnail-strip-item .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ia-thumbnail-strip .thumbnail {

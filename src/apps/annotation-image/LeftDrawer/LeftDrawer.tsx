@@ -1,4 +1,4 @@
-import type { Resource } from 'manifesto.js';
+import type { Resource, Sequence } from 'manifesto.js';
 import { animated } from '@react-spring/web';
 import { useDrawerTransition, type DrawerPanel } from '@components/AnnotationDesktop';
 import { IIIFThumbnailStrip } from '../IIIF/IIIFThumbnailStrip';
@@ -9,7 +9,7 @@ interface LeftDrawerProps {
 
   currentPanel?: DrawerPanel;
 
-  images?: Resource[];
+  iiifSequence?: Sequence;
 
   onSelectImage(image: Resource): void;
 
@@ -32,7 +32,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       style={style}>
       <aside>
         <IIIFThumbnailStrip 
-          images={props.images} 
+          sequence={props.iiifSequence} 
           onClick={props.onSelectImage} />
       </aside>
     </animated.div> 
