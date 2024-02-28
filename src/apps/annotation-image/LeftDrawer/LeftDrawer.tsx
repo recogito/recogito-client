@@ -1,7 +1,7 @@
 import type { Resource, Sequence } from 'manifesto.js';
 import { animated } from '@react-spring/web';
 import { useDrawerTransition, type DrawerPanel } from '@components/AnnotationDesktop';
-import { IIIFThumbnailStrip } from '../IIIF/IIIFThumbnailStrip';
+import { IIIFThumbnailStrip } from '../IIIF';
 
 import './LeftDrawer.css';
 

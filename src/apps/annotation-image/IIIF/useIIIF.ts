@@ -4,6 +4,21 @@ import type { DocumentInTaggedContext } from 'src/Types';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
+// Performs a simple sanity check - to be updated in the future!
+const isSupported = (manifest: Manifest) => {
+  // Require exactly one sequence
+  if (!manifest?.getSequences() || manifest.getSequences().length !== 1)
+    return false;
+
+  const canvases = manifest.getSequences()[0].getCanvases();
+
+  // Require a list of canvases, with length > 0
+  if (!canvases || !Array.isArray(canvases) || canvases.length === 0)
+    return false;
+
+  return true;
+}
+
 /** 
  * TODO add additional checks on the document metadata, to ensure
  * we are dealing with a IIIF (image or presentation) manifest.
@@ -13,6 +28,8 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
   const [sequence, setSequence] = useState<Sequence | undefined>();
 
   const [currentImage, setCurrentImage] = useState<string | undefined>();
+
+  const [manifestError, setManifestError] = useState<string | undefined>();
 
   const [manifestType, setManifestType] = useState<ManifestType | undefined>();
 
@@ -28,17 +45,22 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
         setCurrentImage(url);
         setManifestType('IMAGE');
       } else {
-        Utils.loadManifest(url).then(manifest => {
-          const sequence = (Utils.parseManifest(manifest) as Manifest).getSequences()[0];
+        Utils.loadManifest(url).then(data => {
+          const manifest = Utils.parseManifest(data) as Manifest;
+          if (isSupported(manifest)) {
+            const sequence = manifest.getSequences()[0];
 
-          // Hm... this makes a whole lot of assumptions about the manifest. 
-          // TODO run some kind of initial validation/sanity check and display
-          // a message to the user if this fails
-          const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
+            // Hm... this makes a whole lot of assumptions about the manifest. 
+            // TODO run some kind of initial validation/sanity check and display
+            // a message to the user if this fails
+            const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
 
-          setSequence(sequence);
-          setCurrentImage(firstImage);
-          setManifestType('PRESENTATION');
+            setSequence(sequence);
+            setCurrentImage(firstImage);
+            setManifestType('PRESENTATION');
+          } else {
+            setManifestError(`Unsupported IIIF manifest: ${url}`)
+          }
         })
       }
     }
@@ -71,6 +93,7 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
     currentImage,
     isPresentationManifest,
     isImageManifest,
+    manifestError,
     next,
     previous,
     setCurrentImage,

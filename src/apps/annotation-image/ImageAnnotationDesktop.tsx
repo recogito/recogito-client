@@ -12,7 +12,7 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { Menubar } from './Menubar';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
-import { useIIIF } from './IIIF/useIIIF';
+import { useIIIF, ManifestErrorDialog } from './IIIF';
 import { 
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
@@ -29,7 +29,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
-  const { isPresentationManifest, sequence, currentImage, setCurrentImage } = useIIIF(props.document);
+  const { 
+    isPresentationManifest, 
+    manifestError,
+    sequence, 
+    currentImage, 
+    setCurrentImage 
+  } = useIIIF(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
@@ -191,6 +197,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               </div>
             )}
           </div>
+          
+          {manifestError && (
+            <ManifestErrorDialog 
+              document={props.document}
+              i18n={props.i18n} 
+              message={manifestError} />
+          )}
         </DocumentNotes>
       </ColorState>
     </FilterState>
