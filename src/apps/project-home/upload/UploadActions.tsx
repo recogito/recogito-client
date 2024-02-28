@@ -1,22 +1,21 @@
 import { ReactNode, useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { File, LinkSimple, Plus } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
-import { IIIFDialog } from './dialogs';
+import { IIIFDialog, IIIFManifest } from './dialogs';
+import type { Protocol, Translations } from 'src/Types';
 
 import './UploadActions.css';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
-// For future extension...
-export type UploadFormat = 'IIIF';
-
 interface UploadActionsProps {
+
   i18n: Translations;
 
   onUpload(): void;
 
-  onImport(format: UploadFormat, url: string): void;
+  onImport(format: Protocol, url: string): void;
+
 }
 
 export const UploadActions = (props: UploadActionsProps) => {
@@ -25,9 +24,9 @@ export const UploadActions = (props: UploadActionsProps) => {
   const [dialog, setDialog] = useState<ReactNode | undefined>();
 
   const onImportIIIF = () => {
-    const onSubmit = (url: string) => {
+    const onSubmit = (manifest: IIIFManifest) => {
       setDialog(undefined);
-      props.onImport('IIIF', url);
+      props.onImport(manifest.protocol, manifest.url);
     };
 
     setDialog(

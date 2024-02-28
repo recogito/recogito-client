@@ -1,3 +1,5 @@
+import type { Protocol } from "src/Types";
+
 export interface Upload {
 
   name: string;
@@ -9,6 +11,8 @@ export interface Upload {
   file?: File;
 
   url?: string;
+
+  protocol?: Protocol;
 
 }
 

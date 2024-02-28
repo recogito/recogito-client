@@ -8,7 +8,6 @@ import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import {
   UploadActions,
-  UploadFormat,
   UploadTracker,
   useUpload,
   useDragAndDrop,
@@ -23,6 +22,7 @@ import type {
   DocumentInContext,
   ExtendedProjectData,
   MyProfile,
+  Protocol,
   Translations,
 } from 'src/Types';
 
@@ -109,7 +109,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { getRootProps, getInputProps, isDragActive, open } =
     useDragAndDrop(onDrop);
 
-  const onImportRemote = (format: UploadFormat, url: string) => {
+  const onImportRemote = (protocol: Protocol, url: string) => {
     setShowUploads(true);
 
     addUploads([
@@ -118,6 +118,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         projectId: project.id,
         contextId: defaultContext!.id,
         url,
+        protocol
       },
     ]);
   };
@@ -292,6 +293,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             isAdmin={isAdmin}
           />
         </div>
+
         <UploadTracker
           i18n={props.i18n}
           show={showUploads}

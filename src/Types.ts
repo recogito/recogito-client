@@ -164,7 +164,7 @@ export const ContentTypes = [
 
 export type ContentType = (typeof ContentTypes)[number];
 
-export const Protocols = ['IIIF_IMAGE'] as const;
+export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
 export type Protocol = (typeof Protocols)[number];
 

@@ -22,7 +22,7 @@ const isValidHTTPSURL = (str: string) => {
 
 interface ValidationResult {
 
-  type: 'image' | 'manifest' | string;
+  type: 'image' | 'manifest' | 'collection';
 
   majorVersion: number;
 

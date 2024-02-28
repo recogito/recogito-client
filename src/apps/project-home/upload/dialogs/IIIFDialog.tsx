@@ -4,9 +4,17 @@ import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { Spinner } from '@components/Spinner';
 import { useIIIFValidation } from './useIIIFValidation';
-import type { Translations } from 'src/Types';
+import type { Protocol, Translations } from 'src/Types';
 
 import './IIIFDialog.css';
+
+export interface IIIFManifest {
+
+  url: string;
+
+  protocol: Protocol;
+
+}
 
 interface IIIFDialogProps {
 
@@ -14,7 +22,7 @@ interface IIIFDialogProps {
 
   onCancel(): void;
 
-  onSubmit(url: string): void;
+  onSubmit(manifest: IIIFManifest): void;
 
 }
 
@@ -34,8 +42,14 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
   const onSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
-    if (value && isValid)
-      props.onSubmit(value);
+    if (value && isValid) {
+      const manifest: IIIFManifest = {
+        url: value,
+        protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
+      };
+
+      props.onSubmit(manifest);
+    }
   }
 
   return (
