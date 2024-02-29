@@ -16,7 +16,6 @@ import { useDocumentList } from './useDocumentList';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
 import { DocumentLibrary } from '../../components/DocumentLibrary';
-
 import type {
   Document,
   DocumentInContext,
@@ -27,6 +26,7 @@ import type {
 } from 'src/Types';
 
 import './ProjectHome.css';
+import { validateIIIF } from './upload/dialogs/useIIIFValidation';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -81,8 +81,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         type: 'error',
       });
     } else {
-      setShowUploads(true);
-
       if (Array.isArray(accepted)) {
         addUploads(
           accepted.map((file) => ({
@@ -92,16 +90,30 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             file,
           }))
         );
+
+        setShowUploads(true);
       } else if (typeof accepted === 'string') {
-        // IIIF URL
-        addUploads([
-          {
-            name: accepted, // TODO find a better solution
-            projectId: project.id,
-            contextId: defaultContext!.id,
-            url: accepted,
-          },
-        ]);
+        validateIIIF(accepted, props.i18n).then(({ isValid, result, error }) => {
+          if (isValid) {
+            addUploads([
+              {
+                name: result?.label || accepted,
+                projectId: project.id,
+                contextId: defaultContext!.id,
+                url: accepted,
+                protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
+              },
+            ]);
+
+            setShowUploads(true);
+          } else {
+            setToast({
+              title: 'Error',
+              description: error,
+              type: 'error'
+            })
+          }
+        });
       }
     }
   };

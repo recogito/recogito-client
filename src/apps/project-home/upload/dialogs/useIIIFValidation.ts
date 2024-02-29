@@ -21,15 +21,21 @@ const isValidHTTPSURL = (str: string) => {
 
 interface ValidationResult {
 
-  type: 'image' | 'manifest' | 'collection';
+  isValid: boolean;
 
-  majorVersion: number;
+  result?: {
 
-  label?: string;
+    type: 'image' | 'manifest' | 'collection';
+
+    majorVersion: number;
+  
+    label?: string;
+  
+  }
+
+  error?: 'invalid_url' | 'fetch_error' | 'invalid_manifest' | 'unsupported_manifest_type';
 
 }
-
-type Error = 'invalid_url' | 'fetch_error' | 'invalid_manifest' | 'unsupported_manifest_type';
 
 const getDefaultLabel = (dict: LanguageString | undefined, lang: string) => {
   if (!dict)
@@ -54,72 +60,93 @@ const getDefaultLabel = (dict: LanguageString | undefined, lang: string) => {
   }
 }
 
-export const useIIIFValidation = (url: string, i18n: Translations) => {
-
-  const [isFetching, setIsFetching] = useState(false);
-
-  const [lastError, setLastError] = useState<Error | undefined>();
-
-  const [isValid, setIsValid] = useState(false);
-
-  const [result, setResult] = useState<ValidationResult | undefined>();
-
-  const validate = (url: string) => {
-    if (isValidHTTPSURL(url)) {
-      setIsFetching(true);
-
-      fetch(url)
-        .then((response) => response.json())
-        .then(data => {
-          setIsFetching(false);
-
+export const validateIIIF = (url: string, i18n: Translations): Promise<ValidationResult> => {
+  if (isValidHTTPSURL(url)) {
+    return fetch(url)
+      .then((response) => response.json())
+      .then(data => {
           try {
             const parsed = IIIF.parse(data);
 
             if (parsed.type === 'image') {
-              setLastError(undefined);
-              setIsValid(true);
-              setResult({ type: 'image', majorVersion: parsed.majorVersion });
+              // Image API v1/2/3
+              return {
+                isValid: true,
+                result: {
+                  type: 'image',
+                  majorVersion: parsed.majorVersion
+                }
+              } as ValidationResult;
             } else if (parsed.type === 'manifest') {
-
+              // Presentation API v1/2/3
               const label = getDefaultLabel(parsed.label, i18n.lang);
-
-              setLastError(undefined);
-              setIsValid(true);
-              setResult({ type: 'manifest', majorVersion: parsed.majorVersion, label });
+              return {
+                isValid: true,
+                result: {
+                  type: 'manifest',
+                  majorVersion: parsed.majorVersion, 
+                  label 
+                }
+              } as ValidationResult;
             } else {
-              setLastError('unsupported_manifest_type');
-              setIsValid(false);
-              setResult({ type: parsed.type, majorVersion: parsed.majorVersion });
+              // Probably collection manifest... unsupported!
+              return {
+                isValid: false,
+                result: {
+                  type: parsed.type,
+                  majorVersion: parsed.majorVersion
+                },
+                error: 'unsupported_manifest_type'
+              } as ValidationResult;
             }
           } catch (error) {
+            // Exception during parse - return the error
             console.error(error);
-            setLastError('invalid_manifest');
-            setIsValid(false);
-            setResult(undefined);
+            return {
+              isValid: false,
+              error: 'invalid_manifest'
+            } as ValidationResult;
           }
         })
-        .catch(() => {
-          setIsFetching(false);
-          setLastError('fetch_error');
-          setIsValid(false);
-          setResult(undefined);
+        .catch(error => {
+          console.error(error);
+
+          // HTTP fetch or connection error
+          return {
+            isValid: false,
+            error: 'fetch_error'
+          };
         });
-    } else {
+  } else {
+    return Promise.resolve({
+      isValid: false,
+      error: 'invalid_url'
+    });
+  } 
+}
+
+export const useIIIFValidation = (url: string, i18n: Translations) => {
+
+  const [isFetching, setIsFetching] = useState(false);
+
+  const [lastResult, setLastResult] = useState<ValidationResult | undefined>();
+
+  const validate = (url: string) => {
+    setIsFetching(true);
+
+    validateIIIF(url, i18n).then(result => {
+      setLastResult(result);
       setIsFetching(false);
-      setLastError('invalid_url');
-      setIsValid(false);
-      setResult(undefined);
-    }
+    });
   }
 
   useEffect(() => validate(url), [url])
 
   return {
     isFetching,
-    isValid,
-    lastError,
-    result,
+    isValid: lastResult?.isValid,
+    lastError: lastResult?.error,
+    result: lastResult?.result,
     validate
   }
 
