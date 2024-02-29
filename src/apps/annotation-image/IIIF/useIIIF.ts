@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Utils, Manifest, Resource, Sequence } from 'manifesto.js';
+import { Utils, Manifest, Resource, Sequence, Service } from 'manifesto.js';
 import type { DocumentInTaggedContext } from 'src/Types';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
@@ -47,21 +47,29 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
       } else {
         Utils.loadManifest(url).then(data => {
           const manifest = Utils.parseManifest(data) as Manifest;
+
           if (isSupported(manifest)) {
             const sequence = manifest.getSequences()[0];
 
             // Hm... this makes a whole lot of assumptions about the manifest. 
             // TODO run some kind of initial validation/sanity check and display
             // a message to the user if this fails
-            const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
-
+            // const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
+            
+            // Seems to be the more reliable approach...
+            const firstImage = getImageManifestURL(sequence.getCanvases()[0].getImages()[0].getResource());
+            
             setSequence(sequence);
             setCurrentImage(firstImage);
             setManifestType('PRESENTATION');
           } else {
+            console.log('unsupported manifest');
+
             setManifestError(`Unsupported IIIF manifest: ${url}`)
           }
-        })
+        }).catch(error => {
+          console.error('Error loading manifest', error);
+        });
       }
     }
   }, [document.meta_data?.url]);
@@ -101,3 +109,6 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
   };
 
 }
+
+export const getImageManifestURL = (image: Resource) => `${image.getServices()[0].id}/info.json`;
+

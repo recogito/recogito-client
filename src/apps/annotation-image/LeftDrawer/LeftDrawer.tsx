@@ -13,7 +13,7 @@ interface LeftDrawerProps {
 
   iiifSequence?: Sequence;
 
-  onSelectImage(image: Resource): void;
+  onChangeImage(url: string): void;
 
 }
 
@@ -36,7 +36,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
         <IIIFThumbnailStrip 
           currentImage={props.currentImage}
           sequence={props.iiifSequence} 
-          onClick={props.onSelectImage} />
+          onSelect={props.onChangeImage} />
       </aside>
     </animated.div> 
   ))

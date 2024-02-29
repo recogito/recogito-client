@@ -4,6 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { IIIFThumbnail } from './IIIFThumbnail';
 
 import './IIIFThumbnailStrip.css';
+import { getImageManifestURL } from './useIIIF';
 
 interface IIIFThumbnailStripProps {
 
@@ -11,7 +12,7 @@ interface IIIFThumbnailStripProps {
 
   sequence?: Sequence;
 
-  onClick(resource: Resource): void;
+  onSelect(url: string): void;
 
 }
 
@@ -29,7 +30,8 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
     return [...all, ...canvas.getImages().map(i => ({ label: canvas.getLabel().getValue(), resource: i.getResource() }))];
   }, []) : [];
 
-  const isSelected = (resource: Resource) => resource.id === props.currentImage;
+  const isSelected = (resource: Resource) =>
+    getImageManifestURL(resource) === props.currentImage;
 
   const Row = ({ index, style }: { index: number, style: React.CSSProperties}) => {   
     const { resource, label } = thumbnails[index];
@@ -38,7 +40,7 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
       <div 
         className={`thumbnail-strip-item${isSelected(resource) ? ' selected': ''}`} 
         style={style} 
-        onClick={() => props.onClick(resource)}>
+        onClick={() => props.onSelect(getImageManifestURL(resource))}>
         <IIIFThumbnail image={resource} />
         <span className="label">{label}</span>
       </div>

@@ -62,7 +62,7 @@ if (document.data.content_type === 'text/plain') {
   viewer = 'TEI';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE') {
+} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
   viewer = 'OPENSEADRAGON';
 } else {
   // Should never happen

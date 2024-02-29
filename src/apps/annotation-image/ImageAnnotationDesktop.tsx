@@ -155,7 +155,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 currentImage={currentImage}
                 currentPanel={leftPanel} 
                 iiifSequence={sequence} 
-                onSelectImage={resource => setCurrentImage(resource.id)} />
+                onChangeImage={setCurrentImage} />
 
               <div className="ia-annotated-image-container">
                 {policies && currentImage && (
