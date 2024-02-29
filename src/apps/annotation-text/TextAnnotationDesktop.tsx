@@ -28,6 +28,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [showBranding, setShowBranding] = useState(true);
 
+  const [connectionError, setConnectionError] = useState(false);
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
@@ -144,7 +146,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 present={present}
                 rightPanel={rightPanel}
                 onToggleBranding={() => setShowBranding(!showBranding)}
-                onSetRightDrawer={onSetRightPanel} />
+                onSetRightDrawer={onSetRightPanel} 
+                showConnectionError={connectionError} />
             </div>
 
             <main>
@@ -164,6 +167,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                   tagVocabulary={tagVocabulary}
                   usePopup={usePopup}
                   onChangePresent={setPresent}
+                  onConnectionError={() => setConnectionError(true)}
+                  onSaveError={() => setConnectionError(true)}
                   onLoad={() => setLoading(false)}
                   styleSheet={props.styleSheet}
                 />

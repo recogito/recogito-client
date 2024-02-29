@@ -3,7 +3,7 @@ import type { PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
-import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel } from '@components/AnnotationDesktop';
+import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { 
   ArrowsOutSimple,
   CaretLeft, 
@@ -13,7 +13,6 @@ import {
   MagnifyingGlassMinus, 
   MagnifyingGlassPlus, 
 } from '@phosphor-icons/react';
-import { ErrorBadge } from '@components/AnnotationDesktop/ErrorBadge';
 
 interface MenubarProps {
 
@@ -32,8 +31,6 @@ interface MenubarProps {
   onSetRightDrawer(panel?: DrawerPanel): void;
 
   showConnectionError: boolean;
-
-  showSaveError: boolean;
 
 }
 
@@ -99,7 +96,7 @@ export const Menubar = (props: MenubarProps) => {
           </button>
         </div>
 
-        {(props.showConnectionError || props.showSaveError) && (
+        {(props.showConnectionError) && (
           <ErrorBadge i18n={props.i18n} />
         )}
       </div>

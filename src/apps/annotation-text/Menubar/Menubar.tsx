@@ -1,7 +1,7 @@
 import { ArrowsOutSimple, CaretLeft, Chats, GraduationCap, ListBullets } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel } from '@components/AnnotationDesktop';
+import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
@@ -22,6 +22,8 @@ interface MenubarProps {
   onToggleBranding(): void;
 
   onSetRightDrawer(panel?: DrawerPanel): void;
+
+  showConnectionError: boolean;
 
 }
 
@@ -93,6 +95,10 @@ export const Menubar = (props: MenubarProps) => {
 
             <PDFControls i18n={props.i18n} />
           </>
+        )}
+
+        {(props.showConnectionError) && (
+          <ErrorBadge i18n={props.i18n} />
         )}
       </div>
 

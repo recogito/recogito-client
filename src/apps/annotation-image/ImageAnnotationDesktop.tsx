@@ -35,8 +35,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [connectionError, setConnectionError] = useState(false);
 
-  const [saveError, setSaveError] = useState(false);
-
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
@@ -126,15 +124,14 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               )}
               
               <Menubar 
-                showConnectionError={connectionError}
-                showSaveError={saveError}
                 i18n={props.i18n} 
                 document={props.document} 
                 present={present} 
                 rightPanel={rightPanel}
                 onZoom={onZoom}
                 onToggleBranding={() => setShowBranding(!showBranding)}
-                onSetRightDrawer={onSetRightPanel} />
+                onSetRightDrawer={onSetRightPanel} 
+                showConnectionError={connectionError} />
             </div>
 
             <main>
@@ -156,8 +153,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                     tagVocabulary={tagVocabulary}
                     usePopup={usePopup}
                     onChangePresent={setPresent}
-                    onConnectionErrorChanged={setConnectionError}
-                    onSaveError={() => setSaveError(true)}
+                    onConnectionError={() => setConnectionError(true)}
+                    onSaveError={() => setConnectionError(true)}
                     onLoad={() => setLoading(false)} />
                 )}
               </div>
