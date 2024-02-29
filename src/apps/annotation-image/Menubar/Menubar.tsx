@@ -30,6 +30,10 @@ interface MenubarProps {
 
   onSetRightDrawer(panel?: DrawerPanel): void;
 
+  showConnectionError: boolean;
+
+  showSaveError: boolean;
+
 }
 
 export const Menubar = (props: MenubarProps) => {
