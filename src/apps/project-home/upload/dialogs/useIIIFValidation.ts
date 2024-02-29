@@ -92,7 +92,8 @@ export const useIIIFValidation = (url: string, i18n: Translations) => {
               setIsValid(false);
               setResult({ type: parsed.type, majorVersion: parsed.majorVersion });
             }
-          } catch {
+          } catch (error) {
+            console.error(error);
             setLastError('invalid_manifest');
             setIsValid(false);
             setResult(undefined);
