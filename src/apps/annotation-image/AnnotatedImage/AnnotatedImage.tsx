@@ -49,7 +49,7 @@ interface AnnotatedImageProps {
 
   onChangePresent(present: PresentUser[]): void;
 
-  onConnectionError(): void;
+  onConnectionErrorChanged(error: boolean): void;
 
   onSaveError(): void;
 
@@ -124,8 +124,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           appearanceProvider={appearance}
           onInitialLoad={props.onLoad}
           onPresence={props.onChangePresent} 
-          onConnectError={props.onConnectionError}
-          onInitialLoadError={props.onConnectionError}
+          onConnected={() => props.onConnectionErrorChanged(false)}
+          onConnectError={() => props.onConnectionErrorChanged(true)}
+          onInitialLoadError={() => props.onConnectionErrorChanged(true)}
           onSaveError={props.onSaveError}
           privacyMode={privacy === 'PRIVATE'} />
       }

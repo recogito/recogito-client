@@ -13,6 +13,7 @@ import {
   MagnifyingGlassMinus, 
   MagnifyingGlassPlus, 
 } from '@phosphor-icons/react';
+import { ErrorBadge } from '@components/AnnotationDesktop/ErrorBadge';
 
 interface MenubarProps {
 
@@ -97,6 +98,10 @@ export const Menubar = (props: MenubarProps) => {
             <ListBullets size={17} />
           </button>
         </div>
+
+        {(props.showConnectionError || props.showSaveError) && (
+          <ErrorBadge i18n={props.i18n} />
+        )}
       </div>
 
       <div className="anno-menubar-right ia-menubar-right">
