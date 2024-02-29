@@ -16,6 +16,7 @@ import { useDocumentList } from './useDocumentList';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
 import { DocumentLibrary } from '../../components/DocumentLibrary';
+import { validateIIIF } from './upload/dialogs/useIIIFValidation';
 import type {
   Document,
   DocumentInContext,
@@ -26,7 +27,6 @@ import type {
 } from 'src/Types';
 
 import './ProjectHome.css';
-import { validateIIIF } from './upload/dialogs/useIIIFValidation';
 
 export interface ProjectHomeProps {
   i18n: Translations;
