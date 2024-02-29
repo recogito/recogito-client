@@ -15,17 +15,21 @@ export const ErrorBadge = (props: ErrorBadgeProps) => {
   const onRefresh = () => location.reload();
 
   return (
-    <div className="anno-error-badge">
-      <div className="anno-error-badge-message">
-        {t['Connection Lost.']}
+    <>
+      <div className="anno-error-badge">
+        <div className="anno-error-badge-message">
+          {t['Connection Lost.']}
+        </div>
+
+        <button 
+          className="anno-error-refresh link"
+          onClick={onRefresh}>
+          {t['Try refreshing the page.']}
+        </button>
       </div>
 
-      <button 
-        className="anno-error-refresh link"
-        onClick={onRefresh}>
-        {t['Try refreshing the page.']}
-      </button>
-    </div>
+      <div className="anno-error-clicktrap" />
+    </>
   )
 
 }

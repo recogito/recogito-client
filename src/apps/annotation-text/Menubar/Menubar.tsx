@@ -97,7 +97,7 @@ export const Menubar = (props: MenubarProps) => {
           </>
         )}
 
-        {(props.showConnectionError) && (
+        {props.showConnectionError && (
           <ErrorBadge i18n={props.i18n} />
         )}
       </div>
