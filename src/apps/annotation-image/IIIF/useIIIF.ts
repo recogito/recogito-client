@@ -4,7 +4,7 @@ import type { DocumentInTaggedContext } from 'src/Types';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
-// Performs a simple sanity check - to be updated in the future!
+// Performs a simple sanity check
 const isSupported = (manifest: Manifest) => {
   // Require exactly one sequence
   if (!manifest?.getSequences() || manifest.getSequences().length !== 1)

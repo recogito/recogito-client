@@ -1,10 +1,10 @@
 import type { Resource, Sequence } from 'manifesto.js';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import { getImageManifestURL } from './useIIIF';
 import { IIIFThumbnail } from './IIIFThumbnail';
 
 import './IIIFThumbnailStrip.css';
-import { getImageManifestURL } from './useIIIF';
 
 interface IIIFThumbnailStripProps {
 
