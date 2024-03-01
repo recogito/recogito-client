@@ -3,7 +3,7 @@ import type { PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
-import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel } from '@components/AnnotationDesktop';
+import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { 
   ArrowsOutSimple,
   CaretLeft, 
@@ -33,6 +33,8 @@ interface MenubarProps {
   onSetLeftDrawer(panel?: DrawerPanel): void;
 
   onSetRightDrawer(panel?: DrawerPanel): void;
+
+  showConnectionError: boolean;
 
 }
 
@@ -104,6 +106,10 @@ export const Menubar = (props: MenubarProps) => {
             <ListBullets size={17} />
           </button>
         </div>
+
+        {(props.showConnectionError) && (
+          <ErrorBadge i18n={props.i18n} />
+        )}
       </div>
 
       <div className="anno-menubar-right ia-menubar-right">

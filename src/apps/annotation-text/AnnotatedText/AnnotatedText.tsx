@@ -45,6 +45,10 @@ interface AnnotatedTextProps {
 
   onChangePresent(present: PresentUser[]): void;
 
+  onConnectionError(): void;
+
+  onSaveError(): void;
+
   onLoad(): void;
 
 }
@@ -129,6 +133,9 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               appearanceProvider={createAppearenceProvider()}
               onInitialLoad={() => setAnnotationsLoading(false)}
               onPresence={props.onChangePresent}
+              onConnectError={props.onConnectionError}
+              onInitialLoadError={props.onConnectionError}
+              onSaveError={props.onSaveError}
               privacyMode={privacy === 'PRIVATE'}
             />
           )}

@@ -1,0 +1,32 @@
+.anno-error-badge {
+  align-items: center;
+  background-color: rgba(255, 0, 0, 0.35);
+  border: 1px solid var(--red-500);
+  border-radius: var(--border-radius);
+  color: rgb(128, 0, 0);
+  display: flex;
+  gap: 0.5em;
+  margin-left: 10px;
+  font-size: var(--font-tiny);
+  padding: 1px 12px;
+  position: relative;
+  z-index: 999;
+}
+
+.anno-error-badge button.anno-error-refresh.link {
+  all: unset;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.anno-error-clicktrap {
+  background-color: rgba(255, 255, 255, 0.65);
+  position: fixed;
+  top: 0;
+  left: 0; 
+  width: 100vw;
+  height: 100vh;
+  z-index: 998;
+}
