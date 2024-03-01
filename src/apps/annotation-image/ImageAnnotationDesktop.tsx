@@ -33,6 +33,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [showBranding, setShowBranding] = useState(true);
 
+  const [connectionError, setConnectionError] = useState(false);
+
   const [present, setPresent] = useState<PresentUser[]>([]);
 
   const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
@@ -102,11 +104,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   }
 
-  const onError = (error: Error) => {
-    // TODO UI feedback
-    console.error(error);
-  }
-
   return (
     <FilterState present={present}>
       <ColorState present={present}>
@@ -114,7 +111,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           channelId={props.channelId}
           layerId={defaultLayer?.id}
           present={present}
-          onError={onError}>  
+          onError={() => setConnectionError(true)}>  
 
           <div className="anno-desktop ia-desktop">
             {loading && (
@@ -133,7 +130,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 rightPanel={rightPanel}
                 onZoom={onZoom}
                 onToggleBranding={() => setShowBranding(!showBranding)}
-                onSetRightDrawer={onSetRightPanel} />
+                onSetRightDrawer={onSetRightPanel} 
+                showConnectionError={connectionError} />
             </div>
 
             <main>
@@ -155,7 +153,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                     tagVocabulary={tagVocabulary}
                     usePopup={usePopup}
                     onChangePresent={setPresent}
-                    onConnectError={onConnectError}
+                    onConnectionError={() => setConnectionError(true)}
+                    onSaveError={() => setConnectionError(true)}
                     onLoad={() => setLoading(false)} />
                 )}
               </div>
