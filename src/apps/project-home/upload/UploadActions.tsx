@@ -65,7 +65,7 @@ export const UploadActions = (props: UploadActionsProps) => {
               <LinkSimple size={16} />
               <div>
                 <span>{t['From IIIF image manifest']}</span>
-                <p>{t['No presentation manifests']}</p>
+                <p>{t['IIIF import hint']}</p>
               </div>
             </Item>
           </Content>

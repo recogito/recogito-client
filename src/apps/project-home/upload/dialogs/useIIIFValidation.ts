@@ -33,7 +33,7 @@ interface ValidationResult {
   
   }
 
-  error?: 'invalid_url' | 'fetch_error' | 'invalid_manifest' | 'unsupported_manifest_type';
+  error?: 'invalid_url' | 'not_https' | 'fetch_error' | 'invalid_manifest' | 'unsupported_manifest_type';
 
 }
 
@@ -120,7 +120,7 @@ export const validateIIIF = (url: string, i18n: Translations): Promise<Validatio
   } else {
     return Promise.resolve({
       isValid: false,
-      error: 'invalid_url'
+      error: url.startsWith('https') ? 'invalid_url' : 'not_https'
     });
   } 
 }

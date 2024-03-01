@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Utils, Manifest, Resource, Sequence, Service } from 'manifesto.js';
+import { Utils, Manifest, Resource, Sequence } from 'manifesto.js';
 import type { DocumentInTaggedContext } from 'src/Types';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';

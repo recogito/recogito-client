@@ -66,20 +66,20 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                 type="text" 
                 className={lastError && value && !isFetching ? "invalid" : undefined}
                 value={value} 
-                placeholder={t['Paste URL to a IIIF image manifest']}
+                placeholder={t['Paste URL to a IIIF manifest']}
                 onChange={evt => setValue(evt.target.value)} /> 
 
               {isFetching ? (
                 <p className="message fetching">
                   <Spinner 
                     className="icon text-bottom" 
-                    size={12} /> Validating manifest
+                    size={12} /> {t['Validating manifest']}
                 </p>
               ) : lastError && value ? (
                 <p className="message invalid">
                   <WarningOctagon 
                     className="icon text-bottom" 
-                    size={18} weight="fill" /> {lastError}
+                    size={18} weight="fill" /> {t[lastError]}
                 </p>
               ) : value && result && (
                 <p className="message valid">
@@ -88,7 +88,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                     size={18} /> 
                     
                   <span>
-                    Valid manifest: {result.type === 'image' ? 'IIIF Image API' : 'IIIF Presentation API'} v{result.majorVersion}
+                    {t['Valid manifest:']} {result.type === 'image' ? 'IIIF Image API' : 'IIIF Presentation API'} v{result.majorVersion}
                   </span>
                 </p>   
               )}
