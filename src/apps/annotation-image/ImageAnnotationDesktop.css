@@ -34,3 +34,7 @@
 .ia-drawer .annotation-list {
   padding-right: 10px;
 }
+
+.manifest-error footer {
+  justify-content: flex-end;
+}

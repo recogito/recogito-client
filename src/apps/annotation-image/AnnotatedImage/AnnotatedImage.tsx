@@ -29,7 +29,9 @@ interface AnnotatedImageProps {
 
   defaultLayer?: Layer;
 
-  document: DocumentInTaggedContext;
+  imageManifestURL: string;
+
+  isPresentationManifest?: boolean;
 
   filter?: (a: ImageAnnotation) => boolean;
 
@@ -72,7 +74,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
   const options: OpenSeadragon.Options = useMemo(() => ({
-    tileSources: props.document.meta_data?.url,
+    tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
       clickToZoom: false
     },
@@ -81,7 +83,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     minZoomLevel: 0.4,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
-  }), [props.document.meta_data?.url]);
+  }), [props.imageManifestURL]);
 
   const selectAction = (annotation: ImageAnnotation) => {
     // Annotation targets are editable for creators and admins
@@ -122,12 +124,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           defaultLayer={props.defaultLayer?.id} 
           layerIds={props.layers.map(layer => layer.id)}
           appearanceProvider={appearance}
+          privacyMode={privacy === 'PRIVATE'} 
+          source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
           onInitialLoad={props.onLoad}
           onPresence={props.onChangePresent} 
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
-          onSaveError={props.onSaveError}
-          privacyMode={privacy === 'PRIVATE'} />
+          onSaveError={props.onSaveError} />
       }
 
       <OpenSeadragonViewer 

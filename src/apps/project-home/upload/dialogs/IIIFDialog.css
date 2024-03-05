@@ -11,9 +11,24 @@
   box-shadow: 0 0 0 1px var(--input-error-color);
 }
 
-.import-iiif-dialog .invalid-message {
-  color: var(--red-500);
+.import-iiif-dialog p.message {
+  align-items: center;
+  display: flex;
   font-size: var(--font-tiny);
+  gap: 0.5em;
+  margin: 0.4em 5px;
+}
+
+.import-iiif-dialog .message.fetching {
+  color: #2789e4;
+}
+
+.import-iiif-dialog .message.valid {
+  color: var(--green-500);
+}
+
+.import-iiif-dialog .message.invalid {
+  color: var(--red-500);
 }
 
 .import-iiif-dialog .buttons {

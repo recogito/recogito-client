@@ -10,7 +10,9 @@ import type { Layer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { Menubar } from './Menubar';
+import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
+import { useIIIF, ManifestErrorDialog } from './IIIF';
 import { 
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
@@ -27,6 +29,14 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
+  const { 
+    isPresentationManifest, 
+    manifestError,
+    sequence, 
+    currentImage, 
+    setCurrentImage 
+  } = useIIIF(props.document);
+
   const policies = useLayerPolicies(props.document.layers[0].id);
 
   const [loading, setLoading] = useState(true);
@@ -36,6 +46,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const [connectionError, setConnectionError] = useState(false);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [leftPanel, setLeftPanel] = useState<DrawerPanel | undefined>();
 
   const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
 
@@ -127,23 +139,30 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 i18n={props.i18n} 
                 document={props.document} 
                 present={present} 
+                leftPanel={leftPanel}
                 rightPanel={rightPanel}
                 onZoom={onZoom}
                 onToggleBranding={() => setShowBranding(!showBranding)}
+                onSetLeftDrawer={setLeftPanel}
                 onSetRightDrawer={onSetRightPanel} 
                 showConnectionError={connectionError} />
             </div>
 
             <main>
-              <div className="ia-drawer ia-drawer-left" />
+              <LeftDrawer 
+                currentImage={currentImage}
+                currentPanel={leftPanel} 
+                iiifSequence={sequence} 
+                onChangeImage={setCurrentImage} />
 
               <div className="ia-annotated-image-container">
-                {policies && (
+                {policies && currentImage && (
                   <AnnotatedImage
                     ref={viewer}
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
-                    document={props.document}
+                    imageManifestURL={currentImage}
+                    isPresentationManifest={isPresentationManifest}
                     filter={filter}
                     i18n={props.i18n}
                     layers={layers}
@@ -177,6 +196,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               </div>
             )}
           </div>
+          
+          {manifestError && (
+            <ManifestErrorDialog 
+              document={props.document}
+              i18n={props.i18n} 
+              message={manifestError} />
+          )}
         </DocumentNotes>
       </ColorState>
     </FilterState>
