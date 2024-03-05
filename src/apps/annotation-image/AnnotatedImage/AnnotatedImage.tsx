@@ -1,4 +1,4 @@
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useMemo, useEffect, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
@@ -18,6 +18,7 @@ import {
   PresentUser, 
   useAnnotator 
 } from '@annotorious/react';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -71,6 +72,24 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const appearance = useMemo(() => createAppearenceProvider(), []);
 
+  const [authHeaders, setAuthHeaders] = useState<any>();
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data } ) => {
+      const { access_token } = data.session!;
+
+      // @ts-ignore
+      const { supabaseKey } = supabase;
+
+      const headers = {
+        'Apikeyzz': supabaseKey,
+        'Authorization': `Bearer ${access_token}`
+      };
+
+      setAuthHeaders(headers);
+    })
+  }, []);
+
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.document.meta_data?.url,
     gestureSettingsMouse: {
@@ -80,8 +99,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     crossOriginPolicy: 'Anonymous',
     minZoomLevel: 0.4,
     visibilityRatio: 0.2,
-    preserveImageSizeOnResize: true
-  }), [props.document.meta_data?.url]);
+    preserveImageSizeOnResize: true,
+    ajaxHeaders: authHeaders
+  }), [props.document.meta_data?.url, authHeaders]);
 
   const selectAction = (annotation: ImageAnnotation) => {
     // Annotation targets are editable for creators and admins
@@ -102,7 +122,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     }
   }
 
-  return (
+  return authHeaders && (
     <OpenSeadragonAnnotator
       autoSave
       drawingEnabled={drawingEnabled}
