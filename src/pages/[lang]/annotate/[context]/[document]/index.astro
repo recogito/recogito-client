@@ -1,13 +1,13 @@
 ---
 import crypto from 'crypto';
-import HeaderLayout from '@layouts/HeaderLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext } from '@backend/helpers';
 import { getCollection } from '@backend/crud/collections';
-import type { Collection } from 'src/Types';
+import { isOpenJoinEditFromContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -28,6 +28,15 @@ if (!contextId || !documentId) {
 // Will return empty if this user has no access priviliges
 const document = await getDocumentInContext(supabase, documentId, contextId);
 if (document.error || !document.data) {
+  // Lets check if this is an open join project
+  const resp = await isOpenJoinEditFromContext(supabase, contextId);
+  if (resp) {
+    return Astro.redirect(
+      `/${lang}/projects/${resp}/join?redirect-to=${Astro.url.pathname}`
+    );
+  }
+
+  console.log('Error!');
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
@@ -39,8 +48,9 @@ if (document.error || !document.data) {
 
 // If the document is part of a collection, see if it has custom css
 let styleSheet;
+
 if (document.data.collection_id) {
-  console.info(`Collection found, id: ${document.data.collection_id}`);
+  // console.info(`Collection found, id: ${document.data.collection_id}`);
   const resp = await getCollection(supabase, document.data.collection_id);
   if (!resp.error && resp.data) {
     styleSheet = resp.data.custom_css;
@@ -62,7 +72,7 @@ if (document.data.content_type === 'text/plain') {
   viewer = 'TEI';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE') {
+} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
   viewer = 'OPENSEADRAGON';
 } else {
   // Should never happen
@@ -71,7 +81,13 @@ if (document.data.content_type === 'text/plain') {
 }
 ---
 
-<HeaderLayout title='Annotation'>
+<BaseLayout title={document.data.name}>
+  {
+    viewer === 'TEI' && !styleSheet && (
+      <link rel='stylesheet' href='/tei.css' slot='head' />
+    )
+  }
+
   {
     viewer === 'OPENSEADRAGON' ? (
       <ImageAnnotation
@@ -90,6 +106,11 @@ if (document.data.content_type === 'text/plain') {
       />
     )
   }
-</HeaderLayout>
+</BaseLayout>
 
-<style></style>
+<style>
+  html,
+  body {
+    height: 100%;
+  }
+</style>

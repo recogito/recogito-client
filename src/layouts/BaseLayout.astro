@@ -10,6 +10,10 @@ export interface Props {
 
 const { title } = Astro.props;
 
+const siteColor = config.branding.site_color;
+const textColor = config.branding.contrast_color;
+const backgroundColor = config.branding.background_color;
+
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 ---
 
@@ -17,10 +21,11 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 <html lang={getLangFromUrl(Astro.url)}>
   <head>
     <meta charset='UTF-8' />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
     <meta name='generator' content={Astro.generator} />
     <link rel="icon" type="image/x-icon" href={favicon}>
     <title>{title}</title>
+    <slot name="head" /> 
   </head>
   <body>
     <slot />
@@ -42,3 +47,5 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     </script>
   </body>
 </html>
+
+<style define:vars={{ siteColor, backgroundColor, textColor }}></style>

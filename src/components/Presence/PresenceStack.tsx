@@ -2,9 +2,9 @@ import { isMe } from '@recogito/annotorious-supabase';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import { Avatar } from '@components/Avatar';
+import { PresenceViewMoreButton } from './PresenceViewMoreButton';
 
 import './PresenceStack.css';
-import { PresenceViewMoreButton } from './PresenceViewMoreButton';
 
 interface PresenceStackProps {
 

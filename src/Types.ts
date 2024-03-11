@@ -10,6 +10,13 @@ export interface UserProfile {
   avatar_url?: string;
 }
 
+export interface ExtendedUserProfile extends UserProfile {
+  email_address: string;
+  last_sign_in_at: string;
+  org_group_id: string;
+  org_group_name: string;
+}
+
 export type MyProfile = UserProfile & {
   created_at: string;
 
@@ -32,6 +39,10 @@ export interface Project {
   name: string;
 
   description?: string;
+
+  is_open_join: boolean;
+
+  is_open_edit: boolean;
 }
 
 /**
@@ -52,6 +63,10 @@ export interface ExtendedProjectData {
   name: string;
 
   description?: string;
+
+  is_open_join?: boolean;
+
+  is_open_edit?: boolean;
 
   contexts: Context[];
 
@@ -160,7 +175,7 @@ export const ContentTypes = [
 
 export type ContentType = (typeof ContentTypes)[number];
 
-export const Protocols = ['IIIF_IMAGE'] as const;
+export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
 export type Protocol = (typeof Protocols)[number];
 
@@ -172,6 +187,8 @@ export interface Context {
   description?: string;
 
   project_id: string;
+
+  is_project_default: boolean;
 }
 
 export interface TaggedContext extends Context {

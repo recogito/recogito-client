@@ -1,0 +1,43 @@
+.user-management {
+  box-sizing: context-box;
+}
+.user-management-content {
+  padding: 20px 40px;
+  clear: both;
+}
+
+.user-management-header {
+  box-sizing: border-box;
+  padding: 20px 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.user-management button.select-trigger {
+  justify-content: space-between;
+}
+
+.user-management p.anonymous-warning {
+  background-color: var(--red-500-10);
+  border: 1px solid var(--red-500);
+  border-radius: var(--border-radius);
+  color: var(--red-500);
+  font-size: var(--font-small);
+  max-width: 60ch;
+  margin: 1em 0 1em 0;
+  padding: 0.4em 0.6em;
+}
+
+.user-management p.anonymous-warning a {
+  color: var(--red-500);
+  text-decoration: underline;
+}
+.user-management-search {
+  margin-left: 10px;
+  z-index: 100;
+  position: relative;
+}

@@ -21,4 +21,5 @@
 
 .annotation-card-comments-container li {
   position: relative;
+  overflow-y: auto;
 }

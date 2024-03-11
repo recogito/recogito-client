@@ -1,0 +1,31 @@
+.mobile-reply-form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.mobile-reply-form-close {
+  right: 20px;
+  position: absolute;
+  top: 20px;
+}
+
+.mobile-reply-form textarea {
+  border: none;
+  border-radius: 0;
+  font-size: 1.2em;
+  height: 100%;
+  padding: 2.5%;
+  width: 100%;
+}
+
+.mobile-reply-form-footer {
+  background-color: #fff;
+  border-top: 1px solid var(--gray-200);
+  padding: 20px;
+}

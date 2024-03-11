@@ -8,7 +8,6 @@ import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import {
   UploadActions,
-  UploadFormat,
   UploadTracker,
   useUpload,
   useDragAndDrop,
@@ -17,12 +16,13 @@ import { useDocumentList } from './useDocumentList';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
 import { DocumentLibrary } from '../../components/DocumentLibrary';
-
+import { validateIIIF } from './upload/dialogs/useIIIFValidation';
 import type {
   Document,
   DocumentInContext,
   ExtendedProjectData,
   MyProfile,
+  Protocol,
   Translations,
 } from 'src/Types';
 
@@ -45,7 +45,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [addOpen, setAddOpen] = useState(false);
 
-  const defaultContext = project.contexts.find((c) => c.name === null);
+  const defaultContext = project.contexts.find((c) => c.is_project_default);
 
   const [documents, setDocuments] = useState<DocumentInContext[]>(
     props.documents
@@ -54,8 +54,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const projectPolicies = useProjectPolicies(project.id);
 
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
-
-  const canUpload = projectPolicies?.get('documents').has('INSERT');
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -71,7 +69,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const { addDocumentIds } = useDocumentList(
     project.id,
-    defaultContext!.id,
+    defaultContext?.id,
     (document) => setDocuments((d) => [...d, document])
   );
 
@@ -83,8 +81,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         type: 'error',
       });
     } else {
-      setShowUploads(true);
-
       if (Array.isArray(accepted)) {
         addUploads(
           accepted.map((file) => ({
@@ -94,16 +90,30 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             file,
           }))
         );
+
+        setShowUploads(true);
       } else if (typeof accepted === 'string') {
-        // IIIF URL
-        addUploads([
-          {
-            name: accepted, // TODO find a better solution
-            projectId: project.id,
-            contextId: defaultContext!.id,
-            url: accepted,
-          },
-        ]);
+        validateIIIF(accepted, props.i18n).then(({ isValid, result, error }) => {
+          if (isValid) {
+            addUploads([
+              {
+                name: result?.label || accepted,
+                projectId: project.id,
+                contextId: defaultContext!.id,
+                url: accepted,
+                protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
+              },
+            ]);
+
+            setShowUploads(true);
+          } else {
+            setToast({
+              title: 'Error',
+              description: error,
+              type: 'error'
+            })
+          }
+        });
       }
     }
   };
@@ -111,15 +121,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { getRootProps, getInputProps, isDragActive, open } =
     useDragAndDrop(onDrop);
 
-  const onImportRemote = (format: UploadFormat, url: string) => {
+  const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
     setShowUploads(true);
 
     addUploads([
       {
-        name: url, // TODO find a better solution
+        name: label || url,
         projectId: project.id,
         contextId: defaultContext!.id,
         url,
+        protocol
       },
     ]);
   };
@@ -212,7 +223,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             onError={() => onError('Error updating project description.')}
           />
 
-          {canUpload && (
+          {isAdmin && (
             <div className='admin-actions'>
               <button className='primary' onClick={onAddDocument}>
                 <Plus size={20} /> <span>{t['Add Document']}</span>
@@ -230,7 +241,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
         <div
           className='project-home-grid-wrapper'
-          {...(canUpload ? getRootProps() : {})}
+          {...(isAdmin ? getRootProps() : {})}
         >
           <div
             className='project-home-grid'
@@ -294,6 +305,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             isAdmin={isAdmin}
           />
         </div>
+
         <UploadTracker
           i18n={props.i18n}
           show={showUploads}

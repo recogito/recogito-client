@@ -1,0 +1,43 @@
+---
+import HeaderLayout from '@layouts/HeaderLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getMyProfile } from '@backend/crud';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { getProjectExtended } from '@backend/helpers';
+import { JoinProject } from '@apps/join-project';
+
+const lang = getLangFromUrl(Astro.url);
+
+const i18n = getTranslations(Astro.request, 'dashboard-projects');
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
+
+const projectId = Astro.params.project;
+
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+
+const project = await getProjectExtended(supabase, projectId as string);
+if (project.error || !project.data) {
+  const error = await fetch(`${Astro.url}/404`);
+  return new Response(error.body, {
+    headers: { 'Content-Type': 'text/html;charset=utf-8' },
+    status: 404,
+    statusText: 'Not Found',
+  });
+}
+---
+
+<HeaderLayout title='join'>
+  <JoinProject client:load i18n={i18n} project={project.data} />
+</HeaderLayout>
+
+<style>
+  h1 {
+    padding-left: 40px !important;
+  }
+</style>

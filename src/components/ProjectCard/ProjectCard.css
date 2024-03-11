@@ -93,6 +93,7 @@
   height: 26px;
   width: 26px;
 }
+
 .project-card-footer .avatar-stack .avatar + .avatar {
   margin-right: -10px;
 }

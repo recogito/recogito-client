@@ -5,7 +5,6 @@ import type { AnnotationBody } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 
 interface EditableCommentProps {
-
   i18n: Translations;
 
   editable: boolean;
@@ -15,11 +14,9 @@ interface EditableCommentProps {
   onChange(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
   onCanceled(): void;
-
 }
 
 export const EditableComment = (props: EditableCommentProps) => {
-  
   const { t } = props.i18n;
 
   const { comment, editable } = props;
@@ -63,13 +60,14 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const onSaveChange = (evt: React.FormEvent) => {
     evt.preventDefault();
+
     props.onChange(comment, {
       ...comment,
       // @ts-ignore
       format: renderType === 'quill' ? 'Quill' : 'TextPlain',
       value: renderType === 'text' ? (value as string) : JSON.stringify(value),
     });
-  }
+  };
 
   const onCancelChange = () => {
     props.onCanceled();
@@ -77,7 +75,7 @@ export const EditableComment = (props: EditableCommentProps) => {
   };
 
   return editable ? (
-    <form onSubmit={onSaveChange}>
+    <form>
       {renderType === 'text' ? (
         <TextareaAutosize
           className='no-drag'
@@ -101,7 +99,8 @@ export const EditableComment = (props: EditableCommentProps) => {
         <button
           disabled={value === comment.value}
           className='primary sm flat'
-          type='submit'
+          type='button'
+          onClick={onSaveChange}
         >
           {t['Save']}
         </button>

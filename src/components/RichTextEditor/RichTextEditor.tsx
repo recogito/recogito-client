@@ -1,5 +1,8 @@
-import { RefObject, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ReactQuill, { Range } from 'react-quill';
+import type { DeltaStatic } from 'quill';
+import { UrlDialog } from './UrlDialog';
+import type { Translations } from 'src/Types';
 import {
   ArrowCounterClockwise,
   ArrowClockwise,
@@ -7,18 +10,18 @@ import {
   Link,
   YoutubeLogo,
 } from '@phosphor-icons/react';
-import './styles.css';
-import type { DeltaStatic } from 'quill';
-import { UrlDialog } from './UrlDialog';
-import type { Translations } from 'src/Types';
+
+import './RichTextEditor.css';
 
 export interface RichTextEditorProps {
-  initialValue?: string;
-  value: string | undefined;
-  onChange(value: DeltaStatic): void;
-  placeholder?: string;
   editable?: boolean;
   i18n: Translations;
+  initialValue?: string;
+  placeholder?: string;
+  value: string | DeltaStatic | undefined;
+  onBlur(): void;
+  onChange(value: DeltaStatic): void;
+  onFocus(): void;
 }
 
 const CustomToolbar = () => (
@@ -49,6 +52,8 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
 
   const { t } = props.i18n;
 
+  const reactQuillRef = useRef<ReactQuill | null>(null);
+
   const modules = useMemo(
     () => ({
       toolbar: props.editable
@@ -72,8 +77,6 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
     []
   );
 
-  const quill = useRef<ReactQuill | undefined>();
-
   const formats = [
     'header',
     'bold',
@@ -90,8 +93,8 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
   ];
 
   function imageHandler() {
-    if (quill.current) {
-      const editor = quill.current.editor;
+    if (reactQuillRef.current) {
+      const editor = reactQuillRef.current.editor;
       if (editor) {
         setRange(editor.getSelection());
         setTitle(t['Enter Image URL']);
@@ -107,24 +110,24 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
   }
 
   function undoHandler() {
-    if (!quill.current) return;
+    if (!reactQuillRef.current) return;
 
-    const editor = quill.current.getEditor();
+    const editor = reactQuillRef.current.getEditor();
     // @ts-ignore
     return editor.history.undo();
   }
 
   function redoHandler() {
-    if (!quill.current) return;
+    if (!reactQuillRef.current) return;
 
-    const editor = quill.current.getEditor();
+    const editor = reactQuillRef.current.getEditor();
     // @ts-ignore
     return editor.history.redo();
   }
 
   function videoHandler() {
-    if (quill.current) {
-      const editor = quill.current.editor;
+    if (reactQuillRef.current) {
+      const editor = reactQuillRef.current.editor;
       if (editor) {
         setRange(editor.getSelection());
         setTitle(t['Enter YouTube video URL']);
@@ -156,8 +159,8 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
   }
 
   const handleSaveURL = (url: string) => {
-    if (quill.current) {
-      const editor = quill.current.editor;
+    if (reactQuillRef.current) {
+      const editor = reactQuillRef.current.editor;
       if (editor) {
         if (type === 'video') {
           if (url) {
@@ -167,7 +170,7 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
               editor.insertEmbed(range.index + 1, 'block', '<br><p><br></p>');
               editor.setSelection({ index: range.index + 1, length: 0 });
               editor.focus();
-              quill.current.focus();
+              reactQuillRef.current.focus();
             }
           }
         } else {
@@ -176,7 +179,7 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
             editor.insertEmbed(range.index + 1, 'block', '<br><p><br></p>');
             editor.setSelection({ index: range.index + 1, length: 0 });
             editor.focus();
-            quill.current.focus();
+            reactQuillRef.current.focus();
           }
         }
       }
@@ -186,8 +189,8 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
   };
 
   const handleChange = (_value: string) => {
-    if (quill.current) {
-      const editor = quill.current.editor;
+    if (reactQuillRef.current) {
+      const editor = reactQuillRef.current.editor;
       if (editor) {
         props.onChange(editor.getContents());
       }
@@ -198,14 +201,19 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
     <>
       <div>
         {props.editable && <CustomToolbar />}
-        <ReactQuill
-          readOnly={!props.editable}
-          value={props.value}
-          modules={modules}
-          formats={formats}
-          onChange={handleChange}
-          ref={quill as RefObject<ReactQuill>}
-        />
+        <div>
+          <ReactQuill
+            readOnly={!props.editable}
+            value={props.value}
+            modules={modules}
+            formats={formats}
+            onChange={handleChange}
+            onBlur={props.onBlur}
+            onFocus={props.onFocus}
+            ref={reactQuillRef}
+            placeholder={t['Add an annotation...']}
+          />
+        </div>
       </div>
       <UrlDialog
         title={title}

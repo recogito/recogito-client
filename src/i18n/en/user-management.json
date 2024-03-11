@@ -1,0 +1,23 @@
+{
+  "Remove_name": "Are you sure you want to remove ${name} from the project?",
+  "First Name": "First Name",
+  "Last Name": "Last Name",
+  "Display Name": "Display Name",
+  "Access Level": "Access Level",
+  "Anonymous team member": "Anonymous team member",
+  "You": "You",
+  "User ID": "User ID",
+  "User Management": "User Management",
+  "Email": "Email",
+  "Last Sign In": "Last Sign In",
+  "Search Users": "Search Users",
+  "Something went wrong": "Something went wrong",
+  "Could not change user group.": "Could not change user group.",
+  "Success": "Success",
+  "User Access Level successfully changed.": "User Access Level successfully changed.",
+  "Delete User": "Delete User",
+  "Delete_Warning_Message": "Deleting a user in not reversible. The user will no longer be able to login and their content will be anonymized. Do you wish to proceed?",
+  "Cancel": "Cancel",
+  "User successfully deleted.": "User successfully deleted.",
+  "Back to Projects": "Back to Projects"
+}

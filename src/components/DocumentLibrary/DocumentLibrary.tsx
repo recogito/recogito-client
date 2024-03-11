@@ -127,7 +127,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     getTheme(),
     {
       Table: `
-        --data-table-library_grid-template-columns:  44px repeat(4, minmax(0, 1fr)) 60px !important;
+        --data-table-library_grid-template-columns:  50px 450px repeat(3, minmax(0, 1fr)) 60px !important;
       `,
       HeaderRow: `
         font-size: 13px;
@@ -143,7 +143,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     getTheme(),
     {
       Table: `
-        --data-table-library_grid-template-columns:  44px repeat(3, minmax(0, 1fr)) 60px !important;
+        --data-table-library_grid-template-columns:  50px 550px repeat(2, minmax(0, 1fr)) 60px !important;
       `,
       HeaderRow: `
         font-size: 13px;
@@ -158,7 +158,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     getTheme(),
     {
       Table: `
-        --data-table-library_grid-template-columns:  44px repeat(4, minmax(0, 1fr)) 60px !important;
+        --data-table-library_grid-template-columns:  50px 450px repeat(3, minmax(0, 1fr)) 60px !important;
       `,
       HeaderRow: `
         font-size: 13px;
@@ -431,25 +431,25 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const myDocuments = documents
     ? documents.filter(
-        (d) =>
-          d.created_by === props.user.id &&
-          !d.collection_id &&
-          (search.length > 0 ? matchesSearch(d) : true)
-      )
+      (d) =>
+        d.created_by === props.user.id &&
+        !d.collection_id &&
+        (search.length > 0 ? matchesSearch(d) : true)
+    )
     : [];
 
   const allDocuments = documents
     ? documents.filter((d) =>
-        search.length > 0
-          ? matchesSearch(d) && !d.collection_id
-          : !d.collection_id
-      )
+      search.length > 0
+        ? matchesSearch(d) && !d.collection_id
+        : !d.collection_id
+    )
     : [];
 
   const collectionDocuments = activeCollection
     ? collections[activeCollection - 1].documents.filter((d) =>
-        search.length > 0 ? matchesSearch(d) : true
-      )
+      search.length > 0 ? matchesSearch(d) : true
+    )
     : [];
 
   const selectAll = useRowSelect(

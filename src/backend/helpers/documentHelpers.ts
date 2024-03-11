@@ -8,6 +8,7 @@ import type {
   DocumentInContext,
   DocumentInTaggedContext,
   Layer,
+  Protocol,
   TaggedContext,
 } from 'src/Types';
 import { getTagsForContext } from './tagHelpers';
@@ -28,7 +29,8 @@ export const initDocument = (
   contextId: string,
   onProgress?: (progress: number) => void,
   file?: File,
-  url?: string
+  url?: string,
+  protocol?: Protocol
 ): Promise<DocumentInContext> => {
   if (file?.type.startsWith('image')) {
     // If the document is an image upload, the file is first
@@ -42,7 +44,7 @@ export const initDocument = (
         contextId,
         undefined,
         undefined,
-        'IIIF_IMAGE',
+        protocol,
         iiif.manifest_iiif_url
       )
     );
@@ -54,7 +56,7 @@ export const initDocument = (
       contextId,
       onProgress,
       file,
-      url ? 'IIIF_IMAGE' : undefined,
+      protocol,
       url
     );
   }
@@ -77,15 +79,22 @@ const _initDocument = (
   contextId: string,
   onProgress?: (progress: number) => void,
   file?: File,
-  protocol?: 'IIIF_IMAGE',
+  protocol?: Protocol,
   url?: string
 ): Promise<DocumentInContext> => {
-  
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) =>
-    createDocument(supabase, name, file?.type, protocol ? {
-      protocol, url,
-    } : undefined).then(({ error, data }) => {
+    createDocument(
+      supabase,
+      name,
+      file?.type,
+      protocol
+        ? {
+            protocol,
+            url,
+          }
+        : undefined
+    ).then(({ error, data }) => {
       if (error) {
         reject(error);
       } else {
@@ -175,7 +184,8 @@ export const listDocumentsInProject = (
           ...contexts!inner (
             id,
             name,
-            project_id
+            project_id,
+            is_project_default
           )
         )
       )
@@ -197,13 +207,12 @@ export const listDocumentsInProject = (
               .map(({ contexts, ...l }) => ({
                 ...l,
                 // @ts-ignore
-                context: contexts.find((c) => c.name === null),
+                context: contexts.find((c) => c.is_project_default),
                 // @ts-ignore
               }))
               .filter((l: any) => l.context),
           }))
           .filter((d) => d.layers.length > 0);
-
         return {
           error,
           data: inDefaultContext as unknown as DocumentInContext[],

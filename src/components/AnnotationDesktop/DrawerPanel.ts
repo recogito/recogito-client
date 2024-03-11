@@ -1,0 +1,11 @@
+export enum DrawerPanel { 
+
+  ANNOTATIONS = 'ANNOTATIONS', 
+
+  DOCUMENT_NOTES = 'DOCUMENT_NOTES',
+
+  LAYERS = 'LAYERS', 
+
+  TABLE_OF_CONTENTS = 'TABLE_OF_CONTENTS'
+
+}

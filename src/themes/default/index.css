@@ -113,6 +113,7 @@
   --dark-blue: #07498a;
   --bright-blue: #07529a;
   --brighter-blue: #0969c3;
+  --light-blue: #88bcf7;
   --sand: #987116;
   --mud-gray: #808073;
   --orange: #e9b44a;
@@ -174,7 +175,6 @@ body {
   font-size: 16px;
   line-height: 160%;
   margin: 0;
-  min-height: 100vh;
   padding: 0;
 }
 
