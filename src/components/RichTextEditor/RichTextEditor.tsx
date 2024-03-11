@@ -1,5 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
 import ReactQuill, { Range } from 'react-quill';
+import type { DeltaStatic } from 'quill';
+import { UrlDialog } from './UrlDialog';
+import type { Translations } from 'src/Types';
 import {
   ArrowCounterClockwise,
   ArrowClockwise,
@@ -7,18 +10,18 @@ import {
   Link,
   YoutubeLogo,
 } from '@phosphor-icons/react';
-import './styles.css';
-import type { DeltaStatic } from 'quill';
-import { UrlDialog } from './UrlDialog';
-import type { Translations } from 'src/Types';
+
+import './RichTextEditor.css';
 
 export interface RichTextEditorProps {
-  initialValue?: string;
-  value: string | undefined;
-  onChange(value: DeltaStatic): void;
-  placeholder?: string;
   editable?: boolean;
   i18n: Translations;
+  initialValue?: string;
+  placeholder?: string;
+  value: string | DeltaStatic | undefined;
+  onBlur(): void;
+  onChange(value: DeltaStatic): void;
+  onFocus(): void;
 }
 
 const CustomToolbar = () => (
@@ -205,6 +208,8 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
             modules={modules}
             formats={formats}
             onChange={handleChange}
+            onBlur={props.onBlur}
+            onFocus={props.onFocus}
             ref={reactQuillRef}
             placeholder={t['Add an annotation...']}
           />

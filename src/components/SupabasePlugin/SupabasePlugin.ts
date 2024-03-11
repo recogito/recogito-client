@@ -10,6 +10,8 @@ export type SupabasePluginProps = SupabasePluginConfig & {
 
   privacyMode: boolean,
 
+  source?: string,
+
   onConnected?(user: User): void,
 
   onConnectError?(error: string): void,
@@ -37,7 +39,7 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
   useEffect(() => {
     if (anno) {
       const supabase = Supabase(anno, props);
-      
+
       supabase
         .connect()
         .then(user => props.onConnected && props.onConnected(user))
@@ -59,7 +61,6 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
   }, [
     anno, 
     props.onPresence,
-    props.onSaveError,
     props.onSelectionChange
   ]);
 

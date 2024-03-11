@@ -1,10 +1,22 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import { WarningOctagon } from '@phosphor-icons/react';
 import { FormEvent, useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import type { Translations } from 'src/Types';
+import { Spinner } from '@components/Spinner';
+import { useIIIFValidation } from './useIIIFValidation';
+import type { Protocol, Translations } from 'src/Types';
 
 import './IIIFDialog.css';
+
+export interface IIIFManifest {
+
+  label?: string;
+
+  url: string;
+
+  protocol: Protocol;
+
+}
 
 interface IIIFDialogProps {
 
@@ -12,7 +24,7 @@ interface IIIFDialogProps {
 
   onCancel(): void;
 
-  onSubmit(url: string): void;
+  onSubmit(manifest: IIIFManifest): void;
 
 }
 
@@ -22,18 +34,25 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
 
   const [value, setValue] = useState('');
 
-  const [invalid, setInvalid] = useState(false);
-
-  const isValid = (url: string) => 
-    url && url.startsWith('http') && url.endsWith('/info.json');
+  const {    
+    isFetching,
+    isValid,
+    lastError,
+    result 
+  } = useIIIFValidation(value, props.i18n);
 
   const onSubmit = (evt: FormEvent) => {
     evt.preventDefault();
 
-    if (isValid(value))
-      props.onSubmit(value);
-    else
-      setInvalid(true);
+    if (value && isValid) {
+      const manifest: IIIFManifest = {
+        label: result?.label,
+        url: value,
+        protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
+      };
+
+      props.onSubmit(manifest);
+    }
   }
 
   return (
@@ -43,20 +62,35 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
         <Dialog.Content className="dialog-content import-iiif-dialog">
           <form onSubmit={onSubmit}>
             <Dialog.Title className="dialog-title">{t['Import IIIF']}</Dialog.Title>
-            
               <input 
                 type="text" 
-                className={invalid ? "invalid" : undefined}
+                className={lastError && value && !isFetching ? "invalid" : undefined}
                 value={value} 
-                placeholder={t['Paste URL to a IIIF image manifest']}
+                placeholder={t['Paste URL to a IIIF manifest']}
                 onChange={evt => setValue(evt.target.value)} /> 
 
-              {invalid && (
-                <p className="invalid-message">
+              {isFetching ? (
+                <p className="message fetching">
+                  <Spinner 
+                    className="icon text-bottom" 
+                    size={12} /> {t['Validating manifest']}
+                </p>
+              ) : lastError && value ? (
+                <p className="message invalid">
                   <WarningOctagon 
                     className="icon text-bottom" 
-                    size={18} weight="fill" /> {t['Please enter a valid IIIF manifest URL']}
+                    size={18} weight="fill" /> {t[lastError]}
                 </p>
+              ) : value && result && (
+                <p className="message valid">
+                  <Check 
+                    className="icon text-bottom" 
+                    size={18} /> 
+                    
+                  <span>
+                    {t['Valid manifest:']} {result.type === 'image' ? 'IIIF Image API' : 'IIIF Presentation API'} v{result.majorVersion}
+                  </span>
+                </p>   
               )}
 
               <div className="buttons">
@@ -68,12 +102,12 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                 </Button>  
 
                 <Button 
+                  disabled={!value || !isValid}
                   type="submit" 
                   className="primary sm">
                   {t['Ok']}
                 </Button>
               </div>
-            
           </form>
         </Dialog.Content>
       </Dialog.Portal>

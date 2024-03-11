@@ -1,4 +1,5 @@
 {
+  "Error": "Error",
   "Show annotation list": "Show annotation list",
   "Show annotation filter and color configuration": "Show annotation filter and color configuration",
   "Anonymous": "Anonymous",
@@ -58,5 +59,7 @@
   "Back to project overview": "Back to project overview",
   "Zoom in": "Zoom in",
   "Zoom out": "Zoom out",
-  "Add an annotation...": "Add an annotation..."
+  "Add an annotation...": "Add an annotation...",
+  "Connection Lost.": "Connection Lost.",
+  "Try refreshing the page.": "Try refreshing the page."
 }

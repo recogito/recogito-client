@@ -8,7 +8,6 @@ import { DocumentCard } from '@components/DocumentCard';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import {
   UploadActions,
-  UploadFormat,
   UploadTracker,
   useUpload,
   useDragAndDrop,
@@ -17,12 +16,13 @@ import { useDocumentList } from './useDocumentList';
 import { ProjectTitle } from './ProjectTitle';
 import { ProjectDescription } from './ProjectDescription';
 import { DocumentLibrary } from '../../components/DocumentLibrary';
-
+import { validateIIIF } from './upload/dialogs/useIIIFValidation';
 import type {
   Document,
   DocumentInContext,
   ExtendedProjectData,
   MyProfile,
+  Protocol,
   Translations,
 } from 'src/Types';
 
@@ -81,8 +81,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         type: 'error',
       });
     } else {
-      setShowUploads(true);
-
       if (Array.isArray(accepted)) {
         addUploads(
           accepted.map((file) => ({
@@ -92,16 +90,30 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             file,
           }))
         );
+
+        setShowUploads(true);
       } else if (typeof accepted === 'string') {
-        // IIIF URL
-        addUploads([
-          {
-            name: accepted, // TODO find a better solution
-            projectId: project.id,
-            contextId: defaultContext!.id,
-            url: accepted,
-          },
-        ]);
+        validateIIIF(accepted, props.i18n).then(({ isValid, result, error }) => {
+          if (isValid) {
+            addUploads([
+              {
+                name: result?.label || accepted,
+                projectId: project.id,
+                contextId: defaultContext!.id,
+                url: accepted,
+                protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
+              },
+            ]);
+
+            setShowUploads(true);
+          } else {
+            setToast({
+              title: 'Error',
+              description: error,
+              type: 'error'
+            })
+          }
+        });
       }
     }
   };
@@ -109,15 +121,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const { getRootProps, getInputProps, isDragActive, open } =
     useDragAndDrop(onDrop);
 
-  const onImportRemote = (format: UploadFormat, url: string) => {
+  const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
     setShowUploads(true);
 
     addUploads([
       {
-        name: url, // TODO find a better solution
+        name: label || url,
         projectId: project.id,
         contextId: defaultContext!.id,
         url,
+        protocol
       },
     ]);
   };
@@ -292,6 +305,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             isAdmin={isAdmin}
           />
         </div>
+
         <UploadTracker
           i18n={props.i18n}
           show={showUploads}

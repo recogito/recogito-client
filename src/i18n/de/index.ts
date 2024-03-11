@@ -15,20 +15,26 @@ import projectCollaboration from './project-collaboration.json';
 import projectHome from './project-home.json';
 import projectSettings from './project-settings.json';
 import projectSidedbar from './project-sidebar.json';
+import userManagement from './user-management.json';
 
 export default {
-  'annotation-image': {...annotationCommon, ...annotationImage},
+  'annotation-image': { ...annotationCommon, ...annotationImage },
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
   'dashboard-account': { ...dashboardAccount },
-  'dashboard-projects': { ...dashboardProjects, ...notifications, ...accountMenu },
-  'error': error,
+  'dashboard-projects': {
+    ...dashboardProjects,
+    ...notifications,
+    ...accountMenu,
+  },
+  error: error,
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
   'project-home': projectHome,
   'project-settings': projectSettings,
-  'project-sidebar': { ...projectSidedbar, ...accountMenu }
-}
+  'project-sidebar': { ...projectSidedbar, ...accountMenu },
+  'user-management': userManagement,
+};

@@ -74,7 +74,8 @@ export const useUpload = (onImport: (document: DocumentInContext) => void) => {
           i.contextId,
           (progress) => onProgress(id, progress, 'uploading'),
           i.file,
-          i.url
+          i.url,
+          i.protocol
         ).then((document) => {
           setDataDirty(true);
           onSuccess(id, document);
