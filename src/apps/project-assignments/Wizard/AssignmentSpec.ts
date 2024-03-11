@@ -26,6 +26,7 @@ export const toAssignmentSpec = (
   documents: data.layers.map((layer) => ({
     id: layer.document.id,
     name: layer.document.name,
+    is_private: layer.document.is_private,
     created_at: layer.document.created_at,
     created_by: layer.document.created_by,
     updated_at: layer.document.updated_at,
@@ -45,12 +46,10 @@ export const toAssignmentSpec = (
           name: data.name,
           description: data.description,
           project_id: data.project_id,
+          is_project_default: false
         },
       },
     ],
   })),
-  team:
-    data.layers[0].groups
-      .find((g) => g.is_default === true)
-      ?.members.map((m) => m.user) || [],
+  team: data.team.map(t => t.user)
 });

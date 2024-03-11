@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import {
-  addUsersToLayer,
+  addUsersToContext,
   createAssignmentContext,
-  createLayerInContext,
+  addDocumentsToContext,
 } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Layer } from 'src/Types';
 import type { ProgressProps, ProgressState } from './Progress';
 
 import './Progress.css';
+import type { userRole } from '@backend/Types';
 
 export const ProgressCreating = (props: ProgressProps) => {
   const { t } = props.i18n;
@@ -26,49 +26,48 @@ export const ProgressCreating = (props: ProgressProps) => {
 
     // Step 1. Create a new context for this assignment
     createAssignmentContext(supabase, name!, description, projectId).then(
-      ({ error, data }) => {
+      ({ error, data: context }) => {
         if (error) {
           console.error(error);
 
           setState('failed');
           props.onError(error.message);
         } else {
-          const context = data;
-
           // Step 2. For each document, create a layer in this context
-          documents
-            .reduce((promise, document) => {
-              return promise.then((layers) => {
-                return createLayerInContext(
-                  supabase,
-                  document.id,
-                  projectId,
-                  context.id
-                ).then((layer) => [...layers, layer]);
-              });
-            }, Promise.resolve<Layer[]>([]))
-            .then((layers) => {
-              // Step 3. For each layer, add users to the 'Layer Student' group
-              layers
-                .reduce((promise, layer) => {
-                  return promise.then(() =>
-                    addUsersToLayer(supabase, layer.id, 'default', team)
-                  );
-                }, Promise.resolve<void>(undefined))
-                .then(() => {
-                  setState('success');
-                  props.onSaved(context);
-                });
-            })
-            .catch((error) => {
-              console.error(error);
+          const docs: string[] = documents.map(d => d.id);
+          addDocumentsToContext(
+            supabase,
+            docs,
+            context.id,
+          )
+            .then((result) => {
+              if (!result) {
+                console.error('Failed to add documents to context');
 
-              setState('failed');
-              props.onError(error.message);
-            });
+                setState('failed');
+                props.onError('Failed to add documents to context');
+              } else {
+                // Step 3. For each layer, add users to the context
+                const arr: userRole[] = [];
+                team.forEach((member) => {
+                  arr.push({ user_id: member.id, role: 'default' })
+                });
+
+                addUsersToContext(supabase, context.id, arr)
+                  .then((result) => {
+                    if (!result) {
+                      console.error('Failed to add users to context');
+                      setState('failed');
+                      props.onError('Failed to add users to context');
+                    } else {
+                      setState('success');
+                      props.onSaved(context);
+                    }
+                  })
+              }
+            })
         }
-      }
-    );
+      });
   }, []);
 
   return (

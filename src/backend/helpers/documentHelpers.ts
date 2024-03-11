@@ -88,9 +88,9 @@ const _initDocument = (
       file?.type,
       protocol
         ? {
-            protocol,
-            url,
-          }
+          protocol,
+          url,
+        }
         : undefined
     ).then(({ error, data }) => {
       if (error) {

@@ -7,7 +7,7 @@ import { useAssignments, useProjectPolicies } from '@backend/hooks';
 import { Button } from '@components/Button';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
-import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations, UserProfile } from 'src/Types';
+import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
@@ -48,7 +48,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
     setAssignments(assignments => {
       const isUpdate = assignments?.find(a => a.id === assignment.id);
 
-      return isUpdate ? 
+      return isUpdate ?
         assignments!.map(a => a.id === assignment.id ? assignment : a) :
         [...(assignments || []), assignment];
     });
@@ -84,9 +84,9 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
       } else {
         // Note this will get easier when (if) we get a single RPC call
         // to archive a list of records
-        const chained = data.reduce((p, nextLayer) => 
+        const chained = data.reduce((p, nextLayer) =>
           p.then(() => archiveLayer(supabase, nextLayer.id)
-        ), Promise.resolve());
+          ), Promise.resolve());
 
         chained
           .then(() => archiveAssignment(supabase, assignment.id))
@@ -118,7 +118,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
         {canCreate && (
           <>
-            <Button 
+            <Button
               className="primary"
               onClick={() => setEditing(NEW_ASSIGNMENT)}>
               <GraduationCap size={20} /> <span>New Assignment</span>
@@ -126,7 +126,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
 
             {editing && (
               <AssignmentWizard
-                i18n={props.i18n} 
+                i18n={props.i18n}
                 me={props.me}
                 project={props.project}
                 documents={props.documents}
@@ -144,7 +144,7 @@ export const ProjectAssignments = (props: ProjectAssignmentsProps) => {
             i18n={props.i18n}
             canUpdate={canCreate}
             project={project}
-            assignments={assignments} 
+            assignments={assignments}
             onEditAssignment={onEditAssignment}
             onDeleteAssignment={onDeleteAssignment} />
         ) : (

@@ -181,7 +181,7 @@ export interface Context {
 
   project_id: string;
 
-  is_project_default: boolean;
+  is_project_default?: boolean;
 }
 
 export interface TaggedContext extends Context {
@@ -207,37 +207,20 @@ export interface LayerWithDocument extends Layer {
 }
 
 export interface ExtendedAssignmentData extends Context {
-  layers: [
-    {
-      id: string;
+  team: {
+    user: UserProfile,
 
-      name: string;
+    since: string;
+  }[],
+  layers: {
+    id: string;
 
-      description: string;
+    name: string;
 
-      document: Document;
+    description: string;
 
-      groups: [
-        {
-          id: string;
-
-          name: string;
-
-          description?: string;
-
-          is_admin: boolean;
-
-          is_default: boolean;
-
-          members: Array<{
-            user: UserProfile;
-
-            since: string;
-          }>;
-        }
-      ];
-    }
-  ];
+    document: Document;
+  }[];
 }
 
 export interface TagDefinition {
@@ -246,12 +229,12 @@ export interface TagDefinition {
   name: string;
 
   target_type?:
-    | 'context'
-    | 'document'
-    | 'group'
-    | 'layer'
-    | 'profile'
-    | 'project';
+  | 'context'
+  | 'document'
+  | 'group'
+  | 'layer'
+  | 'profile'
+  | 'project';
 
   scope: 'organization' | 'project' | 'system';
 
