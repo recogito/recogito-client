@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react';
 import { archiveLayer } from '@backend/crud';
-import {
-  addUsersToLayer,
-  createLayerInContext,
-  removeUsersFromLayer,
-  updateAssignmentContext,
-} from '@backend/helpers';
+import { updateAssignmentContext, addDocumentsToContext, addUsersToContext, removeUsersFromContext } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Context, Layer } from 'src/Types';
+import type { Context } from 'src/Types';
 import type { ProgressProps, ProgressState } from './Progress';
 import type { AssignmentSpec } from '../AssignmentSpec';
+import type { userRole } from '@backend/Types';
 
 import './Progress.css';
 
@@ -67,6 +63,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
     name: name!,
     description,
     project_id: props.project.id,
+    is_project_default: true
   };
 
   useEffect(() => {
@@ -91,64 +88,61 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
       // - check for added documents and create layers
       if (documentChanges.added.length > 0) {
-        const layers = await documentChanges.added.reduce(
-          (promise, document) => {
-            return promise.then((layers) => {
-              return createLayerInContext(
-                supabase,
-                document.id,
-                context.project_id,
-                context.id
-              ).then((layer) => [...layers, layer]);
-            });
-          },
-          Promise.resolve<Layer[]>([])
-        );
+        const docs: string[] = documentChanges.added.map(d => d.id);
+        const resultAddDocs = await addDocumentsToContext(
+          supabase,
+          docs,
+          context.id,
+        )
 
-        // - for each created layer, add members to the 'Layer Student' group
-        await layers.reduce((promise, layer) => {
-          return promise.then(() =>
-            addUsersToLayer(supabase, layer.id, 'default', team)
-          );
-        }, Promise.resolve<void>(undefined));
+        if (!resultAddDocs) {
+          console.error('Failed to add documents to context');
+          setState('failed');
+          props.onError('Failed to add documents to context');
+        }
+
       }
 
       // Step 3. Update users if necessary
       const memberChanges = diff(previous.team, team);
 
-      // IDs of the layers on the existing documents
-      const existingLayerIds = documentChanges.unchanged.map(
-        (d) => d.layers[0].id
-      );
+      // - Members were added
+      if (memberChanges.added.length > 0) {
 
-      // - Members were added (and some documents existed previously)
-      if (
-        memberChanges.added.length > 0 &&
-        documentChanges.unchanged.length > 0
-      ) {
-        await existingLayerIds.reduce((promise, layerId) => {
-          // - insert added users to its 'Layer Student' group
-          return promise.then(() =>
-            addUsersToLayer(supabase, layerId, 'default', memberChanges.added)
-          );
-        }, Promise.resolve<void>(undefined));
+        const arr: userRole[] = [];
+        memberChanges.added.forEach((member) => {
+          arr.push({ user_id: member.id, role: 'default' })
+        });
+
+        const resultAddUsers = await addUsersToContext(supabase, context.id, arr);
+
+        if (resultAddUsers) {
+          setState('success');
+          props.onSaved(context);
+        } else {
+          console.error('Failed to add users to context');
+          setState('failed');
+          props.onError('Failed to add users to context');
+        }
       }
 
       // Members were removed (and some documents existed previously)
-      if (
-        memberChanges.removed.length > 0 &&
-        documentChanges.unchanged.length > 0
-      ) {
-        await existingLayerIds.reduce((promise, layerId) => {
-          return promise.then(() =>
-            removeUsersFromLayer(
-              supabase,
-              layerId,
-              'default',
-              memberChanges.removed
-            )
-          );
-        }, Promise.resolve<void>(undefined));
+      if (memberChanges.removed.length > 0) {
+        const arr: string[] = [];
+        team.forEach((member) => {
+          arr.push(member.id)
+        });
+
+        const resultRemoveUsers = await removeUsersFromContext(supabase, context.id, arr);
+
+        if (resultRemoveUsers) {
+          setState('success');
+          props.onSaved(context);
+        } else {
+          console.error('Failed to remove users from context');
+          setState('failed');
+          props.onError('Failed to remove users from context');
+        }
       }
 
       setState('success');
