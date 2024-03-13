@@ -36,7 +36,10 @@ export const MobileFallback = (props: MobileFallbackProps) => {
   useEffect(() => {
     const onResize = () => {
       const h = window.visualViewport?.height;
-      if (h) setHeight(`${h}px`);
+      if (h) { 
+        setHeight(`${h}px`);
+        document.body.style.touchAction = 'none';
+      }
     }
 
     onResize();
@@ -45,6 +48,7 @@ export const MobileFallback = (props: MobileFallbackProps) => {
   
     return () => {
       window.visualViewport?.removeEventListener('resize', onResize);
+      document.body.style.touchAction = 'auto';
     }
   }, []);
 
