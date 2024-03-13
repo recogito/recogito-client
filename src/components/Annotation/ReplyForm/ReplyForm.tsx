@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight, Detective } from '@phosphor-icons/react';
 import type { DeltaStatic } from 'quill';
@@ -10,12 +10,13 @@ import {
 } from '@recogito/annotorious-supabase';
 import { RichTextEditor } from '@components/RichTextEditor';
 import { Avatar } from '../../Avatar';
-import { MobileFallback } from './MobileFallback';
+import { useMobileFallback, MobileTextarea } from '../MobileTextarea';
 import type { Translations } from 'src/Types';
 
 import './ReplyForm.css';
 
 export interface ReplyFormProps {
+
   i18n: Translations;
 
   annotation: SupabaseAnnotation;
@@ -31,43 +32,24 @@ export interface ReplyFormProps {
   beforeSubmit?(body: AnnotationBody): void;
 
   onSubmit(body: AnnotationBody): void;
+
 }
 
-const MIN_SCREEN_HEIGHT = 512;
-
 export const ReplyForm = (props: ReplyFormProps) => {
+
   const { me } = props;
 
   const [value, setValue] = useState<string | DeltaStatic | undefined>();
-
-  const [showMobileFallback, setShowMobileFallback] = useState(false);
 
   const textarea = useRef<HTMLTextAreaElement>(null);
 
   const isPublic = props.annotation.visibility !== Visibility.PRIVATE;
 
-  const onResize = useCallback(() => {
-    const h = window.visualViewport?.height || window.screen.height;
-    setShowMobileFallback(h < MIN_SCREEN_HEIGHT);
-  }, []);
-
-  const onFocus = () => {
-    onResize();
-    window.visualViewport?.addEventListener('resize', onResize);
-  }
-
-  const onBlur = () => {
-    window.visualViewport?.removeEventListener('resize', onResize);
-  }
+  const { useMobile, onBlur, onClose, onFocus } = useMobileFallback();
 
   useEffect(() => {
     if (props.scrollIntoView)
       textarea.current?.scrollIntoView({ behavior: 'smooth' });
-
-    return () => {
-      // Quill doesn't seem to fire onBlur reliably!
-      window.visualViewport?.removeEventListener('resize', onResize);
-    }
   }, []);
 
   useEffect(() => {
@@ -75,16 +57,12 @@ export const ReplyForm = (props: ReplyFormProps) => {
       setTimeout(() => textarea.current?.focus({ preventScroll: true }), 1);
   }, [props.autofocus]);
 
-  const onCloseMobileFallback = () => {
-    // Remove listener, otherwise it will re-open
-    window.removeEventListener('resize', onResize);
-    setShowMobileFallback(false);
-  }
-
-  const onSubmit = (evt?: React.MouseEvent) => {
-    evt?.preventDefault();
-
+  const onSave = (value: string | DeltaStatic) => {
     if (value) {
+      const [format, stringified] = typeof value === 'string'  
+        ? ['TextPlain', value as unknown as string]
+        : ['Quill', JSON.stringify(value)];
+
       const body: SupabaseAnnotationBody = {
         id: uuidv4(),
         annotation: props.annotation.id,
@@ -95,8 +73,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
         },
         created: new Date(),
         purpose: 'commenting',
-        value: JSON.stringify(value),
-        format: 'Quill',
+        format,
+        value: stringified
       };
 
       setValue('');
@@ -107,10 +85,18 @@ export const ReplyForm = (props: ReplyFormProps) => {
     }
   };
 
-  return showMobileFallback ? (
-    <MobileFallback 
-      {...props} 
-      onClose={onCloseMobileFallback} />
+  const onSubmitForm = (evt?: React.MouseEvent) => {
+    evt?.preventDefault();
+    if (value)
+      onSave(value);
+  }
+
+  return useMobile ? (
+    <MobileTextarea
+      i18n={props.i18n}
+      value={value}
+      onSave={onSave}
+      onCancel={onClose} />
   ) : (
     <form className='annotation-reply-form no-drag'>
       {isPublic ? (
@@ -132,7 +118,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
         onFocus={onFocus}
         onBlur={onBlur} />
 
-      <button className='send icon-only' onClick={onSubmit}>
+      <button className='send icon-only' onClick={onSubmitForm}>
         <ArrowRight size={18} />
       </button>
     </form>

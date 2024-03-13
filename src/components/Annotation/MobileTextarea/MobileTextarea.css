@@ -1,4 +1,4 @@
-.mobile-reply-form {
+.mobile-textarea {
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -9,13 +9,13 @@
   z-index: 999;
 }
 
-.mobile-reply-form-close {
+.mobile-textarea-close {
   right: 20px;
   position: absolute;
   top: 20px;
 }
 
-.mobile-reply-form textarea {
+.mobile-textarea textarea {
   border: none;
   border-radius: 0;
   font-size: 1.2em;
@@ -25,7 +25,7 @@
   width: 100%;
 }
 
-.mobile-reply-form-footer {
+.mobile-textarea-footer {
   background-color: #fff;
   border-top: 1px solid var(--gray-200);
   padding: 20px;
