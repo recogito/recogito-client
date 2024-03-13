@@ -33,7 +33,7 @@ export interface ReplyFormProps {
   onSubmit(body: AnnotationBody): void;
 }
 
-const MIN_SCREEN_HEIGHT = 800;
+const MIN_SCREEN_HEIGHT = 512;
 
 export const ReplyForm = (props: ReplyFormProps) => {
   const { me } = props;
