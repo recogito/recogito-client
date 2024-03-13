@@ -66,7 +66,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
     return () => {
       // Quill doesn't seem to fire onBlur reliably!
-      window.removeEventListener('resize', onResize);
+      window.visualViewport?.removeEventListener('resize', onResize);
     }
   }, []);
 
