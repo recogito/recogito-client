@@ -34,12 +34,12 @@ export const MobileFallback = (props: MobileFallbackProps) => {
   const [height, setHeight] = useState('100%');
 
   useEffect(() => {
+    document.body.style.touchAction = 'none';
+
     const onResize = () => {
       const h = window.visualViewport?.height;
-      if (h) { 
+      if (h)
         setHeight(`${h}px`);
-        document.body.style.touchAction = 'none';
-      }
     }
 
     onResize();
