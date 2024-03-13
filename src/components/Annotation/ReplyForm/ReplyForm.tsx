@@ -10,10 +10,10 @@ import {
 } from '@recogito/annotorious-supabase';
 import { RichTextEditor } from '@components/RichTextEditor';
 import { Avatar } from '../../Avatar';
+import { MobileFallback } from './MobileFallback';
 import type { Translations } from 'src/Types';
 
 import './ReplyForm.css';
-import { MobileFallback } from './MobileFallback';
 
 export interface ReplyFormProps {
   i18n: Translations;
@@ -33,7 +33,7 @@ export interface ReplyFormProps {
   onSubmit(body: AnnotationBody): void;
 }
 
-const MIN_KEYBOARD_HEIGHT = 300;
+const MIN_SCREEN_HEIGHT = 800;
 
 export const ReplyForm = (props: ReplyFormProps) => {
   const { me } = props;
@@ -48,7 +48,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
 
   const onResize = useCallback(() => {
     const h = window.visualViewport?.height || window.screen.height;
-    setShowMobileFallback(h < 512);
+    setShowMobileFallback(h < MIN_SCREEN_HEIGHT);
   }, []);
 
   const onFocus = () => {
