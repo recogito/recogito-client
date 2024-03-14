@@ -57,6 +57,8 @@ export const EditableComment = (props: EditableCommentProps) => {
   }, [editable]);
 
   const onSave = (value: string | DeltaStatic) => {
+    const format = typeof value === 'string' ? 'TextPlain' : 'Quill';
+    
     const next = {
       ...comment,
       format,

@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { DeltaOperation, DeltaStatic } from 'quill';
 import { X } from '@phosphor-icons/react';
-import { RichTextEditor } from '@components/RichTextEditor';
 import type { Translations } from 'src/Types';
 
 import './MobileTextarea.css';
@@ -21,9 +20,27 @@ interface MobileTextareaProps {
 
 }
 
+const serializeQuill = (value: DeltaStatic) => {
+  let serialized = '';
+
+  value.ops?.forEach((op: DeltaOperation) => {
+    if (typeof op.insert === "string") {
+      serialized += op.insert;
+    } else if ('image' in op.insert) {
+      serialized += op.insert.image;
+    } else if ('video' in op.insert) {
+      serialized += op.insert.video;
+    }
+  })
+
+  return serialized.trim();
+}
+
 export const MobileTextarea = (props: MobileTextareaProps) => {
 
-  const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(props.value && (
+    typeof props.value === 'string' ? props.value : serializeQuill(props.value)
+  ));
 
   const [height, setHeight] = useState('100%');
 
@@ -66,22 +83,10 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
         </button>
       </div>
 
-      {props.value && typeof props.value === 'string' ? (
-        <textarea
-          autoFocus
-          value={value?.toString() || ''}
-          onChange={evt => setValue(evt.target.value)} />
-      ) : (
-        <div className="mobile-rte">
-          <RichTextEditor
-            value={value}
-            editable={true}
-            i18n={props.i18n}
-            onChange={setValue}
-            placeholder={props.placeholder} 
-            onBlur={onBlur} />
-        </div>
-      )}
+      <textarea
+        autoFocus
+        value={value || ''}
+        onChange={evt => setValue(evt.target.value)} />
 
       <div className="mobile-textarea-footer">
         <button 

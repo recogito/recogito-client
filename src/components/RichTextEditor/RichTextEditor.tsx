@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ReactQuill, { Range } from 'react-quill';
 import type { DeltaStatic } from 'quill';
 import { UrlDialog } from './UrlDialog';
@@ -213,11 +213,6 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
       }
     }
   };
-
-  useEffect(() => {
-    // if (props.editable)
-    //  reactQuillRef.current?.focus();
-  }, []);
 
   return (
     <>
