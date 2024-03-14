@@ -81,7 +81,8 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
       <textarea
         autoFocus
         value={value || ''}
-        onChange={evt => setValue(evt.target.value)} />
+        onChange={evt => setValue(evt.target.value)} 
+        onTouchMove={evt => evt.preventDefault()}/>
 
       <div className="mobile-textarea-footer">
         <button 

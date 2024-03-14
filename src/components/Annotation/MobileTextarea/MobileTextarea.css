@@ -23,6 +23,7 @@
   padding: 2.5%;
   resize: none;
   width: 100%;
+  touch-action: none;
 }
 
 .mobile-textarea .mobile-rte {
