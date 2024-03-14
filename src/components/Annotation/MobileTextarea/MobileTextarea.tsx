@@ -63,11 +63,6 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
     }
   }, []);
 
-  const onBlur = () => {
-    window.visualViewport?.removeEventListener('resize', onResize);
-    document.body.style.touchAction = 'auto';
-  }
-
   const onSave = () => {
     props.onSave(value);
     setValue('');
@@ -86,7 +81,8 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
       <textarea
         autoFocus
         value={value || ''}
-        onChange={evt => setValue(evt.target.value)} />
+        onChange={evt => setValue(evt.target.value)} 
+        onTouchMove={evt => evt.preventDefault()}/>
 
       <div className="mobile-textarea-footer">
         <button 
