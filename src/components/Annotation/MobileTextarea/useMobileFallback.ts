@@ -7,7 +7,6 @@ export const useMobileFallback = () => {
   const [useMobile, setUseMobile] = useState(false);
 
   const onResize = useCallback(() => {
-    console.log('resize');
     const h = window.visualViewport?.height || window.screen.height;
     setUseMobile(h < MIN_SCREEN_HEIGHT);
   }, []);
@@ -23,16 +22,14 @@ export const useMobileFallback = () => {
 
   const onFocus = () => {
     onResize();
-    // window.visualViewport?.addEventListener('resize', onResize);
+    window.visualViewport?.addEventListener('resize', onResize);
   }
 
   const onBlur = () => {
-    console.log('blur remove');
     window.visualViewport?.removeEventListener('resize', onResize);
   }
 
   const onClose = () => {
-    console.log('close rmo');
     window.visualViewport?.removeEventListener('resize', onResize);
     setUseMobile(false);
   }
