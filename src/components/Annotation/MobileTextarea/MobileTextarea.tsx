@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { DeltaStatic } from 'quill';
+import type { DeltaOperation, DeltaStatic } from 'quill';
 import { X } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
@@ -20,9 +20,28 @@ interface MobileTextareaProps {
 
 }
 
+const serializeQuill = (input: DeltaStatic) => {
+  let serialized = '';
+
+  input.ops?.forEach((op: DeltaOperation) => {
+    if (typeof op.insert === "string") {
+      serialized += op.insert;
+    } else if ('image' in op.insert) {
+      serialized += op.insert.image;
+    } else if ('video' in op.insert) {
+      serialized += op.insert.video;
+    }
+  })
+
+  return serialized.trim();
+}
+
 export const MobileTextarea = (props: MobileTextareaProps) => {
 
-  const [value, setValue] = useState(props.value);
+  const [value, setValue] = useState(
+    props.value 
+      ? typeof props.value === 'string' ? props.value : serializeQuill(props.value)
+      : undefined);
 
   const [height, setHeight] = useState('100%');
 

@@ -30,14 +30,14 @@ export const EditableComment = (props: EditableCommentProps) => {
 
   const { useMobile, onBlur, onClose, onFocus } = useMobileFallback();
 
+  const format = comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
+    ? 'Quill': 'TextPlain';
+
   const [value, setValue] = useState<string | DeltaStatic | undefined>(
-    // Hack for now
-    comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
-      ? JSON.parse(comment.value)
+    format === 'Quill'
+      ? JSON.parse(comment.value!)
       : comment.value
   );
-
-  const [renderType, setRenderType] = useState<'text' | 'quill'>('text');
 
   useEffect(() => {
     const { current } = textarea;
@@ -56,21 +56,11 @@ export const EditableComment = (props: EditableCommentProps) => {
     }
   }, [editable]);
 
-  useEffect(() => {
-    if (comment.value && comment.value.length > 0) {
-      if (comment.value.charAt(0) === '{') {
-        setRenderType('quill');
-      } else {
-        setRenderType('text');
-      }
-    }
-  }, []);
-
   const onSave = (value: string | DeltaStatic) => {
     const next = {
       ...comment,
-      format: renderType === 'quill' ? 'Quill' : 'TextPlain',
-      value: renderType === 'text' ? (value as string) : JSON.stringify(value),
+      format,
+      value: format === 'TextPlain' ? (value as string) : JSON.stringify(value)
     };
 
     props.onChange(comment, next);
@@ -85,9 +75,8 @@ export const EditableComment = (props: EditableCommentProps) => {
   const onCancelChange = () => {
     props.onCanceled();
     setValue(JSON.parse(comment.value!));
+    onClose();
   };
-
-  console.log('editable comment', useMobile);
 
   return editable ? useMobile ? (
     <MobileTextarea
@@ -98,7 +87,7 @@ export const EditableComment = (props: EditableCommentProps) => {
       onCancel={onCancelChange} />
   ) :(
     <form>
-      {renderType === 'text' ? (
+      {format === 'TextPlain' ? (
         <TextareaAutosize
           className='no-drag'
           ref={textarea}
@@ -136,7 +125,7 @@ export const EditableComment = (props: EditableCommentProps) => {
         </button>
       </div>
     </form>
-  ) : renderType === 'text' ? (
+  ) : format === 'TextPlain' ? (
     <p className='no-drag'>{comment.value}</p>
   ) : (
     <RichTextEditor
