@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { DeltaOperation, DeltaStatic } from 'quill';
 import { X } from '@phosphor-icons/react';
@@ -21,39 +21,20 @@ interface MobileTextareaProps {
 
 }
 
-const serializeQuill = (input: DeltaStatic) => {
-  let serialized = '';
-
-  input.ops?.forEach((op: DeltaOperation) => {
-    if (typeof op.insert === "string") {
-      serialized += op.insert;
-    } else if ('image' in op.insert) {
-      serialized += op.insert.image;
-    } else if ('video' in op.insert) {
-      serialized += op.insert.video;
-    }
-  })
-
-  return serialized.trim();
-}
-
 export const MobileTextarea = (props: MobileTextareaProps) => {
 
-  const [value, setValue] = useState(props.value); /*
-    props.value 
-      ? typeof props.value === 'string' ? props.value : serializeQuill(props.value)
-      : undefined); */
+  const [value, setValue] = useState(props.value);
 
   const [height, setHeight] = useState('100%');
 
+  const onResize = useCallback(() => {
+    const h = window.visualViewport?.height;
+    if (h)
+      setHeight(`${h}px`);
+  }, []);
+
   useEffect(() => {
     document.body.style.touchAction = 'none';
-
-    const onResize = () => {
-      const h = window.visualViewport?.height;
-      if (h)
-        setHeight(`${h}px`);
-    }
 
     onResize();
   
@@ -64,6 +45,11 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
       document.body.style.touchAction = 'auto';
     }
   }, []);
+
+  const onBlur = () => {
+    window.visualViewport?.removeEventListener('resize', onResize);
+    document.body.style.touchAction = 'auto';
+  }
 
   const onSave = () => {
     props.onSave(value);
@@ -82,9 +68,9 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
 
       {props.value && typeof props.value === 'string' ? (
         <textarea
-        autoFocus
-        value={value?.toString() || ''}
-        onChange={evt => setValue(evt.target.value)} />
+          autoFocus
+          value={value?.toString() || ''}
+          onChange={evt => setValue(evt.target.value)} />
       ) : (
         <div className="mobile-rte">
           <RichTextEditor
@@ -92,7 +78,8 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
             editable={true}
             i18n={props.i18n}
             onChange={setValue}
-            placeholder={props.placeholder} />
+            placeholder={props.placeholder} 
+            onBlur={onBlur} />
         </div>
       )}
 

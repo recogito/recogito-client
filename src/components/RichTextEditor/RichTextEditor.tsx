@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import ReactQuill, { Range } from 'react-quill';
 import type { DeltaStatic } from 'quill';
 import { UrlDialog } from './UrlDialog';
@@ -42,7 +42,7 @@ const CustomToolbar = () => (
     </button>
 
     <button className='ql-link'>
-      <YoutubeLogo />
+      <Link />
     </button>
 
     <button className='ql-image'>
@@ -213,6 +213,11 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
       }
     }
   };
+
+  useEffect(() => {
+    // if (props.editable)
+    //  reactQuillRef.current?.focus();
+  }, []);
 
   return (
     <>
