@@ -14,39 +14,57 @@ import {
 import './RichTextEditor.css';
 
 export interface RichTextEditorProps {
+
   editable?: boolean;
+  
   i18n: Translations;
+  
   placeholder?: string;
+  
   value: string | DeltaStatic | undefined;
-  onBlur(): void;
+  
+  onBlur?(): void;
+  
   onChange(value: DeltaStatic): void;
-  onFocus(): void;
+  
+  onFocus?(): void;
+
 }
 
 const CustomToolbar = () => (
-  <div id='toolbar' className='ql-snow ql-toolbar'>
+  <div id="ql-toolbar" className="ql-toolbar">
     <button className='ql-undo'>
       <ArrowCounterClockwise />
     </button>
+
     <button className='ql-redo'>
       <ArrowClockwise />
     </button>
+
     <button className='ql-link'>
-      <Link />
+      <YoutubeLogo />
     </button>
+
     <button className='ql-image'>
       <Image />
     </button>
+
     <button className='ql-video'>
       <YoutubeLogo />
     </button>
   </div>
-);
+)
+
 export const RichTextEditor = (props: RichTextEditorProps) => {
+
   const [open, setOpen] = useState(false);
+
   const [title, setTitle] = useState('');
+  
   const [message, setMessage] = useState('');
+  
   const [type, setType] = useState<'image' | 'video' | undefined>();
+  
   const [range, setRange] = useState<Range | undefined>();
 
   const { t } = props.i18n;
@@ -63,7 +81,7 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
               maxStack: 100,
               userOnly: false,
             },
-            container: '#toolbar',
+            container: '#ql-toolbar',
             handlers: {
               image: imageHandler,
               undo: undoHandler,
@@ -214,6 +232,7 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
           />
         </div>
       </div>
+
       <UrlDialog
         title={title}
         message={message}
@@ -223,5 +242,6 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
         i18n={props.i18n}
       />
     </>
-  );
-};
+  )
+  
+}

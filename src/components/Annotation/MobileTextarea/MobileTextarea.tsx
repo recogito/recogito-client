@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { DeltaOperation, DeltaStatic } from 'quill';
 import { X } from '@phosphor-icons/react';
+import { RichTextEditor } from '@components/RichTextEditor';
 import type { Translations } from 'src/Types';
 
 import './MobileTextarea.css';
@@ -38,10 +39,10 @@ const serializeQuill = (input: DeltaStatic) => {
 
 export const MobileTextarea = (props: MobileTextareaProps) => {
 
-  const [value, setValue] = useState(
+  const [value, setValue] = useState(props.value); /*
     props.value 
       ? typeof props.value === 'string' ? props.value : serializeQuill(props.value)
-      : undefined);
+      : undefined); */
 
   const [height, setHeight] = useState('100%');
 
@@ -79,10 +80,21 @@ export const MobileTextarea = (props: MobileTextareaProps) => {
         </button>
       </div>
 
-      <textarea
+      {props.value && typeof props.value === 'string' ? (
+        <textarea
         autoFocus
         value={value?.toString() || ''}
         onChange={evt => setValue(evt.target.value)} />
+      ) : (
+        <div className="mobile-rte">
+          <RichTextEditor
+            value={value}
+            editable={true}
+            i18n={props.i18n}
+            onChange={setValue}
+            placeholder={props.placeholder} />
+        </div>
+      )}
 
       <div className="mobile-textarea-footer">
         <button 

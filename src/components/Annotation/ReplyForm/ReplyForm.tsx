@@ -110,7 +110,7 @@ export const ReplyForm = (props: ReplyFormProps) => {
       )}
 
       <RichTextEditor
-        value={value || ''}
+        value={value}
         editable={true}
         i18n={props.i18n}
         onChange={setValue}

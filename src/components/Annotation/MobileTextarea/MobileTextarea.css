@@ -25,6 +25,17 @@
   width: 100%;
 }
 
+.mobile-textarea .mobile-rte {
+  background-color: #fff;
+  height: 100%;
+  padding: 2.5%;
+  width: 100%;
+}
+
+.mobile-textarea .mobile-rte .ql-toolbar {
+  display: none;
+}
+
 .mobile-textarea-footer {
   background-color: #fff;
   border-top: 1px solid var(--gray-200);

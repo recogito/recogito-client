@@ -63,6 +63,8 @@ export const EditableComment = (props: EditableCommentProps) => {
       value: format === 'TextPlain' ? (value as string) : JSON.stringify(value)
     };
 
+    setValue(value);
+    
     props.onChange(comment, next);
   }
 
@@ -103,7 +105,6 @@ export const EditableComment = (props: EditableCommentProps) => {
           value={value}
           onBlur={onBlur}
           onFocus={onFocus}
-          // @ts-ignore
           onChange={setValue}
           editable={true}
           i18n={props.i18n}
@@ -128,8 +129,7 @@ export const EditableComment = (props: EditableCommentProps) => {
     <p className='no-drag'>{comment.value}</p>
   ) : (
     <RichTextEditor
-      value={value || ''}
-      // @ts-ignore
+      value={value}
       onBlur={onBlur}
       onFocus={onFocus}
       onChange={setValue}
