@@ -12,8 +12,6 @@ export const useMobileFallback = () => {
   }, []);
 
   useEffect(() => {
-    // window.visualViewport?.addEventListener('resize', onResize);
-
     return () => {
       // Quill doesn't seem to fire onBlur reliably!
       window.visualViewport?.removeEventListener('resize', onResize);
