@@ -210,7 +210,7 @@ export const RichTextEditor = (props: RichTextEditorProps) => {
             onBlur={props.onBlur}
             onFocus={props.onFocus}
             ref={reactQuillRef}
-            placeholder={t['Add an annotation...']}
+            placeholder={props.placeholder}
           />
         </div>
       </div>

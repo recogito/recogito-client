@@ -115,7 +115,8 @@ export const ReplyForm = (props: ReplyFormProps) => {
         i18n={props.i18n}
         onChange={setValue}
         onFocus={onFocus}
-        onBlur={onBlur} />
+        onBlur={onBlur} 
+        placeholder={props.placeholder} />
 
       <button className='send icon-only' onClick={onSubmitForm}>
         <ArrowRight size={18} />
