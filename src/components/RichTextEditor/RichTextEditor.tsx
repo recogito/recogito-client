@@ -16,7 +16,6 @@ import './RichTextEditor.css';
 export interface RichTextEditorProps {
   editable?: boolean;
   i18n: Translations;
-  initialValue?: string;
   placeholder?: string;
   value: string | DeltaStatic | undefined;
   onBlur(): void;

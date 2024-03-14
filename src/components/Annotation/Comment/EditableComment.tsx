@@ -100,7 +100,6 @@ export const EditableComment = (props: EditableCommentProps) => {
         />
       ) : (
         <RichTextEditor
-          initialValue={JSON.parse(comment.value!)}
           value={value}
           onBlur={onBlur}
           onFocus={onFocus}
@@ -129,7 +128,6 @@ export const EditableComment = (props: EditableCommentProps) => {
     <p className='no-drag'>{comment.value}</p>
   ) : (
     <RichTextEditor
-      initialValue={JSON.parse(comment.value!)}
       value={value || ''}
       // @ts-ignore
       onBlur={onBlur}
