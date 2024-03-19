@@ -90,9 +90,9 @@ const _initDocument = (
       file?.type,
       protocol
         ? {
-            protocol,
-            url,
-          }
+          protocol,
+          url,
+        }
         : undefined
     ).then(({ error, data }) => {
       if (error) {
@@ -151,7 +151,12 @@ export const addDocumentToProject = (
     createLayerInContext(supabase, document.id, projectId, contextId)
   );
 
-  return Promise.all([a, b]).then(([document, defaultLayer]) => {
+  // Third promise: Add project document record
+  const c = b.then(() =>
+    createProjectDocument(supabase, documentId, projectId)
+  ).catch(error => console.error(error));
+
+  return Promise.all([a, b, c]).then(([document, defaultLayer]) => {
     return { ...document, layers: [defaultLayer] };
   });
 };
