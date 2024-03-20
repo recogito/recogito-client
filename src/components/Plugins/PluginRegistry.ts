@@ -2,6 +2,7 @@ import fs from 'fs';
 import type { InstalledPlugin } from 'src/Types';
 import type { PluginMetadata } from './PluginMetadata';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
+import { matchesExtensionPoint } from './utils';
 
 /** 
  * Important: that the plugin registry works ON THE SERVER ONLY, 
@@ -35,27 +36,12 @@ const createPluginRegistry = () => {
     if (!pattern) 
       return [...plugins];
 
-    const patternSegments = pattern.split('.');
-
-    const matchesExtensionPoint = (extensionPoint: string) => {
-      const termSegments = extensionPoint.split('.');
-
-      if (patternSegments.length > termSegments.length)
-        return false; // Query has more segments than the term
-
-      for (let i = 0; i < patternSegments.length; i++) {
-        if (termSegments[i] !== '*' && patternSegments[i] !== '*' && patternSegments[i] !== termSegments[i])
-          return false; // Segments don't match
-      }
-
-      return true; // All segments match
-    } 
-
+    // Match the pattern against 
     const matches = plugins.filter(p => {
       const extensionPoints = Object.keys(p.extension_points);
-      return extensionPoints.some(e => matchesExtensionPoint(e));
+      return extensionPoints.some(e => matchesExtensionPoint(pattern, e));
     });
-    
+
     return matches;
   }
 

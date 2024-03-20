@@ -1,14 +1,22 @@
-export const matchesExtensionPoint = (pluginPattern: string, extensionPoint: string) => {
-  const pluginPatternSegments = pluginPattern.split('.');
+/**
+ * Tests if a specific pattern matches an existing Recogito
+ * extensions point name.
+ */
+export const matchesExtensionPoint = (pattern: string, extensionPoint: string) => {
+  const patternSegments = pattern.split('.');
 
-  const extensionPointSegments = extensionPoint.split('.');
+  const epSegments = extensionPoint.split('.');
 
-  if (pluginPatternSegments.length > extensionPoint.length)
-    return false; // the plugin pattern has more segments than the extension point
+  if (patternSegments.length > epSegments.length)
+    return false; // the pattern is more specific than the extension point
 
-  for (let i = 0; i < pluginPattern.length; i++) {
-    if (extensionPointSegments[i] !== '*' && pluginPatternSegments[i] !== '*' && pluginPatternSegments[i] !== extensionPointSegments[i])
-      return false; // Segments don't match
+  for (let i = 0; i < patternSegments.length; i++) {
+    if (epSegments[i] !== '*' 
+      && patternSegments[i] !== '*' 
+      && patternSegments[i] !== epSegments[i]) { 
+        // Segment doesn't match
+        return false; 
+    }
   }
 
   return true; // All segments match
