@@ -53,7 +53,7 @@ export const Menubar = (props: MenubarProps) => {
 
   const me = props.present.find(isMe)!;
 
-  const plugins = usePlugins('annotation.*.toolbar');
+  const plugins = usePlugins('annotation.image.toolbar');
 
   const toggleLeftDrawer = () => {
     if (props.leftPanel)
@@ -140,7 +140,7 @@ export const Menubar = (props: MenubarProps) => {
           <Extension 
             key={plugin.meta.id}
             plugin={plugin} 
-            extensionPoint="annotation.*.toolbar" />
+            extensionPoint="annotation.image.toolbar" />
         ))}
 
         <div className="anno-desktop-overlay-divider" />

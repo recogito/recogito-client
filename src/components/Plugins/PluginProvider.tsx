@@ -1,5 +1,6 @@
 import { ReactNode, createContext, useContext, useState } from 'react';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
+import { matchesExtensionPoint } from './utils';
 
 interface PluginProviderContextValue {
 
@@ -42,9 +43,10 @@ export const PluginProvider = (props: PluginProviderProps) => {
 
 }
 
-export const usePlugins = (extensionPoint: string) => {
+export const usePlugins = (pattern: string) => {
   const { plugins } = useContext(PluginProviderContext);
-  return plugins.filter(p => Object.keys(p.meta.extension_points).includes(extensionPoint));
+  return plugins.filter(plugin => 
+      Object.keys(plugin.meta.extension_points).find(e => matchesExtensionPoint(pattern, e)));
 }
 
 export const useSharedPluginState = <T extends any = any>(pluginId: string) => {

@@ -44,7 +44,9 @@ export const Menubar = (props: MenubarProps) => {
 
   const me = props.present.find(isMe)!;
 
-  const plugins = usePlugins('annotation.*.toolbar');
+  const plugins = usePlugins('annotation.text.toolbar');
+
+  console.log('plugins', plugins);
 
   const toggleRightDrawer = (panel: DrawerPanel) => {
     if (panel === props.rightPanel)
@@ -120,7 +122,7 @@ export const Menubar = (props: MenubarProps) => {
           <Extension 
             key={plugin.meta.id}
             plugin={plugin} 
-            extensionPoint="annotation.*.toolbar" />
+            extensionPoint="annotation.text.toolbar" />
         ))}
 
         <div className="anno-desktop-overlay-divider" />

@@ -37,7 +37,6 @@ const createPluginRegistry = () => {
 
     const patternSegments = pattern.split('.');
 
-    // Helper to 
     const matchesExtensionPoint = (extensionPoint: string) => {
       const termSegments = extensionPoint.split('.');
 
