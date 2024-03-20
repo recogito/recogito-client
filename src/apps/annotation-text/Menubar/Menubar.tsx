@@ -46,8 +46,6 @@ export const Menubar = (props: MenubarProps) => {
 
   const plugins = usePlugins('annotation.text.toolbar');
 
-  console.log('plugins', plugins);
-
   const toggleRightDrawer = (panel: DrawerPanel) => {
     if (panel === props.rightPanel)
       props.onSetRightDrawer();
