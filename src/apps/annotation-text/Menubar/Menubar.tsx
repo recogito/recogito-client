@@ -108,11 +108,11 @@ export const Menubar = (props: MenubarProps) => {
       <div className="anno-menubar-right ta-menubar-right">  
         {props.present.length > 1 && (
           <>
-            <div className="anno-desktop-overlay-divider" />
-          
             <div className="anno-menubar-section anno-menubar-presence">
               <PresenceStack present={props.present} />
             </div>
+
+            <div className="anno-desktop-overlay-divider" />
           </>
         )}
 
@@ -123,7 +123,9 @@ export const Menubar = (props: MenubarProps) => {
             extensionPoint="annotation.text.toolbar" />
         ))}
 
-        <div className="anno-desktop-overlay-divider" />
+        {plugins.length > 0 && (
+          <div className="anno-desktop-overlay-divider" />
+        )}
 
         <div className="anno-menubar-section anno-menubar-actions-right">
           <button
