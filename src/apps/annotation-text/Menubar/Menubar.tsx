@@ -3,6 +3,7 @@ import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
+import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 import { PDFControls } from './PDFControls';
@@ -42,6 +43,8 @@ export const Menubar = (props: MenubarProps) => {
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
+
+  const plugins = usePlugins('annotation.*.toolbar');
 
   const toggleRightDrawer = (panel: DrawerPanel) => {
     if (panel === props.rightPanel)
@@ -112,6 +115,13 @@ export const Menubar = (props: MenubarProps) => {
             </div>
           </>
         )}
+
+        {plugins.map(plugin => (
+          <Extension 
+            key={plugin.meta.id}
+            plugin={plugin} 
+            extensionPoint="annotation.*.toolbar" />
+        ))}
 
         <div className="anno-desktop-overlay-divider" />
 

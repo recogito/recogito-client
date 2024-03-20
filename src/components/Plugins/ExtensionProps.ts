@@ -29,4 +29,3 @@ export interface AnnotationEditorExtensionProps extends ExtensionProps {
   onUpdateAnnotation(updated: SupabaseAnnotation): void;
 
 }
-

@@ -1,6 +1,7 @@
 import { isMe } from '@recogito/annotorious-supabase';
 import type { PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
+import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
@@ -51,6 +52,8 @@ export const Menubar = (props: MenubarProps) => {
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
+
+  const plugins = usePlugins('annotation.*.toolbar');
 
   const toggleLeftDrawer = () => {
     if (props.leftPanel)
@@ -132,6 +135,13 @@ export const Menubar = (props: MenubarProps) => {
             </div>
           </>
         )}
+
+        {plugins.map(plugin => (
+          <Extension 
+            key={plugin.meta.id}
+            plugin={plugin} 
+            extensionPoint="annotation.*.toolbar" />
+        ))}
 
         <div className="anno-desktop-overlay-divider" />
 
