@@ -3,6 +3,7 @@ import { getLangFromUrl } from '@i18n';
 import config from 'src/config.json';
 import Footer from '../branding/Footer';
 import Header from '../branding/Header';
+import ReactGA from 'react-ga4';
 
 import '@themes/default/index.css';
 
@@ -20,15 +21,18 @@ const useHeader = config.branding.top_logos_enabled;
 const backgroundColor = config.branding.background_color;
 
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
+
+import.meta.env.PUBLIC_GOOGLE_ANALYTICS_TAG_ID &&
+  ReactGA.initialize(import.meta.env.PUBLIC_GOOGLE_ANALYTICS_TAG_ID);
 ---
 
 <!DOCTYPE html>
 <html lang={getLangFromUrl(Astro.url)}>
   <head>
     <meta charset='UTF-8' />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='viewport' content='width=device-width, initial-scale=1' />
     <meta name='generator' content={Astro.generator} />
-    <link rel="icon" type="image/x-icon" href={favicon}>
+    <link rel='icon' type='image/x-icon' href={favicon} />
     <title>{title}</title>
   </head>
   <body>
@@ -155,5 +159,4 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     width: 45px;
     height: 45px;
   }
-</style>
-../branding/Header
+</style>../branding/Header
