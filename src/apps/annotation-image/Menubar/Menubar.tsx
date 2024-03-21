@@ -142,6 +142,7 @@ export const Menubar = (props: MenubarProps) => {
           <Extension 
             key={plugin.meta.id}
             plugin={plugin} 
+            document={props.document}
             extensionPoint="annotation.image.toolbar" />
         ))}
 

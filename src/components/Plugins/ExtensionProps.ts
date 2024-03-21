@@ -1,6 +1,7 @@
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PresentUser, User } from '@annotorious/react';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
+import type { DocumentInTaggedContext } from 'src/Types';
 
 /**
  * Typings for different kinds of plugins
@@ -27,5 +28,11 @@ export interface AnnotationEditorExtensionProps extends ExtensionProps {
   me: PresentUser | User;
 
   onUpdateAnnotation(updated: SupabaseAnnotation): void;
+
+}
+
+export interface AnnotationToolbarExtensionProps extends ExtensionProps {
+
+  document: DocumentInTaggedContext;
 
 }
