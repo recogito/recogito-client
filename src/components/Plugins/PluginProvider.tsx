@@ -62,3 +62,18 @@ export const useSharedPluginState = <T extends any = any>(pluginId: string) => {
 
   return { state, setState };
 }
+
+export const useSharedPluginStateValue = <T extends unknown>(pluginId: string, key: string) => {
+  const { state, setState } = useSharedPluginState(pluginId);
+
+  const value = state[key];
+
+  const setValue = (valueOrFunction: T) => {
+    if (typeof valueOrFunction === 'function')
+      setState((s: any) => ({ ...s, [key]: valueOrFunction(value) }))
+    else 
+      setState((s: any) => ({ ...s, [key]: valueOrFunction }))
+  }
+
+  return [value, setValue];
+}
