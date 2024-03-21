@@ -8,6 +8,7 @@
     "build": "astro build",
     "build-node": "astro build --config astro.config.node.mjs",
     "preview-node": "node ./dist/server/entry.mjs",
+    "install-plugin": "node ./plugins/install-plugin.js",
     "astro": "astro"
   },
   "dependencies": {

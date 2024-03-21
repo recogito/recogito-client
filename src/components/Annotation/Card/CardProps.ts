@@ -1,9 +1,10 @@
-import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react';
+import type { AnnotationBody, PresentUser } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Policies, Translations } from 'src/Types';
 
 export interface CardProps {
 
-  annotation: Annotation;
+  annotation: SupabaseAnnotation;
 
   className?: string;
 
@@ -20,6 +21,8 @@ export interface CardProps {
   onReply(body: AnnotationBody): void;
 
   onDeleteAnnotation(): void;
+
+  onUpdateAnnotation(updated: SupabaseAnnotation): void;
 
   onCreateBody(body: AnnotationBody): void;
 

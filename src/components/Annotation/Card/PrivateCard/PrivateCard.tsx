@@ -14,6 +14,7 @@ export const PrivateCard = (props: CardProps) => {
   const onMakePublic = () =>
     store.updateAnnotation({
       ...props.annotation,
+      // @ts-ignore
       visibility: undefined
     });
 

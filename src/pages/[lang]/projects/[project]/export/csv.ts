@@ -1,5 +1,4 @@
 import type { APIRoute } from 'astro';
-import { Visibility } from '@recogito/annotorious-supabase';
 import { getAllDocumentLayersInProject, getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getMyProfile, getProject } from '@backend/crud';
