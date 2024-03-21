@@ -23,3 +23,7 @@
   position: relative;
   overflow-y: auto;
 }
+
+.annotation-card-comments-container li.interstitial {
+  overflow: visible;
+}

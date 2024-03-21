@@ -118,7 +118,7 @@ export const BaseCard = (props: BaseCardProps) => {
           </li>
 
           {collapsed && (
-            <li style={{ zIndex: comments.length }}>
+            <li style={{ zIndex: comments.length }} className="interstitial">
               <Interstitial
                 label={`Show ${comments.length - 2} more replies`}
                 onClick={() => setCollapsed(false)}
