@@ -33,7 +33,7 @@ export const ProgressCreating = (props: ProgressProps) => {
           setState('failed');
           props.onError(error.message);
         } else {
-          // Step 2. For each document, create a layer in this context
+          // Step 2. Add documents to context
           const docs: string[] = documents.map(d => d.id);
           addDocumentsToContext(
             supabase,
