@@ -20,12 +20,33 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 <!DOCTYPE html>
 <html lang={getLangFromUrl(Astro.url)}>
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src=`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_GOOGLE_ANALYTICS_TAG_ID}`
+    ></script>
+    <script>
+      // @ts-ignore
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag() {
+        // @ts-ignore
+        dataLayer.push(arguments);
+      }
+      // @ts-ignore
+      gtag('js', new Date());
+      // @ts-ignore
+      gtag('config', `${import.meta.env.PUBLIC_GOOGLE_ANALYTICS_TAG_ID}`);
+    </script>
     <meta charset='UTF-8' />
-    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1, interactive-widget=resizes-content'
+    />
     <meta name='generator' content={Astro.generator} />
-    <link rel="icon" type="image/x-icon" href={favicon}>
+    <link rel='icon' type='image/x-icon' href={favicon} />
     <title>{title}</title>
-    <slot name="head" /> 
+    <slot name='head' />
   </head>
   <body>
     <slot />
