@@ -36,8 +36,8 @@
 .project-home-grid {
   display: grid;
   gap: 1rem;
-  grid-auto-rows: 1fr;  
-  grid-template-columns: repeat(auto-fill, 180px);
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, 200px);
   padding: 2em 0 40px 0;
 }
 
@@ -73,20 +73,20 @@
   border-radius: var(--border-radius);
   color: #fff;
   margin: 0 40px;
-  padding: 10px 20px; 
-  position: fixed; 
+  padding: 10px 20px;
+  position: fixed;
   bottom: 40px;
   text-align: center;
 }
 
 @keyframes pop-bottom {
-  0% { 
-    opacity: 0; 
-    transform: translateY(30px); 
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  100% { 
-    opacity: 1; 
-    transform: translateY(0); 
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
