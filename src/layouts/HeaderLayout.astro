@@ -27,10 +27,11 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
   <head>
     <!-- Google tag (gtag.js) -->
     <script
+      type='text/partytown'
       async
       src=`https://www.googletagmanager.com/gtag/js?id=${import.meta.env.PUBLIC_GOOGLE_ANALYTICS_TAG_ID}`
     ></script>
-    <script>
+    <script type='text/partytown'>
       // @ts-ignore
       window.dataLayer = window.dataLayer || [];
 
