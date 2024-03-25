@@ -1,8 +1,10 @@
-import fs from 'fs';
+//import fs from 'fs';
 import type { InstalledPlugin } from 'src/Types';
 import type { PluginMetadata } from './PluginMetadata';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
 import { matchesExtensionPoint } from './utils';
+
+import geotaggerMeta from '../../../plugins/geotagger/plugin.config.json';
 
 /** 
  * Important: that the plugin registry works ON THE SERVER ONLY, 
@@ -10,7 +12,32 @@ import { matchesExtensionPoint } from './utils';
  */
 const createPluginRegistry = () => {
 
-  const pluginRoot = 'dist/plugins';
+  const plugins: PluginMetadata[] = [{
+    ...geotaggerMeta,
+    directory: 'geotagger'
+   } as unknown as PluginMetadata];
+
+  /*
+  try {
+    const pluginDirs = fs.readdirSync(pluginRoot, { withFileTypes: true });
+
+    for (const dir of pluginDirs) {
+      if (dir.isDirectory()) {
+        const configFilePath = `${pluginRoot}/${dir.name}/plugin.config.json`
+
+        if (fs.existsSync(configFilePath)) {
+          const config = JSON.parse(fs.readFileSync(configFilePath).toString());
+          plugins.push({ ...config, directory: dir.name });
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error loading addons:', error);
+  }
+  */
+
+  /*
+  const pluginRoot = 'plugins';
 
   const plugins: PluginMetadata[] = [];
 
@@ -30,6 +57,7 @@ const createPluginRegistry = () => {
   } catch (error) {
     console.error('Error loading addons:', error);
   }
+  */
 
   const listAvailablePlugins = (pattern?: string): PluginMetadata[] => {
     // Return all
