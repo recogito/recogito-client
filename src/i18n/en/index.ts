@@ -17,18 +17,22 @@ import projectSettings from './project-settings.json';
 import projectSidedbar from './project-sidebar.json';
 
 export default {
-  'annotation-image': {...annotationCommon, ...annotationImage},
+  'annotation-image': { ...annotationCommon, ...annotationImage },
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
   'dashboard-account': { ...dashboardAccount },
-  'dashboard-projects': { ...dashboardProjects, ...notifications, ...accountMenu },
-  'error': error,
+  'dashboard-projects': {
+    ...dashboardProjects,
+    ...notifications,
+    ...accountMenu,
+  },
+  error: error,
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
-  'project-home': projectHome,
+  'project-home': { ...projectHome, ...accountMenu, ...projectSidedbar },
   'project-settings': projectSettings,
-  'project-sidebar': { ...projectSidedbar, ...accountMenu }
-}
+  'project-sidebar': { ...projectSidedbar, ...accountMenu },
+};

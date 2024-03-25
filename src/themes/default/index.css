@@ -165,6 +165,10 @@
   --input-focus-border-color: var(--bright-blue);
   --input-label-color: var(--font-light);
   --input-text-color: var(--font-dark);
+
+  /** Palette **/
+  --primary: #07529a;
+  --secondary: #b5c8dc;
 }
 
 html,

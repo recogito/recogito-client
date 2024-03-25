@@ -1,0 +1,42 @@
+.top-bar-container {
+  position: relative;
+}
+
+.top-bar-container header {
+  align-items: center;
+  background-color: var(--bright-blue);
+  box-sizing: border-box;
+  display: flex;
+  height: 60px;
+  justify-content: space-between;
+  padding: 0 40px;
+  width: 100%;
+  z-index: 9999;
+}
+
+.top-bar-branding {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+.top-bar-platform {
+  color: white;
+}
+
+.top-bar-separator {
+  width: 2px;
+  height: 20px;
+  margin-left: 5px;
+  background-color: white;
+}
+
+.top-bar-site_name {
+  padding-left: 5px;
+  color: var(--siteColor);
+}
+
+.top-bar-actions {
+  display: flex;
+  flex-direction: row;
+}

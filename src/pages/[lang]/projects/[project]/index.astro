@@ -1,10 +1,11 @@
 ---
-import ProjectLayout from '@layouts/project/ProjectLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getMyProfile } from '@backend/crud';
+import { getMyProfile, listMyInvites } from '@backend/crud';
+import { listMyProjectsExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
+import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -41,14 +42,20 @@ if (documents.error) {
 }
 
 const i18n = getTranslations(Astro.request, 'project-home');
+
+const invitations = await listMyInvites(supabase);
+
+const projects = await listMyProjectsExtended(supabase);
 ---
 
-<ProjectLayout active='Documents' user={profile.data} project={project.data}>
+<BaseLayout title='Projects Home'>
   <ProjectHome
     client:only
     i18n={i18n}
+    projects={projects.data}
     project={project.data}
     documents={documents.data}
     user={profile.data}
+    invitations={invitations.data}
   />
-</ProjectLayout>
+</BaseLayout>
