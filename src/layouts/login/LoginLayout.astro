@@ -10,14 +10,9 @@ export interface Props {
 const { title } = Astro.props;
 
 const siteColor = config.branding.site_color;
-const siteBanner = config.branding.home_banner;
-const message = config.branding.welcome_blurb;
-
-const backgroundStyle = `background: url(${siteBanner}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
 ---
 
-<HeaderLayout title={title} message={message}>
-  <div class='background' style={backgroundStyle}></div>
+<HeaderLayout title={title}>
   <slot />
 </HeaderLayout>
 

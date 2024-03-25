@@ -73,6 +73,13 @@
 .login-selector {
   position: absolute;
   top: 0;
+  right: 50%;
   margin-top: -40px;
   z-index: 10000;
+}
+
+.login-background-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
