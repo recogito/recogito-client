@@ -10,7 +10,7 @@ import { matchesExtensionPoint } from './utils';
  */
 const createPluginRegistry = () => {
 
-  const pluginRoot = 'plugins';
+  const pluginRoot = 'dist/plugins';
 
   const plugins: PluginMetadata[] = [];
 
