@@ -5,13 +5,13 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && npm run deploy-plugins",
+    "build": "astro build",
     "build-node": "astro build --config astro.config.node.mjs",
-    "deploy-plugins": "cp -R plugins dist/",
     "preview-node": "node ./dist/server/entry.mjs",
     "install-plugin": "node ./plugins/install-plugin.js",
     "astro": "astro",
-    "postinstall": "cd plugins/geotagger && npm install"
+    "preinstall": "node ./plugins/build-registry",
+    "postinstall": "find plugins -maxdepth 1 -mindepth 1 -type d -exec npm install --prefix {} \\;"
   },
   "dependencies": {
     "@allmaps/iiif-parser": "^1.0.0-beta.33",
