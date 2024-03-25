@@ -5,8 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && npm run deploy-plugins",
     "build-node": "astro build --config astro.config.node.mjs",
+    "deploy-plugins": "cp -R plugins dist/",
     "preview-node": "node ./dist/server/entry.mjs",
     "install-plugin": "node ./plugins/install-plugin.js",
     "astro": "astro",
