@@ -9,7 +9,8 @@
     "build-node": "astro build --config astro.config.node.mjs",
     "preview-node": "node ./dist/server/entry.mjs",
     "install-plugin": "node ./plugins/install-plugin.js",
-    "astro": "astro"
+    "astro": "astro",
+    "postinstall": "cd plugins/geotagger && npm install"
   },
   "dependencies": {
     "@allmaps/iiif-parser": "^1.0.0-beta.33",
