@@ -21,19 +21,26 @@ import type {
   Document,
   DocumentInContext,
   ExtendedProjectData,
+  Invitation,
   MyProfile,
   Protocol,
   Translations,
 } from 'src/Types';
 
 import './ProjectHome.css';
+import { TopBar } from '@components/TopBar';
+import { BackButtonBar } from '@components/BackButtonBar';
 
 export interface ProjectHomeProps {
   i18n: Translations;
 
   project: ExtendedProjectData;
 
+  projects: ExtendedProjectData[];
+
   documents: DocumentInContext[];
+
+  invitations: Invitation[];
 
   user: MyProfile;
 }
@@ -181,9 +188,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       documents.map((d) =>
         d.id === document.id
           ? {
-              ...d,
-              ...document,
-            }
+            ...d,
+            ...document,
+          }
           : d
       )
     );
@@ -202,7 +209,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     setAddOpen(true);
   };
 
-  const onDocumentSelected = (_document: DocumentInContext) => {};
+  const onDocumentSelected = (_document: DocumentInContext) => { };
 
   const onDocumentsSelected = (documentIds: string[]) => {
     addDocumentIds(documentIds);
@@ -210,117 +217,130 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   };
 
   return (
-    <div className='project-home'>
-      <ToastProvider>
-        <div>
-          <ProjectTitle editable={isAdmin} project={project} />
+    <>
+      <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.user} />
+      <BackButtonBar i18n={props.i18n} />
+      <div className='project-home'>
+        <ToastProvider>
+          <>
+            <div>
+              <ProjectTitle editable={isAdmin} project={project} />
 
-          <ProjectDescription
-            i18n={props.i18n}
-            editable={isAdmin}
-            project={project}
-            onChanged={setProject}
-            onError={() => onError('Error updating project description.')}
-          />
-
-          {isAdmin && (
-            <div className='admin-actions'>
-              <button className='primary' onClick={onAddDocument}>
-                <Plus size={20} /> <span>{t['Add Document']}</span>
-              </button>
-              <a
-                href={`/${lang}/projects/${project.id}/export/csv`}
-                className='button'
-              >
-                <DownloadSimple size={20} />
-                <span>{t['Export annotations as CSV']}</span>
-              </a>
-            </div>
-          )}
-        </div>
-
-        <div
-          className='project-home-grid-wrapper'
-          {...(isAdmin ? getRootProps() : {})}
-        >
-          <div
-            className='project-home-grid'
-            style={isDragActive ? { pointerEvents: 'none' } : undefined}
-          >
-            {documents.map((document) => (
-              <DocumentCard
-                key={document.id}
-                isDefaultContext
-                isAdmin={isAdmin}
+              <ProjectDescription
                 i18n={props.i18n}
-                document={document}
-                context={defaultContext!}
-                onDelete={() => onDeleteDocument(document)}
-                onUpdate={onUpdateDocument}
-                onError={onError}
+                editable={isAdmin}
+                project={project}
+                onChanged={setProject}
+                onError={() => onError('Error updating project description.')}
               />
-            ))}
+
+              {isAdmin && (
+                <div className='admin-actions'>
+                  <button className='primary' onClick={onAddDocument}>
+                    <Plus size={20} /> <span>{t['Add Document']}</span>
+                  </button>
+                  <a
+                    href={`/${lang}/projects/${project.id}/export/csv`}
+                    className='button'
+                  >
+                    <DownloadSimple size={20} />
+                    <span>{t['Export annotations as CSV']}</span>
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <div
+              className='project-home-grid-wrapper'
+              {...(isAdmin ? getRootProps() : {})}
+            >
+              <div
+                className='project-home-grid'
+                style={isDragActive ? { pointerEvents: 'none' } : undefined}
+              >
+                {documents.map((document) => (
+                  <DocumentCard
+                    key={document.id}
+                    isDefaultContext
+                    isAdmin={isAdmin}
+                    i18n={props.i18n}
+                    document={document}
+                    context={defaultContext!}
+                    onDelete={() => onDeleteDocument(document)}
+                    onUpdate={onUpdateDocument}
+                    onError={onError}
+                  />
+                ))}
+              </div>
+
+              {isDragActive && (
+                <div className='dropzone-hint-wrapper'>
+                  <div className='dropzone-hint'>
+                    <div className='dropzone-hint-popup'>
+                      <CloudArrowUp size={32} />
+                      <h1>
+                        Drop files or links to IIIF manifests to add them to your
+                        project.
+                      </h1>
+                      <p>Supported file formats: plaint text (UTF-8)</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            <div style={isDragActive ? { pointerEvents: 'none' } : undefined}>
+              <DocumentLibrary
+                open={addOpen}
+                i18n={props.i18n}
+                onAddDocument={onDocumentSelected}
+                onCancel={() => setAddOpen(false)}
+                user={props.user}
+                dataDirty={dataDirty || documentUpdated}
+                clearDirtyFlag={() => {
+                  clearDirtyFlag();
+                  setDocumentUpdated(false);
+                }}
+                UploadActions={
+                  <UploadActions
+                    i18n={props.i18n}
+                    onUpload={open}
+                    onImport={onImportRemote}
+                  />
+                }
+                onDocumentsSelected={onDocumentsSelected}
+                disabledIds={documentIds}
+                onUpdated={onUpdateDocument}
+                onError={onError}
+                onDelete={onDeleteDocument}
+                onTogglePrivate={onTogglePrivate}
+                isAdmin={isAdmin}
+              />
+            </div>
+            <UploadTracker
+              i18n={props.i18n}
+              show={showUploads}
+              closable={isIdle}
+              uploads={uploads}
+              onClose={() => setShowUploads(false)}
+            />
           </div>
 
-          {isDragActive && (
-            <div className='dropzone-hint-wrapper'>
-              <div className='dropzone-hint'>
-                <div className='dropzone-hint-popup'>
-                  <CloudArrowUp size={32} />
-                  <h1>
-                    Drop files or links to IIIF manifests to add them to your
-                    project.
-                  </h1>
-                  <p>Supported file formats: plaint text (UTF-8)</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        <div style={isDragActive ? { pointerEvents: 'none' } : undefined}>
-          <DocumentLibrary
-            open={addOpen}
+          <UploadTracker
             i18n={props.i18n}
-            onAddDocument={onDocumentSelected}
-            onCancel={() => setAddOpen(false)}
-            user={props.user}
-            dataDirty={dataDirty || documentUpdated}
-            clearDirtyFlag={() => {
-              clearDirtyFlag();
-              setDocumentUpdated(false);
-            }}
-            UploadActions={
-              <UploadActions
-                i18n={props.i18n}
-                onUpload={open}
-                onImport={onImportRemote}
-              />
-            }
-            onDocumentsSelected={onDocumentsSelected}
-            disabledIds={documentIds}
-            onUpdated={onUpdateDocument}
-            onError={onError}
-            onDelete={onDeleteDocument}
-            onTogglePrivate={onTogglePrivate}
-            isAdmin={isAdmin}
+            show={showUploads}
+            closable={isIdle}
+            uploads={uploads}
+            onClose={() => setShowUploads(false)}
           />
-        </div>
 
-        <UploadTracker
-          i18n={props.i18n}
-          show={showUploads}
-          closable={isIdle}
-          uploads={uploads}
-          onClose={() => setShowUploads(false)}
-        />
+          <Toast
+            content={toast}
+            onOpenChange={(open) => !open && setToast(null)}
+          />
+        </ToastProvider >
 
-        <Toast
-          content={toast}
-          onOpenChange={(open) => !open && setToast(null)}
-        />
-      </ToastProvider>
-
-      <input {...getInputProps()} />
-    </div>
+        <input {...getInputProps()} />
+      </div >
+    </>
   );
 };

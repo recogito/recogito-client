@@ -19,6 +19,7 @@ import userManagement from './user-management.json';
 
 export default {
   'annotation-image': { ...annotationCommon, ...annotationImage },
+  'annotation-image': { ...annotationCommon, ...annotationImage },
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
@@ -33,7 +34,7 @@ export default {
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
-  'project-home': projectHome,
+  'project-home': { ...projectHome, ...accountMenu, ...projectSidedbar },
   'project-settings': projectSettings,
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': userManagement,
