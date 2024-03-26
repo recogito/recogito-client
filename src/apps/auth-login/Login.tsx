@@ -25,6 +25,7 @@ const clearCookies = () => {
 
 export const Login = (props: {
   i18n: Translations;
+  splashURL: string;
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
@@ -128,10 +129,16 @@ export const Login = (props: {
   };
 
   if (isChecking) {
-    return <StateChecking />;
+    return (
+      <div className='login-background-container'>
+        <img src={props.splashURL} alt={'Image of site'} width='100%' height='100%' />
+        <StateChecking />
+      </div>
+    )
   } else if (sendLink) {
     return (
-      <>
+      <div className='login-background-container'>
+        <img src={props.splashURL} alt={'Image of site'} width='100%' height='100%' />
         <div className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
@@ -141,11 +148,12 @@ export const Login = (props: {
           />
         </div>
         <StateMagicLink i18n={props.i18n} />;
-      </>
+      </div>
     );
   } else if (showLogin) {
     return (
-      <>
+      <div className='login-background-container'>
+        <img src={props.splashURL} alt={'Image of site'} width='100%' height='100%' />
         <div className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
@@ -159,17 +167,20 @@ export const Login = (props: {
           onSendLink={() => setSendLink(true)}
           onSignInWithSSO={signInWithSSO}
         />
-      </>
+      </div>
     );
   } else {
     return (
-      <div className='login-selector'>
-        <LoginMethodSelector
-          i18n={props.i18n}
-          availableMethods={props.methods}
-          currentMethod={currentMethod}
-          onChangeMethod={onMethodChanged}
-        />
+      <div className='login-background-container'>
+        <img src={props.splashURL} alt={'Image of site'} width='100%' height='100%' />
+        <div className='login-selector'>
+          <LoginMethodSelector
+            i18n={props.i18n}
+            availableMethods={props.methods}
+            currentMethod={currentMethod}
+            onChangeMethod={onMethodChanged}
+          />
+        </div>
       </div>
     );
   }
