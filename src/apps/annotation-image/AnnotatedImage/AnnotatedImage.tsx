@@ -25,6 +25,8 @@ const SUPABASE_API_KEY: string = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 interface AnnotatedImageProps {
 
+  authToken?: string;
+
   channelId: string;
 
   defaultLayer?: Layer;
@@ -78,6 +80,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     gestureSettingsMouse: {
       clickToZoom: false
     },
+    ajaxHeaders: props.authToken ? {
+      Authentication: `Bearer ${props.authToken}`
+    } : undefined,
     showNavigationControl: false,
     crossOriginPolicy: 'Anonymous',
     minZoomLevel: 0.4,

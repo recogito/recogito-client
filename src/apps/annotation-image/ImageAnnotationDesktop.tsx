@@ -30,6 +30,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
   const { 
+    authToken,
     isPresentationManifest, 
     manifestError,
     sequence, 
@@ -159,6 +160,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 {policies && currentImage && (
                   <AnnotatedImage
                     ref={viewer}
+                    authToken={authToken}
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
                     imageManifestURL={currentImage}

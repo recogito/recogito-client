@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Utils, Manifest, Resource, Sequence } from 'manifesto.js';
 import type { DocumentInTaggedContext } from 'src/Types';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
@@ -31,6 +32,8 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
 
   const [manifestError, setManifestError] = useState<string | undefined>();
 
+  const [authToken, setAuthToken] = useState<string | undefined>();
+
   const [manifestType, setManifestType] = useState<ManifestType | undefined>();
 
   const images = sequence ? sequence.getCanvases().reduce<Resource[]>((images, canvas) => {
@@ -38,7 +41,9 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
   }, []) : [];
 
   useEffect(() => {
-    const url = document.content_type?.startsWith('image/') 
+    const isUploadedFile = document.content_type?.startsWith('image/');
+
+    const url = isUploadedFile
       // Locally uploaded image - for now, assume this is served via built-in IIIF
       // TODO how to construct the right IIIF URL?
       ? `/iiif/${document.id}/info.json`
@@ -50,8 +55,26 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
     }
 
     if (url.endsWith('info.json')) {
-      setCurrentImage(url);
-      setManifestType('IMAGE');
+      if (isUploadedFile) {
+        // For uploaded files, we need to include the auth token
+        // into image requests
+        supabase.auth.getSession().then(({ error, data }) => {
+          // Get Supabase session token first
+          if (error) {
+            // Shouldn't really happen at this point
+            console.error(error);
+          } else {
+            setAuthToken(data.session?.access_token) 
+            setCurrentImage(url);
+            setManifestType('IMAGE');
+          }
+        });
+  
+      } else {
+        // Remote image API manifest
+        setCurrentImage(url);
+        setManifestType('IMAGE');
+      } 
     } else {
       Utils.loadManifest(url).then(data => {
         const manifest = Utils.parseManifest(data) as Manifest;
@@ -106,6 +129,7 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
   }
 
   return { 
+    authToken,
     currentImage,
     isPresentationManifest,
     isImageManifest,
