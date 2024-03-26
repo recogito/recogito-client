@@ -13,6 +13,11 @@ import type {
   TaggedContext,
 } from 'src/Types';
 
+// NOTE we might want to be able to switch
+// between Supabase storage and IIIF Cloud at
+// a later point
+const IMAGE_MODE = 'SUPABASE_STORAGE';
+
 /**
  * Initializes a new Document in a Context. Process differs for
  * different types of content.
@@ -33,21 +38,34 @@ export const initDocument = (
   protocol?: Protocol
 ): Promise<DocumentInContext> => {
   if (file?.type.startsWith('image')) {
-    // If the document is an image upload, the file is first
-    // uploaded to the IIIF server, and then treated like a remote
-    // IIIF source.
-    return uploadImage(supabase, file, name, onProgress).then((iiif) =>
-      _initDocument(
+    if (IMAGE_MODE === 'SUPABASE_STORAGE') {
+      return _initDocument(
         supabase,
         name,
         projectId,
         contextId,
-        undefined,
-        undefined,
-        'IIIF_IMAGE',
-        iiif.manifest_iiif_url
+        onProgress,
+        file,
+        protocol,
+        url
       )
-    );
+    } else {
+      // If the document is an image upload, the file is first
+      // uploaded to the IIIF server, and then treated like a remote
+      // IIIF source.
+      return uploadImage(supabase, file, name, onProgress).then((iiif) =>
+        _initDocument(
+          supabase,
+          name,
+          projectId,
+          contextId,
+          undefined,
+          undefined,
+          'IIIF_IMAGE',
+          iiif.manifest_iiif_url
+        )
+      );
+    }
   } else {
     return _initDocument(
       supabase,

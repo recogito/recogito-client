@@ -36,7 +36,6 @@ if (document.error || !document.data) {
     );
   }
 
-  console.log('Error!');
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
@@ -72,7 +71,7 @@ if (document.data.content_type === 'text/plain') {
   viewer = 'TEI';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
+} else if (document.data.content_type?.startsWith('image/') || document.data.meta_data?.protocol?.startsWith('IIIF')) {
   viewer = 'OPENSEADRAGON';
 } else {
   // Should never happen
@@ -82,30 +81,26 @@ if (document.data.content_type === 'text/plain') {
 ---
 
 <BaseLayout title={document.data.name}>
-  {
-    viewer === 'TEI' && !styleSheet && (
-      <link rel='stylesheet' href='/tei.css' slot='head' />
-    )
-  }
+  {viewer === 'TEI' && !styleSheet && (
+    <link rel='stylesheet' href='/tei.css' slot='head' />
+  )}
 
-  {
-    viewer === 'OPENSEADRAGON' ? (
-      <ImageAnnotation
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-image')}
-        document={document.data}
-        channelId={channelId}
-      />
-    ) : (
-      <TextAnnotation
-        client:only
-        i18n={getTranslations(Astro.request, 'annotation-text')}
-        document={document.data}
-        channelId={channelId}
-        styleSheet={styleSheet}
-      />
-    )
-  }
+  {viewer === 'OPENSEADRAGON' ? (
+    <ImageAnnotation
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-image')}
+      document={document.data}
+      channelId={channelId}
+    />
+  ) : (
+    <TextAnnotation
+      client:only
+      i18n={getTranslations(Astro.request, 'annotation-text')}
+      document={document.data}
+      channelId={channelId}
+      styleSheet={styleSheet}
+    />
+  )}
 </BaseLayout>
 
 <style>

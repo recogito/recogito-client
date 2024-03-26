@@ -1,4 +1,4 @@
-import type { Protocol } from "src/Types";
+import type { Protocol } from 'src/Types';
 
 export interface Upload {
 
