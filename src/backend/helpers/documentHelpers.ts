@@ -14,6 +14,16 @@ import type {
 } from 'src/Types';
 
 /**
+ * IIIF configuration:
+ * - 'IIIF_CLOUD': the image is uploaded to IIIF Cloud first, then a document
+ *   record is created that points to the image on IIIF Cloud. 
+ * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
+ *   is uploaded to Supabase storage.
+ */
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' = 
+  import.meta.env.PUBLIC_IIIF_CONFIGURATION;
+
+/**
  * Initializes a new Document in a Context. Process differs for
  * different types of content.
  *
@@ -33,21 +43,34 @@ export const initDocument = (
   protocol?: Protocol
 ): Promise<DocumentInContext> => {
   if (file?.type.startsWith('image')) {
-    // If the document is an image upload, the file is first
-    // uploaded to the IIIF server, and then treated like a remote
-    // IIIF source.
-    return uploadImage(supabase, file, name, onProgress).then((iiif) =>
-      _initDocument(
+    if (IIIF_CONFIGURATION === 'SUPABASE_CANTALOUPE') {
+      return _initDocument(
         supabase,
         name,
         projectId,
         contextId,
-        undefined,
-        undefined,
-        'IIIF_IMAGE',
-        iiif.manifest_iiif_url
+        onProgress,
+        file,
+        protocol,
+        url
       )
-    );
+    } else {
+      // If the document is an image upload, the file is first
+      // uploaded to the IIIF server, and then treated like a remote
+      // IIIF source.
+      return uploadImage(supabase, file, name, onProgress).then((iiif) =>
+        _initDocument(
+          supabase,
+          name,
+          projectId,
+          contextId,
+          undefined,
+          undefined,
+          'IIIF_IMAGE',
+          iiif.manifest_iiif_url
+        )
+      );
+    }
   } else {
     return _initDocument(
       supabase,
