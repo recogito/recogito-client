@@ -83,6 +83,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     ajaxHeaders: props.authToken ? {
       Authorization: `Bearer ${props.authToken}`
     } : undefined,
+    loadTilesWithAjax: true,
+    ajaxWithCredentials: true,
     showNavigationControl: false,
     crossOriginPolicy: 'Anonymous',
     minZoomLevel: 0.4,
