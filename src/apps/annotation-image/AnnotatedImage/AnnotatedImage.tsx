@@ -63,7 +63,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { i18n, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -80,11 +80,11 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     gestureSettingsMouse: {
       clickToZoom: false
     },
-    ajaxHeaders: props.authToken ? {
-      Authorization: `Bearer ${props.authToken}`
+    ajaxHeaders: authToken ? {
+      Authorization: `Bearer ${authToken}`
     } : undefined,
-    loadTilesWithAjax: true,
-    ajaxWithCredentials: true,
+    loadTilesWithAjax: Boolean(authToken),
+    ajaxWithCredentials: authToken ? true : undefined,
     showNavigationControl: false,
     crossOriginPolicy: 'Anonymous',
     minZoomLevel: 0.4,
