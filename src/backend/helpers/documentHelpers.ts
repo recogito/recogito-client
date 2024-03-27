@@ -13,10 +13,15 @@ import type {
   TaggedContext,
 } from 'src/Types';
 
-// NOTE we might want to be able to switch
-// between Supabase storage and IIIF Cloud at
-// a later point
-const IMAGE_MODE = 'SUPABASE_STORAGE';
+/**
+ * IIIF configuration:
+ * - 'IIIF_CLOUD': the image is uploaded to IIIF Cloud first, then a document
+ *   record is created that points to the image on IIIF Cloud. 
+ * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
+ *   is uploaded to Supabase storage.
+ */
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' = 
+  import.meta.env.PUBLIC_IIIF_CONFIGURATION;
 
 /**
  * Initializes a new Document in a Context. Process differs for
@@ -38,7 +43,7 @@ export const initDocument = (
   protocol?: Protocol
 ): Promise<DocumentInContext> => {
   if (file?.type.startsWith('image')) {
-    if (IMAGE_MODE === 'SUPABASE_STORAGE') {
+    if (IIIF_CONFIGURATION === 'SUPABASE_CANTALOUPE') {
       return _initDocument(
         supabase,
         name,

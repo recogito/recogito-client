@@ -5,6 +5,8 @@ import { supabase } from '@backend/supabaseBrowserClient';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
+const CANTALOUPE_PATH: string | undefined = import.meta.env.PUBLIC_IIIF_CANTALOUPE_PATH;
+
 // Performs a simple sanity check
 const isSupported = (manifest: Manifest) => {
   // Require exactly one sequence
@@ -46,7 +48,7 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
     const url = isUploadedFile
       // Locally uploaded image - for now, assume this is served via built-in IIIF
       // TODO how to construct the right IIIF URL?
-      ? `/iiif/${document.id}/info.json`
+      ? `${CANTALOUPE_PATH}/${document.id}/info.json`
       : document.meta_data?.url;
 
     if (!url) {
