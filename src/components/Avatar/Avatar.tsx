@@ -57,21 +57,25 @@ export const Avatar = (props: AvatarProps) => {
 
   return (
     <RadixAvatar.Root className='avatar'>
-      {avatar && (
-        <RadixAvatar.Image
-          className='avatar-image'
-          title={`${name} avatar`}
-          src={avatar}
-        />
-      )}
+      <span 
+        className={props.color ? 'avatar-wrapper ring' : 'avatar-wrapper'}
+        style={props.color ? { borderColor: props.color } : undefined}>
+        {avatar && (
+          <RadixAvatar.Image
+            className='avatar-image'
+            title={`${name} avatar`}
+            src={avatar}
+          />
+        )}
 
-      <RadixAvatar.Fallback
-        className='avatar-fallback'
-        title={`${name} avatar image`}
-        style={{ backgroundColor }}
-      >
-        {name ? getInitials(name) : <User size={16} />}
-      </RadixAvatar.Fallback>
+        <RadixAvatar.Fallback
+          className='avatar-fallback'
+          title={`${name} avatar image`}
+          style={{ backgroundColor }}
+        >
+          {name ? getInitials(name) : <User size={16} />}
+        </RadixAvatar.Fallback>
+      </span>
     </RadixAvatar.Root>
   );
 };
