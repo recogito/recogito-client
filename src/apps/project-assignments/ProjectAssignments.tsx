@@ -25,6 +25,7 @@ import type {
 } from 'src/Types';
 import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
 import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
 import './ProjectAssignments.css';
