@@ -1,7 +1,7 @@
 import type { User } from '@annotorious/react';
 
 // https://wpdatatables.com/data-visualization-color-palette/
-export const DutchFieldCategorical9 = [
+const DutchFieldCategorical9 = [
   '#e60049', 
   '#0bb4ff', 
   '#50e991', 
@@ -13,7 +13,13 @@ export const DutchFieldCategorical9 = [
   '#00bfa0'
 ];
 
-export const createAuthorPalette = () => {
+export interface AuthorColors {
+
+  getColor(user: User): string;
+
+}
+
+export const createAuthorPalette = (): AuthorColors => {
 
   const assignedColors = new Map<string, string>();
 

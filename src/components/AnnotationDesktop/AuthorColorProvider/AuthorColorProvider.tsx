@@ -1,10 +1,8 @@
 import { ReactNode, createContext, useContext, useMemo } from 'react';
-import { createAuthorPalette } from './authorPalette';
-
-type AuthorColorProviderContextValue = ReturnType<typeof createAuthorPalette>;
+import { type AuthorColors, createAuthorPalette } from './AuthorColors';
 
 // @ts-ignore
-const AuthorColorProviderContext = createContext<AuthorColorProviderContextValue>(undefined);
+const AuthorColorProviderContext = createContext<AuthorColors>(undefined);
 
 interface AuthorColorProviderProps {
 
@@ -24,4 +22,4 @@ export const AuthorColorProvider = (props: AuthorColorProviderProps) => {
 
 }
 
-export const useAuthorPalette = () => useContext(AuthorColorProviderContext);
+export const useAuthorColors = () => useContext(AuthorColorProviderContext);

@@ -1,6 +1,7 @@
 import { Annotorious } from '@annotorious/react';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 import { ImageAnnotationDesktop } from './ImageAnnotationDesktop';
+import { AuthorColorProvider } from '@components/AnnotationDesktop';
 
 export interface ImageAnnotationProps {
 
@@ -15,9 +16,11 @@ export interface ImageAnnotationProps {
 export const ImageAnnotation = (props: ImageAnnotationProps) => {
 
   return (
-    <Annotorious>
-      <ImageAnnotationDesktop {...props} />
-    </Annotorious>
+    <AuthorColorProvider>
+      <Annotorious>
+        <ImageAnnotationDesktop {...props} />
+      </Annotorious>
+    </AuthorColorProvider>
   )
 
 }
