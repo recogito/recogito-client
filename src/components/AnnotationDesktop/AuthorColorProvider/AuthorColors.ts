@@ -15,7 +15,7 @@ const DutchFieldCategorical9 = [
 
 export interface AuthorColors {
 
-  getColor(user: User): string | undefined;
+  getColor(user?: User): string | undefined;
 
 }
 
