@@ -130,16 +130,14 @@ export const Login = (props: {
 
   if (isChecking) {
     return (
-      <div className='login-background-container'>
-        <img src={props.splashURL} className='login-background-img' alt={'Image of site'} />
+      <div id='login-selector' className='login-background-container'>
         <StateChecking />
       </div>
     )
   } else if (sendLink) {
     return (
       <div className='login-background-container'>
-        <img src={props.splashURL} alt={'Image of site'} className='login-background-img' />
-        <div className='login-selector'>
+        <div id='login-selector' className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
             availableMethods={props.methods}
@@ -153,8 +151,7 @@ export const Login = (props: {
   } else if (showLogin) {
     return (
       <div className='login-background-container'>
-        <img src={props.splashURL} alt={'Image of site'} className='login-background-img' />
-        <div className='login-selector'>
+        <div id='login-selector' className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
             availableMethods={props.methods}
@@ -172,8 +169,7 @@ export const Login = (props: {
   } else {
     return (
       <div className='login-background-container'>
-        <img src={props.splashURL} alt={'Image of site'} className='login-background-img' />
-        <div className='login-selector'>
+        <div id='login-selector' className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
             availableMethods={props.methods}
