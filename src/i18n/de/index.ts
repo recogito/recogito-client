@@ -19,8 +19,6 @@ import userManagement from './user-management.json';
 
 export default {
   'annotation-image': { ...annotationCommon, ...annotationImage },
-  'annotation-image': { ...annotationCommon, ...annotationImage },
-  'annotation-image': { ...annotationCommon, ...annotationImage },
   'annotation-text': { ...annotationCommon, ...annotationText },
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
