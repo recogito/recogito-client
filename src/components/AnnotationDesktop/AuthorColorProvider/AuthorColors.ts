@@ -15,7 +15,7 @@ const DutchFieldCategorical9 = [
 
 export interface AuthorColors {
 
-  getColor(user: User): string;
+  getColor(user: User): string | undefined;
 
 }
 
@@ -25,7 +25,9 @@ export const createAuthorPalette = (): AuthorColors => {
 
   let nextIndex = 0;
 
-  const getColor = (user: User) => {
+  const getColor = (user?: User) => {
+    if (!user) return;
+
     const assigned = assignedColors.get(user.id);
     if (assigned)
       return assigned;
