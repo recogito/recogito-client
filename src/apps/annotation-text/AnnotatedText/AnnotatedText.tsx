@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { DrawingStyle, PresentUser } from '@annotorious/react';
+import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
 import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
@@ -25,7 +25,7 @@ interface AnnotatedTextProps {
 
   document: DocumentInTaggedContext;
 
-  filter?: (a: TextAnnotation) => boolean;
+  filter?: Filter;
 
   i18n: Translations;
 
@@ -104,14 +104,12 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             </>
           ) : contentType === 'application/pdf' && text ? (
             <PDFViewer
-              experimentalCSSRenderer
               document={props.document}
               filter={props.filter}
               style={props.style}
               onRendered={() => setPDFLoading(false)} />
           ) : text && (
             <TextAnnotator
-              experimentalCSSRenderer
               filter={props.filter}
               style={props.style}
               presence={{

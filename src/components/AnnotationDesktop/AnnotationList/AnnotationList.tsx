@@ -20,7 +20,7 @@ import {
 
 import './AnnotationList.css';
 
-interface AnnotationListProps {
+interface AnnotationListProps<T extends Anno> {
 
   i18n: Translations;
 
@@ -30,7 +30,7 @@ interface AnnotationListProps {
 
   policies?: Policies;
 
-  sorting?: ((a: Anno, b: Anno) => number);
+  sorting?: ((a: T, b: T) => number);
 
   tagVocabulary?: string[];
 
@@ -38,7 +38,7 @@ interface AnnotationListProps {
 
 }
 
-export const AnnotationList = (props: AnnotationListProps) => {
+export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) => {
 
   const el = useRef<HTMLUListElement>(null);
 
@@ -66,6 +66,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const sorted = useMemo(() => {
     const filtered = filter ? annotations.filter(filter) : annotations;
+    // @ts-ignore
     return props.sorting ? [...filtered].sort(props.sorting) : filtered;
   }, [annotations, filter]);
 

@@ -5,7 +5,7 @@ import { UndoStack } from '@components/AnnotationDesktop';
 import { createAppearenceProvider } from '@components/Presence';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import type { DocumentInTaggedContext, Layer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 import { Toolpanel } from '../Toolpanel';
 import { 
   AnnotoriousOpenSeadragonAnnotator, 
