@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { CloudArrowUp, DownloadSimple, Plus } from '@phosphor-icons/react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -13,10 +13,10 @@ import {
   useDragAndDrop,
 } from './upload';
 import { useDocumentList } from './useDocumentList';
-import { ProjectTitle } from './ProjectTitle';
-import { ProjectDescription } from './ProjectDescription';
 import { DocumentLibrary } from '../../components/DocumentLibrary';
 import { validateIIIF } from './upload/dialogs/useIIIFValidation';
+import { ProjectHeader } from './ProjectHeader';
+
 import type {
   Document,
   DocumentInContext,
@@ -68,11 +68,23 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [documentUpdated, setDocumentUpdated] = useState(false);
 
+  const [tab, setTab] = useState<'documents' | 'assignments' | undefined>();
+
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
     (document) => setDocuments((d) => [...d, document])
   );
 
   const documentIds = useMemo(() => documents.map((d) => d.id), [documents]);
+
+  useEffect(() => {
+    if (!tab && projectPolicies) {
+      if (isAdmin) {
+        setTab('documents');
+      } else {
+        setTab('assignments')
+      }
+    }
+  }, [isAdmin])
 
   const { addDocumentIds } = useDocumentList(
     project.id,
@@ -216,10 +228,31 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     setAddOpen(false);
   };
 
+  const handleSwitchTab = (tab: 'documents' | 'assignments') => {
+
+  }
+
+  const handleGotoSettings = () => {
+
+  }
+
+  const handleGotoUsers = () => {
+
+  }
+
   return (
     <>
       <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.user} />
       <BackButtonBar i18n={props.i18n} />
+      <ProjectHeader
+        i18n={props.i18n} isAdmin={isAdmin || false}
+        name={props.project.name}
+        description={props.project.description || ''}
+        currentTab={isAdmin ? tab : undefined}
+        onSwitchTab={handleSwitchTab}
+        onGotoSettings={handleGotoSettings}
+        onGotoUsers={handleGotoUsers}
+      />
       <div className='project-home'>
         <ToastProvider>
           <>

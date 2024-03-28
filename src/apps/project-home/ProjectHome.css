@@ -4,6 +4,7 @@
   flex-grow: 1;
   padding: 20px 40px;
   position: relative;
+  background-color: white;
 }
 
 .project-home h1 {
