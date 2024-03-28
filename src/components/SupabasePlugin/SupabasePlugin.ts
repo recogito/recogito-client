@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator, Annotation, Annotator, PresentUser, User } from '@annotorious/react';
 import { type SupabasePluginConfig, SupabasePlugin as Supabase } from '@recogito/annotorious-supabase';
 import type { PostgrestError } from '@supabase/supabase-js';
+import { createAppearenceProvider } from '@components/Presence';
 
 // Re-export isMe utility
 export { isMe } from '@recogito/annotorious-supabase';
@@ -36,9 +37,11 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
 
   const [plugin, setPlugin] = useState<ReturnType<typeof Supabase>>();
 
+  const appearanceProvider = useMemo(() => createAppearenceProvider(), []);
+
   useEffect(() => {
     if (anno) {
-      const supabase = Supabase(anno, props);
+      const supabase = Supabase(anno, {...props, appearanceProvider });
 
       supabase
         .connect()
