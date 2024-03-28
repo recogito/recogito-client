@@ -58,8 +58,8 @@ export const Avatar = (props: AvatarProps) => {
   return (
     <RadixAvatar.Root className='avatar'>
       <span 
-        className={props.color ? 'avatar-wrapper ring' : 'avatar-wrapper'}
-        style={props.color ? { borderColor: props.color } : undefined}>
+        className={color ? 'avatar-wrapper ring' : 'avatar-wrapper'}
+        style={color ? { borderColor: color } : undefined}>
         {avatar && (
           <RadixAvatar.Image
             className='avatar-image'
