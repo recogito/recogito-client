@@ -19,6 +19,10 @@ html, body {
   height: 100dvh;  
 }
 
+.ta-desktop main .r6o-annotatable .r6o-span-highlight-layer {
+  mix-blend-mode: multiply;
+}
+
 .ta-desktop main .ta-annotated-text-container {
   display: flex;
   flex-grow: 1;
