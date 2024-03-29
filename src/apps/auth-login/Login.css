@@ -14,11 +14,19 @@
 
 .login,
 .login-magic-link {
-  background-color: var(--gray-100);
-  width: 400px;
-  padding: 30px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: 100%;
 }
 
+main {
+  margin: auto;
+  background-color: var(--gray-100);
+  width: 400px;
+  height: 375px;
+  padding: 30px;
+}
 .login .error,
 .login-magic-link .error {
   font-size: var(--font-tiny);
