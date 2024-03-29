@@ -39,8 +39,7 @@ export const Popup = (props: PopupProps) => {
 
   const isMine = selected.target.creator?.id === me.id;
 
-  const hasComments = 
-    selected.bodies.filter(b => b.purpose === 'commenting' || b.purpose === 'replying').length > 0;
+  const hasBodies = selected.bodies.length > 0;
 
   // Close the popup after a reply
   const onReply = (body: AnnotationBody) => {
@@ -72,7 +71,7 @@ export const Popup = (props: PopupProps) => {
           : 'annotation-popup not-annotatable'
       }
     >
-      {hasComments ? (
+      {hasBodies ? (
         isPrivate ? (
           <Annotation.PrivateCard
             {...props}
