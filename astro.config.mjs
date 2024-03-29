@@ -3,7 +3,9 @@ import react from '@astrojs/react';
 import netlify from '@astrojs/netlify/functions';
 
 export default defineConfig({
-  integrations: [react()],
+  integrations: [
+    react()
+  ],
   output: 'server',
   adapter: netlify(),
   vite: {

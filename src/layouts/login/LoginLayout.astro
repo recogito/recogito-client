@@ -10,18 +10,23 @@ export interface Props {
 const { title } = Astro.props;
 
 const siteColor = config.branding.site_color;
-const siteBanner = config.branding.home_banner;
-const message = config.branding.welcome_blurb;
+const splashURL = config.branding.home_banner;
 
-const backgroundStyle = `background: url(${siteBanner}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
+const backgroundStyle = `background: url(${splashURL}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
 ---
 
-<HeaderLayout title={title} message={message}>
+<HeaderLayout title={title}>
   <div class='background' style={backgroundStyle}></div>
   <slot />
 </HeaderLayout>
 
 <style define:vars={{ siteColor }}>
+  .login-background-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
   .background {
     position: absolute;
     top: 0;
