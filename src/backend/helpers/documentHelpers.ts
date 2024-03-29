@@ -20,7 +20,7 @@ import type {
  * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
  *   is uploaded to Supabase storage.
  */
-const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' = 
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined = 
   import.meta.env.PUBLIC_IIIF_CONFIGURATION;
 
 /**
