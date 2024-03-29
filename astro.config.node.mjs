@@ -13,5 +13,8 @@ export default defineConfig({
     ssr: {
       noExternal: ['@radix-ui/*', '@phosphor-icons/*'],
     },
-  },
+    resolve: {
+      mainFields: [] // react-moment fails without this!
+    }
+  }
 });

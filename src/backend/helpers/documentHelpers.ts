@@ -3,6 +3,7 @@ import { createDocument, createProjectDocument } from '@backend/crud';
 import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
+import { getTagsForContext } from './tagHelpers';
 import type {
   Document,
   DocumentInContext,
@@ -11,7 +12,6 @@ import type {
   Protocol,
   TaggedContext,
 } from 'src/Types';
-import { getTagsForContext } from './tagHelpers';
 
 /**
  * Initializes a new Document in a Context. Process differs for
@@ -44,7 +44,7 @@ export const initDocument = (
         contextId,
         undefined,
         undefined,
-        protocol,
+        'IIIF_IMAGE',
         iiif.manifest_iiif_url
       )
     );
@@ -90,9 +90,9 @@ const _initDocument = (
       file?.type,
       protocol
         ? {
-            protocol,
-            url,
-          }
+          protocol,
+          url,
+        }
         : undefined
     ).then(({ error, data }) => {
       if (error) {
@@ -151,7 +151,12 @@ export const addDocumentToProject = (
     createLayerInContext(supabase, document.id, projectId, contextId)
   );
 
-  return Promise.all([a, b]).then(([document, defaultLayer]) => {
+  // Third promise: Add project document record
+  const c = b.then(() =>
+    createProjectDocument(supabase, documentId, projectId)
+  ).catch(error => console.error(error));
+
+  return Promise.all([a, b, c]).then(([document, defaultLayer]) => {
     return { ...document, layers: [defaultLayer] };
   });
 };
