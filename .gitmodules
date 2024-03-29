@@ -1,3 +1,0 @@
-[submodule "plugins/geotagger"]
-	path = plugins/geotagger
-	url = https://github.com/recogito/geotagger.git
