@@ -1,4 +1,5 @@
 import type { Translations } from "src/Types";
+import { Users, Gear } from "@phosphor-icons/react";
 
 import './ProjectHeader.css'
 
@@ -24,6 +25,16 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
         <h1>
           {props.name}
         </h1>
+        <div className="project-header-button-bar">
+          <button className="project-header-button" onClick={props.onGotoUsers}>
+            <Users color="black" size={20} />
+            {t['Team']}
+          </button>
+          <button className="project-header-button" onClick={props.onGotoSettings}>
+            <Gear color="black" size={20} />
+            {t['Settings']}
+          </button>
+        </div>
       </div>
       <div className="project-header-description-bar">
         {props.description}

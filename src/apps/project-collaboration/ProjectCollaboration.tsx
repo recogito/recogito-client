@@ -10,6 +10,8 @@ import type {
   Group,
   Translations,
 } from 'src/Types';
+import { TopBar } from '@components/TopBar';
+import { BackButtonBar } from '@components/BackButtonBar';
 
 import './ProjectCollaboration.css';
 
@@ -18,9 +20,13 @@ interface ProjectCollaborationProps {
 
   project: ExtendedProjectData;
 
+  projects: ExtendedProjectData[];
+
   invitations: Invitation[];
 
   me: MyProfile;
+
+  user: MyProfile;
 }
 
 export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
@@ -45,16 +51,16 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       groups: project.groups.map((group) =>
         group.id === from.id
           ? // Remove user from this group
-            {
-              ...group,
-              members: group.members.filter(
-                (m) => m.user.id !== member.user.id
-              ),
-            }
+          {
+            ...group,
+            members: group.members.filter(
+              (m) => m.user.id !== member.user.id
+            ),
+          }
           : group.id === to.id
-          ? // Add user to this group
+            ? // Add user to this group
             { ...group, members: [...group.members, updated] }
-          : group
+            : group
       ),
     }));
   };
@@ -108,37 +114,53 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       type: 'error',
     });
 
+  const onError = (error: string) => {
+    setToast({
+      title: t['Something went wrong'],
+      description: t[error] || error,
+      type: 'error',
+    });
+  };
+
   return (
-    <div className='project-collaboration'>
-      <ToastProvider>
-        <h1>{t['Project Team']}</h1>
+    <>
+      <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.user} />
+      <BackButtonBar i18n={props.i18n} showBackToProjects={false} crumbs={[
+        { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
+        { label: props.project.name, href: `/${props.i18n.lang}/projects/${props.project.id}` },
+        { label: t['Team'], href: undefined }
+      ]} />
+      <div className='project-collaboration'>
+        <ToastProvider>
+          <h1>{t['Project Team']}</h1>
 
-        <InviteUser
-          i18n={props.i18n}
-          me={props.me}
-          project={project}
-          invitations={invitations}
-          onInvitiationSent={onInvitationSent}
-          onInvitiationError={onInvitationError}
-        />
+          <InviteUser
+            i18n={props.i18n}
+            me={props.me}
+            project={project}
+            invitations={invitations}
+            onInvitiationSent={onInvitationSent}
+            onInvitiationError={onInvitationError}
+          />
 
-        <MembersTable
-          i18n={props.i18n}
-          project={project}
-          invitations={invitations}
-          me={props.me}
-          onChangeGroup={onChangeGroup}
-          onDeleteMember={onDeleteMember}
-          onDeleteMemberError={onDeleteError}
-          onDeleteInvite={onDeleteInvitation}
-          onDeleteInvitationError={onDeleteInviteError}
-        />
+          <MembersTable
+            i18n={props.i18n}
+            project={project}
+            invitations={invitations}
+            me={props.me}
+            onChangeGroup={onChangeGroup}
+            onDeleteMember={onDeleteMember}
+            onDeleteMemberError={onDeleteError}
+            onDeleteInvite={onDeleteInvitation}
+            onDeleteInvitationError={onDeleteInviteError}
+          />
 
-        <Toast
-          content={toast}
-          onOpenChange={(open) => !open && setToast(null)}
-        />
-      </ToastProvider>
-    </div>
+          <Toast
+            content={toast}
+            onOpenChange={(open) => !open && setToast(null)}
+          />
+        </ToastProvider>
+      </div>
+    </>
   );
 };

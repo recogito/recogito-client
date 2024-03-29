@@ -1,5 +1,4 @@
 .top-bar-container {
-  position: relative;
 }
 
 .top-bar-container header {
@@ -12,6 +11,9 @@
   padding: 0 40px;
   width: 100%;
   z-index: 9999;
+  position: fixed;
+  top: 0;
+  width: 100%;
 }
 
 .top-bar-branding {

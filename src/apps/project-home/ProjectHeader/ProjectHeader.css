@@ -1,15 +1,20 @@
 .project-header-root {
+  margin-top: 10px;
   background-color: var(--gray-100);
   padding-left: 40px;
+  padding-right: 40px;
+  position: fixed;
+  top: 90px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10;
 }
 
 .project-header-name-bar {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-}
-
-.project-header-name {
+  align-items: center;
 }
 
 .project-header-description-bar {
@@ -74,4 +79,20 @@
 .project-header-header-bottom li button:hover {
   background: none;
   box-shadow: none;
+}
+
+.project-header-button-bar {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
+  justify-content: space-between;
+}
+.project-header-button {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px, 16px, 10px, 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 120px;
 }

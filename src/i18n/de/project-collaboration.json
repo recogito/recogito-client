@@ -32,5 +32,7 @@
   "Invitation was sent to": "Die Einladung wurde an ${user} verschickt",
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not delete user.": "Benutzer konnte nicht entfernt werden.",
-  "Could not send invitation.": "Einladung konnte nicht abgeschickt werden."
+  "Could not send invitation.": "Einladung konnte nicht abgeschickt werden.",
+  "Team": "Team",
+  "Projects": "Projects"
 }

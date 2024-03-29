@@ -1,6 +1,8 @@
 .project-settings {
   padding: 20px 40px;
   width: 100%;
+  box-sizing: border-box;
+  margin-top: 100px;
 }
 
 .project-settings-inputs {

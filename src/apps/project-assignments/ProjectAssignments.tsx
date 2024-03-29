@@ -10,21 +10,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { useAssignments, useProjectPolicies } from '@backend/hooks';
 import { Button } from '@components/Button';
 import { ToastProvider, Toast, ToastContent } from '@components/Toast';
-import {
-  AssignmentSpec,
-  AssignmentWizard,
-  NEW_ASSIGNMENT,
-  toAssignmentSpec,
-} from './Wizard';
-import type {
-  Context,
-  DocumentInContext,
-  ExtendedProjectData,
-  MyProfile,
-  Translations,
-} from 'src/Types';
 import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
-import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { AssignmentsGrid } from './Grid';
 
