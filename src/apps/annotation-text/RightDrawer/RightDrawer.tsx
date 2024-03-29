@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useTransition, animated } from '@react-spring/web';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
@@ -17,7 +18,7 @@ interface RightDrawerProps {
 
   policies?: Policies;
 
-  sorting?: ((a: Annotation, b: Annotation) => number);
+  sorting?: ((a: PDFAnnotation, b: PDFAnnotation) => number);
 
   layers?: Layer[];
 
