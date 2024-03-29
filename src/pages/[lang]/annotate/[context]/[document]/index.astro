@@ -36,7 +36,6 @@ if (document.error || !document.data) {
     );
   }
 
-  console.log('Error!');
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
