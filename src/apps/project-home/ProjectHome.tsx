@@ -15,6 +15,7 @@ import './ProjectHome.css';
 import { TopBar } from '@components/TopBar';
 import { BackButtonBar } from '@components/BackButtonBar';
 import { DocumentsView } from './DocumentsView';
+import { AssignmentsView } from './AssignmentsView';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -97,7 +98,13 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               user={props.user}
             />
             :
-            <></>
+            <AssignmentsView
+              i18n={props.i18n}
+              project={props.project}
+              me={props.user}
+              documents={props.documents}
+              setToast={setToast}
+            />
           }
           <Toast
             content={toast}
