@@ -28,11 +28,15 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
         <div className="project-header-button-bar">
           <button className="project-header-button" onClick={props.onGotoUsers}>
             <Users color="black" size={20} />
-            {t['Team']}
+            <div className="project-header-button-text">
+              {t['Team']}
+            </div>
           </button>
           <button className="project-header-button" onClick={props.onGotoSettings}>
             <Gear color="black" size={20} />
-            {t['Settings']}
+            <div className="project-header-button-text">
+              {t['Settings']}
+            </div>
           </button>
         </div>
       </div>

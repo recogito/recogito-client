@@ -10,6 +10,8 @@ interface AvatarProps {
   color?: string;
 
   avatar?: string;
+
+  showBorder?: boolean;
 }
 
 export const formatName = (user: UserProfile) => {
@@ -59,14 +61,14 @@ export const Avatar = (props: AvatarProps) => {
     <RadixAvatar.Root className='avatar'>
       {avatar && (
         <RadixAvatar.Image
-          className='avatar-image'
+          className={props.showBorder ? 'avatar-image avatar-border' : 'avatar-image'}
           title={`${name} avatar`}
           src={avatar}
         />
       )}
 
       <RadixAvatar.Fallback
-        className='avatar-fallback'
+        className={props.showBorder ? 'avatar-fallback avatar-border' : 'avatar-fallback'}
         title={`${name} avatar image`}
         style={{ backgroundColor }}
       >

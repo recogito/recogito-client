@@ -5,21 +5,17 @@
   "2. Team": "2. Team",
   "3. Instructions": "3. Instructions",
   "4. Verify": "4. Verify",
-
   "Cancel": "Cancel",
   "Close": "Close",
   "Next": "Next",
   "Back": "Back",
   "Create Assignment": "Create Assignment",
   "Update Assignment": "Update Assignment",
-
   "Step": "Step",
-
   "Add documents to this assignment.": "Add documents to this assignment.",
   "Select at least 1 document": "Select at least 1 document",
   "Selected 1 document": "Selected 1 document",
   "Selected ${n} documents": "Selected ${n} documents",
-
   "Add people to the assignment.": "Add people to the assignment",
   "Name": "Name",
   "Member since": "Member since",
@@ -29,12 +25,9 @@
   "Select at least 1 team member": "Select at least 1 team member",
   "Selected 1 team member": "Selected 1 team member",
   "Selected ${n} team members": "Selected ${n} team members",
-
   "Add a message": "Add a message or instructions for the team. This step is optional.",
-
   "Almost Ready!": "Almost Ready!",
   "Verify and confirm this assignment.": "Verify and confirm this assignment.",
-
   "Name:": "Name:",
   "1 document": "1 document",
   "${n} documents": "${n} documents",
@@ -45,18 +38,17 @@
   "No team members.": "No team members. Please add at least one member.",
   "Instructions provided.": "Instructions provided.",
   "Please consider adding instructions.": "Please consider adding instructions.",
-
   "The assignment was created successfully": "The assignment was created successfully and was added to the team members' dashboards.",
   "The assignment was updated successfully": "The assignment was updated successfully.",
-
   "Menu actions for assignment:": "Menu actions for assignment:",
   "Edit assignment": "Edit assignment",
   "Delete assignment": "Delete assignment",
-
   "Deleted": "Deleted",
   "Assignment deleted successfully.": "Assignment deleted successfully.",
-
   "Something went wrong": "Something went wrong",
   "Could not delete the assignment.": "Could not delete the assignment.",
-  "Could not open the assignment.": "Could not open the assignment."
+  "Could not open the assignment.": "Could not open the assignment.",
+  "Edit": "Edit",
+  "Project Base Assignment": "Project Base Assignment",
+  "base_assignment_description": "This assignment is created by default for this project. You can edit this description to describe the intent of the project and any additional instructions."
 }

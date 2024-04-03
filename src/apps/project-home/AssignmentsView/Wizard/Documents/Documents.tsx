@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Article, Check, CheckSquare, Image, Square, Warning } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import type { DocumentInContext, Translations } from 'src/Types';
+import type { Document, Translations } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
@@ -13,9 +13,9 @@ interface DocumentsProps {
 
   assignment: AssignmentSpec;
 
-  documents: DocumentInContext[];
+  documents: Document[];
 
-  onChange(documents: DocumentInContext[]): void;
+  onChange(documents: Document[]): void;
 
   onCancel(): void;
 
@@ -29,16 +29,16 @@ export const Documents = (props: DocumentsProps) => {
 
   const { documents } = props;
 
-  const { 
-    selected, 
-    toggleSelected, 
-    toggleAll, 
-    isAllSelected 
+  const {
+    selected,
+    toggleSelected,
+    toggleAll,
+    isAllSelected
   } = useSelectableRows(documents, props.assignment.documents);
 
   useEffect(() => {
     props.onChange(documents.filter(d => selected.includes(d.id)));
-  }, [selected, documents ]);
+  }, [selected, documents]);
 
   return (
     <>
@@ -55,13 +55,13 @@ export const Documents = (props: DocumentsProps) => {
             <thead>
               <tr>
                 <th>
-                  <Checkbox.Root 
+                  <Checkbox.Root
                     className="checkbox-root"
                     checked={isAllSelected}
                     onCheckedChange={toggleAll}>
-                    
+
                     <Checkbox.Indicator>
-                      <CheckSquare size={20} weight="fill" /> 
+                      <CheckSquare size={20} weight="fill" />
                     </Checkbox.Indicator>
 
                     {!isAllSelected && (
@@ -69,7 +69,7 @@ export const Documents = (props: DocumentsProps) => {
                     )}
                   </Checkbox.Root>
                 </th>
-                
+
                 <th></th>
                 <th></th>
               </tr>
@@ -78,13 +78,13 @@ export const Documents = (props: DocumentsProps) => {
               {documents.map(document => (
                 <tr key={document.id}>
                   <td>
-                    <Checkbox.Root 
+                    <Checkbox.Root
                       className="checkbox-root"
                       checked={selected.includes(document.id)}
                       onCheckedChange={checked => toggleSelected(document, checked)}>
 
                       <Checkbox.Indicator>
-                        <CheckSquare size={20} weight="fill" />  
+                        <CheckSquare size={20} weight="fill" />
                       </Checkbox.Indicator>
 
                       {!selected.includes(document.id) && (
@@ -97,7 +97,7 @@ export const Documents = (props: DocumentsProps) => {
                     {/* Temporary hack - for now, everything that has a content type is a text ! */}
                     {document.content_type ? (
                       <Article size={16} />
-                    ) :(
+                    ) : (
                       <Image size={16} />
                     )}
                   </td>
@@ -118,7 +118,7 @@ export const Documents = (props: DocumentsProps) => {
             <p className="hint ok">
               <Check size={16} /> {t['Selected 1 document']}
             </p>
-          ) :(
+          ) : (
             <p className="hint ok">
               <Check size={16} /> {t['Selected ${n} documents'].replace('${n}', selected.length.toString())}
             </p>
@@ -130,7 +130,7 @@ export const Documents = (props: DocumentsProps) => {
         <button
           onClick={props.onCancel}>{t['Cancel']}</button>
 
-        <button 
+        <button
           className="primary"
           onClick={props.onNext}>{t['Next']}</button>
       </section>

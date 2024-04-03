@@ -2,21 +2,22 @@ import { DownloadSimple, Plus } from '@phosphor-icons/react';
 import { DocumentCard } from '@components/DocumentCard';
 import { UploadActions, UploadTracker, useDragAndDrop, useUpload } from '@apps/project-home/upload';
 import { DocumentLibrary } from '@components/DocumentLibrary';
-import type { DocumentInContext, Document, Protocol, ExtendedProjectData, Translations, MyProfile } from 'src/Types';
+import type { Document, Protocol, ExtendedProjectData, Translations, MyProfile } from 'src/Types';
 import { useState, useMemo } from 'react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { archiveLayer, setDocumentPrivacy } from '@backend/crud';
+import { setDocumentPrivacy } from '@backend/crud';
 import { useDocumentList } from '@apps/project-home/useDocumentList';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 import type { ToastContent } from '@components/Toast';
 import '../ProjectHome.css'
+import { removeDocumentsFromProject } from '@backend/helpers';
 
 interface DocumentsViewProps {
   isAdmin: boolean;
   i18n: Translations;
 
-  documents: DocumentInContext[];
+  documents: Document[];
 
   project: ExtendedProjectData;
 
@@ -30,7 +31,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   const [addOpen, setAddOpen] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
   const [documentUpdated, setDocumentUpdated] = useState(false);
-  const [documents, setDocuments] = useState<DocumentInContext[]>(
+  const [documents, setDocuments] = useState<Document[]>(
     props.documents
   );
 
@@ -116,35 +117,28 @@ export const DocumentsView = (props: DocumentsViewProps) => {
    * When 'deleting a document' we're actually just archiving
    * all the layers on this document in this project!
    */
-  const onDeleteDocument = (document: DocumentInContext) => {
+  const onDeleteDocument = (document: Document) => {
     // Optimistic update: remove document from the list
     setDocuments((documents) => documents.filter((d) => d.id !== document.id));
     setDocumentUpdated(true);
-
-    // Note this will get easier when (if) we get a single RPC call
-    // to archive a list of records
-    const chained = document.layers.reduce(
-      (p, nextLayer) => p.then(() => archiveLayer(supabase, nextLayer.id)),
-      Promise.resolve()
-    );
-
-    chained
-      .then(() => {
-        props.setToast({
-          title: t['Deleted'],
-          description: t['Document deleted successfully.'],
-          type: 'success',
-        });
+    removeDocumentsFromProject(supabase, props.project.id, [document.id])
+      .then((resp) => {
+        if (resp) {
+          props.setToast({
+            title: t['Deleted'],
+            description: t['Document deleted successfully.'],
+            type: 'success',
+          });
+        } else {
+          // Roll back optimistic update in case of failure
+          setDocuments((documents) => [...documents, document]);
+          props.setToast({
+            title: t['Something went wrong'],
+            description: t['Could not delete the document.'],
+            type: 'error',
+          });
+        }
       })
-      .catch(() => {
-        // Roll back optimistic update in case of failure
-        setDocuments((documents) => [...documents, document]);
-        props.setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete the document.'],
-          type: 'error',
-        });
-      });
   };
 
   const onTogglePrivate = (document: Document) => {
@@ -180,7 +174,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     setAddOpen(true);
   };
 
-  const onDocumentSelected = (_document: DocumentInContext) => { };
+  const onDocumentSelected = (_document: Document) => { };
 
   const onDocumentsSelected = (documentIds: string[]) => {
     addDocumentIds(documentIds);

@@ -24,6 +24,7 @@ if (profile.error || !profile.data) {
 const projectId = Astro.params.project;
 
 const project = await getProjectExtended(supabase, projectId as string);
+
 if (project.error || !project.data) {
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {

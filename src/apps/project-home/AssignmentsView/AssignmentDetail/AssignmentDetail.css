@@ -1,0 +1,69 @@
+.assignment-detail-container {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: row;
+  width: 67%;
+  align-items: stretch;
+}
+
+.assignment-detail-divider {
+  width: 30px;
+  margin-left: 30px;
+  border-right: 1px solid var(--gray-200);
+}
+
+.assignment-detail-pane {
+  width: 100%;
+  padding-top: 10px;
+  padding-left: 32px;
+}
+
+.assignment-detail-title-row {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assignment-detail-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 27px;
+}
+
+.assignment-detail-buttons {
+  float: right;
+  width: 200px;
+}
+
+.assignment-detail-description-row {
+  padding-top: 14px;
+  display: flex;
+  flex-direction: row;
+}
+
+.assignment-detail-description {
+  font-size: 14px;
+  width: 60%;
+  font-weight: 400;
+  color: var(--gray-600);
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.assignment-detail-team {
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+
+.assignment-detail-team-list {
+  display: flex;
+  flex-direction: row;
+  margin-left: 8px;
+}
+
+.assignment-detail-team-avatar {
+  margin-left: -8px;
+}

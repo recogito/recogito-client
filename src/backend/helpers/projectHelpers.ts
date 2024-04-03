@@ -1,5 +1,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getGroupMembers, zipMembers } from '@backend/crud';
+import {
+  getGroupMembers,
+  getProjectGroupMembers,
+  zipMembers,
+} from '@backend/crud';
 import type { ExtendedProjectData } from 'src/Types';
 import type { Response } from '@backend/Types';
 
@@ -25,26 +29,34 @@ export const listMyProjectsExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts (
+      groups:project_groups(
         id,
-        project_id,
-        name,
-        is_project_default
+        name
       ),
-      layers (
-        id,
-        name,
-        description,
-        document:documents (
+      project_documents(
+        *,
+        document:documents!project_documents_document_id_fkey(
           id,
           name,
           content_type,
           meta_data
         )
       ),
-      groups:project_groups (
+      contexts:contexts!contexts_project_id_fkey(
         id,
-        name
+        project_id,
+        name,
+        is_project_default,
+        created_at,
+        members:context_users(
+          role_id,
+          user:profiles!context_users_user_id_fkey (
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        )
       )
     `
     )
@@ -52,7 +64,12 @@ export const listMyProjectsExtended = (
       if (error) {
         return { error, data: [] as ExtendedProjectData[] };
       } else {
-        const projects = data;
+        const projects: any = data.map((project) => {
+          return {
+            ...project,
+            documents: project.project_documents.map((pd) => pd.document),
+          };
+        });
 
         // All group IDs of all projects in `data`
         const groupIds = projects.reduce(
@@ -60,22 +77,24 @@ export const listMyProjectsExtended = (
           [] as string[]
         );
 
-        return getGroupMembers(supabase, groupIds).then(({ error, data }) => {
-          if (error) {
-            return { error, data: [] as ExtendedProjectData[] };
-          } else {
-            // Re-assign group members to projects
-            const projectsExtended = projects.map(
-              (p) =>
-                ({
-                  ...p,
-                  groups: zipMembers(p.groups, data),
-                } as unknown as ExtendedProjectData)
-            );
+        return getProjectGroupMembers(supabase, groupIds).then(
+          ({ error, data }) => {
+            if (error) {
+              return { error, data: [] as ExtendedProjectData[] };
+            } else {
+              // Re-assign group members to projects
+              const projectsExtended = projects.map(
+                (p) =>
+                  ({
+                    ...p,
+                    users: data.map((d) => d.user),
+                  } as unknown as ExtendedProjectData)
+              );
 
-            return { error, data: projectsExtended };
+              return { error, data: projectsExtended };
+            }
           }
-        });
+        );
       }
     });
 
@@ -103,21 +122,30 @@ export const getProjectExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts (
+      contexts(
         id,
         project_id,
         name,
-        is_project_default
-      ),
-      layers (
-        id,
-        name,
         description,
-        document:documents (
+        is_project_default,
+        created_at,
+        context_users (
           id,
-          name,
-          content_type,
-          meta_data
+          user:profiles!context_users_user_id_fkey(
+            id,
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        ),
+        context_documents(
+          document:documents(
+            id,
+            name,
+            content_type,
+            meta_data
+          )
         )
       ),
       groups:project_groups (

@@ -37,6 +37,7 @@ export default {
     ...{ ...projectHome, ...accountMenu, ...projectSidedbar },
     ...accountMenu,
     ...projectSidedbar,
+    ...projectAssignments,
   },
   'project-settings': { ...projectSettings, ...projectSidedbar },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },

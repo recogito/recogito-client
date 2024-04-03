@@ -4,7 +4,7 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { ProjectHeader } from './ProjectHeader';
 
 import type {
-  DocumentInContext,
+  Document,
   ExtendedProjectData,
   Invitation,
   MyProfile,
@@ -24,7 +24,7 @@ export interface ProjectHomeProps {
 
   projects: ExtendedProjectData[];
 
-  documents: DocumentInContext[];
+  documents: Document[];
 
   invitations: Invitation[];
 
@@ -104,6 +104,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               me={props.user}
               documents={props.documents}
               setToast={setToast}
+              isAdmin={isAdmin as boolean}
             />
           }
           <Toast

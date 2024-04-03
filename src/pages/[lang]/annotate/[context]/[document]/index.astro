@@ -36,7 +36,6 @@ if (document.error || !document.data) {
     );
   }
 
-  console.log('Error!');
   // https://javascript.plainenglish.io/return-custom-404-responses-in-astro-b844b0e0146d
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
@@ -66,19 +65,25 @@ const channelId = data.digest('hex');
 
 let viewer;
 
+console.log('Document: ', document.data);
 if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
 } else if (document.data.content_type === 'text/xml') {
   viewer = 'TEI';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
+} else if (
+  document.data.meta_data?.protocol === 'IIIF_IMAGE' ||
+  document.data.meta_data?.protocol === 'IIIF_PRESENTATION'
+) {
   viewer = 'OPENSEADRAGON';
 } else {
   // Should never happen
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
+
+console.log(viewer);
 ---
 
 <BaseLayout title={document.data.name}>

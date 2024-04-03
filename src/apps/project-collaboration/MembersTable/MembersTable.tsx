@@ -38,45 +38,27 @@ interface MembersTableProps {
   onDeleteInvitationError(error: PostgrestError): void;
 }
 
-// Helper to flatten the list of groups to the list of users
-const getMembers = (groups: Group[]): TeamMember[] =>
-  groups
-    .reduce(
-      (members, group) => [
-        ...members,
-        ...group.members.map(({ user, since }) => ({
-          user,
-          inGroup: group,
-          since,
-        })),
-      ],
-      [] as TeamMember[]
-    )
-    .sort((a, b) => (a.since < b.since ? -1 : a.since > b.since ? 1 : 0));
-
 export const MembersTable = (props: MembersTableProps) => {
   const { t } = props.i18n;
 
   const [selected, setSelected] = useState<string[]>([]);
 
-  const members = getMembers(props.project.groups);
-
-  const isAllSelected = selected.length === members.length;
+  const isAllSelected = selected.length === props.project.users.length;
 
   // Shorthands
-  const isMe = (member: TeamMember) => member.user.id === props.me.id;
+  const isMe = (user: UserProfile) => user.id === props.me.id;
 
-  const isOwner = (member: TeamMember) =>
-    member.user.id === props.project.created_by?.id;
+  const isOwner = (user: UserProfile) =>
+    user.id === props.project.created_by?.id;
 
-  const onSelectRow = (member: TeamMember, checked: Checkbox.CheckedState) => {
-    if (checked) setSelected((selected) => [...selected, member.user.id]);
+  const onSelectRow = (user: UserProfile, checked: Checkbox.CheckedState) => {
+    if (checked) setSelected((selected) => [...selected, user.id]);
     else
-      setSelected((selected) => selected.filter((id) => id !== member.user.id));
+      setSelected((selected) => selected.filter((id) => id !== user.id));
   };
 
   const onSelectAll = (checked: Checkbox.CheckedState) => {
-    if (checked) setSelected(members.map((m) => m.user.id));
+    if (checked) setSelected(props.project.users.map((m) => m.id));
     else setSelected([]);
   };
 
@@ -109,19 +91,19 @@ export const MembersTable = (props: MembersTableProps) => {
       </thead>
 
       <tbody>
-        {members.map((member) => (
-          <tr key={member.user.id}>
+        {props.project.users.map((user) => (
+          <tr key={user.id}>
             <td>
               <Checkbox.Root
                 className='checkbox-root'
-                checked={selected.includes(member.user.id)}
-                onCheckedChange={(checked) => onSelectRow(member, checked)}
+                checked={selected.includes(user.id)}
+                onCheckedChange={(checked) => onSelectRow(user, checked)}
               >
                 <Checkbox.Indicator>
                   <CheckSquare size={20} weight='fill' />
                 </Checkbox.Indicator>
 
-                {!selected.includes(member.user.id) && (
+                {!selected.includes(user.id) && (
                   <span>
                     <Square size={20} />
                   </span>
@@ -130,24 +112,24 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td>
-              {formatName(member.user) || (
+              {formatName(user) || (
                 <span className='anonymous-member'>
                   {t['Anonymous team member']}{' '}
                   <AnonymousTooltip i18n={props.i18n} />
                 </span>
               )}
-              {isMe(member) && <span className='badge'>{t['You']}</span>}
+              {isMe(user) && <span className='badge'>{t['You']}</span>}
             </td>
 
             <td>
-              {isOwner(member) ? (
+              {isOwner(user) ? (
                 <button disabled className='owner'>
                   {t['Owner']}
                 </button>
               ) : (
                 <GroupSelector
                   i18n={props.i18n}
-                  member={member}
+                  member={user}
                   availableGroups={props.project.groups}
                   onChangeGroup={(from, to) =>
                     props.onChangeGroup(member, from, to)

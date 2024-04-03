@@ -1,11 +1,11 @@
 import { Annotorious } from '@annotorious/react';
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
-import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import type { DocumentWithContext, Translations } from 'src/Types';
 
 export interface TextAnnotationProps {
   i18n: Translations;
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
   channelId: string;
 

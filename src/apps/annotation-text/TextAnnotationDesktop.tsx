@@ -48,7 +48,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   // or the first layer in the list, if no project context
   const defaultLayer =
     layers && layers.length > 0
-      ? layers.find((l) => !l.context.name) || layers[0]
+      ? layers.find((l) => l.is_active_layer) || layers[0]
       : undefined;
 
   useEffect(() => {
@@ -74,17 +74,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  // max number of avatars displayed in the top right
-  const limit = 5;
-
-  const onChangeViewMenuPanel = (panel: DrawerPanel | undefined) => {
-    if (panel === DrawerPanel.ANNOTATIONS) {
-      // Don't use the popup if the annotation list is open
-      setUsePopup(false);
-    } else {
-      if (!usePopup) setUsePopup(true);
-    }
-  };
+  // const onChangeViewMenuPanel = (panel: DrawerPanel | undefined) => {
+  //   if (panel === DrawerPanel.ANNOTATIONS) {
+  //     // Don't use the popup if the annotation list is open
+  //     setUsePopup(false);
+  //   } else {
+  //     if (!usePopup) setUsePopup(true);
+  //   }
+  // };
 
   const onSetRightPanel = (panel?: DrawerPanel) => {
     if (panel === DrawerPanel.ANNOTATIONS)
@@ -141,7 +138,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 present={present}
                 rightPanel={rightPanel}
                 onToggleBranding={() => setShowBranding(!showBranding)}
-                onSetRightDrawer={onSetRightPanel} 
+                onSetRightDrawer={onSetRightPanel}
                 showConnectionError={connectionError} />
             </div>
 

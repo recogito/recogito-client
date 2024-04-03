@@ -33,7 +33,12 @@ export default {
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
   'project-collaboration': projectCollaboration,
-  'project-home': { ...projectHome, ...accountMenu, ...projectSidedbar },
+  'project-home': {
+    ...projectHome,
+    ...accountMenu,
+    ...projectSidedbar,
+    ...projectAssignments,
+  },
   'project-settings': projectSettings,
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': userManagement,

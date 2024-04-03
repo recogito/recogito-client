@@ -48,7 +48,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     // Update project groups
     setProject((project) => ({
       ...project,
-      groups: project.groups.map((group) =>
+      user: project.users.map((group) =>
         group.id === from.id
           ? // Remove user from this group
           {

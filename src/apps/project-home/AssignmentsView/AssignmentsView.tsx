@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import {
   archiveAssignment,
@@ -7,23 +7,25 @@ import {
 } from '@backend/helpers';
 import { archiveLayer } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { useAssignments, useProjectPolicies } from '@backend/hooks';
+import { useAssignments } from '@backend/hooks';
 import { Button } from '@components/Button';
 import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
-import type { Context, DocumentInContext, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
-import { AssignmentsGrid } from './Grid';
-
+import type { Context, Document, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import { AssignmentsList } from './AssignmentsList';
 import './AssignmentsView.css';
 import type { ToastContent } from '@components/Toast';
+import { AssignmentDetail } from './AssignmentDetail';
 
 interface AssignmentsViewProps {
   i18n: Translations;
 
   me: MyProfile;
 
+  isAdmin: boolean;
+
   project: ExtendedProjectData;
 
-  documents: DocumentInContext[];
+  documents: Document[];
 
   setToast(content: ToastContent): void;
 }
@@ -35,15 +37,15 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
 
   const [editing, setEditing] = useState<AssignmentSpec | undefined>();
 
-  const policies = useProjectPolicies(project.id);
-
-  // This assumes that people with project UPDATE and context INSERT
-  // privileges are authorized to create assignments
-  const canCreate =
-    policies?.get('projects').has('UPDATE') &&
-    policies?.get('contexts').has('INSERT');
+  const [currentAssignment, setCurrentAssignment] = useState<Context | undefined>();
 
   const { assignments, setAssignments } = useAssignments(project);
+
+  useEffect(() => {
+    if (assignments && assignments.length > 0) {
+      setCurrentAssignment(assignments[0])
+    }
+  }, [assignments])
 
   const onAssignmentSaved = (assignment: Context) =>
     setAssignments((assignments) => {
@@ -118,49 +120,77 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
     });
   };
 
+  const handleAssignmentSelected = (assignment: Context) => {
+    setCurrentAssignment(assignment)
+  }
+
   return (
     <div className='project-assignments'>
-      <h1>Assignments</h1>
+      <header className='project-assignments-document-header-bar'>
+        <h1>
+          {t['Assignments']}
+        </h1>
+        {props.isAdmin && (
+          <>
+            <Button
+              className='primary'
+              onClick={() => setEditing(NEW_ASSIGNMENT)}
+            >
+              <GraduationCap size={20} /> <span>New Assignment</span>
+            </Button>
 
-      {canCreate && (
-        <>
-          <Button
-            className='primary'
-            onClick={() => setEditing(NEW_ASSIGNMENT)}
-          >
-            <GraduationCap size={20} /> <span>New Assignment</span>
-          </Button>
-
-          {editing && (
-            <AssignmentWizard
-              i18n={props.i18n}
-              me={props.me}
-              project={props.project}
-              documents={props.documents}
-              assignment={editing}
-              onSaved={onAssignmentSaved}
-              onClose={() => setEditing(undefined)}
-            />
-          )}
-        </>
-      )}
-
-      {assignments ? (
-        assignments.length === 0 ? (
-          <div />
-        ) : (
-          <AssignmentsGrid
-            i18n={props.i18n}
-            canUpdate={canCreate}
-            project={project}
+            {editing && (
+              <AssignmentWizard
+                i18n={props.i18n}
+                me={props.me}
+                project={props.project}
+                documents={props.documents}
+                assignment={editing}
+                onSaved={onAssignmentSaved}
+                onClose={() => setEditing(undefined)}
+              />
+            )}
+          </>
+        )}
+      </header>
+      {assignments && assignments.length > 0 && currentAssignment &&
+        <div className='project-assignments-presentation-pane'>
+          <AssignmentsList
             assignments={assignments}
-            onEditAssignment={onEditAssignment}
-            onDeleteAssignment={onDeleteAssignment}
+            i18n={props.i18n}
+            currentAssignment={currentAssignment.id as string}
+            onAssignmentSelect={handleAssignmentSelected}
           />
-        )
-      ) : (
+          <AssignmentDetail
+            assignment={currentAssignment}
+            onEditAssignment={() => onEditAssignment(currentAssignment)}
+            i18n={props.i18n}
+            isAdmin={props.isAdmin}
+          />
+        </div>
+      }
+
+
+      {/* {/*</div>
+      {
+    assignments ? (
+      assignments.length === 0 ? (
         <div />
-      )}
+      ) : (
+        <AssignmentsGrid
+          i18n={props.i18n}
+          canUpdate={canCreate}
+          project={project}
+          assignments={assignments}
+          onEditAssignment={onEditAssignment}
+          onDeleteAssignment={onDeleteAssignment}
+        />
+      )
+    ) : (
+      <div />
+    )
+  }
+    </div > * /} */}
     </div>
   );
 };

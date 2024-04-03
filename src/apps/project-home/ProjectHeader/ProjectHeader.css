@@ -90,9 +90,13 @@
 .project-header-button {
   border: 1px solid black;
   border-radius: 4px;
-  padding: 10px, 16px, 10px, 16px;
+  padding: 10px 16px 10px 16px;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  width: 120px;
+  justify-content: center;
+  width: 130px;
+}
+
+.project-header-button-text {
+  padding-left: 3px;
 }

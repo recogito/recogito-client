@@ -2,12 +2,10 @@ import { Article, GraduationCap, Image } from '@phosphor-icons/react';
 import { joinProject } from '@backend/helpers';
 import { Avatar } from '@components/Avatar';
 import type {
-  ContentType,
   ExtendedProjectData,
   MyProfile,
   Policies,
   Translations,
-  UserProfile,
 } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
 import { OpenJoin } from './OpenJoin';
@@ -36,33 +34,17 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = (props: ProjectCardProps) => {
-  const { contexts, description, layers, id, groups, name, is_open_join } =
+  const { contexts, description, id, users, name, is_open_join, documents } =
     props.project;
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
-
-  const members = groups
-    .reduce(
-      (members, group) => [...members, ...group.members],
-      [] as Array<{ user: UserProfile; since: string }>
-    )
-    .reverse();
-
-  // TODO needs more robustness for new content types
-  // in the future
-  const documents = layers.reduce((documents, layer) => {
-    if (documents.some((d) => d.id === layer.document?.id))
-      return [...documents];
-    else if (layer.document) return [...documents, layer.document];
-    else return documents;
-  }, [] as { id: string; content_type?: ContentType }[]);
 
   const images = documents.filter(({ content_type }) => !content_type);
 
   const texts = documents.filter(({ content_type }) => content_type);
 
   const onClick = () => {
-    if (!is_open_join || members.length > 0) {
+    if (!is_open_join || users.length > 0) {
       window.location.href = `./projects/${id}`;
     }
   };
@@ -125,7 +107,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
       />
       <div className='project-card-footer'>
         <div className='avatar-stack'>
-          {members.slice(0, 5).map(({ user }) => (
+          {users.map((user) => (
             <Avatar
               key={user.id}
               id={user.id}
@@ -141,7 +123,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
             />
           ))}
         </div>
-        {members.length > 0 && (
+        {users.length > 0 && (
           <ProjectCardActions
             i18n={props.i18n}
             me={props.me}
@@ -153,7 +135,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
             orgPolicies={props.orgPolicies}
           />
         )}
-        {is_open_join && members.length === 0 && (
+        {is_open_join && users.length === 0 && (
           <OpenJoin
             projectId={id}
             i18n={props.i18n}

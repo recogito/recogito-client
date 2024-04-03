@@ -1,15 +1,11 @@
-import type {
-  DocumentInContext,
-  ExtendedAssignmentData,
-  UserProfile,
-} from 'src/Types';
+import type { Document, ExtendedAssignmentData, UserProfile } from 'src/Types';
 
 export interface AssignmentSpec {
   id?: string;
 
   name?: string;
 
-  documents: DocumentInContext[];
+  documents: Document[];
 
   team: UserProfile[];
 
@@ -46,10 +42,10 @@ export const toAssignmentSpec = (
           name: data.name,
           description: data.description,
           project_id: data.project_id,
-          is_project_default: false
+          is_project_default: false,
         },
       },
     ],
   })),
-  team: data.team.map(t => t.user)
+  team: data.team.map((t) => t.user),
 });

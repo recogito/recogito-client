@@ -6,11 +6,11 @@ export type Response<T> = PromiseLike<{
 }>;
 
 export interface ProjectDocument {
-  id: string;
+  id?: string;
 
-  created_at: string;
+  created_at?: string;
 
-  created_by: string;
+  created_by?: string;
 
   updated_at?: string;
 
@@ -25,4 +25,4 @@ export type userRole = {
   user_id: string;
 
   role: 'default' | 'admin';
-}
+};

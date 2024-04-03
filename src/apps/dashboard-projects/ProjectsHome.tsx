@@ -57,6 +57,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [showProfileNag, setShowProfileNag] = useState(false);
 
+  console.log(props.projects)
+
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
       if (error) window.location.href = `/${props.i18n.lang}/sign-in`;
@@ -83,10 +85,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   // Filtered projects
   const myProjects = projects.filter((p) => p.created_by?.id === me.id);
 
-  const sharedProjects = projects.filter(({ created_by, groups }) =>
-    groups.find(
-      ({ members }) =>
-        members.find((m) => m.user.id === me.id) && me.id !== created_by?.id
+  const sharedProjects = projects.filter(({ created_by, users }) =>
+    users.find((user) => user.id === me.id && me.id !== created_by?.id
     )
   );
 

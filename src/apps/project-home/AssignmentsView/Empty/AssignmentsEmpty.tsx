@@ -7,7 +7,7 @@ interface AssignmentEmptyProps {
 
 }
 
-export const AssignmentsEmpty = (props: AssignmentEmptyProps) => {
+export const AssignmentsEmpty = (_props: AssignmentEmptyProps) => {
 
   return (
     <div className="project-assignments-empty">
@@ -21,7 +21,7 @@ export const AssignmentsEmpty = (props: AssignmentEmptyProps) => {
 
         <div className="project-assignments-empty-actions">
           <a className="button" href="">Learn more</a>
-          
+
           <button>
             <GraduationCap /> <span>Create an assignment</span>
           </button>
