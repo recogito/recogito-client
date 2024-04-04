@@ -391,7 +391,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => item.meta_data.meta?.author ? item.meta_data.meta?.author : '',
       select: true,
       pinLeft: true,
-      sort: { sortKey: 'TITLE' },
+      sort: { sortKey: 'AUTHOR' },
     },
 
     {
@@ -555,6 +555,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     {
       sortFns: {
         TITLE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        AUTHOR: (array) => array.sort((a, b) => a.meta_data.meta?.author.localeCompare(b.meta_data.meta?.author)),
         TYPE: (array) =>
           array.sort((a, b) =>
             (a.content_type || '').localeCompare(b.content_type || '')
