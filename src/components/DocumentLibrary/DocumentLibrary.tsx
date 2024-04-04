@@ -158,7 +158,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     getTheme(),
     {
       Table: `
-        --data-table-library_grid-template-columns:  50px 450px repeat(3, minmax(0, 1fr)) 60px !important;
+        --data-table-library_grid-template-columns:  50px 350px 200px repeat(3, minmax(0, 1fr)) 60px !important;
       `,
       HeaderRow: `
         font-size: 13px;
@@ -386,6 +386,14 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       pinLeft: true,
       sort: { sortKey: 'TITLE' },
     },
+    {
+      label: t['Author'],
+      renderCell: (item) => item.meta_data.meta?.author ? item.meta_data.meta?.author : '',
+      select: true,
+      pinLeft: true,
+      sort: { sortKey: 'TITLE' },
+    },
+
     {
       label: t['Document Type'],
       renderCell: (item) => item.content_type,
