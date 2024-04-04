@@ -82,8 +82,6 @@ if (document.data.content_type === 'text/plain') {
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
-
-console.log(viewer);
 ---
 
 <BaseLayout title={document.data.name}>
