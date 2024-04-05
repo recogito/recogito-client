@@ -62,13 +62,12 @@ checkRepository(username, reponame)
     // Clone repository into the plugins directory
     execSync(`git clone ${repositoryUrl}`);
 
-    // Change into the cloned directory
-    process.chdir(reponame);
+    console.log('\nInstalling dependencies and registering the plugin');
+    process.chdir('..');
 
-    // Run npm install to install dependencies
-    execSync('npm install');
+    execSync('npm install', { stdio: 'inherit' });
 
-    console.log(`Plugin '${reponame}' installed successfully. Restart Recogito for the plugin to take effect.`);
+    console.log(`\n\nPlugin '${reponame}' installed successfully. Restart Recogito for the plugin to take effect.`);
   })
   .catch((error) => {
     console.error(error.message);
