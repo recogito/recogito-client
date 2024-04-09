@@ -16,6 +16,8 @@
   width: 100%;
   padding-top: 10px;
   padding-left: 32px;
+  max-height: 460px;
+  overflow-y: auto;
 }
 
 .assignment-detail-title-row {
@@ -66,4 +68,12 @@
 
 .assignment-detail-team-avatar {
   margin-left: -8px;
+}
+
+.assignment-detail-buttons {
+  display: flex;
+  flex-direction: row;
+  width: 275px;
+  justify-content: space-between;
+  margin-right: 30px;
 }

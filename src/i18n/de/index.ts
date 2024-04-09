@@ -32,7 +32,7 @@ export default {
   error: error,
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
-  'project-collaboration': projectCollaboration,
+  'project-collaboration': { ...projectCollaboration, ...accountMenu },
   'project-home': {
     ...projectHome,
     ...accountMenu,

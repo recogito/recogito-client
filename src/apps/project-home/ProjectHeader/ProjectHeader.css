@@ -100,3 +100,7 @@
 .project-header-button-text {
   padding-left: 3px;
 }
+
+.project-header-spacer {
+  height: 20px;
+}

@@ -2,19 +2,17 @@ import { useEffect, useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import {
   archiveAssignment,
-  getAllLayersInContext,
-  getAssignment,
+  getAssignment
 } from '@backend/helpers';
-import { archiveLayer } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { useAssignments } from '@backend/hooks';
 import { Button } from '@components/Button';
-import { AssignmentSpec, AssignmentWizard, NEW_ASSIGNMENT, toAssignmentSpec } from './Wizard';
+import { AssignmentSpec, AssignmentWizard, contextToAssignmentSpec } from './Wizard';
 import type { Context, Document, ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import { AssignmentsList } from './AssignmentsList';
 import './AssignmentsView.css';
 import type { ToastContent } from '@components/Toast';
 import { AssignmentDetail } from './AssignmentDetail';
+import { assignmentSpecToContext } from './Wizard';
 
 interface AssignmentsViewProps {
   i18n: Translations;
@@ -27,7 +25,11 @@ interface AssignmentsViewProps {
 
   documents: Document[];
 
+  assignments: Context[];
+
   setToast(content: ToastContent): void;
+
+  setAssignments(assignemnts: Context[]): void;
 }
 
 export const AssignmentsView = (props: AssignmentsViewProps) => {
@@ -39,25 +41,33 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
 
   const [currentAssignment, setCurrentAssignment] = useState<Context | undefined>();
 
-  const { assignments, setAssignments } = useAssignments(project);
+  const NEW_ASSIGNMENT = {
+    project_id: project.id,
+    documents: [],
+    team: []
+  };
 
   useEffect(() => {
-    if (assignments && assignments.length > 0) {
-      setCurrentAssignment(assignments[0])
+    if (props.assignments && props.assignments.length > 0) {
+      setCurrentAssignment(props.assignments[0])
     }
-  }, [assignments])
+  }, [props.assignments])
 
-  const onAssignmentSaved = (assignment: Context) =>
-    setAssignments((assignments) => {
-      const isUpdate = assignments?.find((a) => a.id === assignment.id);
+  const onAssignmentSaved = (spec: AssignmentSpec) => {
 
-      return isUpdate
-        ? assignments!.map((a) => (a.id === assignment.id ? assignment : a))
-        : [...(assignments || []), assignment];
-    });
+    const assignment = assignmentSpecToContext(spec);
+
+    const isUpdate = props.assignments?.find((a: Context) => a.id === assignment.id);
+    // @ts-ignore
+    props.setAssignments(isUpdate
+      ? props.assignments!.map((a: Context) => (a.id === assignment.id ? assignment : a))
+      : [...(props.assignments || []), assignment]
+    );
+  };
 
   const onEditAssignment = (assignment: Context) =>
-    getAssignment(supabase, assignment.id).then(({ data, error }) => {
+
+    getAssignment(supabase, assignment.id as string).then(({ data, error }) => {
       if (error || !data) {
         props.setToast({
           title: t['Something went wrong'],
@@ -65,21 +75,19 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           type: 'error',
         });
       } else {
-        const spec = toAssignmentSpec(data);
+        const spec = contextToAssignmentSpec(data);
         setEditing(spec);
       }
     });
 
   const onDeleteAssignment = (assignment: Context) => {
     // Optimistic update: remove assignment from the list
-    setAssignments((assignments) =>
-      (assignments || []).filter((a) => a.id !== assignment.id)
-    );
+    props.setAssignments((props.assignments || []).filter((a) => a.id !== assignment.id));
 
-    getAllLayersInContext(supabase, assignment.id).then(({ error, data }) => {
-      if (error) {
+    archiveAssignment(supabase, assignment.id as string).then((data) => {
+      if (!data) {
         // Roll back
-        setAssignments((assignments) => [...(assignments || []), assignment]);
+        props.setAssignments([...(props.assignments || []), assignment as Context]);
 
         props.setToast({
           title: t['Something went wrong'],
@@ -87,35 +95,11 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           type: 'error',
         });
       } else {
-        // Note this will get easier when (if) we get a single RPC call
-        // to archive a list of records
-        const chained = data.reduce(
-          (p, nextLayer) => p.then(() => archiveLayer(supabase, nextLayer.id)),
-          Promise.resolve()
-        );
-
-        chained
-          .then(() => archiveAssignment(supabase, assignment.id))
-          .then(() => {
-            props.setToast({
-              title: t['Deleted'],
-              description: t['Assignment deleted successfully.'],
-              type: 'success',
-            });
-          })
-          .catch(() => {
-            // Roll back
-            setAssignments((assignments) => [
-              ...(assignments || []),
-              assignment,
-            ]);
-
-            props.setToast({
-              title: t['Something went wrong'],
-              description: t['Could not delete the assignment.'],
-              type: 'error',
-            });
-          });
+        props.setToast({
+          title: t['Deleted'],
+          description: t['Assignment deleted successfully.'],
+          type: 'success',
+        });
       }
     });
   };
@@ -153,10 +137,10 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           </>
         )}
       </header>
-      {assignments && assignments.length > 0 && currentAssignment &&
+      {props.assignments && props.assignments.length > 0 && currentAssignment &&
         <div className='project-assignments-presentation-pane'>
           <AssignmentsList
-            assignments={assignments}
+            assignments={props.assignments}
             i18n={props.i18n}
             currentAssignment={currentAssignment.id as string}
             onAssignmentSelect={handleAssignmentSelected}
@@ -164,33 +148,12 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           <AssignmentDetail
             assignment={currentAssignment}
             onEditAssignment={() => onEditAssignment(currentAssignment)}
+            onDeleteAssignment={(assignment) => onDeleteAssignment(assignment)}
             i18n={props.i18n}
             isAdmin={props.isAdmin}
           />
         </div>
       }
-
-
-      {/* {/*</div>
-      {
-    assignments ? (
-      assignments.length === 0 ? (
-        <div />
-      ) : (
-        <AssignmentsGrid
-          i18n={props.i18n}
-          canUpdate={canCreate}
-          project={project}
-          assignments={assignments}
-          onEditAssignment={onEditAssignment}
-          onDeleteAssignment={onDeleteAssignment}
-        />
-      )
-    ) : (
-      <div />
-    )
-  }
-    </div > * /} */}
     </div>
   );
 };

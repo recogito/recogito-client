@@ -50,5 +50,8 @@
   "Could not open the assignment.": "Could not open the assignment.",
   "Edit": "Edit",
   "Project Base Assignment": "Project Base Assignment",
-  "base_assignment_description": "This assignment is created by default for this project. You can edit this description to describe the intent of the project and any additional instructions."
+  "base_assignment_description": "This assignment is created by default for this project. You can edit this description to describe the intent of the project and any additional instructions.",
+  "Delete": "Delete",
+  "Are you sure you want to delete this assignment?": "Are you sure you want to delete this assignment?",
+  "Deleting this assignment will remove it from all users and will no longer be visible here.": "Deleting this assignment will remove it from all users and will no longer be visible here."
 }

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import { archiveLayer } from '@backend/crud';
+import { archiveContextDocuments } from '@backend/crud';
 import { updateAssignmentContext, addDocumentsToContext, addUsersToContext, removeUsersFromContext } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Context } from 'src/Types';
 import type { ProgressProps, ProgressState } from './Progress';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import type { userRole } from '@backend/Types';
@@ -58,7 +57,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
   const [state, setState] = useState<ProgressState>('idle');
 
-  const context: Context = {
+  const context: any = {
     id: previous.id!,
     name: name!,
     description,
@@ -79,11 +78,8 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
       // - check for removed documents and delete their layers
       if (documentChanges.removed.length > 0) {
-        await documentChanges.removed.reduce((promise, document) => {
-          return promise.then(() => {
-            return archiveLayer(supabase, document.layers[0].id);
-          });
-        }, Promise.resolve<void>(undefined));
+        const ids = documentChanges.removed.map(d => d.id);
+        await archiveContextDocuments(supabase, ids, context.id);
       }
 
       // - check for added documents and create layers
@@ -118,7 +114,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
         if (resultAddUsers) {
           setState('success');
-          props.onSaved(context);
+          props.onSaved(props.assignment);
         } else {
           console.error('Failed to add users to context');
           setState('failed');
@@ -137,7 +133,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
         if (resultRemoveUsers) {
           setState('success');
-          props.onSaved(context);
+          props.onSaved(props.assignment);
         } else {
           console.error('Failed to remove users from context');
           setState('failed');
@@ -149,7 +145,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
     };
 
     update()
-      .then(() => props.onSaved(context))
+      .then(() => props.onSaved(props.assignment))
       .catch((error) => {
         setState('failed');
         props.onError(error);

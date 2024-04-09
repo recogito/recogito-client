@@ -3,8 +3,8 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Layer } from 'src/Types';
 
 export const createLayer = (
-  supabase: SupabaseClient, 
-  document_id: string, 
+  supabase: SupabaseClient,
+  document_id: string,
   project_id: string,
   name?: string,
   description?: string
@@ -15,23 +15,25 @@ export const createLayer = (
       document_id,
       project_id,
       name,
-      description
+      description,
     })
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Layer }));
 
-export const archiveLayer = (supabase: SupabaseClient, id: string): Promise<void> =>
+export const archiveContextDocuments = (
+  supabase: SupabaseClient,
+  documentIds: string[],
+  contextId: string
+): Promise<void> =>
   new Promise((resolve, reject) => {
     supabase
-      .rpc('archive_record_rpc', {
-        _table_name: 'layers',
-        _id: id
+      .rpc('archive_context_document_rpc', {
+        _context_id: contextId,
+        _document_ids: documentIds,
       })
-      .then(({ error }) => {
-        if (error)
-          reject(error);
-        else
-          resolve();
-      })
+      .then(({ error, data }) => {
+        if (error || !data) reject(error);
+        else resolve();
+      });
   });

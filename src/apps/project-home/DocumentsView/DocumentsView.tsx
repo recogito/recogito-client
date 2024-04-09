@@ -24,6 +24,10 @@ interface DocumentsViewProps {
   user: MyProfile;
 
   setToast(content: ToastContent): void;
+
+  setDocuments(documents: Document[]): void;
+
+  onRemoveDocument(document: Document): void;
 }
 
 export const DocumentsView = (props: DocumentsViewProps) => {
@@ -31,22 +35,19 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   const [addOpen, setAddOpen] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
   const [documentUpdated, setDocumentUpdated] = useState(false);
-  const [documents, setDocuments] = useState<Document[]>(
-    props.documents
-  );
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
-    (document) => setDocuments((d) => [...d, document])
+    (document) => props.setDocuments([...props.documents, document])
   );
 
-  const documentIds = useMemo(() => documents.map((d) => d.id), [documents]);
+  const documentIds = useMemo(() => props.documents.map((d) => d.id), [props.documents]);
 
   const defaultContext = props.project.contexts.find((c) => c.is_project_default);
 
   const { addDocumentIds } = useDocumentList(
     props.project.id,
     defaultContext?.id,
-    (document) => setDocuments((d) => [...d, document])
+    (document) => props.setDocuments([...props.documents, document])
   );
 
   const { t, lang } = props.i18n;
@@ -96,7 +97,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     }
   };
 
-  const { getRootProps, getInputProps, isDragActive, open } =
+  const { getInputProps, open } =
     useDragAndDrop(onDrop);
 
   const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
@@ -119,11 +120,12 @@ export const DocumentsView = (props: DocumentsViewProps) => {
    */
   const onDeleteDocument = (document: Document) => {
     // Optimistic update: remove document from the list
-    setDocuments((documents) => documents.filter((d) => d.id !== document.id));
+    props.setDocuments(props.documents.filter((d) => d.id !== document.id));
     setDocumentUpdated(true);
     removeDocumentsFromProject(supabase, props.project.id, [document.id])
       .then((resp) => {
         if (resp) {
+          props.onRemoveDocument(document)
           props.setToast({
             title: t['Deleted'],
             description: t['Document deleted successfully.'],
@@ -131,7 +133,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           });
         } else {
           // Roll back optimistic update in case of failure
-          setDocuments((documents) => [...documents, document]);
+          props.setDocuments([...props.documents, document]);
           props.setToast({
             title: t['Something went wrong'],
             description: t['Could not delete the document.'],
@@ -148,8 +150,8 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   };
 
   const onUpdateDocument = (document: Document) => {
-    setDocuments((documents) =>
-      documents.map((d) =>
+    props.setDocuments(
+      props.documents.map((d) =>
         d.id === document.id
           ? {
             ...d,
@@ -174,7 +176,9 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     setAddOpen(true);
   };
 
-  const onDocumentSelected = (_document: Document) => { };
+  const handleAddDocument = (_document: Document) => {
+
+  }
 
   const onDocumentsSelected = (documentIds: string[]) => {
     addDocumentIds(documentIds);
@@ -189,7 +193,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         </h1>
         {props.isAdmin && (
           <div className='admin-actions'>
-            <button className='primary' onClick={onAddDocument}>
+            <button className='button primary project-home-add-document' onClick={onAddDocument}>
               <Plus size={20} /> <span>{t['Add Document']}</span>
             </button>
             <a
@@ -205,13 +209,11 @@ export const DocumentsView = (props: DocumentsViewProps) => {
 
       <div
         className='project-home-grid-wrapper'
-        {...(props.isAdmin ? getRootProps() : {})}
       >
         <div
           className='project-home-grid'
-          style={isDragActive ? { pointerEvents: 'none' } : undefined}
         >
-          {documents.map((document) => (
+          {props.documents.map((document) => (
             <DocumentCard
               key={document.id}
               isDefaultContext
@@ -226,11 +228,11 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           ))}
         </div>
       </div>
-      <div style={isDragActive ? { pointerEvents: 'none' } : undefined}>
+      <div>
         <DocumentLibrary
           open={addOpen}
           i18n={props.i18n}
-          onAddDocument={onDocumentSelected}
+          onAddDocument={handleAddDocument}
           onCancel={() => setAddOpen(false)}
           user={props.user}
           dataDirty={dataDirty || documentUpdated}

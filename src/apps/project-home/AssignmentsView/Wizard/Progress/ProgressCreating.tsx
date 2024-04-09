@@ -61,7 +61,7 @@ export const ProgressCreating = (props: ProgressProps) => {
                       props.onError('Failed to add users to context');
                     } else {
                       setState('success');
-                      props.onSaved(context);
+                      props.onSaved({ ...props.assignment, id: context.id });
                     }
                   })
               }

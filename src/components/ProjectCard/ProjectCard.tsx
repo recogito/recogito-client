@@ -107,19 +107,19 @@ export const ProjectCard = (props: ProjectCardProps) => {
       />
       <div className='project-card-footer'>
         <div className='avatar-stack'>
-          {users.map((user) => (
+          {users.map((member) => (
             <Avatar
-              key={user.id}
-              id={user.id}
+              key={member.user.id}
+              id={member.user.id}
               name={
-                user.nickname
-                  ? user.nickname
-                  : [user.first_name, user.last_name]
+                member.user.nickname
+                  ? member.user.nickname
+                  : [member.user.first_name, member.user.last_name]
                     .filter((str) => str)
                     .join(' ')
                     .trim()
               }
-              avatar={user.avatar_url}
+              avatar={member.user.avatar_url}
             />
           ))}
         </div>

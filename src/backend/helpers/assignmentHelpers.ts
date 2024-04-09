@@ -11,7 +11,12 @@ export const createAssignmentContext = (
   description: string | undefined,
   project_id: string
 ): Response<Context> =>
-  supabase.rpc('create_context_rpc', { _description: description, _name: name, _project_id: project_id })
+  supabase
+    .rpc('create_context_rpc', {
+      _description: description,
+      _name: name,
+      _project_id: project_id,
+    })
     .then(({ data, error }) => ({ error, data: data[0] as Context }));
 
 export const updateAssignmentContext = (
@@ -23,13 +28,13 @@ export const updateAssignmentContext = (
   supabase
     .from('contexts')
     .update({
-      name, description
+      name,
+      description,
     })
     .eq('id', contextId)
     .select()
     .single()
-    .then(({ error, data }) =>
-      ({ error, data: data as Context }));
+    .then(({ error, data }) => ({ error, data: data as Context }));
 
 /**
  * Archives an assigment context and all associated entities.
@@ -37,23 +42,18 @@ export const updateAssignmentContext = (
 export const archiveAssignment = (
   supabase: SupabaseClient,
   contextId: string
-): Promise<void> => {
-  // TODO because layers can be in multiple contexts, 
-  // they don't get archived automatically
+): Promise<boolean> => {
   return new Promise((resolve, reject) => {
     supabase
-      .rpc('archive_record_rpc', {
-        _table_name: 'contexts',
-        _id: contextId
+      .rpc('archive_context_rpc', {
+        _context_id: contextId,
       })
-      .then(({ error }) => {
-        if (error)
-          reject(error)
-        else
-          resolve();
-      })
-  })
-}
+      .then(({ error, data }) => {
+        if (error) reject(error);
+        else resolve(data);
+      });
+  });
+};
 
 export const getAssignment = (
   supabase: SupabaseClient,
@@ -64,7 +64,8 @@ export const getAssignment = (
   // then do some post processing 'manually'.
   supabase
     .from('contexts')
-    .select(`
+    .select(
+      `
       id,
       name,
       description,
@@ -98,7 +99,8 @@ export const getAssignment = (
           )            
         )
       )
-    `)
+    `
+    )
     .eq('id', contextId)
     .single()
     .then(({ data, error }) => {
@@ -106,8 +108,8 @@ export const getAssignment = (
         return { error, data: undefined };
       } else {
         // Returns a nested list with objects of the following shape:
-        // { 
-        //    context: ..., 
+        // {
+        //    context: ...,
         //    layer: {
         //      id, name, description,
         //      document: { },
@@ -122,21 +124,21 @@ export const getAssignment = (
           name: data.name,
           description: data.description,
           project_id: data.project_id,
-          team: data.team.map(t => {
+          team: data.team.map((t) => {
             return {
               user: { ...t.profile, id: t.user_id },
               since: '',
-            }
+            };
           }),
           // @ts-ignore
-          layers: data.layer_contexts.map(l => {
-            return { ...l.layer, id: l.id }
-          })
-        }
+          layers: data.layer_contexts.map((l) => {
+            return { ...l.layer, id: l.id };
+          }),
+        };
 
         return {
           error: null,
           data: obj,
-        }
+        };
       }
     });

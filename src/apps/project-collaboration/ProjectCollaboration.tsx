@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { InviteUser } from './InviteUser';
 import { MembersTable } from './MembersTable';
-import type { TeamMember } from './TeamMember';
 import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
   Group,
   Translations,
+  Member,
 } from 'src/Types';
 import { TopBar } from '@components/TopBar';
 import { BackButtonBar } from '@components/BackButtonBar';
@@ -38,7 +38,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const onChangeGroup = (member: TeamMember, from: Group, to: Group) => {
+  const onChangeGroup = (member: Member, from: Group, to: Group) => {
     // Update member
     const updated = {
       ...member,
@@ -48,7 +48,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     // Update project groups
     setProject((project) => ({
       ...project,
-      user: project.users.map((group) =>
+      user: project.groups.map((group) =>
         group.id === from.id
           ? // Remove user from this group
           {
@@ -65,7 +65,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     }));
   };
 
-  const onDeleteMember = (member: TeamMember) => {
+  const onDeleteMember = (member: Member) => {
     // Remove user from this project
     setProject((project) => ({
       ...project,

@@ -3,7 +3,7 @@ import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import { EditableText } from '@components/EditableText';
-import type { Context, Document, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
+import type { Document, ExtendedProjectData, Translations, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from './AssignmentSpec';
 import { Documents } from './Documents';
 import { Team } from './Team';
@@ -27,14 +27,9 @@ interface AssignmentWizardProps {
 
   onClose(): void;
 
-  onSaved(assignment: Context): void;
+  onSaved(assignment: AssignmentSpec): void;
 
 }
-
-export const NEW_ASSIGNMENT = {
-  documents: [],
-  team: []
-};
 
 const STEPS = [
   'documents',
@@ -86,7 +81,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
     setAssignment(assignment => ({ ...assignment, description })) :
     setAssignment(assignment => ({ ...assignment, description: undefined }));
 
-  const onSaved = (assignment: Context) => {
+  const onSaved = (assignment: AssignmentSpec) => {
     setComplete(true);
     props.onSaved(assignment);
   }

@@ -5,7 +5,6 @@
   padding: 20px 40px;
   position: relative;
   background-color: white;
-  margin-top: 240px;
 }
 
 .project-home h1 {
@@ -28,6 +27,11 @@
 
 .project-home .admin-actions {
   display: flex;
+  width: 500px;
+}
+
+.project-home-add-document {
+  width: 200px;
 }
 
 .project-home-grid-wrapper {

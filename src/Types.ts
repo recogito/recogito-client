@@ -25,6 +25,12 @@ export type MyProfile = UserProfile & {
   isOrgAdmin: boolean;
 };
 
+export type Member = {
+  inGroup: Group | undefined;
+  since: string;
+  user: UserProfile;
+};
+
 export interface Project {
   id: string;
 
@@ -70,9 +76,11 @@ export interface ExtendedProjectData {
 
   contexts: Context[];
 
+  groups: Group[];
+
   documents: Document[];
 
-  users: UserProfile[];
+  users: Member[];
 }
 
 export interface Group {
@@ -178,30 +186,26 @@ export interface Context {
 
   created_at: string;
 
-  context_users: [
-    {
-      id: string;
-      user_id: string;
-      user: {
-        nickname: string;
-        first_name: string;
-        last_name: string;
-        avatar_url: string;
-      };
-    }
-  ];
+  context_users: {
+    id: string;
+    user_id: string;
+    user: {
+      nickname: string;
+      first_name: string;
+      last_name: string;
+      avatar_url: string;
+    };
+  }[];
 
-  context_documents: [
-    {
-      document: {
-        id: string;
-        name: string;
-        content_type: string;
-        meta_data: any;
-        is_private: boolean;
-      };
-    }
-  ];
+  context_documents: {
+    document: {
+      id: string;
+      name: string;
+      content_type: string;
+      meta_data: any;
+      is_private: boolean;
+    };
+  }[];
 }
 
 export interface TaggedContext extends Context {

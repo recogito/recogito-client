@@ -25,35 +25,29 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
         <h1>
           {props.name}
         </h1>
-        <div className="project-header-button-bar">
-          <button className="project-header-button" onClick={props.onGotoUsers}>
-            <Users color="black" size={20} />
-            <div className="project-header-button-text">
-              {t['Team']}
-            </div>
-          </button>
-          <button className="project-header-button" onClick={props.onGotoSettings}>
-            <Gear color="black" size={20} />
-            <div className="project-header-button-text">
-              {t['Settings']}
-            </div>
-          </button>
-        </div>
+        {props.isAdmin &&
+          <div className="project-header-button-bar">
+            <button className="project-header-button" onClick={props.onGotoUsers}>
+              <Users color="black" size={20} />
+              <div className="project-header-button-text">
+                {t['Team']}
+              </div>
+            </button>
+            <button className="project-header-button" onClick={props.onGotoSettings}>
+              <Gear color="black" size={20} />
+              <div className="project-header-button-text">
+                {t['Settings']}
+              </div>
+            </button>
+          </div>
+        }
       </div>
       <div className="project-header-description-bar">
         {props.description}
       </div>
       <section className='project-header-header-bottom'>
-        {props.currentTab && props.onSwitchTab &&
+        {props.currentTab && props.onSwitchTab ?
           <ul className='project-header-header-tabs'>
-            <li
-              className={props.currentTab === 'assignments' ? 'active' : undefined}
-              onClick={() => {
-                props.onSwitchTab && props.onSwitchTab('assignments');
-              }}
-            >
-              <button>{t['Assignments']}</button>
-            </li>
             <li
               className={props.currentTab === 'documents' ? 'active' : undefined}
               onClick={() => {
@@ -62,7 +56,17 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
             >
               <button>{t['Documents']}</button>
             </li>
+            <li
+              className={props.currentTab === 'assignments' ? 'active' : undefined}
+              onClick={() => {
+                props.onSwitchTab && props.onSwitchTab('assignments');
+              }}
+            >
+              <button>{t['Assignments']}</button>
+            </li>
           </ul>
+          :
+          <div className="project-header-spacer" />
         }
       </section>
     </header>

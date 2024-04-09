@@ -13,8 +13,8 @@ import type {
   Policies,
 } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
-import { HeaderSearchAction } from './Search';
-import { HeaderSortAction, SortFunction } from './Sort';
+import { HeaderSearchAction } from '../../../components/Search';
+import { HeaderSortAction, SortFunction } from '../../../components/Sort';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 
 import './Header.css';

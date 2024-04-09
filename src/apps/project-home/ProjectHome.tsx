@@ -4,6 +4,7 @@ import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { ProjectHeader } from './ProjectHeader';
 
 import type {
+  Context,
   Document,
   ExtendedProjectData,
   Invitation,
@@ -16,6 +17,7 @@ import { TopBar } from '@components/TopBar';
 import { BackButtonBar } from '@components/BackButtonBar';
 import { DocumentsView } from './DocumentsView';
 import { AssignmentsView } from './AssignmentsView';
+import { useAssignments } from '@backend/hooks';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -40,6 +42,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [tab, setTab] = useState<'documents' | 'assignments' | undefined>();
+  const [documents, setDocuments] = useState<Document[]>(
+    props.documents
+  );
+  const [project, setProject] = useState(props.project);
+
+  const { assignments, setAssignments } = useAssignments(project);
 
   const { t } = props.i18n;
 
@@ -73,6 +81,58 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   };
 
+  const updateDefaultContext = (project: ExtendedProjectData, documents: Document[]) => {
+    // Make sure we have all documents in the default context
+    const defaultContextIdx = project.contexts.findIndex(c => c.is_project_default);
+    if (defaultContextIdx > -1) {
+      const defaultContext = { ...project.contexts[defaultContextIdx] };
+
+      // Add any new documents
+      documents.forEach(doc => {
+        const idx = defaultContext.context_documents.findIndex(d => d.document.id === doc.id);
+        if (idx < 0) {
+          // @ts-ignore
+          defaultContext.context_documents.push({ document: doc });
+        }
+      });
+
+      // Remove any documents that have been deleted
+      defaultContext.context_documents.forEach((doc, index) => {
+        const idx = documents.findIndex(d => d.id === doc.document.id);
+        if (idx < 0) {
+          defaultContext.context_documents.splice(index, 1);
+        }
+      })
+
+      const ret = [defaultContext, ...project.contexts.filter(c => c.id !== defaultContext.id)];
+      return ret;
+    }
+
+    return project.contexts;
+  }
+
+  const onSetDocuments = (documents: Document[]) => {
+    setDocuments(documents);
+    const proj = {
+      ...project,
+      documents: documents,
+      contexts: updateDefaultContext(project, documents)
+    };
+    setProject(proj);
+    setAssignments(proj.contexts)
+  }
+
+  const removeDocumentFromAssignments = (document: Document) => {
+    const copy: ExtendedProjectData = JSON.parse(JSON.stringify(props.project));
+    copy.contexts.forEach((context: Context) => {
+      context.context_documents = context.context_documents.filter(cd => (
+        cd.document.id !== document.id
+      ))
+    })
+
+    setProject(copy)
+  }
+
   return (
     <>
       <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.user} />
@@ -86,25 +146,29 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         onGotoSettings={handleGotoSettings}
         onGotoUsers={handleGotoUsers}
       />
-      <div className='project-home'>
+      <div className='project-home' style={{ marginTop: isAdmin ? 240 : 190 }}>
         <ToastProvider>
           {tab === 'documents' ?
             <DocumentsView
               isAdmin={isAdmin as boolean}
-              documents={props.documents}
+              documents={documents}
               i18n={props.i18n}
               project={props.project}
               setToast={setToast}
               user={props.user}
+              setDocuments={onSetDocuments}
+              onRemoveDocument={removeDocumentFromAssignments}
             />
             :
             <AssignmentsView
               i18n={props.i18n}
-              project={props.project}
+              project={project}
               me={props.user}
-              documents={props.documents}
+              documents={documents}
+              assignments={assignments}
               setToast={setToast}
               isAdmin={isAdmin as boolean}
+              setAssignments={setAssignments}
             />
           }
           <Toast

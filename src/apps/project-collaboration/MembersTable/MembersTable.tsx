@@ -11,8 +11,8 @@ import type {
   Group,
   Translations,
   UserProfile,
+  Member,
 } from 'src/Types';
-import type { TeamMember } from '../TeamMember';
 import { DeleteMember } from '../DeleteMember';
 
 import './MembersTable.css';
@@ -27,9 +27,9 @@ interface MembersTableProps {
 
   me: UserProfile;
 
-  onChangeGroup(member: TeamMember, from: Group, to: Group): void;
+  onChangeGroup(member: Member, from: Group, to: Group): void;
 
-  onDeleteMember(member: TeamMember): void;
+  onDeleteMember(member: Member): void;
 
   onDeleteInvite(invitation: Invitation): void;
 
@@ -58,7 +58,7 @@ export const MembersTable = (props: MembersTableProps) => {
   };
 
   const onSelectAll = (checked: Checkbox.CheckedState) => {
-    if (checked) setSelected(props.project.users.map((m) => m.id));
+    if (checked) setSelected(props.project.users.map((m) => m.user.id));
     else setSelected([]);
   };
 
@@ -91,19 +91,19 @@ export const MembersTable = (props: MembersTableProps) => {
       </thead>
 
       <tbody>
-        {props.project.users.map((user) => (
-          <tr key={user.id}>
+        {props.project.users.map((member) => (
+          <tr key={member.user.id}>
             <td>
               <Checkbox.Root
                 className='checkbox-root'
-                checked={selected.includes(user.id)}
-                onCheckedChange={(checked) => onSelectRow(user, checked)}
+                checked={selected.includes(member.user.id)}
+                onCheckedChange={(checked) => onSelectRow(member.user, checked)}
               >
                 <Checkbox.Indicator>
                   <CheckSquare size={20} weight='fill' />
                 </Checkbox.Indicator>
 
-                {!selected.includes(user.id) && (
+                {!selected.includes(member.user.id) && (
                   <span>
                     <Square size={20} />
                   </span>
@@ -112,24 +112,24 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td>
-              {formatName(user) || (
+              {formatName(member.user) || (
                 <span className='anonymous-member'>
                   {t['Anonymous team member']}{' '}
                   <AnonymousTooltip i18n={props.i18n} />
                 </span>
               )}
-              {isMe(user) && <span className='badge'>{t['You']}</span>}
+              {isMe(member.user) && <span className='badge'>{t['You']}</span>}
             </td>
 
             <td>
-              {isOwner(user) ? (
+              {isOwner(member.user) ? (
                 <button disabled className='owner'>
                   {t['Owner']}
                 </button>
               ) : (
                 <GroupSelector
                   i18n={props.i18n}
-                  member={user}
+                  member={member}
                   availableGroups={props.project.groups}
                   onChangeGroup={(from, to) =>
                     props.onChangeGroup(member, from, to)
@@ -139,7 +139,7 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td className='actions'>
-              {!isOwner(member) && (
+              {!isOwner(member.user) && (
                 <DeleteMember
                   i18n={props.i18n}
                   member={member}
