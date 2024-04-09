@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { PresentUser, DrawingStyle } from '@annotorious/react';
+import type { PresentUser, DrawingStyle, Filter } from '@annotorious/react';
 import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -38,7 +38,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
 
-  const [filter, setFilter] = useState<((a: TextAnnotation) => boolean) | undefined>(undefined);
+  const [filter, setFilter] = useState<Filter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -76,15 +76,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   // max number of avatars displayed in the top right
   const limit = 5;
-
-  const onChangeViewMenuPanel = (panel: DrawerPanel | undefined) => {
-    if (panel === DrawerPanel.ANNOTATIONS) {
-      // Don't use the popup if the annotation list is open
-      setUsePopup(false);
-    } else {
-      if (!usePopup) setUsePopup(true);
-    }
-  };
 
   const onSetRightPanel = (panel?: DrawerPanel) => {
     if (panel === DrawerPanel.ANNOTATIONS)
