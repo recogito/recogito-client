@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 import { archiveContextDocuments } from '@backend/crud';
-import { updateAssignmentContext, addDocumentsToContext, addUsersToContext, removeUsersFromContext } from '@backend/helpers';
+import {
+  updateAssignmentContext,
+  addDocumentsToContext,
+  addUsersToContext,
+  removeUsersFromContext,
+} from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { ProgressProps, ProgressState } from './Progress';
 import type { AssignmentSpec } from '../AssignmentSpec';
-import type { userRole } from '@backend/Types';
+import type { UserRole } from '@backend/Types';
 
 import './Progress.css';
 
@@ -62,7 +67,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
     name: name!,
     description,
     project_id: props.project.id,
-    is_project_default: true
+    is_project_default: true,
   };
 
   useEffect(() => {
@@ -78,25 +83,24 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
       // - check for removed documents and delete their layers
       if (documentChanges.removed.length > 0) {
-        const ids = documentChanges.removed.map(d => d.id);
+        const ids = documentChanges.removed.map((d) => d.id);
         await archiveContextDocuments(supabase, ids, context.id);
       }
 
       // - check for added documents and create layers
       if (documentChanges.added.length > 0) {
-        const docs: string[] = documentChanges.added.map(d => d.id);
+        const docs: string[] = documentChanges.added.map((d) => d.id);
         const resultAddDocs = await addDocumentsToContext(
           supabase,
           docs,
-          context.id,
-        )
+          context.id
+        );
 
         if (!resultAddDocs) {
           console.error('Failed to add documents to context');
           setState('failed');
           props.onError('Failed to add documents to context');
         }
-
       }
 
       // Step 3. Update users if necessary
@@ -104,13 +108,16 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
       // - Members were added
       if (memberChanges.added.length > 0) {
-
-        const arr: userRole[] = [];
+        const arr: UserRole[] = [];
         memberChanges.added.forEach((member) => {
-          arr.push({ user_id: member.id, role: 'default' })
+          arr.push({ user_id: member.id, role: 'default' });
         });
 
-        const resultAddUsers = await addUsersToContext(supabase, context.id, arr);
+        const resultAddUsers = await addUsersToContext(
+          supabase,
+          context.id,
+          arr
+        );
 
         if (resultAddUsers) {
           setState('success');
@@ -126,10 +133,14 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
       if (memberChanges.removed.length > 0) {
         const arr: string[] = [];
         team.forEach((member) => {
-          arr.push(member.id)
+          arr.push(member.id);
         });
 
-        const resultRemoveUsers = await removeUsersFromContext(supabase, context.id, arr);
+        const resultRemoveUsers = await removeUsersFromContext(
+          supabase,
+          context.id,
+          arr
+        );
 
         if (resultRemoveUsers) {
           setState('success');

@@ -65,7 +65,6 @@ const channelId = data.digest('hex');
 
 let viewer;
 
-console.log('Document: ', document.data);
 if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
 } else if (document.data.content_type === 'text/xml') {

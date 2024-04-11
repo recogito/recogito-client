@@ -21,7 +21,7 @@ export interface ProjectDocument {
   document_id: string;
 }
 
-export type userRole = {
+export type UserRole = {
   user_id: string;
 
   role: 'default' | 'admin';

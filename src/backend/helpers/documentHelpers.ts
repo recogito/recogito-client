@@ -274,7 +274,6 @@ export const getDocumentInContext = (
             return { error, data: null };
           }
 
-          console.log('Layer Context: ', data);
           document.layers = data.layer_contexts
             .filter((c) => c.layer.document_id === documentId)
             .map((layerContext) => ({
