@@ -9,6 +9,7 @@ import type { Policies, Translations } from 'src/Types';
 import './Popup.css';
 
 interface PopupProps {
+
   selected: { annotation: Anno; editable?: boolean }[];
 
   i18n: Translations;
@@ -18,6 +19,7 @@ interface PopupProps {
   policies?: Policies;
 
   tagVocabulary?: string[];
+
 }
 
 export const Popup = (props: PopupProps) => {

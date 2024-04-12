@@ -2,7 +2,6 @@ import { forwardRef, useMemo, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
-import { createAppearenceProvider } from '@components/Presence';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { Layer, Policies, Translations } from 'src/Types';
@@ -71,8 +70,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const appearance = useMemo(() => createAppearenceProvider(), []);
-
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
@@ -123,7 +120,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           channel={props.channelId}
           defaultLayer={props.defaultLayer?.id} 
           layerIds={props.layers.map(layer => layer.id)}
-          appearanceProvider={appearance}
           privacyMode={privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
           onInitialLoad={props.onLoad}

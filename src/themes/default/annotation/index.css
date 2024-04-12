@@ -167,8 +167,12 @@
 }
 
 .anno-menubar .avatar {
-  height: 30px;
-  width: 30px;
+  height: 36px;
+  width: 36px;
+}
+
+.anno-menubar .avatar .avatar-fallback {
+  font-size: 11.5px;
 }
 
 .anno-menubar .presence-stack .avatar {
