@@ -82,14 +82,8 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
         const manifest = Utils.parseManifest(data) as Manifest;
 
         if (isSupported(manifest)) {
-          const sequence = manifest.getSequences()[0];
-
-          // Hm... this makes a whole lot of assumptions about the manifest. 
-          // TODO run some kind of initial validation/sanity check and display
-          // a message to the user if this fails
-          // const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
+          const sequence = manifest.getSequences()[0]; 
           
-          // Seems to be the more reliable approach...
           const firstImage = getImageManifestURL(sequence.getCanvases()[0].getImages()[0].getResource());
           
           setSequence(sequence);
