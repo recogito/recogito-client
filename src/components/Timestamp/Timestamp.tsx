@@ -6,7 +6,7 @@ interface TimestampProps {
 
   datetime: string | number | Date;
 
-  locale: string;
+  locale?: string;
 
 }
 

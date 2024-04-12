@@ -1,7 +1,8 @@
-import { Annotation } from '@components/Annotation';
 import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import { Annotation } from '@components/Annotation';
+import { Extension, usePlugins } from '@components/Plugins';
 import { TagsWidget } from '../TagsWidget';
 import type { Policies, Translations } from 'src/Types';
 
@@ -29,6 +30,8 @@ export const Popup = (props: PopupProps) => {
 
   const store = useAnnotationStore();
 
+  const plugins = usePlugins('annotation.*.annotation-editor');
+
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
@@ -48,6 +51,9 @@ export const Popup = (props: PopupProps) => {
 
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
+
+  const onUpdateAnnotation = (updated: SupabaseAnnotation) =>
+    store.updateAnnotation(updated);
 
   const onCreateBody = (body: AnnotationBody) =>
     store.addBody(body);
@@ -75,6 +81,7 @@ export const Popup = (props: PopupProps) => {
             annotation={selected} 
             onReply={onReply} 
             onDeleteAnnotation={() => onDeleteAnnotation(selected)}
+            onUpdateAnnotation={onUpdateAnnotation}
             onCreateBody={onCreateBody} 
             onDeleteBody={onDeleteBody} 
             onUpdateBody={onUpdateBody} />
@@ -86,6 +93,7 @@ export const Popup = (props: PopupProps) => {
             policies={props.policies}
             onReply={onReply} 
             onDeleteAnnotation={() => onDeleteAnnotation(selected)}
+            onUpdateAnnotation={onUpdateAnnotation}
             onCreateBody={onCreateBody} 
             onDeleteBody={onDeleteBody}
             onUpdateBody={onUpdateBody} />
@@ -109,6 +117,16 @@ export const Popup = (props: PopupProps) => {
               placeholder={props.i18n.t['Comment...']}
               onSubmit={onReply}
             />
+
+            {plugins.map(plugin => (
+              <Extension 
+                key={plugin.meta.id}
+                plugin={plugin} 
+                extensionPoint="annotation.*.annotation-editor"
+                me={me}
+                annotation={selected} 
+                onUpdateAnnotation={onUpdateAnnotation} />
+            ))}
           </div>
         ) : (
           <div className='annotation-card'>
@@ -128,6 +146,16 @@ export const Popup = (props: PopupProps) => {
               placeholder={props.i18n.t['Comment...']}
               onSubmit={onReply}
             />
+
+            {plugins.map(plugin => (
+              <Extension 
+                key={plugin.meta.id}
+                plugin={plugin} 
+                extensionPoint="annotation.*.annotation-editor"
+                me={me}
+                annotation={selected} 
+                onUpdateAnnotation={onUpdateAnnotation} />
+            ))}
           </div>
         )
       ) : (

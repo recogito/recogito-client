@@ -39,6 +39,7 @@ export interface ProjectHomeProps {
 }
 
 export const ProjectHome = (props: ProjectHomeProps) => {
+
   const { lang, t } = props.i18n;
 
   const [project, setProject] = useState(props.project);
@@ -214,7 +215,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <ToastProvider>
         <div>
           <ProjectTitle editable={isAdmin} project={project} />
-
+                    
           <ProjectDescription
             i18n={props.i18n}
             editable={isAdmin}

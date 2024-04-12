@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import { useFilterSettings } from '../LayerConfiguration';
 import { 
@@ -41,6 +42,8 @@ interface AnnotationListProps<T extends Anno> {
 export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) => {
 
   const el = useRef<HTMLUListElement>(null);
+
+  const plugins = usePlugins('annotation.*.annotation-editor');
 
   const all = useAnnotations(150);
   
@@ -116,6 +119,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
 
+  const onUpdateAnnotation = (updated: SupabaseAnnotation) =>
+    store.updateAnnotation(updated);
+
   const onCreateBody = (body: AnnotationBody) =>
     store.addBody(body);
 
@@ -172,6 +178,16 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
                       onSubmit={onCreateBody} />
+
+                    {plugins.map(plugin => (
+                      <Extension 
+                        key={plugin.meta.name}
+                        plugin={plugin} 
+                        extensionPoint="annotation.*.annotation-editor"
+                        me={me}
+                        annotation={a} 
+                        onUpdateAnnotation={onUpdateAnnotation} />
+                    ))}
                   </div>
                 ) : (
                   <Annotation.EmptyCard
@@ -198,6 +214,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
                   present={props.present}
                   tagVocabulary={props.tagVocabulary} 
                   onReply={onCreateBody}
+                  onUpdateAnnotation={onUpdateAnnotation}
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
                   onUpdateBody={onUpdateBody}
@@ -212,6 +229,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
                   policies={props.policies} 
                   tagVocabulary={props.tagVocabulary} 
                   onReply={onCreateBody}
+                  onUpdateAnnotation={onUpdateAnnotation}
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
                   onUpdateBody={onUpdateBody}
