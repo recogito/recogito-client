@@ -25,6 +25,7 @@ const clearCookies = () => {
 
 export const Login = (props: {
   i18n: Translations;
+  splashURL: string;
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
@@ -128,11 +129,15 @@ export const Login = (props: {
   };
 
   if (isChecking) {
-    return <StateChecking />;
+    return (
+      <div id='login-selector' className='login-background-container'>
+        <StateChecking />
+      </div>
+    )
   } else if (sendLink) {
     return (
-      <>
-        <div className='login-selector'>
+      <div className='login-background-container'>
+        <div id='login-selector' className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
             availableMethods={props.methods}
@@ -141,12 +146,12 @@ export const Login = (props: {
           />
         </div>
         <StateMagicLink i18n={props.i18n} />;
-      </>
+      </div>
     );
   } else if (showLogin) {
     return (
-      <>
-        <div className='login-selector'>
+      <div className='login-background-container'>
+        <div id='login-selector' className='login-selector'>
           <LoginMethodSelector
             i18n={props.i18n}
             availableMethods={props.methods}
@@ -159,17 +164,19 @@ export const Login = (props: {
           onSendLink={() => setSendLink(true)}
           onSignInWithSSO={signInWithSSO}
         />
-      </>
+      </div>
     );
   } else {
     return (
-      <div className='login-selector'>
-        <LoginMethodSelector
-          i18n={props.i18n}
-          availableMethods={props.methods}
-          currentMethod={currentMethod}
-          onChangeMethod={onMethodChanged}
-        />
+      <div className='login-background-container'>
+        <div id='login-selector' className='login-selector'>
+          <LoginMethodSelector
+            i18n={props.i18n}
+            availableMethods={props.methods}
+            currentMethod={currentMethod}
+            onChangeMethod={onMethodChanged}
+          />
+        </div>
       </div>
     );
   }

@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import {
   ArrowLineLeft,
-  CaretCircleLeft,
-  CaretLeft,
   Folders,
   GraduationCap,
   House,
+  PuzzlePiece,
   Sliders,
   UsersThree,
 } from '@phosphor-icons/react';
 import { AccountActions } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
-import { RecogitoCircleLogo } from '@components/RecogitoLogo';
 import { NavItem } from './NavItem';
 import type {
   ExtendedProjectData, 
@@ -104,11 +102,11 @@ export const ProjectSidebar = (props: ProjectSidebarProps) => {
                 link={link('assignments')}
               />
 
-              {/* <NavItem
-                active={active === 'Add Ons'}
-                icon={PuzzlePiece}
-                label={t['Add Ons']}
-              link={link('addons')} /> */}
+              <NavItem
+                active={active === 'Plugins'}
+                icon={<PuzzlePiece size={21} />}
+                label="Plugins"
+                link={link('plugins')} />
 
               {isAdmin && (
                 <NavItem

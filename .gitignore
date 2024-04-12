@@ -4,11 +4,12 @@ dist/
 .vscode/
 .idea/
 node_modules/
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+src/components/Plugins/deployedPlugins.ts
 
 .env
 .env.production

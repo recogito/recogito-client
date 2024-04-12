@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Annotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import { useFilterSettings } from '../LayerConfiguration';
 import { 
@@ -20,7 +21,7 @@ import {
 
 import './AnnotationList.css';
 
-interface AnnotationListProps {
+interface AnnotationListProps<T extends Anno> {
 
   i18n: Translations;
 
@@ -30,7 +31,7 @@ interface AnnotationListProps {
 
   policies?: Policies;
 
-  sorting?: ((a: Anno, b: Anno) => number);
+  sorting?: ((a: T, b: T) => number);
 
   tagVocabulary?: string[];
 
@@ -38,9 +39,11 @@ interface AnnotationListProps {
 
 }
 
-export const AnnotationList = (props: AnnotationListProps) => {
+export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) => {
 
   const el = useRef<HTMLUListElement>(null);
+
+  const plugins = usePlugins('annotation.*.annotation-editor');
 
   const all = useAnnotations(150);
   
@@ -66,6 +69,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const sorted = useMemo(() => {
     const filtered = filter ? annotations.filter(filter) : annotations;
+    // @ts-ignore
     return props.sorting ? [...filtered].sort(props.sorting) : filtered;
   }, [annotations, filter]);
 
@@ -114,6 +118,9 @@ export const AnnotationList = (props: AnnotationListProps) => {
 
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
+
+  const onUpdateAnnotation = (updated: SupabaseAnnotation) =>
+    store.updateAnnotation(updated);
 
   const onCreateBody = (body: AnnotationBody) =>
     store.addBody(body);
@@ -171,6 +178,16 @@ export const AnnotationList = (props: AnnotationListProps) => {
                       annotation={a} 
                       placeholder={props.i18n.t['Comment...']}
                       onSubmit={onCreateBody} />
+
+                    {plugins.map(plugin => (
+                      <Extension 
+                        key={plugin.meta.name}
+                        plugin={plugin} 
+                        extensionPoint="annotation.*.annotation-editor"
+                        me={me}
+                        annotation={a} 
+                        onUpdateAnnotation={onUpdateAnnotation} />
+                    ))}
                   </div>
                 ) : (
                   <Annotation.EmptyCard
@@ -197,6 +214,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   present={props.present}
                   tagVocabulary={props.tagVocabulary} 
                   onReply={onCreateBody}
+                  onUpdateAnnotation={onUpdateAnnotation}
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
                   onUpdateBody={onUpdateBody}
@@ -211,6 +229,7 @@ export const AnnotationList = (props: AnnotationListProps) => {
                   policies={props.policies} 
                   tagVocabulary={props.tagVocabulary} 
                   onReply={onCreateBody}
+                  onUpdateAnnotation={onUpdateAnnotation}
                   onCreateBody={onCreateBody} 
                   onDeleteBody={onDeleteBody} 
                   onUpdateBody={onUpdateBody}

@@ -3,6 +3,7 @@ import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
+import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentInTaggedContext, Translations } from 'src/Types';
 import { PDFControls } from './PDFControls';
@@ -42,6 +43,8 @@ export const Menubar = (props: MenubarProps) => {
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
+
+  const plugins = usePlugins('annotation.text.toolbar');
 
   const toggleRightDrawer = (panel: DrawerPanel) => {
     if (panel === props.rightPanel)
@@ -105,15 +108,25 @@ export const Menubar = (props: MenubarProps) => {
       <div className="anno-menubar-right ta-menubar-right">  
         {props.present.length > 1 && (
           <>
-            <div className="anno-desktop-overlay-divider" />
-          
             <div className="anno-menubar-section anno-menubar-presence">
               <PresenceStack present={props.present} />
             </div>
+
+            <div className="anno-desktop-overlay-divider" />
           </>
         )}
 
-        <div className="anno-desktop-overlay-divider" />
+        {plugins.map(plugin => (
+          <Extension 
+            key={plugin.meta.id}
+            plugin={plugin} 
+            document={props.document}
+            extensionPoint="annotation.text.toolbar" />
+        ))}
+
+        {plugins.length > 0 && (
+          <div className="anno-desktop-overlay-divider" />
+        )}
 
         <div className="anno-menubar-section anno-menubar-actions-right">
           <button
