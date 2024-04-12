@@ -35,6 +35,8 @@ export interface ProjectHomeProps {
 
 export const ProjectHome = (props: ProjectHomeProps) => {
 
+  const { lang, t } = props.i18n;
+
   const projectPolicies = useProjectPolicies(props.project.id);
 
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
@@ -48,8 +50,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [project, setProject] = useState(props.project);
 
   const { assignments, setAssignments } = useAssignments(project);
-
-  const { t } = props.i18n;
 
   useEffect(() => {
     if (!tab && projectPolicies) {
@@ -178,5 +178,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         </ToastProvider >
       </div >
     </>
-  );
-};
+  )
+
+}

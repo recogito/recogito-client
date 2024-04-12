@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTransition, animated } from '@react-spring/web';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import { Extension, usePlugins } from '@components/Plugins';
 import type { CommentProps } from '../Comment/CommentProps';
 import { Interstitial } from './Interstitial';
 import { ReplyForm } from '../ReplyForm';
@@ -17,6 +18,8 @@ type BaseCardProps = CardProps & {
 export const BaseCard = (props: BaseCardProps) => {
 
   const { annotation } = props;
+
+  const plugins = usePlugins('annotation.*.annotation-editor');
 
   const comments = annotation.bodies.filter(
     (b: AnnotationBody) => !b.purpose || b.purpose === 'commenting'
@@ -118,7 +121,7 @@ export const BaseCard = (props: BaseCardProps) => {
           </li>
 
           {collapsed && (
-            <li style={{ zIndex: comments.length }}>
+            <li style={{ zIndex: comments.length }} className="interstitial">
               <Interstitial
                 label={`Show ${comments.length - 2} more replies`}
                 onClick={() => setCollapsed(false)}
@@ -182,6 +185,16 @@ export const BaseCard = (props: BaseCardProps) => {
           beforeSubmit={beforeReply} 
           onSubmit={onReply} />
       )}
+
+      {plugins.map(plugin => (
+        <Extension 
+          key={plugin.meta.id}
+          plugin={plugin}
+          extensionPoint="annotation.*.annotation-editor"
+          me={me}
+          annotation={annotation} 
+          onUpdateAnnotation={props.onUpdateAnnotation} />
+      ))}
     </>
   );
 };
