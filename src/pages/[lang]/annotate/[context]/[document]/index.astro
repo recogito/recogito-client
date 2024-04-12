@@ -98,24 +98,6 @@ const plugins = PluginRegistry.resolvePlugins(pluginConfigs.data, extensionPoint
     <link rel='stylesheet' href='/tei.css' slot='head' />
   )}
 
-<<<<<<< HEAD
-  {viewer === 'OPENSEADRAGON' ? (
-    <ImageAnnotation
-      client:only
-      i18n={getTranslations(Astro.request, 'annotation-image')}
-      document={document.data}
-      channelId={channelId}
-    />
-  ) : (
-    <TextAnnotation
-      client:only
-      i18n={getTranslations(Astro.request, 'annotation-text')}
-      document={document.data}
-      channelId={channelId}
-      styleSheet={styleSheet}
-    />
-  )}
-=======
   {
     viewer === 'OPENSEADRAGON' ? (
       <ImageAnnotation
@@ -136,7 +118,6 @@ const plugins = PluginRegistry.resolvePlugins(pluginConfigs.data, extensionPoint
       />
     )
   }
->>>>>>> develop
 </BaseLayout>
 
 <style>
