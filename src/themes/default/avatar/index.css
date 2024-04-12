@@ -6,6 +6,19 @@
   width: 38px;
 }
 
+.avatar-wrapper {
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.avatar-wrapper.ring {
+  border: 2px solid transparent;
+  padding: 1.5px;
+}
+
 .avatar-image,
 .avatar-fallback {
   align-items: center;

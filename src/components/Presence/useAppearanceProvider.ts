@@ -1,5 +1,7 @@
-import { Appearance, AppearanceProvider, PresentUser, User, defaultColorProvider } from '@annotorious/react';
+import { useMemo } from 'react';
+import type { Appearance, AppearanceProvider, PresentUser, User } from '@annotorious/react';
 import labels from './anonymous-identities.json';
+import { AuthorColors, useAuthorColors } from '@components/AnnotationDesktop';
 
 const IDENTITIES = labels.map(name => `Anonymous ${name}`);
 
@@ -12,12 +14,10 @@ const stringToHash = (str: string) => {
   return hash;
 }
 
-export const createAppearenceProvider = (): AppearanceProvider => {
+const createAppearenceProvider = (colors: AuthorColors): AppearanceProvider => {
   
-  const colorProvider = defaultColorProvider();
-
   const addUser = (presenceKey: string, user: User): Appearance => {
-    const color = colorProvider.assignRandomColor();
+    const color = colors.getColor(user);
 
     const label = user.name ? 
       user.name : 
@@ -29,11 +29,19 @@ export const createAppearenceProvider = (): AppearanceProvider => {
   }
 
   const removeUser = (user: PresentUser) => {
-    colorProvider.releaseColor(user.appearance.color);
+    // nothing to do
   }
   
   return {
     addUser, removeUser
   }
+
+}
+
+export const useAppearanceProvider = () => {
+
+  const colors = useAuthorColors();
+  
+  return useMemo(() => createAppearenceProvider(colors), []);
 
 }

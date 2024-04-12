@@ -1,4 +1,5 @@
 export * from './AnnotationList';
+export * from './AuthorColorProvider';
 export * from './DocumentNotes';
 export * from './ErrorBadge';
 export * from './LayerConfiguration';
