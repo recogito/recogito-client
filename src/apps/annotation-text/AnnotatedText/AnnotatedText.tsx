@@ -4,7 +4,6 @@ import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPo
 import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
-import { createAppearenceProvider } from '@components/Presence';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { PDFViewer } from '../PDFViewer';
@@ -128,7 +127,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               channel={props.channelId}
               defaultLayer={props.defaultLayer?.id}
               layerIds={props.layers.map((layer) => layer.id)}
-              appearanceProvider={createAppearenceProvider()}
               onInitialLoad={() => setAnnotationsLoading(false)}
               onPresence={props.onChangePresent}
               onConnectError={props.onConnectionError}

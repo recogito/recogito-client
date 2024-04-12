@@ -2,6 +2,7 @@ import type { PresentUser, User } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { Timestamp } from '@components/Timestamp';
 import type { Translations } from 'src/Types';
+import { useAuthorColors } from '@components/AnnotationDesktop';
 
 import './Creator.css';
 
@@ -23,6 +24,8 @@ export const Creator = (props: CreatorProps) => {
   
   const isAnonymous = !creator?.name || creator.isGuest;
 
+  const colors = useAuthorColors();
+
   return (
     <div className="annotation-creator">
       {isAnonymous ? (
@@ -31,7 +34,8 @@ export const Creator = (props: CreatorProps) => {
             <Avatar
               id={creator.id}
               name={creator.appearance.label}
-              avatar={creator.appearance.avatar} />
+              avatar={creator.appearance.avatar} 
+              color={colors.getColor(creator)} />
           )}
           
           <div className="annotation-created-by">
@@ -55,7 +59,8 @@ export const Creator = (props: CreatorProps) => {
           <Avatar
             id={creator.id}
             name={creator.name}
-            avatar={creator.avatar} />
+            avatar={creator.avatar} 
+            color={colors.getColor(creator)} />
 
           <div className="annotation-created-by">
             <address>
