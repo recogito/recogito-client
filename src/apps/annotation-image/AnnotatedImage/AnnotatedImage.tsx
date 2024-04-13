@@ -76,7 +76,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       clickToZoom: false
     },
     showNavigationControl: false,
-    crossOriginPolicy: 'Anonymous',
     minZoomLevel: 0.4,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
