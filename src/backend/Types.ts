@@ -5,22 +5,6 @@ export type Response<T> = PromiseLike<{
   data: T;
 }>;
 
-export interface ProjectDocument {
-  id?: string;
-
-  created_at?: string;
-
-  created_by?: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
-
-  project_id: string;
-
-  document_id: string;
-}
-
 export type UserRole = {
   user_id: string;
 

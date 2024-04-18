@@ -127,6 +127,7 @@ export const addDocumentToProject = (
   documentId: string
 ): Response<Document> =>
   createProjectDocument(supabase, documentId, projectId).then(
+    // @ts-ignore
     ({ error, data }) => {
       if (error || !data) {
         return { error: error, data: null };
@@ -283,6 +284,7 @@ export const getDocumentInContext = (
             }));
           const context = data;
 
+          // @ts-ignore
           delete context.layer_contexts;
           document.context = context;
 

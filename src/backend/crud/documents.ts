@@ -1,6 +1,6 @@
 import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
-import type { Response, ProjectDocument } from '@backend/Types';
-import type { Document } from 'src/Types';
+import type { Response } from '@backend/Types';
+import type { Document, ProjectDocument } from 'src/Types';
 
 export const createDocument = (
   supabase: SupabaseClient,
