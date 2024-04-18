@@ -55,25 +55,29 @@ const getInitials = (name: string): string => {
 export const Avatar = (props: AvatarProps) => {
   const { id, name, color, avatar } = props;
 
-  const backgroundColor = color || `hsl(${stringToHash(id) % 360}, 35%, 68%)`;
+  const fallbackColor = `hsl(${stringToHash(id) % 360}, 35%, 48%)`;
 
   return (
     <RadixAvatar.Root className='avatar'>
-      {avatar && (
-        <RadixAvatar.Image
-          className={props.showBorder ? 'avatar-image avatar-border' : 'avatar-image'}
-          title={`${name} avatar`}
-          src={avatar}
-        />
-      )}
+      <span 
+        className={color ? 'avatar-wrapper ring' : 'avatar-wrapper'}
+        style={color ? { borderColor: color } : undefined}>
+        {avatar && (
+          <RadixAvatar.Image
+            className='avatar-image'
+            title={`${name} avatar`}
+            src={avatar}
+          />
+        )}
 
-      <RadixAvatar.Fallback
-        className={props.showBorder ? 'avatar-fallback avatar-border' : 'avatar-fallback'}
-        title={`${name} avatar image`}
-        style={{ backgroundColor }}
-      >
-        {name ? getInitials(name) : <User size={16} />}
-      </RadixAvatar.Fallback>
+        <RadixAvatar.Fallback
+          className='avatar-fallback'
+          title={`${name} avatar image`}
+          style={{ backgroundColor: fallbackColor }}
+        >
+          {name ? getInitials(name) : <User size={16} />}
+        </RadixAvatar.Fallback>
+      </span>
     </RadixAvatar.Root>
   );
 };

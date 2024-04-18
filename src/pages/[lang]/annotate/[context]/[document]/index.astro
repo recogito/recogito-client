@@ -5,8 +5,9 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
-import { getDocumentInContext } from '@backend/helpers';
+import { getDocumentInContext, getInstalledPlugins } from '@backend/helpers';
 import { getCollection } from '@backend/crud/collections';
+import PluginRegistry from '@components/Plugins/PluginRegistry';
 import { isOpenJoinEditFromContext } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
@@ -56,6 +57,12 @@ if (document.data.collection_id) {
   }
 }
 
+const pluginConfigs = await getInstalledPlugins(supabase, document.data.context.project_id);
+if (pluginConfigs.error || !pluginConfigs.data) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 }); 
+}
+
 // Compute realtime channel key
 const secret = import.meta.env.ROOM_SECRET || '';
 const hash = crypto.createHash('sha256');
@@ -63,24 +70,26 @@ const data = hash.update(`${secret}.${contextId}.${documentId}`);
 
 const channelId = data.digest('hex');
 
-let viewer;
+let viewer, extensionPoint;
 
 if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
+  extensionPoint = 'annotation.text';
 } else if (document.data.content_type === 'text/xml') {
   viewer = 'TEI';
+  extensionPoint = 'annotation.text';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-} else if (
-  document.data.meta_data?.protocol === 'IIIF_IMAGE' ||
-  document.data.meta_data?.protocol === 'IIIF_PRESENTATION'
-) {
+} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
   viewer = 'OPENSEADRAGON';
+  extensionPoint = 'annotation.image';
 } else {
   // Should never happen
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
+
+const plugins = PluginRegistry.resolvePlugins(pluginConfigs.data, extensionPoint);
 ---
 
 <BaseLayout title={document.data.name}>
@@ -97,6 +106,7 @@ if (document.data.content_type === 'text/plain') {
         i18n={getTranslations(Astro.request, 'annotation-image')}
         document={document.data}
         channelId={channelId}
+        plugins={plugins}
       />
     ) : (
       <TextAnnotation
@@ -104,6 +114,7 @@ if (document.data.content_type === 'text/plain') {
         i18n={getTranslations(Astro.request, 'annotation-text')}
         document={document.data}
         channelId={channelId}
+        plugins={plugins}
         styleSheet={styleSheet}
       />
     )

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import type { Annotation, DrawingStyle } from '@annotorious/react';
+import { useAuthorColors } from '@components/AnnotationDesktop';
 import type { Layer, Translations } from 'src/Types';
 import { useColorCoding } from './ColorState';
 import { 
@@ -25,6 +26,8 @@ export const ColorSettings = (props: ColorSettingsProps) => {
 
   const { t } = props.i18n;
 
+  const authorColors = useAuthorColors();
+
   const { name, legend, style, setCoding } = useColorCoding();
 
   const [value, setValue] = useState(name || 'none');
@@ -42,7 +45,7 @@ export const ColorSettings = (props: ColorSettingsProps) => {
       if (props.layers)
         setCoding(colorByAssignment(props.layers));
     } else if (value === 'creator') {
-      setCoding(colorByCreator);
+      setCoding(colorByCreator(authorColors));
     } else if (value === 'tag') {
       setCoding(colorByFirstTag);
     }

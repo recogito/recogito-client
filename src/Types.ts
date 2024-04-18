@@ -46,9 +46,9 @@ export interface Project {
 
   description?: string;
 
-  is_open_join: boolean;
+  is_open_join?: boolean;
 
-  is_open_edit: boolean;
+  is_open_edit?: boolean;
 }
 
 /**
@@ -291,6 +291,27 @@ export interface Tag {
   target_id: string;
 
   tag_definition?: TagDefinition;
+}
+
+export interface InstalledPlugin {
+  id: string;
+
+  created_at: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
+  project_id: string;
+
+  plugin_name: string;
+
+  plugin_id: string;
+
+  plugin_settings?: any;
+
 }
 
 export interface Translations {

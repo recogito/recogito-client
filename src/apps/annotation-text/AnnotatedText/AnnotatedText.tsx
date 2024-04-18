@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
-import type { DrawingStyle, PresentUser } from '@annotorious/react';
+import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
 import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
-import { createAppearenceProvider } from '@components/Presence';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { PDFViewer } from '../PDFViewer';
@@ -25,7 +24,7 @@ interface AnnotatedTextProps {
 
   document: DocumentInTaggedContext;
 
-  filter?: (a: TextAnnotation) => boolean;
+  filter?: Filter;
 
   i18n: Translations;
 
@@ -104,14 +103,12 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             </>
           ) : contentType === 'application/pdf' && text ? (
             <PDFViewer
-              experimentalCSSRenderer
               document={props.document}
               filter={props.filter}
               style={props.style}
               onRendered={() => setPDFLoading(false)} />
           ) : text && (
             <TextAnnotator
-              experimentalCSSRenderer
               filter={props.filter}
               style={props.style}
               presence={{
@@ -130,7 +127,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               channel={props.channelId}
               defaultLayer={props.defaultLayer?.id}
               layerIds={props.layers.map((layer) => layer.id)}
-              appearanceProvider={createAppearenceProvider()}
               onInitialLoad={() => setAnnotationsLoading(false)}
               onPresence={props.onChangePresent}
               onConnectError={props.onConnectionError}
