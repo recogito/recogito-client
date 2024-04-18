@@ -1,7 +1,7 @@
 .avatar {
   border-radius: 50%;
   display: block;
-  position:relative;
+  position: relative;
   height: 38px;
   width: 38px;
 }
@@ -32,6 +32,10 @@
   justify-content: center;
   line-height: 120%;
   width: 100%;
+}
+
+.avatar-border {
+  border: 1px solid white;
 }
 
 .avatar-image {

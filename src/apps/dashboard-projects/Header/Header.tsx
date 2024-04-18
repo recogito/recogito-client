@@ -12,16 +12,9 @@ import type {
   Translations,
   Policies,
 } from 'src/Types';
-import type {
-  Invitation,
-  MyProfile,
-  ExtendedProjectData,
-  Translations,
-  Policies,
-} from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
-import { HeaderSearchAction } from './Search';
-import { HeaderSortAction, SortFunction } from './Sort';
+import { HeaderSearchAction } from '../../../components/Search';
+import { HeaderSortAction, SortFunction } from '../../../components/Sort';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 
 import './Header.css';
@@ -133,7 +126,6 @@ export const Header = (props: HeaderProps) => {
 
           <Notifications
             i18n={props.i18n}
-            myProjects={[...mine, ...shared]}
             invitations={props.invitations}
             onInvitationAccepted={props.onInvitationAccepted}
             onInvitationDeclined={props.onInvitationDeclined}

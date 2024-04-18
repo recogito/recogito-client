@@ -80,7 +80,6 @@ if (document.data.content_type === 'text/plain') {
   extensionPoint = 'annotation.text';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-  extensionPoint = 'annotation.text';
 } else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
   viewer = 'OPENSEADRAGON';
   extensionPoint = 'annotation.image';

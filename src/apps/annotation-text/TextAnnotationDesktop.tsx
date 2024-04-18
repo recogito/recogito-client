@@ -48,7 +48,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   // or the first layer in the list, if no project context
   const defaultLayer =
     layers && layers.length > 0
-      ? layers.find((l) => !l.context.name) || layers[0]
+      ? layers.find((l) => l.is_active_layer) || layers[0]
       : undefined;
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 present={present}
                 rightPanel={rightPanel}
                 onToggleBranding={() => setShowBranding(!showBranding)}
-                onSetRightDrawer={onSetRightPanel} 
+                onSetRightDrawer={onSetRightPanel}
                 showConnectionError={connectionError} />
             </div>
 

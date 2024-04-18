@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getGroupMembers, zipMembers } from '@backend/crud';
-import type { ExtendedProjectData } from 'src/Types';
+import { getGroupMembers, getProjectGroupMembers } from '@backend/crud';
+import type { ExtendedProjectData, Group, Member } from 'src/Types';
 import type { Response } from '@backend/Types';
 
 export const listMyProjectsExtended = (
@@ -25,26 +25,34 @@ export const listMyProjectsExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts (
+      groups:project_groups(
         id,
-        project_id,
-        name,
-        is_project_default
+        name
       ),
-      layers (
-        id,
-        name,
-        description,
-        document:documents (
+      project_documents(
+        *,
+        document:documents!project_documents_document_id_fkey(
           id,
           name,
           content_type,
           meta_data
         )
       ),
-      groups:project_groups (
+      contexts:contexts!contexts_project_id_fkey(
         id,
-        name
+        project_id,
+        name,
+        is_project_default,
+        created_at,
+        members:context_users(
+          role_id,
+          user:profiles!context_users_user_id_fkey (
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        )
       )
     `
     )
@@ -52,30 +60,64 @@ export const listMyProjectsExtended = (
       if (error) {
         return { error, data: [] as ExtendedProjectData[] };
       } else {
-        const projects = data;
+        const projects: any = data.map((project) => {
+          return {
+            ...project,
+            documents: project.project_documents.map((pd) => pd.document),
+          };
+        });
 
         // All group IDs of all projects in `data`
         const groupIds = projects.reduce(
-          (ids, project) => [...ids, ...project.groups.map((g) => g.id)],
+          (ids: any, project: any) => [
+            ...ids,
+            ...project.groups.map((g: any) => g.id),
+          ],
           [] as string[]
         );
 
-        return getGroupMembers(supabase, groupIds).then(({ error, data }) => {
-          if (error) {
-            return { error, data: [] as ExtendedProjectData[] };
-          } else {
-            // Re-assign group members to projects
-            const projectsExtended = projects.map(
-              (p) =>
-                ({
-                  ...p,
-                  groups: zipMembers(p.groups, data),
-                } as unknown as ExtendedProjectData)
-            );
+        return getProjectGroupMembers(supabase, groupIds).then(
+          ({ error, data }) => {
+            if (error) {
+              return { error, data: [] as ExtendedProjectData[] };
+            } else {
+              // Re-assign group members to projects
+              let users: any[] = [];
+              data.forEach(
+                (d) =>
+                  (users = [
+                    ...users,
+                    {
+                      user: d.user,
+                      groupId: d.in_group,
+                    },
+                  ])
+              );
 
-            return { error, data: projectsExtended };
+              users = [...new Set(users)];
+
+              const projectsExtended: ExtendedProjectData[] = projects.map(
+                (p: any) => {
+                  const ids: string[] = p.groups.map((g: any) => g.id);
+                  return {
+                    ...p,
+                    users: users
+                      .filter((u) => ids.includes(u.groupId))
+                      .map((m) => {
+                        return {
+                          user: m.user,
+                          inGroup: undefined,
+                          since: '',
+                        };
+                      }),
+                  } as unknown as ExtendedProjectData;
+                }
+              );
+
+              return { error, data: projectsExtended };
+            }
           }
-        });
+        );
       }
     });
 
@@ -103,21 +145,30 @@ export const getProjectExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts (
+      contexts(
         id,
         project_id,
         name,
-        is_project_default
-      ),
-      layers (
-        id,
-        name,
         description,
-        document:documents (
+        is_project_default,
+        created_at,
+        context_users (
           id,
-          name,
-          content_type,
-          meta_data
+          user:profiles!context_users_user_id_fkey(
+            id,
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        ),
+        context_documents(
+          document:documents(
+            id,
+            name,
+            content_type,
+            meta_data
+          )
         )
       ),
       groups:project_groups (
@@ -142,6 +193,30 @@ export const getProjectExtended = (
           if (error) {
             return { error, data: undefined as unknown as ExtendedProjectData };
           } else {
+            // Create a project users group
+            let users: Member[] = [];
+            data.forEach(
+              (d) =>
+                (users = [
+                  ...users,
+                  {
+                    user: d.user,
+                    inGroup: project.groups.find(
+                      (g) => g.id === d.in_group
+                    ) as Group,
+                    since: d.since,
+                  },
+                ])
+            );
+
+            users = users.filter(
+              (value: Member, index: number, array: any[]) => {
+                return (
+                  array.findIndex((u) => u.user.id === value.user.id) === index
+                );
+              }
+            );
+
             // Re-assign group members to groups
             const projectExtended = {
               ...project,
@@ -151,6 +226,7 @@ export const getProjectExtended = (
                   .filter((m) => m.in_group === g.id)
                   .map(({ user, since }) => ({ user, since })),
               })),
+              users,
             } as unknown as ExtendedProjectData;
 
             return { error, data: projectExtended };

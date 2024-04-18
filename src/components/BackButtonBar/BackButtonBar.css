@@ -1,0 +1,62 @@
+.back-button-bar-header {
+  align-items: center;
+  background-color: var(--secondary);
+  border-bottom: 1px solid white;
+  box-sizing: border-box;
+  display: flex;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 40px;
+  width: 100%;
+  z-index: 9999;
+  position: fixed;
+  top: 60px;
+}
+
+.back-button-bar-back {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+
+.back-button-bar-header a {
+  display: flex;
+  font-size: 14px;
+  font-weight: 600;
+  align-items: center;
+  text-decoration: none !important;
+  text-decoration-thickness: none !important;
+  color: black;
+}
+
+.back-button-bar-crumb-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.back-button-bar-crumb {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.back-button-bar-crumb-selectable {
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.back-button-bar-crumbs {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.back-button-bar-right-carat {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-right: 3px;
+}

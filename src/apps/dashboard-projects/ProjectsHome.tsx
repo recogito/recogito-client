@@ -83,10 +83,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   // Filtered projects
   const myProjects = projects.filter((p) => p.created_by?.id === me.id);
 
-  const sharedProjects = projects.filter(({ created_by, groups }) =>
-    groups.find(
-      ({ members }) =>
-        members.find((m) => m.user.id === me.id) && me.id !== created_by?.id
+  const sharedProjects = projects.filter(({ created_by, users }) =>
+    users.find((user) => user.user.id === me.id && me.id !== created_by?.id
     )
   );
 
@@ -124,7 +122,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onLeaveProject = (project: ExtendedProjectData) => {
     project.contexts = [];
-    project.groups = [];
 
     setProjects((projects) =>
       projects.map((p) => (p.id === project.id ? project : p))

@@ -33,5 +33,7 @@
   "Invitation was sent to": "Invitation was sent to ${user}",
   "Something went wrong": "Something went wrong",
   "Could not delete user.": "Could not delete user.",
-  "Could not send invitation.": "Could not send invitation."
+  "Could not send invitation.": "Could not send invitation.",
+  "Team": "Team",
+  "Projects": "Projects"
 }

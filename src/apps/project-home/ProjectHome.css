@@ -4,6 +4,7 @@
   flex-grow: 1;
   padding: 20px 40px;
   position: relative;
+  background-color: white;
 }
 
 .project-home h1 {
@@ -26,6 +27,11 @@
 
 .project-home .admin-actions {
   display: flex;
+  width: 500px;
+}
+
+.project-home-add-document {
+  width: 200px;
 }
 
 .project-home-grid-wrapper {
@@ -36,8 +42,8 @@
 .project-home-grid {
   display: grid;
   gap: 1rem;
-  grid-auto-rows: 1fr;  
-  grid-template-columns: repeat(auto-fill, 180px);
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, 200px);
   padding: 2em 0 40px 0;
 }
 
@@ -73,20 +79,20 @@
   border-radius: var(--border-radius);
   color: #fff;
   margin: 0 40px;
-  padding: 10px 20px; 
-  position: fixed; 
+  padding: 10px 20px;
+  position: fixed;
   bottom: 40px;
   text-align: center;
 }
 
 @keyframes pop-bottom {
-  0% { 
-    opacity: 0; 
-    transform: translateY(30px); 
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  100% { 
-    opacity: 1; 
-    transform: translateY(0); 
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -120,4 +126,14 @@
   font-size: var(--font-tiny);
   margin: 0;
   letter-spacing: 0.01ch;
+}
+
+.project-home-document-header-bar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 80px;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.15);
 }

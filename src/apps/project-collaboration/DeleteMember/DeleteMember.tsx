@@ -3,10 +3,9 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { Trash, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type { PostgrestError } from '@supabase/supabase-js';
-import type { TeamMember } from '../TeamMember';
 import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { Translations, UserProfile } from 'src/Types';
+import type { Member, Translations, UserProfile } from 'src/Types';
 
 interface DeleteMemberProps {
 
@@ -14,9 +13,9 @@ interface DeleteMemberProps {
 
   me: UserProfile;
 
-  member: TeamMember;
+  member: Member;
 
-  onDeleteMember(member: TeamMember): void;
+  onDeleteMember(member: Member): void;
 
   onDeleteError(error: PostgrestError): void;
 
@@ -34,13 +33,13 @@ export const DeleteMember = (props: DeleteMemberProps) => {
 
   const [busy, setBusy] = useState(false);
 
-  const name = nickname ? nickname : 
+  const name = nickname ? nickname :
     (first_name || last_name) ? [first_name, last_name].join(' ') : undefined;
 
   const onDelete = () => {
     setBusy(true);
 
-    removeUserFromProject(supabase, member.user.id, member.inGroup.id)
+    removeUserFromProject(supabase, member.user.id, member.inGroup!.id)
       .then(({ error }) => {
         setBusy(false);
 
@@ -73,22 +72,22 @@ export const DeleteMember = (props: DeleteMemberProps) => {
               {isMe ? (
                 t['You are about to leave']
               ) : name ? (
-                <span dangerouslySetInnerHTML={{__html: t['Remove_name'].replace('${name}', name)}} />
+                <span dangerouslySetInnerHTML={{ __html: t['Remove_name'].replace('${name}', name) }} />
               ) : (
                 t['Remove_anonymous']
               )}
             </Dialog.Description>
 
             <footer className="dialog-footer">
-              <Button 
+              <Button
                 busy={busy}
-                className="danger" 
+                className="danger"
                 onClick={onDelete}>
                 {isMe ? (
-                  t['Yes, I want to leave'] 
+                  t['Yes, I want to leave']
                 ) : (
                   <>
-                    <Trash size={16} /> 
+                    <Trash size={16} />
                     <span>{t['Remove']}</span>
                   </>
                 )}

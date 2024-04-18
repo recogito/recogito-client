@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import type {
-  DocumentInContext,
   Translations,
   Document,
   MyProfile,
@@ -57,7 +56,7 @@ export interface DocumentLibraryProps {
   disabledIds: string[];
   dataDirty: boolean;
   clearDirtyFlag(): void;
-  onAddDocument(document: DocumentInContext): void;
+  onAddDocument(document: Document): void;
   onCancel(): void;
   UploadActions: React.ReactNode;
   onDocumentsSelected(documentIds: string[]): void;
@@ -247,7 +246,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
               revision_count: 0,
             };
             for (let k = 0; k < map[key].length; k++) {
-              const date = new Date(map[key][k].created_at);
+              const date = new Date(map[key][k].created_at as string);
               obj.revisions?.push({
                 ...map[key][k],
                 date_number: date.getTime(),

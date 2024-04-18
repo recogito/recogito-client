@@ -5,18 +5,8 @@ export type Response<T> = PromiseLike<{
   data: T;
 }>;
 
-export interface ProjectDocument {
-  id: string;
+export type UserRole = {
+  user_id: string;
 
-  created_at: string;
-
-  created_by: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
-
-  project_id: string;
-
-  document_id: string;
-}
+  role: 'default' | 'admin';
+};

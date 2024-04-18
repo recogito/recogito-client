@@ -32,9 +32,14 @@ export default {
   error: error,
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
-  'project-collaboration': projectCollaboration,
-  'project-home': projectHome,
-  'project-settings': projectSettings,
+  'project-collaboration': { ...projectCollaboration, ...accountMenu },
+  'project-home': {
+    ...{ ...projectHome, ...accountMenu, ...projectSidedbar },
+    ...accountMenu,
+    ...projectSidedbar,
+    ...projectAssignments,
+  },
+  'project-settings': { ...projectSettings, ...projectSidedbar },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': { ...userManagement, ...accountMenu },
 };
