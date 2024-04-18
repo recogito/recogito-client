@@ -91,8 +91,6 @@ export const ReplyForm = (props: ReplyFormProps) => {
       onSave(value);
   }
 
-  console.log('reply', useMobile);
-
   return useMobile ? (
     <MobileTextarea
       i18n={props.i18n}
