@@ -44,7 +44,7 @@ export const DocumentCardThumbnail = (props: DocumentCardThumbnailProps) => {
   } else if (document.content_type == 'text/xml') {
     return (
       <div className='document-card-image-container'>
-        <img src='/img/pdf-document.png' height={200} width={200} />
+        <img src='/img/tei-document.png' height={200} width={200} />
       </div>
     );
   } else if (document.meta_data?.protocol === 'IIIF_PRESENTATION') {

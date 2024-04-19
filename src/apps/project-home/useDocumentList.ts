@@ -20,7 +20,7 @@ export const useDocumentList = (
             console.log(error);
           } else {
             setDataDirty(true);
-            onAdded(data);
+            onAdded(data[0]);
           }
         })
       );
