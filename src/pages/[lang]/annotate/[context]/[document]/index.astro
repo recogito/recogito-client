@@ -57,10 +57,13 @@ if (document.data.collection_id) {
   }
 }
 
-const pluginConfigs = await getInstalledPlugins(supabase, document.data.context.project_id);
+const pluginConfigs = await getInstalledPlugins(
+  supabase,
+  document.data.context.project_id
+);
 if (pluginConfigs.error || !pluginConfigs.data) {
   const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
 // Compute realtime channel key
@@ -80,7 +83,10 @@ if (document.data.content_type === 'text/plain') {
   extensionPoint = 'annotation.text';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
-} else if (document.data.meta_data?.protocol === 'IIIF_IMAGE' || document.data.meta_data?.protocol === 'IIIF_PRESENTATION') {
+} else if (
+  document.data.meta_data?.protocol === 'IIIF_IMAGE' ||
+  document.data.meta_data?.protocol === 'IIIF_PRESENTATION'
+) {
   viewer = 'OPENSEADRAGON';
   extensionPoint = 'annotation.image';
 } else {
@@ -89,7 +95,10 @@ if (document.data.content_type === 'text/plain') {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
-const plugins = PluginRegistry.resolvePlugins(pluginConfigs.data, extensionPoint);
+const plugins = PluginRegistry.resolvePlugins(
+  pluginConfigs.data,
+  extensionPoint
+);
 ---
 
 <BaseLayout title={document.data.name}>

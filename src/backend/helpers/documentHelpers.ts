@@ -104,19 +104,14 @@ const _initDocument = (
     })
   );
 
-  // Second promise: create layer in the default context
-  const b: Promise<Layer> = a.then((document) =>
-    createLayerInContext(supabase, document.id, projectId, contextId)
-  );
-
-  return Promise.all([a, b]).then(([document, defaultLayer]) => {
+  return Promise.all([a]).then(([document]) => {
     if (file) {
       return uploadFile(supabase, file, document.id, onProgress).then(() => ({
         ...document,
-        layers: [defaultLayer],
+        layers: [],
       }));
     } else {
-      return { ...document, layers: [defaultLayer] };
+      return { ...document, layers: [] };
     }
   });
 };
@@ -288,6 +283,7 @@ export const getDocumentInContext = (
           delete context.layer_contexts;
           document.context = context;
 
+          console.log(JSON.stringify(document, null, 2));
           return { error: null, data: document };
         });
     });
