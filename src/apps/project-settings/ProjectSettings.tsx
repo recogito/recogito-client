@@ -9,13 +9,19 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData, Invitation, Translations, MyProfile } from 'src/Types';
 import * as Switch from '@radix-ui/react-switch';
 import * as Label from '@radix-ui/react-label';
+import { TopBar } from '@components/TopBar';
+import { BackButtonBar } from '@components/BackButtonBar';
 
 import './ProjectSettings.css';
 
 interface ProjectSettingsProps {
+  invitations: Invitation[];
+  projects: ExtendedProjectData[];
+
+  me: MyProfile;
   i18n: Translations;
 
   project: ExtendedProjectData;
@@ -144,127 +150,143 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     project.is_open_join === openJoin &&
     project.is_open_edit === openEdit;
 
+  const onError = (error: string) => {
+    setToast({
+      title: t['Something went wrong'],
+      description: t[error] || error,
+      type: 'error',
+    });
+  };
+
   return (
-    <div className='project-settings'>
-      <ToastProvider>
-        <h1>{t['Project Settings']}</h1>
+    <>
+      <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.me} />
+      <BackButtonBar i18n={props.i18n} showBackToProjects={false} crumbs={[
+        { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
+        { label: props.project.name, href: `/${props.i18n.lang}/projects/${props.project.id}` },
+        { label: t['Settings'], href: undefined }
+      ]} />
+      <div className='project-settings'>
+        <ToastProvider>
+          <h1>{t['Project Settings']}</h1>
 
-        <div className='tagging-vocabulary'>
-          <h2>{t['Name and Access Settings']}</h2>
-          <div className='project-settings-inputs'>
-            <Label.Root
-              className='project-settings-label-root'
-              htmlFor='firstName'
-            >
-              {t['Project Name']}
-            </Label.Root>
-            <input
-              className='project-settings-input'
-              type='text'
-              value={name}
-              placeholder={t['Name your project']}
-              onChange={(evt) => setName(evt.target.value)}
-            />
-            <Label.Root
-              className='project-settings-label-root'
-              htmlFor='firstName'
-            >
-              {t['Project Description']}
-            </Label.Root>
-            <input
-              type='text'
-              value={description}
-              placeholder={t['Describe your project']}
-              onChange={(evt) => setDescription(evt.target.value)}
-            />
-          </div>
-          <div className='project-settings-switch'>
-            <label
-              className='project-settings-switch-label'
-              htmlFor='open-join'
-              style={{ paddingRight: 15 }}
-            >
-              {t['Open Join']}
-            </label>
-            <Switch.Root
-              className='project-settings-switch-root'
-              id='open-join'
-              checked={openJoin}
-              onCheckedChange={() => {
-                setOpenJoin(!openJoin);
-              }}
-            >
-              <Switch.Thumb className='project-settings-switch-thumb' />
-            </Switch.Root>
-            <div className='project-settings-switch-description'>
-              {t['open-join-info']}
+          <div className='tagging-vocabulary'>
+            <h2>{t['Name and Access Settings']}</h2>
+            <div className='project-settings-inputs'>
+              <Label.Root
+                className='project-settings-label-root'
+                htmlFor='firstName'
+              >
+                {t['Project Name']}
+              </Label.Root>
+              <input
+                className='project-settings-input'
+                type='text'
+                value={name}
+                placeholder={t['Name your project']}
+                onChange={(evt) => setName(evt.target.value)}
+              />
+              <Label.Root
+                className='project-settings-label-root'
+                htmlFor='firstName'
+              >
+                {t['Project Description']}
+              </Label.Root>
+              <input
+                type='text'
+                value={description}
+                placeholder={t['Describe your project']}
+                onChange={(evt) => setDescription(evt.target.value)}
+              />
+            </div>
+            <div className='project-settings-switch'>
+              <label
+                className='project-settings-switch-label'
+                htmlFor='open-join'
+                style={{ paddingRight: 15 }}
+              >
+                {t['Open Join']}
+              </label>
+              <Switch.Root
+                className='project-settings-switch-root'
+                id='open-join'
+                checked={openJoin}
+                onCheckedChange={() => {
+                  setOpenJoin(!openJoin);
+                }}
+              >
+                <Switch.Thumb className='project-settings-switch-thumb' />
+              </Switch.Root>
+              <div className='project-settings-switch-description'>
+                {t['open-join-info']}
+              </div>
+            </div>
+            <div style={{ width: 24 }} />
+            <div className='project-settings-switch'>
+              <label
+                className='project-settings-switch-label'
+                htmlFor='open-edit'
+                style={{ paddingRight: 15 }}
+              >
+                {t['Open Edit']}
+              </label>
+              <Switch.Root
+                className='project-settings-switch-root'
+                id='open-edit'
+                checked={openEdit}
+                onCheckedChange={() => setOpenEdit(!openEdit)}
+              >
+                <Switch.Thumb className='project-settings-switch-thumb' />
+              </Switch.Root>
+              <div className='project-settings-switch-description'>
+                {t['open-edit-info']}
+              </div>
+            </div>
+            <div className='buttons'>
+              <Button
+                busy={state === 'saving'}
+                className='primary'
+                onClick={saveProjectSettings}
+                disabled={saveDisabled}
+              >
+                <span>{t['Save']}</span>
+              </Button>
+
+              <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
             </div>
           </div>
-          <div style={{ width: 24 }} />
-          <div className='project-settings-switch'>
-            <label
-              className='project-settings-switch-label'
-              htmlFor='open-edit'
-              style={{ paddingRight: 15 }}
-            >
-              {t['Open Edit']}
-            </label>
-            <Switch.Root
-              className='project-settings-switch-root'
-              id='open-edit'
-              checked={openEdit}
-              onCheckedChange={() => setOpenEdit(!openEdit)}
-            >
-              <Switch.Thumb className='project-settings-switch-thumb' />
-            </Switch.Root>
-            <div className='project-settings-switch-description'>
-              {t['open-edit-info']}
+
+          <div className='tagging-vocabulary'>
+            <h2>{t['Tagging Vocabulary']}</h2>
+
+            <p>{t['You can pre-define a tagging vocabulary']}</p>
+
+            <p>{t['The terms will appear as autocomplete options']}</p>
+
+            <textarea value={vocabulary.join('\n')} onChange={onChange} />
+
+            <div className='buttons'>
+              <Button onClick={clearVocabulary}>
+                <span>{t['Clear']}</span>
+              </Button>
+              <Button
+                busy={state === 'saving'}
+                className='primary'
+                onClick={saveVocabulary}
+              >
+                <span>{t['Save']}</span>
+              </Button>
+
+              <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
             </div>
           </div>
-          <div className='buttons'>
-            <Button
-              busy={state === 'saving'}
-              className='primary'
-              onClick={saveProjectSettings}
-              disabled={saveDisabled}
-            >
-              <span>{t['Save']}</span>
-            </Button>
 
-            <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
-          </div>
-        </div>
-
-        <div className='tagging-vocabulary'>
-          <h2>{t['Tagging Vocabulary']}</h2>
-
-          <p>{t['You can pre-define a tagging vocabulary']}</p>
-
-          <p>{t['The terms will appear as autocomplete options']}</p>
-
-          <textarea value={vocabulary.join('\n')} onChange={onChange} />
-
-          <div className='buttons'>
-            <Button onClick={clearVocabulary}>
-              <span>{t['Clear']}</span>
-            </Button>
-            <Button
-              busy={state === 'saving'}
-              className='primary'
-              onClick={saveVocabulary}
-            >
-              <span>{t['Save']}</span>
-            </Button>
-
-            <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
-          </div>
-        </div>
-
-        <Toast
-          content={toast}
-          onOpenChange={(open) => !open && setToast(null)}
-        />
-      </ToastProvider>
-    </div>
+          <Toast
+            content={toast}
+            onOpenChange={(open) => !open && setToast(null)}
+          />
+        </ToastProvider>
+      </div>
+    </>
   );
 };

@@ -1,13 +1,13 @@
 import { Annotorious } from '@annotorious/react';
 import { type PluginInstallationConfig, PluginProvider } from '@components/Plugins';
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
-import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import type { DocumentWithContext, Translations } from 'src/Types';
 import { AuthorColorProvider } from '@components/AnnotationDesktop';
 
 export interface TextAnnotationProps {
   i18n: Translations;
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
   channelId: string;
 

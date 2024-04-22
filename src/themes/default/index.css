@@ -165,11 +165,15 @@
   --input-focus-border-color: var(--bright-blue);
   --input-label-color: var(--font-light);
   --input-text-color: var(--font-dark);
+
+  /** Palette **/
+  --primary: #07529a;
+  --secondary: #b5c8dc;
 }
 
 html,
 body {
-  background-color: var(--gray-100);
+  background-color: white;
   color: var(--gray-900);
   font-family: Inter, Arial, Helvetica, sans-serif;
   font-size: 16px;

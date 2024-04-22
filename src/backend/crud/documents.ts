@@ -1,6 +1,6 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Response, ProjectDocument } from '@backend/Types';
-import type { Document } from 'src/Types';
+import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
+import type { Response } from '@backend/Types';
+import type { Document, ProjectDocument } from 'src/Types';
 
 export const createDocument = (
   supabase: SupabaseClient,
@@ -26,17 +26,25 @@ export const createProjectDocument = (
   supabase: SupabaseClient,
   documentId: string,
   projectId: string
-): Response<ProjectDocument> =>
+): Response<ProjectDocument | undefined> =>
   supabase
-    .from('project_documents')
-    .insert({
-      project_id: projectId,
-      document_id: documentId,
+    .rpc('add_documents_to_project_rpc', {
+      _document_ids: [documentId],
+      _project_id: projectId,
     })
-    .select()
-    .single()
-    .then(({ error, data }) => {
-      return { error, data: data as ProjectDocument };
+    .then(({ data }) => {
+      if (data) {
+        return {
+          error: null,
+          data: { project_id: projectId, document_id: documentId },
+        };
+      }
+      return {
+        error: {
+          message: 'Failed to create project document',
+        } as PostgrestError,
+        data: undefined,
+      };
     });
 
 export const renameDocument = (

@@ -6,16 +6,16 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { Layer, Policies, Translations } from 'src/Types';
 import { Toolpanel } from '../Toolpanel';
-import { 
-  AnnotoriousOpenSeadragonAnnotator, 
-  DrawingStyle, 
-  ImageAnnotation, 
-  OpenSeadragonAnnotator, 
-  OpenSeadragonPopup, 
-  OpenSeadragonViewer, 
-  PointerSelectAction, 
-  PresentUser, 
-  useAnnotator 
+import {
+  AnnotoriousOpenSeadragonAnnotator,
+  DrawingStyle,
+  ImageAnnotation,
+  OpenSeadragonAnnotator,
+  OpenSeadragonPopup,
+  OpenSeadragonViewer,
+  PointerSelectAction,
+  PresentUser,
+  useAnnotator
 } from '@annotorious/react';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
@@ -83,7 +83,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     loadTilesWithAjax: Boolean(authToken),
     ajaxWithCredentials: authToken ? true : undefined,
     showNavigationControl: false,
-    crossOriginPolicy: 'Anonymous',
     minZoomLevel: 0.4,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
@@ -113,50 +112,50 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       autoSave
       drawingEnabled={drawingEnabled}
       pointerSelectAction={selectAction}
-      tool={tool} 
+      tool={tool}
       filter={props.filter}
       style={props.style}>
-  
-      <UndoStack 
+
+      <UndoStack
         undoEmpty={true} />
 
-      {props.layers && 
+      {props.layers &&
         <SupabasePlugin
           supabaseUrl={SUPABASE}
-          apiKey={SUPABASE_API_KEY} 
+          apiKey={SUPABASE_API_KEY}
           channel={props.channelId}
-          defaultLayer={props.defaultLayer?.id} 
+          defaultLayer={props.defaultLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
           onInitialLoad={props.onLoad}
-          onPresence={props.onChangePresent} 
+          onPresence={props.onChangePresent}
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
           onSaveError={props.onSaveError} />
       }
 
-      <OpenSeadragonViewer 
+      <OpenSeadragonViewer
         ref={ref}
         className="ia-osd-container"
         options={options} />
 
       {props.usePopup && (
         <OpenSeadragonPopup
-          popup ={props => (
-            <Annotation.Popup 
-              {...props} 
+          popup={props => (
+            <Annotation.Popup
+              {...props}
               i18n={i18n}
               policies={policies}
-              present={present} 
-              tagVocabulary={tagVocabulary} /> )} />
+              present={present}
+              tagVocabulary={tagVocabulary} />)} />
       )}
 
-      <Toolpanel 
+      <Toolpanel
         i18n={i18n}
         isAdmin={policies.get('layers').has('INSERT')}
         privacy={privacy}
-        onChangeTool={onChangeTool} 
+        onChangeTool={onChangeTool}
         onChangePrivacy={setPrivacy} />
     </OpenSeadragonAnnotator>
   )

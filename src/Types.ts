@@ -25,6 +25,12 @@ export type MyProfile = UserProfile & {
   isOrgAdmin: boolean;
 };
 
+export type Member = {
+  inGroup: Group | undefined;
+  since: string;
+  user: UserProfile;
+};
+
 export interface Project {
   id: string;
 
@@ -70,33 +76,27 @@ export interface ExtendedProjectData {
 
   contexts: Context[];
 
-  layers: [
-    {
-      id: string;
-
-      name: string;
-
-      description: string;
-
-      document: {
-        id: string;
-
-        name: string;
-
-        content_type?: ContentType;
-
-        meta_data: {
-          protocol: Protocol;
-
-          url: string;
-
-          meta?: object;
-        };
-      };
-    }
-  ];
-
   groups: Group[];
+
+  documents: Document[];
+
+  users: Member[];
+}
+
+export interface ProjectDocument {
+  id?: string;
+
+  created_at?: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
+  project_id: string;
+
+  document_id: string;
 }
 
 export interface Group {
@@ -126,9 +126,9 @@ export interface GroupMember {
 export interface Document {
   id: string;
 
-  created_at: string;
+  created_at?: string;
 
-  created_by: string;
+  created_by?: string;
 
   updated_at?: string;
 
@@ -140,7 +140,7 @@ export interface Document {
 
   content_type?: ContentType;
 
-  is_private: boolean;
+  is_private?: boolean;
 
   collection_id?: string;
 
@@ -159,12 +159,22 @@ export interface Document {
     document_id: string;
   };
 }
-export interface DocumentInContext extends Document {
-  layers: Layer[];
-}
 
-export interface DocumentInTaggedContext extends DocumentInContext {
-  context: TaggedContext;
+export interface DocumentWithContext extends Document {
+  layers: {
+    id: string;
+    is_active: boolean;
+    document_id: string;
+  }[];
+
+  context: {
+    id: string;
+    name: string;
+    description: string;
+    project_id: string;
+    is_project_default: boolean;
+    layer_contexts?: any;
+  };
 }
 
 export const ContentTypes = [
@@ -188,7 +198,30 @@ export interface Context {
 
   project_id: string;
 
-  is_project_default: boolean;
+  is_project_default?: boolean;
+
+  created_at: string;
+
+  context_users: {
+    id: string;
+    user_id: string;
+    user: {
+      nickname: string;
+      first_name: string;
+      last_name: string;
+      avatar_url: string;
+    };
+  }[];
+
+  context_documents: {
+    document: {
+      id: string;
+      name: string;
+      content_type: string;
+      meta_data: any;
+      is_private: boolean;
+    };
+  }[];
 }
 
 export interface TaggedContext extends Context {
@@ -206,7 +239,7 @@ export interface Layer {
 
   description?: string;
 
-  context: Context;
+  is_active_layer: boolean;
 }
 
 export interface LayerWithDocument extends Layer {
@@ -214,37 +247,20 @@ export interface LayerWithDocument extends Layer {
 }
 
 export interface ExtendedAssignmentData extends Context {
-  layers: [
-    {
-      id: string;
+  team: {
+    user: UserProfile;
 
-      name: string;
+    since: string;
+  }[];
+  layers: {
+    id: string;
 
-      description: string;
+    name: string;
 
-      document: Document;
+    description: string;
 
-      groups: [
-        {
-          id: string;
-
-          name: string;
-
-          description?: string;
-
-          is_admin: boolean;
-
-          is_default: boolean;
-
-          members: Array<{
-            user: UserProfile;
-
-            since: string;
-          }>;
-        }
-      ];
-    }
-  ];
+    document: Document;
+  }[];
 }
 
 export interface TagDefinition {

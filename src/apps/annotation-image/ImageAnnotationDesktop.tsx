@@ -13,10 +13,10 @@ import { Menubar } from './Menubar';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { useIIIF, ManifestErrorDialog } from './IIIF';
-import { 
+import {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
-  ImageAnnotation, 
+  ImageAnnotation,
   PresentUser,
   useAnnotator
 } from '@annotorious/react';
@@ -33,9 +33,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     authToken,
     isPresentationManifest, 
     manifestError,
-    sequence, 
-    currentImage, 
-    setCurrentImage 
+    sequence,
+    currentImage,
+    setCurrentImage
   } = useIIIF(props.document);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
@@ -64,13 +64,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   // Default layer is either the first layer in the project context, 
   // or the first layer in the list, if no project context
-  const defaultLayer = layers && layers.length > 0 ? 
-    layers.find(l => !l.context.name) || layers[0] : undefined;
+  const defaultLayer = layers && layers.length > 0 ?
+    layers.find(l => l.is_active_layer) || layers[0] : undefined;
 
   useEffect(() => {
     if (policies) {
       const isDefault = isDefaultContext(props.document.context);
-    
+
       const isAdmin = policies?.get('layers').has('INSERT');
 
       // If this is the default context, and the user has
@@ -92,7 +92,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onConnectError = () =>
     window.location.href = `/${props.i18n.lang}/sign-in`;
 
-  const onZoom = (factor: number) => 
+  const onZoom = (factor: number) =>
     viewer.current?.viewport.zoomBy(factor);
 
   const onSetRightPanel = (panel?: DrawerPanel) => {
@@ -113,7 +113,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-      anno.fitBounds(a, { padding: [vh / 2, vw / 2 + 600, vh / 2, (vw  - 600) / 2] });
+      anno.fitBounds(a, { padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2] });
     }
   }
 
@@ -124,7 +124,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           channelId={props.channelId}
           layerId={defaultLayer?.id}
           present={present}
-          onError={() => setConnectionError(true)}>  
+          onError={() => setConnectionError(true)}>
 
           <div className="anno-desktop ia-desktop">
             {loading && (
@@ -135,25 +135,25 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               {showBranding && (
                 <BrandHeader />
               )}
-              
-              <Menubar 
-                i18n={props.i18n} 
-                document={props.document} 
-                present={present} 
+
+              <Menubar
+                i18n={props.i18n}
+                document={props.document}
+                present={present}
                 leftPanel={leftPanel}
                 rightPanel={rightPanel}
                 onZoom={onZoom}
                 onToggleBranding={() => setShowBranding(!showBranding)}
                 onSetLeftDrawer={setLeftPanel}
-                onSetRightDrawer={onSetRightPanel} 
+                onSetRightDrawer={onSetRightPanel}
                 showConnectionError={connectionError} />
             </div>
 
             <main>
-              <LeftDrawer 
+              <LeftDrawer
                 currentImage={currentImage}
-                currentPanel={leftPanel} 
-                iiifSequence={sequence} 
+                currentPanel={leftPanel}
+                iiifSequence={sequence}
                 onChangeImage={setCurrentImage} />
 
               <div className="ia-annotated-image-container">
@@ -170,7 +170,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                     layers={layers}
                     policies={policies}
                     present={present}
-                    style={style}        
+                    style={style}
                     tagVocabulary={tagVocabulary}
                     usePopup={usePopup}
                     onChangePresent={setPresent}
@@ -198,11 +198,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               </div>
             )}
           </div>
-          
+
           {manifestError && (
-            <ManifestErrorDialog 
+            <ManifestErrorDialog
               document={props.document}
-              i18n={props.i18n} 
+              i18n={props.i18n}
               message={manifestError} />
           )}
         </DocumentNotes>

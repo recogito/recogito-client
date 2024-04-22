@@ -89,7 +89,7 @@ export const EditableComment = (props: EditableCommentProps) => {
       placeholder="placeholder..."
       onSave={onSave}  
       onCancel={onCancelChange} />
-  ) :(
+  ) : (
     <form>
       {format === 'TextPlain' ? (
         <TextareaAutosize

@@ -10,6 +10,8 @@ interface AvatarProps {
   color?: string;
 
   avatar?: string;
+
+  showBorder?: boolean;
 }
 
 export const formatName = (user: UserProfile) => {

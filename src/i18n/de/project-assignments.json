@@ -5,21 +5,17 @@
   "2. Team": "2. Team",
   "3. Instructions": "3. Anweisungen",
   "4. Verify": "4. Kontrolle",
-
   "Cancel": "Abbrechen",
   "Close": "Schließen",
   "Next": "Weiter",
   "Back": "Zurück",
   "Create Assignment": "Arbeitsauftrag erstellen",
   "Update Assignment": "Arbeitsauftrag aktualisieren",
-
   "Step": "Schritt",
-
   "Add documents to this assignment.": "Füge dem Arbeitsauftrag Dokumente hinzu.",
   "Select at least 1 document": "Wähle mindestens 1 Dokument",
   "Selected 1 document": "1 Dokument ausgewählt",
   "Selected ${n} documents": "${n} Dokumente ausgewählt",
-
   "Add people to the assignment.": "Weise diesem Arbeitsauftrag ein Projektteam zu.",
   "Name": "Name",
   "Member since": "Mitglied seit",
@@ -29,12 +25,9 @@
   "Select at least 1 team member": "Wähle mindestens 1 Teammitglied",
   "Selected 1 team member": "1 Teammitglied ausgewählt",
   "Selected ${n} team members": "${n} Teammitglieder ausgewählt",
-
   "Add a message": "Schreibe dem Team eine Nachricht oder zusätzliche Anweisungen für diesen Arbeitsauftrag. Dieser Schritt ist optional.",
-
   "Almost Ready!": "Fast geschafft!",
   "Verify and confirm this assignment.": "Kontrolliere und bestätige den Arbeitsauftrag.",
-
   "Name:": "Name:",
   "1 document": "1 Dokument",
   "${n} documents": "${n} Dokumente",
@@ -45,18 +38,17 @@
   "No team members.": "Kein Team. Bitte weise mindestens ein Teammitglied zu.",
   "Instructions provided.": "Anweisungen vorhanden.",
   "Please consider adding instructions.": "Keine Anweisungen.",
-
   "The assignment was created successfully": "Der Arbeitsauftrag wurde erfolgreich erstellt, und dem Dashboard der Teammitglieder hinzugefügt.",
   "The assignment was updated successfully": "Der Arbeitsauftrag wurde erfolgreich aktualisiert.",
-
   "Menu actions for assignment:": "Menüoptionen für Arbeitsauftrag:",
   "Edit assignment": "Arbeitsauftrag ändern",
   "Delete assignment": "Arbeitsauftrag löschen",
-
   "Deleted": "Gelöscht",
   "Assignment deleted successfully.": "Der Arbeitsauftrag wurde gelöscht.",
-
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not delete the assignment.": "Der Arbeitsauftrag konnte nicht gelöscht werden.",
-  "Could not open the assignment.": "Der Arbeitsauftrag konnte nicht geöffnet werden."
+  "Could not open the assignment.": "Der Arbeitsauftrag konnte nicht geöffnet werden.",
+  "Edit": "Edit",
+  "Project Base Assignment": "Project Base Assignment",
+  "base_assignment_description": "This assignment is created by default for this project. You can edit this description to describe the intent of the project and any additional instructions."
 }
