@@ -225,13 +225,10 @@ export interface Context {
 }
 
 export interface TaggedContext extends Context {
-
   tags: Tag[];
-  
 }
 
 export interface Layer {
-
   id: string;
 
   document_id: string;
@@ -243,7 +240,6 @@ export interface Layer {
   description?: string;
 
   is_active_layer: boolean;
-
 }
 
 export interface LayerWithDocument extends Layer {
