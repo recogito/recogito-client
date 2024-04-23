@@ -10,7 +10,7 @@ import { PDFViewer } from '../PDFViewer';
 import { useContent } from '../useContent';
 import { Toolpanel } from '../Toolpanel';
 import { behaviors } from './teiBehaviors';
-import type { DocumentInTaggedContext, Layer, Policies, Translations } from 'src/Types';
+import type { DocumentWithContext, Layer, Policies, Translations } from 'src/Types';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -22,7 +22,7 @@ interface AnnotatedTextProps {
 
   defaultLayer?: Layer;
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
   filter?: Filter;
 
