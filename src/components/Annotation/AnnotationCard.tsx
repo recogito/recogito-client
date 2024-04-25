@@ -82,8 +82,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
-  const isMine = (body: AnnotationBody) => me.id === body.creator?.id;
-
   const transition = useTransition(collapse ? 
     [] : comments.slice(1, comments.length - 1), {
       from: { 
@@ -96,6 +94,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   );
 
   useEffect(() => { shouldAnimate.current = true; }, []);
+
+  const onMakePublic = () =>
+    props.onUpdateAnnotation({
+      ...annotation,
+      visibility: undefined
+    });
 
   // When this user creates a reply, add the comment to the list,
   // so it doesn't get emphasised like additions from the other users
@@ -130,7 +134,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     props.isNote ? 'note' : undefined,
     isPrivate ? 'private' : undefined,
     // props.isReadOnly ? 'readonly' : undefined
-  ].filter(Boolean).join( );
+  ].filter(Boolean).join(' ');
 
   return (
     <div style={borderStyle} className={className}>
@@ -138,17 +142,18 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         <ul>
           <li>
             <AnnotationCardSection
-              allowEditing={isMine(comments[0])}
               comment={comments[0]}
               emphasizeOnEntry={!dontEmphasise.current.has(comments[0].id)}
               i18n={props.i18n}
               index={0}
               isPrivate={isPrivate}
+              me={me}
               policies={props.policies}
               present={props.present}
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}
+              onMakePublic={() => onMakePublic()}
               onUpdateBody={props.onUpdateBody} />
           </li>
 
@@ -161,10 +166,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           )}
         </ul>
       )}
-
-      {/* props.showReplyField && !props.isReadOnly && (
-        <ReplyField />
-      ) */}
     </div>
   )
 

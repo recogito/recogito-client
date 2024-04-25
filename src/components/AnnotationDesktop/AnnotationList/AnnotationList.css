@@ -10,8 +10,8 @@
   padding: 0;
 }
 
-.anno-drawer-panel.annotation-list li {
-  margin-top: 0.75rem;
+.anno-drawer-panel.annotation-list > ul > li {
+  margin: 8px 0;
 }
 
 .anno-drawer-panel.annotation-list .annotation-card {

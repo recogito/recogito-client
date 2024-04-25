@@ -1,6 +1,6 @@
 import Quill from 'quill';
 import type { Delta, QuillOptions } from 'quill/core';
-import { useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useQuillEditor } from './QuillEditorRoot';
 
 import './QuillEditor.css';
@@ -24,7 +24,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
   const el = useRef<HTMLDivElement>(null);
 
-  const { setQuill } = useQuillEditor();
+  const { quill, setQuill } = useQuillEditor();
 
   useLayoutEffect(() => {
     const options: QuillOptions = {
@@ -41,7 +41,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
       quill.setContents(props.value);
 
     const onChange = () => 
-        props.onChange && props.onChange(quill.getContents());
+      props.onChange && props.onChange(quill.getContents());
 
     quill.on('text-change', onChange);
 
@@ -51,6 +51,17 @@ export const QuillEditor = (props: QuillEditorProps) => {
       quill.off('text-change', onChange);
     }
   }, []);
+
+  useEffect(() => {
+    if (!quill) return
+
+    if (props.readOnly) {
+      quill.disable();
+    } else { 
+      quill.enable();
+      window.setTimeout(() => quill.focus(), 1);
+    }
+  }, [quill, props.readOnly])
 
   return (
     <div 

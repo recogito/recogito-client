@@ -35,7 +35,7 @@
 }
 
 .annotation .annotation-header {
-  align-items: flex-end;
+  align-items: flex-start;
   display: flex;
   justify-content: space-between;
   line-height: 110%;

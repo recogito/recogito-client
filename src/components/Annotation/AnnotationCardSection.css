@@ -1,3 +1,8 @@
+.annotation-section .private-avatar .avatar-fallback {
+  background-color: var(--gray-800);
+  color: #fff;
+}
+
 .annotation-section.editable .annotation-comment-wrapper {
   padding-bottom: 15px;
 }
@@ -14,4 +19,8 @@
   display: flex;
   margin-bottom: 10px;
   padding: 0.25rem 12px;
+}
+
+.annotation-section .annotation-section-footer button {
+  min-width: 0;
 }
