@@ -3,8 +3,8 @@ import { RichTextEditor } from '@components/RichTextEditor';
 import TextareaAutosize from 'react-textarea-autosize';
 import type { AnnotationBody } from '@annotorious/react';
 import type { Translations } from 'src/Types';
-import { MobileTextarea, useMobileFallback } from '../MobileTextarea';
-import type { DeltaStatic } from 'quill';
+import { MobileTextarea, useMobileFallback } from '../MobileTextarea';import type { Delta } from 'quill/core';
+;
 
 interface EditableCommentProps {
 
@@ -56,7 +56,7 @@ export const EditableComment = (props: EditableCommentProps) => {
     }
   }, [editable]);
 
-  const onSave = (value: string | DeltaStatic) => {
+  const onSave = (value: Delta) => {
     const format = typeof value === 'string' ? 'TextPlain' : 'Quill';
     
     const next = {

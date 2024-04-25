@@ -128,14 +128,14 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         <ul>
           <li>
             <AnnotationCardSection
+              allowEditing={isMine(comments[0])}
+              comment={comments[0]}
+              emphasizeOnEntry={!dontEmphasise.current.has(comments[0].id)}
+              i18n={props.i18n}
               index={0}
               isPrivate={isPrivate}
-              i18n={props.i18n}
-              comment={comments[0]}
               policies={props.policies}
               present={props.present}
-              emphasizeOnEntry={!dontEmphasise.current.has(comments[0].id)}
-              editable={isMine(comments[0])}
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}

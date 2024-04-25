@@ -6,6 +6,12 @@
   width: 340px;
 }
 
+.annotation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
 .annotation.readonly {
   background-color: var(--gray-200);
 }
@@ -32,6 +38,7 @@
   align-items: flex-end;
   display: flex;
   justify-content: space-between;
+  line-height: 110%;
   padding: 10px 15px 6px 12px;
 }
 

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Detective, DotsThree } from '@phosphor-icons/react';
-import type { AnnotationBody, PresentUser } from '@annotorious/react';
-// import { Avatar } from './Avatar';
+import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import { Delta } from 'quill/core';
 import { QuillEditor, QuillEditorRoot } from '@components/QuillEditor';
 import { AuthorDetails } from './AuthorDetails';
-// import { TagList } from './Tags/TagList';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
+import { Avatar } from '@components/Avatar';
+import { useAuthorColors } from '@components/AnnotationDesktop';
 
 export interface AnnotationCardSectionProps {
 
@@ -15,7 +16,7 @@ export interface AnnotationCardSectionProps {
 
   comment: AnnotationBody;
 
-  editable?: boolean
+  allowEditing?: boolean
 
   emphasizeOnEntry?: boolean;
 
@@ -39,7 +40,22 @@ export interface AnnotationCardSectionProps {
 
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
+  const { comment, allowEditing } = props;
+
   const [editable, setEditable] = useState(false);
+
+  const colors = useAuthorColors();
+
+  const creator: PresentUser | User | undefined = 
+    props.present.find(p => p.id === comment.creator?.id) || comment.creator;
+
+  const format = comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
+    ? 'Quill' : 'TextPlain';
+
+  const [value, setValue] = useState<Delta | undefined>(
+    format === 'Quill'
+      ? JSON.parse(comment.value!)
+      : new Delta().insert(comment.value || ''));
 
   return (
     <div className={editable ? 'annotation-section editable' : 'annotation-section'}>
@@ -53,10 +69,19 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 </div>
               </div>
             </div>
-          ) : (
-            <div>{/* Avatar */}</div>
+          ) : creator && (
+            <Avatar
+              id={creator.id}
+              name={(creator as PresentUser).appearance?.label || creator.name}
+              avatar={(creator as PresentUser).appearance?.avatar} 
+              color={colors.getColor(creator)} />
           )}
-          <AuthorDetails isPrivate={props.isPrivate} />
+
+          <AuthorDetails 
+            i18n={props.i18n}
+            isPrivate={props.isPrivate} 
+            creator={creator}
+            createdAt={comment.created} />
         </div>
 
         <div className="annotation-header-right">
@@ -68,7 +93,8 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         <QuillEditorRoot>
           <QuillEditor 
             readOnly={!editable}
-            value={'Lorem ipsum dolor sit amet consectetur.'}/>
+            value={value} 
+            onChange={setValue} />
         </QuillEditorRoot>
       </div>
 
