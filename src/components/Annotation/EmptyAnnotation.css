@@ -1,0 +1,7 @@
+.annotation.empty {
+  padding-bottom: 10px;
+}
+
+.annotation.empty .quill-rte .ql-editor {
+  height: 80px;
+}

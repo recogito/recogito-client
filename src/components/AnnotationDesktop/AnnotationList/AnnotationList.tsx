@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Annotation } from '@components/Annotation';
+import { AnnotationCard, EmptyAnnotation } from '@components/Annotation';
 import type { Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
@@ -154,87 +154,39 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
       <ul
         ref={el}
         onClick={onClick}>
-        {sorted.map(a => (
+        {sorted.map(annotation => (
           <li 
-            key={a.id}
-            onClick={event => onClick(event, a)}>
-            {a.bodies.length === 0 ? (
-              isMine(a) ? (              
-                isSelected(a) ? (
-                  <div className={getReplyFormClass(a)}>
-                    <Annotation.TagsWidget 
-                      i18n={props.i18n} 
-                      me={me} 
-                      annotation={a}
-                      vocabulary={props.tagVocabulary} 
-                      onCreateTag={onCreateBody} 
-                      onDeleteTag={onDeleteBody} />
-
-                    <Annotation.ReplyForm
-                      autofocus={autofocus}
-                      i18n={props.i18n}
-                      me={me} 
-                      scrollIntoView
-                      annotation={a} 
-                      placeholder={props.i18n.t['Comment...']}
-                      onSubmit={onCreateBody} />
-
-                    {plugins.map(plugin => (
-                      <Extension 
-                        key={plugin.meta.name}
-                        plugin={plugin} 
-                        extensionPoint="annotation.*.annotation-editor"
-                        me={me}
-                        annotation={a} 
-                        onUpdateAnnotation={onUpdateAnnotation} />
-                    ))}
-                  </div>
-                ) : (
-                  <Annotation.EmptyCard
-                    private={isPrivate(a)}
-                    i18n={props.i18n}
-                    annotation={a} 
-                    present={props.present} />
-                )
+            key={annotation.id}
+            onClick={event => onClick(event, annotation)}>
+            {annotation.bodies.length === 0 ? (
+              isMine(annotation) ? (     
+                <EmptyAnnotation 
+                  annotation={annotation} 
+                  me={me} 
+                  onCreateBody={onCreateBody} />         
               ) : (
-                <Annotation.EmptyCard 
+                <div>{/* 
+                <EmptyAnnotation 
                   typing
                   selected={isSelected(a)}
                   i18n={props.i18n} 
                   annotation={a} 
-                  present={props.present} />              
+                  present={props.present} /> */}</div>             
               )
             ) : (
-              isPrivate(a) ? (
-                <Annotation.PrivateCard 
-                  className={isSelected(a) ? 'selected' : undefined}
-                  showReplyForm={isSelected(a)}
-                  i18n={props.i18n}
-                  annotation={a} 
-                  present={props.present}
-                  tagVocabulary={props.tagVocabulary} 
-                  onReply={onCreateBody}
-                  onUpdateAnnotation={onUpdateAnnotation}
-                  onCreateBody={onCreateBody} 
-                  onDeleteBody={onDeleteBody} 
-                  onUpdateBody={onUpdateBody}
-                  onDeleteAnnotation={() => onDeleteAnnotation(a)} />
-              ) : (
-                <Annotation.PublicCard 
-                  className={isSelected(a) ? 'selected' : undefined}
-                  showReplyForm={isSelected(a)}
-                  i18n={props.i18n}
-                  annotation={a} 
-                  present={props.present}
-                  policies={props.policies} 
-                  tagVocabulary={props.tagVocabulary} 
-                  onReply={onCreateBody}
-                  onUpdateAnnotation={onUpdateAnnotation}
-                  onCreateBody={onCreateBody} 
-                  onDeleteBody={onDeleteBody} 
-                  onUpdateBody={onUpdateBody}
-                  onDeleteAnnotation={() => onDeleteAnnotation(a)} />  
-              )
+              <AnnotationCard 
+                className={isSelected(annotation) ? 'selected' : undefined}
+                showReplyForm={isSelected(annotation)}
+                i18n={props.i18n}
+                annotation={annotation} 
+                present={props.present}
+                tagVocabulary={props.tagVocabulary} 
+                onReply={onCreateBody}
+                onUpdateAnnotation={onUpdateAnnotation}
+                onCreateBody={onCreateBody} 
+                onDeleteBody={onDeleteBody} 
+                onUpdateBody={onUpdateBody}
+                onDeleteAnnotation={() => onDeleteAnnotation(annotation)} />
             )}
           </li>
         ))}

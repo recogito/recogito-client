@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
 import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
-import { Annotation } from '@components/Annotation';
+import { AnnotationCard } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -139,13 +139,14 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           {props.usePopup && (
             <TextAnnotatorPopup
               popup={(props) => (
+                <div>{/*
                 <Annotation.Popup
                   {...props}
                   i18n={i18n}
                   present={present}
                   policies={policies}
                   tagVocabulary={tagVocabulary}
-                />
+              />*/}</div>
               )}
             />
           )}

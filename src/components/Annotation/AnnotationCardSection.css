@@ -1,0 +1,17 @@
+.annotation-section.editable .annotation-comment-wrapper {
+  padding-bottom: 15px;
+}
+
+.annotation-section .align-right {
+  justify-content: flex-end;
+}
+
+.annotation-section + .annotation-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.annotation-section .annotation-section-footer {
+  display: flex;
+  margin-bottom: 10px;
+  padding: 0.25rem 12px;
+}

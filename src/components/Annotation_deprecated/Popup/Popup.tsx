@@ -71,8 +71,7 @@ export const Popup = (props: PopupProps) => {
         isPrivate
           ? 'annotation-popup private not-annotatable'
           : 'annotation-popup not-annotatable'
-      }
-    >
+      }>
       {hasBodies ? (
         isPrivate ? (
           <Annotation.PrivateCard
@@ -101,13 +100,13 @@ export const Popup = (props: PopupProps) => {
       ) : isMine ? (
         isPrivate ? (
           <div className='annotation-card private'>
-            <TagsWidget
+            {/* <TagsWidget
               i18n={props.i18n}
               me={me}
               annotation={selected}
               vocabulary={props.tagVocabulary} 
               onCreateTag={onCreateBody} 
-              onDeleteTag={onDeleteBody} />
+              onDeleteTag={onDeleteBody} /> */}
 
             <Annotation.ReplyForm
               {...props}
@@ -130,13 +129,13 @@ export const Popup = (props: PopupProps) => {
           </div>
         ) : (
           <div className='annotation-card'>
-            <TagsWidget
+            {/* <TagsWidget
               i18n={props.i18n}
               me={me}
               annotation={selected}
               vocabulary={props.tagVocabulary}
               onCreateTag={onCreateBody} 
-              onDeleteTag={onDeleteBody} />
+              onDeleteTag={onDeleteBody} /> */}
 
             <Annotation.ReplyForm
               {...props}

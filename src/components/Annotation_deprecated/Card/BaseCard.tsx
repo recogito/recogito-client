@@ -94,13 +94,13 @@ export const BaseCard = (props: BaseCardProps) => {
 
   return (
     <>
-      <TagsWidget
+      {/* <TagsWidget
         i18n={props.i18n}
         annotation={annotation} 
         me={me} 
         vocabulary={props.tagVocabulary} 
         onCreateTag={props.onCreateBody} 
-        onDeleteTag={props.onDeleteBody} />
+        onDeleteTag={props.onDeleteBody} /> */}
 
       {comments.length > 0 && (
         <ul className='annotation-card-comments-container'>

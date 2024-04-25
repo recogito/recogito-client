@@ -1,0 +1,15 @@
+.annotation .reply-field {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+}
+
+.annotation .reply-field-wrapper {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+  padding: 5px 12px;
+}
+
+.annotation .reply-field-wrapper .quill-rte {
+  flex-grow: 1;
+}

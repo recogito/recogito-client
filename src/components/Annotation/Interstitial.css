@@ -1,0 +1,44 @@
+.annotation .interstitial {
+  align-items: center;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  font-size: 13px;
+  height: 0;
+  justify-content: center;
+  margin: 0 0 2px 0;
+  position: relative;
+}
+
+.annotation .interstitial .label {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 99999px;
+  box-shadow: none;
+  color: var(--font-light);
+  font-size: 12px;
+  padding: 0 10px;
+  position:relative;
+}
+
+.annotation.readonly .interstitial .label {
+  background-color: var(--gray-200);
+}
+
+.annotation.note .interstitial .label {
+  background-color: #F9EEC8;
+}
+
+.annotation.readonly.note .interstitial .label {
+  background-color: #e1d7b4;
+}
+
+.annotation .interstitial .label:hover {
+  background-color: var(--gray-50);
+  box-shadow: none;
+}
+
+.annotation .interstitial .label svg {
+  padding-left: 1ch;
+  position: relative;
+  top: 1px;
+}

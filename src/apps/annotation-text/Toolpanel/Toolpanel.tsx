@@ -2,7 +2,7 @@ import { Annotation, useAnnotationStore, useAnnotator, useSelection } from '@ann
 import { Trash } from '@phosphor-icons/react';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import type { Translations } from 'src/Types';
-import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
+// import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
 import { useState } from 'react';
 
 import './Toolpanel.css';
@@ -56,12 +56,14 @@ export const Toolpanel = (props: ToolbarProps) => {
       </div>
 
       {!isMine(selected) && (
+        <div>{/*
         <AdminOverrideAlert
           i18n={props.i18n}
           open={confirmOpen}
           onConfirm={onDeleteSelection}
           onCancel={() => setConfirmOpen(false)}
         />
+        */}</div>
       )}
       {(props.isAdmin || isMine(selected)) && (
         <div

@@ -283,7 +283,6 @@ export const getDocumentInContext = (
           delete context.layer_contexts;
           document.context = context;
 
-          console.log(JSON.stringify(document, null, 2));
           return { error: null, data: document };
         });
     });

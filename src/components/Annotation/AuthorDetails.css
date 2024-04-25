@@ -1,0 +1,15 @@
+.annotation .author-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.annotation .author-details .created-by {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.annotation .author-details .created-at {
+  color: var(--font-light);
+  font-size: 11px;
+}
