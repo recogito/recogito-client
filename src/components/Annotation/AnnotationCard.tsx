@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAnnotatorUser } from '@annotorious/react';
 import { useTransition } from '@react-spring/web';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useAuthorColors } from '@components/AnnotationDesktop';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { Interstitial } from './Interstitial';
 import type { Policies, Translations } from 'src/Types';
@@ -44,6 +45,15 @@ export interface AnnotationCardProps {
 export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
+
+  const colors = useAuthorColors();
+
+  const borderStyle = useMemo(() => {
+    const creator: PresentUser | User | undefined = 
+      props.present.find(p => p.id === annotation.target.creator?.id) || annotation.target.creator;
+
+    return { '--card-border': colors.getColor(creator) } as React.CSSProperties;
+  }, [colors, annotation]);
 
   // const plugins = usePlugins('annotation.*.annotation-editor');
 
@@ -123,7 +133,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   ].filter(Boolean).join( );
 
   return (
-    <div className={className}>
+    <div style={borderStyle} className={className}>
       {comments.length > 0 && (
         <ul>
           <li>

@@ -40,21 +40,3 @@ export const AuthorDetails = (props: AuthorDetailsProps) => {
   )
 
 }
-
-/*
-         <div className="annotation-created-by">
-            <address className="anonymous">
-              {creator && 'appearance' in creator ? (
-                creator.appearance.label
-              ) : (
-                t['Anonymous']
-              )}
-            </address> 
-
-            <div className="annotation-created-at">
-              {createdAt && (
-                <Timestamp datetime={createdAt} locale={lang} />
-              )}
-            </div>
-          </div>
-*/

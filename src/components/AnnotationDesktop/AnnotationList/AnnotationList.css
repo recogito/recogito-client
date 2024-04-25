@@ -10,6 +10,10 @@
   padding: 0;
 }
 
+.anno-drawer-panel.annotation-list li {
+  margin-top: 0.75rem;
+}
+
 .anno-drawer-panel.annotation-list .annotation-card {
   border: 1px solid var(--gray-300);
   border-radius: 6px;
