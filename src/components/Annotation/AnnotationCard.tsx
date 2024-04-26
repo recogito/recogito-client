@@ -19,6 +19,8 @@ export interface AnnotationCardProps {
   i18n: Translations;
 
   isNote?: boolean;
+
+  isReadOnly?: boolean;
   
   present: PresentUser[];
 
@@ -133,7 +135,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     'annotation',
     props.isNote ? 'note' : undefined,
     isPrivate ? 'private' : undefined,
-    // props.isReadOnly ? 'readonly' : undefined
+    props.isReadOnly ? 'readonly' : undefined
   ].filter(Boolean).join(' ');
 
   return (
@@ -147,6 +149,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               i18n={props.i18n}
               index={0}
               isPrivate={isPrivate}
+              isReadOnly={props.isReadOnly}
               me={me}
               policies={props.policies}
               present={props.present}

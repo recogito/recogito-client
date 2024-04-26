@@ -24,6 +24,8 @@ export interface AnnotationCardSectionProps {
 
   isPrivate?: boolean;
 
+  isReadOnly?: boolean;
+
   me: User | PresentUser;
 
   present: PresentUser[];
@@ -44,7 +46,7 @@ export interface AnnotationCardSectionProps {
 
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
-  const { comment, isPrivate, me, present } = props;
+  const { comment, isPrivate, isReadOnly, me, present } = props;
 
   const colors = useAuthorColors();
 
@@ -58,7 +60,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   const isMine = creator?.id === me.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
-  const canEdit = isMine || props.policies?.get('layers').has('INSERT');
+  const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT'));
 
   const format = comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
     ? 'Quill' : 'TextPlain';

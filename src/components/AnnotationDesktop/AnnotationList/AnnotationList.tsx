@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnnotationCard, EmptyAnnotation } from '@components/Annotation';
-import type { Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
@@ -25,9 +25,11 @@ interface AnnotationListProps<T extends Anno> {
 
   i18n: Translations;
 
-  present: PresentUser[];
+  layers?: Layer[];
 
   me: PresentUser;
+
+  present: PresentUser[];
 
   policies?: Policies;
 
@@ -83,6 +85,10 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const { selected, pointerEvent } = useSelection();
 
+  const activeLayer = useMemo(() => (
+    (props.layers || []).find(l => l.is_active)
+  ), [props.layers]);
+
   const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
     event.stopPropagation();
 
@@ -103,6 +109,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const isPrivate = (a: SupabaseAnnotation) =>
     a.visibility === Visibility.PRIVATE;
+
+  const isReadOnly = (a: SupabaseAnnotation) =>
+    !(a.layer_id && a.layer_id === activeLayer?.id);
 
   const getReplyFormClass = (a: SupabaseAnnotation) => {
     const classes = ['annotation-card'];
@@ -178,6 +187,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
                 className={isSelected(annotation) ? 'selected' : undefined}
                 showReplyForm={isSelected(annotation)}
                 i18n={props.i18n}
+                isReadOnly={isReadOnly(annotation)}
                 annotation={annotation} 
                 present={props.present}
                 tagVocabulary={props.tagVocabulary} 

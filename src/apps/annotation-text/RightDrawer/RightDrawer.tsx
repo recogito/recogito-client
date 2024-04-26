@@ -65,9 +65,10 @@ export const RightDrawer = (props: RightDrawerProps) => {
         {panel === DrawerPanel.ANNOTATIONS ? (
           <AnnotationList 
             i18n={props.i18n}
-            present={props.present} 
+            layers={props.layers}
             me={me}
             policies={props.policies}
+            present={props.present} 
             sorting={props.sorting}
             tagVocabulary={props.tagVocabulary}
             beforeSelect={props.beforeSelectAnnotation} />

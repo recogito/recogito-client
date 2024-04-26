@@ -61,8 +61,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [usePopup, setUsePopup] = useState(true);
 
-
-
   // Default layer is either the first layer in the project context,
   // or the first layer in the list, if no project context
   const defaultLayer =
