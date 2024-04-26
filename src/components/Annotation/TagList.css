@@ -1,5 +1,5 @@
 .annotation .taglist {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   font-size: 13px;
   gap: 0.375rem ;

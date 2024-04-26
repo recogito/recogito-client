@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnnotationCard, EmptyAnnotation } from '@components/Annotation';
 import type { Layer, Policies, Translations } from 'src/Types';
-import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import { useFilterSettings } from '../LayerConfiguration';
@@ -69,11 +69,13 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const annotations = applyFilter();
 
+  const { selected, pointerEvent } = useSelection();
+
   const sorted = useMemo(() => {
     const filtered = filter ? annotations.filter(filter) : annotations;
     // @ts-ignore
     return props.sorting ? [...filtered].sort(props.sorting) : filtered;
-  }, [annotations, filter]);
+  }, [annotations, filter, selected]);
 
   const user = useAnnotatorUser();
 
@@ -82,8 +84,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const anno = useAnnotator<Annotator>();
 
   const store = useAnnotationStore();
-
-  const { selected, pointerEvent } = useSelection();
 
   const activeLayer = useMemo(() => (
     (props.layers || []).find(l => l.is_active)
@@ -107,23 +107,8 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const isMine = (a: SupabaseAnnotation) =>
     me.id === a.target.creator?.id;
 
-  const isPrivate = (a: SupabaseAnnotation) =>
-    a.visibility === Visibility.PRIVATE;
-
   const isReadOnly = (a: SupabaseAnnotation) =>
     !(a.layer_id && a.layer_id === activeLayer?.id);
-
-  const getReplyFormClass = (a: SupabaseAnnotation) => {
-    const classes = ['annotation-card'];
-
-    if (isSelected(a))
-      classes.push('selected');
-
-    if (isPrivate(a))
-      classes.push('private')
-    
-    return classes.join(' ');
-  }
 
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
@@ -155,7 +140,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
 
   return (
-    <div className="anno-drawer-panel annotation-list">
+    <div className="anno-drawer-panel annotation-list not-annotatable">
       <ViewportFilterToggle 
         i18n={props.i18n} 
         onChange={setViewportFilter} />
@@ -167,12 +152,15 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
           <li 
             key={annotation.id}
             onClick={event => onClick(event, annotation)}>
-            {annotation.bodies.length === 0 ? (
+            {annotation.bodies.filter(b => b.purpose !== 'tagging').length === 0 ? (
               isMine(annotation) ? (     
                 <EmptyAnnotation 
+                  autoFocus={autofocus}
                   annotation={annotation} 
+                  i18n={props.i18n}
                   me={me} 
-                  onCreateBody={onCreateBody} />         
+                  onCreateBody={onCreateBody} 
+                  onDeleteBody={onDeleteBody} />         
               ) : (
                 <div>{/* 
                 <EmptyAnnotation 

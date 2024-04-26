@@ -6,6 +6,7 @@ import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
 import { PublicAnnotationActions } from './PublicAnnotationActions';
+import { TagList } from './TagList';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
@@ -14,7 +15,9 @@ export interface AnnotationCardSectionProps {
 
   index: number;
 
-  comment: AnnotationBody;
+  comment?: AnnotationBody;
+
+  tags?: AnnotationBody[];
 
   emphasizeOnEntry?: boolean;
 
@@ -32,7 +35,7 @@ export interface AnnotationCardSectionProps {
   
   onDeleteAnnotation(): void;
 
-  onCreateBody(body: AnnotationBody): void;
+  onCreateTag(value: string): void;
 
   onDeleteBody(body: AnnotationBody): void;
 
@@ -48,27 +51,32 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const [editable, setEditable] = useState(false);
 
-  const creator: PresentUser | User | undefined = 
-    present.find(p => p.id === props.comment.creator?.id) || comment.creator;
+  const firstBody = [props.comment, ...(props.tags || [])].filter(Boolean)[0];
+
+  const creator: PresentUser | User | undefined = firstBody &&
+    (present.find(p => p.id === firstBody.creator?.id) || firstBody.creator);
 
   const isMine = creator?.id === me.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
   const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT'));
 
-  const format = comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
-    ? 'Quill' : 'TextPlain';
+  const format = comment ?
+    comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
+      ? 'Quill' : 'TextPlain' : undefined;
 
-  const [value, setValue] = useState<Delta | undefined>(
+  const [commentValue, setCommentValue] = useState<Delta | undefined>(
     format === 'Quill'
-      ? JSON.parse(comment.value!)
-      : new Delta().insert(comment.value || ''));
+      ? JSON.parse(comment!.value!)
+      : format ? new Delta().insert(comment!.value || '') : undefined);
 
   const onUpdateComment = () => {    
+    if (!comment) return;
+
     const next = {
       ...comment,
       format: 'Quill',
-      value: JSON.stringify(value)
+      value: JSON.stringify(commentValue)
     };
 
     props.onUpdateBody(comment, next);
@@ -82,7 +90,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.emphasizeOnEntry ? 'is-new' : undefined 
   ].filter(Boolean).join(' ');
 
-  return (
+  return firstBody && (
     <div className={className}>
       <div className="annotation-header">
         <div className="annotation-header-left">
@@ -94,7 +102,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             i18n={props.i18n}
             isPrivate={isPrivate} 
             creator={creator}
-            createdAt={comment.created} />
+            createdAt={firstBody.created} />
         </div>
 
         {canEdit && (
@@ -124,18 +132,22 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         <QuillEditorRoot>
           <QuillEditor 
             readOnly={!editable}
-            value={value} 
-            onChange={setValue} />
+            value={commentValue} 
+            onChange={setCommentValue} />
         </QuillEditorRoot>
       </div>
 
-      {/*props.tags?.length > 0 && (
+      {props.tags && props.tags.length > 0 && (
         <div className="annotation-taglist-wrapper">
           <TagList 
-            tags={props.tags} 
-            isEditable={props.isEditable} />
+            isEditable={editable}
+            me={props.me}
+            i18n={props.i18n}
+            tags={props.tags}
+            onCreateTag={props.onCreateTag}
+            onDeleteTag={props.onDeleteBody} />
         </div>
-      )} */}
+      )}
 
       {editable && (
         <div className="annotation-section-footer align-right">

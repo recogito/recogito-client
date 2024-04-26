@@ -1,7 +1,6 @@
 import { KeyboardEvent, useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
-import type { Annotation, AnnotationBody, PresentUser, User } from '@annotorious/react';
-import { v4 as uuidv4 } from 'uuid';
+import type { PresentUser, User } from '@annotorious/react';
 import { AutosizeInput } from '../AutosizeInput';
 import type { Translations } from 'src/Types';
 
@@ -9,15 +8,13 @@ import './TagEditor.css';
 
 interface TagEditorProps {
 
-  annotation: Annotation;
-
   i18n: Translations;
 
   me: PresentUser | User;
 
   vocabulary?: string[];
 
-  onCreate(tag: AnnotationBody): void;
+  onCreateTag(tag: string): void;
 
 }
 
@@ -28,20 +25,10 @@ export const TagEditor = (props: TagEditorProps) => {
   const [value, setValue] = useState('');
 
   const onSave = () => {
-    const tag: AnnotationBody = {
-      id: uuidv4(),
-      annotation: props.annotation.id,
-      creator: {  
-        id: props.me.id,
-        name: props.me.name,
-        avatar: props.me.avatar
-      },
-      created: new Date(),
-      purpose: 'tagging',
-      value
-    };
+    props.onCreateTag(value);
 
-    props.onCreate(tag);
+    setValue('');
+    setEditing(false);
   }
 
   const onCancel = () => {

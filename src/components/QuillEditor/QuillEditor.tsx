@@ -59,9 +59,15 @@ export const QuillEditor = (props: QuillEditorProps) => {
       quill.disable();
     } else { 
       quill.enable();
-      window.setTimeout(() => quill.focus(), 1);
     }
   }, [quill, props.readOnly]);
+
+  useEffect(() => {
+    if (!quill) return;
+
+    if (props.autoFocus)
+      window.setTimeout(() => quill.focus(), 1);
+  }, [quill, props.autoFocus]);
 
   useEffect(() => {
     if (!quill) return;

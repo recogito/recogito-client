@@ -6,12 +6,14 @@ import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
-import { TagEditor } from './TagEditor';
+import { TagList } from './TagList';
 import type { Translations } from 'src/Types';
 
 import './EmptyAnnotation.css';
 
 interface EmptyAnnotationProps {
+  
+  autoFocus?: boolean;
 
   i18n: Translations;
 
@@ -23,11 +25,15 @@ interface EmptyAnnotationProps {
 
   onCreateBody(body: AnnotationBody): void;
 
+  onDeleteBody(body: AnnotationBody): void;
+
 }
 
 export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
   const [value, setValue] = useState<Delta | undefined>();
+
+  const tags = props.annotation.bodies.filter(b => b.purpose === 'tagging');
 
   const onSave = () => {
     if (value) {
@@ -53,7 +59,24 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
       props.onCreateBody && props.onCreateBody(body);
     }
-  };
+  }
+
+  const onCreateTag = (value: string) => {
+    const tag: AnnotationBody = {
+      id: uuidv4(),
+      annotation: props.annotation.id,
+      creator: {  
+        id: props.me.id,
+        name: props.me.name,
+        avatar: props.me.avatar
+      },
+      created: new Date(),
+      purpose: 'tagging',
+      value
+    };
+
+    props.onCreateBody && props.onCreateBody(tag);
+  }
 
   const isPrivate = props.annotation.visibility === Visibility.PRIVATE;
 
@@ -80,20 +103,25 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         
         <div className="annotation-comment-wrapper">
           <QuillEditor 
+            autoFocus={props.autoFocus}
             value={value}
             onChange={setValue}
             placeholder="Add a comment" />
         </div>
 
         <div className="annotation-footer">
-          <TagEditor 
-            annotation={props.annotation}
-            me={props.me}
-            i18n={props.i18n}
-            onCreate={props.onCreateBody} />
+          <div className="annotation-footer-left">
+            <TagList 
+              isEditable
+              i18n={props.i18n}
+              me={props.me}
+              tags={tags}
+              onCreateTag={onCreateTag}  
+              onDeleteTag={props.onDeleteBody} />
+          </div>
 
           <button 
-            className="save save-arrow"
+            className="save save-arrow annotation-footer-right"
             onClick={onSave}>
             <ArrowRight size={20} />
           </button>

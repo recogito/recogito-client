@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
@@ -68,6 +69,10 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       return a.created.getTime() - b.created.getTime();
     });
 
+  // Just a hack for now
+  const tags = annotation.bodies
+    .filter(b => b.purpose === 'tagging');
+
   // Keep a list of comments that should not be color-highlighted
   // on render, either because they were already in the annotation, or they
   // are new additions created by the current user. We're using a
@@ -91,6 +96,23 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       config: { duration: 350 },
     }
   );
+
+  const onCreateTag = (value: string) => {
+    const tag: AnnotationBody = {
+      id: uuidv4(),
+      annotation: props.annotation.id,
+      creator: {  
+        id: me.id,
+        name: me.name,
+        avatar: me.avatar
+      },
+      created: new Date(),
+      purpose: 'tagging',
+      value
+    };
+
+    props.onCreateBody(tag);
+  }
 
   const onMakePublic = () =>
     props.onUpdateAnnotation({
@@ -119,7 +141,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   }, [comments.map(c => c.id).join(',')]);
 
   const className = [
-    'annotation',
+    'annotation not-annotatable',
     props.isNote ? 'note' : undefined,
     isPrivate ? 'private' : undefined,
     props.isReadOnly ? 'readonly' : undefined
@@ -127,12 +149,13 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   return (
     <div style={borderStyle} className={className}>
-      {comments.length > 0 && (
+      {comments.length + tags.length > 0 && (
         <ul>
           <li>
             <AnnotationCardSection
               comment={comments[0]}
-              emphasizeOnEntry={!dontEmphasise.current.has(comments[0].id)}
+              tags={tags}
+              emphasizeOnEntry={!dontEmphasise.current.has(comments[0]?.id)}
               i18n={props.i18n}
               index={0}
               isPrivate={isPrivate}
@@ -141,7 +164,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               policies={props.policies}
               present={props.present}
               onDeleteAnnotation={props.onDeleteAnnotation}
-              onCreateBody={props.onCreateBody}
+              onCreateTag={onCreateTag}
               onDeleteBody={props.onDeleteBody}
               onMakePublic={() => onMakePublic()}
               onUpdateBody={props.onUpdateBody} />
@@ -173,7 +196,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 policies={props.policies}
                 present={props.present}
                 onDeleteAnnotation={props.onDeleteAnnotation}
-                onCreateBody={props.onCreateBody}
+                onCreateTag={onCreateTag}
                 onDeleteBody={props.onDeleteBody}
                 onMakePublic={() => onMakePublic()}
                 onUpdateBody={props.onUpdateBody} />
@@ -195,7 +218,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 policies={props.policies}
                 present={props.present}
                 onDeleteAnnotation={props.onDeleteAnnotation}
-                onCreateBody={props.onCreateBody}
+                onCreateTag={onCreateTag}
                 onDeleteBody={props.onDeleteBody}
                 onMakePublic={() => onMakePublic()}
                 onUpdateBody={props.onUpdateBody} />
