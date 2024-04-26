@@ -49,8 +49,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
-  console.log(annotation);
-
   const colors = useAuthorColors();
 
   const borderStyle = useMemo(() => {
@@ -223,6 +221,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       {props.showReplyField && (
         <ReplyField 
           i18n={props.i18n}
+          isPrivate={isPrivate}
           annotation={props.annotation}
           me={me}
           placeholder={props.i18n.t['Reply...']}

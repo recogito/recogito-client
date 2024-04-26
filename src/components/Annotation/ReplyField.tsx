@@ -8,10 +8,13 @@ import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/Qu
 import type { Translations } from 'src/Types';
 
 import './ReplyField.css';
+import { AuthorAvatar } from './AuthorAvatar';
 
 interface ReplyFieldProps {
 
   i18n: Translations;
+
+  isPrivate?: boolean;
 
   annotation: SupabaseAnnotation;
 
@@ -58,7 +61,10 @@ export const ReplyField = (props: ReplyFieldProps) => {
     <div className="reply-field">
       <QuillEditorRoot>
         <div className="annotation-header">
-          {/* <Avatar /> */}
+          <AuthorAvatar 
+            author={props.me}
+            isPrivate={props.isPrivate} />
+
           <div className="annotation-toolbar-wrapper">
             <QuillEditorToolbar />
           </div>

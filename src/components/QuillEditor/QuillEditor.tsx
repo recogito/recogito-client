@@ -1,5 +1,5 @@
 import Quill from 'quill';
-import type { Delta, QuillOptions } from 'quill/core';
+import { Delta, type QuillOptions } from 'quill/core';
 import { useEffect, useLayoutEffect, useRef } from 'react';
 import { useQuillEditor } from './QuillEditorRoot';
 
@@ -61,7 +61,17 @@ export const QuillEditor = (props: QuillEditorProps) => {
       quill.enable();
       window.setTimeout(() => quill.focus(), 1);
     }
-  }, [quill, props.readOnly])
+  }, [quill, props.readOnly]);
+
+  useEffect(() => {
+    if (!quill) return;
+
+    const current = quill.getContents();
+    const next = props.value || new Delta();
+
+    if (JSON.stringify(current) !== JSON.stringify(next))
+      quill.setContents(next);
+  }, [props.value, quill])
 
   return (
     <div 

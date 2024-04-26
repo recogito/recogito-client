@@ -11,6 +11,7 @@ import { PublicAnnotationActions } from './PublicAnnotationActions';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
+import { AuthorAvatar } from './AuthorAvatar';
 
 export interface AnnotationCardSectionProps {
 
@@ -86,23 +87,9 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     <div className={editable ? 'annotation-section editable' : 'annotation-section'}>
       <div className="annotation-header">
         <div className="annotation-header-left">
-          {isPrivate ? (
-            <div className="avatar private-avatar">
-              <div 
-                className="avatar-wrapper ring"
-                style={color ? { borderColor: color } : undefined}>
-                <div className="avatar-fallback">
-                  <Detective size={17} />
-                </div>
-              </div>
-            </div>
-          ) : creator && (
-            <Avatar
-              id={creator.id}
-              name={(creator as PresentUser).appearance?.label || creator.name}
-              avatar={(creator as PresentUser).appearance?.avatar} 
-              color={color} />
-          )}
+          <AuthorAvatar 
+            author={creator}
+            isPrivate={isPrivate} />
 
           <AuthorDetails 
             i18n={props.i18n}

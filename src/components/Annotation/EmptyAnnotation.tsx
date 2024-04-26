@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowRight, Detective } from '@phosphor-icons/react';
+import { ArrowRight } from '@phosphor-icons/react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
@@ -7,6 +7,7 @@ import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
 
 import './EmptyAnnotation.css';
+import { AuthorAvatar } from './AuthorAvatar';
 
 interface EmptyAnnotationProps {
 
@@ -63,17 +64,9 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
       <QuillEditorRoot>
         <div className="annotation-header">
           <div className="annotation-header-left">
-            {isPrivate ? (
-              <div className="private-avatar">
-                <div className="avatar-ring">
-                  <div className="avatar-inner">
-                    <Detective size={17} />
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div>{/* <Avatar /> */}</div>
-            )}
+            <AuthorAvatar
+              author={props.me}
+              isPrivate={isPrivate} />
           </div>
 
           <div className="annotation-toolbar-wrapper">
