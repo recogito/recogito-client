@@ -49,6 +49,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
+  console.log(annotation);
+
   const colors = useAuthorColors();
 
   const borderStyle = useMemo(() => {

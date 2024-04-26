@@ -66,7 +66,9 @@ export const ReplyField = (props: ReplyFieldProps) => {
 
         <div className="reply-field-wrapper">
           <QuillEditor 
-            placeholder={props.placeholder} />
+            placeholder={props.placeholder} 
+            value={value} 
+            onChange={setValue} />
 
           <button 
             className="save save-arrow"

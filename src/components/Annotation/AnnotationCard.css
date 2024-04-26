@@ -12,6 +12,10 @@
   padding: 0;
 }
 
+.annotation > ul > li + li {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
 .annotation.readonly {
   background-color: var(--gray-200);
 }

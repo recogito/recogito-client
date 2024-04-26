@@ -11,10 +11,6 @@
   justify-content: flex-end;
 }
 
-.annotation-section + .annotation-section {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
 .annotation-section .annotation-section-footer {
   display: flex;
   margin-bottom: 10px;
