@@ -1,3 +1,12 @@
+.annotation-section {
+  transition: background-color 1500ms;
+}
+
+.annotation-section.is-new {
+  background-color: #ffe0a2;
+  transition: background-color 10ms;
+}
+
 .annotation-section.editable .annotation-comment-wrapper {
   padding-bottom: 15px;
 }

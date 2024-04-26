@@ -6,10 +6,10 @@ import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supab
 import { useAuthorColors } from '@components/AnnotationDesktop';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { Interstitial } from './Interstitial';
+import { ReplyField } from './ReplyField';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCard.css';
-import { ReplyField } from './ReplyField';
 
 export interface AnnotationCardProps {
 
@@ -76,8 +76,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const [collapse, setCollapse] = useState(comments.length > 3);
 
-  const shouldAnimate = useRef(false);
-
   const user = useAnnotatorUser();
 
   const me: PresentUser | User =
@@ -87,16 +85,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const transition = useTransition(collapse ? 
     [] : comments.slice(1, comments.length - 1), {
-      from: { 
-        maxHeight: shouldAnimate.current ? '0vh' : '80vh' 
-      },
-      enter: { maxHeight: '80vh' },
+      from: { maxHeight:'0vh' },
+      enter: { maxHeight: '60vh' },
       leave: { maxHeight: '0vh' },
-      config: { duration: shouldAnimate.current ? 350 : 0 },
+      config: { duration: 350 },
     }
   );
-
-  useEffect(() => { shouldAnimate.current = true; }, []);
 
   const onMakePublic = () =>
     props.onUpdateAnnotation({
@@ -113,23 +107,15 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     props.onReply && props.onReply(b);
 
   useEffect(() => {
-    const eqSet = (x: Set<any>, y: Set<any>) =>
-      x.size === y.size && [...x].every((x) => y.has(x));
-
-    const commentIds = comments.map(c => c.id);
-
-    if (eqSet(new Set(commentIds), dontEmphasise.current || new Set()))
-      shouldAnimate.current = false;
-
     // Update the ref after comments have rendered...
     dontEmphasise.current = new Set(comments.map(b => b.id));
 
-    // ...and remove 'is-new' CSS class instantly for fading effect
+    //...and remove 'is-new' CSS class instantly for fading effect
     setTimeout(() => {
       document
         .querySelectorAll('.is-new')
         .forEach((el) => el.classList.remove('is-new'));
-    }, 100);
+    }, 200);
   }, [comments.map(c => c.id).join(',')]);
 
   const className = [
@@ -171,7 +157,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
           {transition((style, item, _, index) => (
             <animated.li
-              key={item.id}
+              key={`${item.id}-${index}`}
               style={{
                 ...style,
                 zIndex: comments.length - index - 1,

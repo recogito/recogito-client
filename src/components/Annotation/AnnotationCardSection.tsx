@@ -1,17 +1,14 @@
-import { useMemo, useState } from 'react';
-import { Detective } from '@phosphor-icons/react';
+import { useState } from 'react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Delta } from 'quill/core';
-import { useAuthorColors } from '@components/AnnotationDesktop';
-import { Avatar } from '@components/Avatar';
 import { QuillEditor, QuillEditorRoot } from '@components/QuillEditor';
+import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
 import { PublicAnnotationActions } from './PublicAnnotationActions';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
-import { AuthorAvatar } from './AuthorAvatar';
 
 export interface AnnotationCardSectionProps {
 
@@ -49,14 +46,10 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { comment, isPrivate, isReadOnly, me, present } = props;
 
-  const colors = useAuthorColors();
-
   const [editable, setEditable] = useState(false);
 
   const creator: PresentUser | User | undefined = 
     present.find(p => p.id === props.comment.creator?.id) || comment.creator;
-
-  const color = useMemo(() => colors.getColor(creator), [colors, creator]);
 
   const isMine = creator?.id === me.id;
 
@@ -83,8 +76,14 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     setEditable(false);
   }
 
+  const className = [
+    'annotation-section',
+    editable ? 'editable' : undefined,
+    props.emphasizeOnEntry ? 'is-new' : undefined 
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className={editable ? 'annotation-section editable' : 'annotation-section'}>
+    <div className={className}>
       <div className="annotation-header">
         <div className="annotation-header-left">
           <AuthorAvatar 
