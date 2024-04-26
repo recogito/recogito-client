@@ -12,7 +12,7 @@
   padding: 0;
 }
 
-.annotation > ul > li + li {
+.annotation > ul > li:not(.interstitial-wrapper) + li {
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 

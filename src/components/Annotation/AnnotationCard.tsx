@@ -162,7 +162,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           </li>
 
           {collapse && (
-            <li>
+            <li className="interstitial-wrapper">
               <Interstitial
                 label={`Show ${comments.length - 2} more replies`}
                 onClick={() => setCollapse(false)} />

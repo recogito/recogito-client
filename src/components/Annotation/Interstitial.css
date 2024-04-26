@@ -1,17 +1,25 @@
+.annotation > ul > li:not(.interstitial-wrapper) + li.interstitial-wrapper {
+  border: none;
+}
+
 .annotation .interstitial {
   align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   font-size: 13px;
   height: 0;
   justify-content: center;
-  margin: 0 0 2px 0;
+  padding-top: 15px;
   position: relative;
+}
+.annotation .interstitial-wrapper::after {
+  border-top: 1px solid var(--gray-200);
+  content: '';
+  display: block;
+  height: 15px;
 }
 
 .annotation .interstitial .label {
   background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 99999px;
   box-shadow: none;
   color: var(--font-light);
