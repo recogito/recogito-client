@@ -173,9 +173,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
             ) : (
               <AnnotationCard 
                 annotation={annotation} 
-                className={isSelected(annotation) ? 'selected' : undefined}
                 i18n={props.i18n}
                 isReadOnly={isReadOnly(annotation)}
+                isSelected={isSelected(annotation)}
                 present={props.present}
                 showReplyField={!isReadOnly(annotation) && isSelected(annotation)}
                 tagVocabulary={props.tagVocabulary} 

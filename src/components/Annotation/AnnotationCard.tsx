@@ -16,13 +16,13 @@ export interface AnnotationCardProps {
 
   annotation: SupabaseAnnotation;
 
-  className?: string;
-
   i18n: Translations;
 
   isNote?: boolean;
 
   isReadOnly?: boolean;
+
+  isSelected?: boolean;
   
   present: PresentUser[];
 
@@ -79,7 +79,9 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   // ref, because we don't want to re-render when this list changes.
   const dontEmphasise = useRef(new Set(comments.map(b => b.id)));
 
-  const [collapse, setCollapse] = useState(comments.length > 3);
+  const [shouldCollapse, setShouldCollapse] = useState(true);
+  
+  const isCollapsed = shouldCollapse && comments.length > 3;
 
   const user = useAnnotatorUser();
 
@@ -88,7 +90,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
-  const transition = useTransition(collapse ? 
+  const transition = useTransition(isCollapsed ? 
     [] : comments.slice(1, comments.length - 1), {
       from: { maxHeight:'0vh' },
       enter: { maxHeight: '60vh' },
@@ -140,8 +142,13 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     }, 200);
   }, [comments.map(c => c.id).join(',')]);
 
+  useEffect(() => {
+    if (!props.isSelected) setShouldCollapse(true);
+  }, [props.isSelected]);
+
   const className = [
     'annotation not-annotatable',
+    props.isSelected ? 'selected' : undefined,
     props.isNote ? 'note' : undefined,
     isPrivate ? 'private' : undefined,
     props.isReadOnly ? 'readonly' : undefined
@@ -170,11 +177,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               onUpdateBody={props.onUpdateBody} />
           </li>
 
-          {collapse && (
+          {isCollapsed && (
             <li className="interstitial-wrapper">
               <Interstitial
                 label={`Show ${comments.length - 2} more replies`}
-                onClick={() => setCollapse(false)} />
+                onClick={() => setShouldCollapse(false)} />
             </li>
           )}
 
