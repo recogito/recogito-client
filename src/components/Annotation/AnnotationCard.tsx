@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAnnotatorUser } from '@annotorious/react';
-import { useTransition } from '@react-spring/web';
+import { animated, useTransition } from '@react-spring/web';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useAuthorColors } from '@components/AnnotationDesktop';
@@ -9,6 +9,7 @@ import { Interstitial } from './Interstitial';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCard.css';
+import { ReplyField } from './ReplyField';
 
 export interface AnnotationCardProps {
 
@@ -26,7 +27,7 @@ export interface AnnotationCardProps {
 
   policies?: Policies;
 
-  showReplyForm?: boolean;
+  showReplyField?: boolean;
 
   tagVocabulary?: string[];
 
@@ -167,7 +168,64 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 onClick={() => setCollapse(false)} />
             </li>
           )}
+
+          {transition((style, item, _, index) => (
+            <animated.li
+              key={item.id}
+              style={{
+                ...style,
+                zIndex: comments.length - index - 1,
+              }}>
+              <AnnotationCardSection
+                comment={item}
+                emphasizeOnEntry={!dontEmphasise.current.has(item.id)}
+                i18n={props.i18n}
+                index={index + 1}
+                isPrivate={isPrivate}
+                isReadOnly={props.isReadOnly}
+                me={me}
+                policies={props.policies}
+                present={props.present}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onCreateBody={props.onCreateBody}
+                onDeleteBody={props.onDeleteBody}
+                onMakePublic={() => onMakePublic()}
+                onUpdateBody={props.onUpdateBody} />
+            </animated.li>
+          ))}
+
+          {comments.length > 1 && (
+            <li style={{ zIndex: 1 }}>
+              <AnnotationCardSection
+                comment={comments[comments.length - 1]}
+                emphasizeOnEntry={!dontEmphasise.current.has(
+                  comments[comments.length - 1].id
+                )}
+                i18n={props.i18n}
+                index={comments.length - 1}
+                isPrivate={isPrivate}
+                isReadOnly={props.isReadOnly}
+                me={me}
+                policies={props.policies}
+                present={props.present}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onCreateBody={props.onCreateBody}
+                onDeleteBody={props.onDeleteBody}
+                onMakePublic={() => onMakePublic()}
+                onUpdateBody={props.onUpdateBody} />
+            </li>
+          )}
         </ul>
+      )}
+
+      {props.showReplyField && (
+        <ReplyField 
+          i18n={props.i18n}
+          annotation={props.annotation}
+          me={me}
+          placeholder={props.i18n.t['Reply...']}
+          beforeSubmit={beforeReply} 
+          onSubmit={onReply} />
       )}
     </div>
   )
