@@ -5,11 +5,15 @@ import type { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
+import { AuthorAvatar } from './AuthorAvatar';
+import { TagEditor } from './TagEditor';
+import type { Translations } from 'src/Types';
 
 import './EmptyAnnotation.css';
-import { AuthorAvatar } from './AuthorAvatar';
 
 interface EmptyAnnotationProps {
+
+  i18n: Translations;
 
   annotation: SupabaseAnnotation;
 
@@ -82,9 +86,11 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         </div>
 
         <div className="annotation-footer">
-          {/* <AddTag 
-            onAddTag={() => {}}
-            onCancel={() => {}} /> */}
+          <TagEditor 
+            annotation={props.annotation}
+            me={props.me}
+            i18n={props.i18n}
+            onCreate={props.onCreateBody} />
 
           <button 
             className="save save-arrow"
