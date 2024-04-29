@@ -12,9 +12,9 @@ interface PublicAnnotationActionsProps {
 
   onDeleteAnnotation(): void;
 
-  onDeleteComment(): void;
+  onDeleteSection(): void;
 
-  onEditComment(): void;
+  onEditSection(): void;
 
 }
 
@@ -43,13 +43,13 @@ export const PublicAnnotationActions = (props: PublicAnnotationActionsProps) => 
 
             <Dropdown.Item
               className='dropdown-item'
-              onSelect={props.onEditComment}>
+              onSelect={props.onEditSection}>
               <Pencil size={16} /> <span>{t['Edit comment']}</span>
             </Dropdown.Item>
 
             <Dropdown.Item
               className='dropdown-item'
-              onSelect={props.onDeleteComment}>
+              onSelect={props.onDeleteSection}>
               <Trash size={16} /> <span>{t['Delete comment']}</span>
             </Dropdown.Item>
           </div>

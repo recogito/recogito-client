@@ -10,18 +10,17 @@ import { TagList } from './TagList';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
+import { TagsWidget } from '@components/Annotation_deprecated/TagsWidget';
 
 export interface AnnotationCardSectionProps {
 
-  index: number;
-
   comment?: AnnotationBody;
-
-  tags?: AnnotationBody[];
 
   emphasizeOnEntry?: boolean;
 
   i18n: Translations;
+
+  index: number;
 
   isPrivate?: boolean;
 
@@ -32,12 +31,16 @@ export interface AnnotationCardSectionProps {
   present: PresentUser[];
 
   policies?: Policies;
+
+  tags?: AnnotationBody[];
   
   onDeleteAnnotation(): void;
 
   onCreateTag(value: string): void;
 
   onDeleteBody(body: AnnotationBody): void;
+
+  onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
   onMakePublic(): void;
 
@@ -69,9 +72,16 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const [commentValue, setCommentValue] = useState<Delta | undefined>(parseBody(comment));
 
-  useEffect(() => {
-    setCommentValue(parseBody(props.comment));
-  }, [props.comment]);
+  useEffect(() => setCommentValue(parseBody(props.comment)), [props.comment]);
+
+  const onDeleteSection = () => {
+    const toDelete: AnnotationBody[] = [
+      props.comment!,
+      ...(props.tags || [])
+    ].filter(Boolean);
+
+    props.onBulkDeleteBodies(toDelete);
+  }
 
   const onUpdateComment = () => {    
     if (!comment) return;
@@ -113,10 +123,10 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             {isPrivate ? (
               <PrivateAnnotationActions
                 i18n={props.i18n} 
-                isFirst={props.index === 0} 
+                isFirst={props.index === 0}
                 onDeleteAnnotation={props.onDeleteAnnotation}
-                onDeleteComment={() => props.onDeleteBody(comment)}
-                onEditComment={() => setEditable(true)} 
+                onDeleteSection={onDeleteSection}
+                onEditSection={() => setEditable(true)}
                 onMakePublic={props.onMakePublic}/>
             ) : (
               <PublicAnnotationActions 
@@ -124,8 +134,8 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 isFirst={props.index === 0} 
                 isMine={isMine}
                 onDeleteAnnotation={props.onDeleteAnnotation}
-                onDeleteComment={() => props.onDeleteBody(comment)}
-                onEditComment={() => setEditable(true)} />
+                onDeleteSection={onDeleteSection}
+                onEditSection={() => setEditable(true)} />
             )}    
           </div>
         )}
@@ -140,13 +150,13 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         </QuillEditorRoot>
       </div>
 
-      {props.tags && props.tags.length > 0 && (
+      {(props.index === 0 && ((props.tags || []).length > 0 || editable)) && (
         <div className="annotation-taglist-wrapper">
           <TagList 
             isEditable={editable}
             me={props.me}
             i18n={props.i18n}
-            tags={props.tags}
+            tags={props.tags || []}
             onCreateTag={props.onCreateTag}
             onDeleteTag={props.onDeleteBody} />
         </div>

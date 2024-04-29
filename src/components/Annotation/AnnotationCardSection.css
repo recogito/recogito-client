@@ -7,18 +7,21 @@
   transition: background-color 10ms;
 }
 
-.annotation-section.editable .annotation-comment-wrapper {
-  padding-bottom: 15px;
-}
-
 .annotation-section .align-right {
   justify-content: flex-end;
 }
 
+.annotation-section.editable .annotation-comment-wrapper {
+  padding-bottom: 0;
+}
+
+.annotation-section.editable .annotation-taglist-wrapper {
+  padding: 8px 12px 0 12px;
+}
+
 .annotation-section .annotation-section-footer {
   display: flex;
-  margin-bottom: 10px;
-  padding: 0.25rem 12px;
+  margin: 12px;
 }
 
 .annotation-section .annotation-section-footer button {

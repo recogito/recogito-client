@@ -42,8 +42,34 @@ export interface AnnotationCardProps {
 
   onDeleteBody(body: AnnotationBody): void;
 
+  onBulkDeleteBodies(bodies: AnnotationBody[]): void;
+
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
+}
+
+/**
+ * Per convention, we only support tags created along with the first comment.
+ * This means:
+ * - only the creator of the annotation can be the creator of tags,
+ * - but they could be anywhere in the ordered list of bodies, because the
+ *   creator might have added them later, while editing the initial comment.
+ * 
+ * Apply some basic sanity checking here! 
+ */
+const getTags = (annotation: SupabaseAnnotation) => {
+  const creator = annotation.target.creator;
+
+  const allTags = annotation
+    .bodies.filter(b => b.purpose === 'tagging');
+
+  const byCreator = allTags
+    .filter(b => b.creator?.id === creator?.id);
+
+  if (allTags.length !== byCreator.length)
+    console.warn('Integrity warning: annotation has tags not created by annotation creator', annotation);
+
+  return byCreator;
 }
 
 export const AnnotationCard = (props: AnnotationCardProps) => {
@@ -69,9 +95,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       return a.created.getTime() - b.created.getTime();
     });
 
-  // Just a hack for now
-  const tags = annotation.bodies
-    .filter(b => b.purpose === 'tagging');
+
+  const tags = getTags(annotation);
 
   // Keep a list of comments that should not be color-highlighted
   // on render, either because they were already in the annotation, or they
@@ -154,9 +179,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     props.isReadOnly ? 'readonly' : undefined
   ].filter(Boolean).join(' ');
 
+  // Annotation is not empty if it has a comment, tags or both
+  const notEmpty = comments.length + tags.length > 0;
+
   return (
     <div style={borderStyle} className={className}>
-      {comments.length + tags.length > 0 && (
+      {notEmpty && (
         <ul>
           <li>
             <AnnotationCardSection
@@ -173,6 +201,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateTag={onCreateTag}
               onDeleteBody={props.onDeleteBody}
+              onBulkDeleteBodies={props.onBulkDeleteBodies}
               onMakePublic={() => onMakePublic()}
               onUpdateBody={props.onUpdateBody} />
           </li>
@@ -205,6 +234,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 onDeleteAnnotation={props.onDeleteAnnotation}
                 onCreateTag={onCreateTag}
                 onDeleteBody={props.onDeleteBody}
+                onBulkDeleteBodies={props.onBulkDeleteBodies}
                 onMakePublic={() => onMakePublic()}
                 onUpdateBody={props.onUpdateBody} />
             </animated.li>
@@ -227,6 +257,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 onDeleteAnnotation={props.onDeleteAnnotation}
                 onCreateTag={onCreateTag}
                 onDeleteBody={props.onDeleteBody}
+                onBulkDeleteBodies={props.onBulkDeleteBodies}
                 onMakePublic={() => onMakePublic()}
                 onUpdateBody={props.onUpdateBody} />
             </li>

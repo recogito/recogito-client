@@ -8,14 +8,13 @@ interface PrivateAnnotationActionsProps {
 
   isFirst?: boolean;
 
-  onMakePublic(): void;
-
-  onEditComment(): void;
-
   onDeleteAnnotation(): void;
 
-  onDeleteComment(): void;
+  onDeleteSection(): void;
 
+  onEditSection(): void;
+
+  onMakePublic(): void;
 }
 
 export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) => {
@@ -44,11 +43,11 @@ export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) =
             </>
           )}
 
-          <Dropdown.Item className="dropdown-item" onSelect={props.onEditComment}>
+          <Dropdown.Item className="dropdown-item" onSelect={props.onEditSection}>
             <Pencil size={16} /> <span>{t['Edit comment']}</span>
           </Dropdown.Item>
 
-          <Dropdown.Item className="dropdown-item" onSelect={props.onDeleteComment}>
+          <Dropdown.Item className="dropdown-item" onSelect={props.onDeleteSection}>
             <Trash size={16} /> <span>{t['Delete comment']}</span>
           </Dropdown.Item>
         </div>
