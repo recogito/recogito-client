@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Delta } from 'quill/core';
 import { QuillEditor, QuillEditorRoot } from '@components/QuillEditor';
@@ -45,6 +45,12 @@ export interface AnnotationCardSectionProps {
 
 }
 
+const parseBody = (body?: AnnotationBody): Delta | undefined => 
+  body?.value ? body.value.length > 0 && body.value.charAt(0) === '{'
+      ? JSON.parse(body.value)
+      : new Delta().insert(body!.value || '')
+  : undefined;
+
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { comment, isPrivate, isReadOnly, me, present } = props;
@@ -61,14 +67,11 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   // Comments are editable if they are mine, or I'm a layer admin
   const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT'));
 
-  const format = comment ?
-    comment.value && comment.value.length > 0 && comment.value.charAt(0) === '{'
-      ? 'Quill' : 'TextPlain' : undefined;
+  const [commentValue, setCommentValue] = useState<Delta | undefined>(parseBody(comment));
 
-  const [commentValue, setCommentValue] = useState<Delta | undefined>(
-    format === 'Quill'
-      ? JSON.parse(comment!.value!)
-      : format ? new Delta().insert(comment!.value || '') : undefined);
+  useEffect(() => {
+    setCommentValue(parseBody(props.comment));
+  }, [props.comment]);
 
   const onUpdateComment = () => {    
     if (!comment) return;

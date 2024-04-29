@@ -185,16 +185,16 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             </li>
           )}
 
-          {transition((style, item, _, index) => (
+          {transition((style, comment, _, index) => (
             <animated.li
-              key={`${item.id}-${index}`}
+              key={comment.id}
               style={{
                 ...style,
                 zIndex: comments.length - index - 1,
               }}>
               <AnnotationCardSection
-                comment={item}
-                emphasizeOnEntry={!dontEmphasise.current.has(item.id)}
+                comment={comment}
+                emphasizeOnEntry={!dontEmphasise.current.has(comment.id)}
                 i18n={props.i18n}
                 index={index + 1}
                 isPrivate={isPrivate}
