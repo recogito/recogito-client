@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
-import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { useAuthorColors } from '@components/AnnotationDesktop';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { Interstitial } from './Interstitial';
 import { ReplyField } from './ReplyField';
@@ -15,6 +14,8 @@ import './AnnotationCard.css';
 export interface AnnotationCardProps {
 
   annotation: SupabaseAnnotation;
+
+  borderColor?: Color;
 
   i18n: Translations;
 
@@ -76,14 +77,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
-  const colors = useAuthorColors();
-
-  const borderStyle = useMemo(() => {
-    const creator: PresentUser | User | undefined = 
-      props.present.find(p => p.id === annotation.target.creator?.id) || annotation.target.creator;
-
-    return { '--card-border': colors.getColor(creator) } as React.CSSProperties;
-  }, [colors, annotation]);
+  const borderStyle = props.borderColor ? 
+    { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
   // const plugins = usePlugins('annotation.*.annotation-editor');
 

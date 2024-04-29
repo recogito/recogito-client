@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
 import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
-import { AnnotationCard } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';

@@ -184,6 +184,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 policies={policies}
                 present={present}
                 sorting={sorting}
+                style={style}
                 tagVocabulary={tagVocabulary}
                 beforeSelectAnnotation={beforeSelectAnnotation}
                 onChangeAnnotationFilter={f => setFilter(() => f)}

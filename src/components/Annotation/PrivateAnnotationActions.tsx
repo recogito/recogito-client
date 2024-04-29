@@ -21,6 +21,11 @@ export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) =
 
   const { t } = props.i18n;
 
+  const onClick = (evt: React.MouseEvent) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
   return (
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
@@ -29,7 +34,7 @@ export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) =
         </button>
       </Dropdown.Trigger>
 
-      <Dropdown.Content asChild sideOffset={5} align="start">
+      <Dropdown.Content asChild sideOffset={5} align="start" onClick={onClick}>
         <div className="dropdown-content no-icons">
           {props.isFirst && (
             <>

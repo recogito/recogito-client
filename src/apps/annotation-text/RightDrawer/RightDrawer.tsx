@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useTransition, animated } from '@react-spring/web';
+import type { TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
@@ -21,6 +22,8 @@ interface RightDrawerProps {
   sorting?: ((a: PDFAnnotation, b: PDFAnnotation) => number);
 
   layers?: Layer[];
+
+  style?: (a: TextAnnotation) => DrawingStyle;
 
   tagVocabulary?: string[];
 
@@ -64,6 +67,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
       <aside>
         {panel === DrawerPanel.ANNOTATIONS ? (
           <AnnotationList 
+            currentStyle={props.style}
             i18n={props.i18n}
             layers={props.layers}
             me={me}

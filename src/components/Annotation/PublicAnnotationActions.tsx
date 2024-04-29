@@ -22,6 +22,11 @@ export const PublicAnnotationActions = (props: PublicAnnotationActionsProps) => 
 
   const { t } = props.i18n;
 
+  const onClick = (evt: React.MouseEvent) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+  }
+
   return (
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
@@ -31,7 +36,7 @@ export const PublicAnnotationActions = (props: PublicAnnotationActionsProps) => 
       </Dropdown.Trigger>
 
       <Dropdown.Portal>
-        <Dropdown.Content asChild sideOffset={5} align='start'>
+        <Dropdown.Content asChild sideOffset={5} align="start" onClick={onClick}>
           <div className='dropdown-content no-icons'>
             {props.isFirst && (
               <Dropdown.Item

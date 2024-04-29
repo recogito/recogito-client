@@ -16,12 +16,16 @@ import {
   useSelection,
   User,
   useViewportState,
-  useAnnotationStore
+  useAnnotationStore,
+  Annotation,
+  DrawingStyle
 } from '@annotorious/react';
 
 import './AnnotationList.css';
 
 interface AnnotationListProps<T extends Anno> {
+
+  currentStyle?: (a: Annotation) => DrawingStyle;
 
   i18n: Translations;
 
@@ -122,6 +126,10 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const onDeleteBody = (body: AnnotationBody) =>
     store.deleteBody(body);
 
+  const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
+    // TODO to replace with store.bulkDeleteBodies once supported in Annotorious!
+    bodies.forEach(b => store.deleteBody(b));
+
   const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
     store.updateBody(oldValue, newValue);
     
@@ -138,6 +146,13 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     // Don't focus reply before pointer up, otherwise the selection breaks!
     setAutofocus(pointerEvent?.type === 'pointerup');
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
+
+  const getBorderColor = (annotation: Anno) => {
+    if (props.currentStyle) {
+      const styled = props.currentStyle(annotation);
+      return styled.fill;
+    }
+  }
 
   return (
     <div className="anno-drawer-panel annotation-list not-annotatable">
@@ -172,7 +187,8 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               )
             ) : (
               <AnnotationCard 
-                annotation={annotation} 
+                annotation={annotation}
+                borderColor={getBorderColor(annotation)}
                 i18n={props.i18n}
                 isReadOnly={isReadOnly(annotation)}
                 isSelected={isSelected(annotation)}
@@ -183,6 +199,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
                 onUpdateAnnotation={onUpdateAnnotation}
                 onCreateBody={onCreateBody} 
                 onDeleteBody={onDeleteBody} 
+                onBulkDeleteBodies={onBulkDeleteBodies}
                 onUpdateBody={onUpdateBody}
                 onDeleteAnnotation={() => onDeleteAnnotation(annotation)} />
             )}
