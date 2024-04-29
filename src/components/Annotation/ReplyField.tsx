@@ -5,10 +5,10 @@ import { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation, SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
+import { AuthorAvatar } from './AuthorAvatar';
 import type { Translations } from 'src/Types';
 
 import './ReplyField.css';
-import { AuthorAvatar } from './AuthorAvatar';
 
 interface ReplyFieldProps {
 

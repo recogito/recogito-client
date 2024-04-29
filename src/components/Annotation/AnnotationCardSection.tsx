@@ -10,7 +10,6 @@ import { TagList } from './TagList';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
-import { TagsWidget } from '@components/Annotation_deprecated/TagsWidget';
 
 export interface AnnotationCardSectionProps {
 
