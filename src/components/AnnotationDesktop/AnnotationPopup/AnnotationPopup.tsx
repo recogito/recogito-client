@@ -43,14 +43,12 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
   // Popup only supports a single selected annotation for now
   const selected = props.selected[0].annotation as SupabaseAnnotation;
 
-  const isPrivate = selected.visibility === Visibility.PRIVATE;
-
   const isMine = selected.target.creator?.id === me.id;
 
   const isReadOnly =
     !(selected.layer_id && selected.layer_id === activeLayer?.id);
 
-  const hasBodies = selected.bodies.length > 0;
+  const hasComment = selected.bodies.filter(b => b.purpose !== 'tagging').length > 0;
 
   // Close the popup after a reply
   const onReply = (body: AnnotationBody) => {
@@ -81,7 +79,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
     <div
       key={selected.id}
       className="annotation-popup not-annotatable">
-      {hasBodies ? (
+      {hasComment ? (
         <AnnotationCard 
           annotation={selected}
           i18n={props.i18n}

@@ -1,6 +1,5 @@
 import { forwardRef, useMemo, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -17,6 +16,7 @@ import {
   PresentUser,
   useAnnotator
 } from '@annotorious/react';
+import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -136,7 +136,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       {props.usePopup && (
         <OpenSeadragonPopup
           popup={props => (
-            <Annotation.Popup
+            <AnnotationPopup
               {...props}
               i18n={i18n}
               policies={policies}
