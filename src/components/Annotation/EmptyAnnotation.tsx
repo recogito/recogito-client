@@ -10,6 +10,7 @@ import { TagList } from './TagList';
 import type { Translations } from 'src/Types';
 
 import './EmptyAnnotation.css';
+import { AuthorDetails } from './AuthorDetails';
 
 interface EmptyAnnotationProps {
   
@@ -23,6 +24,8 @@ interface EmptyAnnotationProps {
 
   me: PresentUser | User;
 
+  present: PresentUser[];
+
   onCreateBody(body: AnnotationBody): void;
 
   onDeleteBody(body: AnnotationBody): void;
@@ -32,6 +35,13 @@ interface EmptyAnnotationProps {
 }
 
 export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
+
+  const { target } = props.annotation;
+
+  const creator: PresentUser | User | undefined = 
+    props.present.find(p => p.id === target.creator?.id) || target.creator;
+
+  const isMine = creator?.id === props.me.id;
 
   const [value, setValue] = useState<Delta | undefined>();
 
@@ -86,7 +96,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
     isPrivate ? 'private' : undefined
   ].filter(Boolean).join(' ');
 
-  return (
+  return isMine ? (
     <div className={className}>
       <QuillEditorRoot>
         <div className="annotation-header">
@@ -127,6 +137,27 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           </button>
         </div>
       </QuillEditorRoot>
+    </div>
+  ) : (
+    <div className={className}>
+      <div className="annotation-header">
+        <div className="annotation-header-left">
+          <AuthorAvatar 
+            author={creator}
+            isPrivate={isPrivate} />
+
+          <div>
+            <AuthorDetails 
+              i18n={props.i18n}
+              isPrivate={isPrivate} 
+              creator={creator} />
+
+            <div className="typing">
+              <div className="typing-animation" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 

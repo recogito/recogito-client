@@ -79,9 +79,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
-  // If this annotation has no bodies on mount, it's a new annotation (obviously)
-  const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
-
   // Update isNew when anntoation changes
   useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id]);
 
@@ -120,6 +117,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   const me: PresentUser | User =
     props.present.find((p) => p.id === user.id) || user;
 
+  const isMine = annotation.target.creator?.id === me.id;
+
+  // If this is my annotation and has no bodies on mount, it's a new annotation
+  const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
+
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -152,6 +154,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   useEffect(() => {
     // Update the ref after comments have rendered...
     dontEmphasise.current = new Set(comments.map(b => b.id));
+
+    if (comments.length > 0) setIsNew(false);
 
     //...and remove 'is-new' CSS class instantly for fading effect
     setTimeout(() => {
@@ -187,6 +191,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       autoFocus={props.autoFocus}
       i18n={props.i18n}
       me={me} 
+      present={props.present}
       onCreateBody={props.onCreateBody} 
       onDeleteBody={props.onDeleteBody} 
       onSubmit={onSubmit} />   
