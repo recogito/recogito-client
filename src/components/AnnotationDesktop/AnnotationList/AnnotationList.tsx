@@ -95,7 +95,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
     event.stopPropagation();
-
+    
     props.beforeSelect(a);
 
     if (a)
@@ -110,9 +110,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   // Shorthands
   const isSelected = (a: SupabaseAnnotation) => 
     selected.length > 0 && selected[0].annotation.id == a.id;
-
-  const isMine = (a: SupabaseAnnotation) =>
-    me.id === a.target.creator?.id;
 
   const isReadOnly = (a: SupabaseAnnotation) =>
     !(a.layer_id && a.layer_id === activeLayer?.id);

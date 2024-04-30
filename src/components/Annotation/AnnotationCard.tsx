@@ -286,7 +286,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
       {props.showReplyField && (
         <ReplyField 
-          autoFocus={props.autoFocus}
+          autoFocus
           i18n={props.i18n}
           isPrivate={isPrivate}
           annotation={props.annotation}
