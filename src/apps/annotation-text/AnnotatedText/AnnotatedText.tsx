@@ -138,7 +138,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
           {props.usePopup && (
             <TextAnnotatorPopup
-              popup={(props) => (
+                popup={(props) => (
                 <AnnotationPopup
                   {...props}
                   i18n={i18n}

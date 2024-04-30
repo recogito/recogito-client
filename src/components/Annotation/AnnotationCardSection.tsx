@@ -17,6 +17,8 @@ export interface AnnotationCardSectionProps {
 
   annotation: SupabaseAnnotation;
 
+  isSelected?: boolean;
+
   comment?: AnnotationBody;
 
   emphasizeOnEntry?: boolean;
@@ -143,6 +145,12 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
     props.onCreateBody(tag);
   }
+
+  useEffect(() => {
+    // Stop editing when annotation is deselected
+    if (!props.isSelected)
+      setEditable(false);
+  }, [props.isSelected]);
 
   const className = [
     'annotation-section',

@@ -71,8 +71,7 @@ export const Toolpanel = (props: ToolbarProps) => {
             selected.length > 0
               ? 'ta-toolpanel-context ta-toolpanel-context-right anno-desktop-overlay'
               : 'ta-toolpanel-context ta-toolpanel-context-right anno-desktop-overlay hidden'
-          }
-        >
+          }>
           <button
             className='delete'
             aria-label={props.i18n.t['Delete selected annotation']}

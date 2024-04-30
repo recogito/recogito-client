@@ -3,7 +3,7 @@ import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
-import { AnnotationCard, EmptyAnnotation } from '@components/Annotation';
+import { AnnotationCard } from '@components/Annotation';
 import type { Layer, Policies, Translations } from 'src/Types';
 
 import './AnnotationPopup.css';
@@ -36,22 +36,15 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
 
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
+  // Popup only supports a single selected annotation for now
+  const selected = props.selected[0].annotation as SupabaseAnnotation;
+
   const activeLayer = useMemo(() => (
     (props.layers || []).find(l => l.is_active)
   ), [props.layers]);
 
-  // Popup only supports a single selected annotation for now
-  const selected = props.selected[0].annotation as SupabaseAnnotation;
-
-  // If this annotation has no bodies on mount, it's a new annotation (obviously)
-  const isNew = useMemo(() => selected.bodies.length === 0, [selected.id]);
-
-  const isMine = selected.target.creator?.id === me.id;
-
   const isReadOnly =
     !(selected.layer_id && selected.layer_id === activeLayer?.id);
-
-  const hasComment = selected.bodies.filter(b => b.purpose !== 'tagging').length > 0;
 
   const onSaveAnnotation = () =>
     anno.state.selection.clear();
@@ -79,7 +72,6 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
     <div
       key={selected.id}
       className="annotation-popup not-annotatable">
-      {!isNew ? (
         <AnnotationCard 
           annotation={selected}
           i18n={props.i18n}
@@ -87,7 +79,6 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
           present={props.present}
           showReplyField={!isReadOnly}
           tagVocabulary={props.tagVocabulary} 
-          onReply={onCreateBody}
           onUpdateAnnotation={onUpdateAnnotation}
           onCreateBody={onCreateBody} 
           onDeleteBody={onDeleteBody} 
@@ -95,23 +86,6 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
           onUpdateBody={onUpdateBody}
           onDeleteAnnotation={() => onDeleteAnnotation(selected)} 
           onSubmit={onSaveAnnotation} />
-      ) : isMine ? (
-        <EmptyAnnotation 
-          annotation={selected} 
-          i18n={props.i18n}
-          me={me} 
-          onCreateBody={onCreateBody} 
-          onDeleteBody={onDeleteBody} 
-          onSubmit={onSaveAnnotation} />   
-      ) : (
-        <div>{/* 
-        <EmptyAnnotation 
-          typing
-          selected={isSelected(a)}
-          i18n={props.i18n} 
-          annotation={a} 
-          present={props.present} /> */}</div>   
-      )}
     </div>
   );
 };

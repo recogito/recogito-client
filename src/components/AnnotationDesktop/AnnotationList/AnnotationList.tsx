@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AnnotationCard, EmptyAnnotation } from '@components/Annotation';
+import { AnnotationCard } from '@components/Annotation';
 import type { Layer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
@@ -104,6 +104,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
       anno.state.selection.clear();
   }
 
+  const onSubmit = () => 
+    anno.state.selection.clear();
+
   // Shorthands
   const isSelected = (a: SupabaseAnnotation) => 
     selected.length > 0 && selected[0].annotation.id == a.id;
@@ -167,42 +170,24 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
           <li 
             key={annotation.id}
             onClick={event => onClick(event, annotation)}>
-            {annotation.bodies.filter(b => b.purpose !== 'tagging').length === 0 ? (
-              isMine(annotation) ? (     
-                <EmptyAnnotation 
-                  autoFocus={autofocus}
-                  annotation={annotation} 
-                  i18n={props.i18n}
-                  me={me} 
-                  onCreateBody={onCreateBody} 
-                  onDeleteBody={onDeleteBody} />         
-              ) : (
-                <div>{/* 
-                <EmptyAnnotation 
-                  typing
-                  selected={isSelected(a)}
-                  i18n={props.i18n} 
-                  annotation={a} 
-                  present={props.present} /> */}</div>             
-              )
-            ) : (
-              <AnnotationCard 
-                annotation={annotation}
-                borderColor={getBorderColor(annotation)}
-                i18n={props.i18n}
-                isReadOnly={isReadOnly(annotation)}
-                isSelected={isSelected(annotation)}
-                present={props.present}
-                showReplyField={!isReadOnly(annotation) && isSelected(annotation)}
-                tagVocabulary={props.tagVocabulary} 
-                onReply={onCreateBody}
-                onUpdateAnnotation={onUpdateAnnotation}
-                onCreateBody={onCreateBody} 
-                onDeleteBody={onDeleteBody} 
-                onBulkDeleteBodies={onBulkDeleteBodies}
-                onUpdateBody={onUpdateBody}
-                onDeleteAnnotation={() => onDeleteAnnotation(annotation)} />
-            )}
+            
+            <AnnotationCard 
+              annotation={annotation}
+              autoFocus={autofocus}
+              borderColor={getBorderColor(annotation)}
+              i18n={props.i18n}
+              isReadOnly={isReadOnly(annotation)}
+              isSelected={isSelected(annotation)}
+              present={props.present}
+              showReplyField={!isReadOnly(annotation) && isSelected(annotation)}
+              tagVocabulary={props.tagVocabulary} 
+              onUpdateAnnotation={onUpdateAnnotation}
+              onCreateBody={onCreateBody} 
+              onDeleteBody={onDeleteBody} 
+              onBulkDeleteBodies={onBulkDeleteBodies}
+              onUpdateBody={onUpdateBody}
+              onDeleteAnnotation={() => onDeleteAnnotation(annotation)} 
+              onSubmit={onSubmit} />
           </li>
         ))}
       </ul>

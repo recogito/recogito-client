@@ -18,7 +18,7 @@ interface ReplyFieldProps {
 
   annotation: SupabaseAnnotation;
 
-  autofocus?: boolean;
+  autoFocus?: boolean;
 
   scrollIntoView?: boolean;
 
@@ -72,6 +72,7 @@ export const ReplyField = (props: ReplyFieldProps) => {
 
         <div className="reply-field-wrapper">
           <QuillEditor 
+            autoFocus={props.autoFocus}
             placeholder={props.placeholder} 
             value={value} 
             onChange={setValue} />

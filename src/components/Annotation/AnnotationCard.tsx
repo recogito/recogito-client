@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
@@ -10,10 +9,13 @@ import { ReplyField } from './ReplyField';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCard.css';
+import { EmptyAnnotation } from './EmptyAnnotation';
 
 export interface AnnotationCardProps {
 
   annotation: SupabaseAnnotation;
+
+  autoFocus?: boolean;
 
   borderColor?: Color;
 
@@ -32,8 +34,6 @@ export interface AnnotationCardProps {
   showReplyField?: boolean;
 
   tagVocabulary?: string[];
-
-  onReply(body: AnnotationBody): void;
 
   onDeleteAnnotation(): void;
 
@@ -79,6 +79,19 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
+  // If this annotation has no bodies on mount, it's a new annotation (obviously)
+  const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
+
+  // Update isNew when anntoation changes
+  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id]);
+
+  // Once the user saves the annotation, it's no longer new
+  const onSubmit = () => {
+    console.log('submit!');
+    setIsNew(false);
+    props.onSubmit();
+  }
+
   const borderStyle = props.borderColor ? 
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
@@ -91,7 +104,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       if (!a.created || !b.created) return 0;
       return a.created.getTime() - b.created.getTime();
     });
-
 
   const tags = getTags(annotation);
 
@@ -112,12 +124,14 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
+  const [shouldAnimate, setShouldAnimate] = useState(false);
+
   const transition = useTransition(isCollapsed ? 
     [] : comments.slice(1, comments.length - 1), {
-      from: { maxHeight:'0vh' },
+      from: { maxHeight: '0vh' },
       enter: { maxHeight: '60vh' },
       leave: { maxHeight: '0vh' },
-      config: { duration: 350 },
+      config: { duration: shouldAnimate ? 350 : 0 },
     }
   );
 
@@ -132,8 +146,10 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   const beforeReply = (b: AnnotationBody) =>
     (dontEmphasise.current = new Set([...dontEmphasise.current, b.id]));
 
-  const onReply = (b: AnnotationBody) =>
-    props.onReply && props.onReply(b);
+  const onReply = (b: AnnotationBody) => {
+    props.onCreateBody(b);
+    props.onSubmit();
+  }
 
   useEffect(() => {
     // Update the ref after comments have rendered...
@@ -151,6 +167,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     if (!props.isSelected) setShouldCollapse(true);
   }, [props.isSelected]);
 
+  useEffect(() => {
+    // Enable animation after initial render
+    setTimeout(() => setShouldAnimate(true), 1);
+  }, []);
+
   const className = [
     'annotation not-annotatable',
     props.isSelected ? 'selected' : undefined,
@@ -162,7 +183,16 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   // Annotation is not empty if it has a comment, tags or both
   const notEmpty = comments.length + tags.length > 0;
 
-  return (
+  return isNew ? (
+    <EmptyAnnotation 
+      annotation={annotation} 
+      autoFocus={props.autoFocus}
+      i18n={props.i18n}
+      me={me} 
+      onCreateBody={props.onCreateBody} 
+      onDeleteBody={props.onDeleteBody} 
+      onSubmit={onSubmit} />   
+  ) : (
     <div style={borderStyle} className={className}>
       {notEmpty && (
         <ul>
@@ -175,6 +205,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               index={0}
               isPrivate={isPrivate}
               isReadOnly={props.isReadOnly}
+              isSelected={props.isSelected}
               me={me}
               policies={props.policies}
               present={props.present}
@@ -183,7 +214,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               onDeleteBody={props.onDeleteBody}
               onBulkDeleteBodies={props.onBulkDeleteBodies}
               onMakePublic={() => onMakePublic()}
-              onSubmit={props.onSubmit}
+              onSubmit={onSubmit}
               onUpdateBody={props.onUpdateBody} />
           </li>
 
@@ -200,6 +231,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               key={comment.id}
               style={{
                 ...style,
+                overflow: 'hidden',
                 zIndex: comments.length - index - 1,
               }}>
               <AnnotationCardSection
@@ -210,6 +242,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 index={index + 1}
                 isPrivate={isPrivate}
                 isReadOnly={props.isReadOnly}
+                isSelected={props.isSelected}
                 me={me}
                 policies={props.policies}
                 present={props.present}
@@ -235,6 +268,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 index={comments.length - 1}
                 isPrivate={isPrivate}
                 isReadOnly={props.isReadOnly}
+                isSelected={props.isSelected}
                 me={me}
                 policies={props.policies}
                 present={props.present}
@@ -252,6 +286,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
       {props.showReplyField && (
         <ReplyField 
+          autoFocus={props.autoFocus}
           i18n={props.i18n}
           isPrivate={isPrivate}
           annotation={props.annotation}
