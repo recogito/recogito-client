@@ -27,6 +27,8 @@ interface EmptyAnnotationProps {
 
   onDeleteBody(body: AnnotationBody): void;
 
+  onSubmit(): void;
+
 }
 
 export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
@@ -57,8 +59,10 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
       setValue(undefined);
 
-      props.onCreateBody && props.onCreateBody(body);
+      props.onCreateBody(body);
     }
+
+    props.onSubmit();
   }
 
   const onCreateTag = (value: string) => {

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
-import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { AnnotationCard, EmptyAnnotation } from '@components/Annotation';
 import type { Layer, Policies, Translations } from 'src/Types';
@@ -50,11 +50,8 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
 
   const hasComment = selected.bodies.filter(b => b.purpose !== 'tagging').length > 0;
 
-  // Close the popup after a reply
-  const onReply = (body: AnnotationBody) => {
-    store.addBody(body);
+  const onSaveNewAnnotation = () =>
     anno.state.selection.clear();
-  }
 
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
@@ -100,7 +97,8 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
           i18n={props.i18n}
           me={me} 
           onCreateBody={onCreateBody} 
-          onDeleteBody={onDeleteBody} />   
+          onDeleteBody={onDeleteBody} 
+          onSubmit={onSaveNewAnnotation} />   
       ) : (
         <div>{/* 
         <EmptyAnnotation 
