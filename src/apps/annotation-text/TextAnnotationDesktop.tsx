@@ -50,7 +50,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       underlineStyle: 'solid',
       underlineColor: '#000',
       underlineOffset: z * 3,
-      underlineThickness: 1.5
+      underlineThickness: 2
     });
 
     return (a: SupabaseAnnotation, state: any, z: number) =>

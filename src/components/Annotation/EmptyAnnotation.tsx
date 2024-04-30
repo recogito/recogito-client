@@ -39,10 +39,6 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
   const onSave = () => {
     if (value) {
-      const [format, stringified] = typeof value === 'string'  
-        ? ['TextPlain', value as unknown as string]
-        : ['Quill', JSON.stringify(value)];
-
       const body: SupabaseAnnotationBody = {
         id: uuidv4(),
         annotation: props.annotation.id,
@@ -53,8 +49,8 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         },
         created: new Date(),
         purpose: 'commenting',
-        format,
-        value: stringified
+        format: 'Quill',
+        value: JSON.stringify(value)
       };
 
       setValue(undefined);

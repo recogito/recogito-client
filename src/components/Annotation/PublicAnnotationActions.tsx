@@ -4,9 +4,11 @@ import type { Translations } from 'src/Types';
 
 interface PublicAnnotationActionsProps {
 
+  hasReplies: boolean;
+
   i18n: Translations;
 
-  isFirst?: boolean;
+  isFirst: boolean;
 
   isMine: boolean;
 
@@ -52,11 +54,13 @@ export const PublicAnnotationActions = (props: PublicAnnotationActionsProps) => 
               <Pencil size={16} /> <span>{t['Edit comment']}</span>
             </Dropdown.Item>
 
-            <Dropdown.Item
-              className='dropdown-item'
-              onSelect={props.onDeleteSection}>
-              <Trash size={16} /> <span>{t['Delete comment']}</span>
-            </Dropdown.Item>
+            {props.hasReplies && (
+              <Dropdown.Item
+                className='dropdown-item'
+                onSelect={props.onDeleteSection}>
+                <Trash size={16} /> <span>{t['Delete comment']}</span>
+              </Dropdown.Item>
+            )}
           </div>
         </Dropdown.Content>
       </Dropdown.Portal>

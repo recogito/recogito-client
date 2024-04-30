@@ -45,6 +45,8 @@ export interface AnnotationCardProps {
 
   onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
+  onSubmit(): void;
+
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
 }
@@ -119,23 +121,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     }
   );
 
-  const onCreateTag = (value: string) => {
-    const tag: AnnotationBody = {
-      id: uuidv4(),
-      annotation: props.annotation.id,
-      creator: {  
-        id: me.id,
-        name: me.name,
-        avatar: me.avatar
-      },
-      created: new Date(),
-      purpose: 'tagging',
-      value
-    };
-
-    props.onCreateBody(tag);
-  }
-
   const onMakePublic = () =>
     props.onUpdateAnnotation({
       ...annotation,
@@ -183,9 +168,9 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         <ul>
           <li>
             <AnnotationCardSection
+              annotation={annotation}
               comment={comments[0]}
               tags={tags}
-              emphasizeOnEntry={!dontEmphasise.current.has(comments[0]?.id)}
               i18n={props.i18n}
               index={0}
               isPrivate={isPrivate}
@@ -194,10 +179,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               policies={props.policies}
               present={props.present}
               onDeleteAnnotation={props.onDeleteAnnotation}
-              onCreateTag={onCreateTag}
+              onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}
               onBulkDeleteBodies={props.onBulkDeleteBodies}
               onMakePublic={() => onMakePublic()}
+              onSubmit={props.onSubmit}
               onUpdateBody={props.onUpdateBody} />
           </li>
 
@@ -217,6 +203,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 zIndex: comments.length - index - 1,
               }}>
               <AnnotationCardSection
+                annotation={annotation}
                 comment={comment}
                 emphasizeOnEntry={!dontEmphasise.current.has(comment.id)}
                 i18n={props.i18n}
@@ -227,10 +214,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 policies={props.policies}
                 present={props.present}
                 onDeleteAnnotation={props.onDeleteAnnotation}
-                onCreateTag={onCreateTag}
+                onCreateBody={props.onCreateBody}
                 onDeleteBody={props.onDeleteBody}
                 onBulkDeleteBodies={props.onBulkDeleteBodies}
                 onMakePublic={() => onMakePublic()}
+                onSubmit={props.onSubmit}
                 onUpdateBody={props.onUpdateBody} />
             </animated.li>
           ))}
@@ -238,6 +226,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           {comments.length > 1 && (
             <li style={{ zIndex: 1 }}>
               <AnnotationCardSection
+                annotation={annotation}
                 comment={comments[comments.length - 1]}
                 emphasizeOnEntry={!dontEmphasise.current.has(
                   comments[comments.length - 1].id
@@ -250,10 +239,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 policies={props.policies}
                 present={props.present}
                 onDeleteAnnotation={props.onDeleteAnnotation}
-                onCreateTag={onCreateTag}
+                onCreateBody={props.onCreateBody}
                 onDeleteBody={props.onDeleteBody}
                 onBulkDeleteBodies={props.onBulkDeleteBodies}
                 onMakePublic={() => onMakePublic()}
+                onSubmit={props.onSubmit}
                 onUpdateBody={props.onUpdateBody} />
             </li>
           )}

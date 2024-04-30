@@ -43,6 +43,9 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
   // Popup only supports a single selected annotation for now
   const selected = props.selected[0].annotation as SupabaseAnnotation;
 
+  // If this annotation has no bodies on mount, it's a new annotation (obviously)
+  const isNew = useMemo(() => selected.bodies.length === 0, [selected.id]);
+
   const isMine = selected.target.creator?.id === me.id;
 
   const isReadOnly =
@@ -50,7 +53,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
 
   const hasComment = selected.bodies.filter(b => b.purpose !== 'tagging').length > 0;
 
-  const onSaveNewAnnotation = () =>
+  const onSaveAnnotation = () =>
     anno.state.selection.clear();
 
   const onDeleteAnnotation = (annotation: Anno) => 
@@ -76,7 +79,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
     <div
       key={selected.id}
       className="annotation-popup not-annotatable">
-      {hasComment ? (
+      {!isNew ? (
         <AnnotationCard 
           annotation={selected}
           i18n={props.i18n}
@@ -90,7 +93,8 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
           onDeleteBody={onDeleteBody} 
           onBulkDeleteBodies={onBulkDeleteBodies}
           onUpdateBody={onUpdateBody}
-          onDeleteAnnotation={() => onDeleteAnnotation(selected)} />
+          onDeleteAnnotation={() => onDeleteAnnotation(selected)} 
+          onSubmit={onSaveAnnotation} />
       ) : isMine ? (
         <EmptyAnnotation 
           annotation={selected} 
@@ -98,7 +102,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
           me={me} 
           onCreateBody={onCreateBody} 
           onDeleteBody={onDeleteBody} 
-          onSubmit={onSaveNewAnnotation} />   
+          onSubmit={onSaveAnnotation} />   
       ) : (
         <div>{/* 
         <EmptyAnnotation 

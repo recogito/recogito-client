@@ -4,10 +4,19 @@
 }
 
 .annotation .reply-field-wrapper {
-  align-items: center;
+  align-items: flex-end;
   display: flex;
   gap: 0.5rem;
   padding: 5px 12px;
+}
+
+.annotation .reply-field-wrapper .quill-rte {
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.annotation .reply-field-wrapper button.save.save-arrow {
+  margin-bottom: 4px;
 }
 
 .annotation .reply-field-wrapper .quill-rte {

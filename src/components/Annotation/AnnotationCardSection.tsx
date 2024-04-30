@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
-import { QuillEditor, QuillEditorRoot } from '@components/QuillEditor';
+import { QuillEditor, QuillEditorRoot, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
@@ -12,6 +14,8 @@ import type { Policies, Translations } from 'src/Types';
 import './AnnotationCardSection.css';
 
 export interface AnnotationCardSectionProps {
+
+  annotation: SupabaseAnnotation;
 
   comment?: AnnotationBody;
 
@@ -35,13 +39,15 @@ export interface AnnotationCardSectionProps {
   
   onDeleteAnnotation(): void;
 
-  onCreateTag(value: string): void;
+  onCreateBody(body: AnnotationBody): void;
 
   onDeleteBody(body: AnnotationBody): void;
 
   onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
   onMakePublic(): void;
+
+  onSubmit(): void;
 
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
@@ -64,6 +70,8 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   const creator: PresentUser | User | undefined = firstBody &&
     (present.find(p => p.id === firstBody.creator?.id) || firstBody.creator);
 
+  const hasReplies = props.annotation.bodies.filter(b => b.purpose === 'commenting').length > 1;
+
   const isMine = creator?.id === me.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
@@ -82,18 +90,58 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.onBulkDeleteBodies(toDelete);
   }
 
-  const onUpdateComment = () => {    
-    if (!comment) return;
+  const onSave = () => {   
+    if (commentValue && !isEmpty(commentValue)) {
+      console.log(commentValue);
 
-    const next = {
-      ...comment,
-      format: 'Quill',
-      value: JSON.stringify(commentValue)
-    };
-
-    props.onUpdateBody(comment, next);
+      // Update existing or create new
+      const next = comment ? {
+        ...comment,
+        format: 'Quill',
+        value: JSON.stringify(commentValue)
+      } : {
+        id: uuidv4(),
+        annotation: props.annotation.id,
+        creator: {
+          id: props.me.id,
+          name: props.me.name,
+          avatar: props.me.avatar,
+        },
+        created: new Date(),
+        purpose: 'commenting',
+        format: 'Quill',
+        value: JSON.stringify(commentValue)
+      }
+      
+      if (comment)
+        props.onUpdateBody(comment, next);
+      else
+        props.onCreateBody(next);
+    } else {
+      if (comment)
+        props.onDeleteBody(comment);
+    }
 
     setEditable(false);
+
+    props.onSubmit();
+  }
+
+  const onCreateTag = (value: string) => {
+    const tag: AnnotationBody = {
+      id: uuidv4(),
+      annotation: props.annotation.id,
+      creator: {  
+        id: me.id,
+        name: me.name,
+        avatar: me.avatar
+      },
+      created: new Date(),
+      purpose: 'tagging',
+      value
+    };
+
+    props.onCreateBody(tag);
   }
 
   const className = [
@@ -121,6 +169,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <div className="annotation-header-right">
             {isPrivate ? (
               <PrivateAnnotationActions
+                hasReplies={hasReplies}
                 i18n={props.i18n} 
                 isFirst={props.index === 0}
                 onDeleteAnnotation={props.onDeleteAnnotation}
@@ -129,6 +178,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 onMakePublic={props.onMakePublic}/>
             ) : (
               <PublicAnnotationActions 
+                hasReplies={hasReplies}
                 i18n={props.i18n} 
                 isFirst={props.index === 0} 
                 isMine={isMine}
@@ -140,14 +190,16 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         )}
       </div>
 
-      <div className="annotation-comment-wrapper">
-        <QuillEditorRoot>
-          <QuillEditor 
-            readOnly={!editable}
-            value={commentValue} 
-            onChange={setCommentValue} />
-        </QuillEditorRoot>
-      </div>
+      {(commentValue || editable) && (
+        <div className="annotation-comment-wrapper">
+          <QuillEditorRoot>
+            <QuillEditor 
+              readOnly={!editable}
+              value={commentValue} 
+              onChange={setCommentValue} />
+          </QuillEditorRoot>
+        </div>
+      )}
 
       {(props.index === 0 && ((props.tags || []).length > 0 || editable)) && (
         <div className="annotation-taglist-wrapper">
@@ -156,7 +208,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             me={props.me}
             i18n={props.i18n}
             tags={props.tags || []}
-            onCreateTag={props.onCreateTag}
+            onCreateTag={onCreateTag}
             onDeleteTag={props.onDeleteBody} />
         </div>
       )}
@@ -171,7 +223,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
           <button 
             className="sm flat primary"
-            onClick={onUpdateComment}>
+            onClick={onSave}>
             Save
           </button>
         </div>
