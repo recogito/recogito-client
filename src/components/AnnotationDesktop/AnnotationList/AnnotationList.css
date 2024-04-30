@@ -1,6 +1,6 @@
 .anno-drawer-panel.annotation-list {
   box-sizing: border-box;
-  padding: 0 5px 40px 15px;
+  padding: 0 5px 40px 10px;
 }
 
 .anno-drawer-panel.annotation-list > ul {
@@ -11,7 +11,7 @@
 }
 
 .anno-drawer-panel.annotation-list > ul > li {
-  margin: 10px 0 25px 0;
+  margin: 10px 0;
 }
 
 .anno-drawer-panel.annotation-list .annotation-card {

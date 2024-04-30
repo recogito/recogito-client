@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -72,20 +72,22 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
     <div
       key={selected.id}
       className="annotation-popup not-annotatable">
-        <AnnotationCard 
-          annotation={selected}
-          i18n={props.i18n}
-          isReadOnly={isReadOnly}
-          present={props.present}
-          showReplyField={!isReadOnly}
-          tagVocabulary={props.tagVocabulary} 
-          onUpdateAnnotation={onUpdateAnnotation}
-          onCreateBody={onCreateBody} 
-          onDeleteBody={onDeleteBody} 
-          onBulkDeleteBodies={onBulkDeleteBodies}
-          onUpdateBody={onUpdateBody}
-          onDeleteAnnotation={() => onDeleteAnnotation(selected)} 
-          onSubmit={onSaveAnnotation} />
+      <AnnotationCard 
+        autoFocus
+        annotation={selected}
+        i18n={props.i18n}
+        isReadOnly={isReadOnly}
+        present={props.present}
+        showReplyField={!isReadOnly}
+        tagVocabulary={props.tagVocabulary} 
+        onUpdateAnnotation={onUpdateAnnotation}
+        onCreateBody={onCreateBody} 
+        onDeleteBody={onDeleteBody} 
+        onBulkDeleteBodies={onBulkDeleteBodies}
+        onUpdateBody={onUpdateBody}
+        onDeleteAnnotation={() => onDeleteAnnotation(selected)} 
+        onSubmit={onSaveAnnotation} />
     </div>
-  );
-};
+  )
+  
+}

@@ -26,7 +26,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
   const { quill, setQuill } = useQuillEditor();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const options: QuillOptions = {
       placeholder: props.placeholder,
       readOnly: props.readOnly
@@ -34,8 +34,8 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
     const quill = new Quill(el.current!, options);
 
-    if (props.autoFocus && !props.readOnly)
-      quill.focus();
+    // if (props.autoFocus && !props.readOnly)
+    //  quill.focus();
 
     if (props.value)
       quill.setContents(props.value);
@@ -66,7 +66,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
     if (!quill) return;
 
     if (props.autoFocus)
-      window.setTimeout(() => quill.focus(), 1);
+      quill.focus();
   }, [quill, props.autoFocus]);
 
   useEffect(() => {

@@ -49,7 +49,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
 
   const drawerTransition = useTransition([props.currentPanel], {
     from: { flexBasis: 0 },
-    enter: { flexBasis: 360 },
+    enter: { flexBasis: 400 },
     leave: { flexBasis: 0 },
     config: {
       duration: shouldAnimate ? 180 : 0

@@ -81,10 +81,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     return props.sorting ? [...filtered].sort(props.sorting) : filtered;
   }, [annotations, filter, selected]);
 
-  const user = useAnnotatorUser();
-
-  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
-
   const anno = useAnnotator<Annotator>();
 
   const store = useAnnotationStore();
@@ -93,19 +89,29 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     (props.layers || []).find(l => l.is_active)
   ), [props.layers]);
 
-  const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
+  const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {  
     event.stopPropagation();
-    
-    props.beforeSelect(a);
 
-    if (a)
-      anno.state.selection.setSelected(a.id);
-    else
+    const isAlreadySelected = a && isSelected(a);
+    if (!isAlreadySelected) {
+      props.beforeSelect(a);
+
+      if (a)
+        anno.state.selection.setSelected(a.id);
+      else
+        anno.state.selection.clear();
+    }
+  }
+  const onSubmit = (annotation: SupabaseAnnotation) => {
+    // Follow GoogleDocs pattern which de-selects annotations
+    // when they are new, but keeps the reply field open
+    // after adding a reply
+    const hasReplies =
+      store.getAnnotation(annotation.id)!.bodies.filter(b => b.purpose === 'commenting').length > 1;
+
+    if (!hasReplies)
       anno.state.selection.clear();
   }
-
-  const onSubmit = () => 
-    anno.state.selection.clear();
 
   // Shorthands
   const isSelected = (a: SupabaseAnnotation) => 
@@ -135,12 +141,12 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     
   useEffect(() => {
     // Scroll the first selected card into view
-    if (selected?.length > 0) {
+    if (selected?.length > 0 && pointerEvent) {
       setTimeout(() => {
         const card = el.current?.querySelector('.selected');
         if (card)
          card.scrollIntoView({ behavior: 'smooth' });  
-      }, 250);
+      }, 1);
     }
     
     // Don't focus reply before pointer up, otherwise the selection breaks!
@@ -184,7 +190,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               onBulkDeleteBodies={onBulkDeleteBodies}
               onUpdateBody={onUpdateBody}
               onDeleteAnnotation={() => onDeleteAnnotation(annotation)} 
-              onSubmit={onSubmit} />
+              onSubmit={() => onSubmit(annotation)} />
           </li>
         ))}
       </ul>
