@@ -1,4 +1,4 @@
-import type { Color, DrawingStyle, PresentUser } from '@annotorious/react';
+import type { AnnotationState, Color, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { getDisplayName, enumerateCreators } from '../../utils';
@@ -19,17 +19,17 @@ export const colorByCreator = (
 
   let legend = buildLegend(present || [], annotations, colors);
 
-  const getStyle = () => (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
+  const getStyle = () => (annotation: SupabaseAnnotation, state?: AnnotationState): DrawingStyle => {
     const creatorId = annotation.target.creator?.id;
     if (creatorId) {
       const assignedColor = legend.get(creatorId);
       if (assignedColor) {
-        return { fill: assignedColor.color, fillOpacity: selected ? 0.5: 0.24 };
+        return { fill: assignedColor.color, fillOpacity: state?.selected ? 0.5: 0.24 };
       } else {
-        return { fill: UNKNOWN_CREATOR, fillOpacity: selected ? 0.5: 0.24 };
+        return { fill: UNKNOWN_CREATOR, fillOpacity: state?.selected ? 0.5: 0.24 };
       }
     } else {
-      return { fill: UNKNOWN_CREATOR, fillOpacity: selected ? 0.45 : 0.14 };
+      return { fill: UNKNOWN_CREATOR, fillOpacity: state?.selected ? 0.45 : 0.14 };
     }
   }
 

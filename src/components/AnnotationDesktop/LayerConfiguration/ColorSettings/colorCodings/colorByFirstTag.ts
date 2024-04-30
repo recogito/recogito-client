@@ -1,4 +1,4 @@
-import type { Color, DrawingStyle } from '@annotorious/react';
+import type { AnnotationState, Color, DrawingStyle } from '@annotorious/react';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
 import { AdobeCategorical12 } from '../ColorPalettes';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -17,13 +17,13 @@ export const colorByFirstTag = (annotations: SupabaseAnnotation[]): ColorCoding 
 
   let legend = buildLegend(annotations);
 
-  const getStyle = () => (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
+  const getStyle = () => (annotation: SupabaseAnnotation, state?: AnnotationState): DrawingStyle => {
     const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
     const assignedColor = legend.get(firstTag);
     if (assignedColor) {
-      return { fill: assignedColor, fillOpacity: selected ? 0.5: 0.24 };
+      return { fill: assignedColor, fillOpacity: state?.selected ? 0.5: 0.24 };
     } else {
-      return { fill: NO_TAG, fillOpacity: selected ? 0.5: 0.24 };
+      return { fill: NO_TAG, fillOpacity: state?.selected ? 0.5: 0.24 };
     }
   };
 

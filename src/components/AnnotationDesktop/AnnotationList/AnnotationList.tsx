@@ -150,7 +150,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const getBorderColor = (annotation: Anno) => {
     if (props.currentStyle) {
       const styled = props.currentStyle(annotation);
-      return styled.fill;
+      return styled?.fill;
     }
   }
 

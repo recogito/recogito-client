@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { PresentUser, DrawingStyle, Filter } from '@annotorious/react';
+import type { PresentUser, DrawingStyle, Filter, AnnotationState } from '@annotorious/react';
 import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -39,7 +39,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [layers, setLayers] = useState<Layer[] | undefined>();
 
-  const [defaultLayerStyle, setDefaultLayerStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
+  const [defaultLayerStyle, setDefaultLayerStyle] =
+    useState<((a: TextAnnotation, state: AnnotationState, z?: number) => DrawingStyle) | undefined>(undefined);
 
   const style = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
@@ -52,9 +53,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       underlineThickness: 1.5
     });
 
-    return (a: SupabaseAnnotation, _: any, z: number) =>
+    return (a: SupabaseAnnotation, state: any, z: number) =>
       (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle(z) : 
-      defaultLayerStyle ? defaultLayerStyle(a as TextAnnotation) : {};
+      defaultLayerStyle ? defaultLayerStyle(a as TextAnnotation, state, z) : undefined;
   }, [defaultLayerStyle, layers]);
 
   const [filter, setFilter] = useState<Filter | undefined>(undefined);
