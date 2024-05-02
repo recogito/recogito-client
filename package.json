@@ -8,7 +8,8 @@
     "build": "astro build",
     "build-node": "astro build --config astro.config.node.mjs",
     "preview-node": "node ./dist/server/entry.mjs",
-    "astro": "astro"
+    "astro": "astro",
+    "postinstall": "node copy-pdf-worker.js"
   },
   "dependencies": {
     "@allmaps/iiif-parser": "^1.0.0-beta.33",
