@@ -28,7 +28,7 @@ export const archiveContextDocuments = (
 ): Promise<void> =>
   new Promise((resolve, reject) => {
     supabase
-      .rpc('archive_context_document_rpc', {
+      .rpc('archive_context_documents_rpc', {
         _context_id: contextId,
         _document_ids: documentIds,
       })

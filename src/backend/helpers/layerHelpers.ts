@@ -271,3 +271,21 @@ export const addReadOnlyLayersToContext = (
         return { error, data };
       }
     });
+
+export const removeReadOnlyLayersFromContext = (
+  supabase: SupabaseClient,
+  contextId: string,
+  layerIds: string[]
+): Response<boolean> =>
+  supabase
+    .rpc('remove_read_only_layers_rpc', {
+      _context_id: contextId,
+      _layer_ids: layerIds,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        return { error, data: false };
+      } else {
+        return { error, data };
+      }
+    });
