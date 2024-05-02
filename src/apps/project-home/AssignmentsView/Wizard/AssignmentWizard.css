@@ -4,7 +4,7 @@
   padding: 0;
 }
 
-.dialog-content.assignment-wizard h1 {
+.dialog-content.assignment-wizard h2 {
   display: inline-block;
   font-size: 1.25em;
   margin: 20px;
@@ -26,13 +26,13 @@
   background-color: var(--orange-500);
 }
 
-
 .assignment-wizard .tabs-list .badge.valid {
   background-color: var(--green-500);
 }
 
 .assignment-wizard .tabs-content {
   background-color: #fff;
+  min-height: 300px;
 }
 
 .assignment-wizard .tabs-content .row {
@@ -53,14 +53,14 @@
   flex: 75%;
 }
 
-.assignment-wizard .tabs-content h1 { 
+.assignment-wizard .tabs-content h1 {
   margin: 0;
   font-size: 1em;
 }
 
 .assignment-wizard .tabs-content p {
   font-size: var(--font-small);
-} 
+}
 
 .assignment-wizard .tabs-content .wizard-nav {
   display: flex;

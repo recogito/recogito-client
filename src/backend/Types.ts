@@ -10,3 +10,11 @@ export type UserRole = {
 
   role: 'default' | 'admin';
 };
+
+export type AvailableLayers = {
+  document_id: string;
+  layer_id: string;
+  context_id: string;
+  is_active: boolean;
+  context_name: string;
+};

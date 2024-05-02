@@ -1,4 +1,8 @@
-import type { Document, ExtendedAssignmentData, UserProfile } from 'src/Types';
+import type {
+  DocumentWithLayers,
+  ExtendedAssignmentData,
+  UserProfile,
+} from 'src/Types';
 
 export interface AssignmentSpec {
   id?: string;
@@ -9,7 +13,7 @@ export interface AssignmentSpec {
 
   project_id: string;
 
-  documents: Document[];
+  documents: DocumentWithLayers[];
 
   team: UserProfile[];
 
@@ -19,42 +23,56 @@ export interface AssignmentSpec {
 // Utility crosswalk between ExtendedAssignmentData and AssignmentSpec
 export const contextToAssignmentSpec = (
   data: ExtendedAssignmentData
-): AssignmentSpec => ({
-  id: data.id,
-  name: data.name,
-  description: data.description,
-  project_id: data.project_id,
-  created_at: data.created_at,
-  documents: data.layers.map((layer) => ({
-    id: layer.document.id,
-    name: layer.document.name,
-    is_private: layer.document.is_private,
-    created_at: layer.document.created_at,
-    created_by: layer.document.created_by,
-    updated_at: layer.document.updated_at,
-    updated_by: layer.document.updated_by,
-    bucket_id: layer.document.bucket_id,
-    content_type: layer.document.content_type,
-    meta_data: layer.document.meta_data,
-    layers: [
-      {
-        id: layer.id,
-        document_id: layer.document.id,
+): AssignmentSpec => {
+  const documents: any[] = [];
+
+  data.layers.forEach((layer) => {
+    let found = documents.find((d) => d.id === layer.document.id);
+    if (!found) {
+      found = {
+        id: layer.document.id,
+        name: layer.document.name,
+        is_private: layer.document.is_private,
+        created_at: layer.document.created_at,
+        created_by: layer.document.created_by,
+        updated_at: layer.document.updated_at,
+        updated_by: layer.document.updated_by,
+        bucket_id: layer.document.bucket_id,
+        content_type: layer.document.content_type,
+        meta_data: layer.document.meta_data,
+        layers: [],
+      };
+
+      documents.push(found);
+    }
+
+    found.layers.push({
+      id: layer.id,
+      document_id: layer.document.id,
+      project_id: data.project_id,
+      name: layer.name,
+      description: layer.description,
+      is_active: layer.is_active_layer,
+      context: {
+        id: data.id,
+        name: data.name,
+        description: data.description as string,
         project_id: data.project_id,
-        name: layer.name,
-        description: layer.description,
-        context: {
-          id: data.id,
-          name: data.name,
-          description: data.description,
-          project_id: data.project_id,
-          is_project_default: false,
-        },
+        is_project_default: false,
       },
-    ],
-  })),
-  team: data.team.map((t) => t.user),
-});
+    });
+  });
+
+  return {
+    id: data.id,
+    name: data.name,
+    description: data.description,
+    project_id: data.project_id,
+    created_at: data.created_at,
+    documents: documents,
+    team: data.team.map((t) => t.user),
+  };
+};
 
 export const assignmentSpecToContext = (spec: AssignmentSpec) => {
   return {

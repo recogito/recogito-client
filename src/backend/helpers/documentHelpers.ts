@@ -1,9 +1,8 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument, createProjectDocument } from '@backend/crud';
-import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, Layer, Protocol, TaggedContext } from 'src/Types';
+import type { Document, Protocol, TaggedContext } from 'src/Types';
 import type { DocumentWithContext } from '../../Types';
 
 /**
@@ -271,8 +270,10 @@ export const getDocumentInContext = (
           }
 
           document.layers = data.layer_contexts
+            // @ts-ignore
             .filter((c) => c.layer.document_id === documentId)
             .map((layerContext) => ({
+              // @ts-ignore
               id: layerContext.layer.id,
               is_active: layerContext.is_active_layer,
               document_id: documentId,
@@ -283,7 +284,6 @@ export const getDocumentInContext = (
           delete context.layer_contexts;
           document.context = context;
 
-          console.log(JSON.stringify(document, null, 2));
           return { error: null, data: document };
         });
     });
