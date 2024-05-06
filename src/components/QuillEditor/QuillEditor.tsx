@@ -1,6 +1,6 @@
 import Quill from 'quill';
 import { Delta, type QuillOptions } from 'quill/core';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQuillEditor } from './QuillEditorRoot';
 
 import './QuillEditor.css';
@@ -33,9 +33,6 @@ export const QuillEditor = (props: QuillEditorProps) => {
     };
 
     const quill = new Quill(el.current!, options);
-
-    // if (props.autoFocus && !props.readOnly)
-    //  quill.focus();
 
     if (props.value)
       quill.setContents(props.value);
