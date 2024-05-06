@@ -1,4 +1,4 @@
-export const getParseYoutubeURL = (url: string) => {
+export const parseYoutubeURL = (url: string) => {
   const match =
     url.match(
       /^(?:(https?):\/\/)?(?:(?:www|m)\.)?youtube\.com\/watch.*v=([a-zA-Z0-9_-]+)/

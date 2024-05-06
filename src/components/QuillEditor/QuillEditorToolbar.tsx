@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowClockwise, ArrowCounterClockwise, Image, Link, Video } from '@phosphor-icons/react';
 import { useQuillEditor } from './QuillEditorRoot';
-import { EmbedImageDialog, EmbedLinkDialog } from './EmbedDialog';
+import { EmbedImageDialog, EmbedLinkDialog, EmbedYouTubeDialog } from './QuillEmbedDialog';
 import type { Translations } from 'src/Types';
 
 interface QuillEditorToolbarProps {
@@ -37,18 +37,6 @@ export const QuillEditorToolbar = (props: QuillEditorToolbarProps) => {
     }
   }, [quill]);
 
-  const onInsertLink = () => {
-
-  }
-
-  const onInsertImage = () => {
-
-  }
-
-  const onInsertYouTube = () => {
-
-  }
-
   return quill && (
     <>
       <div className="quill-rte-toolbar">
@@ -83,18 +71,15 @@ export const QuillEditorToolbar = (props: QuillEditorToolbarProps) => {
       {showDialog === 'LINK' ? (
         <EmbedLinkDialog 
           i18n={props.i18n}
-          onCancel={() => setShowDialog(undefined)} 
-          onSave={onInsertLink} />
+          onClose={() => setShowDialog(undefined)} />
       ) : showDialog === 'IMAGE' ? (
         <EmbedImageDialog
           i18n={props.i18n}
-          onCancel={() => setShowDialog(undefined)} 
-          onSave={onInsertImage} />
+          onClose={() => setShowDialog(undefined)} />
       ) : showDialog === 'YOUTUBE' ? (
-        <EmbedImageDialog
+        <EmbedYouTubeDialog
           i18n={props.i18n}
-          onCancel={() => setShowDialog(undefined)} 
-          onSave={onInsertYouTube} />
+          onClose={() => setShowDialog(undefined)} />
       ) : null}
     </>
   )

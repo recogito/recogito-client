@@ -107,13 +107,15 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           </div>
 
           <div className="annotation-toolbar-wrapper">
-            <QuillEditorToolbar />
+            <QuillEditorToolbar
+              i18n={props.i18n} />
           </div>
         </div>
         
         <div className="annotation-comment-wrapper">
           <QuillEditor 
             autoFocus={props.autoFocus}
+            i18n={props.i18n}
             value={value}
             onChange={setValue}
             placeholder="Add a comment" />

@@ -2,6 +2,7 @@ import Quill from 'quill';
 import { Delta, type QuillOptions } from 'quill/core';
 import { useEffect, useRef } from 'react';
 import { useQuillEditor } from './QuillEditorRoot';
+import type { Translations } from 'src/Types';
 
 import './QuillEditor.css';
 import 'quill/dist/quill.core.css';
@@ -9,6 +10,8 @@ import 'quill/dist/quill.core.css';
 interface QuillEditorProps {
 
   autoFocus?: boolean;
+
+  i18n: Translations;
 
   placeholder?: string;
 
@@ -79,7 +82,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
   return (
     <div 
       ref={el}
-      className="quill-rte" />
+      className="quill-rte not-annotatable" />
   )
 
 }

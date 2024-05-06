@@ -202,6 +202,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         <div className="annotation-comment-wrapper">
           <QuillEditorRoot>
             <QuillEditor 
+              i18n={props.i18n}
               readOnly={!editable}
               value={commentValue} 
               onChange={setCommentValue} />

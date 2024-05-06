@@ -66,13 +66,15 @@ export const ReplyField = (props: ReplyFieldProps) => {
             isPrivate={props.isPrivate} />
 
           <div className="annotation-toolbar-wrapper">
-            <QuillEditorToolbar />
+            <QuillEditorToolbar 
+              i18n={props.i18n} />
           </div>
         </div>
 
         <div className="reply-field-wrapper">
           <QuillEditor 
             autoFocus={props.autoFocus}
+            i18n={props.i18n}
             placeholder={props.placeholder} 
             value={value} 
             onChange={setValue} />
