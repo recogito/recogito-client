@@ -51,6 +51,10 @@ export interface AnnotationCardProps {
 
 }
 
+const getCreator = (annotation: SupabaseAnnotation) =>
+  annotation.target?.creator || 
+    (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
+
 /**
  * Per convention, we only support tags created along with the first comment.
  * This means:
@@ -61,7 +65,9 @@ export interface AnnotationCardProps {
  * Apply some basic sanity checking here! 
  */
 const getTags = (annotation: SupabaseAnnotation) => {
-  const creator = annotation.target.creator;
+  const creator = getCreator(annotation);
+
+  if (!creator) return [];
 
   const allTags = annotation
     .bodies.filter(b => b.purpose === 'tagging');
@@ -116,8 +122,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const me: PresentUser | User =
     props.present.find((p) => p.id === user.id) || user;
-
-  const isMine = annotation.target.creator?.id === me.id;
 
   // If this is my annotation and has no bodies on mount, it's a new annotation
   const [isNew, setIsNew] = useState(annotation.bodies.length === 0);

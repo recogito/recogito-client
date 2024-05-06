@@ -1,7 +1,7 @@
-import type { Annotation, PresentUser } from '@annotorious/react';
+import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react';
 import type { Policies, Translations } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
-import { AnnotationCard } from '@components/Annotation/AnnotationCard';
+import { AnnotationCard } from '@components/Annotation';
 
 interface DocumentNotesListItemProps {
 
@@ -13,7 +13,9 @@ interface DocumentNotesListItemProps {
 
   present: PresentUser[];
 
-  showReplyForm?: boolean;
+  showReplyField?: boolean;
+
+  onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
   onDeleteNote(): void;
 
@@ -23,13 +25,9 @@ interface DocumentNotesListItemProps {
 
   onUpdateBody(oldValue: DocumentNoteBody, newValue: DocumentNoteBody): void;
 
-  onMakePublic(): void;
-
 }
 
 export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
-
-  const { onMakePublic } = props;
 
   const i18n = {
     ...props.i18n,
@@ -41,18 +39,20 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
 
   return (
     <AnnotationCard
+      autoFocus
       isNote 
-      showReplyForm={props.showReplyForm}
       annotation={props.note as unknown as Annotation}
-      i18n={i18n}
-      policies={props.policies}
+      i18n={i18n}   
+      policies={props.policies}    
       present={props.present}
-      onReply={props.onCreateBody}
+      showReplyField={props.showReplyField}
+      onBulkDeleteBodies={props.onBulkDeleteBodies}
       onCreateBody={props.onCreateBody}
       onDeleteBody={props.onDeleteBody}
       onUpdateBody={props.onUpdateBody}
       onUpdateAnnotation={() => {}}
-      onDeleteAnnotation={props.onDeleteNote} />
+      onDeleteAnnotation={props.onDeleteNote} 
+      onSubmit={() => {}} />
   )
 
 }

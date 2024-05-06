@@ -12,9 +12,7 @@ import {
   PresentUser, 
   useAnnotations,
   useAnnotator,
-  useAnnotatorUser,
   useSelection,
-  User,
   useViewportState,
   useAnnotationStore,
   Annotation,
@@ -181,6 +179,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               i18n={props.i18n}
               isReadOnly={isReadOnly(annotation)}
               isSelected={isSelected(annotation)}
+              policies={props.policies}
               present={props.present}
               showReplyField={!isReadOnly(annotation) && isSelected(annotation)}
               tagVocabulary={props.tagVocabulary} 
