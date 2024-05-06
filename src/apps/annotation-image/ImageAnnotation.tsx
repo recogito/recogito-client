@@ -5,13 +5,15 @@ import { ImageAnnotationDesktop } from './ImageAnnotationDesktop';
 import { AuthorColorProvider } from '@components/AnnotationDesktop';
 
 export interface ImageAnnotationProps {
+
   i18n: Translations;
 
   document: DocumentWithContext;
 
   channelId: string;
 
-  plugins: PluginInstallationConfig[]
+  plugins: PluginInstallationConfig[];
+  
 }
 
 export const ImageAnnotation = (props: ImageAnnotationProps) => {

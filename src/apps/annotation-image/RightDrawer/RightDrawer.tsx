@@ -1,5 +1,5 @@
 import { animated } from '@react-spring/web';
-import type { Annotation, DrawingStyle, ImageAnnotation, PresentUser } from '@annotorious/react';
+import type { Annotation, AnnotationState, DrawingStyle, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { useDrawerTransition, AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
 import type { Layer, Policies, Translations } from 'src/Types';
@@ -17,6 +17,8 @@ interface RightDrawerProps {
   policies?: Policies;
 
   layers?: Layer[];
+
+  style?: (a: ImageAnnotation, state: AnnotationState) => DrawingStyle;
 
   tagVocabulary?: string[];
 
@@ -48,6 +50,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
       <aside>
         {panel === DrawerPanel.ANNOTATIONS ? (
           <AnnotationList 
+            currentStyle={props.style}
             i18n={props.i18n}
             present={props.present} 
             layers={props.layers}
