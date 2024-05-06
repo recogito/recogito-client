@@ -42,6 +42,7 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
     if (!quill) return; // Should never happen
 
     quill.formatText(range.index, range.length, 'link', url);
+    quill.focus();  
 
     props.onClose();
   }
@@ -67,7 +68,7 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
     quill.insertEmbed(range.index, 'image', url, 'user');
     quill.insertEmbed(range.index + 1, 'block', '<br><p><br></p>');
     quill.setSelection({ index: range.index + 1, length: 0 });
-    quill.focus();
+    window.setTimeout(() => quill.focus(), 100);
 
     props.onClose();
   }
@@ -97,7 +98,7 @@ export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
       quill.insertEmbed(range.index, 'video', vetted);
       quill.insertEmbed(range.index + 1, 'block', '<br><p><br></p>');
       quill.setSelection({ index: range.index + 1, length: 0 });
-      quill.focus();  
+      quill.focus();
     }
 
     props.onClose();
@@ -126,6 +127,11 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
 
   const { t } = props.i18n;
 
+  const onCancel = () => {
+    props.onCancel();
+    window.setTimeout(() => quill?.focus(), 1);
+  }
+
   return selection && (
     <Dialog.Root open={true}>
       <Dialog.Portal>
@@ -148,7 +154,7 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
 
           <div className="embed-dialog-actions">
             <button 
-              onClick={() => props.onCancel()}>
+              onClick={onCancel}>
               {t['Cancel']}
             </button>
 
