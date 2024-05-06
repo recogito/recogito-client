@@ -6,6 +6,8 @@ export enum DrawerPanel {
 
   LAYERS = 'LAYERS', 
 
-  TABLE_OF_CONTENTS = 'TABLE_OF_CONTENTS'
+  TABLE_OF_CONTENTS = 'TABLE_OF_CONTENTS',
+
+  FILTERS = 'FILTERS'
 
 }

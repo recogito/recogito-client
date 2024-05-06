@@ -1,11 +1,11 @@
-import { ArrowsOutSimple, CaretLeft, Chats, GraduationCap, ListBullets } from '@phosphor-icons/react';
+import { ArrowsOutSimple, CaretLeft, Chats, FunnelSimple, GraduationCap, ListBullets } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import type { DocumentWithContext, Translations } from 'src/Types';
 import { PDFControls } from './PDFControls';
 
 import './Menubar.css';
@@ -14,13 +14,17 @@ interface MenubarProps {
 
   i18n: Translations;
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
   present: PresentUser[];
+
+  leftDrawerOpen?: boolean;
 
   rightPanel?: DrawerPanel;
 
   onToggleBranding(): void;
+
+  onToggleLeftDrawer(): void;
 
   onSetRightDrawer(panel?: DrawerPanel): void;
 
@@ -56,6 +60,10 @@ export const Menubar = (props: MenubarProps) => {
   return (
     <div className="anno-menubar ta-menubar">
       <div className="anno-menubar-left ta-menubar-left">
+        <button onClick={props.onToggleLeftDrawer}>
+          <FunnelSimple />
+        </button>
+
         {contextName ? (
           <>
             <a 

@@ -1,4 +1,5 @@
 html, body {
+  background-color: var(--gray-100);
   height: 100%;
   overscroll-behavior: none;
 }
@@ -12,6 +13,10 @@ html, body {
   display: flex;
   flex-direction: row;
   overflow: hidden;
+}
+
+.ta-desktop main .ta-annotated-text-container {
+  overflow-y: scroll;
 }
 
 .ta-desktop main .r6o-annotatable canvas {
@@ -32,7 +37,6 @@ html, body {
   display: flex;
   flex-grow: 1;
   justify-content: center;
-  overflow-y: scroll;
 }
 
 .ta-desktop main .ta-annotated-text-container .content-wrapper {
@@ -45,15 +49,6 @@ html, body {
   position: relative;
   width: 100%;
   word-wrap: break-word;
-}
-
-.content-wrapper.text main {
-  height: fit-content;
-  white-space: pre-line;
-}
-
-.content-wrapper.tei main {
-  height: fit-content;
 }
 
 .content-wrapper .text,

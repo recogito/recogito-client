@@ -18,6 +18,7 @@ import type { Layer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
+import { LeftDrawer } from './LeftDrawer/LeftDrawer';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
@@ -32,6 +33,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const [connectionError, setConnectionError] = useState(false);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
+
+  const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
   const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
 
@@ -148,12 +151,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 present={present}
                 rightPanel={rightPanel}
                 onToggleBranding={() => setShowBranding(!showBranding)}
+                onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
                 onSetRightDrawer={onSetRightPanel}
                 showConnectionError={connectionError} />
             </div>
 
             <main>
-              <div className="ta-drawer ta-drawer-left" />
+              <LeftDrawer open={leftPanelOpen} />
 
               {policies && (
                 <AnnotatedText
@@ -189,12 +193,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 onChangeAnnotationFilter={f => setFilter(() => f)}
                 onChangeAnnotationStyle={s => setDefaultLayerStyle(() => s)} />
             </main>
-
-            {showBranding && (
-              <div className="footer">
-                <BrandFooter />
-              </div>
-            )}
           </div>
         </DocumentNotes>
       </ColorState>

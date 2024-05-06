@@ -5,6 +5,8 @@ import { CheckSquare, Square } from '@phosphor-icons/react';
 import { AnonymousTooltip } from '@components/AnonymousTooltip';
 import { formatName } from '@components/Avatar';
 import { GroupSelector } from '../GroupSelector';
+import { DeleteInvite } from '../DeleteInvite';
+import { DeleteMember } from '../DeleteMember';
 import type {
   ExtendedProjectData,
   Invitation,
@@ -13,10 +15,8 @@ import type {
   UserProfile,
   Member,
 } from 'src/Types';
-import { DeleteMember } from '../DeleteMember';
 
 import './MembersTable.css';
-import { DeleteInvite } from '../DeleteInvite';
 
 interface MembersTableProps {
   i18n: Translations;
