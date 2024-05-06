@@ -50,6 +50,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
           <AnnotationList 
             i18n={props.i18n}
             present={props.present} 
+            layers={props.layers}
             me={me}
             policies={props.policies}
             tagVocabulary={props.tagVocabulary}

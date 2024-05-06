@@ -53,7 +53,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       underlineThickness: 2
     });
 
-    return (a: SupabaseAnnotation, state: any, z: number) =>
+    return (a: SupabaseAnnotation, state: AnnotationState, z: number) =>
       (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle(z) : 
       defaultLayerStyle ? defaultLayerStyle(a as TextAnnotation, state, z) : undefined;
   }, [defaultLayerStyle, layers]);
@@ -62,8 +62,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [usePopup, setUsePopup] = useState(true);
 
-  // Default layer is either the first layer in the project context,
-  // or the first layer in the list, if no project context
   const defaultLayer =
     layers && layers.length > 0
       ? layers.find((l) => l.is_active_layer) || layers[0]

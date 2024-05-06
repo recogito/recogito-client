@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -14,6 +14,7 @@ import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { useIIIF, ManifestErrorDialog } from './IIIF';
 import {
+  AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
   ImageAnnotation,
@@ -22,12 +23,15 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
+
+  const policies = useLayerPolicies(props.document.layers[0].id);
 
   const {
     isPresentationManifest,
@@ -36,8 +40,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     currentImage,
     setCurrentImage
   } = useIIIF(props.document);
-
-  const policies = useLayerPolicies(props.document.layers[0].id);
 
   const [loading, setLoading] = useState(true);
 
@@ -53,18 +55,34 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [style, setStyle] = useState<((a: ImageAnnotation) => DrawingStyle) | undefined>(undefined);
+  const [layers, setLayers] = useState<Layer[] | undefined>();
+
+  const [defaultLayerStyle, setDefaultLayerStyle] =
+   useState<((a: ImageAnnotation, state: AnnotationState) => DrawingStyle) | undefined>(undefined);
+
+  const style = useMemo(() => {
+    const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
+
+    const readOnlyStyle: DrawingStyle = {
+      fillOpacity: 0,
+      stroke: '#010101',
+      strokeOpacity: 1,
+      strokeWidth: 2
+    };
+
+    return (a: SupabaseAnnotation, state: AnnotationState) =>
+      (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle : 
+      defaultLayerStyle ? defaultLayerStyle(a as ImageAnnotation, state) : undefined;
+  }, [defaultLayerStyle, layers]);
 
   const [filter, setFilter] = useState<((a: ImageAnnotation) => boolean) | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
-  const [layers, setLayers] = useState<Layer[] | undefined>();
-
-  // Default layer is either the first layer in the project context, 
-  // or the first layer in the list, if no project context
-  const defaultLayer = layers && layers.length > 0 ?
-    layers.find(l => l.is_active_layer) || layers[0] : undefined;
+  const defaultLayer =
+    layers && layers.length > 0
+      ? layers.find((l) => l.is_active_layer) || layers[0]
+      : undefined;
 
   useEffect(() => {
     if (policies) {
@@ -184,10 +202,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 layers={layers}
                 policies={policies}
                 present={present}
+                style={style}
                 tagVocabulary={tagVocabulary}
                 beforeSelectAnnotation={beforeSelectAnnotation}
                 onChangeAnnotationFilter={f => setFilter(() => f)}
-                onChangeAnnotationStyle={s => setStyle(() => s)} />
+                onChangeAnnotationStyle={s => setDefaultLayerStyle(() => s)} />
             </main>
 
             {showBranding && (
