@@ -94,10 +94,19 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     if (!isAlreadySelected) {
       props.beforeSelect(a);
 
-      if (a)
-        anno.state.selection.setSelected(a.id);
-      else
+      if (a) {
+        // Annotation targets are editable for creators and admins
+        const me = anno?.getUser()?.id;
+
+        const isActiveLayer = a.layer_id === activeLayer?.id;
+
+        const canEdit = isActiveLayer && (
+          a.target.creator?.id === me || props.policies?.get('layers').has('INSERT'));
+
+        anno.state.selection.setSelected(a.id, canEdit);
+      } else {
         anno.state.selection.clear();
+      }
     }
   }
   const onSubmit = (annotation: SupabaseAnnotation) => {
