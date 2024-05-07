@@ -1,4 +1,4 @@
-import { ArrowsOutSimple, CaretLeft, Chats, FunnelSimple, GraduationCap, ListBullets } from '@phosphor-icons/react';
+import { ArrowsOutSimple, CaretLeft, Chats, FunnelSimple, GraduationCap, ListBullets, Palette } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
@@ -8,9 +8,11 @@ import { PresenceStack } from '@components/Presence';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { PDFControls } from './PDFControls';
 
-import './Menubar.css';
+import './Toolbar.css';
+import { UsersThree } from '@phosphor-icons/react/dist/ssr';
+import { PrivacySelector } from '@components/PrivacySelector';
 
-interface MenubarProps {
+interface ToolbarProps {
 
   i18n: Translations;
 
@@ -32,7 +34,7 @@ interface MenubarProps {
 
 }
 
-export const Menubar = (props: MenubarProps) => {
+export const Toolbar = (props: ToolbarProps) => {
 
   const { t } = props.i18n;
 
@@ -58,46 +60,37 @@ export const Menubar = (props: MenubarProps) => {
   } 
 
   return (
-    <div className="anno-menubar ta-menubar">
-      <div className="anno-menubar-left ta-menubar-left">
-        <button onClick={props.onToggleLeftDrawer}>
-          <FunnelSimple />
-        </button>
+    <div className="anno-toolbar ta-toolbar">
+      <div className="anno-toolbar-slot anno-toolbar-slot-left">
+        <div className="anno-toolbar-group">
+          <button 
+            className={props.leftDrawerOpen ? 'active' : undefined}
+            onClick={props.onToggleLeftDrawer}>
+            <FunnelSimple size={18} />
+          </button>
+        </div>
 
-        {contextName ? (
-          <>
-            <a 
-              href={back} 
-              className="assignment-icon"
-              title={t['Back to assignment overview']}>
-              <GraduationCap size={20} />
-            </a>
+        <div className="anno-toolbar-group">
+          {contextName ? (
+            <>
+              <a 
+                href={back} 
+                className="assignment-icon"
+                title={t['Back to assignment overview']}>
+                <GraduationCap size={18} />
+              </a>
 
-            <h1>
-              <a href={back}>{contextName}</a> / <span>{props.document.name}</span>
-            </h1>
-          </>
-        ) : (
-          <>
-            <a 
-              href={back} 
-              className="back-to-project"
-              title={t['Back to project overview']}>
-              <CaretLeft size={20} />
-            </a>
-
+              <h1>
+                <a href={back}>{contextName}</a> 
+                <span>/</span>
+                <span>{props.document.name}</span>
+              </h1>
+            </>
+          ) : (
             <h1>
               <span>{props.document.name}</span>
             </h1>
-          </>
-        )}
-
-        <div className="anno-desktop-overlay-divider" />
-
-        <div>
-          <button>
-            <ListBullets size={17} />
-          </button>
+          )}
         </div>
 
         {isPDF && (
@@ -113,7 +106,18 @@ export const Menubar = (props: MenubarProps) => {
         )}
       </div>
 
-      <div className="anno-menubar-right ta-menubar-right">  
+      <div className="anno-toolbar-slot anno-toolbar-slot-center">
+        <PrivacySelector
+          mode="PUBLIC"
+          i18n={props.i18n}
+          onChangeMode={() => {}} />
+
+        <div className="anno-desktop-overlay-divider" />
+
+        <Palette size={17} />
+      </div>
+
+      <div className="anno-toolbar-slot anno-toolbar-slot-right">  
         {props.present.length > 1 && (
           <>
             <div className="anno-menubar-section anno-menubar-presence">

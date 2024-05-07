@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useTransition, animated } from '@react-spring/web';
+import { animated, easings, useTransition } from '@react-spring/web';
 import type { TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
@@ -48,11 +48,12 @@ export const RightDrawer = (props: RightDrawerProps) => {
     previous.current && !props.currentPanel;
 
   const drawerTransition = useTransition([props.currentPanel], {
-    from: { flexBasis: 0 },
-    enter: { flexBasis: 400 },
-    leave: { flexBasis: 0 },
+    from: { flexBasis: 0, flexGrow: 0 },
+    enter: { flexBasis: 360, flexGrow: 2 },
+    leave: { flexBasis: 0, flexGrow: 0 },
     config: {
-      duration: shouldAnimate ? 180 : 0
+      duration: shouldAnimate ? 350 : 0,
+      easing: easings.easeInOutCubic
     }
   });
 

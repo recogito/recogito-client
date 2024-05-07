@@ -1,6 +1,5 @@
 .ta-drawer.ta-right-drawer {
   background-color: var(--gray-100);
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.28);
   flex-grow: 0;   
   flex-shrink: 0; 
   flex-basis: 0;
@@ -13,5 +12,5 @@
   position: absolute;
   top: 5px;
   left: 0;
-  width: 380px;
+  width: 340px;
 }

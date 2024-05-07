@@ -8,17 +8,18 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
-import { BrandFooter, BrandHeader } from '@components/Branding';
+import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { TextAnnotationProps } from './TextAnnotation';
-import { Menubar } from './Menubar';
+import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
+import { LeftDrawer } from './LeftDrawer/LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import type { Layer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-import { LeftDrawer } from './LeftDrawer/LeftDrawer';
+
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
@@ -145,10 +146,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 <BrandHeader />
               )}
 
-              <Menubar
+              <Toolbar
                 i18n={props.i18n}
                 document={props.document}
                 present={present}
+                leftDrawerOpen={leftPanelOpen}
                 rightPanel={rightPanel}
                 onToggleBranding={() => setShowBranding(!showBranding)}
                 onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
@@ -156,7 +158,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 showConnectionError={connectionError} />
             </div>
 
-            <main>
+            <main className={rightPanel ? 'list-open' : undefined}>
               <LeftDrawer open={leftPanelOpen} />
 
               {policies && (
@@ -179,6 +181,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                   styleSheet={props.styleSheet}
                 />
               )}
+
+              <div className="spacer" />
 
               <RightDrawer
                 currentPanel={rightPanel}

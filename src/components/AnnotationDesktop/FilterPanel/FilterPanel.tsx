@@ -4,6 +4,7 @@ import type { Translations } from 'src/Types';
 
 import './FilterPanel.css';
 import { Creators } from './Creators';
+import { Tags } from './Tags';
 
 interface FilterPanelProps {
 
@@ -19,6 +20,8 @@ export const FilterPanel = (props: FilterPanelProps) => {
       <Visibility i18n={props.i18n} />
 
       <Creators />
+
+      <Tags />
     </div>
   )
 

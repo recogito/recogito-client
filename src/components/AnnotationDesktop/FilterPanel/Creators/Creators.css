@@ -6,21 +6,3 @@
   margin: 0;
   padding: 0;
 }
-
-.anno-drawer-panel.filter-panel .filter-creators button.creator-button {
-  all: unset;
-  background-color: var(--gray-300);
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  line-height: 100%;
-  padding: 0.625rem 0.75rem;
-}
-
-.anno-drawer-panel.filter-panel .filter-creators button.creator-button[data-state="on"] {
-  background-color: var(--bright-blue);
-  color: #fff;
-}
-
-.anno-drawer-panel.filter-panel .filter-creators button.creator-button:focus-visible {
-  box-shadow: 0 0 0 2px black;
-}

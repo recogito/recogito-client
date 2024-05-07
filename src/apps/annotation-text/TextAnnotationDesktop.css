@@ -6,17 +6,13 @@ html, body {
 
 .ta-desktop .header,
 .ta-desktop .footer {
-  z-index: 10;
+  z-index: 20;
 }
 
 .ta-desktop main {
   display: flex;
   flex-direction: row;
   overflow: hidden;
-}
-
-.ta-desktop main .ta-annotated-text-container {
-  overflow-y: scroll;
 }
 
 .ta-desktop main .r6o-annotatable canvas {
@@ -36,7 +32,7 @@ html, body {
 .ta-desktop main .ta-annotated-text-container {
   display: flex;
   flex-grow: 1;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .ta-desktop main .ta-annotated-text-container .content-wrapper {
@@ -47,28 +43,23 @@ html, body {
   min-height: 100%;
   pointer-events: all;
   position: relative;
-  width: 100%;
   word-wrap: break-word;
+}
+
+.ta-desktop .spacer {
+  flex-grow: 1;
 }
 
 .content-wrapper .text,
 .content-wrapper .tei {
   background-color: #fff;
-  border-color: var(--gray-300);
-  border-style: solid;
-  border-width: 0 1px;
-  margin: 0 auto;
   max-width: 65ch;
   padding: 70px 85px 140px 85px;
 }
 
-.content-wrapper .pdf {
-  background-color: transparent;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
+main.list-open .content-wrapper .text,
+main.list-open .content-wrapper .tei {
+  margin-right: 0;
 }
 
 .content-wrapper .r6o-pdf-container {
@@ -98,59 +89,6 @@ html, body {
 .ta-desktop main {
   flex-grow: 1;
   position: relative;
-}
-
-.ta-toolbar-container {
-  align-items: center;
-  display: flex;
-}
-
-.ta-toolbar-context {
-  border: none;
-  border-radius: 50%;
-  margin: 0 6px;
-  transition: opacity 250ms ease-in-out;
-}
-
-.ta-toolbar-context.hidden {
-  opacity: 0;
-}
-
-.ta-toolbar-context button {
-  border-radius: 50%;
-}
-
-.ta-toolbar-context button.delete {
-  background-color: var(--red-500);
-}
-
-.ta-toolbar-context button.delete svg {
-  color: #fff;
-}
-
-.ta-toolbar {
-  align-items: center;
-  bottom: 30px;
-  border-radius: 9999px;
-  display: flex;
-  flex-direction: row;
-}
-
-.ta-toolbar button {
-  border-radius: 50%;
-  vertical-align: bottom;
-}
-
-.ta-toolbar button svg {
-  color: var(--font-dark);
-}
-
-.ta-toolbar :is(button, a.button) + :is(button, a.button) {
-  margin-left: 6px;
-}
-
-.ta-toolbar section {
-  padding: 6px;
 }
 
 .ta-drawer {

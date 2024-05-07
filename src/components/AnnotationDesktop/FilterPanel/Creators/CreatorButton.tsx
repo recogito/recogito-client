@@ -13,7 +13,7 @@ interface CreatorButtonProps {
 export const CreatorButton = (props: CreatorButtonProps) => {
 
   return (
-    <Toggle.Root className="creator-button">
+    <Toggle.Root className="toggle">
       {props.creator}
     </Toggle.Root>
   )

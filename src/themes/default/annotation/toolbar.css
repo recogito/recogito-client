@@ -1,0 +1,148 @@
+.anno-toolbar {
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem;
+  position: relative;
+}
+
+.anno-toolbar-slot {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.anno-toolbar h1 {
+  align-items: center;
+  display: flex;
+  font-size: var(--font-tiny);
+  font-family: Inter;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+.anno-toolbar h1 a[href] {
+  color: var(--font-dark);
+}
+
+.anno-toolbar h1 span {
+  color: var(--font-light);
+  font-weight: 400;
+}
+
+.anno-toolbar .assignment-icon {
+  align-items: center;
+  border-radius: 50%;
+  color: var(--font-dark);
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.anno-toolbar button {
+  border-radius: 50%;
+  color: var(--font-dark);
+  height: 36px;
+  vertical-align: bottom;
+  width: 36px;
+}
+
+.anno-toolbar button > svg {
+  color: var(--font-dark);
+}
+
+.anno-toolbar :is(button, a.button, .with-notification) + :is(button, a.button, .with-notification) {
+  margin-left: 2px;
+}
+
+.anno-toolbar .anno-toolbar-right {
+  align-items: center;
+  display: flex;
+  padding-right: 10px;
+}
+
+.anno-toolbar button {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  box-shadow: none;
+  height: 36px;
+  min-width: auto;
+  outline: none;
+  padding: 0;
+  vertical-align: bottom;
+  width: 36px;
+}
+
+.anno-toolbar-group {
+  align-items: center;
+  display: flex;
+}
+
+.anno-toolbar .anno-toolbar-right button:hover {
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.06);
+}
+
+.anno-toolbar .anno-toolbar-right button svg {
+  color: var(--font-dark);
+}
+
+.anno-toolbar button.active {
+  background-color: var(--bright-blue);
+  color: #fff;
+}
+
+.anno-toolbar button.active svg {
+  color: #fff;
+}
+
+.anno-toolbar .avatar {
+  height: 36px;
+  width: 36px;
+}
+
+.anno-toolbar .avatar .avatar-fallback {
+  font-size: 11.5px;
+}
+
+.anno-toolbar .presence-stack .avatar {
+  height: 34px;
+  width: 34px;
+}
+
+.anno-toolbar .avatar:hover {
+  box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.06);
+}
+
+.anno-toolbar .anno-menubar-me {
+  padding-left: 10px;
+}
+
+.anno-toolbar .with-notification {
+  display: inline-block;
+  position: relative;
+}
+
+.anno-toolbar .notification-bubble {
+  all: unset;
+  align-items: center;
+  background-color: var(--bright-blue);
+  border-radius: 999px;
+  border: 1px solid #fff;
+  color: #fff !important;
+  display: flex;
+  gap: 1px;
+  font-size: 9px;
+  height: 13px;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  width: 13px;
+}
+
+
