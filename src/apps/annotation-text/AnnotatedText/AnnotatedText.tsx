@@ -157,12 +157,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           </div>
         </div>
       </div>
-
-      <Toolpanel        
-        i18n={i18n}
-        isAdmin={policies.get('layers').has('INSERT')}
-        privacy={privacy}
-        onChangePrivacy={setPrivacy} />
     </div>
   )
 

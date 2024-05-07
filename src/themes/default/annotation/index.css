@@ -37,13 +37,3 @@
 .anno-desktop-overlay button.active svg {
   color: #fff;
 }
-
-.anno-desktop-overlay-divider {
-  border-style: solid;
-  border-color: rgba(0, 0, 0, 0.08);
-  border-width: 0 2px 0 0;
-  display: inline-block;
-  height: 16px;
-  margin: 0 8px;
-  right: 0;
-}

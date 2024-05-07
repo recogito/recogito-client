@@ -96,3 +96,7 @@ main.list-open .content-wrapper .tei {
   pointer-events: auto;
   z-index: 1;
 }
+
+.ta-desktop .annotation-list .annotation {
+  box-shadow: 0 0 16px -7px rgba(0, 0, 0, 0.18);
+}

@@ -6,3 +6,7 @@ button.color-selector-trigger {
   padding: 0 0.75rem;
   width: auto;
 }
+
+button.color-selector-trigger > svg:first-child {
+  margin-right: 0.5rem;
+}

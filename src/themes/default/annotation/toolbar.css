@@ -4,7 +4,7 @@
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: space-between;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.75rem;
   position: relative;
 }
 
@@ -146,4 +146,13 @@
   width: 13px;
 }
 
+.anno-toolbar-divider {
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.08);
+  border-width: 0 2px 0 0;
+  display: inline-block;
+  height: 16px;
+  margin: 0 4px;
+  right: 0;
+}
 

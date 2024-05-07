@@ -96,7 +96,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
         {isPDF && (
           <>
-            <div className="anno-desktop-overlay-divider" />
+            <div className="anno-toolbar-divider" />
 
             <PDFControls i18n={props.i18n} />
           </>
@@ -113,7 +113,7 @@ export const Toolbar = (props: ToolbarProps) => {
           i18n={props.i18n}
           onChangeMode={() => {}} />
 
-        <div className="anno-desktop-overlay-divider" />
+        <div className="anno-toolbar-divider" />
 
         <ColorSettings i18n={props.i18n} />
       </div>
@@ -129,45 +129,6 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        {plugins.map(plugin => (
-          <Extension 
-            key={plugin.meta.id}
-            plugin={plugin} 
-            document={props.document}
-            extensionPoint="annotation.text.toolbar" />
-        ))}
-
-        {plugins.length > 0 && (
-          <div className="anno-desktop-overlay-divider" />
-        )}
-
-        <div className="anno-menubar-section anno-menubar-actions-right">
-          <button
-            className={props.rightPanel === DrawerPanel.ANNOTATIONS ? 'active' : undefined}
-            aria-label={t['Show annotation list']}
-            onClick={() => toggleRightDrawer(DrawerPanel.ANNOTATIONS)}>
-            <Chats size={17} />
-          </button>
-
-          <LayersPanelMenuIcon
-            i18n={props.i18n}
-            active={props.rightPanel === DrawerPanel.LAYERS}
-            onSelect={() => toggleRightDrawer(DrawerPanel.LAYERS)} />
-
-          <DocumentNotesMenuIcon
-            i18n={props.i18n}
-            active={props.rightPanel === DrawerPanel.DOCUMENT_NOTES}
-            onSelect={() => toggleRightDrawer(DrawerPanel.DOCUMENT_NOTES)} />
-        </div>
-
-        <div className="anno-desktop-overlay-divider" />
-
-        <div className="anno-menubar-section">
-          <button onClick={props.onToggleBranding}>
-            <ArrowsOutSimple size={17} />
-          </button>
-        </div>
-
         {me && (
           <div className="anno-menubar-me">
             <Avatar 
@@ -177,6 +138,33 @@ export const Toolbar = (props: ToolbarProps) => {
               avatar={me.appearance.avatar} />
           </div>
         )}
+
+        <div className="anno-toolbar-divider" />
+
+        {plugins.map(plugin => (
+          <Extension 
+            key={plugin.meta.id}
+            plugin={plugin} 
+            document={props.document}
+            extensionPoint="annotation.text.toolbar" />
+        ))}
+
+        {plugins.length > 0 && (
+          <div className="anno-toolbar-divider" />
+        )}
+
+        <button onClick={props.onToggleBranding}>
+          <ArrowsOutSimple size={17} />
+        </button>
+
+        <div className="anno-toolbar-divider" />
+
+        <button
+          className={props.rightPanel === DrawerPanel.ANNOTATIONS ? 'active' : undefined}
+          aria-label={t['Show annotation list']}
+          onClick={() => toggleRightDrawer(DrawerPanel.ANNOTATIONS)}>
+          <Chats size={17} />
+        </button>
       </div>
     </div>
   )

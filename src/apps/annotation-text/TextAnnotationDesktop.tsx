@@ -182,8 +182,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 />
               )}
 
-              <div className="spacer" />
-
               <RightDrawer
                 currentPanel={rightPanel}
                 i18n={props.i18n}
