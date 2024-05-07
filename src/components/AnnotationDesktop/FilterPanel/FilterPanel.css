@@ -1,0 +1,12 @@
+.anno-drawer-panel.filter-panel {
+  font-size: var(--font-small);
+  padding: 25px 20px;
+}
+.anno-drawer-panel.filter-panel h2 {
+  align-items: center;
+  display: flex;
+  font-family: Inter;
+  font-size: var(--font-small);
+  gap: 0.5rem;
+  margin: 0.25rem 0 1rem 0;
+}

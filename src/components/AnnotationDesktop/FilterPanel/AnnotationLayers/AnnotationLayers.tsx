@@ -6,7 +6,7 @@ export const AnnotationLayers = () => {
   return (
     <section className="filters-annotationlayers">
       <h2>
-        <Stack /> Annotation Layers
+        <Stack size={18} /> Annotation Layers
       </h2>
 
       <section>

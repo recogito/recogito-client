@@ -9,6 +9,7 @@
 @import './form/index.css';
 @import './mixins/index.css';
 @import './popover/index.css';
+@import './radio/index.css';
 @import './select/index.css';
 @import './table/index.css';
 @import './tabs/index.css';
