@@ -73,20 +73,18 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <div className="anno-toolbar-group">
           {contextName ? (
-            <>
+            <h1>
               <a 
                 href={back} 
                 className="assignment-icon"
                 title={t['Back to assignment overview']}>
                 <GraduationCap size={18} />
+                {contextName}
               </a>
-
-              <h1>
-                <a href={back}>{contextName}</a> 
-                <span>/</span>
-                <span>{props.document.name}</span>
-              </h1>
-            </>
+              
+              <span>/</span>
+              <span>{props.document.name}</span>
+            </h1>
           ) : (
             <h1>
               <span>{props.document.name}</span>

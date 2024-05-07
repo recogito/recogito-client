@@ -4,7 +4,7 @@
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: space-between;
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 0.75rem;
   position: relative;
 }
 
@@ -19,12 +19,17 @@
   display: flex;
   font-size: var(--font-tiny);
   font-family: Inter;
-  font-weight: 500;
   gap: 0.5rem;
+  margin: 0;
+  padding-left: 0.75rem;
+  white-space: nowrap;
 }
 
 .anno-toolbar h1 a[href] {
+  align-items: center;
   color: var(--font-dark);
+  display: inline-flex;
+  gap: 0.5rem;
 }
 
 .anno-toolbar h1 span {
@@ -33,13 +38,7 @@
 }
 
 .anno-toolbar .assignment-icon {
-  align-items: center;
-  border-radius: 50%;
   color: var(--font-dark);
-  display: inline-flex;
-  height: 28px;
-  justify-content: center;
-  width: 28px;
 }
 
 .anno-toolbar button {
