@@ -12,6 +12,10 @@ button.privacy-selector-trigger > span {
   vertical-align: bottom;
 }
 
+button.privacy-selector-trigger > svg:first-child {
+  margin-right: 0.25rem;
+}
+
 button.privacy-selector-trigger[data-privacy='private']  {
   background-color: var(--bright-blue);
   color: #fff;

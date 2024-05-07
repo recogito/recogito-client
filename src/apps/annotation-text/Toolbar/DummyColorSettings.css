@@ -1,0 +1,8 @@
+button.color-selector-trigger {
+  border-radius: var(--border-radius);
+  box-sizing: border-box;
+  font-size: var(--font-tiny);
+  font-weight: 500;
+  padding: 0 0.75rem;
+  width: auto;
+}

@@ -1,3 +1,7 @@
 .ta-toolbar {
   z-index: 10;
 }
+
+.ta-toolbar .anno-toolbar-slot.anno-toolbar-slot-center .anno-desktop-overlay-divider {
+  margin: 0 2px;
+}

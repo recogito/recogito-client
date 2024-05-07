@@ -11,6 +11,7 @@ import { PDFControls } from './PDFControls';
 import './Toolbar.css';
 import { UsersThree } from '@phosphor-icons/react/dist/ssr';
 import { PrivacySelector } from '@components/PrivacySelector';
+import { ColorSettings } from './DummyColorSettings';
 
 interface ToolbarProps {
 
@@ -114,7 +115,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <div className="anno-desktop-overlay-divider" />
 
-        <Palette size={17} />
+        <ColorSettings i18n={props.i18n} />
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-right">  
