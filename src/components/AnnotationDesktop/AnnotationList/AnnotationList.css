@@ -1,6 +1,6 @@
 .anno-drawer-panel.annotation-list {
   box-sizing: border-box;
-  padding: 0 5px 40px 10px;
+  padding: 0 20px 40px 12px;
 }
 
 .anno-drawer-panel.annotation-list > ul {
@@ -16,13 +16,13 @@
 
 .anno-drawer-panel.annotation-list > ul > li .annotation {
   margin: 0;
-  transition: margin 350ms ease-in;
+  transition: margin 400ms ease-in;
 }
 
 .anno-drawer-panel.annotation-list > ul > li .annotation.selected {
-  margin: 20px 0;
+  margin: 25px 0;
   box-shadow: 0 0 6px 3px rgba(7, 82, 154, 0.25);
-  transition: margin 350ms ease-out;
+  transition: margin 100ms ease-out;
 }
 
 .anno-drawer-panel.annotation-list .annotation-card {
