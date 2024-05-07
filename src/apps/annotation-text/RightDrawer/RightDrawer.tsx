@@ -51,17 +51,17 @@ export const RightDrawer = (props: RightDrawerProps) => {
     from: { flexGrow: props.currentPanel ? 1 : 0 },
     to: { flexGrow: props.currentPanel ? 0 : 1 },
     config: {
-      duration: shouldAnimate ? 350 : 0,
+      duration: shouldAnimate ? 450 : 0,
       easing: easings.easeInOutCubic
     }
   });
 
   const drawerTransition = useTransition([props.currentPanel], {
-    from: { flexBasis: 0, flexGrow: 0 },
-    enter: { flexBasis: 360, flexGrow: 0.65 },
-    leave: { flexBasis: 0, flexGrow: 0 },
+    from: { flexBasis: 0, flexGrow: 0, opacity: 0 },
+    enter: { flexBasis: 340, flexGrow: 1, opacity: 1 },
+    leave: { flexBasis: 0, flexGrow: 0, opacity: 0 },
     config: {
-      duration: shouldAnimate ? 350 : 0,
+      duration: shouldAnimate ? 450 : 0,
       easing: easings.easeInOutCubic
     }
   });

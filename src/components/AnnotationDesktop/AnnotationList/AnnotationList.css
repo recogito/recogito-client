@@ -14,6 +14,17 @@
   margin: 10px 0;
 }
 
+.anno-drawer-panel.annotation-list > ul > li .annotation {
+  margin: 0;
+  transition: margin 350ms ease-in;
+}
+
+.anno-drawer-panel.annotation-list > ul > li .annotation.selected {
+  margin: 20px 0;
+  box-shadow: 0 0 6px 3px rgba(7, 82, 154, 0.25);
+  transition: margin 350ms ease-out;
+}
+
 .anno-drawer-panel.annotation-list .annotation-card {
   border: 1px solid var(--gray-300);
   border-radius: 6px;

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
+import { animated, easings, useSpring } from '@react-spring/web';
 import type { PresentUser, DrawingStyle, Filter, AnnotationState } from '@annotorious/react';
 import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
@@ -19,7 +20,6 @@ import type { Layer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
@@ -94,9 +94,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  // max number of avatars displayed in the top right
-  const limit = 5;
-
   const onSetRightPanel = (panel?: DrawerPanel) => {
     if (panel === DrawerPanel.ANNOTATIONS)
       setUsePopup(false); // Don't use the popup if annotation list is open
@@ -127,6 +124,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       : (a: TextAnnotation, b: TextAnnotation) =>
         a.target.selector[0].start - b.target.selector[0].start;
 
+  const brandingAnimation = useSpring({
+    from: { maxHeight: showBranding ? 0 : 150 },
+    to: { maxHeight: showBranding ? 150 : 0 },
+    immediate: !layers,
+    config: {
+      duration: 250,
+      easing: easings.easeInOutCubic
+    }
+  });
+
   return (
     <FilterState present={present}>
       <ColorState present={present}>
@@ -142,9 +149,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             )}
 
             <div className="header">
-              {showBranding && (
+              <animated.div style={brandingAnimation}>
                 <BrandHeader />
-              )}
+              </animated.div>
 
               <Toolbar
                 i18n={props.i18n}
