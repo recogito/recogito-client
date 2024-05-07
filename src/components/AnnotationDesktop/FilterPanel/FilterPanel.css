@@ -1,7 +1,17 @@
 .anno-drawer-panel.filter-panel {
   font-size: var(--font-small);
-  padding: 25px 20px;
+  padding: 10px 20px;
 }
+
+.anno-drawer-panel.filter-panel section {
+  padding: 15px 0;
+}
+
+.anno-drawer-panel.filter-panel section + section {
+  border-top: 1px solid var(--gray-300);
+  margin-top: 1rem;
+}
+
 .anno-drawer-panel.filter-panel h2 {
   align-items: center;
   display: flex;
@@ -10,3 +20,4 @@
   gap: 0.5rem;
   margin: 0.25rem 0 1rem 0;
 }
+

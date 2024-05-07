@@ -25,7 +25,7 @@
   border-color: var(--bright-blue);
 }
 
-.radio-group-item:focus {
+.radio-group-item:focus-visible {
   box-shadow: 0 0 0 2px black;
 }
 
