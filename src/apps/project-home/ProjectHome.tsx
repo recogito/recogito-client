@@ -18,6 +18,7 @@ import { BackButtonBar } from '@components/BackButtonBar';
 import { DocumentsView } from './DocumentsView';
 import { AssignmentsView } from './AssignmentsView';
 import { useAssignments } from '@backend/hooks';
+import type { AvailableLayers } from '@backend/Types';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -30,12 +31,13 @@ export interface ProjectHomeProps {
 
   invitations: Invitation[];
 
+  availableLayers: AvailableLayers[];
+
   user: MyProfile;
 }
 
 export const ProjectHome = (props: ProjectHomeProps) => {
-
-  const { lang, t } = props.i18n;
+  const { t } = props.i18n;
 
   const projectPolicies = useProjectPolicies(props.project.id);
 
@@ -44,9 +46,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [tab, setTab] = useState<'documents' | 'assignments' | undefined>();
-  const [documents, setDocuments] = useState<Document[]>(
-    props.documents
-  );
+  const [documents, setDocuments] = useState<Document[]>(props.documents);
   const [project, setProject] = useState(props.project);
 
   const { assignments, setAssignments } = useAssignments(project);
@@ -56,22 +56,22 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       if (isAdmin) {
         setTab('documents');
       } else {
-        setTab('assignments')
+        setTab('assignments');
       }
     }
-  }, [isAdmin])
+  }, [isAdmin]);
 
   const handleSwitchTab = (tab: 'documents' | 'assignments') => {
     setTab(tab);
-  }
+  };
 
   const handleGotoSettings = () => {
     window.location.href = `/${props.i18n.lang}/projects/${props.project.id}/settings`;
-  }
+  };
 
   const handleGotoUsers = () => {
     window.location.href = `/${props.i18n.lang}/projects/${props.project.id}/collaboration`;
-  }
+  };
 
   const onError = (error: string) => {
     setToast({
@@ -81,15 +81,22 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   };
 
-  const updateDefaultContext = (project: ExtendedProjectData, documents: Document[]) => {
+  const updateDefaultContext = (
+    project: ExtendedProjectData,
+    documents: Document[]
+  ) => {
     // Make sure we have all documents in the default context
-    const defaultContextIdx = project.contexts.findIndex(c => c.is_project_default);
+    const defaultContextIdx = project.contexts.findIndex(
+      (c) => c.is_project_default
+    );
     if (defaultContextIdx > -1) {
       const defaultContext = { ...project.contexts[defaultContextIdx] };
 
       // Add any new documents
-      documents.forEach(doc => {
-        const idx = defaultContext.context_documents.findIndex(d => d.document.id === doc.id);
+      documents.forEach((doc) => {
+        const idx = defaultContext.context_documents.findIndex(
+          (d) => d.document.id === doc.id
+        );
         if (idx < 0) {
           // @ts-ignore
           defaultContext.context_documents.push({ document: doc });
@@ -98,47 +105,57 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
       // Remove any documents that have been deleted
       defaultContext.context_documents.forEach((doc, index) => {
-        const idx = documents.findIndex(d => d.id === doc.document.id);
+        const idx = documents.findIndex((d) => d.id === doc.document.id);
         if (idx < 0) {
           defaultContext.context_documents.splice(index, 1);
         }
-      })
+      });
 
-      const ret = [defaultContext, ...project.contexts.filter(c => c.id !== defaultContext.id)];
+      const ret = [
+        defaultContext,
+        ...project.contexts.filter((c) => c.id !== defaultContext.id),
+      ];
       return ret;
     }
 
     return project.contexts;
-  }
+  };
 
   const onSetDocuments = (documents: Document[]) => {
     setDocuments(documents);
     const proj = {
       ...project,
       documents: documents,
-      contexts: updateDefaultContext(project, documents)
+      contexts: updateDefaultContext(project, documents),
     };
     setProject(proj);
-    setAssignments(proj.contexts)
-  }
+    setAssignments(proj.contexts);
+  };
 
   const removeDocumentFromAssignments = (document: Document) => {
     const copy: ExtendedProjectData = JSON.parse(JSON.stringify(props.project));
     copy.contexts.forEach((context: Context) => {
-      context.context_documents = context.context_documents.filter(cd => (
-        cd.document.id !== document.id
-      ))
-    })
+      context.context_documents = context.context_documents.filter(
+        (cd) => cd.document.id !== document.id
+      );
+    });
 
-    setProject(copy)
-  }
+    setProject(copy);
+  };
 
   return (
     <>
-      <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.user} />
+      <TopBar
+        invitations={props.invitations}
+        i18n={props.i18n}
+        onError={onError}
+        projects={props.projects}
+        me={props.user}
+      />
       <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
       <ProjectHeader
-        i18n={props.i18n} isAdmin={isAdmin || false}
+        i18n={props.i18n}
+        isAdmin={isAdmin || false}
         name={props.project.name}
         description={props.project.description || ''}
         currentTab={isAdmin ? tab : undefined}
@@ -148,7 +165,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       />
       <div className='project-home' style={{ marginTop: isAdmin ? 240 : 190 }}>
         <ToastProvider>
-          {tab === 'documents' ?
+          {tab === 'documents' ? (
             <DocumentsView
               isAdmin={isAdmin as boolean}
               documents={documents}
@@ -159,7 +176,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               setDocuments={onSetDocuments}
               onRemoveDocument={removeDocumentFromAssignments}
             />
-            :
+          ) : (
             <AssignmentsView
               i18n={props.i18n}
               project={project}
@@ -169,15 +186,15 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               setToast={setToast}
               isAdmin={isAdmin as boolean}
               setAssignments={setAssignments}
+              availableLayers={props.availableLayers}
             />
-          }
+          )}
           <Toast
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}
           />
-        </ToastProvider >
-      </div >
+        </ToastProvider>
+      </div>
     </>
-  )
-
-}
+  );
+};

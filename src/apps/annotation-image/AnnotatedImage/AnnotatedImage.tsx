@@ -25,6 +25,8 @@ const SUPABASE_API_KEY: string = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 interface AnnotatedImageProps {
 
+  authToken?: string;
+
   channelId: string;
 
   defaultLayer?: Layer;
@@ -61,7 +63,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { i18n, layers, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, layers, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -76,6 +78,11 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     gestureSettingsMouse: {
       clickToZoom: false
     },
+    ajaxHeaders: authToken ? {
+      Authorization: `Bearer ${authToken}`
+    } : undefined,
+    loadTilesWithAjax: Boolean(authToken),
+    ajaxWithCredentials: authToken ? true : undefined,
     showNavigationControl: false,
     minZoomLevel: 0.4,
     visibilityRatio: 0.2,

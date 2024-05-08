@@ -1,7 +1,7 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile, listMyInvites } from '@backend/crud';
-import { listMyProjectsExtended } from '@backend/helpers';
+import { getAvailableLayers, listMyProjectsExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
@@ -47,6 +47,8 @@ const i18n = getTranslations(Astro.request, 'project-home');
 const invitations = await listMyInvites(supabase);
 
 const projects = await listMyProjectsExtended(supabase);
+
+const availableLayers = await getAvailableLayers(supabase, projectId as string);
 ---
 
 <BaseLayout title='Projects Home'>
@@ -58,5 +60,6 @@ const projects = await listMyProjectsExtended(supabase);
     documents={documents.data}
     user={profile.data}
     invitations={invitations.data}
+    availableLayers={availableLayers.data}
   />
 </BaseLayout>

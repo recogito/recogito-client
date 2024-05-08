@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Utils, Manifest, Resource, Sequence } from 'manifesto.js';
 import type { DocumentInTaggedContext } from 'src/Types';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
+
+const CANTALOUPE_PATH: string | undefined = import.meta.env.PUBLIC_IIIF_CANTALOUPE_PATH;
 
 // Performs a simple sanity check
 const isSupported = (manifest: Manifest) => {
@@ -31,6 +34,8 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
 
   const [manifestError, setManifestError] = useState<string | undefined>();
 
+  const [authToken, setAuthToken] = useState<string | undefined>();
+
   const [manifestType, setManifestType] = useState<ManifestType | undefined>();
 
   const images = sequence ? sequence.getCanvases().reduce<Resource[]>((images, canvas) => {
@@ -38,41 +43,63 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
   }, []) : [];
 
   useEffect(() => {
-    if (document.meta_data?.url) {
-      const { url } = document.meta_data;
+    const isUploadedFile = document.content_type?.startsWith('image/');
 
-      if (url.endsWith('info.json')) {
+    const url = isUploadedFile
+      // Locally uploaded image - for now, assume this is served via built-in IIIF
+      // TODO how to construct the right IIIF URL?
+      ? `${CANTALOUPE_PATH}/${document.id}/info.json`
+      : document.meta_data?.url;
+
+    if (!url) {
+      console.error('Could not resolve IIIF URL for document', document);
+      return;
+    }
+
+    if (url.endsWith('info.json')) {
+      if (isUploadedFile) {
+        // For uploaded files, we need to include the auth token
+        // into image requests
+        supabase.auth.getSession().then(({ error, data }) => {
+          // Get Supabase session token first
+          if (error) {
+            // Shouldn't really happen at this point
+            console.error(error);
+          } else {
+            setAuthToken(data.session?.access_token) 
+            setCurrentImage(url);
+            setManifestType('IMAGE');
+          }
+        });
+  
+      } else {
+        // Remote image API manifest
         setCurrentImage(url);
         setManifestType('IMAGE');
-      } else {
-        Utils.loadManifest(url).then(data => {
-          const manifest = Utils.parseManifest(data) as Manifest;
+      } 
+    } else {
+      Utils.loadManifest(url).then(data => {
+        const manifest = Utils.parseManifest(data) as Manifest;
 
-          if (isSupported(manifest)) {
-            const sequence = manifest.getSequences()[0];
+        if (isSupported(manifest)) {
+          const sequence = manifest.getSequences()[0]; 
+          
+          const firstImage = getImageManifestURL(sequence.getCanvases()[0].getImages()[0].getResource());
+          
+          setSequence(sequence);
+          setCurrentImage(firstImage);
+          setManifestType('PRESENTATION');
+        } else {
+          console.log('unsupported manifest');
 
-            // Hm... this makes a whole lot of assumptions about the manifest. 
-            // TODO run some kind of initial validation/sanity check and display
-            // a message to the user if this fails
-            // const firstImage = sequence.getCanvases()[0].getImages()[0].getResource().id;
-            
-            // Seems to be the more reliable approach...
-            const firstImage = getImageManifestURL(sequence.getCanvases()[0].getImages()[0].getResource());
-            
-            setSequence(sequence);
-            setCurrentImage(firstImage);
-            setManifestType('PRESENTATION');
-          } else {
-            console.log('unsupported manifest');
-
-            setManifestError(`Unsupported IIIF manifest: ${url}`)
-          }
-        }).catch(error => {
-          console.error('Error loading manifest', error);
-        });
-      }
+          setManifestError(`Unsupported IIIF manifest: ${url}`)
+        }
+      }).catch(error => {
+        console.error('Error loading manifest', error);
+      });
     }
-  }, [document.meta_data?.url]);
+
+  }, [document]);
 
   // Helpers
   const isPresentationManifest = manifestType === 'PRESENTATION';
@@ -98,6 +125,7 @@ export const useIIIF = (document: DocumentInTaggedContext) => {
   }
 
   return { 
+    authToken,
     currentImage,
     isPresentationManifest,
     isImageManifest,

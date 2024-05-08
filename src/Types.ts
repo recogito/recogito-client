@@ -246,7 +246,7 @@ export const ContentTypes = [
   'text/xml',
 ] as const;
 
-export type ContentType = (typeof ContentTypes)[number];
+export type ContentType = (typeof ContentTypes)[number] | string;
 
 export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
@@ -332,6 +332,8 @@ export interface ExtendedAssignmentData extends Context {
 
     document: Document;
 
+    is_active_layer: boolean;
+    
   }[];
 
 }
@@ -411,7 +413,6 @@ export interface InstalledPlugin {
   plugin_id: string;
 
   plugin_settings?: any;
-
 }
 
 export interface Translations {
