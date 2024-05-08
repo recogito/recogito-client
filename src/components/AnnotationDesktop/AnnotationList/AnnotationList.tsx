@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnnotationCard } from '@components/Annotation';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Layer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
@@ -15,19 +15,19 @@ import {
   useSelection,
   useViewportState,
   useAnnotationStore,
-  Annotation,
-  DrawingStyle
+  DrawingStyleExpression
 } from '@annotorious/react';
 
 import './AnnotationList.css';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 
 interface AnnotationListProps<T extends Anno> {
 
-  currentStyle?: (a: Annotation) => DrawingStyle;
+  currentStyle?: DrawingStyleExpression<SupabaseAnnotation> | HighlightStyleExpression;
 
   i18n: Translations;
 
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   me: PresentUser;
 

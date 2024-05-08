@@ -1,27 +1,27 @@
-import { useEffect, useRef } from 'react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
-import type { HighlightStyleExpression, TextAnnotation } from '@recogito/react-text-annotator';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
-import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
+import type { Annotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
+import { AnnotationList } from '@components/AnnotationDesktop';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
+import { useMemo, useRef } from 'react';
 
 interface RightDrawerProps {
 
   i18n: Translations;
 
-  present: PresentUser[];
+  layers?: DocumentLayer[];
 
-  currentPanel?: DrawerPanel;
+  open: boolean;
 
   policies?: Policies;
 
-  sorting?: ((a: PDFAnnotation, b: PDFAnnotation) => number);
+  present: PresentUser[];
 
-  layers?: DocumentLayer[];
+  sorting?: ((a: PDFAnnotation, b: PDFAnnotation) => number);
 
   style?: HighlightStyleExpression;
 
@@ -29,57 +29,47 @@ interface RightDrawerProps {
 
   beforeSelectAnnotation(a?: Annotation): void;
 
-  onChangeAnnotationFilter(fn: ((a: Annotation) => boolean)): void;
-
-  onChangeAnnotationStyle(fn: ((a: Annotation) => DrawingStyle)): void;
-
 }
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
-  const previous = useRef<DrawerPanel | undefined>();
-
   const me = props.present.find(isMe)!;
 
-  const shouldAnimate = 
-    // Drawer currently closed, and should open
-    !previous.current && props.currentPanel ||
-    // Drawer currently open, and should close
-    previous.current && !props.currentPanel;
+  // Is defined **after** the component mounts
+  const el = useRef<HTMLDivElement>(null);
 
   const spacerAnimation = useSpring({
-    from: { flexGrow: props.currentPanel ? 1 : 0 },
-    to: { flexGrow: props.currentPanel ? 0 : 1 },
+    from: { flexGrow: props.open ? 1 : 0 },
+    to: { flexGrow: props.open ? 0 : 1 },
+    immediate: !el.current, // Immediate animation on first run only
     config: {
-      duration: shouldAnimate ? 450 : 0,
+      duration: 450,
       easing: easings.easeInOutCubic
     }
   });
 
-  const drawerTransition = useTransition([props.currentPanel], {
+  const drawerTransition = useTransition([props.open], {
     from: { flexBasis: 0, flexGrow: 0, opacity: 0 },
     enter: { flexBasis: 340, flexGrow: 1, opacity: 1 },
     leave: { flexBasis: 0, flexGrow: 0, opacity: 0 },
     config: {
-      duration: shouldAnimate ? 450 : 0,
+      duration: 450,
       easing: easings.easeInOutCubic
     }
   });
 
-  useEffect(() => {
-    previous.current = props.currentPanel;
-  }, [props.currentPanel]);
-
   return ( 
     <>
-      <animated.div style={spacerAnimation} className="spacer" />
+      <animated.div 
+        ref={el}
+        style={spacerAnimation} 
+        className="spacer" />
 
-      {drawerTransition((style, panel) => panel && (
+      {drawerTransition((style, open) => open && (
         <animated.div 
           className="ta-drawer ta-right-drawer"
           style={style}>
           <aside>
-            {panel === DrawerPanel.ANNOTATIONS ? (
               <AnnotationList 
                 currentStyle={props.style}
                 i18n={props.i18n}
@@ -90,20 +80,13 @@ export const RightDrawer = (props: RightDrawerProps) => {
                 sorting={props.sorting}
                 tagVocabulary={props.tagVocabulary}
                 beforeSelect={props.beforeSelectAnnotation} />
-            ) : panel === DrawerPanel.LAYERS ? (
-              <LayerConfigurationPanel
-                i18n={props.i18n}
-                layers={props.layers}
-                present={props.present}
-                onChangeStyle={props.onChangeAnnotationStyle} 
-                onChangeFilter={props.onChangeAnnotationFilter} />
-            ) : panel === DrawerPanel.DOCUMENT_NOTES ? props.layers && (
+            {/*
               <DocumentNotesList 
                 i18n={props.i18n}
                 present={props.present}
                 policies={props.policies} 
                 tagVocabulary={props.tagVocabulary} />
-            ) : undefined}
+            ) : undefined */}
           </aside>
         </animated.div>
       ))}

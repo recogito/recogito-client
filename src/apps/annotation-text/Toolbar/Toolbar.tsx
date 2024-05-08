@@ -1,17 +1,17 @@
-import { ArrowsOutSimple, CaretLeft, Chats, FunnelSimple, GraduationCap, ListBullets, Palette } from '@phosphor-icons/react';
+import { ArrowsOutSimple, Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
+import { DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import type { DocumentWithContext, Translations } from 'src/Types';
+import { PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
+import { ColorSettings } from './DummyColorSettings';
+import type { DocumentWithContext, Translations } from 'src/Types';
 
 import './Toolbar.css';
-import { UsersThree } from '@phosphor-icons/react/dist/ssr';
-import { PrivacySelector } from '@components/PrivacySelector';
-import { ColorSettings } from './DummyColorSettings';
+
 
 interface ToolbarProps {
 
@@ -23,13 +23,13 @@ interface ToolbarProps {
 
   leftDrawerOpen?: boolean;
 
-  rightPanel?: DrawerPanel;
+  rightDrawerOpen?: boolean;
 
   onToggleBranding(): void;
 
   onToggleLeftDrawer(): void;
 
-  onSetRightDrawer(panel?: DrawerPanel): void;
+  onToggleRightDrawer(): void;
 
   showConnectionError: boolean;
 
@@ -52,13 +52,6 @@ export const Toolbar = (props: ToolbarProps) => {
   const me = props.present.find(isMe)!;
 
   const plugins = usePlugins('annotation.text.toolbar');
-
-  const toggleRightDrawer = (panel: DrawerPanel) => {
-    if (panel === props.rightPanel)
-      props.onSetRightDrawer();
-    else
-     props.onSetRightDrawer(panel);
-  } 
 
   return (
     <div className="anno-toolbar ta-toolbar">
@@ -158,9 +151,9 @@ export const Toolbar = (props: ToolbarProps) => {
         <div className="anno-toolbar-divider" />
 
         <button
-          className={props.rightPanel === DrawerPanel.ANNOTATIONS ? 'active' : undefined}
+          className={props.rightDrawerOpen ? 'active' : undefined}
           aria-label={t['Show annotation list']}
-          onClick={() => toggleRightDrawer(DrawerPanel.ANNOTATIONS)}>
+          onClick={props.onToggleRightDrawer}>
           <Chats size={17} />
         </button>
       </div>

@@ -25,23 +25,29 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
-  const policies = useLayerPolicies(props.document.layers[0].id);
-
   const [loading, setLoading] = useState(true);
-
+  
   const [showBranding, setShowBranding] = useState(true);
+
+  const policies = useLayerPolicies(props.document.layers[0].id);
 
   const [connectionError, setConnectionError] = useState(false);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [leftPanelOpen, setLeftPanelOpen] = useState(false);
-
-  const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
-
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
   const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
+
+  const activeLayer = useMemo(() => (
+    layers && layers.length > 0
+      ? layers.find((l) => l.is_active) || layers[0]
+      : undefined
+  ), [layers]);
+
+  const [leftPanelOpen, setLeftPanelOpen] = useState(false);
+
+  const [rightPanelOpen, setRightPanelOpen] = useState(false);
 
   const [defaultLayerStyle, setDefaultLayerStyle] =
     useState<HighlightStyleExpression | undefined>(undefined);
@@ -67,11 +73,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [usePopup, setUsePopup] = useState(true);
 
-  const activeLayer =
-    layers && layers.length > 0
-      ? layers.find((l) => l.is_active) || layers[0]
-      : undefined;
-
   useEffect(() => {
     if (policies) {
       const isDefault = props.document.context.is_project_default;
@@ -86,7 +87,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           props.document.id,
           props.document.context.project_id
         ).then(({ data, error }) => {
-          if (error) console.error(error);
+          if (error) 
+              console.error(error);
 
           const current = new Set(props.document.layers.map(l => l.id));
           
@@ -102,20 +104,20 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  const onSetRightPanel = (panel?: DrawerPanel) => {
+  // TODO clean up!
+  const onToggleRightPanel = (panel?: DrawerPanel) => {
     if (panel === DrawerPanel.ANNOTATIONS)
       setUsePopup(false); // Don't use the popup if annotation list is open
     else if (!usePopup)
       setUsePopup(true);
 
-    setRightPanel(panel);
+    setRightPanelOpen(true);
   }
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
-      // Don't fit the view if the annotation is already selected
+      // Don't scroll if the annotation is already selected
       if (anno.state.selection.isSelected(a)) return;
-
       anno.scrollIntoView(a);
     }
   };
@@ -164,14 +166,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 document={props.document}
                 present={present}
                 leftDrawerOpen={leftPanelOpen}
-                rightPanel={rightPanel}
+                rightDrawerOpen={rightPanelOpen}
                 onToggleBranding={() => setShowBranding(!showBranding)}
                 onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-                onSetRightDrawer={onSetRightPanel}
+                onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
                 showConnectionError={connectionError} />
             </div>
 
-            <main className={rightPanel ? 'list-open' : undefined}>
+            <main className={rightPanelOpen ? 'list-open' : undefined}>
               <LeftDrawer 
                 i18n={props.i18n}
                 open={leftPanelOpen} />
@@ -197,17 +199,15 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               )}
 
               <RightDrawer
-                currentPanel={rightPanel}
                 i18n={props.i18n}
                 layers={layers}
+                open={rightPanelOpen}
                 policies={policies}
                 present={present}
                 sorting={sorting}
                 style={style}
                 tagVocabulary={tagVocabulary}
-                beforeSelectAnnotation={beforeSelectAnnotation}
-                onChangeAnnotationFilter={f => setFilter(() => f)}
-                onChangeAnnotationStyle={s => setDefaultLayerStyle(() => s)} />
+                beforeSelectAnnotation={beforeSelectAnnotation} />
             </main>
           </div>
         </DocumentNotes>
