@@ -49,8 +49,6 @@ const invitations = await listMyInvites(supabase);
 const projects = await listMyProjectsExtended(supabase);
 
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
-
-console.log('Available layers: ', availableLayers);
 ---
 
 <BaseLayout title='Projects Home'>

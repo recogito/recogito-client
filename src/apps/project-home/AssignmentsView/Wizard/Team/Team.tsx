@@ -112,7 +112,7 @@ export const Team = (props: TeamProps) => {
     );
 
     props.onChange(members);
-  }, [selected, props.project.groups, props.onChange]);
+  }, [selected, props.project.groups]);
 
   const sortBy = (field: Field) => () =>
     setSorting((sorting) => {
