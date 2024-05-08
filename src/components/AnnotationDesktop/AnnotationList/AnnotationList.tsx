@@ -169,10 +169,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   return (
     <div className="anno-drawer-panel annotation-list not-annotatable">
-      <ViewportFilterToggle 
-        i18n={props.i18n} 
-        onChange={setViewportFilter} />
-
       <ul
         ref={el}
         onClick={onClick}>

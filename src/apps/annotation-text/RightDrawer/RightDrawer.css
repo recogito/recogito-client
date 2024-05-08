@@ -10,9 +10,40 @@
 
 .ta-right-drawer aside {
   position: absolute;
-  top: 5px;
+  top: 0;
   left: 0;
   max-width: 380px;
   min-width: 320px;
   width: 100%;
+}
+
+.ta-drawer aside .tablist {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  padding: 15px 15px 5px 15px;
+}
+
+.ta-drawer aside .tablist ul {
+  display: flex;
+  gap: 1.25rem;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ta-drawer aside .tablist ul li.active {
+  color: var(--font-dark);
+  font-weight: 500;
+}
+
+.ta-drawer aside .tablist ul li.active svg {
+  color: var(--font-dark);
+}
+
+.ta-drawer aside .tablist button {
+  all: unset;
+  align-items: center;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.25rem;
 }
