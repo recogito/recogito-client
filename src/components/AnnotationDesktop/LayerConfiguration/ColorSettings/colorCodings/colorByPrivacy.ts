@@ -20,7 +20,7 @@ export const colorByPrivacy = (): ColorCoding => {
     color: PALETTE[7] , label: 'All public annotations'
   }];
 
-  const update = (annotations: SupabaseAnnotation[]) => getLegend();
+  const update = (_: SupabaseAnnotation[]) => getLegend();
 
   return { name: 'privacy', getLegend, getStyle, update };
 

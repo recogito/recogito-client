@@ -167,10 +167,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 present={present}
                 leftDrawerOpen={leftPanelOpen}
                 rightDrawerOpen={rightPanelOpen}
+                showConnectionError={connectionError} 
+                onChangeStyle={s => setDefaultLayerStyle(() => s)}
                 onToggleBranding={() => setShowBranding(!showBranding)}
                 onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-                onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
-                showConnectionError={connectionError} />
+                onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
             </div>
 
             <main className={rightPanelOpen ? 'list-open' : undefined}>

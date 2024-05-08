@@ -1,4 +1,4 @@
-button.color-selector-trigger {
+button.color-coding-selector-trigger {
   border-radius: var(--border-radius);
   box-sizing: border-box;
   font-size: var(--font-tiny);
@@ -7,6 +7,6 @@ button.color-selector-trigger {
   width: auto;
 }
 
-button.color-selector-trigger > svg:first-child {
+button.color-coding-selector-trigger > svg:first-child {
   margin-right: 0.5rem;
 }

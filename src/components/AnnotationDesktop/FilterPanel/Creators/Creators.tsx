@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { User as UserIcon } from '@phosphor-icons/react';
 import * as Toggle from '@radix-ui/react-toggle';
 import type { Annotation, Filter, PresentUser, User } from '@annotorious/react';
+import { getCreator } from '@components/AnnotationDesktop';
 import { useCreators } from './useCreators';
 import type { Translations } from 'src/Types';
 
@@ -16,10 +17,6 @@ interface CreatorsProps {
   onSetFilter(filter?: Filter): void;
 
 }
-
-const getCreator = (annotation: Annotation) =>
-  annotation.target?.creator || 
-    (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
 
 export const Creators = (props: CreatorsProps) => {
 

@@ -1,37 +1,37 @@
 import { ArrowsOutSimple, Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
-import type { PresentUser } from '@annotorious/react';
+import type { Annotation, DrawingStyleExpression, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
+import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
-import { ColorSettings } from './DummyColorSettings';
 import type { DocumentWithContext, Translations } from 'src/Types';
 
 import './Toolbar.css';
 
-
 interface ToolbarProps {
-
-  i18n: Translations;
 
   document: DocumentWithContext;
 
-  present: PresentUser[];
+  i18n: Translations;
 
   leftDrawerOpen?: boolean;
 
+  present: PresentUser[];
+
   rightDrawerOpen?: boolean;
+
+  showConnectionError: boolean;
+
+  onChangeStyle(style?: DrawingStyleExpression<Annotation>): void;
 
   onToggleBranding(): void;
 
   onToggleLeftDrawer(): void;
 
   onToggleRightDrawer(): void;
-
-  showConnectionError: boolean;
 
 }
 
@@ -45,8 +45,9 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const isPDF = props.document.content_type === 'application/pdf';
   
-  const back = contextName ? 
-    `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` : 
+  // TODO change, once we have routes for assignments again
+  const back = /* contextName ? 
+    `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` :  */
     `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
@@ -106,7 +107,9 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <div className="anno-toolbar-divider" />
 
-        <ColorSettings i18n={props.i18n} />
+        <ColorCodingSelector 
+          i18n={props.i18n} 
+          onChange={props.onChangeStyle} />
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-right">  

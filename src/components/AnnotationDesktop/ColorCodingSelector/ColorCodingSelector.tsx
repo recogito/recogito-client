@@ -1,27 +1,52 @@
-import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
+import type { DrawingStyleExpression } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
-import type { Annotation, DrawingStyle } from '@annotorious/react';
-import { useAuthorColors } from '@components/AnnotationDesktop';
-import type { Layer, Translations } from 'src/Types';
+import type { Translations } from 'src/Types';
+import { 
+  useColorByCreator,
+  useColorByFirstTag,
+  useColorByPrivacy 
+} from './colorCodings';
 
-import './DummyColorSettings.css';
+import './ColorCodingSelector.css';
 
-interface ColorSettingsProps {
+interface ColorCodingSelectorProps {
 
   i18n: Translations;
+
+  onChange(style?: DrawingStyleExpression<SupabaseAnnotation>): void;
   
 }
 
-export const ColorSettings = (props: ColorSettingsProps) => {
+export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const { t } = props.i18n;
 
-  const authorColors = useAuthorColors();
+  const byCreator = useColorByCreator();
+  
+  const byFirstTag = useColorByFirstTag();
+
+  const byPrivacy = useColorByPrivacy();
+
+  const onChange = (key: string) => {
+    if (key === 'creator') {
+      props.onChange(byCreator);
+    } else if (key === 'tag') {
+      props.onChange(byFirstTag);
+    } else if (key === 'privacy') {
+      props.onChange(byPrivacy);
+    } else {
+      props.onChange();
+    }
+  }
 
   return (
-    <Select.Root>
-      <Select.Trigger className="select-trigger color-selector-trigger" aria-label="Annotation color by">
+    <Select.Root 
+      onValueChange={onChange}>
+      <Select.Trigger 
+        className="select-trigger color-coding-selector-trigger" 
+        aria-label="Annotation color by">
         <Palette size={18} />
         <Select.Value placeholder="Ohne Farbschema" />
         <Select.Icon className="select-icon">
