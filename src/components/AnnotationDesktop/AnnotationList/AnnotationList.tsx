@@ -162,7 +162,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const getBorderColor = (annotation: Anno) => {
     if (props.currentStyle) {
-      const styled = props.currentStyle(annotation);
+      const styled = typeof props.currentStyle === 'function' 
+        ? props.currentStyle(annotation, {}) : props.currentStyle;
+        
       return styled?.fill;
     }
   }
