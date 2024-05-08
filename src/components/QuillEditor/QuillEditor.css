@@ -1,0 +1,55 @@
+.quill-rte .ql-editor {
+  line-height: 160%;
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+
+.quill-rte.ql-disabled .ql-editor {
+  height: fit-content;
+}
+
+.quill-rte .ql-editor.ql-blank::before {
+  font-style: normal;
+  left: 10px;
+}
+
+.quill-rte .ql-editor p {
+  margin: 0; 
+  padding: 0;
+}
+
+.quill-rte .ql-editor img {
+  display: inline-block;
+}
+
+.quill-rte-toolbar {
+  display: flex;
+  gap: 0.125rem;
+}
+
+.quill-rte-toolbar button {
+  align-items: center;
+  all: unset;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+
+.quill-rte-toolbar button svg {
+  align-self: center;
+  color: #000;
+  display: block;
+}
+
+.quill-rte-toolbar button:disabled {
+  color: var(--gray-400);
+  cursor: inherit;
+}
+
+.quill-rte-toolbar button:disabled svg {
+  color: var(--gray-400);
+}

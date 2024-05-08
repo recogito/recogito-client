@@ -1,6 +1,5 @@
 import { forwardRef, useMemo, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -17,6 +16,8 @@ import {
   PresentUser,
   useAnnotator
 } from '@annotorious/react';
+import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -62,7 +63,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, layers, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -88,12 +89,14 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     preserveImageSizeOnResize: true
   }), [props.imageManifestURL]);
 
-  const selectAction = (annotation: ImageAnnotation) => {
+  const selectAction = (annotation: SupabaseAnnotation) => {
     // Annotation targets are editable for creators and admins
     const me = anno?.getUser()?.id;
 
-    const canEdit = annotation.target.creator?.id === me ||
-      policies.get('layers').has('INSERT');
+    const isActiveLayer = annotation.layer_id === props.defaultLayer?.id;
+
+    const canEdit = isActiveLayer && (
+      annotation.target.creator?.id === me || policies.get('layers').has('INSERT'));
 
     return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }
@@ -143,9 +146,10 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       {props.usePopup && (
         <OpenSeadragonPopup
           popup={props => (
-            <Annotation.Popup
+            <AnnotationPopup
               {...props}
               i18n={i18n}
+              layers={layers}
               policies={policies}
               present={present}
               tagVocabulary={tagVocabulary} />)} />

@@ -15,4 +15,5 @@ src/components/Plugins/deployedPlugins.ts
 .env.production
 .idea
 
+public/pdf.worker.min.mjs
 .DS_Store

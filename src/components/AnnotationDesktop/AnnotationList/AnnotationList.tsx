@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Annotation } from '@components/Annotation';
-import type { Policies, Translations } from 'src/Types';
-import { SupabaseAnnotation, Visibility } from '@recogito/annotorious-supabase';
+import { AnnotationCard } from '@components/Annotation';
+import type { Layer, Policies, Translations } from 'src/Types';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import { useFilterSettings } from '../LayerConfiguration';
@@ -12,22 +12,26 @@ import {
   PresentUser, 
   useAnnotations,
   useAnnotator,
-  useAnnotatorUser,
   useSelection,
-  User,
   useViewportState,
-  useAnnotationStore
+  useAnnotationStore,
+  Annotation,
+  DrawingStyle
 } from '@annotorious/react';
 
 import './AnnotationList.css';
 
 interface AnnotationListProps<T extends Anno> {
 
+  currentStyle?: (a: Annotation) => DrawingStyle;
+
   i18n: Translations;
 
-  present: PresentUser[];
+  layers?: Layer[];
 
   me: PresentUser;
+
+  present: PresentUser[];
 
   policies?: Policies;
 
@@ -67,30 +71,52 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const annotations = applyFilter();
 
+  const { selected, pointerEvent } = useSelection();
+
   const sorted = useMemo(() => {
     const filtered = filter ? annotations.filter(filter) : annotations;
     // @ts-ignore
     return props.sorting ? [...filtered].sort(props.sorting) : filtered;
-  }, [annotations, filter]);
-
-  const user = useAnnotatorUser();
-
-  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
+  }, [annotations, filter, selected]);
 
   const anno = useAnnotator<Annotator>();
 
   const store = useAnnotationStore();
 
-  const { selected, pointerEvent } = useSelection();
+  const activeLayer = useMemo(() => (
+    (props.layers || []).find(l => l.is_active)
+  ), [props.layers]);
 
-  const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {    
+  const onClick = (event: React.MouseEvent, a?: SupabaseAnnotation) => {  
     event.stopPropagation();
 
-    props.beforeSelect(a);
+    const isAlreadySelected = a && isSelected(a);
+    if (!isAlreadySelected) {
+      props.beforeSelect(a);
 
-    if (a)
-      anno.state.selection.setSelected(a.id);
-    else
+      if (a) {
+        // Annotation targets are editable for creators and admins
+        const me = anno?.getUser()?.id;
+
+        const isActiveLayer = a.layer_id === activeLayer?.id;
+
+        const canEdit = isActiveLayer && (
+          a.target.creator?.id === me || props.policies?.get('layers').has('INSERT'));
+
+        anno.state.selection.setSelected(a.id, canEdit);
+      } else {
+        anno.state.selection.clear();
+      }
+    }
+  }
+  const onSubmit = (annotation: SupabaseAnnotation) => {
+    // Follow GoogleDocs pattern which de-selects annotations
+    // when they are new, but keeps the reply field open
+    // after adding a reply
+    const hasReplies =
+      store.getAnnotation(annotation.id)!.bodies.filter(b => b.purpose === 'commenting').length > 1;
+
+    if (!hasReplies)
       anno.state.selection.clear();
   }
 
@@ -98,23 +124,8 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const isSelected = (a: SupabaseAnnotation) => 
     selected.length > 0 && selected[0].annotation.id == a.id;
 
-  const isMine = (a: SupabaseAnnotation) =>
-    me.id === a.target.creator?.id;
-
-  const isPrivate = (a: SupabaseAnnotation) =>
-    a.visibility === Visibility.PRIVATE;
-
-  const getReplyFormClass = (a: SupabaseAnnotation) => {
-    const classes = ['annotation-card'];
-
-    if (isSelected(a))
-      classes.push('selected');
-
-    if (isPrivate(a))
-      classes.push('private')
-    
-    return classes.join(' ');
-  }
+  const isReadOnly = (a: SupabaseAnnotation) =>
+    !(a.layer_id && a.layer_id === activeLayer?.id);
 
   const onDeleteAnnotation = (annotation: Anno) => 
     store.deleteAnnotation(annotation);
@@ -128,25 +139,36 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const onDeleteBody = (body: AnnotationBody) =>
     store.deleteBody(body);
 
+  const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
+    // TODO to replace with store.bulkDeleteBodies once supported in Annotorious!
+    bodies.forEach(b => store.deleteBody(b));
+
   const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
     store.updateBody(oldValue, newValue);
     
   useEffect(() => {
     // Scroll the first selected card into view
-    if (selected?.length > 0) {
+    if (selected?.length > 0 && pointerEvent) {
       setTimeout(() => {
         const card = el.current?.querySelector('.selected');
         if (card)
          card.scrollIntoView({ behavior: 'smooth' });  
-      }, 250);
+      }, 1);
     }
     
     // Don't focus reply before pointer up, otherwise the selection breaks!
     setAutofocus(pointerEvent?.type === 'pointerup');
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
 
+  const getBorderColor = (annotation: Anno) => {
+    if (props.currentStyle) {
+      const styled = props.currentStyle(annotation);
+      return styled?.fill;
+    }
+  }
+
   return (
-    <div className="anno-drawer-panel annotation-list">
+    <div className="anno-drawer-panel annotation-list not-annotatable">
       <ViewportFilterToggle 
         i18n={props.i18n} 
         onChange={setViewportFilter} />
@@ -154,88 +176,29 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
       <ul
         ref={el}
         onClick={onClick}>
-        {sorted.map(a => (
+        {sorted.map(annotation => (
           <li 
-            key={a.id}
-            onClick={event => onClick(event, a)}>
-            {a.bodies.length === 0 ? (
-              isMine(a) ? (              
-                isSelected(a) ? (
-                  <div className={getReplyFormClass(a)}>
-                    <Annotation.TagsWidget 
-                      i18n={props.i18n} 
-                      me={me} 
-                      annotation={a}
-                      vocabulary={props.tagVocabulary} 
-                      onCreateTag={onCreateBody} 
-                      onDeleteTag={onDeleteBody} />
-
-                    <Annotation.ReplyForm
-                      autofocus={autofocus}
-                      i18n={props.i18n}
-                      me={me} 
-                      scrollIntoView
-                      annotation={a} 
-                      placeholder={props.i18n.t['Comment...']}
-                      onSubmit={onCreateBody} />
-
-                    {plugins.map(plugin => (
-                      <Extension 
-                        key={plugin.meta.name}
-                        plugin={plugin} 
-                        extensionPoint="annotation.*.annotation-editor"
-                        me={me}
-                        annotation={a} 
-                        onUpdateAnnotation={onUpdateAnnotation} />
-                    ))}
-                  </div>
-                ) : (
-                  <Annotation.EmptyCard
-                    private={isPrivate(a)}
-                    i18n={props.i18n}
-                    annotation={a} 
-                    present={props.present} />
-                )
-              ) : (
-                <Annotation.EmptyCard 
-                  typing
-                  selected={isSelected(a)}
-                  i18n={props.i18n} 
-                  annotation={a} 
-                  present={props.present} />              
-              )
-            ) : (
-              isPrivate(a) ? (
-                <Annotation.PrivateCard 
-                  className={isSelected(a) ? 'selected' : undefined}
-                  showReplyForm={isSelected(a)}
-                  i18n={props.i18n}
-                  annotation={a} 
-                  present={props.present}
-                  tagVocabulary={props.tagVocabulary} 
-                  onReply={onCreateBody}
-                  onUpdateAnnotation={onUpdateAnnotation}
-                  onCreateBody={onCreateBody} 
-                  onDeleteBody={onDeleteBody} 
-                  onUpdateBody={onUpdateBody}
-                  onDeleteAnnotation={() => onDeleteAnnotation(a)} />
-              ) : (
-                <Annotation.PublicCard 
-                  className={isSelected(a) ? 'selected' : undefined}
-                  showReplyForm={isSelected(a)}
-                  i18n={props.i18n}
-                  annotation={a} 
-                  present={props.present}
-                  policies={props.policies} 
-                  tagVocabulary={props.tagVocabulary} 
-                  onReply={onCreateBody}
-                  onUpdateAnnotation={onUpdateAnnotation}
-                  onCreateBody={onCreateBody} 
-                  onDeleteBody={onDeleteBody} 
-                  onUpdateBody={onUpdateBody}
-                  onDeleteAnnotation={() => onDeleteAnnotation(a)} />  
-              )
-            )}
+            key={annotation.id}
+            onClick={event => onClick(event, annotation)}>
+            
+            <AnnotationCard 
+              annotation={annotation}
+              autoFocus={autofocus}
+              borderColor={getBorderColor(annotation)}
+              i18n={props.i18n}
+              isReadOnly={isReadOnly(annotation)}
+              isSelected={isSelected(annotation)}
+              policies={props.policies}
+              present={props.present}
+              showReplyField={!isReadOnly(annotation) && isSelected(annotation)}
+              tagVocabulary={props.tagVocabulary} 
+              onUpdateAnnotation={onUpdateAnnotation}
+              onCreateBody={onCreateBody} 
+              onDeleteBody={onDeleteBody} 
+              onBulkDeleteBodies={onBulkDeleteBodies}
+              onUpdateBody={onUpdateBody}
+              onDeleteAnnotation={() => onDeleteAnnotation(annotation)} 
+              onSubmit={() => onSubmit(annotation)} />
           </li>
         ))}
       </ul>

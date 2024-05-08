@@ -1,8 +1,7 @@
-import type { Annotation, PresentUser } from '@annotorious/react';
+import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react';
 import type { Policies, Translations } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
-import { BaseCard } from '@components/Annotation/Card/BaseCard';
-import { PrivateComment, PublicComment } from '@components/Annotation/Comment';
+import { AnnotationCard } from '@components/Annotation';
 
 interface DocumentNotesListItemProps {
 
@@ -14,7 +13,9 @@ interface DocumentNotesListItemProps {
 
   present: PresentUser[];
 
-  showReplyForm?: boolean;
+  showReplyField?: boolean;
+
+  onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
   onDeleteNote(): void;
 
@@ -24,15 +25,9 @@ interface DocumentNotesListItemProps {
 
   onUpdateBody(oldValue: DocumentNoteBody, newValue: DocumentNoteBody): void;
 
-  onMakePublic(): void;
-
 }
 
 export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
-
-  const { onMakePublic } = props;
-
-  const isPrivate = props.note.is_private;
 
   const i18n = {
     ...props.i18n,
@@ -43,26 +38,21 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
   }
 
   return (
-    <div className={isPrivate ? 
-      'document-notes-list-item annotation-card private' :
-      'document-notes-list-item annotation-card public'}>
-      <BaseCard 
-        showReplyForm={props.showReplyForm}
-        annotation={props.note as unknown as Annotation}
-        i18n={i18n}
-        policies={props.policies}
-        present={props.present}
-        comment={props => isPrivate ? (
-            <PrivateComment {...props} onMakePublic={onMakePublic} />
-          ) : (
-            <PublicComment {...props} />
-          )} 
-        onReply={props.onCreateBody}
-        onCreateBody={props.onCreateBody}
-        onDeleteBody={props.onDeleteBody}
-        onUpdateBody={props.onUpdateBody}
-        onDeleteAnnotation={props.onDeleteNote} />
-    </div>
+    <AnnotationCard
+      autoFocus
+      isNote 
+      annotation={props.note as unknown as Annotation}
+      i18n={i18n}   
+      policies={props.policies}    
+      present={props.present}
+      showReplyField={props.showReplyField}
+      onBulkDeleteBodies={props.onBulkDeleteBodies}
+      onCreateBody={props.onCreateBody}
+      onDeleteBody={props.onDeleteBody}
+      onUpdateBody={props.onUpdateBody}
+      onUpdateAnnotation={() => {}}
+      onDeleteAnnotation={props.onDeleteNote} 
+      onSubmit={() => {}} />
   )
 
 }

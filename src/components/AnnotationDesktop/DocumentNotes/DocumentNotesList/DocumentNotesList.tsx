@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import type { PresentUser } from '@annotorious/react';
+import type { AnnotationBody, PresentUser } from '@annotorious/react';
 import type { Policies, Translations } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { Sorter, Sorting, SortSelector } from '../SortSelector';
 import { NewNote, NewNoteForm } from '../NewNote';
-import type { DocumentNote } from '../Types';
+import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
@@ -52,6 +52,9 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     setSelected(note.id);
   }
 
+  const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
+    bodies.forEach(b => deleteBody(b as DocumentNoteBody));
+
   return (
     <div className="anno-sidepanel document-notes-list">
       <div className="document-notes-list-header">
@@ -84,14 +87,14 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
             <DocumentNotesListItem 
               i18n={props.i18n}
               note={note} 
-              showReplyForm={selected === note.id}
+              showReplyField={selected === note.id}
               policies={props.policies}
               present={props.present} 
               onCreateBody={createBody}
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}
               onDeleteNote={() => deleteNote(note.id)} 
-              onMakePublic={() => makePublic(note)} />
+              onBulkDeleteBodies={onBulkDeleteBodies} />
           </li>
         ))}
       </ul>

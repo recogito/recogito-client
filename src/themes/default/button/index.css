@@ -74,7 +74,7 @@ button svg:last-child {
 }
 
 :is(button, a.button) + :is(button, a.button) {
-  margin-left: 0.8em;
+  margin-left: 0.5rem;
 }
 
 button.tiny,

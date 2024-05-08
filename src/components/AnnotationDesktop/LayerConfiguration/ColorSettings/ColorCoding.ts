@@ -1,11 +1,11 @@
-import type { Color, DrawingStyle, PresentUser } from '@annotorious/react';
+import type { AnnotationState, Color, DrawingStyle, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export interface ColorCoding {
 
   name: string;
 
-  getStyle(): ((a: SupabaseAnnotation, selected?: boolean) => DrawingStyle);
+  getStyle(): ((a: SupabaseAnnotation, state: AnnotationState, z?: number) => DrawingStyle);
 
   getLegend(): ColorLegendValue[];
 

@@ -1,0 +1,4 @@
+.private-avatar .avatar-fallback {
+  background-color: var(--gray-800);
+  color: #fff;
+}

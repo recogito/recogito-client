@@ -9,7 +9,7 @@ import { Polygon, Rectangle } from './Icons';
 import { Cursor, Trash } from '@phosphor-icons/react';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import type { Translations } from 'src/Types';
-import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
+// import { AdminOverrideAlert } from '@components/Annotation/Comment/PublicComment/PublicCommentActions';
 
 import './Toolpanel.css';
 
@@ -97,14 +97,14 @@ export const Toolpanel = (props: ToolpanelProps) => {
         </section>
       </div>
 
-      {!isMine(selected) && (
+      {/*!isMine(selected) && (
         <AdminOverrideAlert
           i18n={props.i18n}
           open={confirmOpen}
           onConfirm={onDeleteSelection}
           onCancel={() => setConfirmOpen(false)}
         />
-      )}
+      )*/}
       {(props.isAdmin || isMine(selected)) && (
         <div
           className={
