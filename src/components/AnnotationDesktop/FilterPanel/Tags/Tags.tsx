@@ -1,9 +1,10 @@
 import * as Toggle from '@radix-ui/react-toggle';
 import { Tag as TagIcon} from '@phosphor-icons/react';
-
-const TAGS = ['historical reference', 'meter', 'lorem ipsum', 'dolor sit amet'];
+import { useTags } from './useTags';
 
 export const Tags = () => {
+
+  const tags = useTags();
 
   return (
     <section className="filter-creators">
@@ -12,7 +13,7 @@ export const Tags = () => {
       </h2>
 
       <ul>
-        {TAGS.map(tag => (
+        {tags.map(tag => (
           <li key={tag}>
             <Toggle.Root className="toggle">
               {tag}

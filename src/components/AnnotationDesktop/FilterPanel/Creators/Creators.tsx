@@ -1,20 +1,22 @@
-import { useState } from 'react';
 import { User } from '@phosphor-icons/react';
+import * as Toggle from '@radix-ui/react-toggle';
+import type { PresentUser } from '@annotorious/react';
+import { useCreators } from './useCreators';
+import type { Translations } from 'src/Types';
+
 import './Creators.css';
-import { CreatorButton } from './CreatorButton';
 
-const CREATORS = ['Chelsea', 'Jamie', 'Lorin', 'Anindita'];
+interface CreatorsProps {
 
-export const Creators = () => {
+  i18n: Translations;
 
-  const [checked, setChecked] = useState<string[]>([]);
+  present: PresentUser[];
 
-  const onToggle = (creator: string, checked: boolean) => {
-    if (checked)
-      setChecked(current => ([...current, creator]))
-    else
-      setChecked(current => current.filter(c => c !== creator));
-  }
+}
+
+export const Creators = (props: CreatorsProps) => {
+
+  const creators = useCreators(props.present);
 
   return (
     <section className="filter-creators">
@@ -23,12 +25,11 @@ export const Creators = () => {
       </h2>
 
       <ul>
-        {CREATORS.map(creator => (
-          <li key={creator}>
-            <CreatorButton
-              creator={creator}
-              checked={checked.includes(creator)}
-              onToggle={checked => onToggle(creator, checked)} />
+        {creators.map(creator => (
+          <li key={creator.id}>
+            <Toggle.Root className="toggle">
+              {creator.name || 'Anonymous'}
+            </Toggle.Root>
           </li>
         ))}
       </ul>

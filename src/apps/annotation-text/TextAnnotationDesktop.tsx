@@ -176,7 +176,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             <main className={rightPanelOpen ? 'list-open' : undefined}>
               <LeftDrawer 
                 i18n={props.i18n}
-                open={leftPanelOpen} />
+                open={leftPanelOpen} 
+                present={present} />
 
               {policies && (
                 <AnnotatedText
