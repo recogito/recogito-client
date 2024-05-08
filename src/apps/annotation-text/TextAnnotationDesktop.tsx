@@ -177,7 +177,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               <LeftDrawer 
                 i18n={props.i18n}
                 open={leftPanelOpen} 
-                present={present} />
+                present={present} 
+                onSetFilter={f => setFilter(() => f)} />
 
               {policies && (
                 <AnnotatedText

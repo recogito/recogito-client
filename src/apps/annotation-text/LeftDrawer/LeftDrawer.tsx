@@ -1,5 +1,5 @@
 import { animated, easings, useTransition } from '@react-spring/web';
-import type { PresentUser } from '@annotorious/react';
+import type { Filter, PresentUser } from '@annotorious/react';
 import { FilterPanel } from '@components/AnnotationDesktop/FilterPanel';
 import type { Translations } from 'src/Types';
 
@@ -13,10 +13,12 @@ interface LeftDrawerProps {
   
   present: PresentUser[];
 
+  onSetFilter(filter?: Filter): void;
+
 }
 
 export const LeftDrawer = (props: LeftDrawerProps) => {
-  
+
   const transition = useTransition([props.open], {
     from: { flexBasis: 0, opacity: 0 },
     enter: { flexBasis: 240, opacity: 1 },
@@ -34,7 +36,8 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       <aside>
         <FilterPanel 
           i18n={props.i18n} 
-          present={props.present} />
+          present={props.present} 
+          onSetFilter={props.onSetFilter} />
       </aside>
     </animated.div>
   ))

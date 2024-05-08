@@ -1,4 +1,5 @@
-import type { PresentUser } from '@annotorious/react';
+import { useEffect, useState } from 'react';
+import type { Filter, PresentUser } from '@annotorious/react';
 import { Creators } from './Creators';
 import { Tags } from './Tags';
 import { Visibility } from './Visibility';
@@ -12,9 +13,18 @@ interface FilterPanelProps {
 
   present: PresentUser[];
 
+  onSetFilter(filter?: Filter): void;
+
 }
 
 export const FilterPanel = (props: FilterPanelProps) => {
+
+  const [tagFilter, setTagFilter] = useState<Filter | undefined>();
+
+  useEffect(() => {
+    // TODO merge filters
+    props.onSetFilter(tagFilter); 
+  }, [tagFilter]);
 
   return (
     <div className="anno-drawer-panel filter-panel not-annotatable">
@@ -25,7 +35,8 @@ export const FilterPanel = (props: FilterPanelProps) => {
         i18n={props.i18n} 
         present={props.present} />
 
-      <Tags />
+      <Tags 
+        onSetFilter={f => setTagFilter(() => f)} />
     </div>
   )
 
