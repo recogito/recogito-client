@@ -30,7 +30,7 @@
 }
 
 .annotation.readonly .interstitial .label {
-  background-color: var(--gray-200);
+  background-color: var(--gray-50);
 }
 
 .annotation.note .interstitial .label {

@@ -105,6 +105,6 @@ main.list-open .content-wrapper .tei {
   z-index: 1;
 }
 
-.ta-desktop .annotation-list .annotation {
+.ta-desktop .annotation-list .annotation:not(.readonly) {
   box-shadow: 0 0 16px -7px rgba(0, 0, 0, 0.18);
 }
