@@ -1,10 +1,19 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument, createProjectDocument } from '@backend/crud';
-import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, Layer, Protocol, TaggedContext } from 'src/Types';
+import type { Document, Protocol, TaggedContext } from 'src/Types';
 import type { DocumentWithContext } from '../../Types';
+
+/**
+ * IIIF configuration:
+ * - 'IIIF_CLOUD': the image is uploaded to IIIF Cloud first, then a document
+ *   record is created that points to the image on IIIF Cloud. 
+ * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
+ *   is uploaded to Supabase storage.
+ */
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined = 
+  import.meta.env.PUBLIC_IIIF_CONFIGURATION;
 
 /**
  * Initializes a new Document in a Context. Process differs for
@@ -26,21 +35,34 @@ export const initDocument = (
   protocol?: Protocol
 ): Promise<Document> => {
   if (file?.type.startsWith('image')) {
-    // If the document is an image upload, the file is first
-    // uploaded to the IIIF server, and then treated like a remote
-    // IIIF source.
-    return uploadImage(supabase, file, name, onProgress).then((iiif) =>
-      _initDocument(
+    if (IIIF_CONFIGURATION === 'SUPABASE_CANTALOUPE') {
+      return _initDocument(
         supabase,
         name,
         projectId,
         contextId,
-        undefined,
-        undefined,
-        'IIIF_IMAGE',
-        iiif.manifest_iiif_url
+        onProgress,
+        file,
+        protocol,
+        url
       )
-    );
+    } else {
+      // If the document is an image upload, the file is first
+      // uploaded to the IIIF server, and then treated like a remote
+      // IIIF source.
+      return uploadImage(supabase, file, name, onProgress).then((iiif) =>
+        _initDocument(
+          supabase,
+          name,
+          projectId,
+          contextId,
+          undefined,
+          undefined,
+          'IIIF_IMAGE',
+          iiif.manifest_iiif_url
+        )
+      );
+    }
   } else {
     return _initDocument(
       supabase,
@@ -271,8 +293,10 @@ export const getDocumentInContext = (
           }
 
           document.layers = data.layer_contexts
+            // @ts-ignore
             .filter((c) => c.layer.document_id === documentId)
             .map((layerContext) => ({
+              // @ts-ignore
               id: layerContext.layer.id,
               is_active: layerContext.is_active_layer,
               document_id: documentId,

@@ -15,6 +15,7 @@
 @import './toast/index.css';
 @import './tooltip/index.css';
 @import './scroll-area/index.css';
+@import './accordian/index.css';
 
 @font-face {
   font-family: Inter;
@@ -220,6 +221,13 @@ h2 {
 p {
   margin: 0.8em 0;
   padding: 0;
+}
+
+.text-body-small-bold {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 13ps;
+  line-height: 18.2px;
 }
 
 input,

@@ -177,13 +177,31 @@ export interface DocumentWithContext extends Document {
   };
 }
 
+export interface DocumentWithLayers extends Document {
+  layers: {
+    id: string;
+    document_id: string;
+    project_id: string;
+    name?: string;
+    description?: string;
+    is_active: boolean;
+    context: {
+      id?: string;
+      name?: string;
+      description?: string;
+      project_id: string;
+      is_project_default?: boolean;
+    };
+  }[];
+}
+
 export const ContentTypes = [
   'application/pdf',
   'text/plain',
   'text/xml',
 ] as const;
 
-export type ContentType = (typeof ContentTypes)[number];
+export type ContentType = (typeof ContentTypes)[number] | string;
 
 export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
@@ -260,6 +278,8 @@ export interface ExtendedAssignmentData extends Context {
     description: string;
 
     document: Document;
+
+    is_active_layer: boolean;
   }[];
 }
 
@@ -311,7 +331,6 @@ export interface InstalledPlugin {
   plugin_id: string;
 
   plugin_settings?: any;
-
 }
 
 export interface Translations {

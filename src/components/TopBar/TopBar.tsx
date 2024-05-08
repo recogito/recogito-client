@@ -1,10 +1,14 @@
 import { Notifications } from '@components/Notifications';
-import { Invitation, Translations, ExtendedProjectData, MyProfile } from 'src/Types';
+import type {
+  Invitation,
+  Translations,
+  ExtendedProjectData,
+  MyProfile,
+} from 'src/Types';
 import { useState } from 'react';
 
 import config from 'src/config.json';
 import { AccountActions } from '@components/AccountActions';
-
 
 import './TopBar.css';
 
@@ -19,8 +23,9 @@ interface TopBarProps {
 }
 
 export const TopBar = (props: TopBarProps) => {
-
-  const [invitations, setInvitations] = useState<Invitation[]>(props.invitations);
+  const [invitations, setInvitations] = useState<Invitation[]>(
+    props.invitations
+  );
 
   const [projects, setProjects] = useState<ExtendedProjectData[]>(
     props.projects
@@ -36,10 +41,7 @@ export const TopBar = (props: TopBarProps) => {
 
     // Make sure we're not creating a duplicate in the list by joining a
     // project we're already a member of!
-    setProjects([
-      ...projects.filter((p) => p.id !== project.id),
-      project,
-    ]);
+    setProjects([...projects.filter((p) => p.id !== project.id), project]);
   };
 
   const onInvitationDeclined = (invitation: Invitation) =>
@@ -69,6 +71,5 @@ export const TopBar = (props: TopBarProps) => {
         </div>
       </header>
     </div>
-  )
-
-}
+  );
+};

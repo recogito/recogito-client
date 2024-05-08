@@ -34,7 +34,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const policies = useLayerPolicies(props.document.layers[0].id);
 
   const {
-    isPresentationManifest,
+    authToken,
+    isPresentationManifest, 
     manifestError,
     sequence,
     currentImage,
@@ -177,6 +178,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 {policies && currentImage && (
                   <AnnotatedImage
                     ref={viewer}
+                    authToken={authToken}
                     channelId={props.channelId}
                     defaultLayer={defaultLayer}
                     imageManifestURL={currentImage}

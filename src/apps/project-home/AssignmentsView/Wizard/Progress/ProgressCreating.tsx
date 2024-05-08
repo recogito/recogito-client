@@ -3,6 +3,7 @@ import {
   addUsersToContext,
   createAssignmentContext,
   addDocumentsToContext,
+  addReadOnlyLayersToContext,
 } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
@@ -54,8 +55,44 @@ export const ProgressCreating = (props: ProgressProps) => {
                   setState('failed');
                   props.onError('Failed to add users to context');
                 } else {
-                  setState('success');
-                  props.onSaved({ ...props.assignment, id: context.id });
+                  // Step 4. Add any read only layers
+                  const layers: string[] = [];
+                  props.assignment.documents.forEach((doc) => {
+                    doc.layers.forEach((layer) => {
+                      if (layer.context.id !== props.assignment.id) {
+                        layers.push(layer.id);
+                      }
+                    });
+                  });
+                  if (layers.length > 0) {
+                    addReadOnlyLayersToContext(
+                      supabase,
+                      context.id,
+                      layers
+                    ).then((result) => {
+                      if (!result) {
+                        console.error(
+                          'Failed to add read only layers to context'
+                        );
+                        setState('failed');
+                        props.onError(
+                          'Failed to add read only layers to context'
+                        );
+                      } else {
+                        setState('success');
+                        props.onSaved({
+                          ...props.assignment,
+                          id: context.id,
+                        });
+                      }
+                    });
+                  } else {
+                    setState('success');
+                    props.onSaved({
+                      ...props.assignment,
+                      id: context.id,
+                    });
+                  }
                 }
               });
             }

@@ -102,11 +102,9 @@ const plugins = PluginRegistry.resolvePlugins(
 ---
 
 <BaseLayout title={document.data.name}>
-  {
-    viewer === 'TEI' && !styleSheet && (
-      <link rel='stylesheet' href='/tei.css' slot='head' />
-    )
-  }
+  {viewer === 'TEI' && !styleSheet && (
+    <link rel='stylesheet' href='/tei.css' slot='head' />
+  )}
 
   {
     viewer === 'OPENSEADRAGON' ? (
