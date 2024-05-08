@@ -201,6 +201,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               )}
 
               <RightDrawer
+                filter={filter}
                 i18n={props.i18n}
                 layers={layers}
                 open={rightPanelOpen}

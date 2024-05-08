@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
 import type { DocumentLayer, Layer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -24,6 +25,8 @@ import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 interface AnnotationListProps<T extends Anno> {
 
   currentStyle?: DrawingStyleExpression<SupabaseAnnotation> | HighlightStyleExpression;
+
+  filter?: Filter;
 
   i18n: Translations;
 
@@ -69,7 +72,8 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     }
   }
 
-  const annotations = applyFilter();
+  const annotations = props.filter ? 
+    applyFilter().filter(props.filter) : applyFilter();
 
   const { selected, pointerEvent } = useSelection();
 
