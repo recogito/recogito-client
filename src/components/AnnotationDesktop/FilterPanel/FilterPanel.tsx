@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Filter, PresentUser } from '@annotorious/react';
+import type { Annotation, Filter, PresentUser } from '@annotorious/react';
 import { Creators } from './Creators';
 import { Tags } from './Tags';
 import { Visibility } from './Visibility';
@@ -19,12 +19,23 @@ interface FilterPanelProps {
 
 export const FilterPanel = (props: FilterPanelProps) => {
 
+  const [creatorFilter, setCreatorFilter] = useState<Filter | undefined>();
+
   const [tagFilter, setTagFilter] = useState<Filter | undefined>();
 
   useEffect(() => {
-    // TODO merge filters
-    props.onSetFilter(tagFilter); 
-  }, [tagFilter]);
+    const filters = [
+      creatorFilter!,
+      tagFilter!
+    ].filter(Boolean);
+
+    if (filters.length > 0) {
+      const chained = (a: Annotation) => filters.every(fn => fn(a));
+      props.onSetFilter(chained);
+    } else {
+      props.onSetFilter(undefined); 
+    }
+  }, [creatorFilter, tagFilter]);
 
   return (
     <div className="anno-drawer-panel filter-panel not-annotatable">
@@ -33,7 +44,8 @@ export const FilterPanel = (props: FilterPanelProps) => {
 
       <Creators 
         i18n={props.i18n} 
-        present={props.present} />
+        present={props.present} 
+        onSetFilter={f => setCreatorFilter(() => f)} />
 
       <Tags 
         onSetFilter={f => setTagFilter(() => f)} />
