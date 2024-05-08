@@ -3,13 +3,13 @@ import { Chats, Note } from '@phosphor-icons/react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
-import type { Annotation, Filter, PresentUser } from '@annotorious/react';
+import type { Annotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList } from '@components/AnnotationDesktop';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 interface RightDrawerProps {
 
