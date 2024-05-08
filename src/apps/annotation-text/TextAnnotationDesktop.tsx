@@ -59,7 +59,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
 
     const readOnlyStyle = (state?: AnnotationState, z?: number) => ({
-      fill: '#000000',
+      fill: state?.selected ? '#000000' : undefined,
       fillOpacity: state?.selected ? 0.08 : 0,
       underlineStyle: 'solid',
       underlineColor: '#000000' as Color,
