@@ -253,3 +253,39 @@ export const getAllLayersInContext = (
         return { error, data: flattened as unknown as Layer[] };
       }
     });
+
+export const addReadOnlyLayersToContext = (
+  supabase: SupabaseClient,
+  contextId: string,
+  layerIds: string[]
+): Response<boolean> =>
+  supabase
+    .rpc('add_read_only_layers_rpc', {
+      _context_id: contextId,
+      _layer_ids: layerIds,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        return { error, data: false };
+      } else {
+        return { error, data };
+      }
+    });
+
+export const removeReadOnlyLayersFromContext = (
+  supabase: SupabaseClient,
+  contextId: string,
+  layerIds: string[]
+): Response<boolean> =>
+  supabase
+    .rpc('remove_read_only_layers_rpc', {
+      _context_id: contextId,
+      _layer_ids: layerIds,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        return { error, data: false };
+      } else {
+        return { error, data };
+      }
+    });

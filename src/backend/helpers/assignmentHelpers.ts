@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Response } from '@backend/Types';
+import type { AvailableLayers, Response } from '@backend/Types';
 import type { Context, ExtendedAssignmentData } from 'src/Types';
 
 /**
@@ -82,6 +82,8 @@ export const getAssignment = (
       ),
       layer_contexts (
         id,
+        context_id,
+        is_active_layer,
         layer:layer_id(
           id,
           name,
@@ -132,7 +134,13 @@ export const getAssignment = (
           }),
           // @ts-ignore
           layers: data.layer_contexts.map((l) => {
-            return { ...l.layer, id: l.id };
+            return {
+              ...l.layer,
+              // @ts-ignore
+              id: l.layer.id,
+              context_id: l.context_id,
+              is_active_layer: l.is_active_layer,
+            };
           }),
         };
 
@@ -142,3 +150,13 @@ export const getAssignment = (
         };
       }
     });
+
+export const getAvailableLayers = (
+  supabase: SupabaseClient,
+  projectId: string
+): Response<AvailableLayers[]> =>
+  supabase
+    .rpc('get_availabale_layers_rpc', {
+      _project_id: projectId,
+    })
+    .then(({ error, data }) => ({ error, data: data as AvailableLayers[] }));
