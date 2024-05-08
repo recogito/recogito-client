@@ -201,7 +201,7 @@ export const ContentTypes = [
   'text/xml',
 ] as const;
 
-export type ContentType = (typeof ContentTypes)[number];
+export type ContentType = (typeof ContentTypes)[number] | string;
 
 export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
