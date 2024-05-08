@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
-import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import type { DrawingStyle, DrawingStyleExpression, Filter, PresentUser } from '@annotorious/react';
+import { CETEIcean, HighlightStyleExpression, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { PDFViewer } from '../PDFViewer';
 import { useContent } from '../useContent';
-import { Toolpanel } from '../Toolpanel';
 import { behaviors } from './teiBehaviors';
-import type { DocumentWithContext, Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -18,9 +18,9 @@ const SUPABASE_API_KEY = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 interface AnnotatedTextProps {
 
+  activeLayer?: DocumentLayer;
+  
   channelId: string;
-
-  defaultLayer?: Layer;
 
   document: DocumentWithContext;
 
@@ -28,13 +28,13 @@ interface AnnotatedTextProps {
 
   i18n: Translations;
 
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   policies: Policies;
 
   present: PresentUser[];
 
-  style?: (a: TextAnnotation) => DrawingStyle;
+  style?: HighlightStyleExpression;
 
   styleSheet?: string;
 

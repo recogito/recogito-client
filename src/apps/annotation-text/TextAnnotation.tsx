@@ -5,6 +5,7 @@ import type { DocumentWithContext, Translations } from 'src/Types';
 import { AuthorColorProvider } from '@components/AnnotationDesktop';
 
 export interface TextAnnotationProps {
+
   i18n: Translations;
 
   document: DocumentWithContext;
@@ -14,9 +15,9 @@ export interface TextAnnotationProps {
   plugins: PluginInstallationConfig[];
 
   styleSheet?: string;
+
 }
 
-/** Wraps the actual text annotation desktop, so we can access Annotorious context **/
 export const TextAnnotation = (props: TextAnnotationProps) => {
   return (
     <PluginProvider plugins={props.plugins}>

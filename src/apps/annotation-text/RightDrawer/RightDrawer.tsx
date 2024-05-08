@@ -1,11 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
-import type { TextAnnotation } from '@recogito/react-text-annotator';
+import type { HighlightStyleExpression, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { Annotation, DrawingStyle, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, LayerConfigurationPanel, DrawerPanel } from '@components/AnnotationDesktop';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
 
@@ -21,9 +21,9 @@ interface RightDrawerProps {
 
   sorting?: ((a: PDFAnnotation, b: PDFAnnotation) => number);
 
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
-  style?: (a: TextAnnotation) => DrawingStyle;
+  style?: HighlightStyleExpression;
 
   tagVocabulary?: string[];
 

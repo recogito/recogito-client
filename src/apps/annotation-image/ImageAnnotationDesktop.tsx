@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
+import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { BrandFooter, BrandHeader } from '@components/Branding';
@@ -86,7 +86,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   useEffect(() => {
     if (policies) {
-      const isDefault = isDefaultContext(props.document.context);
+      const isDefault = props.document.context.is_project_default;
 
       const isAdmin = policies?.get('layers').has('INSERT');
 

@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import { animated, easings, useSpring } from '@react-spring/web';
-import type { PresentUser, DrawingStyle, Filter, AnnotationState } from '@annotorious/react';
-import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
+import type { PresentUser, Filter, AnnotationState, Color } from '@annotorious/react';
+import type { HighlightStyle, HighlightStyleExpression, RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
+import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
 import { BrandHeader } from '@components/Branding';
@@ -16,7 +16,7 @@ import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
 import { LeftDrawer } from './LeftDrawer/LeftDrawer';
 import { RightDrawer } from './RightDrawer';
-import type { Layer } from 'src/Types';
+import type { DocumentLayer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
@@ -41,39 +41,40 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [layers, setLayers] = useState<Layer[] | undefined>();
+  const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
 
   const [defaultLayerStyle, setDefaultLayerStyle] =
-    useState<((a: TextAnnotation, state: AnnotationState, z?: number) => DrawingStyle) | undefined>(undefined);
+    useState<HighlightStyleExpression | undefined>(undefined);
 
-  const style = useMemo(() => {
+  const style: HighlightStyleExpression = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
 
-    const readOnlyStyle = (z: number) => ({
+    const readOnlyStyle = (z?: number) => ({
       fillOpacity: 0,
       underlineStyle: 'solid',
-      underlineColor: '#000',
-      underlineOffset: z * 3,
+      underlineColor: '#000000' as Color,
+      underlineOffset: (z || 0) * 3,
       underlineThickness: 2
-    });
+    } as HighlightStyle);
 
-    return (a: SupabaseAnnotation, state: AnnotationState, z: number) =>
-      (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle(z) : 
-      defaultLayerStyle ? defaultLayerStyle(a as TextAnnotation, state, z) : undefined;
+    return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
+      (a.layer_id && readOnly.has(a.layer_id)) 
+        ? readOnlyStyle(z) : 
+          typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a, state, z) : undefined;
   }, [defaultLayerStyle, layers]);
 
   const [filter, setFilter] = useState<Filter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
-  const defaultLayer =
+  const activeLayer =
     layers && layers.length > 0
-      ? layers.find((l) => l.is_active_layer) || layers[0]
+      ? layers.find((l) => l.is_active) || layers[0]
       : undefined;
 
   useEffect(() => {
     if (policies) {
-      const isDefault = isDefaultContext(props.document.context);
+      const isDefault = props.document.context.is_project_default;
 
       const isAdmin = policies?.get('layers').has('INSERT');
 
@@ -86,7 +87,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           props.document.context.project_id
         ).then(({ data, error }) => {
           if (error) console.error(error);
-          else setLayers(data);
+
+          const current = new Set(props.document.layers.map(l => l.id));
+          
+          const toAdd: DocumentLayer[] = data
+            .filter(l => !current.has(l.id))
+            .map(l => ({ id: l.id, document_id: l.document_id, is_active: false }));
+
+          setLayers([...props.document.layers, ...toAdd]);
         });
       } else {
         setLayers(props.document.layers);
@@ -139,14 +147,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       <ColorState present={present}>
         <DocumentNotes
           channelId={props.channelId}
-          layerId={defaultLayer?.id}
+          layerId={activeLayer?.id}
           present={present}
           onError={() => setConnectionError(true)}>
 
           <div className="anno-desktop ta-desktop">
-            {loading && (
-              <LoadingOverlay />
-            )}
+            {loading && ( <LoadingOverlay /> )}
 
             <div className="header">
               <animated.div style={brandingAnimation}>
@@ -166,12 +172,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             </div>
 
             <main className={rightPanel ? 'list-open' : undefined}>
-              <LeftDrawer open={leftPanelOpen} />
+              <LeftDrawer 
+                i18n={props.i18n}
+                open={leftPanelOpen} />
 
               {policies && (
                 <AnnotatedText
+                  activeLayer={activeLayer}
                   channelId={props.channelId}
-                  defaultLayer={defaultLayer}
                   document={props.document}
                   filter={filter}
                   i18n={props.i18n}
@@ -185,8 +193,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                   onConnectionError={() => setConnectionError(true)}
                   onSaveError={() => setConnectionError(true)}
                   onLoad={() => setLoading(false)}
-                  styleSheet={props.styleSheet}
-                />
+                  styleSheet={props.styleSheet} />
               )}
 
               <RightDrawer
