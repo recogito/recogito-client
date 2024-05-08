@@ -1,19 +1,22 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
-import type { Filter } from '@annotorious/react';
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import type { Annotation, Filter, User } from '@annotorious/react';
+import type { FilterSetting } from './FilterSetting';
 
 interface FilterStateContextValue {
 
-  creatorFilter?: Filter;
+  creatorSettings?: FilterSetting<User[]>;
 
-  setCreatorFilter: React.Dispatch<React.SetStateAction<Filter | undefined>>;
+  setCreatorSettings: React.Dispatch<React.SetStateAction<FilterSetting<User[]> | undefined>>;
 
-  tagFilter?: Filter;
+  tagSettings?: FilterSetting<string[]>;
   
-  setTagFilter: React.Dispatch<React.SetStateAction<Filter | undefined>>;
+  setTagSettings: React.Dispatch<React.SetStateAction<FilterSetting<string[]> | undefined>>;
 
-  visibilityFilter?: Filter;
+  visibilitySettings?: FilterSetting<'public' | 'private' | 'all'>;
   
-  setVisibilityFilter: React.Dispatch<React.SetStateAction<Filter | undefined>>;
+  setVisibilitySettings: React.Dispatch<React.SetStateAction<FilterSetting<'all' | 'private' | 'public'> | undefined>>;
+
+  filter?: Filter;
 
 }
 
@@ -28,20 +31,42 @@ interface FilterStateProps {
 
 export const FilterState = (props: FilterStateProps) => {
 
-  const [creatorFilter, setCreatorFilter] = useState<Filter | undefined>();
+  const [creatorSettings, setCreatorSettings] = 
+    useState<FilterSetting<User[]> | undefined>();
 
-  const [tagFilter, setTagFilter] = useState<Filter | undefined>();
+  const [tagSettings, setTagSettings] = 
+    useState<FilterSetting<string[]> | undefined>();
 
-  const [visibilityFilter, setVisibilityFilter] = useState<Filter | undefined>();
+  const [visibilitySettings, setVisibilitySettings] = 
+    useState<FilterSetting<'all' | 'private' | 'public'> | undefined>();
+
+  const [chained, setChained] = useState<Filter | undefined>();
+
+  // Note: this may move into the context provider later
+  useEffect(() => {
+    const filters = [
+      creatorSettings?.filter!,
+      tagSettings?.filter!,
+      visibilitySettings?.filter!
+    ].filter(Boolean);
+
+    if (filters.length > 0) {
+      const chained = (a: Annotation) => filters.every(fn => fn(a));
+      setChained(() => chained)
+    } else {
+      setChained(undefined); 
+    }
+  }, [creatorSettings, tagSettings, visibilitySettings]);
 
   return (
     <FilterStateContext.Provider value={{ 
-      creatorFilter,
-      setCreatorFilter,
-      tagFilter,
-      setTagFilter,
-      visibilityFilter,
-      setVisibilityFilter 
+      creatorSettings,
+      setCreatorSettings,
+      tagSettings,
+      setTagSettings,
+      visibilitySettings,
+      setVisibilitySettings,
+      filter: chained 
     }}>
       {props.children}
     </FilterStateContext.Provider>
@@ -49,4 +74,18 @@ export const FilterState = (props: FilterStateProps) => {
 
 }
 
-export const useFilterState = () => useContext(FilterStateContext);
+export const useFilterSettingsState = () => useContext(FilterStateContext);
+
+export const useFilter = () => {
+  const { 
+    creatorSettings, 
+    tagSettings, 
+    visibilitySettings, 
+    filter 
+  } = useContext(FilterStateContext);
+
+  // Number of filter conditions chained in the filter
+  const numConditions = [creatorSettings, tagSettings, visibilitySettings].filter(Boolean).length;
+
+  return { filter, numConditions };
+}

@@ -3,6 +3,7 @@ import { type PluginInstallationConfig, PluginProvider } from '@components/Plugi
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { AuthorColorProvider } from '@components/AnnotationDesktop';
+import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 export interface TextAnnotationProps {
 
@@ -22,9 +23,11 @@ export const TextAnnotation = (props: TextAnnotationProps) => {
   return (
     <PluginProvider plugins={props.plugins}>
       <AuthorColorProvider>
-        <Annotorious>
-          <TextAnnotationDesktop {...props} />
-        </Annotorious>
+        <FilterState>
+          <Annotorious>
+            <TextAnnotationDesktop {...props} />
+          </Annotorious>
+        </FilterState>
       </AuthorColorProvider>
     </PluginProvider>
   );

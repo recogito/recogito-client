@@ -13,8 +13,6 @@ interface LeftDrawerProps {
   
   present: PresentUser[];
 
-  onSetFilter(filter?: Filter): void;
-
 }
 
 export const LeftDrawer = (props: LeftDrawerProps) => {
@@ -36,8 +34,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       <aside>
         <FilterPanel 
           i18n={props.i18n} 
-          present={props.present} 
-          onSetFilter={props.onSetFilter} />
+          present={props.present} />
       </aside>
     </animated.div>
   ))

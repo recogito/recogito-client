@@ -1,38 +1,33 @@
-import { useState } from 'react';
-import type { Filter } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Visibility as VisibilityMode } from '@recogito/annotorious-supabase';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { Lock } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
+import { useFilterSettingsState } from '../FilterState';
 
 import './Visibility.css';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface VisibilityProps {
 
   i18n: Translations;
 
-  onSetFilter(filter?: Filter): void;
-
 }
 
 export const Visibility = (props: VisibilityProps) => {
 
-  const [selected, setSelected] = useState('all');
+  const { visibilitySettings, setVisibilitySettings } = useFilterSettingsState();
 
-  const onValueChange = (value: string) => {
+  const onValueChange = (value: 'all' | 'private' | 'public') => {
     if (value === 'all') {
-      props.onSetFilter();
+      setVisibilitySettings(undefined);
     } else {
       const filter = (a: SupabaseAnnotation) => {
         const isPrivate = a.visibility === VisibilityMode.PRIVATE;
         return value === 'private' ? isPrivate : !isPrivate;
       }
 
-      props.onSetFilter(filter);
+      setVisibilitySettings({ state: value, filter });
     }
-
-    setSelected(value);
   }
 
   return (
@@ -43,7 +38,7 @@ export const Visibility = (props: VisibilityProps) => {
 
       <RadioGroup.Root 
         className="radio-group-root"
-        value={selected}
+        value={visibilitySettings?.state || 'all'}
         onValueChange={onValueChange}>
         <div className="radio-group-item-wrapper">
           <RadioGroup.Item 

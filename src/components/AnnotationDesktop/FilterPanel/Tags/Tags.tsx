@@ -1,34 +1,28 @@
-import { useState } from 'react';
-import type { Annotation, Filter } from '@annotorious/react';
+import type { Annotation } from '@annotorious/react';
 import * as Toggle from '@radix-ui/react-toggle';
 import { Tag as TagIcon} from '@phosphor-icons/react';
 import { useTags } from './useTags';
+import { useFilterSettingsState } from '../FilterState';
 
-interface TagsProps {
-
-  onSetFilter(filter?: Filter): void;
-
-}
-
-export const Tags = (props: TagsProps) => {
+export const Tags = () => {
 
   const tags = useTags();
 
-  const [selected, setSelected] = useState<string[]>([]);
+  const { tagSettings, setTagSettings } = useFilterSettingsState();
+
+  const selected = tagSettings?.state || [];
 
   const onToggle = (tag: string) => {
     const next = new Set(selected.includes(tag) 
       ? selected.filter(s => s !== tag) : [...selected, tag]);
-
-    setSelected([...next]);     
-
+  
     if (next.size > 0) {
-      const filter = (a: Annotation) => 
+      const filter = (a: Annotation) =>
         a.bodies.some(b => b.purpose === 'tagging' && b.value && next.has(b.value));
 
-      props.onSetFilter(filter);
+      setTagSettings({ state: [...next], filter });
     } else {
-      props.onSetFilter(undefined);
+      setTagSettings(undefined);
     }
   }
 

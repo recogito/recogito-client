@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { User as UserIcon } from '@phosphor-icons/react';
 import * as Toggle from '@radix-ui/react-toggle';
-import type { Annotation, Filter, PresentUser, User } from '@annotorious/react';
+import type { Annotation, PresentUser, User } from '@annotorious/react';
 import { getCreator } from '@components/AnnotationDesktop';
 import { useCreators } from './useCreators';
+import { useFilterSettingsState } from '../FilterState';
 import type { Translations } from 'src/Types';
 
 import './Creators.css';
@@ -14,21 +14,19 @@ interface CreatorsProps {
 
   present: PresentUser[];
 
-  onSetFilter(filter?: Filter): void;
-
 }
 
 export const Creators = (props: CreatorsProps) => {
 
   const creators = useCreators(props.present);
 
-  const [selected, setSelected] = useState<User[]>([]);
+  const { creatorSettings, setCreatorSettings } = useFilterSettingsState();
+
+  const selected = creatorSettings?.state || [];
 
   const onToggle = (creator: User) => {
     const next = selected.some(u => u.id === creator.id) 
       ? selected.filter(u => u.id !== creator.id) : [...selected, creator];
-
-    setSelected(next);     
 
     if (next.length > 0) {
       const creatorIds = new Set(next.map(u => u.id));
@@ -38,9 +36,9 @@ export const Creators = (props: CreatorsProps) => {
         return id ? creatorIds.has(id) : false;
       }
 
-      props.onSetFilter(filter);
+      setCreatorSettings({ state: next, filter });
     } else {
-      props.onSetFilter(undefined);
+      setCreatorSettings(undefined);
     }
   }
 

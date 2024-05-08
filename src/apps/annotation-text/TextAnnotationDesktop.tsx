@@ -9,7 +9,6 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { DocumentNotes } from '@components/AnnotationDesktop';
-import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -73,8 +72,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         ? readOnlyStyle(state, z) : 
           typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a, state, z) : undefined;
   }, [defaultLayerStyle, layers]);
-
-  const [filter, setFilter] = useState<Filter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -147,79 +144,74 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   });
 
   return (
-    <FilterState>
-      <DocumentNotes
-        channelId={props.channelId}
-        layerId={activeLayer?.id}
-        present={present}
-        onError={() => setConnectionError(true)}>
+    <DocumentNotes
+      channelId={props.channelId}
+      layerId={activeLayer?.id}
+      present={present}
+      onError={() => setConnectionError(true)}>
 
-        <div className="anno-desktop ta-desktop">
-          {loading && ( <LoadingOverlay /> )}
+      <div className="anno-desktop ta-desktop">
+        {loading && ( <LoadingOverlay /> )}
 
-          <div className="header">
-            <animated.div style={brandingAnimation}>
-              <BrandHeader />
-            </animated.div>
+        <div className="header">
+          <animated.div style={brandingAnimation}>
+            <BrandHeader />
+          </animated.div>
 
-            <Toolbar
-              i18n={props.i18n}
+          <Toolbar
+            i18n={props.i18n}
+            document={props.document}
+            present={present}
+            privacy={privacy}
+            leftDrawerOpen={leftPanelOpen}
+            rightDrawerOpen={rightPanelOpen}
+            showConnectionError={connectionError} 
+            onChangePrivacy={setPrivacy}
+            onChangeStyle={s => setDefaultLayerStyle(() => s)}
+            onToggleBranding={() => setShowBranding(!showBranding)}
+            onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
+            onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
+        </div>
+
+        <main className={rightPanelOpen ? 'list-open' : undefined}>
+          <LeftDrawer 
+            i18n={props.i18n}
+            open={leftPanelOpen} 
+            present={present} />
+
+          {policies && (
+            <AnnotatedText
+              activeLayer={activeLayer}
+              channelId={props.channelId}
               document={props.document}
-              present={present}
-              privacy={privacy}
-              leftDrawerOpen={leftPanelOpen}
-              rightDrawerOpen={rightPanelOpen}
-              showConnectionError={connectionError} 
-              onChangePrivacy={setPrivacy}
-              onChangeStyle={s => setDefaultLayerStyle(() => s)}
-              onToggleBranding={() => setShowBranding(!showBranding)}
-              onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-              onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
-          </div>
-
-          <main className={rightPanelOpen ? 'list-open' : undefined}>
-            <LeftDrawer 
-              i18n={props.i18n}
-              open={leftPanelOpen} 
-              present={present} 
-              onSetFilter={f => setFilter(() => f)} />
-
-            {policies && (
-              <AnnotatedText
-                activeLayer={activeLayer}
-                channelId={props.channelId}
-                document={props.document}
-                filter={filter}
-                i18n={props.i18n}
-                layers={layers}
-                policies={policies}
-                present={present}
-                privacy={privacy}
-                style={style}
-                tagVocabulary={tagVocabulary}
-                usePopup={usePopup}
-                onChangePresent={setPresent}
-                onConnectionError={() => setConnectionError(true)}
-                onSaveError={() => setConnectionError(true)}
-                onLoad={() => setLoading(false)}
-                styleSheet={props.styleSheet} />
-            )}
-
-            <RightDrawer
-              filter={filter}
               i18n={props.i18n}
               layers={layers}
-              open={rightPanelOpen}
               policies={policies}
               present={present}
-              sorting={sorting}
+              privacy={privacy}
               style={style}
               tagVocabulary={tagVocabulary}
-              beforeSelectAnnotation={beforeSelectAnnotation} />
-          </main>
-        </div>
-      </DocumentNotes>
-    </FilterState>
+              usePopup={usePopup}
+              onChangePresent={setPresent}
+              onConnectionError={() => setConnectionError(true)}
+              onSaveError={() => setConnectionError(true)}
+              onLoad={() => setLoading(false)}
+              styleSheet={props.styleSheet} />
+          )}
+
+          <RightDrawer
+            i18n={props.i18n}
+            layers={layers}
+            open={rightPanelOpen}
+            policies={policies}
+            present={present}
+            sorting={sorting}
+            style={style}
+            tagVocabulary={tagVocabulary}
+            beforeSelectAnnotation={beforeSelectAnnotation} />
+        </main>
+      </div>
+    </DocumentNotes>
   )
 
 }

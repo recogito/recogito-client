@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Filter, PresentUser } from '@annotorious/react';
+import type { PresentUser } from '@annotorious/react';
 import { CETEIcean, HighlightStyleExpression, TEIAnnotator, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
@@ -10,6 +10,7 @@ import { useContent } from '../useContent';
 import { behaviors } from './teiBehaviors';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -22,8 +23,6 @@ interface AnnotatedTextProps {
   channelId: string;
 
   document: DocumentWithContext;
-
-  filter?: Filter;
 
   i18n: Translations;
 
@@ -69,6 +68,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   const loading = annotationsLoading || pdfLoading || !text;
 
+  const { filter } = useFilter();
+
   useEffect(() => {
     if (!loading)
       props.onLoad();
@@ -91,7 +92,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                 <DynamicStyle style={props.styleSheet} />
               
                 <TEIAnnotator
-                  filter={props.filter}
+                  filter={filter}
                   style={props.style}
                   presence={{
                     font: '500 12px Inter, Arial, Helvetica, sans-serif',
@@ -104,12 +105,12 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             ) : contentType === 'application/pdf' && text ? (
               <PDFViewer
                 document={props.document}
-                filter={props.filter}
+                filter={filter}
                 style={props.style}
                 onRendered={() => setPDFLoading(false)} />
             ) : text && (
               <TextAnnotator
-                filter={props.filter}
+                filter={filter}
                 style={props.style}
                 presence={{
                   font: '500 12px Inter, Arial, Helvetica, sans-serif',

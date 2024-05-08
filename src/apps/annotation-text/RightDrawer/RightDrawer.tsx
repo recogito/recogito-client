@@ -9,12 +9,11 @@ import { AnnotationList, DocumentNotesList } from '@components/AnnotationDesktop
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 interface RightDrawerProps {
 
   i18n: Translations;
-
-  filter?: Filter;
 
   layers?: DocumentLayer[];
 
@@ -37,6 +36,8 @@ interface RightDrawerProps {
 export const RightDrawer = (props: RightDrawerProps) => {
 
   const me = props.present.find(isMe)!;
+
+  const { filter } = useFilter();
 
   const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
 
@@ -97,7 +98,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
               {tab === 'ANNOTATIONS' ? (
                 <AnnotationList 
                   currentStyle={props.style}
-                  filter={props.filter}
+                  filter={filter}
                   i18n={props.i18n}
                   layers={props.layers}
                   me={me}
