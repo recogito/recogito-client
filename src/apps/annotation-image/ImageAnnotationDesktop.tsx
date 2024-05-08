@@ -33,7 +33,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const policies = useLayerPolicies(props.document.layers[0].id);
 
-  const { 
+  const {
     authToken,
     isPresentationManifest, 
     manifestError,
