@@ -10,6 +10,7 @@ import { PDFControls } from './PDFControls';
 import type { DocumentWithContext, Translations } from 'src/Types';
 
 import './Toolbar.css';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 interface ToolbarProps {
 
@@ -48,6 +49,8 @@ export const Toolbar = (props: ToolbarProps) => {
   const { project_id } = props.document.context;
 
   const isPDF = props.document.content_type === 'application/pdf';
+
+  const { numConditions } = useFilter();
   
   // TODO change, once we have routes for assignments again
   const back = /* contextName ? 
@@ -62,11 +65,20 @@ export const Toolbar = (props: ToolbarProps) => {
     <div className="anno-toolbar ta-toolbar">
       <div className="anno-toolbar-slot anno-toolbar-slot-left">
         <div className="anno-toolbar-group">
-          <button 
-            className={props.leftDrawerOpen ? 'active' : undefined}
-            onClick={props.onToggleLeftDrawer}>
-            <FunnelSimple size={18} />
-          </button>
+          <div 
+            className="with-notification">
+            <button 
+              className={props.leftDrawerOpen ? 'active' :  undefined}
+              onClick={props.onToggleLeftDrawer}>
+              <FunnelSimple size={18} />
+            </button>
+
+            {numConditions > 0 && (
+              <span className="notification-bubble">
+                <span>{numConditions}</span>
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="anno-toolbar-group">

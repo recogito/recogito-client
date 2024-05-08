@@ -133,16 +133,16 @@
   border: 1px solid #fff;
   color: #fff !important;
   display: flex;
-  gap: 1px;
-  font-size: 9px;
-  height: 13px;
+  gap: 11px;
+  font-size: 9.5px;
+  height: 16px;
   justify-content: center;
   margin: 0;
   padding: 0;
   position: absolute;
-  right: -2px;
-  top: -2px;
-  width: 13px;
+  right: -5px;
+  top: -3px;
+  width: 16px;
 }
 
 .anno-toolbar-divider {
