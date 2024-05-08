@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import type { DrawingStyle, DrawingStyleExpression, Filter, PresentUser } from '@annotorious/react';
-import { CETEIcean, HighlightStyleExpression, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import type { Filter, PresentUser } from '@annotorious/react';
+import { CETEIcean, HighlightStyleExpression, TEIAnnotator, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -10,7 +10,6 @@ import { useContent } from '../useContent';
 import { behaviors } from './teiBehaviors';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -31,6 +30,8 @@ interface AnnotatedTextProps {
   layers?: DocumentLayer[];
 
   policies: Policies;
+
+  privacy: PrivacyMode;
 
   present: PresentUser[];
 
@@ -68,8 +69,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   const loading = annotationsLoading || pdfLoading || !text;
 
-  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
-
   useEffect(() => {
     if (!loading)
       props.onLoad();
@@ -77,11 +76,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   return (
     <div className="ta-annotated-text-container">
-      <div style={{  
-        boxShadow: '0 0 16px -8px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.34)',
-        overflowY: 'scroll',
-        zIndex: 10
-      }}>
+      <div className="page-wrapper">
         <div className="content-wrapper">
           <div
             className={
@@ -130,14 +125,14 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                 supabaseUrl={SUPABASE}
                 apiKey={SUPABASE_API_KEY}
                 channel={props.channelId}
-                defaultLayer={props.defaultLayer?.id}
+                defaultLayer={props.activeLayer?.id}
                 layerIds={layers.map((layer) => layer.id)}
                 onInitialLoad={() => setAnnotationsLoading(false)}
                 onPresence={props.onChangePresent}
                 onConnectError={props.onConnectionError}
                 onInitialLoadError={props.onConnectionError}
                 onSaveError={props.onSaveError}
-                privacyMode={privacy === 'PRIVATE'}
+                privacyMode={props.privacy === 'PRIVATE'}
               />
             )}
 

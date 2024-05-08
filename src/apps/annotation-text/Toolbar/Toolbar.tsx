@@ -5,7 +5,7 @@ import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import { PrivacySelector } from '@components/PrivacySelector';
+import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
 import type { DocumentWithContext, Translations } from 'src/Types';
 
@@ -21,9 +21,13 @@ interface ToolbarProps {
 
   present: PresentUser[];
 
+  privacy: PrivacyMode;
+
   rightDrawerOpen?: boolean;
 
   showConnectionError: boolean;
+
+  onChangePrivacy(mode: PrivacyMode): void;
 
   onChangeStyle(style?: DrawingStyleExpression<Annotation>): void;
 
@@ -41,7 +45,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const contextName = props.document.context.name;
 
-  const { id, project_id } = props.document.context;
+  const { project_id } = props.document.context;
 
   const isPDF = props.document.content_type === 'application/pdf';
   
@@ -101,9 +105,9 @@ export const Toolbar = (props: ToolbarProps) => {
 
       <div className="anno-toolbar-slot anno-toolbar-slot-center">
         <PrivacySelector
-          mode="PUBLIC"
+          mode={props.privacy}
           i18n={props.i18n}
-          onChangeMode={() => {}} />
+          onChangeMode={props.onChangePrivacy} />
 
         <div className="anno-toolbar-divider" />
 

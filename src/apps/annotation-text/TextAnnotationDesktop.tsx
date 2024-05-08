@@ -11,6 +11,7 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
 import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
+import type { PrivacyMode } from '@components/PrivacySelector';
 import type { TextAnnotationProps } from './TextAnnotation';
 import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
@@ -48,6 +49,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
+
+  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [defaultLayerStyle, setDefaultLayerStyle] =
     useState<HighlightStyleExpression | undefined>(undefined);
@@ -165,9 +168,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 i18n={props.i18n}
                 document={props.document}
                 present={present}
+                privacy={privacy}
                 leftDrawerOpen={leftPanelOpen}
                 rightDrawerOpen={rightPanelOpen}
                 showConnectionError={connectionError} 
+                onChangePrivacy={setPrivacy}
                 onChangeStyle={s => setDefaultLayerStyle(() => s)}
                 onToggleBranding={() => setShowBranding(!showBranding)}
                 onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
@@ -191,6 +196,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                   layers={layers}
                   policies={policies}
                   present={present}
+                  privacy={privacy}
                   style={style}
                   tagVocabulary={tagVocabulary}
                   usePopup={usePopup}

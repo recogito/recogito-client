@@ -36,6 +36,12 @@ html, body {
   justify-content: flex-end;
 }
 
+.ta-desktop main .ta-annotated-text-container .page-wrapper {
+  box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.34);
+  overflow-y: scroll;
+  z-index: 10;
+}
+
 .ta-desktop main .ta-annotated-text-container .content-wrapper {
   font-family: Lora;
   font-size: 17px;

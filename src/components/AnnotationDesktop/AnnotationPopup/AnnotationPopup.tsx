@@ -4,7 +4,7 @@ import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { AnnotationCard } from '@components/Annotation';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './AnnotationPopup.css';
 
@@ -14,7 +14,7 @@ interface AnnotationPopupProps {
 
   i18n: Translations;
 
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   present: PresentUser[];
 
