@@ -12,7 +12,8 @@ html, body {
 .ta-desktop main {
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .ta-desktop main .r6o-annotatable canvas {
