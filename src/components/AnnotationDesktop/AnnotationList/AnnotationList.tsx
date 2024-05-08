@@ -59,9 +59,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   // 'Show all' vs. 'Show in viewport' setting
   const [viewportFilter, setViewportFilter] = useState<ViewportFilter>(ViewportFilter.NONE);
 
-  // Global annotation layer filter
-  const { filter } = useFilterSettings();
-
   const [autofocus, setAutofocus] = useState(false);
 
   const applyFilter = () => {
@@ -78,10 +75,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const { selected, pointerEvent } = useSelection();
 
   const sorted = useMemo(() => {
-    const filtered = filter ? annotations.filter(filter) : annotations;
     // @ts-ignore
-    return props.sorting ? [...filtered].sort(props.sorting) : filtered;
-  }, [annotations, filter, selected]);
+    return props.sorting ? [...annotations].sort(props.sorting) : annotations;
+  }, [annotations, props.sorting]);
 
   const anno = useAnnotator<Annotator>();
 

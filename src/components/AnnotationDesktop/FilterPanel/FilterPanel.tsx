@@ -6,6 +6,7 @@ import { Visibility } from './Visibility';
 import type { Translations } from 'src/Types';
 
 import './FilterPanel.css';
+import { useFilterState } from './FilterState';
 
 interface FilterPanelProps {
 
@@ -19,14 +20,21 @@ interface FilterPanelProps {
 
 export const FilterPanel = (props: FilterPanelProps) => {
 
-  const [creatorFilter, setCreatorFilter] = useState<Filter | undefined>();
+  const {
+    creatorFilter, 
+    setCreatorFilter,
+    tagFilter, 
+    setTagFilter,
+    visibilityFilter, 
+    setVisibilityFilter
+  } = useFilterState();
 
-  const [tagFilter, setTagFilter] = useState<Filter | undefined>();
-
+  // Note: this may move into the context provider later
   useEffect(() => {
     const filters = [
       creatorFilter!,
-      tagFilter!
+      tagFilter!,
+      visibilityFilter!
     ].filter(Boolean);
 
     if (filters.length > 0) {
@@ -35,12 +43,13 @@ export const FilterPanel = (props: FilterPanelProps) => {
     } else {
       props.onSetFilter(undefined); 
     }
-  }, [creatorFilter, tagFilter]);
+  }, [creatorFilter, tagFilter, visibilityFilter]);
 
   return (
     <div className="anno-drawer-panel filter-panel not-annotatable">
       <Visibility 
-        i18n={props.i18n} />
+        i18n={props.i18n} 
+        onSetFilter={f => setVisibilityFilter(() => f)}/>
 
       <Creators 
         i18n={props.i18n} 

@@ -8,7 +8,8 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
+import { DocumentNotes } from '@components/AnnotationDesktop';
+import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -58,8 +59,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const style: HighlightStyleExpression = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
 
-    const readOnlyStyle = (z?: number) => ({
-      fillOpacity: 0,
+    const readOnlyStyle = (state?: AnnotationState, z?: number) => ({
+      fill: '#000000',
+      fillOpacity: state?.selected ? 0.08 : 0,
       underlineStyle: 'solid',
       underlineColor: '#000000' as Color,
       underlineOffset: (z || 0) * 3,
@@ -68,7 +70,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
     return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
       (a.layer_id && readOnly.has(a.layer_id)) 
-        ? readOnlyStyle(z) : 
+        ? readOnlyStyle(state, z) : 
           typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a, state, z) : undefined;
   }, [defaultLayerStyle, layers]);
 
@@ -107,15 +109,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  // TODO clean up!
-  const onToggleRightPanel = (panel?: DrawerPanel) => {
-    if (panel === DrawerPanel.ANNOTATIONS)
-      setUsePopup(false); // Don't use the popup if annotation list is open
-    else if (!usePopup)
-      setUsePopup(true);
-
-    setRightPanelOpen(true);
-  }
+  useEffect(() => {
+    // Need to rethink - we also want popups
+    // when the panel shows Notes. But the design
+    // may still change...
+    setUsePopup(!rightPanelOpen);
+  }, [rightPanelOpen]);
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
@@ -148,80 +147,78 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   });
 
   return (
-    <FilterState present={present}>
-      <ColorState present={present}>
-        <DocumentNotes
-          channelId={props.channelId}
-          layerId={activeLayer?.id}
-          present={present}
-          onError={() => setConnectionError(true)}>
+    <FilterState>
+      <DocumentNotes
+        channelId={props.channelId}
+        layerId={activeLayer?.id}
+        present={present}
+        onError={() => setConnectionError(true)}>
 
-          <div className="anno-desktop ta-desktop">
-            {loading && ( <LoadingOverlay /> )}
+        <div className="anno-desktop ta-desktop">
+          {loading && ( <LoadingOverlay /> )}
 
-            <div className="header">
-              <animated.div style={brandingAnimation}>
-                <BrandHeader />
-              </animated.div>
+          <div className="header">
+            <animated.div style={brandingAnimation}>
+              <BrandHeader />
+            </animated.div>
 
-              <Toolbar
-                i18n={props.i18n}
+            <Toolbar
+              i18n={props.i18n}
+              document={props.document}
+              present={present}
+              privacy={privacy}
+              leftDrawerOpen={leftPanelOpen}
+              rightDrawerOpen={rightPanelOpen}
+              showConnectionError={connectionError} 
+              onChangePrivacy={setPrivacy}
+              onChangeStyle={s => setDefaultLayerStyle(() => s)}
+              onToggleBranding={() => setShowBranding(!showBranding)}
+              onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
+              onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
+          </div>
+
+          <main className={rightPanelOpen ? 'list-open' : undefined}>
+            <LeftDrawer 
+              i18n={props.i18n}
+              open={leftPanelOpen} 
+              present={present} 
+              onSetFilter={f => setFilter(() => f)} />
+
+            {policies && (
+              <AnnotatedText
+                activeLayer={activeLayer}
+                channelId={props.channelId}
                 document={props.document}
-                present={present}
-                privacy={privacy}
-                leftDrawerOpen={leftPanelOpen}
-                rightDrawerOpen={rightPanelOpen}
-                showConnectionError={connectionError} 
-                onChangePrivacy={setPrivacy}
-                onChangeStyle={s => setDefaultLayerStyle(() => s)}
-                onToggleBranding={() => setShowBranding(!showBranding)}
-                onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-                onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
-            </div>
-
-            <main className={rightPanelOpen ? 'list-open' : undefined}>
-              <LeftDrawer 
-                i18n={props.i18n}
-                open={leftPanelOpen} 
-                present={present} 
-                onSetFilter={f => setFilter(() => f)} />
-
-              {policies && (
-                <AnnotatedText
-                  activeLayer={activeLayer}
-                  channelId={props.channelId}
-                  document={props.document}
-                  filter={filter}
-                  i18n={props.i18n}
-                  layers={layers}
-                  policies={policies}
-                  present={present}
-                  privacy={privacy}
-                  style={style}
-                  tagVocabulary={tagVocabulary}
-                  usePopup={usePopup}
-                  onChangePresent={setPresent}
-                  onConnectionError={() => setConnectionError(true)}
-                  onSaveError={() => setConnectionError(true)}
-                  onLoad={() => setLoading(false)}
-                  styleSheet={props.styleSheet} />
-              )}
-
-              <RightDrawer
                 filter={filter}
                 i18n={props.i18n}
                 layers={layers}
-                open={rightPanelOpen}
                 policies={policies}
                 present={present}
-                sorting={sorting}
+                privacy={privacy}
                 style={style}
                 tagVocabulary={tagVocabulary}
-                beforeSelectAnnotation={beforeSelectAnnotation} />
-            </main>
-          </div>
-        </DocumentNotes>
-      </ColorState>
+                usePopup={usePopup}
+                onChangePresent={setPresent}
+                onConnectionError={() => setConnectionError(true)}
+                onSaveError={() => setConnectionError(true)}
+                onLoad={() => setLoading(false)}
+                styleSheet={props.styleSheet} />
+            )}
+
+            <RightDrawer
+              filter={filter}
+              i18n={props.i18n}
+              layers={layers}
+              open={rightPanelOpen}
+              policies={policies}
+              present={present}
+              sorting={sorting}
+              style={style}
+              tagVocabulary={tagVocabulary}
+              beforeSelectAnnotation={beforeSelectAnnotation} />
+          </main>
+        </div>
+      </DocumentNotes>
     </FilterState>
   )
 
