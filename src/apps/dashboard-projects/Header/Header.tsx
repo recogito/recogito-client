@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { AccountActions } from '@components/AccountActions';
 import { Button } from '@components/Button';
-import { Notifications } from '@components/Notifications';
-import { RecogitoLogo } from '@components/RecogitoLogo';
 import type {
   Invitation,
   MyProfile,
@@ -18,6 +15,10 @@ import { HeaderSortAction, SortFunction } from '../../../components/Sort';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 
 import './Header.css';
+import {
+  ToggleDisplay,
+  type ToggleDisplayOptions,
+} from '@components/ToggleDisplay';
 
 interface HeaderProps {
   i18n: Translations;
@@ -34,7 +35,7 @@ interface HeaderProps {
 
   onChangeFilter(f: ProjectFilter): void;
 
-  onChangeSort(sortFn: SortFunction): void;
+  onChangeSort(sortFn: SortFunction, name: string): void;
 
   onChangeSearch(value: string): void;
 
@@ -48,6 +49,12 @@ interface HeaderProps {
   onInvitationDeclined(invitation: Invitation): void;
 
   onError(error: string): void;
+
+  onSetProjects(projects: ExtendedProjectData[]): void;
+
+  display: ToggleDisplayOptions;
+
+  onSetDisplay(display: ToggleDisplayOptions): void;
 }
 
 export const Header = (props: HeaderProps) => {
@@ -55,11 +62,15 @@ export const Header = (props: HeaderProps) => {
 
   const { filter, onChangeFilter } = props;
 
-  const [all, mine, shared] = props.projects;
+  const [mine, shared, openJoin] = props.projects;
 
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
+
+  const isReader = props.policies
+    ? !props.policies.get('projects').has('INSERT')
+    : true;
 
   const onCreateProject = () => {
     if (creating) return;
@@ -108,7 +119,6 @@ export const Header = (props: HeaderProps) => {
     <header className='dashboard-header'>
       <section className='dashboard-header-top'>
         <h1>
-          <RecogitoLogo />
           <span>{t['Projects']}</span>
         </h1>
 
@@ -123,32 +133,11 @@ export const Header = (props: HeaderProps) => {
               <span>{t['New Project']}</span>
             </Button>
           )}
-
-          <Notifications
-            i18n={props.i18n}
-            invitations={props.invitations}
-            onInvitationAccepted={props.onInvitationAccepted}
-            onInvitationDeclined={props.onInvitationDeclined}
-            onError={props.onError}
-          />
-
-          <AccountActions i18n={props.i18n} profile={props.me} />
         </div>
       </section>
 
       <section className='dashboard-header-bottom'>
         <ul className='dashboard-header-tabs'>
-          <li
-            className={filter === ProjectFilter.ALL ? 'active' : undefined}
-            onClick={() => onChangeFilter(ProjectFilter.ALL)}
-          >
-            <button>{t['All']}</button>
-
-            <span className={all.length === 0 ? 'badge disabled' : 'badge'}>
-              {all.length}
-            </span>
-          </li>
-
           <li
             className={filter === ProjectFilter.MINE ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.MINE)}
@@ -160,14 +149,31 @@ export const Header = (props: HeaderProps) => {
             </span>
           </li>
 
-          <li
-            className={filter === ProjectFilter.SHARED ? 'active' : undefined}
-            onClick={() => onChangeFilter(ProjectFilter.SHARED)}
-          >
-            <button>{t['Shared with me']}</button>
+          {!isReader && (
+            <li
+              className={filter === ProjectFilter.SHARED ? 'active' : undefined}
+              onClick={() => onChangeFilter(ProjectFilter.SHARED)}
+            >
+              <button>{t['Shared with me']}</button>
 
-            <span className={shared.length === 0 ? 'badge disabled' : 'badge'}>
-              {shared.length}
+              <span
+                className={shared.length === 0 ? 'badge disabled' : 'badge'}
+              >
+                {shared.length}
+              </span>
+            </li>
+          )}
+
+          <li
+            className={filter === ProjectFilter.PUBLIC ? 'active' : undefined}
+            onClick={() => onChangeFilter(ProjectFilter.PUBLIC)}
+          >
+            <button>{t['Public Projects']}</button>
+
+            <span
+              className={openJoin.length === 0 ? 'badge disabled' : 'badge'}
+            >
+              {openJoin.length}
             </span>
           </li>
         </ul>
@@ -184,6 +190,12 @@ export const Header = (props: HeaderProps) => {
             <HeaderSortAction
               i18n={props.i18n}
               onChangeSort={props.onChangeSort}
+            />
+          </li>
+          <li>
+            <ToggleDisplay
+              display={props.display}
+              onChangeDisplay={props.onSetDisplay}
             />
           </li>
         </ul>

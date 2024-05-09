@@ -54,5 +54,13 @@
   "open-edit-info": "With 'Open Edit' switched on, any member of your project can edit the default assignment.",
   "Join": "Join",
   "Join Project": "Join Project",
-  "Join Project Message": "This project allows all users to become members. Would you like to join?"
+  "Join Project Message": "This project allows all users to become members. Would you like to join?",
+  "assignments": "assignments",
+  "assignment": "assignment",
+  "Public Projects": "Public Projects",
+  "Assignments": "Assignments",
+  "Texts": "Texts",
+  "Images": "Images",
+  "Team": "Team",
+  "Owner": "Owner"
 }

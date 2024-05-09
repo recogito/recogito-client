@@ -12,7 +12,10 @@ import { ToastProvider, Toast, ToastContent } from '@components/Toast';
 import { Header, type SortFunction } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
+import { ProjectsList } from './List';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
+import { TopBar } from '@components/TopBar';
+import type { ToggleDisplayOptions } from '@components/ToggleDisplay';
 
 import './ProjectsHome.css';
 
@@ -27,9 +30,9 @@ export interface ProjectsHomeProps {
 }
 
 export enum ProjectFilter {
-  ALL,
   MINE,
   SHARED,
+  PUBLIC,
 }
 
 export const ProjectsHome = (props: ProjectsHomeProps) => {
@@ -49,13 +52,19 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [filter, setFilter] = useState(ProjectFilter.ALL);
+  const [filter, setFilter] = useState(ProjectFilter.MINE);
 
   const [search, setSearch] = useState('');
 
   const [sort, setSort] = useState<SortFunction | undefined>();
 
+  const [sortType, setSortType] = useState('');
+
   const [showProfileNag, setShowProfileNag] = useState(false);
+
+  const [display, setDisplay] = useState<ToggleDisplayOptions>('cards');
+
+  const isReader = policies ? !policies.get('projects').has('INSERT') : true;
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
@@ -83,31 +92,39 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   // Filtered projects
   const myProjects = projects.filter((p) => p.created_by?.id === me.id);
 
-  const sharedProjects = projects.filter(({ created_by, users }) =>
-    users.find((user) => user.user.id === me.id && me.id !== created_by?.id
-    )
-  );
+  const sharedProjects = isReader
+    ? projects.filter(({ created_by, users }) =>
+        users.find((user) => user.user.id === me.id && me.id !== created_by?.id)
+      )
+    : me.isOrgAdmin
+    ? projects
+    : projects.filter((p) => p.created_by?.id !== me.id && !p.is_open_join);
 
   const openJoinProjects = projects.filter(
     (p) => p.is_open_join && p.contexts.length === 0
   );
 
-  // All projects are different for admins vs. mere mortals
   const allProjects = me.isOrgAdmin
     ? projects
     : [...new Set([...myProjects, ...sharedProjects, ...openJoinProjects])];
 
-  const filteredProjects =
-    // All projects
-    filter === ProjectFilter.ALL
-      ? allProjects
-      : // Am I the creator?
-      filter === ProjectFilter.MINE
-        ? myProjects
-        : // Am I one of the users in the groups?
-        filter === ProjectFilter.SHARED
-          ? sharedProjects
-          : [];
+  const filteredProjects = isReader
+    ? filter === ProjectFilter.MINE
+      ? sharedProjects
+      : // Am I one of the users in the groups?
+      filter === ProjectFilter.PUBLIC
+      ? openJoinProjects
+      : []
+    : // All projects
+    filter === ProjectFilter.PUBLIC
+    ? openJoinProjects
+    : // Am I the creator?
+    filter === ProjectFilter.MINE
+    ? myProjects
+    : // Am I one of the users in the groups?
+    filter === ProjectFilter.SHARED
+    ? sharedProjects
+    : [];
 
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
@@ -126,7 +143,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     setProjects((projects) =>
       projects.map((p) => (p.id === project.id ? project : p))
     );
-  }
+  };
 
   const onError = (error: string) =>
     setError({
@@ -159,20 +176,40 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
+        <TopBar
+          invitations={props.invitations}
+          i18n={props.i18n}
+          onError={onError}
+          projects={projects}
+          me={me}
+          showNotifications={true}
+          onInvitationAccepted={onInvitationAccepted}
+          onInvitationDeclined={onInvitationDeclined}
+        />
         <Header
           i18n={props.i18n}
           me={me}
           policies={policies}
-          projects={[allProjects, myProjects, sharedProjects]}
+          projects={
+            isReader
+              ? [sharedProjects, [], openJoinProjects]
+              : [myProjects, sharedProjects, openJoinProjects]
+          }
           invitations={invitations}
           filter={filter}
           onChangeFilter={setFilter}
           onChangeSearch={setSearch}
-          onChangeSort={(fn) => setSort(() => fn)}
+          onChangeSort={(fn: any, name: string): void => {
+            setSort(() => fn);
+            setSortType(name);
+          }}
           onProjectCreated={onProjectCreated}
           onInvitationAccepted={onInvitationAccepted}
           onInvitationDeclined={onInvitationDeclined}
           onError={onError}
+          onSetProjects={(projects) => setProjects(projects)}
+          display={display}
+          onSetDisplay={setDisplay}
         />
 
         {allProjects.length === 0 ? (
@@ -185,13 +222,27 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               onError={onError}
             />
           )
-        ) : (
+        ) : display === 'cards' ? (
           <ProjectsGrid
             i18n={props.i18n}
             me={me}
             projects={filteredProjects}
             search={search}
             sort={sort}
+            onProjectDeleted={onProjectDeleted}
+            onLeaveProject={onLeaveProject}
+            onDetailsChanged={onDetailsChanged}
+            onError={onError}
+            orgPolicies={policies}
+          />
+        ) : (
+          <ProjectsList
+            i18n={props.i18n}
+            me={me}
+            projects={filteredProjects}
+            search={search}
+            sort={sort}
+            sortType={sortType}
             onProjectDeleted={onProjectDeleted}
             onLeaveProject={onLeaveProject}
             onDetailsChanged={onDetailsChanged}

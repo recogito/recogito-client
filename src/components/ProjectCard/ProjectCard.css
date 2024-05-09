@@ -6,13 +6,11 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  transition: all .25s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
 .project-card:hover {
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.1),
-    0 2px 8px -2px rgba(0, 0, 0, 0.28);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 8px -2px rgba(0, 0, 0, 0.28);
 }
 
 .project-card-body {
@@ -20,11 +18,17 @@
   padding: 15px 20px 5px 15px;
 }
 
+.project-card-divider {
+  height: 17px;
+  width: 1px;
+  border-right: 1px solid var(--gray-300);
+}
+
 .project-card-body h1 {
   font-size: 1em;
   font-weight: 500;
   margin: 0;
-  padding: 0;  
+  padding: 0;
 }
 
 .project-card-body h1 a,
@@ -45,7 +49,7 @@
   padding: 0 2px;
   text-overflow: ellipsis;
   word-wrap: break-word;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
 
@@ -60,12 +64,11 @@
 
 .project-card-body ul.document-stats li {
   display: inline-block;
-
 }
 
 .project-card-body ul.document-stats li + li {
   padding-left: 10px;
-} 
+}
 
 .project-card-body ul.document-stats li svg {
   padding: 0 3px 2px 0;
@@ -89,7 +92,7 @@
 }
 
 .project-card-footer .avatar-stack .avatar {
-  border: 2px solid var(--gray-50); 
+  border: 2px solid var(--gray-50);
   height: 26px;
   width: 26px;
 }

@@ -4,7 +4,7 @@ import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile, listMyInvites } from '@backend/crud';
 import { ProjectsHome } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
-import HeaderLayout from '@layouts/HeaderLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -29,8 +29,11 @@ if (!projects.data || !invitations.data) {
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
+
+console.log(projects.data);
 ---
-<HeaderLayout title='Dashboard'>
+
+<BaseLayout title='Dashboard'>
   <ProjectsHome
     client:only
     me={me.data}
@@ -38,4 +41,4 @@ if (!projects.data || !invitations.data) {
     invitations={invitations.data}
     i18n={getTranslations(Astro.request, 'dashboard-projects')}
   />
-</HeaderLayout>
+</BaseLayout>

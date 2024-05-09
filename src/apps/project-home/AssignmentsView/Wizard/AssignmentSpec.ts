@@ -97,6 +97,8 @@ export const assignmentSpecToContext = (spec: AssignmentSpec) => {
         document: {
           id: d.id,
           name: d.name,
+          content_type: d.content_type,
+          meta_data: d.meta_data,
         },
       };
     }),

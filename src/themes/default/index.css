@@ -222,11 +222,32 @@ p {
   padding: 0;
 }
 
+.text-body-small {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18.2px;
+}
+
 .text-body-small-bold {
   font-family: Inter;
   font-weight: 600;
-  font-size: 13ps;
+  font-size: 13px;
   line-height: 18.2px;
+}
+
+.text-body-bold {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18.2px;
+}
+
+.text-body-tiny {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13.31px;
 }
 
 input,
