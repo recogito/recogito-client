@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
 import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
-import { Annotation } from '@components/Annotation';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -10,7 +9,8 @@ import { PDFViewer } from '../PDFViewer';
 import { useContent } from '../useContent';
 import { Toolpanel } from '../Toolpanel';
 import { behaviors } from './teiBehaviors';
-import type { DocumentInTaggedContext, Layer, Policies, Translations } from 'src/Types';
+import type { DocumentWithContext, Layer, Policies, Translations } from 'src/Types';
+import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -22,7 +22,7 @@ interface AnnotatedTextProps {
 
   defaultLayer?: Layer;
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
   filter?: Filter;
 
@@ -54,7 +54,7 @@ interface AnnotatedTextProps {
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { i18n, policies, present, tagVocabulary } = props;
+  const { i18n, layers, policies, present, tagVocabulary } = props;
 
   const contentType = props.document.content_type;
 
@@ -120,13 +120,13 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
           <UndoStack undoEmpty={true} />
 
-          {props.layers && (
+          {layers && (
             <SupabasePlugin
               supabaseUrl={SUPABASE}
               apiKey={SUPABASE_API_KEY}
               channel={props.channelId}
               defaultLayer={props.defaultLayer?.id}
-              layerIds={props.layers.map((layer) => layer.id)}
+              layerIds={layers.map((layer) => layer.id)}
               onInitialLoad={() => setAnnotationsLoading(false)}
               onPresence={props.onChangePresent}
               onConnectError={props.onConnectionError}
@@ -138,14 +138,14 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
           {props.usePopup && (
             <TextAnnotatorPopup
-              popup={(props) => (
-                <Annotation.Popup
+                popup={(props) => (
+                <AnnotationPopup
                   {...props}
                   i18n={i18n}
+                  layers={layers}
                   present={present}
                   policies={policies}
-                  tagVocabulary={tagVocabulary}
-                />
+                  tagVocabulary={tagVocabulary} />
               )}
             />
           )}

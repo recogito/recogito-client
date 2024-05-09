@@ -1,7 +1,6 @@
 button.unstyled {
   background-color: transparent;
   border: none;
-  border-radius: 0;
   box-shadow: none;
   color: var(--font-light);
   cursor: pointer;

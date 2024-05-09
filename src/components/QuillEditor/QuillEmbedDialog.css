@@ -1,0 +1,19 @@
+.quill-embed-dialog h2 {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.quill-embed-dialog p {
+  margin: 1.25rem 0;
+}
+
+.quill-embed-dialog input {
+  margin: 1.25rem 0;
+  width: 100%;
+}
+
+.quill-embed-dialog .embed-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+}

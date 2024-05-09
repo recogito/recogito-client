@@ -1,4 +1,4 @@
-import type { Color, DrawingStyle } from '@annotorious/react';
+import type { AnnotationState, Color, DrawingStyle } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
 import type { ColorCoding, ColorLegendValue } from '../ColorCoding';
@@ -13,12 +13,12 @@ export const colorByAssignment = (layers: Layer[]) => (): ColorCoding => {
   const legend = new Map(layers.map((layer, idx) => 
     ([layer.id, { color: PALETTE[idx], label: layer.context?.name || 'No Assignment' }])));
 
-  const getStyle = () => (annotation: SupabaseAnnotation, selected?: boolean): DrawingStyle => {
+  const getStyle = () => (annotation: SupabaseAnnotation, state?: AnnotationState): DrawingStyle => {
     const assignedColor = legend.get(annotation.layer_id!);
     if (assignedColor) {
-      return { fill: assignedColor.color, fillOpacity: selected ? 0.5 : 0.24 };
+      return { fill: assignedColor.color, fillOpacity: state?.selected ? 0.5 : 0.24 };
     } else {
-      return { fill: NO_ASSIGNMENT, fillOpacity: selected ? 0.5 : 0.24 };
+      return { fill: NO_ASSIGNMENT, fillOpacity: state?.selected ? 0.5 : 0.24 };
     }
   }
 

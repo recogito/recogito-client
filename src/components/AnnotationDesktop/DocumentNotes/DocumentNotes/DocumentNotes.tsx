@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
+import { ReactNode, createContext, useEffect, useState } from 'react';
 import type { PostgrestError, RealtimeChannel } from '@supabase/supabase-js';
 import type { PresentUser} from '@annotorious/react';
 import type { ChangeEvent } from '@recogito/annotorious-supabase';

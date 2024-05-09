@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { PresentUser, DrawingStyle, Filter } from '@annotorious/react';
+import type { PresentUser, DrawingStyle, Filter, AnnotationState } from '@annotorious/react';
 import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -36,16 +37,31 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
+  const [layers, setLayers] = useState<Layer[] | undefined>();
+
+  const [defaultLayerStyle, setDefaultLayerStyle] =
+    useState<((a: TextAnnotation, state: AnnotationState, z?: number) => DrawingStyle) | undefined>(undefined);
+
+  const style = useMemo(() => {
+    const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
+
+    const readOnlyStyle = (z: number) => ({
+      fillOpacity: 0,
+      underlineStyle: 'solid',
+      underlineColor: '#000',
+      underlineOffset: z * 3,
+      underlineThickness: 2
+    });
+
+    return (a: SupabaseAnnotation, state: AnnotationState, z: number) =>
+      (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle(z) : 
+      defaultLayerStyle ? defaultLayerStyle(a as TextAnnotation, state, z) : undefined;
+  }, [defaultLayerStyle, layers]);
 
   const [filter, setFilter] = useState<Filter | undefined>(undefined);
 
   const [usePopup, setUsePopup] = useState(true);
 
-  const [layers, setLayers] = useState<Layer[] | undefined>();
-
-  // Default layer is either the first layer in the project context,
-  // or the first layer in the list, if no project context
   const defaultLayer =
     layers && layers.length > 0
       ? layers.find((l) => l.is_active_layer) || layers[0]
@@ -167,10 +183,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 policies={policies}
                 present={present}
                 sorting={sorting}
+                style={style}
                 tagVocabulary={tagVocabulary}
                 beforeSelectAnnotation={beforeSelectAnnotation}
                 onChangeAnnotationFilter={f => setFilter(() => f)}
-                onChangeAnnotationStyle={s => setStyle(() => s)} />
+                onChangeAnnotationStyle={s => setDefaultLayerStyle(() => s)} />
             </main>
 
             {showBranding && (
