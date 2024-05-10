@@ -250,6 +250,13 @@ p {
   line-height: 13.31px;
 }
 
+.text-body-large-bold {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19.36px;
+}
+
 input,
 textarea {
   font-family: Inter;

@@ -1,11 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations } from 'src/Types';
-import * as Switch from '@radix-ui/react-switch';
 import * as Label from '@radix-ui/react-label';
+import * as RadioGroup from '@radix-ui/react-radio-group';
 import './CreateProjectDialog.css';
 import { Button } from '@components/Button';
 import { useState } from 'react';
-import { InfoTooltip } from '@components/InfoTooltip';
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -34,6 +33,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
     props.onSaveProject(name, description, openJoin, openEdit);
   };
 
+  const visibility = openJoin ? 'public' : 'private';
+  const type = openEdit ? 'single_team' : 'assignments';
+
   return (
     <Dialog.Root open={props.open}>
       <Dialog.Portal>
@@ -45,10 +47,13 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
           </Dialog.Title>
           <div className='create-project-root'>
             <Label.Root
-              className='create-project-label-root'
+              className='create-project-label-detail text-body-large-bold'
               htmlFor='firstName'
             >
-              {t['Project Name']}
+              {t['Project Details']}
+            </Label.Root>
+            <Label.Root className='create-project-label text-body-small-bold'>
+              {t['Name']}
             </Label.Root>
             <input
               className='create-project-input'
@@ -57,11 +62,8 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
               placeholder={t['Name your project']}
               onChange={(evt) => setName(evt.target.value)}
             />
-            <Label.Root
-              className='create-project-label-root'
-              htmlFor='firstName'
-            >
-              {t['Project Description']}
+            <Label.Root className='create-project-label text-body-small-bold'>
+              {t['Description']}
             </Label.Root>
             <input
               type='text'
@@ -69,53 +71,142 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
               placeholder={t['Describe your project']}
               onChange={(evt) => setDescription(evt.target.value)}
             />
-            <div className='create-project-switches'>
-              <InfoTooltip content={t['open-join-info']} />
-              <label
-                className='create-project-switch-label'
-                htmlFor='open-join'
-                style={{ paddingRight: 15 }}
+            <div className='create-project-visibility'>
+              <Label.Root
+                className='create-project-label-detail text-body-large-bold'
+                htmlFor='firstName'
               >
-                {t['Open Join']}
-              </label>
-              <Switch.Root
-                className='create-project-switch-root'
-                id='open-join'
-                onCheckedChange={() => {
-                  setOpenJoin(!openJoin);
-                }}
-              >
-                <Switch.Thumb className='create-project-switch-thumb' />
-              </Switch.Root>
-              <div style={{ width: 24 }} />
-              <InfoTooltip content={t['open-edit-info']} />
-              <label
-                className='create-project-switch-label'
-                htmlFor='open-edit'
-                style={{ paddingRight: 15 }}
-              >
-                {t['Open Edit']}
-              </label>
-              <Switch.Root
-                className='create-project-switch-root'
-                id='open-edit'
-                onCheckedChange={() => setOpenEdit(!openEdit)}
-              >
-                <Switch.Thumb className='create-project-switch-thumb' />
-              </Switch.Root>
-            </div>
-            <div className='create-project-buttons'>
-              <Button type='button' className='sm' onClick={props.onClose}>
-                {t['Cancel']}
-              </Button>
+                {t['Project Visibility']}
+              </Label.Root>
+              <div className='create-project-switches'>
+                <RadioGroup.Root
+                  className='create-project-radio-group-root'
+                  defaultValue='private'
+                  value={visibility}
+                  aria-label='View density'
+                  onValueChange={(value) =>
+                    value === 'public' ? setOpenJoin(true) : setOpenJoin(false)
+                  }
+                >
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <RadioGroup.Item
+                      className='create-project-radio-group-item'
+                      value='private'
+                      id='r1'
+                    >
+                      <RadioGroup.Indicator className='create-project-radio-group-indicator' />
+                    </RadioGroup.Item>
+                    <label
+                      className='create-project-radio-group-label text-body-small-bold'
+                      htmlFor='r1'
+                    >
+                      {t['Private']}
+                    </label>
+                  </div>
+                  <div className='create-project-radio-group-helper text-body-small'>
+                    {
+                      t[
+                        'Project admins choose the users that can join this project'
+                      ]
+                    }
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <RadioGroup.Item
+                      className='create-project-radio-group-item'
+                      value='public'
+                      id='r2'
+                    >
+                      <RadioGroup.Indicator className='create-project-radio-group-indicator' />
+                    </RadioGroup.Item>
+                    <label
+                      className='create-project-radio-group-label text-body-small-bold'
+                      htmlFor='r2'
+                    >
+                      {t['Public']}
+                    </label>
+                  </div>
+                  <div className='create-project-radio-group-helper text-body-small'>
+                    {
+                      t[
+                        'Any registered user can join this project without an invitation'
+                      ]
+                    }
+                  </div>
+                </RadioGroup.Root>
+                <div className='create-project-switches'>
+                  <Label.Root
+                    className='create-project-label-detail text-body-large-bold'
+                    htmlFor='firstName'
+                  >
+                    {t['Project Visibility']}
+                  </Label.Root>
+                  <RadioGroup.Root
+                    className='create-project-radio-group-root'
+                    defaultValue='assignments'
+                    value={type}
+                    aria-label='View density'
+                    onValueChange={(value) =>
+                      value === 'assignments'
+                        ? setOpenEdit(false)
+                        : setOpenEdit(true)
+                    }
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <RadioGroup.Item
+                        className='create-project-radio-group-item'
+                        value='assignments'
+                        id='r1'
+                      >
+                        <RadioGroup.Indicator className='create-project-radio-group-indicator' />
+                      </RadioGroup.Item>
+                      <label
+                        className='create-project-radio-group-label text-body-small-bold'
+                        htmlFor='r1'
+                      >
+                        {t['Assignments']}
+                      </label>
+                    </div>
+                    <div className='create-project-radio-group-helper text-body-small'>
+                      {
+                        t[
+                          'Project admins create assignments with specific documents and team members'
+                        ]
+                      }
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <RadioGroup.Item
+                        className='create-project-radio-group-item'
+                        value='single_team'
+                        id='r2'
+                      >
+                        <RadioGroup.Indicator className='create-project-radio-group-indicator' />
+                      </RadioGroup.Item>
+                      <label
+                        className='create-project-radio-group-label text-body-small-bold'
+                        htmlFor='r2'
+                      >
+                        {t['Single Team']}
+                      </label>
+                    </div>
+                    <div className='create-project-radio-group-helper text-body-small'>
+                      {t['Project members can annotate any document']}
+                    </div>
+                  </RadioGroup.Root>
+                </div>
+              </div>
+              <div className='create-project-buttons'>
+                <Button type='button' className='sm' onClick={props.onClose}>
+                  {t['Cancel']}
+                </Button>
 
-              <Button
-                disabled={name.length === 0 || description.length === 0}
-                className='primary sm'
-                onClick={handleCreateProject}
-              >
-                {t['Create']}
-              </Button>
+                <Button
+                  disabled={name.length === 0 || description.length === 0}
+                  className='primary sm'
+                  onClick={handleCreateProject}
+                >
+                  {t['Create']}
+                </Button>
+              </div>
             </div>
           </div>
         </Dialog.Content>

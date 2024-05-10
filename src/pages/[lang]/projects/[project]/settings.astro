@@ -3,8 +3,14 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile, listPendingInvitations } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { getProjectExtended, listMyProjectsExtended } from '@backend/helpers';
+import {
+  getProjectExtended,
+  listMyProjectsExtended,
+  getInstalledPlugins,
+} from '@backend/helpers';
 import { ProjectSettings } from '@apps/project-settings';
+import { ProjectPlugins } from '@apps/project-plugins';
+import PluginRegistry from '@components/Plugins/PluginRegistry';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -43,6 +49,14 @@ if (project.error || invitations.error) {
 }
 
 const projects = await listMyProjectsExtended(supabase);
+const installedPlugins = await getInstalledPlugins(
+  supabase,
+  projectId as string
+);
+if (installedPlugins.error || !installedPlugins.data) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
 ---
 
 <BaseLayout title='Settings'>
@@ -53,6 +67,8 @@ const projects = await listMyProjectsExtended(supabase);
     invitations={invitations.data}
     me={profile.data}
     projects={projects.data}
+    availablePlugins={PluginRegistry.listAvailablePlugins()}
+    installedPlugins={PluginRegistry.resolvePlugins(installedPlugins.data)}
   />
 </BaseLayout>
 

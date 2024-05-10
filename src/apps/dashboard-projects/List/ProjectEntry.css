@@ -9,6 +9,7 @@
 
 .project-entry-name {
   width: 15%;
+  cursor: pointer;
 }
 
 .project-entry-description {

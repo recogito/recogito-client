@@ -19,6 +19,7 @@ import './ProjectCard.css';
 import { JoinProjectDialog } from './JoinProjectDialog';
 import { useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { OwnerPill } from '@components/OwnerPill';
 
 interface ProjectCardProps {
   i18n: Translations;
@@ -39,8 +40,16 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = (props: ProjectCardProps) => {
-  const { contexts, description, id, users, name, is_open_join, documents } =
-    props.project;
+  const {
+    contexts,
+    description,
+    id,
+    users,
+    name,
+    is_open_join,
+    documents,
+    created_by,
+  } = props.project;
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
 
@@ -78,9 +87,16 @@ export const ProjectCard = (props: ProjectCardProps) => {
   return (
     <div className='project-card'>
       <div className='project-card-body' onClick={onClick}>
-        <h1>
-          <a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a>
-        </h1>
+        <div className='project-card-header'>
+          <h1>
+            <a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a>
+          </h1>
+          {created_by.id === props.me.id ? (
+            <OwnerPill i18n={props.i18n} />
+          ) : (
+            <div />
+          )}
+        </div>
         {description ? (
           <p>{description}</p>
         ) : (

@@ -77,8 +77,8 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
   };
 
   return (
-    <div className='project-entry' onClick={onClick}>
-      <div className='project-entry-name'>
+    <div className='project-entry'>
+      <div className='project-entry-name' onClick={onClick}>
         <div className='text-body-bold'>{name}</div>
       </div>
       <div className='project-entry-description'>

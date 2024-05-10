@@ -65,5 +65,14 @@
   "Texts": "Texts",
   "Images": "Images",
   "Team": "Team",
-  "Owner": "Owner"
+  "Owner": "Owner",
+  "Project Visibility": "Project Visibility",
+  "Public": "Public",
+  "Private": "Private",
+  "Project admins choose the users that can join this project": "Project admins choose the users that can join this project",
+  "Any registered user can join this project without an invitation": "Any registered user can join this project without an invitation",
+  "Project Type": "Project Type",
+  "Single Team": "Single Team",
+  "Project admins create assignments with specific documents and team members": "Project admins create assignments with specific documents and team members",
+  "Project members can annotate any document": "Project members can annotate any document"
 }
