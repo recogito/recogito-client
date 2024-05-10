@@ -1,5 +1,5 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
-import { SquaresFour, ListBullets } from '@phosphor-icons/react';
+import { SquaresFour, ListBullets } from '@phosphor-icons/react/dist/ssr';
 import './ToggleDisplay.css';
 
 export type ToggleDisplayOptions = 'cards' | 'rows';

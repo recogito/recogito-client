@@ -5,7 +5,7 @@ import {
   PencilSimple,
   SignOut,
   Trash,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, leaveProject } from '@backend/crud';
 import { ConfirmedAction } from '@components/ConfirmedAction';

@@ -33,7 +33,6 @@ if (project.error || !project.data) {
     statusText: 'Not Found',
   });
 }
-console.log(project.data);
 
 const documents = await listDocumentsInProject(supabase, projectId as string);
 

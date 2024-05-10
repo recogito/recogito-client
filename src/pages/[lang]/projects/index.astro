@@ -29,8 +29,6 @@ if (!projects.data || !invitations.data) {
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
-
-console.log(projects.data);
 ---
 
 <BaseLayout title='Dashboard'>

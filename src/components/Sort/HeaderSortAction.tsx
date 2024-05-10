@@ -1,4 +1,4 @@
-import { Check, FunnelSimple } from '@phosphor-icons/react';
+import { Check, FunnelSimple } from '@phosphor-icons/react/dist/ssr';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { useState } from 'react';
 import type { ExtendedProjectData, Translations } from 'src/Types';

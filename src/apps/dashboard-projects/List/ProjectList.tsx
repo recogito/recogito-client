@@ -6,7 +6,7 @@ import type {
   Translations,
 } from 'src/Types';
 import type { SortFunction } from '../Header';
-import { CaretDown } from '@phosphor-icons/react';
+import { CaretDown } from '@phosphor-icons/react/dist/ssr';
 import './ProjectList.css';
 
 export interface ProjectsListProps {

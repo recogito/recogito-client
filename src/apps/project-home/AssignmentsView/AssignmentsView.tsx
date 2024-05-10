@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GraduationCap } from '@phosphor-icons/react';
+import { GraduationCap } from '@phosphor-icons/react/dist/ssr';
 import { archiveAssignment, getAssignment } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';

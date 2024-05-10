@@ -1,5 +1,5 @@
 import type { Translations } from 'src/Types';
-import { UserCircle } from '@phosphor-icons/react';
+import { UserCircle } from '@phosphor-icons/react/dist/ssr';
 
 import './OwnerPill.css';
 
