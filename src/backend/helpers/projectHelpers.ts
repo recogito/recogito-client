@@ -61,9 +61,16 @@ export const listMyProjectsExtended = (
         return { error, data: [] as ExtendedProjectData[] };
       } else {
         const projects: any = data.map((project) => {
+          const documents: Document[] = [];
+          project.project_documents.forEach((pd) => {
+            if (pd.document) {
+              documents.push(pd.document);
+            }
+          });
+
           return {
             ...project,
-            documents: project.project_documents.map((pd) => pd.document),
+            documents,
           };
         });
 
