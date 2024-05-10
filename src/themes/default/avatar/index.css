@@ -17,6 +17,7 @@
 .avatar-wrapper.ring {
   border: 2px solid transparent;
   padding: 1.5px;
+  background-color: #fff;
 }
 
 .avatar-image,
