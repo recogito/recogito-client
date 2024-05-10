@@ -115,9 +115,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
         const pages =
-          a.target.selector[0].pageNumber - b.target.selector[0].pageNumber;
+          a.target.selector[0]?.pageNumber - b.target.selector[0]?.pageNumber;
         return pages === 0
-          ? a.target.selector[0].start - b.target.selector[0].start
+          ? a.target.selector[0]?.start - b.target.selector[0]?.start
           : pages;
       }
       : (a: TextAnnotation, b: TextAnnotation) =>
