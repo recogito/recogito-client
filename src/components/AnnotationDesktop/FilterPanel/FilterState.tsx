@@ -4,9 +4,9 @@ import type { FilterSetting } from './FilterSetting';
 
 interface FilterStateContextValue {
 
-  layerSettings?: FilterSetting<string[]>;
+  layerSettings?: FilterSetting<string[] | undefined>;
   
-  setLayerSettings: React.Dispatch<React.SetStateAction<FilterSetting<string[]> | undefined>>;
+  setLayerSettings: React.Dispatch<React.SetStateAction<FilterSetting<string[] | undefined> | undefined>>;
 
   creatorSettings?: FilterSetting<User[]>;
 
@@ -36,7 +36,7 @@ interface FilterStateProps {
 export const FilterState = (props: FilterStateProps) => {
 
   const [layerSettings, setLayerSettings] = 
-    useState<FilterSetting<string[]> | undefined> ();
+    useState<FilterSetting<string[] | undefined> | undefined> ();
 
   const [creatorSettings, setCreatorSettings] = 
     useState<FilterSetting<User[]> | undefined>();
@@ -49,13 +49,10 @@ export const FilterState = (props: FilterStateProps) => {
 
   const [chained, setChained] = useState<Filter | undefined>();
 
-  useEffect(() => {
-
-  }, []);
-
   // Note: this may move into the context provider later
   useEffect(() => {
     const filters = [
+      layerSettings?.filter!,
       creatorSettings?.filter!,
       tagSettings?.filter!,
       visibilitySettings?.filter!
@@ -67,7 +64,7 @@ export const FilterState = (props: FilterStateProps) => {
     } else {
       setChained(undefined); 
     }
-  }, [creatorSettings, tagSettings, visibilitySettings]);
+  }, [layerSettings, creatorSettings, tagSettings, visibilitySettings]);
 
   return (
     <FilterStateContext.Provider value={{ 
@@ -91,6 +88,7 @@ export const useFilterSettingsState = () => useContext(FilterStateContext);
 
 export const useFilter = () => {
   const { 
+    layerSettings,
     creatorSettings, 
     tagSettings, 
     visibilitySettings, 
@@ -98,7 +96,7 @@ export const useFilter = () => {
   } = useContext(FilterStateContext);
 
   // Number of filter conditions chained in the filter
-  const numConditions = [creatorSettings, tagSettings, visibilitySettings].filter(Boolean).length;
+  const numConditions = [layerSettings, creatorSettings, tagSettings, visibilitySettings].filter(Boolean).length;
 
   return { filter, numConditions };
 }
