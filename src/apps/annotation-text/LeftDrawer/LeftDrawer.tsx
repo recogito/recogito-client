@@ -1,13 +1,17 @@
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { Filter, PresentUser } from '@annotorious/react';
 import { FilterPanel } from '@components/AnnotationDesktop/FilterPanel';
-import type { Translations } from 'src/Types';
+import type { DocumentLayer, Translations } from 'src/Types';
 
 import './LeftDrawer.css';
 
 interface LeftDrawerProps {
 
   i18n: Translations;
+
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
 
   open: boolean;
   
@@ -34,6 +38,8 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       <aside>
         <FilterPanel 
           i18n={props.i18n} 
+          layers={props.layers}
+          layerNames={props.layerNames}
           present={props.present} />
       </aside>
     </animated.div>

@@ -6,8 +6,6 @@ import { useCreators } from './useCreators';
 import { useFilterSettingsState } from '../FilterState';
 import type { Translations } from 'src/Types';
 
-import './Creators.css';
-
 interface CreatorsProps {
 
   i18n: Translations;
@@ -43,7 +41,7 @@ export const Creators = (props: CreatorsProps) => {
   }
 
   return (
-    <section className="filter-creators">
+    <section className="filter-creators filter-toggle-buttons">
       <h2>
         <UserIcon size={19} /> Creators
       </h2>

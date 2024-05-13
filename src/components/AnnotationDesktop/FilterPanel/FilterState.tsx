@@ -4,6 +4,10 @@ import type { FilterSetting } from './FilterSetting';
 
 interface FilterStateContextValue {
 
+  layerSettings?: FilterSetting<string[]>;
+  
+  setLayerSettings: React.Dispatch<React.SetStateAction<FilterSetting<string[]> | undefined>>;
+
   creatorSettings?: FilterSetting<User[]>;
 
   setCreatorSettings: React.Dispatch<React.SetStateAction<FilterSetting<User[]> | undefined>>;
@@ -31,6 +35,9 @@ interface FilterStateProps {
 
 export const FilterState = (props: FilterStateProps) => {
 
+  const [layerSettings, setLayerSettings] = 
+    useState<FilterSetting<string[]> | undefined> ();
+
   const [creatorSettings, setCreatorSettings] = 
     useState<FilterSetting<User[]> | undefined>();
 
@@ -41,6 +48,10 @@ export const FilterState = (props: FilterStateProps) => {
     useState<FilterSetting<'all' | 'private' | 'public'> | undefined>();
 
   const [chained, setChained] = useState<Filter | undefined>();
+
+  useEffect(() => {
+
+  }, []);
 
   // Note: this may move into the context provider later
   useEffect(() => {
@@ -60,6 +71,8 @@ export const FilterState = (props: FilterStateProps) => {
 
   return (
     <FilterStateContext.Provider value={{ 
+      layerSettings,
+      setLayerSettings,
       creatorSettings,
       setCreatorSettings,
       tagSettings,

@@ -12,15 +12,20 @@
   position: absolute;
   top: 0;
   left: 0;
-  max-width: 380px;
   min-width: 320px;
   width: 100%;
 }
 
 .ta-drawer aside .tablist {
+  background-color: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 0 10px -5px rgba(0, 0, 0, 0.18);
   color: var(--font-light);
   font-size: var(--font-tiny);
-  padding: 15px 15px 5px 15px;
+  padding: 10px 15px 5px 15px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .ta-drawer aside .tablist ul {
@@ -46,4 +51,8 @@
   cursor: pointer;
   display: inline-flex;
   gap: 0.25rem;
+}
+
+.ta-drawer aside .tabcontent {
+  max-width: 380px;
 }

@@ -1,0 +1,43 @@
+.anno-drawer-panel.filter-panel .filters-annotationlayers h2 {
+  margin: 0 0 0.125rem 0;
+}
+
+.anno-drawer-panel.filter-panel .filters-annotationlayers section {
+  padding-left: 6px; 
+}
+
+.filters-annotationlayers h3 {
+  font-size: var(--font-tiny);
+  font-style: italic;
+  font-weight: 500;
+  margin: 0;
+  padding: 0 0 0.125rem 0;
+}
+
+.filters-annotationlayers li,
+.filters-annotationlayers .active-layer {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filters-annotationlayers .checkbox-root {
+  align-items: center;
+  background-color: white;
+  border: 1px solid var(--gray-500);
+  border-radius: var(--border-radius);
+  color: #fff;
+  display: flex;
+  height: 16px;
+  justify-content: center;
+  width: 16px;
+}
+
+.filters-annotationlayers .checkbox-root svg {
+  display: block;
+}
+
+.filters-annotationlayers .checkbox-root[data-state="checked"] {
+  background-color: var(--bright-blue);
+  border-color: var(--bright-blue);
+}

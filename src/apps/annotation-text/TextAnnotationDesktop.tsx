@@ -6,9 +6,9 @@ import type { HighlightStyle, HighlightStyleExpression, RecogitoTextAnnotator, T
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getAllDocumentLayersInProject } from '@backend/helpers';
+import { getAllDocumentLayersInProject, getAvailableLayers } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { DocumentNotes } from '@components/AnnotationDesktop';
+import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -39,6 +39,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
   const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
+
+  const layerNames = useLayerNames(props.document);
 
   const activeLayer = useMemo(() => (
     layers && layers.length > 0
@@ -176,6 +178,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         <main className={rightPanelOpen ? 'list-open' : undefined}>
           <LeftDrawer 
             i18n={props.i18n}
+            layers={layers}
+            layerNames={layerNames}
             open={leftPanelOpen} 
             present={present} />
 

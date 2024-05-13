@@ -1,5 +1,6 @@
 button.checkbox-root {
   all: unset;
+  cursor: pointer;
   display: inline;
   line-height: normal;
   vertical-align: middle;

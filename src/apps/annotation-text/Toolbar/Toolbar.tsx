@@ -52,10 +52,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const { numConditions } = useFilter();
   
-  // TODO change, once we have routes for assignments again
-  const back = /* contextName ? 
-    `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` :  */
-    `/${props.i18n.lang}/projects/${project_id}`;
+  const back = `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
 
@@ -163,11 +160,11 @@ export const Toolbar = (props: ToolbarProps) => {
           <div className="anno-toolbar-divider" />
         )}
 
-        <button onClick={props.onToggleBranding}>
+        {/* <button onClick={props.onToggleBranding}>
           <ArrowsOutSimple size={17} />
         </button>
 
-        <div className="anno-toolbar-divider" />
+        <div className="anno-toolbar-divider" /> */}
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}

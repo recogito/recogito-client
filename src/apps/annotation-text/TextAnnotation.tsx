@@ -20,6 +20,7 @@ export interface TextAnnotationProps {
 }
 
 export const TextAnnotation = (props: TextAnnotationProps) => {
+
   return (
     <PluginProvider plugins={props.plugins}>
       <AuthorColorProvider>

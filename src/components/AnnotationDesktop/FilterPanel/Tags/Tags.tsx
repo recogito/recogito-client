@@ -27,7 +27,7 @@ export const Tags = () => {
   }
 
   return (
-    <section className="filter-creators">
+    <section className="filter-tags filter-toggle-buttons">
       <h2>
         <TagIcon size={19} /> Tags
       </h2>

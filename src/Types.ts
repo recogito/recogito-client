@@ -186,7 +186,7 @@ export interface Document {
 export interface DocumentWithContext extends Document {
 
   context: DocumentContext;
-
+  
   layers: DocumentLayer[];
 
 }
@@ -194,7 +194,7 @@ export interface DocumentWithContext extends Document {
 export interface DocumentContext {
 
   id: string;
-
+  
   name: string;
 
   description: string;

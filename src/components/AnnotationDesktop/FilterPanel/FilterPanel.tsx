@@ -1,14 +1,19 @@
 import type { PresentUser } from '@annotorious/react';
+import { AnnotationLayers } from './AnnotationLayers';
 import { Creators } from './Creators';
 import { Tags } from './Tags';
 import { Visibility } from './Visibility';
-import type { Translations } from 'src/Types';
+import type { DocumentLayer, Translations } from 'src/Types';
 
 import './FilterPanel.css';
 
 interface FilterPanelProps {
 
   i18n: Translations;
+
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
 
   present: PresentUser[];
 
@@ -18,6 +23,10 @@ export const FilterPanel = (props: FilterPanelProps) => {
 
   return (
     <div className="anno-drawer-panel filter-panel not-annotatable">
+      <AnnotationLayers
+        layers={props.layers}
+        layerNames={props.layerNames} />
+
       <Visibility 
         i18n={props.i18n} />
 

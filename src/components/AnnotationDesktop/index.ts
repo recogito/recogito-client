@@ -7,4 +7,5 @@ export * from './LayerConfiguration';
 export * from './UndoStack';
 export * from './DrawerPanel';
 export * from './useDrawerTransition';
+export * from './useLayerNames';
 export * from './utils';
