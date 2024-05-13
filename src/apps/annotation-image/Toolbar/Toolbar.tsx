@@ -4,15 +4,17 @@ import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentWithContext, Translations } from 'src/Types';
-import { ErrorBadge } from '@components/AnnotationDesktop';
-import type { PrivacyMode } from '@components/PrivacySelector';
+import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
+import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { Polygon, Rectangle } from './Icons';
 import { 
   Chats, 
+  Cursor, 
   FunnelSimple, 
   GraduationCap, 
   MagnifyingGlassMinus, 
-  MagnifyingGlassPlus, 
+  MagnifyingGlassPlus
 } from '@phosphor-icons/react';
 
 interface ToolbarProps {
@@ -30,10 +32,14 @@ interface ToolbarProps {
   rightDrawerOpen: boolean;
 
   showConnectionError: boolean;
+  
+  tool?: string;
 
   onChangePrivacy(mode: PrivacyMode): void;
 
   onChangeStyle(style?: DrawingStyleExpression<ImageAnnotation>): void;
+
+  onChangeTool(tool?: string): void;
 
   onToggleBranding(): void;
 
@@ -63,7 +69,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   return (
     <div className="anno-toolbar ia-toolbar not-annotatable">
-      <div className="anno-toolbar-slot anno-toolbar-slotleft">
+      <div className="anno-toolbar-slot anno-toolbar-slot-left">
         <div className="anno-toolbar-group">
           <div 
             className="with-notification">
@@ -107,19 +113,53 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
       </div>
 
-      <div className="anno-toolbar-right ia-toolbar-right">
-        <div className="anno-toolbar-section">
-          <button onClick={() => props.onZoom(2)}>
-            <MagnifyingGlassPlus size={18} />
-          </button>
-
-          <button onClick={() => props.onZoom(0.5)}>
-            <MagnifyingGlassMinus size={18} />
-          </button>
-        </div>
+      <div className="anno-toolbar-slot anno-toolbar-slot-center">
+        <PrivacySelector
+          mode={props.privacy}
+          i18n={props.i18n}
+          onChangeMode={props.onChangePrivacy} />
 
         <div className="anno-toolbar-divider" />
 
+        <button
+          className={props.tool === undefined ? 'active' : undefined}
+          aria-label={t['Pan and zoom the image, select annotations']}
+          onClick={() => props.onChangeTool(undefined)}>
+          <Cursor size={18} />
+        </button>
+
+        <button
+          className={props.tool === 'rectangle' ? 'active' : undefined}
+          aria-label={t['Create rectangle annotations']}
+          onClick={() => props.onChangeTool('rectangle')}>
+          <Rectangle />
+        </button>
+
+        <button
+          className={props.tool === 'polygon' ? 'active' : undefined}
+          aria-label={t['Create polygon annotations']}
+          onClick={() => props.onChangeTool('polygon')}>
+          <Polygon />
+        </button>
+
+        <div className="anno-toolbar-divider" />
+        
+        <button onClick={() => props.onZoom(2)}>
+          <MagnifyingGlassPlus size={18} />
+        </button>
+
+        <button onClick={() => props.onZoom(0.5)}>
+          <MagnifyingGlassMinus size={18} />
+        </button>
+
+        <div className="anno-toolbar-divider" />
+
+        <ColorCodingSelector 
+          i18n={props.i18n} 
+          onChange={props.onChangeStyle} />
+      </div>
+
+      <div className="anno-toolbar-slot anno-toobar-slot-right ia-toolbar-right">
         {props.present.length > 1 && (
           <>
             <div className="anno-toolbar-section anno-toolbar-presence">

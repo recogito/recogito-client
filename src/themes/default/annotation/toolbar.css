@@ -45,6 +45,7 @@
 .anno-toolbar button {
   border-radius: 50%;
   color: var(--font-dark);
+  flex: 0 0 auto;
   height: 36px;
   vertical-align: bottom;
   width: 36px;

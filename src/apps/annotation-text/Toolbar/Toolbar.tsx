@@ -1,5 +1,5 @@
-import { ArrowsOutSimple, Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
-import type { Annotation, DrawingStyleExpression, PresentUser } from '@annotorious/react';
+import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
+import type { PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';

@@ -64,6 +64,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       : undefined
   ), [layers]);
 
+  const [tool, setTool] = useState<string | undefined>();
+
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
@@ -123,17 +125,23 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   }, [policies]);
 
-  const onConnectError = () =>
-    window.location.href = `/${props.i18n.lang}/sign-in`;
-
   const onZoom = (factor: number) =>
     viewer.current?.viewport.zoomBy(factor);
+
+  useEffect(() => {
+    // Need to rethink - we also want popups
+    // when the panel shows Notes. But the design
+    // may still change...
+    setUsePopup(!rightPanelOpen);
+  }, [rightPanelOpen]);
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't fit the view if the annotation is already selected
       if (anno.state.selection.isSelected(a))
         return;
+
+      console.log('before select');
 
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
@@ -165,8 +173,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             leftDrawerOpen={leftPanelOpen}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
+            tool={tool}
             onChangePrivacy={setPrivacy}
             onChangeStyle={s => setDefaultLayerStyle(() => s)}
+            onChangeTool={setTool}
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
             onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
@@ -197,8 +207,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 layers={layers}
                 policies={policies}
                 present={present}
+                privacy={privacy}
                 style={style}
                 tagVocabulary={tagVocabulary}
+                tool={tool}
                 usePopup={usePopup}
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
