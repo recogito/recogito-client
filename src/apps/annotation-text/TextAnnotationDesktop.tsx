@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import { animated, easings, useSpring } from '@react-spring/web';
-import type { PresentUser, Filter, AnnotationState, Color } from '@annotorious/react';
+import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
 import type { HighlightStyle, HighlightStyleExpression, RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';

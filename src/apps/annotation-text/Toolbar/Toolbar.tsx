@@ -11,6 +11,7 @@ import type { DocumentWithContext, Translations } from 'src/Types';
 
 import './Toolbar.css';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 
 interface ToolbarProps {
 
@@ -18,19 +19,19 @@ interface ToolbarProps {
 
   i18n: Translations;
 
-  leftDrawerOpen?: boolean;
+  leftDrawerOpen: boolean;
 
   present: PresentUser[];
 
   privacy: PrivacyMode;
 
-  rightDrawerOpen?: boolean;
+  rightDrawerOpen: boolean;
 
   showConnectionError: boolean;
 
   onChangePrivacy(mode: PrivacyMode): void;
 
-  onChangeStyle(style?: DrawingStyleExpression<Annotation>): void;
+  onChangeStyle(style?: HighlightStyleExpression): void;
 
   onToggleBranding(): void;
 
@@ -128,7 +129,7 @@ export const Toolbar = (props: ToolbarProps) => {
       <div className="anno-toolbar-slot anno-toolbar-slot-right">  
         {props.present.length > 1 && (
           <>
-            <div className="anno-menubar-section anno-menubar-presence">
+            <div className="anno-toolbar-section anno-toolbar-presence">
               <PresenceStack present={props.present} />
             </div>
 
@@ -137,7 +138,7 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
 
         {me && (
-          <div className="anno-menubar-me">
+          <div className="anno-toolbar-me">
             <Avatar 
               id={me.id}
               name={me.appearance.label}

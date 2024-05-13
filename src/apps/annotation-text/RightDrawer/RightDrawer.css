@@ -17,9 +17,8 @@
 }
 
 .ta-drawer aside .tablist {
-  background-color: var(--gray-50);
+  background-color: var(--gray-100);
   border-bottom: 1px solid var(--gray-200);
-  box-shadow: 0 0 10px -5px rgba(0, 0, 0, 0.18);
   color: var(--font-light);
   font-size: var(--font-tiny);
   padding: 10px 15px 5px 15px;

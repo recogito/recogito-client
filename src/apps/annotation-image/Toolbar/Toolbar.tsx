@@ -1,45 +1,50 @@
 import { isMe } from '@recogito/annotorious-supabase';
-import type { PresentUser } from '@annotorious/react';
+import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import type { DocumentInTaggedContext, Translations } from 'src/Types';
-import { DocumentNotesMenuIcon, LayersPanelMenuIcon, DrawerPanel, ErrorBadge } from '@components/AnnotationDesktop';
+import type { DocumentWithContext, Translations } from 'src/Types';
+import { ErrorBadge } from '@components/AnnotationDesktop';
+import type { PrivacyMode } from '@components/PrivacySelector';
 import { 
   ArrowsOutSimple,
   CaretLeft, 
-  Chats, 
   GraduationCap, 
-  ListBullets, 
   MagnifyingGlassMinus, 
   MagnifyingGlassPlus, 
 } from '@phosphor-icons/react';
 
-interface MenubarProps {
+interface ToolbarProps {
+
+  document: DocumentWithContext;
 
   i18n: Translations;
 
-  document: DocumentInTaggedContext;
+  leftDrawerOpen: boolean;
 
   present: PresentUser[];
 
-  leftPanel?: DrawerPanel;
+  privacy: PrivacyMode;
 
-  rightPanel?: DrawerPanel;
-
-  onZoom(factor: number): void;
-
-  onToggleBranding(): void;
-
-  onSetLeftDrawer(panel?: DrawerPanel): void;
-
-  onSetRightDrawer(panel?: DrawerPanel): void;
+  rightDrawerOpen: boolean;
 
   showConnectionError: boolean;
 
+  onChangePrivacy(mode: PrivacyMode): void;
+
+  onChangeStyle(style?: DrawingStyleExpression<ImageAnnotation>): void;
+
+  onToggleBranding(): void;
+
+  onToggleLeftDrawer(): void;
+
+  onToggleRightDrawer(): void;
+
+  onZoom(factor: number): void;
+
 }
 
-export const Menubar = (props: MenubarProps) => {
+export const Toolbar = (props: ToolbarProps) => {
 
   const { t } = props.i18n;
   
@@ -55,24 +60,10 @@ export const Menubar = (props: MenubarProps) => {
 
   const plugins = usePlugins('annotation.image.toolbar');
 
-  const toggleLeftDrawer = () => {
-    if (props.leftPanel)
-      props.onSetLeftDrawer();
-    else
-      props.onSetLeftDrawer(DrawerPanel.TABLE_OF_CONTENTS);
-  }
-
-  const toggleRightDrawer = (panel: DrawerPanel) => {
-    if (panel === props.rightPanel)
-      props.onSetRightDrawer();
-    else
-     props.onSetRightDrawer(panel);
-  } 
-
   return (
-    <div className="anno-menubar ia-menubar not-annotatable">
-      <div className="anno-menubar-left ia-menubar-left">
-        <div className="anno-menubar-section anno-menubar-title">
+    <div className="anno-toolbar ia-toolbar not-annotatable">
+      <div className="anno-toolbar-slot anno-toolbar-slotleft">
+        <div className="anno-toolbar-group">
           {contextName ? (
             <>
               <a 
@@ -102,21 +93,21 @@ export const Menubar = (props: MenubarProps) => {
           )}
         </div>
 
-        <div className="anno-desktop-overlay-divider" />
+        <div className="anno-toolbar-divider" />
 
-        <div>
+        {/* <div>
           <button onClick={toggleLeftDrawer}>
             <ListBullets size={17} />
           </button>
-        </div>
+        </div> */}
 
         {(props.showConnectionError) && (
           <ErrorBadge i18n={props.i18n} />
         )}
       </div>
 
-      <div className="anno-menubar-right ia-menubar-right">
-        <div className="anno-menubar-section">
+      <div className="anno-toolbar-right ia-toolbar-right">
+        <div className="anno-toolbar-section">
           <button onClick={() => props.onZoom(2)}>
             <MagnifyingGlassPlus size={18} />
           </button>
@@ -126,15 +117,15 @@ export const Menubar = (props: MenubarProps) => {
           </button>
         </div>
 
-        <div className="anno-desktop-overlay-divider" />
+        <div className="anno-toolbar-divider" />
 
         {props.present.length > 1 && (
           <>
-            <div className="anno-menubar-section anno-menubar-presence">
+            <div className="anno-toolbar-section anno-toolbar-presence">
               <PresenceStack present={props.present} />
             </div>
 
-            <div className="anno-desktop-overlay-divider" />
+            <div className="anno-toolbar-divider" />
           </>
         )}
 
@@ -147,10 +138,10 @@ export const Menubar = (props: MenubarProps) => {
         ))}
 
         {plugins.length > 0 && (
-          <div className="anno-desktop-overlay-divider" />
+          <div className="anno-toolbar-divider" />
         )}
 
-        <div className="anno-menubar-section anno-menubar-actions-right">
+        {/* <div className="anno-menubar-section anno-menubar-actions-right">
           <button
             className={props.rightPanel === DrawerPanel.ANNOTATIONS ? 'active' : undefined}
             aria-label={t['Show annotation list']}
@@ -167,18 +158,18 @@ export const Menubar = (props: MenubarProps) => {
             i18n={props.i18n}
             active={props.rightPanel === DrawerPanel.DOCUMENT_NOTES}
             onSelect={() => toggleRightDrawer(DrawerPanel.DOCUMENT_NOTES)} />
-        </div>
+        </div> */}
 
-        <div className="anno-desktop-overlay-divider" />
+        <div className="anno-toolbar-divider" />
 
-        <div className="anno-menubar-section">
+        <div className="anno-toolbar-section">
           <button onClick={props.onToggleBranding}>
             <ArrowsOutSimple size={17} />
           </button>
         </div>
 
         {me && (
-          <div className="anno-menubar-me">
+          <div className="anno-toolbar-me">
             <Avatar 
               id={me.id}
               name={me.appearance.label}

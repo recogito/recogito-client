@@ -3,6 +3,7 @@ import { PluginProvider, type PluginInstallationConfig } from '@components/Plugi
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { ImageAnnotationDesktop } from './ImageAnnotationDesktop';
 import { AuthorColorProvider } from '@components/AnnotationDesktop';
+import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 export interface ImageAnnotationProps {
 
@@ -21,9 +22,11 @@ export const ImageAnnotation = (props: ImageAnnotationProps) => {
   return (
     <PluginProvider plugins={props.plugins}>
       <AuthorColorProvider>
-        <Annotorious>
-          <ImageAnnotationDesktop {...props} />
-        </Annotorious>
+        <FilterState>
+          <Annotorious>
+            <ImageAnnotationDesktop {...props} />
+          </Annotorious>
+        </FilterState>
       </AuthorColorProvider>
     </PluginProvider>
   )

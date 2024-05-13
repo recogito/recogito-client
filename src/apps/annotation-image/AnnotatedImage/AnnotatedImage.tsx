@@ -3,11 +3,12 @@ import type OpenSeadragon from 'openseadragon';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Layer, Policies, Translations } from 'src/Types';
 import { Toolpanel } from '../Toolpanel';
 import {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyle,
+  DrawingStyleExpression,
   ImageAnnotation,
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
@@ -25,27 +26,25 @@ const SUPABASE_API_KEY: string = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 interface AnnotatedImageProps {
 
+  activeLayer?: DocumentLayer;
+
   authToken?: string;
 
   channelId: string;
 
-  defaultLayer?: Layer;
+  i18n: Translations;
 
   imageManifestURL: string;
 
   isPresentationManifest?: boolean;
 
-  filter?: (a: ImageAnnotation) => boolean;
-
-  i18n: Translations;
-
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   policies: Policies;
 
   present: PresentUser[];
 
-  style?: (a: ImageAnnotation) => DrawingStyle;
+  style?: DrawingStyleExpression<ImageAnnotation>;
 
   tagVocabulary: string[];
 
