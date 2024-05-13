@@ -9,5 +9,11 @@
 }
 
 .anno-drawer.ia-left-drawer aside {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+}
+
+.anno-drawer.ia-left-drawer aside .tabcontent {
+  flex: 1;
 }
