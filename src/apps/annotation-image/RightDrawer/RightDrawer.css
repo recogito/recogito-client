@@ -8,6 +8,9 @@
   right: 0;
   scroll-padding: 40px;
   top: 0;
-  transform: translateX(360px);
   width: 360px;
+}
+
+.ia-right-drawer .tablist {
+  background-color: var(--gray-50);
 }

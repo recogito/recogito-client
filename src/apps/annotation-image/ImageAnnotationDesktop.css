@@ -27,7 +27,6 @@
 .ia-drawer {
   height: 100%;
   overflow-y: auto;
-  padding: 5px 0;
   position: absolute;
   z-index: 1;
 }

@@ -12,6 +12,7 @@ import type { DocumentLayer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
+import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
 import { useIIIF, ManifestErrorDialog } from './IIIF';
 import {
@@ -25,7 +26,6 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
-
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -207,17 +207,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             )}
           </div>
 
-          {/* <RightDrawer
-            currentPanel={rightPanel}
+          <RightDrawer
             i18n={props.i18n}
             layers={layers}
+            open={rightPanelOpen}
             policies={policies}
             present={present}
             style={style}
             tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation}
-            onChangeAnnotationFilter={f => setFilter(() => f)}
-          onChangeAnnotationStyle={s => setDefaultLayerStyle(() => s)} /> */}
+            beforeSelectAnnotation={beforeSelectAnnotation} />
         </main>
       </div>
 
