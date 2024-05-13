@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { getAvailableLayers } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { DocumentContext, DocumentWithContext } from 'src/Types';
+import type { DocumentWithContext } from 'src/Types';
 
 export interface NamedLayer {
 
@@ -21,17 +21,16 @@ export const useLayerNames = (document: DocumentWithContext) => {
   const [names, setNames] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
-    const { layers, context} = document;
-
-    const layerIds = new Set(layers.map(l => l.id));
+    const { context} = document;
 
     getAvailableLayers(supabase, context.project_id).then(({ data, error }) => {
       if (error) {
+        console.error(error);
       } else {
         // The idea is that for each layer ID, we want the name of the context 
         // in which the given layer is the active one.
         const entries = data
-          .filter(l => l.layer_id && l.is_active && l.context_name && layerIds.has(l.layer_id))
+          .filter(l => l.layer_id && l.is_active && l.context_name)
           .map(l => [l.layer_id, l.context_name] as [string, string]);
         
         setNames(new Map([...entries]))

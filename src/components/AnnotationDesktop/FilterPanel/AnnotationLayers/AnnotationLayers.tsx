@@ -73,7 +73,7 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
           </Checkbox.Root>
 
           <label htmlFor="active-layer">
-            {props.layerNames.get(active.id)}
+            {props.layerNames.get(active.id) || 'Baselayer'}
           </label>
         </div>
       </section>
@@ -95,7 +95,7 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
                 </Checkbox.Root>
 
                 <label htmlFor={`layer-${l.id}`}>
-                  {props.layerNames.get(l.id)}
+                  {props.layerNames.get(l.id) || 'Baselayer'}
                 </label>
               </li>
             ))}
