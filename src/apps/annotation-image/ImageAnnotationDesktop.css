@@ -1,6 +1,7 @@
 @import '@annotorious/react/annotorious-react.css';
 
 .ia-desktop main {
+  background-color: var(--gray-100);
   flex-grow: 1;
   position: relative;
   overflow: hidden;

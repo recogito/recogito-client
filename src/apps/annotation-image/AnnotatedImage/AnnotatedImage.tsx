@@ -3,11 +3,13 @@ import type OpenSeadragon from 'openseadragon';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import type { DocumentLayer, Layer, Policies, Translations } from 'src/Types';
+import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import { Toolpanel } from '../Toolpanel';
 import {
   AnnotoriousOpenSeadragonAnnotator,
-  DrawingStyle,
   DrawingStyleExpression,
   ImageAnnotation,
   OpenSeadragonAnnotator,
@@ -17,8 +19,6 @@ import {
   PresentUser,
   useAnnotator
 } from '@annotorious/react';
-import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -72,6 +72,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
+  const { filter } = useFilter();
+
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
@@ -92,7 +94,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     // Annotation targets are editable for creators and admins
     const me = anno?.getUser()?.id;
 
-    const isActiveLayer = annotation.layer_id === props.defaultLayer?.id;
+    const isActiveLayer = annotation.layer_id === props.activeLayer?.id;
 
     const canEdit = isActiveLayer && (
       annotation.target.creator?.id === me || policies.get('layers').has('INSERT'));
@@ -115,7 +117,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       drawingEnabled={drawingEnabled}
       pointerSelectAction={selectAction}
       tool={tool}
-      filter={props.filter}
+      filter={filter}
       style={props.style}>
 
       <UndoStack
@@ -126,7 +128,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           supabaseUrl={SUPABASE}
           apiKey={SUPABASE_API_KEY}
           channel={props.channelId}
-          defaultLayer={props.defaultLayer?.id}
+          defaultLayer={props.activeLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 

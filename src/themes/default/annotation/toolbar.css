@@ -6,6 +6,7 @@
   justify-content: space-between;
   padding: 0.375rem 0.75rem;
   position: relative;
+  z-index: 10;
 }
 
 .anno-toolbar-slot {

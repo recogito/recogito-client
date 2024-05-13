@@ -6,9 +6,10 @@ import { PresenceStack } from '@components/Presence';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { ErrorBadge } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { 
-  ArrowsOutSimple,
-  CaretLeft, 
+  Chats, 
+  FunnelSimple, 
   GraduationCap, 
   MagnifyingGlassMinus, 
   MagnifyingGlassPlus, 
@@ -50,11 +51,11 @@ export const Toolbar = (props: ToolbarProps) => {
   
   const contextName = props.document.context.name;
 
-  const { id, project_id } = props.document.context;
+  const { project_id } = props.document.context;
 
-  const back = contextName ? 
-    `/${props.i18n.lang}/projects/${project_id}/assignments/${id}` : 
-    `/${props.i18n.lang}/projects/${project_id}`;
+  const { numConditions } = useFilter();
+
+  const back = `/${props.i18n.lang}/projects/${project_id}`;
 
   const me = props.present.find(isMe)!;
 
@@ -64,42 +65,42 @@ export const Toolbar = (props: ToolbarProps) => {
     <div className="anno-toolbar ia-toolbar not-annotatable">
       <div className="anno-toolbar-slot anno-toolbar-slotleft">
         <div className="anno-toolbar-group">
+          <div 
+            className="with-notification">
+            <button 
+              className={props.leftDrawerOpen ? 'active' :  undefined}
+              onClick={props.onToggleLeftDrawer}>
+              <FunnelSimple size={18} />
+            </button>
+
+            {numConditions > 0 && (
+              <span className="notification-bubble">
+                <span>{numConditions}</span>
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="anno-toolbar-group">
           {contextName ? (
-            <>
+            <h1>
               <a 
                 href={back} 
                 className="assignment-icon"
                 title={t['Back to assignment overview']}>
                 <GraduationCap size={20} />
+                {contextName}
               </a>
 
-              <h1>
-                <a href={back}>{contextName}</a> / <span>{props.document.name}</span>
-              </h1>
-            </>
+              <span>/</span>
+              <span>{props.document.name}</span>
+            </h1>
           ) : (
-            <>
-              <a 
-                href={back} 
-                className="back-to-project"
-                title={t['Back to project overview']}>
-                <CaretLeft size={20} />
-              </a>
-
-              <h1>
-                <span>{props.document.name}</span>
-              </h1>
-            </>
+            <h1>
+              <span>{props.document.name}</span>
+            </h1>
           )}
         </div>
-
-        <div className="anno-toolbar-divider" />
-
-        {/* <div>
-          <button onClick={toggleLeftDrawer}>
-            <ListBullets size={17} />
-          </button>
-        </div> */}
 
         {(props.showConnectionError) && (
           <ErrorBadge i18n={props.i18n} />
@@ -160,14 +161,6 @@ export const Toolbar = (props: ToolbarProps) => {
             onSelect={() => toggleRightDrawer(DrawerPanel.DOCUMENT_NOTES)} />
         </div> */}
 
-        <div className="anno-toolbar-divider" />
-
-        <div className="anno-toolbar-section">
-          <button onClick={props.onToggleBranding}>
-            <ArrowsOutSimple size={17} />
-          </button>
-        </div>
-
         {me && (
           <div className="anno-toolbar-me">
             <Avatar 
@@ -177,6 +170,15 @@ export const Toolbar = (props: ToolbarProps) => {
               avatar={me.appearance.avatar} />
           </div>
         )}
+
+        <div className="anno-toolbar-divider" />
+
+        <button
+          className={props.rightDrawerOpen ? 'active' : undefined}
+          aria-label={t['Show annotation list']}
+          onClick={props.onToggleRightDrawer}>
+          <Chats size={17} />
+        </button>
       </div>
     </div>
   )

@@ -11,6 +11,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import type { DocumentLayer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
+import { LeftDrawer } from './LeftDrawer';
 import { Toolbar } from './Toolbar';
 import { useIIIF, ManifestErrorDialog } from './IIIF';
 import {
@@ -24,6 +25,7 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
+
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -172,11 +174,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         </div>
 
         <main>
-          {/* <LeftDrawer
+          <LeftDrawer 
             currentImage={currentImage}
-            currentPanel={leftPanel}
+            i18n={props.i18n}
             iiifSequence={sequence}
-            onChangeImage={setCurrentImage} /> */}
+            layers={layers}
+            layerNames={layerNames}
+            open={leftPanelOpen} 
+            present={present} 
+            onChangeImage={setCurrentImage} />
 
           <div className="ia-annotated-image-container">
             {policies && currentImage && (

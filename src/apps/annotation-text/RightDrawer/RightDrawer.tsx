@@ -73,7 +73,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
 
       {drawerTransition((style, open) => open && (
         <animated.div 
-          className="ta-drawer ta-right-drawer"
+          className="anno-drawer ta-drawer ta-right-drawer"
           style={style}>
           <aside>
             <div className="tablist">

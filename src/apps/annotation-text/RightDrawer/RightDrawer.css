@@ -1,4 +1,4 @@
-.ta-drawer.ta-right-drawer {
+.anno-drawer.ta-right-drawer {
   background-color: var(--gray-100);
   flex-grow: 0;   
   flex-shrink: 0; 
@@ -16,40 +16,8 @@
   width: 100%;
 }
 
-.ta-drawer aside .tablist {
-  background-color: var(--gray-100);
-  border-bottom: 1px solid var(--gray-200);
-  color: var(--font-light);
-  font-size: var(--font-tiny);
-  padding: 10px 15px 5px 15px;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.ta-drawer aside .tablist ul {
-  display: flex;
-  gap: 1.25rem;
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-}
-
-.ta-drawer aside .tablist ul li.active {
-  color: var(--font-dark);
-  font-weight: 500;
-}
-
-.ta-drawer aside .tablist ul li.active svg {
-  color: var(--font-dark);
-}
-
-.ta-drawer aside .tablist button {
-  all: unset;
-  align-items: center;
-  cursor: pointer;
-  display: inline-flex;
-  gap: 0.25rem;
+.ta-right-drawer aside .tablist {
+  background-color: var(--gray-50);
 }
 
 .ta-drawer aside .tabcontent {

@@ -34,6 +34,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
 
   const me = props.present.find(isMe)!;
 
+  /*
   const drawerTransition = useDrawerTransition(props.currentPanel, {
     from: { transform: 'translateX(180px)', opacity: 0 },
     enter: { transform: 'translateX(0px)', opacity: 1 },
@@ -42,9 +43,12 @@ export const RightDrawer = (props: RightDrawerProps) => {
       duration: 120
     }
   });
+  */
 
-  return drawerTransition((style, panel) => panel && (
-    <animated.div 
+  // return drawerTransition((style, panel) => panel && (
+  //   <animated.div 
+  return (
+    <div
       className="ia-drawer ia-right-drawer"
       style={style}>
       <aside>
@@ -73,7 +77,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
             tagVocabulary={props.tagVocabulary} />
         ) : undefined}
       </aside>
-    </animated.div>
+    </div>
   ))
 
 }

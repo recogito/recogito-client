@@ -8,8 +8,6 @@ import { PresenceStack } from '@components/Presence';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
 import type { DocumentWithContext, Translations } from 'src/Types';
-
-import './Toolbar.css';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 

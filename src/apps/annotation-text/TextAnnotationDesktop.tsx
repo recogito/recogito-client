@@ -6,7 +6,7 @@ import type { HighlightStyle, HighlightStyleExpression, RecogitoTextAnnotator, T
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getAllDocumentLayersInProject, getAvailableLayers } from '@backend/helpers';
+import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import { BrandHeader } from '@components/Branding';
