@@ -72,8 +72,9 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const onChangeName = (name: string) =>
     setAssignment((assignment) => ({ ...assignment, name }));
 
-  const onChangeDocuments = (documents: DocumentWithLayers[]) =>
+  const onChangeDocuments = (documents: DocumentWithLayers[]) => {
     setAssignment((assignment) => ({ ...assignment, documents }));
+  };
 
   const onChangeTeam = (team: UserProfile[]) =>
     setAssignment((assignment) => ({ ...assignment, team }));

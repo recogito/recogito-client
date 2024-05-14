@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getGroupMembers, getProjectGroupMembers } from '@backend/crud';
-import type { ExtendedProjectData, Group, Member } from 'src/Types';
+import { getProjectGroupMembers } from '@backend/crud';
+import type { ExtendedProjectData } from 'src/Types';
 import type { Response } from '@backend/Types';
 
 export const listMyProjectsExtended = (
@@ -152,16 +152,29 @@ export const getProjectExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts(
+      groups:project_groups(
+        id,
+        name
+      ),
+      project_documents(
+        *,
+        document:documents!project_documents_document_id_fkey(
+          id,
+          name,
+          content_type,
+          meta_data
+        )
+      ),
+      contexts:contexts!contexts_project_id_fkey(
         id,
         project_id,
         name,
-        description,
         is_project_default,
         created_at,
-        context_users (
+        members:context_users(
           id,
-          user:profiles!context_users_user_id_fkey(
+          role_id,
+          user:profiles!context_users_user_id_fkey (
             id,
             nickname,
             first_name,
@@ -177,12 +190,6 @@ export const getProjectExtended = (
             meta_data
           )
         )
-      ),
-      groups:project_groups (
-        id,
-        name,
-        is_admin,
-        is_default
       )
     `
     )
@@ -196,49 +203,64 @@ export const getProjectExtended = (
 
         const groupIds = project.groups.map((g) => g.id);
 
-        return getGroupMembers(supabase, groupIds).then(({ error, data }) => {
-          if (error) {
-            return { error, data: undefined as unknown as ExtendedProjectData };
-          } else {
-            // Create a project users group
-            let users: Member[] = [];
-            data.forEach(
-              (d) =>
-                (users = [
-                  ...users,
-                  {
-                    user: d.user,
-                    inGroup: project.groups.find(
-                      (g) => g.id === d.in_group
-                    ) as Group,
-                    since: d.since,
-                  },
-                ])
-            );
+        return getProjectGroupMembers(supabase, groupIds).then(
+          ({ error, data }) => {
+            if (error) {
+              return {
+                error,
+                data: undefined as unknown as ExtendedProjectData,
+              };
+            } else {
+              // Re-assign group members to projects
+              let users: any[] = [];
+              data.forEach(
+                (d) =>
+                  (users = [
+                    ...users,
+                    {
+                      user: d.user,
+                      groupId: d.in_group,
+                    },
+                  ])
+              );
+              users = [...new Set(users)];
 
-            users = users.filter(
-              (value: Member, index: number, array: any[]) => {
-                return (
-                  array.findIndex((u) => u.user.id === value.user.id) === index
-                );
-              }
-            );
+              // Re-assign group members to groups
+              /*
+                                  users: users
+                      .filter((u) => ids.includes(u.groupId))
+                      .map((m) => {
+                        return {
+                          user: m.user,
+                          inGroup: undefined,
+                          since: '',
+                        };
+              */
+              const ids: string[] = project.groups.map((g: any) => g.id);
+              const projectExtended = {
+                ...project,
+                groups: project.groups.map((g) => ({
+                  ...g,
+                  members: data
+                    .filter((m) => m.in_group === g.id)
+                    .map(({ user, since }) => ({ user, since })),
+                })),
+                users: users
+                  .filter((u) => ids.includes(u.groupId))
+                  .map((m) => {
+                    return {
+                      user: m.user,
+                      inGroup: undefined,
+                      since: '',
+                    };
+                  }),
+                documents: project.project_documents.map((pd) => pd.document),
+              } as unknown as ExtendedProjectData;
 
-            // Re-assign group members to groups
-            const projectExtended = {
-              ...project,
-              groups: project.groups.map((g) => ({
-                ...g,
-                members: data
-                  .filter((m) => m.in_group === g.id)
-                  .map(({ user, since }) => ({ user, since })),
-              })),
-              users,
-            } as unknown as ExtendedProjectData;
-
-            return { error, data: projectExtended };
+              return { error, data: projectExtended };
+            }
           }
-        });
+        );
       }
     });
 

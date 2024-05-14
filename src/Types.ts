@@ -220,7 +220,7 @@ export interface Context {
 
   created_at: string;
 
-  context_users: {
+  members: {
     id: string;
     user_id: string;
     user: {

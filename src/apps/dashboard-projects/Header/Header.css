@@ -1,5 +1,6 @@
 .dashboard-header {
   background-color: #fff;
+  margin-top: 60px;
 }
 
 .dashboard-header section {
@@ -10,7 +11,6 @@
 }
 
 .dashboard-header section.dashboard-header-top {
-  border-bottom: 1px solid var(--gray-100);
   padding: 20px 30px;
 }
 
@@ -50,14 +50,15 @@
   width: auto;
 }
 
-.dashboard-header section.dashboard-header-bottom .dashboard-header-bottom-actions {
+.dashboard-header
+  section.dashboard-header-bottom
+  .dashboard-header-bottom-actions {
   align-items: center;
   display: flex;
 }
 
 .dashboard-header section.dashboard-header-bottom {
   padding: 6px 25px 0 30px;
-  border-bottom: 1px solid var(--gray-200);
 }
 
 .dashboard-header-bottom ul {
@@ -100,5 +101,3 @@
   background: none;
   box-shadow: none;
 }
-
-

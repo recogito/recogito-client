@@ -1,0 +1,59 @@
+.project-entry {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 64px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.project-entry-name {
+  width: 15%;
+  cursor: pointer;
+}
+
+.project-entry-description {
+  color: var(--gray-600);
+  width: 30%;
+}
+
+.project-entry-assignments-with-docs {
+  width: 7%;
+  text-align: center;
+}
+
+.project-entry-assignments {
+  width: 21%;
+  text-align: center;
+}
+
+.project-entry-texts {
+  width: 7%;
+  text-align: center;
+}
+
+.project-entry-images {
+  width: 7%;
+  text-align: center;
+}
+
+.project-entry-avatar-stack {
+  width: 15%;
+  display: flex;
+  flex-direction: row;
+}
+
+.project-entry-actions {
+  width: 19%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.project-entry-avatar-stack .avatar {
+  border: 2px solid var(--gray-50);
+  height: 26px;
+  width: 26px;
+  margin-right: -10px;
+}
