@@ -38,6 +38,8 @@ export interface AnnotationCardSectionProps {
   policies?: Policies;
 
   tags?: AnnotationBody[];
+
+  tagVocabulary?: string[];
   
   onDeleteAnnotation(): void;
 
@@ -64,6 +66,8 @@ const parseBody = (body?: AnnotationBody): Delta | undefined =>
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { comment, isPrivate, isReadOnly, me, present } = props;
+
+  const { t } = props.i18n;
 
   const [editable, setEditable] = useState(false);
 
@@ -217,6 +221,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             me={props.me}
             i18n={props.i18n}
             tags={props.tags || []}
+            vocabulary={props.tagVocabulary}
             onCreateTag={onCreateTag}
             onDeleteTag={props.onDeleteBody} />
         </div>
@@ -227,13 +232,13 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <button 
             className="sm flat unstyled"
             onClick={() => setEditable(false)}>
-            Cancel
+            {t['Cancel']}
           </button>
 
           <button 
             className="sm flat primary"
             onClick={onSave}>
-            Save
+            {t['Save']}
           </button>
         </div>
       )}

@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
-import { useFilterSettings } from '../LayerConfiguration';
 import { 
   Annotation as Anno,
   AnnotationBody,
@@ -15,19 +15,21 @@ import {
   useSelection,
   useViewportState,
   useAnnotationStore,
-  Annotation,
-  DrawingStyle
+  DrawingStyleExpression
 } from '@annotorious/react';
 
 import './AnnotationList.css';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 
 interface AnnotationListProps<T extends Anno> {
 
-  currentStyle?: (a: Annotation) => DrawingStyle;
+  currentStyle?: DrawingStyleExpression<SupabaseAnnotation> | HighlightStyleExpression;
+
+  filter?: Filter;
 
   i18n: Translations;
 
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   me: PresentUser;
 
@@ -56,9 +58,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   // 'Show all' vs. 'Show in viewport' setting
   const [viewportFilter, setViewportFilter] = useState<ViewportFilter>(ViewportFilter.NONE);
 
-  // Global annotation layer filter
-  const { filter } = useFilterSettings();
-
   const [autofocus, setAutofocus] = useState(false);
 
   const applyFilter = () => {
@@ -69,15 +68,15 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     }
   }
 
-  const annotations = applyFilter();
+  const annotations = props.filter ? 
+    applyFilter().filter(props.filter) : applyFilter();
 
   const { selected, pointerEvent } = useSelection();
 
   const sorted = useMemo(() => {
-    const filtered = filter ? annotations.filter(filter) : annotations;
     // @ts-ignore
-    return props.sorting ? [...filtered].sort(props.sorting) : filtered;
-  }, [annotations, filter, selected]);
+    return props.sorting ? [...annotations].sort(props.sorting) : annotations;
+  }, [annotations, props.sorting]);
 
   const anno = useAnnotator<Annotator>();
 
@@ -162,7 +161,9 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   const getBorderColor = (annotation: Anno) => {
     if (props.currentStyle) {
-      const styled = props.currentStyle(annotation);
+      const styled = typeof props.currentStyle === 'function' 
+        ? props.currentStyle(annotation, {}) : props.currentStyle;
+        
       return styled?.fill;
     }
   }

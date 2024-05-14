@@ -1,13 +1,15 @@
-import { forwardRef, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import type { Layer, Policies, Translations } from 'src/Types';
-import { Toolpanel } from '../Toolpanel';
+import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import {
   AnnotoriousOpenSeadragonAnnotator,
-  DrawingStyle,
+  DrawingStyleExpression,
   ImageAnnotation,
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
@@ -16,8 +18,6 @@ import {
   PresentUser,
   useAnnotator
 } from '@annotorious/react';
-import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -25,29 +25,31 @@ const SUPABASE_API_KEY: string = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 interface AnnotatedImageProps {
 
+  activeLayer?: DocumentLayer;
+
   authToken?: string;
 
   channelId: string;
 
-  defaultLayer?: Layer;
+  i18n: Translations;
 
   imageManifestURL: string;
 
   isPresentationManifest?: boolean;
 
-  filter?: (a: ImageAnnotation) => boolean;
-
-  i18n: Translations;
-
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   policies: Policies;
 
   present: PresentUser[];
 
-  style?: (a: ImageAnnotation) => DrawingStyle;
+  privacy: PrivacyMode;
+
+  style?: DrawingStyleExpression<ImageAnnotation>;
 
   tagVocabulary: string[];
+
+  tool?: string;
 
   usePopup: boolean;
 
@@ -69,14 +71,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const [drawingEnabled, setDrawingEnabled] = useState(false);
 
-  const [tool, setTool] = useState<string>('rectangle');
-
-  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+  const { filter } = useFilter();
 
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
-      clickToZoom: false
+      clickToZoom: false,
+      dblClickToZoom: false
     },
     ajaxHeaders: authToken ? {
       Authorization: `Bearer ${authToken}`
@@ -84,7 +85,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     loadTilesWithAjax: Boolean(authToken),
     ajaxWithCredentials: authToken ? true : undefined,
     showNavigationControl: false,
-    minZoomLevel: 0.4,
+    minZoomLevel: 0.1,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
   }), [props.imageManifestURL]);
@@ -93,7 +94,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     // Annotation targets are editable for creators and admins
     const me = anno?.getUser()?.id;
 
-    const isActiveLayer = annotation.layer_id === props.defaultLayer?.id;
+    const isActiveLayer = annotation.layer_id === props.activeLayer?.id;
 
     const canEdit = isActiveLayer && (
       annotation.target.creator?.id === me || policies.get('layers').has('INSERT'));
@@ -101,22 +102,22 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }
 
-  const onChangeTool = (tool: string | null) => {
-    if (tool) {
-      if (!drawingEnabled) setDrawingEnabled(true);
-      setTool(tool);
+  useEffect(() => {
+    if (props.tool) {
+      if (!drawingEnabled)
+        setDrawingEnabled(true);
     } else {
       setDrawingEnabled(false);
     }
-  }
+  }, [props.tool]);
 
   return (
     <OpenSeadragonAnnotator
       autoSave
       drawingEnabled={drawingEnabled}
       pointerSelectAction={selectAction}
-      tool={tool}
-      filter={props.filter}
+      tool={props.tool || 'rectangle'}
+      filter={filter}
       style={props.style}>
 
       <UndoStack
@@ -127,9 +128,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           supabaseUrl={SUPABASE}
           apiKey={SUPABASE_API_KEY}
           channel={props.channelId}
-          defaultLayer={props.defaultLayer?.id}
+          defaultLayer={props.activeLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
-          privacyMode={privacy === 'PRIVATE'} 
+          privacyMode={props.privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
           onInitialLoad={props.onLoad}
           onPresence={props.onChangePresent}
@@ -154,13 +155,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
               present={present}
               tagVocabulary={tagVocabulary} />)} />
       )}
-
-      <Toolpanel
-        i18n={i18n}
-        isAdmin={policies.get('layers').has('INSERT')}
-        privacy={privacy}
-        onChangeTool={onChangeTool}
-        onChangePrivacy={setPrivacy} />
     </OpenSeadragonAnnotator>
   )
 

@@ -1,7 +1,11 @@
-import type { Resource, Sequence } from 'manifesto.js';
-import { animated } from '@react-spring/web';
-import { useDrawerTransition, type DrawerPanel } from '@components/AnnotationDesktop';
+import { useState } from 'react';
+import { Chats, Faders, Files, Note } from '@phosphor-icons/react';
+import type { Sequence } from 'manifesto.js';
+import type { PresentUser } from '@annotorious/react';
+import { animated, useTransition, easings } from '@react-spring/web';
 import { IIIFThumbnailStrip } from '../IIIF';
+import type { DocumentLayer, Translations } from 'src/Types';
+import { FilterPanel } from '@components/AnnotationDesktop/FilterPanel';
 
 import './LeftDrawer.css';
 
@@ -9,9 +13,17 @@ interface LeftDrawerProps {
 
   currentImage?: string;
 
-  currentPanel?: DrawerPanel;
+  i18n: Translations;
 
   iiifSequence?: Sequence;
+
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
+
+  open: boolean;
+  
+  present: PresentUser[];
 
   onChangeImage(url: string): void;
 
@@ -19,24 +31,57 @@ interface LeftDrawerProps {
 
 export const LeftDrawer = (props: LeftDrawerProps) => {
 
-  const drawerTransition = useDrawerTransition(props.currentPanel, {
-    from: { transform: 'translateX(-75px)', opacity: 0 },
+  const { t } = props.i18n;
+
+  const [tab, setTab] = useState<'FILTERS' | 'PAGES'>('FILTERS');
+
+  const transition = useTransition([props.open], {
+    from: { transform: 'translateX(-140px)', opacity: 0 },
     enter: { transform: 'translateX(0px)', opacity: 1 },
-    leave: { transform: 'translateX(-75px)', opacity: 0 },
+    leave: { transform: 'translateX(-140px)', opacity: 0 },
     config: {
-      duration: 120
+      duration: 180,
+      easing: easings.easeInOutCubic
     }
   });
 
-  return drawerTransition((style, panel) => panel && (
+  return transition((style, open) => open && (
     <animated.div 
-      className="ia-drawer ia-left-drawer"
+      className="anno-drawer ia-drawer ia-left-drawer"
       style={style}>
       <aside>
-        <IIIFThumbnailStrip 
-          currentImage={props.currentImage}
-          sequence={props.iiifSequence} 
-          onSelect={props.onChangeImage} />
+        <div className="tablist">
+          <ul>
+            <li 
+              className={tab === 'FILTERS' ? 'active' : undefined}>
+              <button onClick={() => setTab('FILTERS')}>
+                <Faders size={18} /> {t['Filters']}
+              </button>
+            </li>
+
+            <li 
+              className={tab === 'PAGES' ? 'active' : undefined}>
+              <button onClick={() => setTab('PAGES')}>
+                <Files size={18} /> {t['Pages']}
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div className="tabcontent">
+          {tab === 'FILTERS' ? (
+            <FilterPanel 
+              i18n={props.i18n} 
+              layers={props.layers}
+              layerNames={props.layerNames}
+              present={props.present} />
+          ) : (
+            <IIIFThumbnailStrip 
+              currentImage={props.currentImage}
+              sequence={props.iiifSequence} 
+              onSelect={props.onChangeImage} />
+          )}
+        </div>
       </aside>
     </animated.div> 
   ))

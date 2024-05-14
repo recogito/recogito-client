@@ -12,7 +12,7 @@
   position: relative;
 }
 .annotation .interstitial-wrapper::after {
-  border-top: 1px solid var(--gray-200);
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
   content: '';
   display: block;
   height: 15px;
@@ -20,6 +20,7 @@
 
 .annotation .interstitial .label {
   background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
   border-radius: 99999px;
   box-shadow: none;
   color: var(--font-light);
@@ -29,7 +30,7 @@
 }
 
 .annotation.readonly .interstitial .label {
-  background-color: var(--gray-200);
+  background-color: var(--gray-300);
 }
 
 .annotation.note .interstitial .label {

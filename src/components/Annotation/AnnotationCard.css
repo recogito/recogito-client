@@ -4,7 +4,6 @@
   border-radius: 5px;
   overflow: hidden;
   position: relative;
-  transition: all 120ms;
 }
 
 .annotation ul {
@@ -22,7 +21,7 @@
 }
 
 .annotation.readonly {
-  background-color: var(--gray-200);
+  background-color: var(--gray-300);
   border: 1px solid var(--gray-400);
 }
 
@@ -32,11 +31,6 @@
 
 .annotation.note.readonly {
   background-color: #e1d7b4;
-}
-
-.annotation.selected {
-  box-shadow: 0 0 0 3px var(--button-focus-outline-color);
-  transform: translateX(-5px);
 }
 
 .annotation:not(.note)::after {

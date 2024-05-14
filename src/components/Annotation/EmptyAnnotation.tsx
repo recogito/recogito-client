@@ -6,11 +6,11 @@ import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
+import { AuthorDetails } from './AuthorDetails';
 import { TagList } from './TagList';
 import type { Translations } from 'src/Types';
 
 import './EmptyAnnotation.css';
-import { AuthorDetails } from './AuthorDetails';
 
 interface EmptyAnnotationProps {
   
@@ -26,6 +26,8 @@ interface EmptyAnnotationProps {
 
   present: PresentUser[];
 
+  tagVocabulary?: string[];
+
   onCreateBody(body: AnnotationBody): void;
 
   onDeleteBody(body: AnnotationBody): void;
@@ -35,6 +37,8 @@ interface EmptyAnnotationProps {
 }
 
 export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
+
+  const { t } = props.i18n;
 
   const { target } = props.annotation;
 
@@ -118,7 +122,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
             i18n={props.i18n}
             value={value}
             onChange={setValue}
-            placeholder="Add a comment" />
+            placeholder={t['Add a comment']} />
         </div>
 
         <div className="annotation-footer">
@@ -128,6 +132,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
               i18n={props.i18n}
               me={props.me}
               tags={tags}
+              vocabulary={props.tagVocabulary}
               onCreateTag={onCreateTag}  
               onDeleteTag={props.onDeleteBody} />
           </div>

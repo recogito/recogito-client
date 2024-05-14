@@ -323,11 +323,3 @@ export const listAllDocuments = (
     .then(({ error, data }) => {
       return { error, data };
     });
-
-export const isDefaultContext = (context: TaggedContext) =>
-  context.tags?.length > 0 &&
-  context.tags.some(
-    (t) =>
-      t.tag_definition?.scope === 'system' &&
-      t.tag_definition?.name === 'DEFAULT_CONTEXT'
-  );

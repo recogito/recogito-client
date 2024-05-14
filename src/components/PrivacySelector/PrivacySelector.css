@@ -1,24 +1,27 @@
-.anno-desktop-overlay button.privacy-selector-trigger {
-  border-radius: 9999px;
+button.privacy-selector-trigger {
+  border-radius: var(--border-radius);
   box-sizing: border-box;
   font-size: var(--font-tiny);
   font-weight: 500;
-  height: 38px;
-  padding: 0 12px;
+  padding: 0 0.75rem;
   width: auto;
 }
 
-.anno-desktop-overlay button.privacy-selector-trigger > span {
+button.privacy-selector-trigger > span {
   padding: 1px 0 0 3px;
   vertical-align: bottom;
 }
 
-.anno-desktop-overlay button.privacy-selector-trigger[data-privacy='private']  {
+button.privacy-selector-trigger > svg:first-child {
+  margin-right: 0.5rem;
+}
+
+button.privacy-selector-trigger[data-privacy='private']  {
   background-color: var(--bright-blue);
   color: #fff;
 }
 
-.anno-desktop-overlay button.privacy-selector-trigger[data-privacy='private'] svg {
+button.privacy-selector-trigger[data-privacy='private'] svg {
   color: #fff;
 }
 

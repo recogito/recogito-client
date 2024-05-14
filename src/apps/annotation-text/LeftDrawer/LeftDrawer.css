@@ -1,0 +1,15 @@
+.ta-drawer.ta-left-drawer {
+  flex-grow: 0;   
+  flex-shrink: 0; 
+  flex-basis: 0;
+  position: relative;
+  scroll-padding: 40px;
+  z-index: 9;
+}
+
+.ta-left-drawer aside {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 240px;
+}

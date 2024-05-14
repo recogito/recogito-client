@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
 import { PDFAnnotator } from '@recogito/react-pdf-annotator';
-import type { DocumentInTaggedContext } from 'src/Types';
+import type { DocumentWithContext } from 'src/Types';
 import { getDownloadURL } from '@backend/storage';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { TextAnnotation } from '@recogito/react-text-annotator';
-import type { DrawingStyle } from '@annotorious/react';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { Filter } from '@annotorious/react';
 
 import '@recogito/react-pdf-annotator/react-pdf-annotator.css';
 
 interface PDFViewerProps {
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
-  experimentalCSSRenderer?: boolean;
+  filter?: Filter;
 
-  filter?: ((a: TextAnnotation) => boolean);
-
-  style?: ((a: TextAnnotation) => DrawingStyle);
+  style?: HighlightStyleExpression;
 
   onRendered?(): void;
 
@@ -36,9 +34,9 @@ export const PDFViewer = (props: PDFViewerProps) => {
 
   return downloadURL && (
     <PDFAnnotator 
-      experimentalCSSRenderer={props.experimentalCSSRenderer}
       pdfUrl={downloadURL} 
       filter={props.filter}
+      // @ts-ignore - this is fixed in the next pdf-annotator release!
       style={props.style}
       onRendered={props.onRendered} />
   )

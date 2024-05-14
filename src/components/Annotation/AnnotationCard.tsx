@@ -196,6 +196,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       i18n={props.i18n}
       me={me} 
       present={props.present}
+      tagVocabulary={props.tagVocabulary}
       onCreateBody={props.onCreateBody} 
       onDeleteBody={props.onDeleteBody} 
       onSubmit={onSubmit} />   
@@ -215,6 +216,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             me={me}
             policies={props.policies}
             present={props.present}
+            tagVocabulary={props.tagVocabulary}
             onDeleteAnnotation={props.onDeleteAnnotation}
             onCreateBody={props.onCreateBody}
             onDeleteBody={props.onDeleteBody}
@@ -227,7 +229,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         {isCollapsed && (
           <li className="interstitial-wrapper">
             <Interstitial
-              label={`Show ${comments.length - 2} more replies`}
+              i18n={props.i18n}
+              count={comments.length - 2}
               onClick={() => setShouldCollapse(false)} />
           </li>
         )}
@@ -252,6 +255,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               me={me}
               policies={props.policies}
               present={props.present}
+              tagVocabulary={props.tagVocabulary}
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}
@@ -278,6 +282,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               me={me}
               policies={props.policies}
               present={props.present}
+              tagVocabulary={props.tagVocabulary}
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}
@@ -296,7 +301,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           isPrivate={isPrivate}
           annotation={props.annotation}
           me={me}
-          placeholder={props.i18n.t['Reply...']}
+          placeholder={props.i18n.t['Reply']}
           beforeSubmit={beforeReply} 
           onSubmit={onReply} />
       )}

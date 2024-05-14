@@ -3,8 +3,10 @@ import { type PluginInstallationConfig, PluginProvider } from '@components/Plugi
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { AuthorColorProvider } from '@components/AnnotationDesktop';
+import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 export interface TextAnnotationProps {
+
   i18n: Translations;
 
   document: DocumentWithContext;
@@ -14,16 +16,19 @@ export interface TextAnnotationProps {
   plugins: PluginInstallationConfig[];
 
   styleSheet?: string;
+
 }
 
-/** Wraps the actual text annotation desktop, so we can access Annotorious context **/
 export const TextAnnotation = (props: TextAnnotationProps) => {
+
   return (
     <PluginProvider plugins={props.plugins}>
       <AuthorColorProvider>
-        <Annotorious>
-          <TextAnnotationDesktop {...props} />
-        </Annotorious>
+        <FilterState>
+          <Annotorious>
+            <TextAnnotationDesktop {...props} />
+          </Annotorious>
+        </FilterState>
       </AuthorColorProvider>
     </PluginProvider>
   );

@@ -1,20 +1,21 @@
-.anno-menubar .pdf-scale-controls {
+.anno-toolbar .pdf-scale-controls {
   align-items: center;
   display: flex;
 }
 
-.anno-menubar .pdf-scale-controls button.select-trigger {
+.anno-toolbar .pdf-scale-controls button.select-trigger {
+  border: 1px solid var(--gray-200);
   border-radius: var(--border-radius);
   width: auto;
   min-width: 90px;
   padding: 0 0.8em;
 }
 
-.anno-menubar .pdf-scale-controls .custom-scale > span:first-child {
+.anno-toolbar .pdf-scale-controls .custom-scale > span:first-child {
   color: transparent;
 }
 
-.anno-menubar  .pdf-scale-controls .custom-scale > span:last-child {
+.anno-toolbar .pdf-scale-controls .custom-scale > span:last-child {
   align-items: center;
   display: flex;
   height: 100%;

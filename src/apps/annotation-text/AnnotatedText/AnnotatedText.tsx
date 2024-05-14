@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
-import type { DrawingStyle, Filter, PresentUser } from '@annotorious/react';
-import { CETEIcean, TEIAnnotator, TextAnnotation, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import type { PresentUser } from '@annotorious/react';
+import { CETEIcean, HighlightStyleExpression, TEIAnnotator, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { PDFViewer } from '../PDFViewer';
 import { useContent } from '../useContent';
-import { Toolpanel } from '../Toolpanel';
 import { behaviors } from './teiBehaviors';
-import type { DocumentWithContext, Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -18,23 +18,23 @@ const SUPABASE_API_KEY = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 interface AnnotatedTextProps {
 
+  activeLayer?: DocumentLayer;
+  
   channelId: string;
-
-  defaultLayer?: Layer;
 
   document: DocumentWithContext;
 
-  filter?: Filter;
-
   i18n: Translations;
 
-  layers?: Layer[];
+  layers?: DocumentLayer[];
 
   policies: Policies;
 
+  privacy: PrivacyMode;
+
   present: PresentUser[];
 
-  style?: (a: TextAnnotation) => DrawingStyle;
+  style?: HighlightStyleExpression;
 
   styleSheet?: string;
 
@@ -68,7 +68,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   const loading = annotationsLoading || pdfLoading || !text;
 
-  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+  const { filter } = useFilter();
 
   useEffect(() => {
     if (!loading)
@@ -76,22 +76,16 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
   }, [loading]);
 
   return (
-    <div className="ta-annotated-text-container">
-      <div className="content-wrapper">
-        <div
-          className={
-            contentType === 'text/xml'
-              ? 'tei'
-              : contentType === 'application/pdf'
-              ? 'pdf'
-              : 'text'
-          }>
+    <div 
+      className="ta-annotated-text-container">
+      <div className="page-wrapper">
+        <div className="content-wrapper">
           {contentType === 'text/xml' && text ? (
             <>
               <DynamicStyle style={props.styleSheet} />
             
               <TEIAnnotator
-                filter={props.filter}
+                filter={filter}
                 style={props.style}
                 presence={{
                   font: '500 12px Inter, Arial, Helvetica, sans-serif',
@@ -104,12 +98,12 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           ) : contentType === 'application/pdf' && text ? (
             <PDFViewer
               document={props.document}
-              filter={props.filter}
+              filter={filter}
               style={props.style}
               onRendered={() => setPDFLoading(false)} />
           ) : text && (
             <TextAnnotator
-              filter={props.filter}
+              filter={filter}
               style={props.style}
               presence={{
                 font: '500 12px Inter, Arial, Helvetica, sans-serif',
@@ -125,14 +119,14 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               supabaseUrl={SUPABASE}
               apiKey={SUPABASE_API_KEY}
               channel={props.channelId}
-              defaultLayer={props.defaultLayer?.id}
+              defaultLayer={props.activeLayer?.id}
               layerIds={layers.map((layer) => layer.id)}
               onInitialLoad={() => setAnnotationsLoading(false)}
               onPresence={props.onChangePresent}
               onConnectError={props.onConnectionError}
               onInitialLoadError={props.onConnectionError}
               onSaveError={props.onSaveError}
-              privacyMode={privacy === 'PRIVATE'}
+              privacyMode={props.privacy === 'PRIVATE'}
             />
           )}
 
@@ -151,12 +145,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           )}
         </div>
       </div>
-
-      <Toolpanel        
-        i18n={i18n}
-        isAdmin={policies.get('layers').has('INSERT')}
-        privacy={privacy}
-        onChangePrivacy={setPrivacy} />
     </div>
   )
 
