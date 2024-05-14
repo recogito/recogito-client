@@ -117,6 +117,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     setUsePopup(!rightPanelOpen);
   }, [rightPanelOpen]);
 
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
+    setUsePopup(tab === 'NOTES');
+
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't scroll if the annotation is already selected
@@ -124,6 +127,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       anno.scrollIntoView(a);
     }
   };
+
+
 
   const sorting =
     props.document.content_type === 'application/pdf'
@@ -224,7 +229,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             sorting={sorting}
             style={style}
             tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation} />
+            beforeSelectAnnotation={beforeSelectAnnotation} 
+            onTabChanged={onRightTabChanged}/>
         </main>
       </div>
     </DocumentNotes>

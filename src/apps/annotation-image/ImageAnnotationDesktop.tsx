@@ -135,6 +135,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     setUsePopup(!rightPanelOpen);
   }, [rightPanelOpen]);
 
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
+    setUsePopup(tab === 'NOTES');
+
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't fit the view if the annotation is already selected
@@ -227,7 +230,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             present={present}
             style={style}
             tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation} />
+            beforeSelectAnnotation={beforeSelectAnnotation} 
+            onTabChanged={onRightTabChanged} />
         </main>
       </div>
 

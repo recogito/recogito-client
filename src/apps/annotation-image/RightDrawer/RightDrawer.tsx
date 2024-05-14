@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Chats, Note } from '@phosphor-icons/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
@@ -29,15 +29,13 @@ interface RightDrawerProps {
 
   beforeSelectAnnotation(a?: ImageAnnotation): void;
 
+  onTabChanged?(tab: 'ANNOTATIONS' | 'NOTES'): void;
+
 }
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
   const me = props.present.find(isMe)!;
-
-  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
-
-  const { filter } = useFilter();
 
   const transition = useTransition([props.open], {
     from: { transform: 'translateX(180px)', opacity: 0 },
@@ -48,6 +46,15 @@ export const RightDrawer = (props: RightDrawerProps) => {
       easing: easings.easeInOutCubic
     }
   });
+
+  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
+
+  const { filter } = useFilter();
+
+  useEffect(() => {
+    if (props.onTabChanged)
+      props.onTabChanged(tab);
+  }, [tab]);
 
   return transition((style, open) => open && (
     <animated.div 

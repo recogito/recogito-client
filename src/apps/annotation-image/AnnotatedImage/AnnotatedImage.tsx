@@ -85,7 +85,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     loadTilesWithAjax: Boolean(authToken),
     ajaxWithCredentials: authToken ? true : undefined,
     showNavigationControl: false,
-    minZoomLevel: 0.4,
+    minZoomLevel: 0.1,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
   }), [props.imageManifestURL]);

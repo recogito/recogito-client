@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Chats, Note } from '@phosphor-icons/react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
@@ -31,6 +31,8 @@ interface RightDrawerProps {
 
   beforeSelectAnnotation(a?: Annotation): void;
 
+  onTabChanged?(tab: 'ANNOTATIONS' | 'NOTES'): void;
+
 }
 
 export const RightDrawer = (props: RightDrawerProps) => {
@@ -38,8 +40,6 @@ export const RightDrawer = (props: RightDrawerProps) => {
   const me = props.present.find(isMe)!;
 
   const { filter } = useFilter();
-
-  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
 
   // Is defined **after** the component mounts
   const el = useRef<HTMLDivElement>(null);
@@ -63,6 +63,13 @@ export const RightDrawer = (props: RightDrawerProps) => {
       easing: easings.easeInOutCubic
     }
   });
+
+  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
+
+  useEffect(() => {
+    if (props.onTabChanged)
+      props.onTabChanged(tab);
+  }, [tab])
 
   return ( 
     <>
