@@ -98,14 +98,6 @@ export const Toolbar = (props: ToolbarProps) => {
           )}
         </div>
 
-        {isPDF && (
-          <>
-            <div className="anno-toolbar-divider" />
-
-            <PDFControls i18n={props.i18n} />
-          </>
-        )}
-
         {props.showConnectionError && (
           <ErrorBadge i18n={props.i18n} />
         )}
@@ -118,6 +110,13 @@ export const Toolbar = (props: ToolbarProps) => {
           onChangeMode={props.onChangePrivacy} />
 
         <div className="anno-toolbar-divider" />
+
+        {isPDF && (
+          <div className="anno-toolbar-group">
+            <PDFControls i18n={props.i18n} />
+            <div className="anno-toolbar-divider" />
+          </div>
+        )}
 
         <ColorCodingSelector 
           i18n={props.i18n} 

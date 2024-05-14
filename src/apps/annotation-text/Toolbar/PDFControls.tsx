@@ -58,7 +58,7 @@ export const PDFControls = (props: PDFControlsProps) => {
         </Select.Trigger>
 
         <Select.Portal>
-          <Select.Content className="select-content">
+          <Select.Content className="select-content" position="popper">
             <Select.Viewport className="select-viewport">
               <Select.Item value="auto" className="select-item">
                 <Select.ItemIndicator className="select-item-indicator">
@@ -88,13 +88,13 @@ export const PDFControls = (props: PDFControlsProps) => {
       <button 
         onClick={onZoomIn}
         aria-label={t['Zoom in']}>
-        <MagnifyingGlassPlus />
+        <MagnifyingGlassPlus size={18} />
       </button>
 
       <button
         onClick={onZoomOut}
         aria-label={t['Zoom out']}>
-        <MagnifyingGlassMinus />
+        <MagnifyingGlassMinus size={18} />
       </button>
     </div>
   )
