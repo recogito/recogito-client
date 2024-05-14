@@ -123,11 +123,7 @@ main.tei.list-open .content-wrapper {
 }
 
 .ta-desktop main.pdf .ta-right-drawer {
-  flex-grow: 0;
-}
-
-.ta-desktop main.pdf .ta-right-drawer  {
   border-left: 1px solid var(--gray-300);
+  flex-grow: 0.1 !important;
 }
-
 
