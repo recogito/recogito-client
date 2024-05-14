@@ -227,7 +227,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         {isCollapsed && (
           <li className="interstitial-wrapper">
             <Interstitial
-              label={`Show ${comments.length - 2} more replies`}
+              i18n={props.i18n}
+              count={comments.length - 2}
               onClick={() => setShouldCollapse(false)} />
           </li>
         )}
