@@ -20,6 +20,8 @@ interface TagEditorProps {
 
 export const TagEditor = (props: TagEditorProps) => {
 
+  const { t } = props.i18n;
+
   const [editing, setEditing] = useState(false);
 
   const [value, setValue] = useState('');
@@ -67,7 +69,7 @@ export const TagEditor = (props: TagEditorProps) => {
     <button 
       className="tag-editor-trigger"
       onClick={() => setEditing(true)}>
-      <TagIcon size={12} /> <span>Add a Tag</span>
+      <TagIcon size={12} /> <span>{t['Add a tag']}</span>
     </button>
   )
 

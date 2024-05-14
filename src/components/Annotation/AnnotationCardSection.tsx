@@ -65,6 +65,8 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { comment, isPrivate, isReadOnly, me, present } = props;
 
+  const { t } = props.i18n;
+
   const [editable, setEditable] = useState(false);
 
   const firstBody = [props.comment, ...(props.tags || [])].filter(Boolean)[0];
@@ -227,13 +229,13 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <button 
             className="sm flat unstyled"
             onClick={() => setEditable(false)}>
-            Cancel
+            {t['Cancel']}
           </button>
 
           <button 
             className="sm flat primary"
             onClick={onSave}>
-            Save
+            {t['Save']}
           </button>
         </div>
       )}

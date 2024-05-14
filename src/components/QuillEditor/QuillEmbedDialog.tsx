@@ -36,6 +36,8 @@ interface EmbedDialogProps {
 
 export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
 
+  const { t } = props.i18n;
+
   const { quill } = useQuillEditor();
 
   const onSave = (range: Range, url: string) => {
@@ -50,8 +52,8 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
   return (
     <QuillEmbedDialog 
       i18n={props.i18n}
-      title="Link" 
-      placeholder="Enter link"
+      title={t['Link']} 
+      placeholder={t['Enter link']}
       onSave={onSave}
       onCancel={props.onClose} />
   )
@@ -59,6 +61,8 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
 }
 
 export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
+
+  const { t } = props.i18n;
 
   const { quill } = useQuillEditor();
 
@@ -77,9 +81,9 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
     <QuillEmbedDialog 
       i18n={props.i18n}
       icon={<Image size={24} />} 
-      title="Image" 
-      message="Paste a publicly available URL to the image to insert it into your annotation." 
-      placeholder="Image URL" 
+      title={t['Image']}
+      message={t['Paste a publicly available URL to the image to insert it into your annotation.']}
+      placeholder={t['Image URL']}
       onSave={onSave}
       onCancel={props.onClose}/>
   )
@@ -87,6 +91,8 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
 }
 
 export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
+
+  const { t } = props.i18n;
 
   const { quill } = useQuillEditor();
 
@@ -108,9 +114,9 @@ export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
     <QuillEmbedDialog 
       i18n={props.i18n}
       icon={<Video size={24} />} 
-      title="YouTube Video" 
-      message="Paste a YouTube URL to embed the video into your annotation." 
-      placeholder="YouTube URL" 
+      title={t['YouTube Video']}
+      message={t['Paste a YouTube URL to embed the video into your annotation.']}
+      placeholder={t['YouTube URL']}
       onSave={onSave} 
       onCancel={props.onClose} />
   )

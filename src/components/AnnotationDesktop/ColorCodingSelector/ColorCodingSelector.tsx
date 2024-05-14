@@ -43,12 +43,13 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   return (
     <Select.Root 
-      onValueChange={onChange}>
+      onValueChange={onChange}
+      defaultValue="none">
       <Select.Trigger 
         className="select-trigger color-coding-selector-trigger" 
         aria-label="Annotation color by">
         <Palette size={18} />
-        <Select.Value placeholder="Ohne Farbschema" />
+        <Select.Value />
         <Select.Icon className="select-icon">
           <CaretDown />
         </Select.Icon>
