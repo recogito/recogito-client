@@ -37,7 +37,9 @@ html, body {
 }
 
 .ta-desktop main .ta-annotated-text-container .page-wrapper {
+  background-color: #fff;
   box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.34);
+  min-width: 65ch;
   overflow-y: scroll;
   z-index: 10;
 }
