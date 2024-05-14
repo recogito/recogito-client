@@ -31,6 +31,8 @@ interface LeftDrawerProps {
 
 export const LeftDrawer = (props: LeftDrawerProps) => {
 
+  const { t } = props.i18n;
+
   const [tab, setTab] = useState<'FILTERS' | 'PAGES'>('FILTERS');
 
   const transition = useTransition([props.open], {
@@ -53,14 +55,14 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
             <li 
               className={tab === 'FILTERS' ? 'active' : undefined}>
               <button onClick={() => setTab('FILTERS')}>
-                <Faders size={18} /> Filters
+                <Faders size={18} /> {t['Filters']}
               </button>
             </li>
 
             <li 
               className={tab === 'PAGES' ? 'active' : undefined}>
               <button onClick={() => setTab('PAGES')}>
-                <Files size={18} /> Pages
+                <Files size={18} /> {t['Pages']}
               </button>
             </li>
           </ul>
