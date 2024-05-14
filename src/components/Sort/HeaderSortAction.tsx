@@ -5,41 +5,40 @@ import type { ExtendedProjectData, Translations } from 'src/Types';
 import type { SortFunction } from './SortFunction';
 
 interface HeaderSortActionProps {
-
   i18n: Translations;
 
-  onChangeSort(sortFn: SortFunction): void; 
-
+  onChangeSort(sortFn: SortFunction, name: string): void;
 }
 
 const Sorters = {
+  Name: (a: ExtendedProjectData, b: ExtendedProjectData) =>
+    a.name > b.name ? 1 : -1,
 
-  'Name': (a: ExtendedProjectData, b: ExtendedProjectData) => a.name > b.name ? 1 : -1,
+  Newest: (a: ExtendedProjectData, b: ExtendedProjectData) =>
+    a.created_at < b.created_at ? 1 : -1,
 
-  'Newest': (a: ExtendedProjectData, b: ExtendedProjectData) => a.created_at < b.created_at ? 1 : -1,
-
-  'Oldest': (a: ExtendedProjectData, b: ExtendedProjectData) => a.created_at > b.created_at ? 1 : -1
-
-}
+  Oldest: (a: ExtendedProjectData, b: ExtendedProjectData) =>
+    a.created_at > b.created_at ? 1 : -1,
+};
 
 export const HeaderSortAction = (props: HeaderSortActionProps) => {
+  const { t } = props.i18n;
 
-  const { t } = props.i18n;
-
-  const [sort, setSort] = useState<keyof typeof Sorters| undefined>();
+  const [sort, setSort] = useState<keyof typeof Sorters | undefined>();
 
   const changeSort = (key: keyof typeof Sorters) => () => {
     setSort(key);
-    props.onChangeSort(Sorters[key]);
-  }
+    props.onChangeSort(Sorters[key], key);
+  };
 
   const item = (key: keyof typeof Sorters) => (
-    <Dropdown.Item 
+    <Dropdown.Item
       className={sort === key ? 'dropdown-item' : 'dropdown-item no-icon'}
-      onSelect={changeSort(key)}>
-      {sort === key && <Check size={16} /> } {t[key]}
+      onSelect={changeSort(key)}
+    >
+      {sort === key && <Check size={16} />} {t[key]}
     </Dropdown.Item>
-  )
+  );
 
   return (
     <Dropdown.Root>
@@ -50,15 +49,12 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
       </Dropdown.Trigger>
 
       <Dropdown.Portal>
-        <Dropdown.Content
-          align="end"
-          className="dropdown-content">
+        <Dropdown.Content align='end' className='dropdown-content'>
           {item('Name')}
           {item('Newest')}
           {item('Oldest')}
         </Dropdown.Content>
       </Dropdown.Portal>
     </Dropdown.Root>
-  )
-
-}
+  );
+};

@@ -1,4 +1,9 @@
-import { Article, GraduationCap, Image } from '@phosphor-icons/react';
+import {
+  Article,
+  GraduationCap,
+  Image,
+  LineVertical,
+} from '@phosphor-icons/react';
 import { joinProject } from '@backend/helpers';
 import { Avatar } from '@components/Avatar';
 import type {
@@ -14,6 +19,7 @@ import './ProjectCard.css';
 import { JoinProjectDialog } from './JoinProjectDialog';
 import { useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { OwnerPill } from '@components/OwnerPill';
 
 interface ProjectCardProps {
   i18n: Translations;
@@ -34,14 +40,28 @@ interface ProjectCardProps {
 }
 
 export const ProjectCard = (props: ProjectCardProps) => {
-  const { contexts, description, id, users, name, is_open_join, documents } =
-    props.project;
+  const {
+    contexts,
+    description,
+    id,
+    users,
+    name,
+    is_open_join,
+    documents,
+    created_by,
+  } = props.project;
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
 
   const images = documents.filter(({ content_type }) => !content_type);
 
   const texts = documents.filter(({ content_type }) => content_type);
+
+  const { t } = props.i18n;
+
+  const showDocs = props.orgPolicies
+    ? props.orgPolicies.get('projects').has('INSERT')
+    : false;
 
   const onClick = () => {
     if (!is_open_join || users.length > 0) {
@@ -67,31 +87,44 @@ export const ProjectCard = (props: ProjectCardProps) => {
   return (
     <div className='project-card'>
       <div className='project-card-body' onClick={onClick}>
-        <h1>
-          <a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a>
-        </h1>
+        <div className='project-card-header'>
+          <h1>
+            <a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a>
+          </h1>
+          {created_by.id === props.me.id ? (
+            <OwnerPill i18n={props.i18n} />
+          ) : (
+            <div />
+          )}
+        </div>
         {description ? (
           <p>{description}</p>
         ) : (
           <p className='no-description'>{props.i18n.t['No description.']}</p>
         )}
         <ul className='document-stats'>
-          {contexts.length > 1 && (
+          {contexts.length > 0 && (
             <li>
               <GraduationCap size={16} />
-              <span className='count'>{contexts.length - 1}</span>
+              <span className='count'>{contexts.length}</span>
+              {!showDocs &&
+                (contexts.length === 1
+                  ? ` ${t['assignment']}`
+                  : ` ${t['assignments']}`)}
             </li>
           )}
 
-          {images.length > 0 && (
+          {showDocs && images.length > 0 && (
             <li>
+              <LineVertical size={16} />
               <Image size={16} />
               <span className='count'>{images.length}</span>
             </li>
           )}
 
-          {texts.length > 0 && (
+          {showDocs && texts.length > 0 && (
             <li>
+              <LineVertical size={16} />
               <Article size={16} />
               <span className='count'>{texts.length}</span>
             </li>
@@ -115,9 +148,9 @@ export const ProjectCard = (props: ProjectCardProps) => {
                 member.user.nickname
                   ? member.user.nickname
                   : [member.user.first_name, member.user.last_name]
-                    .filter((str) => str)
-                    .join(' ')
-                    .trim()
+                      .filter((str) => str)
+                      .join(' ')
+                      .trim()
               }
               avatar={member.user.avatar_url}
             />

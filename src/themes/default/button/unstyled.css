@@ -12,6 +12,7 @@ button.unstyled {
 
 button.unstyled svg {
   position: relative;
+  color: white;
   top: -1px;
 }
 
@@ -33,6 +34,6 @@ button.unstyled.icon-only {
 }
 
 button.unstyled.icon-only svg {
-  margin: 1px 0 0 0;  
+  margin: 1px 0 0 0;
   padding: 0;
 }

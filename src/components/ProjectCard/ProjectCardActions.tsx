@@ -91,7 +91,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
             className='unstyled icon-only project-card-actions'
             aria-label={`${t['Show menu actions menu for project:']} ${props.project.name}`}
           >
-            <DotsThreeVertical weight='bold' size={20} />
+            <DotsThreeVertical weight='bold' size={20} color='black' />
           </button>
         </Trigger>
 
@@ -101,12 +101,16 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
             sideOffset={5}
             align='start'
           >
-            {isMine || isOrgAdmin &&
-              <Item className='dropdown-item' onSelect={() => setEditing(true)}>
-                <PencilSimple size={16} />{' '}
-                <span>{t['Edit project details']}</span>
-              </Item>
-            }
+            {isMine ||
+              (isOrgAdmin && (
+                <Item
+                  className='dropdown-item'
+                  onSelect={() => setEditing(true)}
+                >
+                  <PencilSimple size={16} />{' '}
+                  <span>{t['Edit project details']}</span>
+                </Item>
+              ))}
 
             <ConfirmedAction.Trigger>
               <Item className='dropdown-item'>

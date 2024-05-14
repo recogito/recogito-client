@@ -20,20 +20,18 @@ interface AssignmentDetailProps {
 }
 
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
-
   const { t } = props.i18n;
 
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const members = props.assignment.context_users
-    .reduce(
-      (members, context_user) => [...members, context_user.user as UserProfile],
-      [] as UserProfile[]
-    );
+  const members = props.assignment.members.reduce(
+    (members, context_user) => [...members, context_user.user as UserProfile],
+    [] as UserProfile[]
+  );
 
   const handleDelete = () => {
     setConfirmOpen(true);
-  }
+  };
 
   return (
     <div className='assignment-detail-container'>
@@ -41,28 +39,33 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
       <div className='assignment-detail-pane'>
         <div className='assignment-detail-title-row'>
           <div className='assignment-detail-title'>
-            {props.assignment.is_project_default ? t['Project Base Assignment'] : props.assignment.name}
+            {props.assignment.is_project_default
+              ? t['Project Base Assignment']
+              : props.assignment.name}
           </div>
-          {props.isAdmin &&
+          {props.isAdmin && (
             <div className='assignment-detail-buttons'>
-              <button className="project-header-button" onClick={() => props.onEditAssignment(props.assignment)}>
-                <Pencil color="black" size={20} />
-                <div className="project-header-button-text">
-                  {t['Edit']}
-                </div>
+              <button
+                className='project-header-button'
+                onClick={() => props.onEditAssignment(props.assignment)}
+              >
+                <Pencil color='black' size={20} />
+                <div className='project-header-button-text'>{t['Edit']}</div>
               </button>
-              <button className="project-header-button" onClick={handleDelete}>
-                <Trash color="black" size={20} />
-                <div className="project-header-button-text">
-                  {t['Delete']}
-                </div>
+              <button className='project-header-button' onClick={handleDelete}>
+                <Trash color='black' size={20} />
+                <div className='project-header-button-text'>{t['Delete']}</div>
               </button>
             </div>
-          }
+          )}
         </div>
         <div className='assignment-detail-description-row'>
           <div className='assignment-detail-description'>
-            {props.assignment.is_project_default && (!props.assignment.description || props.assignment.description.length === 0) ? t['base_assignment_description'] : props.assignment.description}
+            {props.assignment.is_project_default &&
+            (!props.assignment.description ||
+              props.assignment.description.length === 0)
+              ? t['base_assignment_description']
+              : props.assignment.description}
           </div>
           <div className='assignment-detail-team'>
             {t['Team']}
@@ -75,9 +78,9 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
                       user.nickname
                         ? user.nickname
                         : [user.first_name, user.last_name]
-                          .filter((str) => str)
-                          .join(' ')
-                          .trim()
+                            .filter((str) => str)
+                            .join(' ')
+                            .trim()
                     }
                     avatar={user.avatar_url}
                   />
@@ -87,9 +90,7 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
         </div>
         <div className='assignment-detail-document-grid'>
-          <div
-            className='project-home-grid'
-          >
+          <div className='project-home-grid'>
             {props.assignment.context_documents.map(({ document }) => (
               <DocumentCard
                 key={document.id}
@@ -108,10 +109,10 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {
-          setConfirmOpen(false)
-          props.onDeleteAssignment(props.assignment)
+          setConfirmOpen(false);
+          props.onDeleteAssignment(props.assignment);
         }}
       />
     </div>
-  )
-}
+  );
+};
