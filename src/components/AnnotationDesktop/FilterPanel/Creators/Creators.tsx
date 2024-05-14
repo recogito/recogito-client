@@ -16,6 +16,8 @@ interface CreatorsProps {
 
 export const Creators = (props: CreatorsProps) => {
 
+  const { t } = props.i18n;
+
   const creators = useCreators(props.present);
 
   const { creatorSettings, setCreatorSettings } = useFilterSettingsState();
@@ -43,7 +45,7 @@ export const Creators = (props: CreatorsProps) => {
   return (
     <section className="filter-creators filter-toggle-buttons">
       <h2>
-        <UserIcon size={19} /> Creators
+        <UserIcon size={19} /> {t['Creators']}
       </h2>
 
       <ul>
@@ -53,7 +55,7 @@ export const Creators = (props: CreatorsProps) => {
               className="toggle"
               pressed={selected.some(u => u.id === creator.id)}
               onPressedChange={() => onToggle(creator)}>
-              {creator.name || 'Anonymous'}
+              {creator.name || t['Anonymous']}
             </Toggle.Root>
           </li>
         ))}

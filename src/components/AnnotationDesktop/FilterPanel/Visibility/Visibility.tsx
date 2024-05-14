@@ -15,6 +15,8 @@ interface VisibilityProps {
 
 export const Visibility = (props: VisibilityProps) => {
 
+  const { t } = props.i18n;
+
   const { visibilitySettings, setVisibilitySettings } = useFilterSettingsState();
 
   const onValueChange = (value: 'all' | 'private' | 'public') => {
@@ -33,7 +35,7 @@ export const Visibility = (props: VisibilityProps) => {
   return (
     <section className="filter-visibility">
       <h2>
-        <Lock size={19} /> Visibility
+        <Lock size={19} /> {t['Visibility']}
       </h2>
 
       <RadioGroup.Root 
@@ -51,7 +53,7 @@ export const Visibility = (props: VisibilityProps) => {
           </RadioGroup.Item>
 
           <label htmlFor="visibility-all">
-            All annotations
+            {t['All annotations']}
           </label>
         </div>
 
@@ -65,7 +67,7 @@ export const Visibility = (props: VisibilityProps) => {
           </RadioGroup.Item>
 
           <label htmlFor="visibility-public">
-            Public annotations only
+            {t['Public annotations only']}
           </label>
         </div>
 
@@ -79,7 +81,7 @@ export const Visibility = (props: VisibilityProps) => {
           </RadioGroup.Item>
 
           <label htmlFor="visibility-private">
-            Private annotations only
+            {t['Private annotations only']}
           </label>
         </div>
 

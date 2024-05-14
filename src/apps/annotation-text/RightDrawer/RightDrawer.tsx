@@ -37,6 +37,8 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
+  const { t } = props.i18n;
+
   const me = props.present.find(isMe)!;
 
   const { filter } = useFilter();
@@ -88,14 +90,14 @@ export const RightDrawer = (props: RightDrawerProps) => {
                 <li 
                   className={tab === 'ANNOTATIONS' ? 'active' : undefined}>
                   <button onClick={() => setTab('ANNOTATIONS')}>
-                    <Chats size={18} /> Annotations
+                    <Chats size={18} /> {t['Annotations']}
                   </button>
                 </li>
 
                 <li 
                   className={tab === 'NOTES' ? 'active' : undefined}>
                   <button onClick={() => setTab('NOTES')}>
-                    <Note size={18} /> Notes
+                    <Note size={18} /> {t['Notes']}
                   </button>
                 </li>
               </ul>

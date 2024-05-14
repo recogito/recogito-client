@@ -24,6 +24,7 @@ export const FilterPanel = (props: FilterPanelProps) => {
   return (
     <div className="anno-drawer-panel filter-panel not-annotatable">
       <AnnotationLayers
+        i18n={props.i18n}
         layers={props.layers}
         layerNames={props.layerNames} />
 
@@ -34,7 +35,8 @@ export const FilterPanel = (props: FilterPanelProps) => {
         i18n={props.i18n} 
         present={props.present} />
 
-      <Tags />
+      <Tags 
+        i18n={props.i18n} />
     </div>
   )
 

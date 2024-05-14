@@ -1,13 +1,14 @@
 import { Check, Stack } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import type { Annotation } from '@annotorious/react';
-import type { DocumentLayer } from 'src/Types';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { DocumentLayer, Translations } from 'src/Types';
 import { useFilterSettingsState } from '../FilterState';
 
 import './AnnotationLayers.css';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface AnnotationLayersProps {
+
+  i18n: Translations;
 
   layers?: DocumentLayer[];
 
@@ -16,6 +17,8 @@ interface AnnotationLayersProps {
 }
 
 export const AnnotationLayers = (props: AnnotationLayersProps) => {
+
+  const { t } = props.i18n;
 
   const active = props.layers?.find(l => l.is_active);
 
@@ -54,11 +57,11 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
   return active && (
     <section className="filters-annotationlayers">
       <h2>
-        <Stack size={18} /> Annotation Layers
+        <Stack size={18} /> {t['Annotation Layers']}
       </h2>
 
       <section>
-        <h3>Active</h3>
+        <h3>{t['Active']}</h3>
 
         <div className="active-layer">
           <Checkbox.Root
@@ -73,14 +76,14 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
           </Checkbox.Root>
 
           <label htmlFor="active-layer">
-            {props.layerNames.get(active.id) || 'Baselayer'}
+            {props.layerNames.get(active.id) || t['Baselayer']}
           </label>
         </div>
       </section>
 
       {readOnly.length > 0 && (
         <section>
-          <h3>Read-Only</h3>
+          <h3>{t['Read-Only']}</h3>
           <ul>
             {readOnly.map(l => (
               <li key={l.id}>
@@ -95,7 +98,7 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
                 </Checkbox.Root>
 
                 <label htmlFor={`layer-${l.id}`}>
-                  {props.layerNames.get(l.id) || 'Baselayer'}
+                  {props.layerNames.get(l.id) || t['Baselayer']}
                 </label>
               </li>
             ))}
