@@ -215,6 +215,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             me={me}
             policies={props.policies}
             present={props.present}
+            tagVocabulary={props.tagVocabulary}
             onDeleteAnnotation={props.onDeleteAnnotation}
             onCreateBody={props.onCreateBody}
             onDeleteBody={props.onDeleteBody}
@@ -253,6 +254,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               me={me}
               policies={props.policies}
               present={props.present}
+              tagVocabulary={props.tagVocabulary}
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}
@@ -279,6 +281,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               me={me}
               policies={props.policies}
               present={props.present}
+              tagVocabulary={props.tagVocabulary}
               onDeleteAnnotation={props.onDeleteAnnotation}
               onCreateBody={props.onCreateBody}
               onDeleteBody={props.onDeleteBody}

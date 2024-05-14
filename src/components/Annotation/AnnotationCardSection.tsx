@@ -38,6 +38,8 @@ export interface AnnotationCardSectionProps {
   policies?: Policies;
 
   tags?: AnnotationBody[];
+
+  tagVocabulary?: string[];
   
   onDeleteAnnotation(): void;
 
@@ -219,6 +221,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             me={props.me}
             i18n={props.i18n}
             tags={props.tags || []}
+            vocabulary={props.tagVocabulary}
             onCreateTag={onCreateTag}
             onDeleteTag={props.onDeleteBody} />
         </div>

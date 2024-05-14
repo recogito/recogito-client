@@ -47,6 +47,7 @@ export const TagList = (props: TagListProps) => {
         <TagEditor 
           i18n={props.i18n}
           me={props.me} 
+          vocabulary={props.vocabulary}
           onCreateTag={onCreateTag} />
       )}
     </ul>
