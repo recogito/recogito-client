@@ -297,7 +297,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           isPrivate={isPrivate}
           annotation={props.annotation}
           me={me}
-          placeholder={props.i18n.t['Reply...']}
+          placeholder={props.i18n.t['Reply']}
           beforeSubmit={beforeReply} 
           onSubmit={onReply} />
       )}
