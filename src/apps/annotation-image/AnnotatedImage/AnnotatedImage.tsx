@@ -105,7 +105,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   useEffect(() => {
     if (props.tool) {
       if (!drawingEnabled)
-          setDrawingEnabled(true);
+        setDrawingEnabled(true);
     } else {
       setDrawingEnabled(false);
     }

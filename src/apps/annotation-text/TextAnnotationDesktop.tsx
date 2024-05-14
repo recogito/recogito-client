@@ -24,6 +24,8 @@ import '@recogito/react-text-annotator/react-text-annotator.css';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
+  const contentType = props.document.content_type;
+
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const [loading, setLoading] = useState(true);
@@ -145,6 +147,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   });
 
+  const className = [
+    'ta-annotated-text-container',
+    contentType === 'text/xml' 
+      ? 'tei'
+    : contentType === 'application/pdf'
+      ? 'pdf'
+    : 'text',
+    rightPanelOpen ? 'list-open' : undefined
+  ].filter(Boolean).join(' ');
+
   return (
     <DocumentNotes
       channelId={props.channelId}
@@ -175,7 +187,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
         </div>
 
-        <main className={rightPanelOpen ? 'list-open' : undefined}>
+        <main className={className}>
           <LeftDrawer 
             i18n={props.i18n}
             layers={layers}

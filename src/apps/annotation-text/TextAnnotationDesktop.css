@@ -12,8 +12,14 @@ html, body {
 .ta-desktop main {
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
   overflow-x: auto;
   overflow-y: hidden;
+  position: relative;
+}
+
+.content-wrapper main img {
+  max-width: 100%;
 }
 
 .ta-desktop main .r6o-annotatable canvas {
@@ -59,16 +65,45 @@ html, body {
   flex-grow: 1;
 }
 
-.content-wrapper .text,
-.content-wrapper .tei {
+.ta-drawer {
+  overflow-y: auto;
+  pointer-events: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.ta-desktop .annotation-list .annotation:not(.readonly) {
+  box-shadow: 0 0 16px -7px rgba(0, 0, 0, 0.18);
+}
+
+.a9s-popup {
+  z-index: 999;
+}
+
+/** Text-/TEI-related specializations **/
+
+main.text .content-wrapper,
+main.tei .content-wrapper {
   background-color: #fff;
   max-width: 65ch;
   padding: 70px 85px 140px 85px;
 }
 
-main.list-open .content-wrapper .text,
-main.list-open .content-wrapper .tei {
+main.text.list-open .content-wrapper,
+main.tei.list-open .content-wrapper {
   margin-right: 0;
+}
+
+/** PDF-related specializations **/
+.ta-desktop main.pdf .ta-annotated-text-container .page-wrapper {
+  background-color: transparent;
+  box-shadow: none;
+  overflow-y: hidden;
+  width: 100%;
+} 
+
+.ta-desktop main.pdf .spacer {
+  display: none;
 }
 
 .content-wrapper .r6o-pdf-container {
@@ -87,26 +122,12 @@ main.list-open .content-wrapper .tei {
   opacity: 1;
 }
 
-.a9s-popup {
-  z-index: 999;
+.ta-desktop main.pdf .ta-right-drawer {
+  flex-grow: 0;
 }
 
-.content-wrapper main img {
-  max-width: 100%;
+.ta-desktop main.pdf .ta-right-drawer  {
+  border-left: 1px solid var(--gray-300);
 }
 
-.ta-desktop main {
-  flex-grow: 1;
-  position: relative;
-}
 
-.ta-drawer {
-  overflow-y: auto;
-  pointer-events: auto;
-  position: relative;
-  z-index: 1;
-}
-
-.ta-desktop .annotation-list .annotation:not(.readonly) {
-  box-shadow: 0 0 16px -7px rgba(0, 0, 0, 0.18);
-}

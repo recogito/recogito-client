@@ -39,7 +39,7 @@
 }
 
 .anno-drawer aside .tablist {
-  border-bottom: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-300);
   color: var(--font-light);
   font-size: var(--font-tiny);
   padding: 10px 15px 5px 15px;

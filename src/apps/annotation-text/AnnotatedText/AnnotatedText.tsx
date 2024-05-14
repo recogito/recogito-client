@@ -76,81 +76,73 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
   }, [loading]);
 
   return (
-    <div className="ta-annotated-text-container">
+    <div 
+      className="ta-annotated-text-container">
       <div className="page-wrapper">
         <div className="content-wrapper">
-          <div
-            className={
-              contentType === 'text/xml'
-                ? 'tei'
-                : contentType === 'application/pdf'
-                ? 'pdf'
-                : 'text'
-            }>
-            {contentType === 'text/xml' && text ? (
-              <>
-                <DynamicStyle style={props.styleSheet} />
-              
-                <TEIAnnotator
-                  filter={filter}
-                  style={props.style}
-                  presence={{
-                    font: '500 12px Inter, Arial, Helvetica, sans-serif',
-                  }}>
-                  <CETEIcean 
-                    tei={text} 
-                    behaviors={behaviors} />
-                </TEIAnnotator>
-              </>
-            ) : contentType === 'application/pdf' && text ? (
-              <PDFViewer
-                document={props.document}
-                filter={filter}
-                style={props.style}
-                onRendered={() => setPDFLoading(false)} />
-            ) : text && (
-              <TextAnnotator
+          {contentType === 'text/xml' && text ? (
+            <>
+              <DynamicStyle style={props.styleSheet} />
+            
+              <TEIAnnotator
                 filter={filter}
                 style={props.style}
                 presence={{
                   font: '500 12px Inter, Arial, Helvetica, sans-serif',
                 }}>
-                <p className='plaintext'>{text}</p>
-              </TextAnnotator>
-            )}
+                <CETEIcean 
+                  tei={text} 
+                  behaviors={behaviors} />
+              </TEIAnnotator>
+            </>
+          ) : contentType === 'application/pdf' && text ? (
+            <PDFViewer
+              document={props.document}
+              filter={filter}
+              style={props.style}
+              onRendered={() => setPDFLoading(false)} />
+          ) : text && (
+            <TextAnnotator
+              filter={filter}
+              style={props.style}
+              presence={{
+                font: '500 12px Inter, Arial, Helvetica, sans-serif',
+              }}>
+              <p className='plaintext'>{text}</p>
+            </TextAnnotator>
+          )}
 
-            <UndoStack undoEmpty={true} />
+          <UndoStack undoEmpty={true} />
 
-            {layers && (
-              <SupabasePlugin
-                supabaseUrl={SUPABASE}
-                apiKey={SUPABASE_API_KEY}
-                channel={props.channelId}
-                defaultLayer={props.activeLayer?.id}
-                layerIds={layers.map((layer) => layer.id)}
-                onInitialLoad={() => setAnnotationsLoading(false)}
-                onPresence={props.onChangePresent}
-                onConnectError={props.onConnectionError}
-                onInitialLoadError={props.onConnectionError}
-                onSaveError={props.onSaveError}
-                privacyMode={props.privacy === 'PRIVATE'}
-              />
-            )}
+          {layers && (
+            <SupabasePlugin
+              supabaseUrl={SUPABASE}
+              apiKey={SUPABASE_API_KEY}
+              channel={props.channelId}
+              defaultLayer={props.activeLayer?.id}
+              layerIds={layers.map((layer) => layer.id)}
+              onInitialLoad={() => setAnnotationsLoading(false)}
+              onPresence={props.onChangePresent}
+              onConnectError={props.onConnectionError}
+              onInitialLoadError={props.onConnectionError}
+              onSaveError={props.onSaveError}
+              privacyMode={props.privacy === 'PRIVATE'}
+            />
+          )}
 
-            {props.usePopup && (
-              <TextAnnotatorPopup
-                  popup={(props) => (
-                  <AnnotationPopup
-                    {...props}
-                    i18n={i18n}
-                    layers={layers}
-                    present={present}
-                    policies={policies}
-                    tagVocabulary={tagVocabulary} />
-                )}
-              />
-            )}
-          </div>
+          {props.usePopup && (
+            <TextAnnotatorPopup
+                popup={(props) => (
+                <AnnotationPopup
+                  {...props}
+                  i18n={i18n}
+                  layers={layers}
+                  present={present}
+                  policies={policies}
+                  tagVocabulary={tagVocabulary} />
+              )}
+            />
+          )}
         </div>
       </div>
     </div>
