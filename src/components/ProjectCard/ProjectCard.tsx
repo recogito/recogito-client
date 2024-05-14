@@ -3,7 +3,7 @@ import {
   GraduationCap,
   Image,
   LineVertical,
-} from '@phosphor-icons/react/dist/ssr';
+} from '@phosphor-icons/react';
 import { joinProject } from '@backend/helpers';
 import { Avatar } from '@components/Avatar';
 import type {

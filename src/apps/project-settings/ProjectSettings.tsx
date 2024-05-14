@@ -29,7 +29,7 @@ import {
   PluginInstallationConfig,
   Extension,
 } from '@components/Plugins';
-import { Trash } from '@phosphor-icons/react/dist/ssr';
+import { Trash } from '@phosphor-icons/react';
 import { GetPlugins } from '@apps/project-plugins/GetPlugins';
 
 interface ProjectSettingsProps {

@@ -1,5 +1,5 @@
 import type { Context, Translations, UserProfile, Document } from 'src/Types';
-import { Pencil, Trash } from '@phosphor-icons/react/dist/ssr';
+import { Pencil, Trash } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
 import { ConfirmDelete } from './ConfirmDelete';

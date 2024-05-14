@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus } from '@phosphor-icons/react/dist/ssr';
+import { Plus } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import type {

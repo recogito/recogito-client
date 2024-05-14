@@ -23,7 +23,7 @@ import { MetadataModal } from '@components/DocumentCard/MetadataModal';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import { CheckCircle } from '@phosphor-icons/react/dist/ssr';
+import { CheckCircle } from '@phosphor-icons/react';
 
 export type LibraryDocument = Pick<
   Document,
