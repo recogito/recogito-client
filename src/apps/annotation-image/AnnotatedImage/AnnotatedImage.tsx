@@ -76,7 +76,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
-      clickToZoom: false
+      clickToZoom: false,
+      dblClickToZoom: false
     },
     ajaxHeaders: authToken ? {
       Authorization: `Bearer ${authToken}`
@@ -102,10 +103,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   }
 
   useEffect(() => {
-    if (props.tool)
-      if (!drawingEnabled) setDrawingEnabled(true);
-    else
+    if (props.tool) {
+      if (!drawingEnabled)
+          setDrawingEnabled(true);
+    } else {
       setDrawingEnabled(false);
+    }
   }, [props.tool]);
 
   return (
