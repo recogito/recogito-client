@@ -1,10 +1,10 @@
 import { KeyboardEvent, useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import type { PresentUser, User } from '@annotorious/react';
-import { AutosizeInput } from '../AutosizeInput';
 import type { Translations } from 'src/Types';
 
 import './TagEditor.css';
+import { Autosuggest } from '@components/Autosuggest';
 
 interface TagEditorProps {
 
@@ -26,6 +26,12 @@ export const TagEditor = (props: TagEditorProps) => {
 
   const [value, setValue] = useState('');
 
+  const onSubmit = (value: string) => {
+    props.onCreateTag(value);
+    setValue('');
+    setEditing(false);
+  }
+
   const onSave = () => {
     props.onCreateTag(value);
 
@@ -38,18 +44,15 @@ export const TagEditor = (props: TagEditorProps) => {
     setEditing(false);
   }
 
-  const onKeyDown = (evt: KeyboardEvent<HTMLInputElement>) => {
-    if (evt.key === 'Enter')
-      onSave();
-  }
-
   return editing ? (
     <div className="tag-editor">
-      <AutosizeInput
+      <Autosuggest
         autoFocus
+        autoSize
         value={value}
-        onChange={evt => setValue(evt.target.value)} 
-        onKeyDown={onKeyDown} />
+        onChange={setValue} 
+        onSubmit={onSubmit}
+        vocabulary={props.vocabulary} />
 
       <div className="tag-editor-actions">
         <button

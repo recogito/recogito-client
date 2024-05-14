@@ -34,11 +34,11 @@
   margin-left: 3px;
 }
 
-.annotation .tag-editor .autosize-input {
+.annotation .tag-editor .autosuggest {
   font-size: 11.5px;
 }
 
-.annotation .tag-editor .autosize-input input {
+.annotation .tag-editor .autosuggest input {
   background-color: var(--gray-100);
   border: none;
   border-radius: 3px;

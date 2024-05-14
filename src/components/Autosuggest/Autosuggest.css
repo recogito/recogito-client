@@ -1,0 +1,61 @@
+.autosuggest {
+  display: inline;
+  position: relative;
+  z-index: 1;
+}
+
+.autosuggest input {
+  background-color: transparent;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  padding: 4px;
+  outline: none;
+}
+
+.autosuggest input:focus {
+  box-shadow: none;
+}
+
+.autosuggest ul {
+  background-color: #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.25);
+  list-style-type: none;
+  margin: 0;
+  max-height: 200px;
+  min-width: 172px;
+  overflow-y: auto;
+  padding: 0;
+  position: absolute;
+  z-index: 9999;
+}
+
+.autosuggest ul:empty {
+  display: none;
+}
+
+.autosuggest li {
+  box-sizing: border-box;
+  cursor: pointer;
+  display: block;
+  font-size: 12px;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.autosuggest li {
+  display: block;
+}
+
+.autosuggest li.selected {
+  background-color: var(--button-focus-outline-color);
+}
+
+.autosuggest li:first-child {
+  border-radius: 3px 3px 0 0;
+}
+
+.autosuggest li:last-child {
+  border-radius: 0 0 3px 3px;
+}
