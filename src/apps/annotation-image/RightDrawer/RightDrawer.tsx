@@ -4,6 +4,7 @@ import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, DrawerPanel } from '@components/AnnotationDesktop';
+import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
@@ -35,6 +36,8 @@ export const RightDrawer = (props: RightDrawerProps) => {
   const me = props.present.find(isMe)!;
 
   const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
+
+  const { filter } = useFilter();
 
   const transition = useTransition([props.open], {
     from: { transform: 'translateX(180px)', opacity: 0 },
@@ -73,6 +76,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
           {tab === 'ANNOTATIONS' ? (
             <AnnotationList 
               currentStyle={props.style}
+              filter={filter}
               i18n={props.i18n}
               present={props.present} 
               layers={props.layers}
