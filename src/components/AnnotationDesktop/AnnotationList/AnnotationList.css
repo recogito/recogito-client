@@ -42,7 +42,7 @@
 .anno-drawer-panel.annotation-list .annotation-list-filter {
   color: var(--font-light);
   font-size: var(--font-tiny);
-  padding: 0.5em 8px 0em 0;
+  padding: 0.5em 2px 0em 0;
   text-align: right;
 }
 

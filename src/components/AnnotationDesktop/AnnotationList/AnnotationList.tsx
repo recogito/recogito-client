@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
-import type { DocumentLayer, Layer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
-import { useFilterSettings } from '../LayerConfiguration';
 import { 
   Annotation as Anno,
   AnnotationBody,
@@ -171,6 +170,10 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   return (
     <div className="anno-drawer-panel annotation-list not-annotatable">
+      <ViewportFilterToggle 
+        i18n={props.i18n} 
+        onChange={setViewportFilter} />
+
       <ul
         ref={el}
         onClick={onClick}>
