@@ -1,4 +1,4 @@
-import { KeyboardEvent, useState } from 'react';
+import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import type { PresentUser, User } from '@annotorious/react';
 import type { Translations } from 'src/Types';
