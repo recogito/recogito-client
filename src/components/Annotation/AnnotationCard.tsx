@@ -196,6 +196,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       i18n={props.i18n}
       me={me} 
       present={props.present}
+      tagVocabulary={props.tagVocabulary}
       onCreateBody={props.onCreateBody} 
       onDeleteBody={props.onDeleteBody} 
       onSubmit={onSubmit} />   

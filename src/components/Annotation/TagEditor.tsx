@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import type { PresentUser, User } from '@annotorious/react';
+import { Autosuggest } from '@components/Autosuggest';
 import type { Translations } from 'src/Types';
 
 import './TagEditor.css';
-import { Autosuggest } from '@components/Autosuggest';
 
 interface TagEditorProps {
 
@@ -19,6 +19,7 @@ interface TagEditorProps {
 }
 
 export const TagEditor = (props: TagEditorProps) => {
+  console.log('vocab', props.vocabulary);
 
   const { t } = props.i18n;
 

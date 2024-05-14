@@ -26,6 +26,8 @@ interface EmptyAnnotationProps {
 
   present: PresentUser[];
 
+  tagVocabulary?: string[];
+
   onCreateBody(body: AnnotationBody): void;
 
   onDeleteBody(body: AnnotationBody): void;
@@ -130,6 +132,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
               i18n={props.i18n}
               me={props.me}
               tags={tags}
+              vocabulary={props.tagVocabulary}
               onCreateTag={onCreateTag}  
               onDeleteTag={props.onDeleteBody} />
           </div>

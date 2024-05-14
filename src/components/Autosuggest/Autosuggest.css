@@ -24,7 +24,7 @@
   list-style-type: none;
   margin: 0;
   max-height: 200px;
-  min-width: 172px;
+  min-width: 100px;
   overflow-y: auto;
   padding: 0;
   position: absolute;
@@ -40,7 +40,7 @@
   cursor: pointer;
   display: block;
   font-size: 12px;
-  padding: 8px 12px;
+  padding: 3px 8px;
   width: 100%;
 }
 
