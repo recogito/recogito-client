@@ -49,7 +49,7 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "@uppy/core": "^3.11.3",
-    "@uppy/xhr-upload": "^3.6.6",
+    "@uppy/xhr-upload": "3.6.4",
     "accept-language-parser": "^1.5.0",
     "astro": "^2.10.15",
     "classnames": "^2.5.1",
