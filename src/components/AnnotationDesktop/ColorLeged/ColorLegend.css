@@ -1,6 +1,8 @@
 .popover-content.color-legend {
   font-size: var(--font-tiny);
-  padding: 15px 0;
+  min-width: 120px;
+  padding: 0.25rem 0.5rem;
+  width: auto;
 }
 
 .popover-content.color-legend ul {
@@ -12,12 +14,13 @@
 .popover-content.color-legend li {
   align-items: center;
   display: flex;
-  gap: 8px;
+  gap: 0.5rem;
+  margin: 0.125rem 0;
 }
 
 .popover-content.color-legend li .legend-color {
   border-radius: 2px;
-  display: inline-block;
+  display: block;
   height: 16px;
   width: 16px;
 }
