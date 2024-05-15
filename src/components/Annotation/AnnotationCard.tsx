@@ -139,12 +139,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   );
 
   const replyFieldTransition = useTransition([props.showReplyField], {
-    from: { maxHeight: '0vh' },
+    from: { maxHeight: '0px' },
     enter: { maxHeight: `${document.documentElement.clientHeight * 0.3 + 80}px` },
     leave: { maxHeight: '0px' },
     config: { 
-      duration: 200,
-      easing: easings.easeInOutCubic 
+      duration: 300,
+      easing: easings.easeOutCubic
     }
   });
 

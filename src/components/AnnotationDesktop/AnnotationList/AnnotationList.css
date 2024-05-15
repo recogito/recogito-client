@@ -16,7 +16,7 @@
 
 .anno-drawer-panel.annotation-list > ul > li .annotation {
   margin: 0;
-  transition: margin 400ms ease-in;
+  transition: margin 500ms ease-in-out, opacity 200ms ease-out; 
 }
 
 .anno-drawer-panel.annotation-list.has-selected > ul > li .annotation:not(.selected) {
