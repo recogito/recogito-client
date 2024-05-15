@@ -30,7 +30,7 @@ export const post: APIRoute = async ({ request, cookies }) => {
   formData.append('resource[project_id]', IIIF_PROJECT_ID);
   formData.append('resource[content]', file);
 
-  console.log('Calling IIIF fetch');
+  console.log('Calling IIIF fetch', IIIF_KEY);
   return fetch(IIIF_URL, {
     headers: {
       'X-API-KEY': IIIF_KEY,
@@ -42,7 +42,6 @@ export const post: APIRoute = async ({ request, cookies }) => {
       return res.json();
     })
     .then((result) => {
-      console.log('result: ', result);
       return new Response(JSON.stringify(result), { status: 200 });
     });
 };
