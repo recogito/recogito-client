@@ -152,7 +152,7 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        {me && (
+        {/*me && (
           <div className="anno-toolbar-me">
             <Avatar 
               id={me.id}
@@ -160,7 +160,7 @@ export const Toolbar = (props: ToolbarProps) => {
               color={me.appearance.color} 
               avatar={me.appearance.avatar} />
           </div>
-        )}
+        ) */}
 
         <div className="anno-toolbar-divider" />
 

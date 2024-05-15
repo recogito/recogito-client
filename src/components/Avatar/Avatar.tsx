@@ -22,15 +22,7 @@ export const formatName = (user: UserProfile) => {
   if (first_name || last_name) return `${first_name} ${last_name}`.trim();
 
   // Remember that this function returns undefined if user has no (nick)name set!
-};
-
-export const getDisplayName = (user: UserProfile) => {
-  if (user.nickname) return user.nickname;
-
-  const _realname = [user.first_name, user.last_name]
-    .filter((str) => str)
-    .join(' ');
-};
+}
 
 const stringToHash = (str: string) => {
   let hash = 0;
@@ -65,16 +57,13 @@ export const Avatar = (props: AvatarProps) => {
         {avatar && (
           <RadixAvatar.Image
             className='avatar-image'
-            title={`${name} avatar`}
             src={avatar}
           />
         )}
 
         <RadixAvatar.Fallback
           className='avatar-fallback'
-          title={`${name} avatar image`}
-          style={{ backgroundColor: fallbackColor }}
-        >
+          style={{ backgroundColor: fallbackColor }}>
           {name ? getInitials(name) : <User size={16} />}
         </RadixAvatar.Fallback>
       </span>
