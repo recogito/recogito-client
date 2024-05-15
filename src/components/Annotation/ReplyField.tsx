@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight } from '@phosphor-icons/react';
 import { Delta } from 'quill/core';
@@ -32,7 +32,7 @@ interface ReplyFieldProps {
 
 }
 
-export const ReplyField = (props: ReplyFieldProps) => {
+export const ReplyField = forwardRef<HTMLDivElement, ReplyFieldProps>((props, ref) => {
 
   const [value, setValue] = useState<Delta>(new Delta());
 
@@ -58,7 +58,7 @@ export const ReplyField = (props: ReplyFieldProps) => {
   }
 
   return (
-    <div className="reply-field">
+    <div className="reply-field" ref={ref}>
       <QuillEditorRoot>
         <div className="annotation-header">
           <AuthorAvatar 
@@ -89,4 +89,4 @@ export const ReplyField = (props: ReplyFieldProps) => {
     </div>
   )
 
-}
+});

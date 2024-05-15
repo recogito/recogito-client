@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAnnotatorUser } from '@annotorious/react';
-import { animated, useTransition } from '@react-spring/web';
+import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { AnnotationCardSection } from './AnnotationCardSection';
@@ -130,12 +130,26 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
-  const transition = useTransition(isCollapsed ? 
+  const interstitialTtransition = useTransition(isCollapsed ? 
     [] : comments.slice(1, comments.length - 1), {
       from: { maxHeight: '0vh' },
       enter: { maxHeight: '40vh' },
       leave: { maxHeight: '0vh' },
-      config: { duration: shouldAnimate ? 350 : 0 },
+      config: { 
+        duration: shouldAnimate ? 350 : 0,
+        easing: easings.easeInOutCubic 
+      }
+    }
+  );
+
+  const replyFieldTransition = useTransition([props.showReplyField], {
+      from: { maxHeight: '0vh' },
+      enter: { maxHeight: `${document.documentElement.clientHeight * 0.3 + 80}px` },
+      leave: { maxHeight: '0px' },
+      config: { 
+        duration: 200,
+        easing: easings.easeInOutCubic 
+      }
     }
   );
 
@@ -235,7 +249,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           </li>
         )}
 
-        {transition((style, comment, _, index) => (
+        {interstitialTtransition((style, comment, _, index) => (
           <animated.li
             key={comment.id}
             style={{
@@ -294,17 +308,19 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         )}
       </ul>
 
-      {props.showReplyField && (
-        <ReplyField 
-          autoFocus
-          i18n={props.i18n}
-          isPrivate={isPrivate}
-          annotation={props.annotation}
-          me={me}
-          placeholder={props.i18n.t['Reply']}
-          beforeSubmit={beforeReply} 
-          onSubmit={onReply} />
-      )}
+      {replyFieldTransition((style, open) => open && (
+        <animated.div style={style}>
+          <ReplyField
+            autoFocus
+            i18n={props.i18n}
+            isPrivate={isPrivate}
+            annotation={props.annotation}
+            me={me}
+            placeholder={props.i18n.t['Reply']}
+            beforeSubmit={beforeReply} 
+            onSubmit={onReply} />
+        </animated.div>
+      ))}
     </div>
   )
 

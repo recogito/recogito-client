@@ -168,8 +168,12 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     }
   }
 
+  const className = selected.length > 0 
+    ? 'anno-drawer-panel annotation-list not-annotatable has-selected'
+    : 'anno-drawer-panel annotation-list not-annotatable'
+
   return (
-    <div className="anno-drawer-panel annotation-list not-annotatable">
+    <div className={className}>
       <ViewportFilterToggle 
         i18n={props.i18n} 
         onChange={setViewportFilter} />

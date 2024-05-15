@@ -1,6 +1,5 @@
 .annotation {
   background-color: #fff;
-  border: 1px solid var(--gray-300);
   border-radius: 5px;
   overflow: hidden;
   position: relative;
@@ -33,14 +32,8 @@
   background-color: #e1d7b4;
 }
 
-.annotation:not(.note)::after {
-  background-color: var(--card-border);
-  bottom: 0;
-  content: '';
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 3px;
+.annotation:not(.note) {
+  /* border-left: 3px solid var(--card-border, transparent); */
 }
 
 .annotation .annotation-header {
@@ -48,8 +41,7 @@
   display: flex;
   justify-content: space-between;
   line-height: 110%;
-
-  padding: 10px 15px 6px 12px;
+  padding: 10px 15px 6px 9px;
 }
 
 .annotation .annotation-header .annotation-header-left {
@@ -65,7 +57,7 @@
 .annotation .annotation-comment-wrapper {
   max-height: 30vh;
   overflow-y: auto;
-  padding: 5px 12px 5px 12px;
+  padding: 5px 12px 5px 9px;
 }
 
 .annotation .quill-rte {
