@@ -173,6 +173,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             document={props.document}
             present={present}
             privacy={privacy}
+            layers={layers}
+            layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}

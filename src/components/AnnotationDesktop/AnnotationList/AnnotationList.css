@@ -27,10 +27,8 @@
 
 .anno-drawer-panel.annotation-list > ul > li .annotation.selected {
   margin: 25px 0;
-  box-shadow: 
-    0 0 1px 0 rgba(0, 0, 0, 0.18), 
-    2px 3px 8px 0 rgba(0, 0, 0, 0.12),
-    3px 8px 20px 0 rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
+    1px 1px 8px 0 rgba(0, 0, 0, 0.08);
   transition: margin 100ms ease-out;
 }
 

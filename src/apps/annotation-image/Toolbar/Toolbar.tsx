@@ -1,10 +1,11 @@
+import { useEffect } from 'react';
 import { isMe } from '@recogito/annotorious-supabase';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import type { DocumentWithContext, Translations } from 'src/Types';
-import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
+import type { DocumentLayer, DocumentWithContext, Translations } from 'src/Types';
+import { ColorCodingSelector, ColorLegend, ErrorBadge, useColorCoding } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { Polygon, Rectangle } from './Icons';
@@ -22,6 +23,10 @@ interface ToolbarProps {
   document: DocumentWithContext;
 
   i18n: Translations;
+
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
 
   leftDrawerOpen: boolean;
 
@@ -66,6 +71,15 @@ export const Toolbar = (props: ToolbarProps) => {
   const me = props.present.find(isMe)!;
 
   const plugins = usePlugins('annotation.image.toolbar');
+
+  const colorCoding = useColorCoding();
+
+  useEffect(() => {
+    if (colorCoding?.style)
+      props.onChangeStyle(colorCoding.style as DrawingStyleExpression<ImageAnnotation>);
+    else
+      props.onChangeStyle();
+  }, [colorCoding])
 
   return (
     <div className="anno-toolbar ia-toolbar not-annotatable">
@@ -156,7 +170,12 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <ColorCodingSelector 
           i18n={props.i18n} 
-          onChange={props.onChangeStyle} />
+          present={props.present} 
+          layers={props.layers}
+          layerNames={props.layerNames} />
+
+        <ColorLegend 
+          i18n={props.i18n} />
       </div>
 
       <div className="anno-toolbar-slot anno-toobar-slot-right ia-toolbar-right">
@@ -181,25 +200,6 @@ export const Toolbar = (props: ToolbarProps) => {
         {plugins.length > 0 && (
           <div className="anno-toolbar-divider" />
         )}
-
-        {/* <div className="anno-menubar-section anno-menubar-actions-right">
-          <button
-            className={props.rightPanel === DrawerPanel.ANNOTATIONS ? 'active' : undefined}
-            aria-label={t['Show annotation list']}
-            onClick={() => toggleRightDrawer(DrawerPanel.ANNOTATIONS)}>
-            <Chats size={17} />
-          </button>
-
-          <LayersPanelMenuIcon
-            i18n={props.i18n}
-            active={props.rightPanel === DrawerPanel.LAYERS}
-            onSelect={() => toggleRightDrawer(DrawerPanel.LAYERS)} />
-
-          <DocumentNotesMenuIcon
-            i18n={props.i18n}
-            active={props.rightPanel === DrawerPanel.DOCUMENT_NOTES}
-            onSelect={() => toggleRightDrawer(DrawerPanel.DOCUMENT_NOTES)} />
-        </div> */}
 
         {me && (
           <div className="anno-toolbar-me">

@@ -2,7 +2,7 @@ import { Annotorious } from '@annotorious/react';
 import { PluginProvider, type PluginInstallationConfig } from '@components/Plugins';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { ImageAnnotationDesktop } from './ImageAnnotationDesktop';
-import { AuthorColorProvider } from '@components/AnnotationDesktop';
+import { AuthorColorProvider, ColorState } from '@components/AnnotationDesktop';
 import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 export interface ImageAnnotationProps {
@@ -23,9 +23,11 @@ export const ImageAnnotation = (props: ImageAnnotationProps) => {
     <PluginProvider plugins={props.plugins}>
       <AuthorColorProvider>
         <FilterState>
-          <Annotorious>
-            <ImageAnnotationDesktop {...props} />
-          </Annotorious>
+          <ColorState>
+            <Annotorious>
+              <ImageAnnotationDesktop {...props} />
+            </Annotorious>
+          </ColorState>
         </FilterState>
       </AuthorColorProvider>
     </PluginProvider>
