@@ -1,8 +1,8 @@
 import * as Select from '@radix-ui/react-select';
-import type { DrawingStyleExpression } from '@annotorious/react';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
+import { useColorCodingState } from './ColorState';
 import { 
   useColorByCreator,
   useColorByFirstTag,
@@ -15,7 +15,7 @@ interface ColorCodingSelectorProps {
 
   i18n: Translations;
 
-  onChange(style?: DrawingStyleExpression<SupabaseAnnotation>): void;
+  present: PresentUser[];
   
 }
 
@@ -23,21 +23,23 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const { t } = props.i18n;
 
-  const byCreator = useColorByCreator();
+  const byCreator = useColorByCreator(props.present);
   
   const byFirstTag = useColorByFirstTag();
 
   const byPrivacy = useColorByPrivacy();
 
+  const { coding, setCoding } = useColorCodingState();
+
   const onChange = (key: string) => {
     if (key === 'creator') {
-      props.onChange(byCreator);
+      setCoding(byCreator);
     } else if (key === 'tag') {
-      props.onChange(byFirstTag);
+      // props.onChange(byFirstTag);
     } else if (key === 'privacy') {
-      props.onChange(byPrivacy);
+      // props.onChange(byPrivacy);
     } else {
-      props.onChange();
+      setCoding(undefined);
     }
   }
 

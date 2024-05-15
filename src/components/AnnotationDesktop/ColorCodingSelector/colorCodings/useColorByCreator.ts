@@ -1,5 +1,7 @@
-import type { Annotation, AnnotationState, Color, DrawingStyle, DrawingStyleExpression } from '@annotorious/react';
-import { useAuthorColors } from '@components/AnnotationDesktop';
+import { useAnnotations, type Annotation, type AnnotationState, type Color, type DrawingStyle, type PresentUser } from '@annotorious/react';
+import { enumerateCreators, useAuthorColors } from '@components/AnnotationDesktop';
+import type { ColorCoding } from '../ColorCoding';
+import { getDisplayName } from '@components/AnnotationDesktop/LayerConfiguration/utils';
 
 const UNKNOWN_CREATOR: Color = '#727272';
 
@@ -7,7 +9,9 @@ const getCreator = (annotation: Annotation) =>
   annotation.target?.creator || 
     (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
 
-export const useColorByCreator = () => {
+export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
+
+  const annotations = useAnnotations(250);
 
   const authorColors = useAuthorColors();
 
@@ -26,6 +30,12 @@ export const useColorByCreator = () => {
     }
   }
 
-  return style;
+  const buildLegend = () => {
+    const creators = enumerateCreators(present, annotations);
+    return creators.map(user => 
+      ({ color: authorColors.getColor(user) as Color, label: getDisplayName(user) }))
+  }
+
+  return { name: 'creator', style, legend: buildLegend() };
 
 }

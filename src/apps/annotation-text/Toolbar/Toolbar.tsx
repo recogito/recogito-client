@@ -10,6 +10,9 @@ import { PDFControls } from './PDFControls';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import { ColorLeged } from '@components/AnnotationDesktop/ColorLeged';
+import { useColorCoding } from '@components/AnnotationDesktop/ColorCodingSelector/ColorState';
+import { useEffect } from 'react';
 
 interface ToolbarProps {
 
@@ -56,6 +59,15 @@ export const Toolbar = (props: ToolbarProps) => {
   const me = props.present.find(isMe)!;
 
   const plugins = usePlugins('annotation.text.toolbar');
+
+  const colorCoding = useColorCoding();
+
+  useEffect(() => {
+    if (colorCoding?.style)
+      props.onChangeStyle(colorCoding.style);
+    else
+      props.onChangeStyle();
+  }, [colorCoding])
 
   return (
     <div className="anno-toolbar ta-toolbar">
@@ -120,7 +132,10 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <ColorCodingSelector 
           i18n={props.i18n} 
-          onChange={props.onChangeStyle} />
+          present={props.present} />
+
+        <ColorLeged 
+          i18n={props.i18n} />
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-right">  

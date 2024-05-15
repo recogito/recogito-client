@@ -1,0 +1,23 @@
+.popover-content.color-legend {
+  font-size: var(--font-tiny);
+  padding: 15px 0;
+}
+
+.popover-content.color-legend ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.popover-content.color-legend li {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.popover-content.color-legend li .legend-color {
+  border-radius: 2px;
+  display: inline-block;
+  height: 16px;
+  width: 16px;
+}

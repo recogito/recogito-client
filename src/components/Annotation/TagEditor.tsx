@@ -19,7 +19,6 @@ interface TagEditorProps {
 }
 
 export const TagEditor = (props: TagEditorProps) => {
-  console.log('vocab', props.vocabulary);
 
   const { t } = props.i18n;
 
