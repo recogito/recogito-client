@@ -9,13 +9,17 @@ import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
-import type { DocumentWithContext, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, Translations } from 'src/Types';
 
 interface ToolbarProps {
 
   document: DocumentWithContext;
 
   i18n: Translations;
+
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
 
   leftDrawerOpen: boolean;
 
@@ -129,7 +133,9 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <ColorCodingSelector 
           i18n={props.i18n} 
-          present={props.present} />
+          present={props.present} 
+          layers={props.layers}
+          layerNames={props.layerNames} />
 
         <ColorLegend 
           i18n={props.i18n} />

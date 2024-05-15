@@ -1,37 +1,11 @@
 import { useMemo } from 'react';
 import { Annotation, AnnotationState, DrawingStyle, useAnnotations, type Color } from '@annotorious/react';
+import { enumerateTags } from '@components/AnnotationDesktop';
 import { AdobeCategorical12 } from '../ColorPalettes';
 import type { ColorCoding } from '../ColorCoding';
-import { enumerateTags } from '@components/AnnotationDesktop/utils';
+import { createPalette } from './utils';
 
 const PALETTE = AdobeCategorical12;
-
-export const createTagPalette = () => {
-
-  const assignedColors = new Map<string, Color>();
-
-  let nextIndex = 0;
-
-  const getColor = (tag: string) => {
-    const assigned = assignedColors.get(tag);
-    if (assigned)
-      return assigned;
-
-    // Assign next free color
-    const nextColor = PALETTE[nextIndex];
-
-    assignedColors.set(tag, nextColor);
-
-    nextIndex = (nextIndex + 1) % PALETTE.length;
-
-    return nextColor;
-  }
-
-  return {
-    getColor
-  }
-
-}
 
 const NO_TAG: Color = '#727272';
 
@@ -39,11 +13,9 @@ export const useColorByFirstTag = (): ColorCoding => {
 
   const annotations = useAnnotations(500);
 
-  const { getColor } = useMemo(() => createTagPalette(), []);
+  const { getColor } = useMemo(() => createPalette(PALETTE), []);
 
   const style = useMemo(() => {
-    const { getColor } = createTagPalette();
-
     return (annotation: Annotation, state?: AnnotationState): DrawingStyle => {
       const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
 

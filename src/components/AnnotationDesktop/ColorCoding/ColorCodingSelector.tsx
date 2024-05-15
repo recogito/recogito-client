@@ -1,12 +1,13 @@
 import * as Select from '@radix-ui/react-select';
 import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import type { DocumentLayer, Translations } from 'src/Types';
 import { useColorCodingState } from './ColorState';
 import { 
   useColorByCreator,
   useColorByFirstTag,
-  useColorByPrivacy 
+  useColorByPrivacy, 
+  userColorByLayer
 } from './colorCodings';
 
 import './ColorCodingSelector.css';
@@ -15,8 +16,12 @@ interface ColorCodingSelectorProps {
 
   i18n: Translations;
 
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
+
   present: PresentUser[];
-  
+
 }
 
 export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
@@ -27,13 +32,17 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
   
   const byFirstTag = useColorByFirstTag();
 
+  const byLayer = userColorByLayer(props.layers, props.layerNames);
+
   const byPrivacy = useColorByPrivacy();
 
-  const { colorCoding, setColorCoding } = useColorCodingState();
+  const { setColorCoding } = useColorCodingState();
 
   const onChange = (key: string) => {
     if (key === 'creator') {
       setColorCoding(byCreator);
+    } else if (key === 'layer') {
+      setColorCoding(byLayer);
     } else if (key === 'tag') {
       setColorCoding(byFirstTag);
     } else if (key === 'privacy') {
@@ -66,6 +75,13 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
               </Select.ItemIndicator>
               <Select.ItemText>{t['No color coding']}</Select.ItemText>
             </Select.Item>
+
+            {/* <Select.Item value="layer" className="select-item">
+              <Select.ItemIndicator className="select-item-indicator">
+                <Check />
+              </Select.ItemIndicator>
+              <Select.ItemText>{t['Layer']}</Select.ItemText>
+            </Select.Item> */}
 
             <Select.Item value="privacy" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">

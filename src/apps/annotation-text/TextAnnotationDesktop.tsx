@@ -182,6 +182,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             document={props.document}
             present={present}
             privacy={privacy}
+            layers={layers}
+            layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError} 
