@@ -200,10 +200,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     props.isReadOnly ? 'readonly' : undefined
   ].filter(Boolean).join(' ');
 
-  // Annotation is not empty if it has a comment, tags or both
-  const isEmpty = comments.length + tags.length === 0;
-
-  return (isEmpty || isNew) ? (
+  return isNew ? (
     <EmptyAnnotation 
       annotation={annotation} 
       autoFocus={props.autoFocus}
@@ -220,7 +217,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       onSubmit={onSubmit}
       onUpdateAnnotation={props.onUpdateAnnotation} 
       onUpdateBody={props.onUpdateBody} />   
-  ) : !isEmpty && (
+  ) : (
     <div style={borderStyle} className={className}>
       <ul>
         <li>

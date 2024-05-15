@@ -117,111 +117,52 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
     isPrivate ? 'private' : undefined
   ].filter(Boolean).join(' ');
 
-  return isMine ? (
+  return (
     <div className={className}>
-      {props.annotation.bodies.length === 0 ? (
-        <QuillEditorRoot>
-          <div className="annotation-header">
-            <div className="annotation-header-left">
-              <AuthorAvatar
-                author={props.me}
-                isPrivate={isPrivate} />
-            </div>
-
-            <div className="annotation-toolbar-wrapper">
-              <QuillEditorToolbar
-                i18n={props.i18n} />
-            </div>
-          </div>
-          
-          <div className="annotation-comment-wrapper">
-            <QuillEditor 
-              autoFocus={props.autoFocus}
-              i18n={props.i18n}
-              value={value}
-              onChange={setValue}
-              placeholder={t['Add a comment']} />
-          </div>
-
-          <div className="annotation-footer">
-            <div className="annotation-footer-left">
-              <TagList 
-                isEditable
-                i18n={props.i18n}
-                me={props.me}
-                tags={tags}
-                vocabulary={props.tagVocabulary}
-                onCreateTag={onCreateTag}  
-                onDeleteTag={props.onDeleteBody} />
-            </div>
-
-            <button 
-              className="save save-arrow annotation-footer-right"
-              onClick={onSave}>
-              <ArrowRight size={20} />
-            </button>
-          </div>
-        </QuillEditorRoot>
-      ) : (
-        <>
-          <AnnotationCardSection 
-            annotation={props.annotation}
-            i18n={props.i18n}
-            index={0}
-            isSelected={props.isSelected}
-            me={props.me}
-            present={props.present}
-            tagVocabulary={props.tagVocabulary}
-            onDeleteAnnotation={props.onDeleteAnnotation}
-            onCreateBody={props.onCreateBody}
-            onDeleteBody={props.onDeleteBody}
-            onBulkDeleteBodies={props.onBulkDeleteBodies}
-            onMakePublic={props.onMakePublic}
-            onSubmit={props.onSubmit}
-            onUpdateBody={props.onUpdateBody} />
-
-          {plugins.map(plugin => (
-            <Extension 
-              key={plugin.meta.id}
-              plugin={plugin}
-              extensionPoint="annotation.*.annotation-editor"
-              me={props.me}
-              annotation={props.annotation} 
-              onUpdateAnnotation={props.onUpdateAnnotation} />
-          ))}
-        </>
-        )
-      ) : (
-
-      )
-
-
-      ) : (
-      )
-
-    </div>
-  ) : (
-    <div className={className}>
-      {props.annotation.bodies.length === 0 ? (
+      <QuillEditorRoot>
         <div className="annotation-header">
           <div className="annotation-header-left">
-            <AuthorAvatar 
-              author={creator}
+            <AuthorAvatar
+              author={props.me}
               isPrivate={isPrivate} />
+          </div>
 
-            <div>
-              <AuthorDetails 
-                i18n={props.i18n}
-                isPrivate={isPrivate} 
-                creator={creator} />
-
-              <div className="typing">
-                <div className="typing-animation" />
-              </div>
-            </div>
+          <div className="annotation-toolbar-wrapper">
+            <QuillEditorToolbar
+              i18n={props.i18n} />
           </div>
         </div>
-      ) : plugins.map(plugin => (
+        
+        <div className="annotation-comment-wrapper">
+          <QuillEditor 
+            autoFocus={props.autoFocus}
+            i18n={props.i18n}
+            value={value}
+            onChange={setValue}
+            placeholder={t['Add a comment']} />
+        </div>
+
+        <div className="annotation-footer">
+          <div className="annotation-footer-left">
+            <TagList 
+              isEditable
+              i18n={props.i18n}
+              me={props.me}
+              tags={tags}
+              vocabulary={props.tagVocabulary}
+              onCreateTag={onCreateTag}  
+              onDeleteTag={props.onDeleteBody} />
+          </div>
+
+          <button 
+            className="save save-arrow annotation-footer-right"
+            onClick={onSave}>
+            <ArrowRight size={20} />
+          </button>
+        </div>
+      </QuillEditorRoot>
+
+      {plugins.map(plugin => (
         <Extension 
           key={plugin.meta.id}
           plugin={plugin}

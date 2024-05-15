@@ -151,7 +151,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
       setTimeout(() => {
         const card = el.current?.querySelector('.selected');
         if (card)
-         card.scrollIntoView({ behavior: 'smooth' });  
+         card.scrollIntoView({ behavior: 'smooth', block: 'center' });  
       }, 1);
     }
     
