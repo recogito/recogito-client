@@ -163,32 +163,42 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           </div>
         </QuillEditorRoot>
       ) : (
-        <AnnotationCardSection 
-          annotation={props.annotation}
-          i18n={props.i18n}
-          index={0}
-          isSelected={props.isSelected}
-          me={props.me}
-          present={props.present}
-          tagVocabulary={props.tagVocabulary}
-          onDeleteAnnotation={props.onDeleteAnnotation}
-          onCreateBody={props.onCreateBody}
-          onDeleteBody={props.onDeleteBody}
-          onBulkDeleteBodies={props.onBulkDeleteBodies}
-          onMakePublic={props.onMakePublic}
-          onSubmit={props.onSubmit}
-          onUpdateBody={props.onUpdateBody} />
-      )}
+        <>
+          <AnnotationCardSection 
+            annotation={props.annotation}
+            i18n={props.i18n}
+            index={0}
+            isSelected={props.isSelected}
+            me={props.me}
+            present={props.present}
+            tagVocabulary={props.tagVocabulary}
+            onDeleteAnnotation={props.onDeleteAnnotation}
+            onCreateBody={props.onCreateBody}
+            onDeleteBody={props.onDeleteBody}
+            onBulkDeleteBodies={props.onBulkDeleteBodies}
+            onMakePublic={props.onMakePublic}
+            onSubmit={props.onSubmit}
+            onUpdateBody={props.onUpdateBody} />
 
-      {plugins.map(plugin => (
-        <Extension 
-          key={plugin.meta.id}
-          plugin={plugin}
-          extensionPoint="annotation.*.annotation-editor"
-          me={props.me}
-          annotation={props.annotation} 
-          onUpdateAnnotation={props.onUpdateAnnotation} />
-      ))}
+          {plugins.map(plugin => (
+            <Extension 
+              key={plugin.meta.id}
+              plugin={plugin}
+              extensionPoint="annotation.*.annotation-editor"
+              me={props.me}
+              annotation={props.annotation} 
+              onUpdateAnnotation={props.onUpdateAnnotation} />
+          ))}
+        </>
+        )
+      ) : (
+
+      )
+
+
+      ) : (
+      )
+
     </div>
   ) : (
     <div className={className}>
