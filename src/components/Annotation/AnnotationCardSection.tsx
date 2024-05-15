@@ -71,7 +71,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const [editable, setEditable] = useState(false);
 
-  const firstBody = [props.comment, ...(props.tags || [])].filter(Boolean)[0];
+  const firstBody = props.annotation.bodies[0];
 
   const creator: PresentUser | User | undefined = firstBody &&
     (present.find(p => p.id === firstBody.creator?.id) || firstBody.creator);

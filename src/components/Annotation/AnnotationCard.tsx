@@ -3,6 +3,7 @@ import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { Extension, usePlugins } from '@components/Plugins';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
@@ -85,18 +86,13 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
-  // Update isNew when anntoation changes
-  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id]);
-
-  const onSubmit = () => {
-    setIsNew(false);
-    props.onSubmit();
-  }
-
   const borderStyle = props.borderColor ? 
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
-  // const plugins = usePlugins('annotation.*.annotation-editor');
+  const plugins = usePlugins('annotation.*.annotation-editor');
+
+  // Update isNew when anntoation changes
+  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id]);
 
   const comments = annotation.bodies
     .filter(b => !b.purpose || b.purpose === 'commenting')
@@ -143,15 +139,19 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   );
 
   const replyFieldTransition = useTransition([props.showReplyField], {
-      from: { maxHeight: '0vh' },
-      enter: { maxHeight: `${document.documentElement.clientHeight * 0.3 + 80}px` },
-      leave: { maxHeight: '0px' },
-      config: { 
-        duration: 200,
-        easing: easings.easeInOutCubic 
-      }
+    from: { maxHeight: '0vh' },
+    enter: { maxHeight: `${document.documentElement.clientHeight * 0.3 + 80}px` },
+    leave: { maxHeight: '0px' },
+    config: { 
+      duration: 200,
+      easing: easings.easeInOutCubic 
     }
-  );
+  });
+
+  const onSubmit = () => {
+    setIsNew(false);
+    props.onSubmit();
+  }
 
   const onMakePublic = () =>
     props.onUpdateAnnotation({
@@ -208,12 +208,18 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
       annotation={annotation} 
       autoFocus={props.autoFocus}
       i18n={props.i18n}
+      isSelected={props.isSelected}
       me={me} 
       present={props.present}
       tagVocabulary={props.tagVocabulary}
+      onBulkDeleteBodies={props.onBulkDeleteBodies}
       onCreateBody={props.onCreateBody} 
-      onDeleteBody={props.onDeleteBody} 
-      onSubmit={onSubmit} />   
+      onDeleteAnnotation={props.onDeleteAnnotation}
+      onDeleteBody={props.onDeleteBody}
+      onMakePublic={onMakePublic} 
+      onSubmit={onSubmit}
+      onUpdateAnnotation={props.onUpdateAnnotation} 
+      onUpdateBody={props.onUpdateBody} />   
   ) : !isEmpty && (
     <div style={borderStyle} className={className}>
       <ul>
@@ -307,6 +313,16 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           </li>
         )}
       </ul>
+
+      {plugins.map(plugin => (
+        <Extension 
+          key={plugin.meta.id}
+          plugin={plugin}
+          extensionPoint="annotation.*.annotation-editor"
+          me={me}
+          annotation={annotation} 
+          onUpdateAnnotation={props.onUpdateAnnotation} />
+      ))}
 
       {replyFieldTransition((style, open) => open && (
         <animated.div style={style}>

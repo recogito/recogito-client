@@ -1,5 +1,4 @@
 .annotation.empty {
-  padding-bottom: 10px;
   --anim-dot-size: 3px;
   --anim-color: var(--gray-900);
   --anim-h-offset: 6px;
@@ -10,7 +9,11 @@
   height: 80px;
 }
 
-.annotation.empty .typing{
+.annotation.empty .annotation-footer {
+  padding-bottom: 10px;
+}
+
+.annotation.empty .typing {
   padding: 3px 0 4px 1px;
 }
 
