@@ -11,7 +11,7 @@ interface ColorLegendProps {
 
 }
 
-export const ColorLeged = (props: ColorLegendProps) => {
+export const ColorLegend = (props: ColorLegendProps) => {
 
   const { t } = props.i18n;
 

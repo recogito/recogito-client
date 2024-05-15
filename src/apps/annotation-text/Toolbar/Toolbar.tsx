@@ -1,18 +1,15 @@
+import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import { isMe } from '@recogito/annotorious-supabase';
-import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
+import { ColorCodingSelector, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
 import type { DocumentWithContext, Translations } from 'src/Types';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import { ColorLeged } from '@components/AnnotationDesktop';
-import { useColorCoding } from '@components/AnnotationDesktop/ColorCoding/ColorState';
-import { useEffect } from 'react';
 
 interface ToolbarProps {
 
@@ -134,7 +131,7 @@ export const Toolbar = (props: ToolbarProps) => {
           i18n={props.i18n} 
           present={props.present} />
 
-        <ColorLeged 
+        <ColorLegend 
           i18n={props.i18n} />
       </div>
 
