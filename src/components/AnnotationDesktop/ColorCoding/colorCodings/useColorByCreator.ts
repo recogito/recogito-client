@@ -1,9 +1,8 @@
 import { useMemo } from 'react';
 import { useAnnotations } from '@annotorious/react';
 import type { Annotation, AnnotationState, Color, DrawingStyle, PresentUser } from '@annotorious/react';
-import { enumerateCreators, useAuthorColors } from '@components/AnnotationDesktop';
+import { enumerateCreators, getDisplayName, useAuthorColors } from '@components/AnnotationDesktop';
 import type { ColorCoding } from '../ColorCoding';
-import { getDisplayName } from '@components/AnnotationDesktop/LayerConfiguration/utils';
 
 const UNKNOWN_CREATOR: Color = '#727272';
 
