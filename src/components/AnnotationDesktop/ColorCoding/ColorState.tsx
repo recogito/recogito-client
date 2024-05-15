@@ -3,9 +3,9 @@ import type { ColorCoding } from './ColorCoding';
 
 interface ColorStateContextValue {
 
-  coding?: ColorCoding;
+  colorCoding?: ColorCoding;
 
-  setCoding: React.Dispatch<React.SetStateAction<ColorCoding | undefined>>;
+  setColorCoding: React.Dispatch<React.SetStateAction<ColorCoding | undefined>>;
 
 }
 
@@ -20,10 +20,10 @@ interface ColorStateProps {
 
 export const ColorState = (props: ColorStateProps) => {
 
-  const [coding, setCoding] = useState<ColorCoding | undefined>();
+  const [colorCoding, setColorCoding] = useState<ColorCoding | undefined>();
 
   return (
-    <ColorStateContext.Provider value={{ coding, setCoding }}>
+    <ColorStateContext.Provider value={{ colorCoding, setColorCoding }}>
       {props.children}
     </ColorStateContext.Provider>
   )
@@ -33,6 +33,6 @@ export const ColorState = (props: ColorStateProps) => {
 export const useColorCodingState = () => useContext(ColorStateContext);
 
 export const useColorCoding = () => {
-  const { coding } = useContext(ColorStateContext);
-  return coding
+  const { colorCoding } = useContext(ColorStateContext);
+  return colorCoding;
 }

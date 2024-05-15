@@ -1,6 +1,6 @@
 export * from './AnnotationList';
 export * from './AuthorColorProvider';
-export * from './ColorCodingSelector';
+export * from './ColorCoding';
 export * from './DocumentNotes';
 export * from './ErrorBadge';
 export * from './LayerConfiguration';

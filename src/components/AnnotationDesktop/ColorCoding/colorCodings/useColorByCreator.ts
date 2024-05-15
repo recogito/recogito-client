@@ -1,4 +1,6 @@
-import { useAnnotations, type Annotation, type AnnotationState, type Color, type DrawingStyle, type PresentUser } from '@annotorious/react';
+import { useMemo } from 'react';
+import { useAnnotations } from '@annotorious/react';
+import type { Annotation, AnnotationState, Color, DrawingStyle, PresentUser } from '@annotorious/react';
 import { enumerateCreators, useAuthorColors } from '@components/AnnotationDesktop';
 import type { ColorCoding } from '../ColorCoding';
 import { getDisplayName } from '@components/AnnotationDesktop/LayerConfiguration/utils';
@@ -11,7 +13,7 @@ const getCreator = (annotation: Annotation) =>
 
 export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
 
-  const annotations = useAnnotations(250);
+  const annotations = useAnnotations(500);
 
   const authorColors = useAuthorColors();
 
@@ -30,12 +32,12 @@ export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
     }
   }
 
-  const buildLegend = () => {
+  const legend = useMemo(() => {
     const creators = enumerateCreators(present, annotations);
     return creators.map(user => 
-      ({ color: authorColors.getColor(user) as Color, label: getDisplayName(user) }))
-  }
+      ({ color: authorColors.getColor(user) as Color, label: getDisplayName(user) }));
+  }, [present, annotations]);
 
-  return { name: 'creator', style, legend: buildLegend() };
+  return { name: 'creator', style, legend };
 
 }

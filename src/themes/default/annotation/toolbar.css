@@ -51,6 +51,11 @@
   width: 36px;
 }
 
+.anno-toolbar button:disabled {
+  background-color: transparent;
+  border-color: transparent;
+}
+
 .anno-toolbar button > svg {
   color: var(--font-dark);
 }

@@ -29,17 +29,17 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const byPrivacy = useColorByPrivacy();
 
-  const { coding, setCoding } = useColorCodingState();
+  const { colorCoding, setColorCoding } = useColorCodingState();
 
   const onChange = (key: string) => {
     if (key === 'creator') {
-      setCoding(byCreator);
+      setColorCoding(byCreator);
     } else if (key === 'tag') {
-      // props.onChange(byFirstTag);
+      setColorCoding(byFirstTag);
     } else if (key === 'privacy') {
-      // props.onChange(byPrivacy);
+      setColorCoding(byPrivacy);
     } else {
-      setCoding(undefined);
+      setColorCoding(undefined);
     }
   }
 

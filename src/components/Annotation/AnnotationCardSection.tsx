@@ -98,8 +98,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const onSave = () => {   
     if (commentValue && !isEmpty(commentValue)) {
-      console.log(commentValue);
-
       // Update existing or create new
       const next = comment ? {
         ...comment,

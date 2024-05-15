@@ -1,6 +1,8 @@
 import { useMemo } from 'react';
 import { Annotation, AnnotationState, DrawingStyle, useAnnotations, type Color } from '@annotorious/react';
 import { AdobeCategorical12 } from '../ColorPalettes';
+import type { ColorCoding } from '../ColorCoding';
+import { enumerateTags } from '@components/AnnotationDesktop/utils';
 
 const PALETTE = AdobeCategorical12;
 
@@ -33,9 +35,11 @@ export const createTagPalette = () => {
 
 const NO_TAG: Color = '#727272';
 
-export const useColorByFirstTag = () => {
+export const useColorByFirstTag = (): ColorCoding => {
 
-  const annotations = useAnnotations(250);
+  const annotations = useAnnotations(500);
+
+  const { getColor } = useMemo(() => createTagPalette(), []);
 
   const style = useMemo(() => {
     const { getColor } = createTagPalette();
@@ -49,8 +53,13 @@ export const useColorByFirstTag = () => {
         return { fill: NO_TAG, fillOpacity: state?.selected ? 0.5: 0.24 };
       }
     }
-  }, []);
+  }, [getColor]);
 
-  return style;
+  const legend = useMemo(() => {
+    const tags = enumerateTags(annotations);
+    return tags.map(tag => ({ color: getColor(tag) as Color, label: tag }));
+  }, [getColor, annotations]);
+
+  return { name: 'tag', style, legend }; 
 
 }

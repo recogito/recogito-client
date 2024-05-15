@@ -1,6 +1,6 @@
 import { Info } from '@phosphor-icons/react';
 import * as Popover from '@radix-ui/react-popover';
-import { useColorCoding } from '../ColorCodingSelector/ColorState';
+import { useColorCoding } from './ColorState';
 import type { Translations } from 'src/Types';
 
 import './ColorLegend.css';

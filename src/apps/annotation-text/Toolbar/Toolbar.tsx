@@ -10,8 +10,8 @@ import { PDFControls } from './PDFControls';
 import type { DocumentWithContext, Translations } from 'src/Types';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import { ColorLeged } from '@components/AnnotationDesktop/ColorLeged';
-import { useColorCoding } from '@components/AnnotationDesktop/ColorCodingSelector/ColorState';
+import { ColorLeged } from '@components/AnnotationDesktop';
+import { useColorCoding } from '@components/AnnotationDesktop/ColorCoding/ColorState';
 import { useEffect } from 'react';
 
 interface ToolbarProps {
