@@ -43,7 +43,7 @@
     "@typescript-eslint/eslint-plugin": "^6.10.0",
     "@typescript-eslint/parser": "^6.10.0",
     "@uppy/core": "^3.2.1",
-    "@uppy/xhr-upload": "^3.3.0",
+    "@uppy/xhr-upload": "3.6.4",
     "accept-language-parser": "^1.5.0",
     "astro": "^2.5.1",
     "confetti-explosion-react": "^0.1.2",
