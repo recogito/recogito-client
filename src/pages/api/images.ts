@@ -1,11 +1,11 @@
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
-const IIIF_URL = import.meta.env.IIIF_URL;
-const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
-const IIIF_KEY = import.meta.env.IIIF_KEY;
-
 export const post: APIRoute = async ({ request, cookies }) => {
+  const IIIF_URL = import.meta.env.IIIF_URL;
+  const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
+  const IIIF_KEY = import.meta.env.IIIF_KEY;
+
   console.log('Entered api/images POST');
   // Verify if the user is logged in
   const supabase = await createSupabaseServerClient(request, cookies);
