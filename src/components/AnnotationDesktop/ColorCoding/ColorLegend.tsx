@@ -29,6 +29,7 @@ export const ColorLegend = (props: ColorLegendProps) => {
       </Popover.Trigger>
 
       <Popover.Content className="popover-content color-legend">
+        <h3>{t['Colors']}</h3>
         {legend && (
           <ul>
             {legend.map(({ label, color }, index) => (

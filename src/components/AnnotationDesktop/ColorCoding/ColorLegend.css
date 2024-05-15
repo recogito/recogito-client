@@ -5,10 +5,17 @@
   width: auto;
 }
 
+.popover-content.color-legend h3 {
+  font-size: var(--font-tiny);
+  font-weight: 500;
+  margin: 0;
+  padding: 0.25rem 0;
+}
+
 .popover-content.color-legend ul {
   list-style-type: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 0.25rem;
 }
 
 .popover-content.color-legend li {
