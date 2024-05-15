@@ -38,6 +38,11 @@ export const post: APIRoute = async ({ request, cookies }) => {
     method: 'POST',
     body: formData,
   })
-    .then((res) => res.json())
-    .then((result) => new Response(JSON.stringify(result), { status: 200 }));
+    .then((res) => {
+      return res.json();
+    })
+    .then((result) => {
+      console.log('result: ', result);
+      return new Response(JSON.stringify(result), { status: 200 });
+    });
 };
