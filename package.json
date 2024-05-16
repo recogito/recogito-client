@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@allmaps/iiif-parser": "1.0.0-beta.36",
-    "@annotorious/react": "^3.0.0-rc.23",
+    "@annotorious/react": "3.0.0-rc.23",
     "@astrojs/netlify": "^2.6.0",
     "@astrojs/node": "^5.3.6",
     "@astrojs/react": "^2.3.2",

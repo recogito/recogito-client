@@ -117,7 +117,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
     isPrivate ? 'private' : undefined
   ].filter(Boolean).join(' ');
 
-  return (
+  return isMine ? (
     <div className={className}>
       <QuillEditorRoot>
         <div className="annotation-header">
@@ -171,6 +171,27 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           annotation={props.annotation} 
           onUpdateAnnotation={props.onUpdateAnnotation} />
       ))}
+    </div>
+  ) : (
+    <div className={`${className} typing`}>
+      <div className="annotation-header">
+        <div className="annotation-header-left">
+          <AuthorAvatar 
+            author={creator}
+            isPrivate={isPrivate} />
+
+          <div>
+            <AuthorDetails 
+              i18n={props.i18n}
+              isPrivate={isPrivate} 
+              creator={creator} />
+
+            <div className="typing-animation">
+              <div />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 
