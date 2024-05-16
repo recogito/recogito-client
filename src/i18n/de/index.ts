@@ -39,7 +39,11 @@ export default {
     ...projectSidedbar,
     ...projectAssignments,
   },
-  'project-settings': { ...projectSettings, ...dashboardProjects },
+  'project-settings': {
+    ...projectSettings,
+    ...dashboardProjects,
+    ...accountMenu,
+  },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': userManagement,
 };
