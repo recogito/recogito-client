@@ -1,15 +1,18 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import { animated, easings, useSpring } from '@react-spring/web';
 import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
-import type { HighlightStyle, HighlightStyleExpression, RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
+import type {
+  HighlightStyle,
+  HighlightStyleExpression,
+  RecogitoTextAnnotator,
+  TextAnnotation,
+} from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
-import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import type { TextAnnotationProps } from './TextAnnotation';
@@ -21,15 +24,15 @@ import type { DocumentLayer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
+import { TopBar } from '@components/TopBar';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
-
   const contentType = props.document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const [loading, setLoading] = useState(true);
-  
+
   const [showBranding, setShowBranding] = useState(true);
 
   const policies = useLayerPolicies(props.document.layers[0].id);
@@ -44,11 +47,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const layerNames = useLayerNames(props.document);
 
-  const activeLayer = useMemo(() => (
-    layers && layers.length > 0
-      ? layers.find((l) => l.is_active) || layers[0]
-      : undefined
-  ), [layers]);
+  const activeLayer = useMemo(
+    () =>
+      layers && layers.length > 0
+        ? layers.find((l) => l.is_active) || layers[0]
+        : undefined,
+    [layers]
+  );
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
@@ -56,39 +61,47 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [activeLayerStyle, setActiveLayerStyle] =
-    useState<HighlightStyleExpression | undefined>(undefined);
+  const [activeLayerStyle, setActiveLayerStyle] = useState<
+    HighlightStyleExpression | undefined
+  >(undefined);
 
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
-      const hse: HighlightStyleExpression = 
-        (a: SupabaseAnnotation, state?: AnnotationState) => ({ 
-          fill: style(a), 
-          fillOpacity: state?.selected ? 0.5: 0.24 
-        });
+      const hse: HighlightStyleExpression = (
+        a: SupabaseAnnotation,
+        state?: AnnotationState
+      ) => ({
+        fill: style(a),
+        fillOpacity: state?.selected ? 0.5 : 0.24,
+      });
 
       setActiveLayerStyle(() => hse);
     } else {
       setActiveLayerStyle(undefined);
     }
-  }
+  };
 
   const style: HighlightStyleExpression = useMemo(() => {
-    const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
+    const readOnly = new Set(
+      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
+    );
 
-    const readOnlyStyle = (state?: AnnotationState, z?: number) => ({
-      fill: state?.selected ? '#000000' : undefined,
-      fillOpacity: state?.selected ? 0.08 : 0,
-      underlineStyle: 'solid',
-      underlineColor: '#000000' as Color,
-      underlineOffset: (z || 0) * 3,
-      underlineThickness: 2
-    } as HighlightStyle);
+    const readOnlyStyle = (state?: AnnotationState, z?: number) =>
+      ({
+        fill: state?.selected ? '#000000' : undefined,
+        fillOpacity: state?.selected ? 0.08 : 0,
+        underlineStyle: 'solid',
+        underlineColor: '#000000' as Color,
+        underlineOffset: (z || 0) * 3,
+        underlineThickness: 2,
+      } as HighlightStyle);
 
     return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
-      (a.layer_id && readOnly.has(a.layer_id)) 
-        ? readOnlyStyle(state, z) : 
-          typeof activeLayerStyle === 'function' ? activeLayerStyle(a, state, z) : undefined;
+      a.layer_id && readOnly.has(a.layer_id)
+        ? readOnlyStyle(state, z)
+        : typeof activeLayerStyle === 'function'
+        ? activeLayerStyle(a, state, z)
+        : undefined;
   }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
@@ -107,14 +120,17 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           props.document.id,
           props.document.context.project_id
         ).then(({ data, error }) => {
-          if (error) 
-              console.error(error);
+          if (error) console.error(error);
 
-          const current = new Set(props.document.layers.map(l => l.id));
-          
+          const current = new Set(props.document.layers.map((l) => l.id));
+
           const toAdd: DocumentLayer[] = data
-            .filter(l => !current.has(l.id))
-            .map(l => ({ id: l.id, document_id: l.document_id, is_active: false }));
+            .filter((l) => !current.has(l.id))
+            .map((l) => ({
+              id: l.id,
+              document_id: l.document_id,
+              is_active: false,
+            }));
 
           setLayers([...props.document.layers, ...toAdd]);
         });
@@ -145,49 +161,46 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const sorting =
     props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
-        const pages =
-          a.target.selector[0]?.pageNumber - b.target.selector[0]?.pageNumber;
-        return pages === 0
-          ? a.target.selector[0]?.start - b.target.selector[0]?.start
-          : pages;
-      }
+          const pages =
+            a.target.selector[0]?.pageNumber - b.target.selector[0]?.pageNumber;
+          return pages === 0
+            ? a.target.selector[0]?.start - b.target.selector[0]?.start
+            : pages;
+        }
       : (a: TextAnnotation, b: TextAnnotation) =>
-        a.target.selector[0].start - b.target.selector[0].start;
-
-  const brandingAnimation = useSpring({
-    from: { maxHeight: showBranding ? 0 : 150 },
-    to: { maxHeight: showBranding ? 150 : 0 },
-    immediate: !layers,
-    config: {
-      duration: 250,
-      easing: easings.easeInOutCubic
-    }
-  });
+          a.target.selector[0].start - b.target.selector[0].start;
 
   const className = [
     'ta-annotated-text-container',
-    contentType === 'text/xml' 
+    contentType === 'text/xml'
       ? 'tei'
-    : contentType === 'application/pdf'
+      : contentType === 'application/pdf'
       ? 'pdf'
-    : 'text',
-    rightPanelOpen ? 'list-open' : undefined
-  ].filter(Boolean).join(' ');
+      : 'text',
+    rightPanelOpen ? 'list-open' : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <DocumentNotes
       channelId={props.channelId}
       layerId={activeLayer?.id}
       present={present}
-      onError={() => setConnectionError(true)}>
+      onError={() => setConnectionError(true)}
+    >
+      <div className='anno-desktop ta-desktop'>
+        {loading && <LoadingOverlay />}
 
-      <div className="anno-desktop ta-desktop">
-        {loading && ( <LoadingOverlay /> )}
-
-        <div className="header">
-          <animated.div style={brandingAnimation}>
-            <BrandHeader />
-          </animated.div>
+        <div className='header'>
+          <TopBar
+            i18n={props.i18n}
+            invitations={[]}
+            me={props.me}
+            projects={[]}
+            showNotifications={false}
+            onError={() => {}}
+          />
 
           <Toolbar
             i18n={props.i18n}
@@ -199,21 +212,23 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             leftDrawerOpen={leftPanelOpen}
             policies={policies}
             rightDrawerOpen={rightPanelOpen}
-            showConnectionError={connectionError} 
+            showConnectionError={connectionError}
             onChangePrivacy={setPrivacy}
             onChangeStyle={onChangeStyle}
             onToggleBranding={() => setShowBranding(!showBranding)}
-            onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-            onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />
+            onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
+            onToggleRightDrawer={() => setRightPanelOpen((open) => !open)}
+          />
         </div>
 
         <main className={className}>
-          <LeftDrawer 
+          <LeftDrawer
             i18n={props.i18n}
             layers={layers}
             layerNames={layerNames}
-            open={leftPanelOpen} 
-            present={present} />
+            open={leftPanelOpen}
+            present={present}
+          />
 
           {policies && (
             <AnnotatedText
@@ -232,7 +247,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               onConnectionError={() => setConnectionError(true)}
               onSaveError={() => setConnectionError(true)}
               onLoad={() => setLoading(false)}
-              styleSheet={props.styleSheet} />
+              styleSheet={props.styleSheet}
+            />
           )}
 
           <RightDrawer
@@ -244,11 +260,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             sorting={sorting}
             style={style}
             tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation} 
-            onTabChanged={onRightTabChanged}/>
+            beforeSelectAnnotation={beforeSelectAnnotation}
+            onTabChanged={onRightTabChanged}
+          />
         </main>
       </div>
     </DocumentNotes>
-  )
-
-}
+  );
+};

@@ -9,6 +9,7 @@ import { getDocumentInContext, getInstalledPlugins } from '@backend/helpers';
 import { getCollection } from '@backend/crud/collections';
 import PluginRegistry from '@components/Plugins/PluginRegistry';
 import { isOpenJoinEditFromContext } from '@backend/helpers';
+import { getMyProfile } from '@backend/crud';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -99,12 +100,20 @@ const plugins = PluginRegistry.resolvePlugins(
   pluginConfigs.data,
   extensionPoint
 );
+
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
 ---
 
 <BaseLayout title={document.data.name}>
-  {viewer === 'TEI' && !styleSheet && (
-    <link rel='stylesheet' href='/tei.css' slot='head' />
-  )}
+  {
+    viewer === 'TEI' && !styleSheet && (
+      <link rel='stylesheet' href='/tei.css' slot='head' />
+    )
+  }
 
   {
     viewer === 'OPENSEADRAGON' ? (
@@ -114,6 +123,7 @@ const plugins = PluginRegistry.resolvePlugins(
         document={document.data}
         channelId={channelId}
         plugins={plugins}
+        me={profile.data}
       />
     ) : (
       <TextAnnotation
@@ -123,6 +133,7 @@ const plugins = PluginRegistry.resolvePlugins(
         channelId={channelId}
         plugins={plugins}
         styleSheet={styleSheet}
+        me={profile.data}
       />
     )
   }
@@ -131,6 +142,6 @@ const plugins = PluginRegistry.resolvePlugins(
 <style>
   html,
   body {
-    height: 100%;
+    height: calc(100vh - 60px);
   }
 </style>
