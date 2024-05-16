@@ -4,8 +4,8 @@ import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@anno
 import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import type { DocumentLayer, DocumentWithContext, Translations } from 'src/Types';
-import { ColorCodingSelector, ColorLegend, ErrorBadge, useColorCoding } from '@components/AnnotationDesktop';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
+import { ColorCodingSelector, ColorLegend, DeleteSelected, ErrorBadge, useColorCoding } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { Polygon, Rectangle } from './Icons';
@@ -29,6 +29,8 @@ interface ToolbarProps {
   layerNames: Map<string, string>;
 
   leftDrawerOpen: boolean;
+
+  policies?: Policies;
 
   present: PresentUser[];
 
@@ -167,6 +169,11 @@ export const Toolbar = (props: ToolbarProps) => {
         </button>
 
         <div className="anno-toolbar-divider" />
+
+        <DeleteSelected
+          activeLayer={props.layers?.find(l => l.is_active)}
+          i18n={props.i18n}
+          policies={props.policies} />
 
         <ColorCodingSelector 
           i18n={props.i18n} 

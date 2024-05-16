@@ -176,7 +176,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           </animated.div>
 
           <Toolbar
-            activeLayer={activeLayer}
             i18n={props.i18n}
             document={props.document}
             present={present}

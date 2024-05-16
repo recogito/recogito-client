@@ -11,8 +11,6 @@ import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 
 
 interface ToolbarProps {
 
-  activeLayer?: DocumentLayer;
-
   document: DocumentWithContext;
 
   i18n: Translations;
@@ -132,7 +130,7 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
 
         <DeleteSelected
-          activeLayer={props.activeLayer}
+          activeLayer={props.layers?.find(l => l.is_active)}
           i18n={props.i18n}
           policies={props.policies} />
 
