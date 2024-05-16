@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
+import { Extension, usePlugins } from '@components/Plugins';
 import { QuillEditor, QuillEditorRoot, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
@@ -53,6 +54,8 @@ export interface AnnotationCardSectionProps {
 
   onSubmit(): void;
 
+  onUpdateAnnotation(updated: SupabaseAnnotation): void;
+
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
 }
@@ -68,6 +71,8 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   const { comment, isPrivate, isReadOnly, me, present } = props;
 
   const { t } = props.i18n;
+
+  const plugins = usePlugins('annotation.*.annotation-editor');
 
   const [editable, setEditable] = useState(false);
 
@@ -226,20 +231,32 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       )}
 
       {editable && (
-        <div className="annotation-section-footer align-right">
-          <button 
-            className="sm flat unstyled"
-            onClick={() => setEditable(false)}>
-            {t['Cancel']}
-          </button>
+          <div className="annotation-section-footer align-right">
+            <button 
+              className="sm flat unstyled"
+              onClick={() => setEditable(false)}>
+              {t['Cancel']}
+            </button>
 
-          <button 
-            className="sm flat primary"
-            onClick={onSave}>
-            {t['Save']}
-          </button>
-        </div>
+            <button 
+              className="sm flat primary"
+              onClick={onSave}>
+              {t['Save']}
+            </button>
+          </div>
       )}
+
+      {plugins.map(plugin => (
+        <Extension 
+          key={plugin.meta.id}
+          annotation={props.annotation} 
+          extensionPoint="annotation.*.annotation-editor"
+          isEditable={editable}
+          isSelected={props.isSelected}
+          me={me}
+          plugin={plugin}
+          onUpdateAnnotation={props.onUpdateAnnotation} />
+      ))}
     </div>
   )
 

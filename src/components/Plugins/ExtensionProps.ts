@@ -1,7 +1,7 @@
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PresentUser, User } from '@annotorious/react';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
-import type { DocumentInTaggedContext } from 'src/Types';
+import type { DocumentWithContext } from 'src/Types';
 
 /**
  * Typings for different kinds of plugins
@@ -25,6 +25,10 @@ export interface AnnotationEditorExtensionProps extends ExtensionProps {
 
   annotation: SupabaseAnnotation;
 
+  isEditable?: boolean;
+
+  isSelected?: boolean;
+
   me: PresentUser | User;
 
   onUpdateAnnotation(updated: SupabaseAnnotation): void;
@@ -33,6 +37,6 @@ export interface AnnotationEditorExtensionProps extends ExtensionProps {
 
 export interface AnnotationToolbarExtensionProps extends ExtensionProps {
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
 }
