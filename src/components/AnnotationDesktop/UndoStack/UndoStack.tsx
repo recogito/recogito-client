@@ -34,7 +34,7 @@ export const UndoStack = (props: UndoStackProps) => {
         const { current } = created;
         created.current = annotation;
 
-        if (current) {
+        if (current && current.id !== annotation.id) {
           // This happens if the user goes directly from 
           // having one empty annotation open to creating
           // a new one! Delete the previous in this case.

@@ -16,7 +16,6 @@ import {
   OpenSeadragonViewer,
   PointerSelectAction,
   PresentUser,
-  User,
   useAnnotator
 } from '@annotorious/react';
 
