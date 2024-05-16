@@ -48,19 +48,29 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     // Update project groups
     setProject((project) => ({
       ...project,
-      user: project.groups.map((group) =>
+      users: project.users.map((u) => {
+        if (u.user.id === member.user.id) {
+          return {
+            ...u,
+            inGroup: to,
+          };
+        } else {
+          return u;
+        }
+      }),
+      groups: project.groups.map((group) =>
         group.id === from.id
           ? // Remove user from this group
-          {
-            ...group,
-            members: group.members.filter(
-              (m) => m.user.id !== member.user.id
-            ),
-          }
+            {
+              ...group,
+              members: group.members.filter(
+                (m) => m.user.id !== member.user.id
+              ),
+            }
           : group.id === to.id
-            ? // Add user to this group
+          ? // Add user to this group
             { ...group, members: [...group.members, updated] }
-            : group
+          : group
       ),
     }));
   };
@@ -71,8 +81,8 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       ...project,
       groups: project.groups.map((group) => ({
         ...group,
-        members: group.members.filter(m => m.user.id !== member.user.id)
-      }))
+        members: group.members.filter((m) => m.user.id !== member.user.id),
+      })),
     }));
   };
 
@@ -124,12 +134,25 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   return (
     <>
-      <TopBar invitations={props.invitations} i18n={props.i18n} onError={onError} projects={props.projects} me={props.user} />
-      <BackButtonBar i18n={props.i18n} showBackToProjects={false} crumbs={[
-        { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
-        { label: props.project.name, href: `/${props.i18n.lang}/projects/${props.project.id}` },
-        { label: t['Team'], href: undefined }
-      ]} />
+      <TopBar
+        invitations={props.invitations}
+        i18n={props.i18n}
+        onError={onError}
+        projects={props.projects}
+        me={props.user}
+      />
+      <BackButtonBar
+        i18n={props.i18n}
+        showBackToProjects={false}
+        crumbs={[
+          { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
+          {
+            label: props.project.name,
+            href: `/${props.i18n.lang}/projects/${props.project.id}`,
+          },
+          { label: t['Team'], href: undefined },
+        ]}
+      />
       <div className='project-collaboration'>
         <ToastProvider>
           <h1>{t['Project Team']}</h1>
