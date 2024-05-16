@@ -26,6 +26,14 @@ import {
 
 import './ImageAnnotationDesktop.css';
 
+const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (_: ImageAnnotation, state?: AnnotationState) => ({
+  fill: '#0080ff',
+  fillOpacity: 0.25,
+  stroke: '#0080ff',
+  strokeOpacity: state?.selected ? 0.9 : 0.5,
+  strokeWidth: state?.selected ? 2 : 1
+});
+
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
@@ -72,7 +80,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [defaultLayerStyle, setDefaultLayerStyle] =
-    useState<DrawingStyleExpression<ImageAnnotation> | undefined>(undefined);
+    useState<DrawingStyleExpression<ImageAnnotation> | undefined>(() => DEFAULT_STYLE);
 
   // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
@@ -91,7 +99,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         ? readOnlyStyle(state?.selected)
         : defaultLayerStyle 
           ? typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a as ImageAnnotation, state) : defaultLayerStyle 
-          : undefined;
+          : DEFAULT_STYLE;
     }
   }, [defaultLayerStyle, layers]);
 
@@ -179,7 +187,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             showConnectionError={connectionError}
             tool={tool}
             onChangePrivacy={setPrivacy}
-            onChangeStyle={s => setDefaultLayerStyle(() => s)}
+            onChangeStyle={s => setDefaultLayerStyle(() => s || DEFAULT_STYLE)}
             onChangeTool={setTool}
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
