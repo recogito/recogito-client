@@ -1,9 +1,9 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations } from 'src/Types';
 
-import './AdminDeleteAlert.css';
+import './AdminOverrideAlert.css';
 
-interface AdminDeleteAlertProps {
+interface AdminOverrideAlertProps {
 
   i18n: Translations;
 
@@ -15,7 +15,7 @@ interface AdminDeleteAlertProps {
 
 }
 
-export const AdminDeleteAlert = (props: AdminDeleteAlertProps) => {
+export const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
 
   const { t } = props.i18n;
 

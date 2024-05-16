@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Trash } from '@phosphor-icons/react';
 import { useAnnotationStore, useAnnotatorUser, useSelection } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { AdminDeleteAlert } from '@components/AnnotationDesktop';
+import { AdminOverrideAlert } from '@components/AnnotationDesktop';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
 import './DeleteSelected.css';
@@ -51,7 +51,7 @@ export const DeleteSelected = (props: DeleteSelectedProps) => {
   return isDeletable && (
     <>
       {!isMine && (
-        <AdminDeleteAlert
+        <AdminOverrideAlert
           i18n={props.i18n}
           open={promptOverride}
           onConfirm={onDeleteSelection}

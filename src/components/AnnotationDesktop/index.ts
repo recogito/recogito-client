@@ -1,4 +1,4 @@
-export * from './AdminDeleteAlert';
+export * from './AdminOverrideAlert';
 export * from './AnnotationList';
 export * from './AuthorColorProvider';
 export * from './ColorCoding';
