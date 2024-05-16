@@ -4,8 +4,6 @@ import type { Translations } from 'src/Types';
 
 interface PrivateAnnotationActionsProps {
 
-  hasReplies: boolean;
-
   i18n: Translations;
 
   isFirst: boolean;
@@ -38,7 +36,18 @@ export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) =
 
       <Dropdown.Content asChild sideOffset={5} align="start" onClick={onClick}>
         <div className="dropdown-content no-icons">
-          {props.isFirst && (
+          <Dropdown.Item
+            className='dropdown-item'
+            onSelect={props.onEditSection}>
+            <Pencil size={16} /> 
+            {props.isFirst ? (
+              <span>{t['Edit annotation']}</span>
+            ) : (
+              <span>{t['Edit reply']}</span>
+            )}
+          </Dropdown.Item>
+
+          {props.isFirst ? (
             <>
               <Dropdown.Item className="dropdown-item" onSelect={props.onMakePublic}>
                 <UsersThree size={16} /> <span>{t['Make annotation public']}</span>
@@ -48,15 +57,11 @@ export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) =
                 <Trash size={16} /> <span>{t['Delete annotation']}</span>
               </Dropdown.Item>
             </>
-          )}
-
-          <Dropdown.Item className="dropdown-item" onSelect={props.onEditSection}>
-            <Pencil size={16} /> <span>{t['Edit comment']}</span>
-          </Dropdown.Item>
-
-          {props.hasReplies && (
-            <Dropdown.Item className="dropdown-item" onSelect={props.onDeleteSection}>
-              <Trash size={16} /> <span>{t['Delete comment']}</span>
+          ) : (
+            <Dropdown.Item
+              className='dropdown-item'
+              onSelect={props.onDeleteSection}>
+              <Trash size={16} /> <span>{t['Delete reply']}</span>
             </Dropdown.Item>
           )}
         </div>

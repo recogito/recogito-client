@@ -81,8 +81,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   const creator: PresentUser | User | undefined = firstBody &&
     (present.find(p => p.id === firstBody.creator?.id) || firstBody.creator);
 
-  const hasReplies = props.annotation.bodies.filter(b => b.purpose === 'commenting').length > 1;
-
   const isMine = creator?.id === me.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
@@ -184,7 +182,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <div className="annotation-header-right">
             {isPrivate ? (
               <PrivateAnnotationActions
-                hasReplies={hasReplies}
                 i18n={props.i18n} 
                 isFirst={props.index === 0}
                 onDeleteAnnotation={props.onDeleteAnnotation}
@@ -193,7 +190,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 onMakePublic={props.onMakePublic}/>
             ) : (
               <PublicAnnotationActions 
-                hasReplies={hasReplies}
                 i18n={props.i18n} 
                 isFirst={props.index === 0} 
                 isMine={isMine}
@@ -246,7 +242,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           </div>
       )}
 
-      {plugins.map(plugin => (
+      {props.index === 0 ? plugins.map(plugin => (
         <Extension 
           key={plugin.meta.id}
           annotation={props.annotation} 
@@ -256,7 +252,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           me={me}
           plugin={plugin}
           onUpdateAnnotation={props.onUpdateAnnotation} />
-      ))}
+      )) : null}
     </div>
   )
 
