@@ -29,7 +29,7 @@ import './ImageAnnotationDesktop.css';
 
 const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (_: ImageAnnotation, state?: AnnotationState) => ({
   fill: '#0080ff',
-  fillOpacity: 0.25,
+  fillOpacity: state?.hovered ? 0.28 : 0.2,
   stroke: '#0080ff',
   strokeOpacity: state?.selected ? 0.9 : 0.5,
   strokeWidth: state?.selected ? 2 : 1
@@ -81,7 +81,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
   const [activeLayerStyle, setActiveLayerStyle] =
-    useState<DrawingStyleExpression<ImageAnnotation> | undefined>(() => DEFAULT_STYLE);
+    useState<DrawingStyleExpression<ImageAnnotation>>(() => DEFAULT_STYLE);
 
     const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
       if (style) {
@@ -91,7 +91,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             
             return {
               fill: color,
-              fillOpacity: 0.25,
+              fillOpacity: state?.hovered ? 0.28 : 0.2,
               stroke: color,
               strokeOpacity: state?.selected ? 0.9 : 0.5,
               strokeWidth: state?.selected ? 2 : 1
@@ -100,7 +100,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   
         setActiveLayerStyle(() => hse);
       } else {
-        setActiveLayerStyle(DEFAULT_STYLE);
+        setActiveLayerStyle(() => DEFAULT_STYLE);
       }
     }
 
@@ -108,20 +108,19 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
 
-    const readOnlyStyle = (selected?: boolean) => ({
-      fillOpacity: 0,
+    const readOnlyStyle = (state?: AnnotationState) => ({
+      fill: '#010101',
+      fillOpacity: state?.hovered ? 0.1 : 0,
       stroke: '#010101',
-      strokeOpacity: selected ? 1 : 0.65,
-      strokeWidth: selected ? 2.5 : 2
+      strokeOpacity: state?.selected ? 1 : 0.65,
+      strokeWidth: state?.selected ? 2.5 : 2
     });
 
     return (annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
       return (a.layer_id && readOnly.has(a.layer_id)) 
-        ? readOnlyStyle(state?.selected)
-        : activeLayerStyle 
-          ? typeof activeLayerStyle === 'function' ? activeLayerStyle(a as ImageAnnotation, state) : activeLayerStyle 
-          : DEFAULT_STYLE;
+        ? readOnlyStyle(state)
+        : typeof activeLayerStyle === 'function' ? activeLayerStyle(a as ImageAnnotation, state) : activeLayerStyle;
     }
   }, [activeLayerStyle, layers]);
 
