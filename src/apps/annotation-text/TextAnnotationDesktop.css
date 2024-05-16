@@ -82,8 +82,7 @@ html, body {
 
 .ta-desktop .anno-drawer-panel.annotation-list > ul > li .annotation.selected {
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
-    2px 3px 8px 0 rgba(0, 0, 0, 0.12),
-    3px 8px 20px 0 rgba(0, 0, 0, 0.08);
+    2px 3px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 .a9s-popup {

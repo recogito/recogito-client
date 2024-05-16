@@ -29,7 +29,7 @@
   margin: 25px 0;
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
     1px 1px 8px 0 rgba(0, 0, 0, 0.08);
-  transition: margin 100ms ease-out;
+  transition: margin 300ms ease-out;
 }
 
 .anno-drawer-panel.annotation-list .annotation-card {
