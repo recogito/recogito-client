@@ -1,12 +1,13 @@
 import { useMemo } from 'react';
 import { useAnnotations } from '@annotorious/react';
-import type { Annotation, AnnotationState, Color, DrawingStyle, PresentUser } from '@annotorious/react';
+import type { Color, PresentUser } from '@annotorious/react';
 import { enumerateCreators, getDisplayName, useAuthorColors } from '@components/AnnotationDesktop';
 import type { ColorCoding } from '../ColorCoding';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const UNKNOWN_CREATOR: Color = '#727272';
 
-const getCreator = (annotation: Annotation) =>
+const getCreator = (annotation: SupabaseAnnotation) =>
   annotation.target?.creator || 
     (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
 
@@ -16,18 +17,18 @@ export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
 
   const authorColors = useAuthorColors();
 
-  const style = (annotation: Annotation, state?: AnnotationState): DrawingStyle => {
+  const style = (annotation: SupabaseAnnotation): Color => {
     const creator = getCreator(annotation);
 
     if (creator) {
       const assignedColor = authorColors.getColor(creator);
       if (assignedColor) {
-        return { fill: assignedColor as Color, fillOpacity: state?.selected ? 0.5: 0.24 };
+        return assignedColor as Color;
       } else {
-        return { fill: UNKNOWN_CREATOR, fillOpacity: state?.selected ? 0.5: 0.24 };
+        return UNKNOWN_CREATOR;
       }
     } else {
-      return { fill: UNKNOWN_CREATOR, fillOpacity: state?.selected ? 0.45 : 0.14 };
+      return UNKNOWN_CREATOR;
     }
   }
 

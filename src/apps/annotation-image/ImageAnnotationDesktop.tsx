@@ -18,6 +18,7 @@ import { useIIIF, ManifestErrorDialog } from './IIIF';
 import {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
+  Color,
   DrawingStyleExpression,
   ImageAnnotation,
   PresentUser,
@@ -79,8 +80,29 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [defaultLayerStyle, setDefaultLayerStyle] =
+  const [activeLayerStyle, setActiveLayerStyle] =
     useState<DrawingStyleExpression<ImageAnnotation> | undefined>(() => DEFAULT_STYLE);
+
+    const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+      if (style) {
+        const hse: DrawingStyleExpression<ImageAnnotation> = 
+          (a: SupabaseAnnotation, state?: AnnotationState) => {
+            const color = style(a);
+            
+            return {
+              fill: color,
+              fillOpacity: 0.25,
+              stroke: color,
+              strokeOpacity: state?.selected ? 0.9 : 0.5,
+              strokeWidth: state?.selected ? 2 : 1
+            }
+          };
+  
+        setActiveLayerStyle(() => hse);
+      } else {
+        setActiveLayerStyle(DEFAULT_STYLE);
+      }
+    }
 
   // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
@@ -97,11 +119,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       const a = annotation as SupabaseAnnotation;
       return (a.layer_id && readOnly.has(a.layer_id)) 
         ? readOnlyStyle(state?.selected)
-        : defaultLayerStyle 
-          ? typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a as ImageAnnotation, state) : defaultLayerStyle 
+        : activeLayerStyle 
+          ? typeof activeLayerStyle === 'function' ? activeLayerStyle(a as ImageAnnotation, state) : activeLayerStyle 
           : DEFAULT_STYLE;
     }
-  }, [defaultLayerStyle, layers]);
+  }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -187,7 +209,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             showConnectionError={connectionError}
             tool={tool}
             onChangePrivacy={setPrivacy}
-            onChangeStyle={s => setDefaultLayerStyle(() => s || DEFAULT_STYLE)}
+            onChangeStyle={onChangeStyle}
             onChangeTool={setTool}
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}

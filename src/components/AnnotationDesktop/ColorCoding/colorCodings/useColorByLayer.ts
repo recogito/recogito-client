@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { AnnotationState, Color, DrawingStyle } from '@annotorious/react';
+import type { Color } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { ColorCoding } from '../ColorCoding';
 import { ColorBrewerDark2_8 } from '../ColorPalettes';
@@ -18,14 +18,14 @@ export const userColorByLayer = (
   const { getColor } = useMemo(() => createPalette(PALETTE), []);
 
   const style = useMemo(() => {
-    return (annotation: SupabaseAnnotation, state?: AnnotationState): DrawingStyle => {
+    return (annotation: SupabaseAnnotation): Color => {
       const layerId = annotation.layer_id;
 
       if (layerId) {
-        return { fill: getColor(layerId), fillOpacity: state?.selected ? 0.5: 0.24 };
+        return getColor(layerId);
       } else {
         // Shouldn't happen unless in case of integrity error
-        return { fill: NO_LAYER, fillOpacity: state?.selected ? 0.5: 0.24 };
+        return NO_LAYER;
       }
     }
   }, [getColor]);

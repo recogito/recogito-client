@@ -56,8 +56,22 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [defaultLayerStyle, setDefaultLayerStyle] =
+  const [activeLayerStyle, setActiveLayerStyle] =
     useState<HighlightStyleExpression | undefined>(undefined);
+
+  const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+    if (style) {
+      const hse: HighlightStyleExpression = 
+        (a: SupabaseAnnotation, state?: AnnotationState) => ({ 
+          fill: style(a), 
+          fillOpacity: state?.selected ? 0.5: 0.24 
+        });
+
+      setActiveLayerStyle(() => hse);
+    } else {
+      setActiveLayerStyle(undefined);
+    }
+  }
 
   const style: HighlightStyleExpression = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
@@ -74,8 +88,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
       (a.layer_id && readOnly.has(a.layer_id)) 
         ? readOnlyStyle(state, z) : 
-          typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a, state, z) : undefined;
-  }, [defaultLayerStyle, layers]);
+          typeof activeLayerStyle === 'function' ? activeLayerStyle(a, state, z) : undefined;
+  }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -187,7 +201,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError} 
             onChangePrivacy={setPrivacy}
-            onChangeStyle={s => setDefaultLayerStyle(() => s)}
+            onChangeStyle={onChangeStyle}
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
             onToggleRightDrawer={() => setRightPanelOpen(open => !open)} />

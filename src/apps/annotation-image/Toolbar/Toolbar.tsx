@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
+import type { Color, PresentUser } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
@@ -42,7 +43,7 @@ interface ToolbarProps {
 
   onChangePrivacy(mode: PrivacyMode): void;
 
-  onChangeStyle(style?: DrawingStyleExpression<ImageAnnotation>): void;
+  onChangeStyle(style?: (a: SupabaseAnnotation) => Color): void;
 
   onChangeTool(tool?: string): void;
 
@@ -74,7 +75,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   useEffect(() => {
     if (colorCoding?.style)
-      props.onChangeStyle(colorCoding.style as DrawingStyleExpression<ImageAnnotation>);
+      props.onChangeStyle(colorCoding.style);
     else
       props.onChangeStyle();
   }, [colorCoding])

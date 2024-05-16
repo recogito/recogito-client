@@ -1,11 +1,11 @@
-import type { Color, DrawingStyleExpression, ImageAnnotation } from '@annotorious/react';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { Color } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 export interface ColorCoding {
 
   name: string;
 
-  style: DrawingStyleExpression<ImageAnnotation> | HighlightStyleExpression;
+  style: (a: SupabaseAnnotation) => Color;
 
   legend: ColorLegendValue[];
 

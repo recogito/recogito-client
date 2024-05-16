@@ -76,13 +76,6 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
               <Select.ItemText>{t['No color coding']}</Select.ItemText>
             </Select.Item>
 
-            {/* <Select.Item value="layer" className="select-item">
-              <Select.ItemIndicator className="select-item-indicator">
-                <Check />
-              </Select.ItemIndicator>
-              <Select.ItemText>{t['Layer']}</Select.ItemText>
-            </Select.Item> */}
-
             <Select.Item value="privacy" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />

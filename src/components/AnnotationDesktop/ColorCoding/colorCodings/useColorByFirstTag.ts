@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
-import { Annotation, AnnotationState, DrawingStyle, useAnnotations, type Color } from '@annotorious/react';
+import { useAnnotations, type Color } from '@annotorious/react';
 import { enumerateTags } from '@components/AnnotationDesktop';
 import { AdobeCategorical12 } from '../ColorPalettes';
 import type { ColorCoding } from '../ColorCoding';
 import { createPalette } from './utils';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 const PALETTE = AdobeCategorical12;
 
@@ -16,13 +17,13 @@ export const useColorByFirstTag = (): ColorCoding => {
   const { getColor } = useMemo(() => createPalette(PALETTE), []);
 
   const style = useMemo(() => {
-    return (annotation: Annotation, state?: AnnotationState): DrawingStyle => {
+    return (annotation: SupabaseAnnotation): Color => {
       const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
 
       if (firstTag) {
-        return { fill: getColor(firstTag), fillOpacity: state?.selected ? 0.5: 0.24 };
+        return getColor(firstTag);
       } else {
-        return { fill: NO_TAG, fillOpacity: state?.selected ? 0.5: 0.24 };
+        return NO_TAG;
       }
     }
   }, [getColor]);

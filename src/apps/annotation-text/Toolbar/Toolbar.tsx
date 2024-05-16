@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
-import type { PresentUser } from '@annotorious/react';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { Color, PresentUser } from '@annotorious/react';
 import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface ToolbarProps {
 
@@ -33,7 +33,7 @@ interface ToolbarProps {
 
   onChangePrivacy(mode: PrivacyMode): void;
 
-  onChangeStyle(style?: HighlightStyleExpression): void;
+  onChangeStyle(style?: (a: SupabaseAnnotation) => Color): void;
 
   onToggleBranding(): void;
 
