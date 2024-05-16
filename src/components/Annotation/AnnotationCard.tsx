@@ -3,7 +3,6 @@ import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { Extension, usePlugins } from '@components/Plugins';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
@@ -89,10 +88,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   const borderStyle = props.borderColor ? 
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
-  const plugins = usePlugins('annotation.*.annotation-editor');
-
   // Update isNew when anntoation changes
-  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id]);
+  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
 
   const comments = annotation.bodies
     .filter(b => !b.purpose || b.purpose === 'commenting')
@@ -240,6 +237,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             onBulkDeleteBodies={props.onBulkDeleteBodies}
             onMakePublic={() => onMakePublic()}
             onSubmit={onSubmit}
+            onUpdateAnnotation={props.onUpdateAnnotation}
             onUpdateBody={props.onUpdateBody} />
         </li>
 
@@ -279,6 +277,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               onBulkDeleteBodies={props.onBulkDeleteBodies}
               onMakePublic={() => onMakePublic()}
               onSubmit={props.onSubmit}
+              onUpdateAnnotation={props.onUpdateAnnotation}
               onUpdateBody={props.onUpdateBody} />
           </animated.li>
         ))}
@@ -306,20 +305,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               onBulkDeleteBodies={props.onBulkDeleteBodies}
               onMakePublic={() => onMakePublic()}
               onSubmit={props.onSubmit}
+              onUpdateAnnotation={props.onUpdateAnnotation}
               onUpdateBody={props.onUpdateBody} />
           </li>
         )}
       </ul>
-
-      {plugins.map(plugin => (
-        <Extension 
-          key={plugin.meta.id}
-          plugin={plugin}
-          extensionPoint="annotation.*.annotation-editor"
-          me={me}
-          annotation={annotation} 
-          onUpdateAnnotation={props.onUpdateAnnotation} />
-      ))}
 
       {replyFieldTransition((style, open) => open && (
         <animated.div style={style}>
