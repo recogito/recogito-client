@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
-import { isMe } from '@recogito/annotorious-supabase';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
-import { Avatar } from '@components/Avatar';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
@@ -69,8 +67,6 @@ export const Toolbar = (props: ToolbarProps) => {
   const { numConditions } = useFilter();
 
   const back = `/${props.i18n.lang}/projects/${project_id}`;
-
-  const me = props.present.find(isMe)!;
 
   const plugins = usePlugins('annotation.image.toolbar');
 
@@ -207,18 +203,6 @@ export const Toolbar = (props: ToolbarProps) => {
         {plugins.length > 0 && (
           <div className="anno-toolbar-divider" />
         )}
-
-        {me && (
-          <div className="anno-toolbar-me">
-            <Avatar 
-              id={me.id}
-              name={me.appearance.label}
-              color={me.appearance.color} 
-              avatar={me.appearance.avatar} />
-          </div>
-        )}
-
-        <div className="anno-toolbar-divider" />
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}
