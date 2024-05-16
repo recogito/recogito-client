@@ -79,6 +79,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     // Remove user from this project
     setProject((project) => ({
       ...project,
+      users: project.users.filter((u) => u.user.id !== member.user.id),
       groups: project.groups.map((group) => ({
         ...group,
         members: group.members.filter((m) => m.user.id !== member.user.id),
