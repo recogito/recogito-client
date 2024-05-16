@@ -88,9 +88,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   const borderStyle = props.borderColor ? 
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
-  // Update isNew when anntoation changes
-  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
-
   const comments = annotation.bodies
     .filter(b => !b.purpose || b.purpose === 'commenting')
     .slice()
@@ -118,6 +115,9 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   // If this is my annotation and has no bodies on mount, it's a new annotation
   const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
+
+  // Update isNew when anntoation changes
+  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
