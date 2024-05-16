@@ -18,7 +18,6 @@ import { useIIIF, ManifestErrorDialog } from './IIIF';
 import {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
-  DrawingStyle,
   DrawingStyleExpression,
   ImageAnnotation,
   PresentUser,
@@ -79,19 +78,20 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
 
-    const readOnlyStyle: DrawingStyle = {
+    const readOnlyStyle = (selected?: boolean) => ({
       fillOpacity: 0,
       stroke: '#010101',
-      strokeOpacity: 1,
-      strokeWidth: 2
-    };
+      strokeOpacity: selected ? 1 : 0.65,
+      strokeWidth: selected ? 2.5 : 2
+    });
 
     return (annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
-      return (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle : 
-      defaultLayerStyle 
-        ? typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a as ImageAnnotation, state) : defaultLayerStyle 
-        : undefined;
+      return (a.layer_id && readOnly.has(a.layer_id)) 
+        ? readOnlyStyle(state?.selected)
+        : defaultLayerStyle 
+          ? typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a as ImageAnnotation, state) : defaultLayerStyle 
+          : undefined;
     }
   }, [defaultLayerStyle, layers]);
 
