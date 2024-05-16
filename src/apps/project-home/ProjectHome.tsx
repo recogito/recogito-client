@@ -53,7 +53,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   useEffect(() => {
     if (!tab && projectPolicies) {
-      if (isAdmin) {
+      if (isAdmin || props.project.is_open_edit) {
         setTab('documents');
       } else {
         setTab('assignments');

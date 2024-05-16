@@ -81,6 +81,13 @@ export const assignmentSpecToContext = (spec: AssignmentSpec) => {
     description: spec.description,
     project_id: spec.project_id,
     created_at: new Date().toISOString(),
+    members: spec.team.map((t) => {
+      return {
+        id: '',
+        user_id: t.id,
+        user: t,
+      };
+    }),
     context_users: spec.team.map((t) => {
       return {
         user_id: t.id,

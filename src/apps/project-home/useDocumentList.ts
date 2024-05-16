@@ -20,6 +20,7 @@ export const useDocumentList = (
             console.log(error);
           } else {
             setDataDirty(true);
+            // @ts-ignore
             onAdded(data[0]);
           }
         })
