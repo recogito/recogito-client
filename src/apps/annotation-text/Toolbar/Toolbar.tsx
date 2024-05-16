@@ -2,16 +2,16 @@ import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import { isMe } from '@recogito/annotorious-supabase';
-import { ColorCodingSelector, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
-import { Avatar } from '@components/Avatar';
+import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
-import type { DocumentLayer, DocumentWithContext, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 
 interface ToolbarProps {
+
+  activeLayer?: DocumentLayer;
 
   document: DocumentWithContext;
 
@@ -22,6 +22,8 @@ interface ToolbarProps {
   layerNames: Map<string, string>;
 
   leftDrawerOpen: boolean;
+
+  policies?: Policies;
 
   present: PresentUser[];
 
@@ -57,8 +59,6 @@ export const Toolbar = (props: ToolbarProps) => {
   
   const back = `/${props.i18n.lang}/projects/${project_id}`;
 
-  const me = props.present.find(isMe)!;
-
   const plugins = usePlugins('annotation.text.toolbar');
 
   const colorCoding = useColorCoding();
@@ -68,7 +68,7 @@ export const Toolbar = (props: ToolbarProps) => {
       props.onChangeStyle(colorCoding.style);
     else
       props.onChangeStyle();
-  }, [colorCoding])
+  }, [colorCoding]);
 
   return (
     <div className="anno-toolbar ta-toolbar">
@@ -131,6 +131,11 @@ export const Toolbar = (props: ToolbarProps) => {
           </div>
         )}
 
+        <DeleteSelected
+          activeLayer={props.activeLayer}
+          i18n={props.i18n}
+          policies={props.policies} />
+
         <ColorCodingSelector 
           i18n={props.i18n} 
           present={props.present} 
@@ -152,16 +157,6 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        {/*me && (
-          <div className="anno-toolbar-me">
-            <Avatar 
-              id={me.id}
-              name={me.appearance.label}
-              color={me.appearance.color} 
-              avatar={me.appearance.avatar} />
-          </div>
-        ) */}
-
         <div className="anno-toolbar-divider" />
 
         {plugins.map(plugin => (
@@ -175,12 +170,6 @@ export const Toolbar = (props: ToolbarProps) => {
         {plugins.length > 0 && (
           <div className="anno-toolbar-divider" />
         )}
-
-        {/* <button onClick={props.onToggleBranding}>
-          <ArrowsOutSimple size={17} />
-        </button>
-
-        <div className="anno-toolbar-divider" /> */}
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}

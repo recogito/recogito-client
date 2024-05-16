@@ -128,8 +128,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   };
 
-
-
   const sorting =
     props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
@@ -178,6 +176,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           </animated.div>
 
           <Toolbar
+            activeLayer={activeLayer}
             i18n={props.i18n}
             document={props.document}
             present={present}
@@ -185,6 +184,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             layers={layers}
             layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
+            policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError} 
             onChangePrivacy={setPrivacy}

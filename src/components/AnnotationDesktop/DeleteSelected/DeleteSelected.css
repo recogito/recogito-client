@@ -1,0 +1,7 @@
+.anno-toolbar button.delete-selected {
+  background-color: var(--red-500);
+}
+
+.anno-toolbar button.delete-selected svg {
+  color: #fff;
+}
