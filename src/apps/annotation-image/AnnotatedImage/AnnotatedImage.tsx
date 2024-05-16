@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -73,6 +73,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const { filter } = useFilter();
 
+  // Workaround
+  const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
+
+  useEffect(() => {
+    annoRef.current = anno;
+  }, [anno]);
+
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
     gestureSettingsMouse: {
@@ -92,12 +99,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const selectAction = (annotation: SupabaseAnnotation) => {
     // Annotation targets are editable for creators and admins
-    const me = anno?.getUser()?.id;
-
     const isActiveLayer = annotation.layer_id === props.activeLayer?.id;
 
+    const me = annoRef.current?.getUser();
+
     const canEdit = isActiveLayer && (
-      annotation.target.creator?.id === me || policies.get('layers').has('INSERT'));
+      annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
     return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
   }

@@ -1,20 +1,27 @@
 .annotation.empty {
-  padding-bottom: 10px;
   --anim-dot-size: 3px;
   --anim-color: var(--gray-900);
   --anim-h-offset: 6px;
   --anim-v-offset: -5px;
 }
 
+.annotation.empty.typing .annotation-header {
+  margin-bottom: 6px;
+}
+
 .annotation.empty .quill-rte .ql-editor {
   height: 80px;
 }
 
-.annotation.empty .typing{
-  padding: 3px 0 4px 1px;
+.annotation.empty .annotation-footer {
+  padding-bottom: 10px;
 }
 
 .annotation.empty .typing-animation {
+  padding: 3px 0 4px 1px;
+}
+
+.annotation.empty .typing-animation > div {
   animation: dot-typing 1.4s infinite linear;
   background-color: var(--anim-color);
   border-radius: var(--anim-dot-size);

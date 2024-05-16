@@ -17,7 +17,7 @@ const stringToHash = (str: string) => {
 const createAppearenceProvider = (colors: AuthorColors): AppearanceProvider => {
   
   const addUser = (presenceKey: string, user: User): Appearance => {
-    const color = colors.getColor(user);
+    const color = colors.getColor(user)!;
 
     const label = user.name ? 
       user.name : 

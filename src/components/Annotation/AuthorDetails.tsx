@@ -23,7 +23,7 @@ export const AuthorDetails = (props: AuthorDetailsProps) => {
   const { t, lang } = props.i18n;
 
   const authorName = creator && 'appearance' in creator ? 
-    creator.appearance.label : t['Anonymous'];
+    creator.appearance.label : creator?.name || t['Anonymous'];
 
   return (
     <div className="author-details">

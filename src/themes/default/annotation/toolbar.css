@@ -51,6 +51,11 @@
   width: 36px;
 }
 
+.anno-toolbar button:disabled {
+  background-color: transparent;
+  border-color: transparent;
+}
+
 .anno-toolbar button > svg {
   color: var(--font-dark);
 }
@@ -101,17 +106,12 @@
 }
 
 .anno-toolbar .avatar {
-  height: 36px;
-  width: 36px;
+  height: 32px;
+  width: 32px;
 }
 
 .anno-toolbar .avatar .avatar-fallback {
   font-size: 11.5px;
-}
-
-.anno-toolbar .presence-stack .avatar {
-  height: 34px;
-  width: 34px;
 }
 
 .anno-toolbar .avatar:hover {

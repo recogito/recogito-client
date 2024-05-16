@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
+import { Extension, usePlugins } from '@components/Plugins';
 import { QuillEditor, QuillEditorRoot, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
@@ -53,6 +54,8 @@ export interface AnnotationCardSectionProps {
 
   onSubmit(): void;
 
+  onUpdateAnnotation(updated: SupabaseAnnotation): void;
+
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
 }
@@ -69,14 +72,14 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { t } = props.i18n;
 
+  const plugins = usePlugins('annotation.*.annotation-editor');
+
   const [editable, setEditable] = useState(false);
 
-  const firstBody = [props.comment, ...(props.tags || [])].filter(Boolean)[0];
+  const firstBody = props.annotation.bodies[0];
 
   const creator: PresentUser | User | undefined = firstBody &&
     (present.find(p => p.id === firstBody.creator?.id) || firstBody.creator);
-
-  const hasReplies = props.annotation.bodies.filter(b => b.purpose === 'commenting').length > 1;
 
   const isMine = creator?.id === me.id;
 
@@ -98,8 +101,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const onSave = () => {   
     if (commentValue && !isEmpty(commentValue)) {
-      console.log(commentValue);
-
       // Update existing or create new
       const next = comment ? {
         ...comment,
@@ -181,7 +182,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <div className="annotation-header-right">
             {isPrivate ? (
               <PrivateAnnotationActions
-                hasReplies={hasReplies}
                 i18n={props.i18n} 
                 isFirst={props.index === 0}
                 onDeleteAnnotation={props.onDeleteAnnotation}
@@ -190,7 +190,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 onMakePublic={props.onMakePublic}/>
             ) : (
               <PublicAnnotationActions 
-                hasReplies={hasReplies}
                 i18n={props.i18n} 
                 isFirst={props.index === 0} 
                 isMine={isMine}
@@ -228,20 +227,32 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       )}
 
       {editable && (
-        <div className="annotation-section-footer align-right">
-          <button 
-            className="sm flat unstyled"
-            onClick={() => setEditable(false)}>
-            {t['Cancel']}
-          </button>
+          <div className="annotation-section-footer align-right">
+            <button 
+              className="sm flat unstyled"
+              onClick={() => setEditable(false)}>
+              {t['Cancel']}
+            </button>
 
-          <button 
-            className="sm flat primary"
-            onClick={onSave}>
-            {t['Save']}
-          </button>
-        </div>
+            <button 
+              className="sm flat primary"
+              onClick={onSave}>
+              {t['Save']}
+            </button>
+          </div>
       )}
+
+      {props.index === 0 ? plugins.map(plugin => (
+        <Extension 
+          key={plugin.meta.id}
+          annotation={props.annotation} 
+          extensionPoint="annotation.*.annotation-editor"
+          isEditable={editable}
+          isSelected={props.isSelected}
+          me={me}
+          plugin={plugin}
+          onUpdateAnnotation={props.onUpdateAnnotation} />
+      )) : null}
     </div>
   )
 

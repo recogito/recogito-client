@@ -1,15 +1,13 @@
+import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
-import type { PresentUser } from '@annotorious/react';
-import { isMe } from '@recogito/annotorious-supabase';
-import { ColorCodingSelector, ErrorBadge } from '@components/AnnotationDesktop';
-import { Avatar } from '@components/Avatar';
+import type { Color, PresentUser } from '@annotorious/react';
+import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
-import type { DocumentWithContext, Translations } from 'src/Types';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface ToolbarProps {
 
@@ -17,7 +15,13 @@ interface ToolbarProps {
 
   i18n: Translations;
 
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
+
   leftDrawerOpen: boolean;
+
+  policies?: Policies;
 
   present: PresentUser[];
 
@@ -29,7 +33,7 @@ interface ToolbarProps {
 
   onChangePrivacy(mode: PrivacyMode): void;
 
-  onChangeStyle(style?: HighlightStyleExpression): void;
+  onChangeStyle(style?: (a: SupabaseAnnotation) => Color): void;
 
   onToggleBranding(): void;
 
@@ -53,9 +57,16 @@ export const Toolbar = (props: ToolbarProps) => {
   
   const back = `/${props.i18n.lang}/projects/${project_id}`;
 
-  const me = props.present.find(isMe)!;
-
   const plugins = usePlugins('annotation.text.toolbar');
+
+  const colorCoding = useColorCoding();
+
+  useEffect(() => {
+    if (colorCoding?.style)
+      props.onChangeStyle(colorCoding.style);
+    else
+      props.onChangeStyle();
+  }, [colorCoding]);
 
   return (
     <div className="anno-toolbar ta-toolbar">
@@ -118,9 +129,19 @@ export const Toolbar = (props: ToolbarProps) => {
           </div>
         )}
 
+        <DeleteSelected
+          activeLayer={props.layers?.find(l => l.is_active)}
+          i18n={props.i18n}
+          policies={props.policies} />
+
         <ColorCodingSelector 
           i18n={props.i18n} 
-          onChange={props.onChangeStyle} />
+          present={props.present} 
+          layers={props.layers}
+          layerNames={props.layerNames} />
+
+        <ColorLegend 
+          i18n={props.i18n} />
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-right">  
@@ -132,16 +153,6 @@ export const Toolbar = (props: ToolbarProps) => {
 
             <div className="anno-desktop-overlay-divider" />
           </>
-        )}
-
-        {me && (
-          <div className="anno-toolbar-me">
-            <Avatar 
-              id={me.id}
-              name={me.appearance.label}
-              color={me.appearance.color} 
-              avatar={me.appearance.avatar} />
-          </div>
         )}
 
         <div className="anno-toolbar-divider" />
@@ -157,12 +168,6 @@ export const Toolbar = (props: ToolbarProps) => {
         {plugins.length > 0 && (
           <div className="anno-toolbar-divider" />
         )}
-
-        {/* <button onClick={props.onToggleBranding}>
-          <ArrowsOutSimple size={17} />
-        </button>
-
-        <div className="anno-toolbar-divider" /> */}
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}

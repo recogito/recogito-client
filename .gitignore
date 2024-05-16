@@ -9,11 +9,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-src/components/Plugins/deployedPlugins.ts
-
 .env
 .env.production
 .idea
 
+src/components/Plugins/deployedPlugins.ts
+plugins/**
 public/pdf.worker.min.mjs
+
 .DS_Store

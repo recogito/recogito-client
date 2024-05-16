@@ -2,8 +2,7 @@ import { Annotorious } from '@annotorious/react';
 import { type PluginInstallationConfig, PluginProvider } from '@components/Plugins';
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
 import type { DocumentWithContext, Translations } from 'src/Types';
-import { AuthorColorProvider } from '@components/AnnotationDesktop';
-import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { AuthorColorProvider, ColorState, FilterState } from '@components/AnnotationDesktop';
 
 export interface TextAnnotationProps {
 
@@ -25,9 +24,11 @@ export const TextAnnotation = (props: TextAnnotationProps) => {
     <PluginProvider plugins={props.plugins}>
       <AuthorColorProvider>
         <FilterState>
-          <Annotorious>
-            <TextAnnotationDesktop {...props} />
-          </Annotorious>
+          <ColorState>
+            <Annotorious>
+              <TextAnnotationDesktop {...props} />
+            </Annotorious>
+          </ColorState>
         </FilterState>
       </AuthorColorProvider>
     </PluginProvider>

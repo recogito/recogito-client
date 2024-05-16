@@ -16,13 +16,20 @@
 
 .anno-drawer-panel.annotation-list > ul > li .annotation {
   margin: 0;
-  transition: margin 400ms ease-in;
+  transition: margin 500ms ease-in-out, opacity 200ms ease-out; 
+}
+
+.anno-drawer-panel.annotation-list.has-selected > ul > li .annotation:not(.selected) {
+  cursor: pointer;
+  filter: grayscale(0.8) contrast(0.65) brightness(1.25);
+  opacity: 0.45;
 }
 
 .anno-drawer-panel.annotation-list > ul > li .annotation.selected {
   margin: 25px 0;
-  box-shadow: 0 0 6px 3px rgba(7, 82, 154, 0.25);
-  transition: margin 100ms ease-out;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
+    1px 1px 8px 0 rgba(0, 0, 0, 0.08);
+  transition: margin 300ms ease-out;
 }
 
 .anno-drawer-panel.annotation-list .annotation-card {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAnnotatorUser } from '@annotorious/react';
-import { animated, useTransition } from '@react-spring/web';
+import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { AnnotationCardSection } from './AnnotationCardSection';
@@ -85,18 +85,10 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   const { annotation } = props;
 
-  // Update isNew when anntoation changes
-  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id]);
-
-  const onSubmit = () => {
-    setIsNew(false);
-    props.onSubmit();
-  }
+  const el = useRef<HTMLDivElement>(null);
 
   const borderStyle = props.borderColor ? 
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
-
-  // const plugins = usePlugins('annotation.*.annotation-editor');
 
   const comments = annotation.bodies
     .filter(b => !b.purpose || b.purpose === 'commenting')
@@ -126,18 +118,39 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   // If this is my annotation and has no bodies on mount, it's a new annotation
   const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
 
+  // Update isNew when anntoation changes
+  useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
+
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
 
-  const transition = useTransition(isCollapsed ? 
+  const interstitialTtransition = useTransition(isCollapsed ? 
     [] : comments.slice(1, comments.length - 1), {
       from: { maxHeight: '0vh' },
       enter: { maxHeight: '40vh' },
       leave: { maxHeight: '0vh' },
-      config: { duration: shouldAnimate ? 350 : 0 },
+      config: { 
+        duration: shouldAnimate ? 350 : 0,
+        easing: easings.easeInOutCubic 
+      }
     }
   );
+
+  const replyFieldTransition = useTransition([props.showReplyField], {
+    from: { maxHeight: '0px' },
+    enter: { maxHeight: `${document.documentElement.clientHeight * 0.3 + 80}px` },
+    leave: { maxHeight: '0px' },
+    config: { 
+      duration: 300,
+      easing: easings.easeOutCubic
+    }
+  });
+
+  const onSubmit = () => {
+    setIsNew(false);
+    props.onSubmit();
+  }
 
   const onMakePublic = () =>
     props.onUpdateAnnotation({
@@ -170,7 +183,13 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   }, [comments.map(c => c.id).join(',')]);
 
   useEffect(() => {
-    if (!props.isSelected) setShouldCollapse(true);
+    if (props.isSelected) {
+      setTimeout(() => {
+        el.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });  
+      }, 1);
+    } else {
+      setShouldCollapse(true);
+    }
   }, [props.isSelected]);
 
   useEffect(() => {
@@ -186,126 +205,137 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     props.isReadOnly ? 'readonly' : undefined
   ].filter(Boolean).join(' ');
 
-  // Annotation is not empty if it has a comment, tags or both
-  const isEmpty = comments.length + tags.length === 0;
-
-  return (isEmpty || isNew) ? (
-    <EmptyAnnotation 
-      annotation={annotation} 
-      autoFocus={props.autoFocus}
-      i18n={props.i18n}
-      me={me} 
-      present={props.present}
-      tagVocabulary={props.tagVocabulary}
-      onCreateBody={props.onCreateBody} 
-      onDeleteBody={props.onDeleteBody} 
-      onSubmit={onSubmit} />   
-  ) : !isEmpty && (
-    <div style={borderStyle} className={className}>
-      <ul>
-        <li>
-          <AnnotationCardSection
-            annotation={annotation}
-            comment={comments[0]}
-            tags={tags}
-            i18n={props.i18n}
-            index={0}
-            isPrivate={isPrivate}
-            isReadOnly={props.isReadOnly}
-            isSelected={props.isSelected}
-            me={me}
-            policies={props.policies}
-            present={props.present}
-            tagVocabulary={props.tagVocabulary}
-            onDeleteAnnotation={props.onDeleteAnnotation}
-            onCreateBody={props.onCreateBody}
-            onDeleteBody={props.onDeleteBody}
-            onBulkDeleteBodies={props.onBulkDeleteBodies}
-            onMakePublic={() => onMakePublic()}
-            onSubmit={onSubmit}
-            onUpdateBody={props.onUpdateBody} />
-        </li>
-
-        {isCollapsed && (
-          <li className="interstitial-wrapper">
-            <Interstitial
-              i18n={props.i18n}
-              count={comments.length - 2}
-              onClick={() => setShouldCollapse(false)} />
-          </li>
-        )}
-
-        {transition((style, comment, _, index) => (
-          <animated.li
-            key={comment.id}
-            style={{
-              ...style,
-              overflow: 'hidden',
-              zIndex: comments.length - index - 1,
-            }}>
-            <AnnotationCardSection
-              annotation={annotation}
-              comment={comment}
-              emphasizeOnEntry={!dontEmphasise.current.has(comment.id)}
-              i18n={props.i18n}
-              index={index + 1}
-              isPrivate={isPrivate}
-              isReadOnly={props.isReadOnly}
-              isSelected={props.isSelected}
-              me={me}
-              policies={props.policies}
-              present={props.present}
-              tagVocabulary={props.tagVocabulary}
-              onDeleteAnnotation={props.onDeleteAnnotation}
-              onCreateBody={props.onCreateBody}
-              onDeleteBody={props.onDeleteBody}
-              onBulkDeleteBodies={props.onBulkDeleteBodies}
-              onMakePublic={() => onMakePublic()}
-              onSubmit={props.onSubmit}
-              onUpdateBody={props.onUpdateBody} />
-          </animated.li>
-        ))}
-
-        {comments.length > 1 && (
-          <li style={{ zIndex: 1 }}>
-            <AnnotationCardSection
-              annotation={annotation}
-              comment={comments[comments.length - 1]}
-              emphasizeOnEntry={!dontEmphasise.current.has(
-                comments[comments.length - 1].id
-              )}
-              i18n={props.i18n}
-              index={comments.length - 1}
-              isPrivate={isPrivate}
-              isReadOnly={props.isReadOnly}
-              isSelected={props.isSelected}
-              me={me}
-              policies={props.policies}
-              present={props.present}
-              tagVocabulary={props.tagVocabulary}
-              onDeleteAnnotation={props.onDeleteAnnotation}
-              onCreateBody={props.onCreateBody}
-              onDeleteBody={props.onDeleteBody}
-              onBulkDeleteBodies={props.onBulkDeleteBodies}
-              onMakePublic={() => onMakePublic()}
-              onSubmit={props.onSubmit}
-              onUpdateBody={props.onUpdateBody} />
-          </li>
-        )}
-      </ul>
-
-      {props.showReplyField && (
-        <ReplyField 
-          autoFocus
+  return (
+    <div ref={el}>
+      {isNew ? (
+        <EmptyAnnotation 
+          annotation={annotation} 
+          autoFocus={props.autoFocus}
           i18n={props.i18n}
-          isPrivate={isPrivate}
-          annotation={props.annotation}
-          me={me}
-          placeholder={props.i18n.t['Reply']}
-          beforeSubmit={beforeReply} 
-          onSubmit={onReply} />
+          isSelected={props.isSelected}
+          me={me} 
+          present={props.present}
+          tagVocabulary={props.tagVocabulary}
+          onBulkDeleteBodies={props.onBulkDeleteBodies}
+          onCreateBody={props.onCreateBody} 
+          onDeleteAnnotation={props.onDeleteAnnotation}
+          onDeleteBody={props.onDeleteBody}
+          onMakePublic={onMakePublic} 
+          onSubmit={onSubmit}
+          onUpdateAnnotation={props.onUpdateAnnotation} 
+          onUpdateBody={props.onUpdateBody} />   
+      ) : (
+        <div style={borderStyle} className={className}>
+          <ul>
+            <li>
+              <AnnotationCardSection
+                annotation={annotation}
+                comment={comments[0]}
+                tags={tags}
+                i18n={props.i18n}
+                index={0}
+                isPrivate={isPrivate}
+                isReadOnly={props.isReadOnly}
+                isSelected={props.isSelected}
+                me={me}
+                policies={props.policies}
+                present={props.present}
+                tagVocabulary={props.tagVocabulary}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onCreateBody={props.onCreateBody}
+                onDeleteBody={props.onDeleteBody}
+                onBulkDeleteBodies={props.onBulkDeleteBodies}
+                onMakePublic={() => onMakePublic()}
+                onSubmit={onSubmit}
+                onUpdateAnnotation={props.onUpdateAnnotation}
+                onUpdateBody={props.onUpdateBody} />
+            </li>
+
+            {isCollapsed && (
+              <li className="interstitial-wrapper">
+                <Interstitial
+                  i18n={props.i18n}
+                  count={comments.length - 2}
+                  onClick={() => setShouldCollapse(false)} />
+              </li>
+            )}
+
+            {interstitialTtransition((style, comment, _, index) => (
+              <animated.li
+                key={comment.id}
+                style={{
+                  ...style,
+                  overflow: 'hidden',
+                  zIndex: comments.length - index - 1,
+                }}>
+                <AnnotationCardSection
+                  annotation={annotation}
+                  comment={comment}
+                  emphasizeOnEntry={!dontEmphasise.current.has(comment.id)}
+                  i18n={props.i18n}
+                  index={index + 1}
+                  isPrivate={isPrivate}
+                  isReadOnly={props.isReadOnly}
+                  isSelected={props.isSelected}
+                  me={me}
+                  policies={props.policies}
+                  present={props.present}
+                  tagVocabulary={props.tagVocabulary}
+                  onDeleteAnnotation={props.onDeleteAnnotation}
+                  onCreateBody={props.onCreateBody}
+                  onDeleteBody={props.onDeleteBody}
+                  onBulkDeleteBodies={props.onBulkDeleteBodies}
+                  onMakePublic={() => onMakePublic()}
+                  onSubmit={props.onSubmit}
+                  onUpdateAnnotation={props.onUpdateAnnotation}
+                  onUpdateBody={props.onUpdateBody} />
+              </animated.li>
+            ))}
+
+            {comments.length > 1 && (
+              <li style={{ zIndex: 1 }}>
+                <AnnotationCardSection
+                  annotation={annotation}
+                  comment={comments[comments.length - 1]}
+                  emphasizeOnEntry={!dontEmphasise.current.has(
+                    comments[comments.length - 1].id
+                  )}
+                  i18n={props.i18n}
+                  index={comments.length - 1}
+                  isPrivate={isPrivate}
+                  isReadOnly={props.isReadOnly}
+                  isSelected={props.isSelected}
+                  me={me}
+                  policies={props.policies}
+                  present={props.present}
+                  tagVocabulary={props.tagVocabulary}
+                  onDeleteAnnotation={props.onDeleteAnnotation}
+                  onCreateBody={props.onCreateBody}
+                  onDeleteBody={props.onDeleteBody}
+                  onBulkDeleteBodies={props.onBulkDeleteBodies}
+                  onMakePublic={() => onMakePublic()}
+                  onSubmit={props.onSubmit}
+                  onUpdateAnnotation={props.onUpdateAnnotation}
+                  onUpdateBody={props.onUpdateBody} />
+              </li>
+            )}
+          </ul>
+
+          {replyFieldTransition((style, open) => open && (
+            <animated.div style={style}>
+              <ReplyField
+                autoFocus
+                i18n={props.i18n}
+                isPrivate={isPrivate}
+                annotation={props.annotation}
+                me={me}
+                placeholder={props.i18n.t['Reply']}
+                beforeSubmit={beforeReply} 
+                onSubmit={onReply} />
+            </animated.div>
+          ))}
+        </div>
       )}
     </div>
   )
-
 }

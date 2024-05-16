@@ -18,7 +18,7 @@ import { useIIIF, ManifestErrorDialog } from './IIIF';
 import {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
-  DrawingStyle,
+  Color,
   DrawingStyleExpression,
   ImageAnnotation,
   PresentUser,
@@ -26,6 +26,14 @@ import {
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';
+
+const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (_: ImageAnnotation, state?: AnnotationState) => ({
+  fill: '#0080ff',
+  fillOpacity: state?.hovered ? 0.28 : 0.2,
+  stroke: '#0080ff',
+  strokeOpacity: state?.selected ? 0.9 : 0.5,
+  strokeWidth: state?.selected ? 2 : 1
+});
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
@@ -72,28 +80,49 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [defaultLayerStyle, setDefaultLayerStyle] =
-    useState<DrawingStyleExpression<ImageAnnotation> | undefined>(undefined);
+  const [activeLayerStyle, setActiveLayerStyle] =
+    useState<DrawingStyleExpression<ImageAnnotation>>(() => DEFAULT_STYLE);
+
+    const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+      if (style) {
+        const hse: DrawingStyleExpression<ImageAnnotation> = 
+          (a: SupabaseAnnotation, state?: AnnotationState) => {
+            const color = style(a);
+            
+            return {
+              fill: color,
+              fillOpacity: state?.hovered ? 0.28 : 0.2,
+              stroke: color,
+              strokeOpacity: state?.selected ? 0.9 : 0.5,
+              strokeWidth: state?.selected ? 2 : 1
+            }
+          };
+  
+        setActiveLayerStyle(() => hse);
+      } else {
+        setActiveLayerStyle(() => DEFAULT_STYLE);
+      }
+    }
 
   // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
 
-    const readOnlyStyle: DrawingStyle = {
-      fillOpacity: 0,
+    const readOnlyStyle = (state?: AnnotationState) => ({
+      fill: '#010101',
+      fillOpacity: state?.hovered ? 0.1 : 0,
       stroke: '#010101',
-      strokeOpacity: 1,
-      strokeWidth: 2
-    };
+      strokeOpacity: state?.selected ? 1 : 0.65,
+      strokeWidth: state?.selected ? 2.5 : 2
+    });
 
     return (annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
-      return (a.layer_id && readOnly.has(a.layer_id)) ? readOnlyStyle : 
-      defaultLayerStyle 
-        ? typeof defaultLayerStyle === 'function' ? defaultLayerStyle(a as ImageAnnotation, state) : defaultLayerStyle 
-        : undefined;
+      return (a.layer_id && readOnly.has(a.layer_id)) 
+        ? readOnlyStyle(state)
+        : typeof activeLayerStyle === 'function' ? activeLayerStyle(a as ImageAnnotation, state) : activeLayerStyle;
     }
-  }, [defaultLayerStyle, layers]);
+  }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -144,8 +173,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       if (anno.state.selection.isSelected(a))
         return;
 
-      console.log('before select');
-
       const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
       const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
@@ -173,12 +200,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             document={props.document}
             present={present}
             privacy={privacy}
+            layers={layers}
+            layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
+            policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
             tool={tool}
             onChangePrivacy={setPrivacy}
-            onChangeStyle={s => setDefaultLayerStyle(() => s)}
+            onChangeStyle={onChangeStyle}
             onChangeTool={setTool}
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}

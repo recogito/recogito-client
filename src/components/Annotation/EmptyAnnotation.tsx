@@ -5,22 +5,26 @@ import type { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
+import { Extension, usePlugins } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
+import { AnnotationCardSection } from './AnnotationCardSection';
 import { TagList } from './TagList';
 import type { Translations } from 'src/Types';
 
 import './EmptyAnnotation.css';
 
 interface EmptyAnnotationProps {
+
+  annotation: SupabaseAnnotation;
   
   autoFocus?: boolean;
 
   i18n: Translations;
 
-  annotation: SupabaseAnnotation;
-
   isNote?: boolean;
+
+  isSelected?: boolean;
 
   me: PresentUser | User;
 
@@ -28,11 +32,21 @@ interface EmptyAnnotationProps {
 
   tagVocabulary?: string[];
 
+  onBulkDeleteBodies(bodies: AnnotationBody[]): void;
+
   onCreateBody(body: AnnotationBody): void;
 
   onDeleteBody(body: AnnotationBody): void;
 
+  onDeleteAnnotation(): void;
+
+  onMakePublic(): void;
+
   onSubmit(): void;
+
+  onUpdateAnnotation(updated: SupabaseAnnotation): void;
+
+  onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
 
 }
 
@@ -41,6 +55,8 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
   const { t } = props.i18n;
 
   const { target } = props.annotation;
+
+  const plugins = usePlugins('annotation.*.annotation-editor');
 
   const creator: PresentUser | User | undefined = 
     props.present.find(p => p.id === target.creator?.id) || target.creator;
@@ -96,6 +112,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
   const className = [
     'annotation empty',
+    props.isSelected ? 'selected' : undefined,
     props.isNote ? 'note' : undefined,
     isPrivate ? 'private' : undefined
   ].filter(Boolean).join(' ');
@@ -144,9 +161,19 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           </button>
         </div>
       </QuillEditorRoot>
+
+      {plugins.map(plugin => (
+        <Extension 
+          key={plugin.meta.id}
+          plugin={plugin}
+          extensionPoint="annotation.*.annotation-editor"
+          me={props.me}
+          annotation={props.annotation} 
+          onUpdateAnnotation={props.onUpdateAnnotation} />
+      ))}
     </div>
   ) : (
-    <div className={className}>
+    <div className={`${className} typing`}>
       <div className="annotation-header">
         <div className="annotation-header-left">
           <AuthorAvatar 
@@ -159,8 +186,8 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
               isPrivate={isPrivate} 
               creator={creator} />
 
-            <div className="typing">
-              <div className="typing-animation" />
+            <div className="typing-animation">
+              <div />
             </div>
           </div>
         </div>

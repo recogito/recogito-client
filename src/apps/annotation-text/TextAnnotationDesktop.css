@@ -44,7 +44,9 @@ html, body {
 
 .ta-desktop main .ta-annotated-text-container .page-wrapper {
   background-color: #fff;
-  box-shadow: 0 0 16px -8px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.34);
+  box-shadow: 
+    0 0 1px rgba(0, 0, 0, 0.34),
+    0 0 16px -8px rgba(0, 0, 0, 0.18);
   min-width: 65ch;
   overflow-y: scroll;
   z-index: 10;
@@ -73,7 +75,14 @@ html, body {
 }
 
 .ta-desktop .annotation-list .annotation:not(.readonly) {
-  box-shadow: 0 0 16px -7px rgba(0, 0, 0, 0.18);
+  box-shadow: 
+    0 0 1px 0 rgba(0, 0, 0, 0.18),
+    0 0 16px -7px rgba(0, 0, 0, 0.25);
+}
+
+.ta-desktop .anno-drawer-panel.annotation-list > ul > li .annotation.selected {
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
+    2px 3px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 .a9s-popup {

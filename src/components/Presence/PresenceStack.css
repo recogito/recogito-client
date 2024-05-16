@@ -1,33 +1,58 @@
-.presence-stack ul {
+.presence {
+  align-items: center;
+  display: flex;
+  gap: 1px;
+}
+
+.presence button {
+  display: block;
+  margin:0;
+  padding: 0;
+}
+
+.presence-stack .avatar {
+  cursor: pointer;
+}
+
+.presence ul {
   display: flex;
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.presence-stack li {
-  display: inline-block;
+.presence-stack li, .presence-stack button {
+  display: flex;
 }
 
 .presence-stack li + li {
-  margin-left: -7px;
+  margin-left: -8px;
 }
 
-.presence-stack .avatar {
-  letter-spacing: 0.05ch;
+.presence-stack .tooltip-content {
+  border: 1px solid var(--gray-200);
+}
+
+.presence .presence-more {
+  color: var(--font-light);
   font-size: var(--font-tiny);
-  font-weight: 500;
-  pointer-events: all;
-  position: relative;
 }
 
-.presence-stack .avatar::after {
-  border-radius: 50%;
-  box-shadow: inset 0 0 0 2px var(--presence-color);
-  content: '';
-  height: 100%;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
+.presence .presence-list {
+  padding: 0.75rem 1.5rem 0.75rem 0.5rem;
+  width: auto;
 }
+
+.presence .presence-list ul {
+  flex-direction: column;
+  font-size: var(--font-tiny);
+  gap: 0.5rem;
+}
+
+.presence .presence-list li {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+

@@ -1,5 +1,6 @@
 .annotation-section {
   transition: background-color 1500ms;
+  padding-bottom: 5px;
 }
 
 .annotation-section.is-new {

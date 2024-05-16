@@ -1,6 +1,5 @@
 .annotation {
   background-color: #fff;
-  border: 1px solid var(--gray-300);
   border-radius: 5px;
   overflow: hidden;
   position: relative;
@@ -33,14 +32,12 @@
   background-color: #e1d7b4;
 }
 
-.annotation:not(.note)::after {
-  background-color: var(--card-border);
-  bottom: 0;
+.annotation:not(.note)::before {
   content: '';
-  left: 0;
+  border-left: 3px solid var(--card-border);
+  height: 100%;
+  width: 0;
   position: absolute;
-  top: 0;
-  width: 3px;
 }
 
 .annotation .annotation-header {
@@ -48,7 +45,6 @@
   display: flex;
   justify-content: space-between;
   line-height: 110%;
-
   padding: 10px 15px 6px 12px;
 }
 

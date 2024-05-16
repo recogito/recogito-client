@@ -1,12 +1,13 @@
 import * as Select from '@radix-ui/react-select';
-import type { DrawingStyleExpression } from '@annotorious/react';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import type { DocumentLayer, Translations } from 'src/Types';
+import { useColorCodingState } from './ColorState';
 import { 
   useColorByCreator,
   useColorByFirstTag,
-  useColorByPrivacy 
+  useColorByPrivacy, 
+  userColorByLayer
 } from './colorCodings';
 
 import './ColorCodingSelector.css';
@@ -15,29 +16,39 @@ interface ColorCodingSelectorProps {
 
   i18n: Translations;
 
-  onChange(style?: DrawingStyleExpression<SupabaseAnnotation>): void;
-  
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
+
+  present: PresentUser[];
+
 }
 
 export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const { t } = props.i18n;
 
-  const byCreator = useColorByCreator();
+  const byCreator = useColorByCreator(props.present);
   
   const byFirstTag = useColorByFirstTag();
 
+  const byLayer = userColorByLayer(props.layers, props.layerNames);
+
   const byPrivacy = useColorByPrivacy();
+
+  const { setColorCoding } = useColorCodingState();
 
   const onChange = (key: string) => {
     if (key === 'creator') {
-      props.onChange(byCreator);
+      setColorCoding(byCreator);
+    } else if (key === 'layer') {
+      setColorCoding(byLayer);
     } else if (key === 'tag') {
-      props.onChange(byFirstTag);
+      setColorCoding(byFirstTag);
     } else if (key === 'privacy') {
-      props.onChange(byPrivacy);
+      setColorCoding(byPrivacy);
     } else {
-      props.onChange();
+      setColorCoding(undefined);
     }
   }
 
