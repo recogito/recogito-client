@@ -4,10 +4,10 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { BrandHeader } from '@components/Branding';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { TopBar } from '@components/TopBar';
 import type { DocumentLayer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
@@ -27,7 +27,10 @@ import {
 
 import './ImageAnnotationDesktop.css';
 
-const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (_: ImageAnnotation, state?: AnnotationState) => ({
+const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (
+  _: ImageAnnotation,
+  state?: AnnotationState
+) => ({
   fill: '#0080ff',
   fillOpacity: state?.hovered ? 0.28 : 0.2,
   stroke: '#0080ff',
@@ -55,7 +58,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const {
     authToken,
-    isPresentationManifest, 
+    isPresentationManifest,
     manifestError,
     sequence,
     currentImage,
@@ -66,11 +69,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const layerNames = useLayerNames(props.document);
 
-  const activeLayer = useMemo(() => (
-    layers && layers.length > 0
-      ? layers.find((l) => l.is_active) || layers[0]
-      : undefined
-  ), [layers]);
+  const activeLayer = useMemo(
+    () =>
+      layers && layers.length > 0
+        ? layers.find((l) => l.is_active) || layers[0]
+        : undefined,
+    [layers]
+  );
 
   const [tool, setTool] = useState<string | undefined>();
 
@@ -80,48 +85,55 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
-  const [activeLayerStyle, setActiveLayerStyle] =
-    useState<DrawingStyleExpression<ImageAnnotation>>(() => DEFAULT_STYLE);
+  const [activeLayerStyle, setActiveLayerStyle] = useState<
+    DrawingStyleExpression<ImageAnnotation>
+  >(() => DEFAULT_STYLE);
 
-    const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
-      if (style) {
-        const hse: DrawingStyleExpression<ImageAnnotation> = 
-          (a: SupabaseAnnotation, state?: AnnotationState) => {
-            const color = style(a);
-            
-            return {
-              fill: color,
-              fillOpacity: state?.hovered ? 0.28 : 0.2,
-              stroke: color,
-              strokeOpacity: state?.selected ? 0.9 : 0.5,
-              strokeWidth: state?.selected ? 2 : 1
-            }
-          };
-  
-        setActiveLayerStyle(() => hse);
-      } else {
-        setActiveLayerStyle(() => DEFAULT_STYLE);
-      }
+  const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+    if (style) {
+      const hse: DrawingStyleExpression<ImageAnnotation> = (
+        a: SupabaseAnnotation,
+        state?: AnnotationState
+      ) => {
+        const color = style(a);
+
+        return {
+          fill: color,
+          fillOpacity: state?.hovered ? 0.28 : 0.2,
+          stroke: color,
+          strokeOpacity: state?.selected ? 0.9 : 0.5,
+          strokeWidth: state?.selected ? 2 : 1
+        };
+      };
+
+      setActiveLayerStyle(() => hse);
+    } else {
+      setActiveLayerStyle(() => DEFAULT_STYLE);
     }
+  };
 
   // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
-    const readOnly = new Set((layers || []).filter(l => !l.is_active).map(l => l.id));
+    const readOnly = new Set(
+      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
+    );
 
     const readOnlyStyle = (state?: AnnotationState) => ({
       fill: '#010101',
       fillOpacity: state?.hovered ? 0.1 : 0,
       stroke: '#010101',
       strokeOpacity: state?.selected ? 1 : 0.65,
-      strokeWidth: state?.selected ? 2.5 : 2
+      strokeWidth: state?.selected ? 2.5 : 2,
     });
 
     return (annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
-      return (a.layer_id && readOnly.has(a.layer_id)) 
+      return a.layer_id && readOnly.has(a.layer_id)
         ? readOnlyStyle(state)
-        : typeof activeLayerStyle === 'function' ? activeLayerStyle(a as ImageAnnotation, state) : activeLayerStyle;
-    }
+        : typeof activeLayerStyle === 'function'
+        ? activeLayerStyle(a as ImageAnnotation, state)
+        : activeLayerStyle;
+    };
   }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
@@ -135,26 +147,32 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       // If this is the default context, and the user has
       // sufficient privileges to create layers, load all layers
       if (isDefault && isAdmin) {
-        getAllDocumentLayersInProject(supabase, props.document.id, props.document.context.project_id)
-          .then(({ data, error }) => {
-            if (error) 
-              console.error(error);
+        getAllDocumentLayersInProject(
+          supabase,
+          props.document.id,
+          props.document.context.project_id
+        ).then(({ data, error }) => {
+          if (error) console.error(error);
 
-            const current = new Set(props.document.layers.map(l => l.id));
-            
-            const toAdd: DocumentLayer[] = data
-              .filter(l => !current.has(l.id))
-              .map(l => ({ id: l.id, document_id: l.document_id, is_active: false }));
+          const current = new Set(props.document.layers.map((l) => l.id));
 
-            setLayers([...props.document.layers, ...toAdd]);
-          });
+          const toAdd: DocumentLayer[] = data
+            .filter((l) => !current.has(l.id))
+            .map((l) => ({
+              id: l.id,
+              document_id: l.document_id,
+              is_active: false,
+            }));
+
+          setLayers([...props.document.layers, ...toAdd]);
+        });
       } else {
         setLayers(props.document.layers);
       }
     }
   }, [policies]);
 
-  const onZoom = (factor: number) =>
+  const onZoom = (factor: number) => 
     viewer.current?.viewport.zoomBy(factor);
 
   useEffect(() => {
@@ -170,15 +188,22 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't fit the view if the annotation is already selected
-      if (anno.state.selection.isSelected(a))
-        return;
+      if (anno.state.selection.isSelected(a)) return;
 
-      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-      const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+      const vw = Math.max(
+        document.documentElement.clientWidth || 0,
+        window.innerWidth || 0
+      );
+      const vh = Math.max(
+        document.documentElement.clientHeight || 0,
+        window.innerHeight || 0
+      );
 
-      anno.fitBounds(a, { padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2] });
+      anno.fitBounds(a, {
+        padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2],
+      });
     }
-  }
+  };
 
   return (
     <DocumentNotes
@@ -188,13 +213,17 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       onError={() => setConnectionError(true)}>
 
       <div className="anno-desktop ia-desktop">
-        {loading && ( <LoadingOverlay /> )}
+        <TopBar
+          i18n={props.i18n}
+          invitations={[]}
+          me={props.me}
+          projects={[]}
+          showNotifications={false}
+          onError={() => setConnectionError(true)} />
+
+        {loading && <LoadingOverlay />}
 
         <div className="header">
-          {showBranding && (
-            <BrandHeader />
-          )}
-
           <Toolbar
             i18n={props.i18n}
             document={props.document}
@@ -213,18 +242,19 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
             onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
-            onZoom={onZoom}/>
+            onZoom={onZoom}
+          />
         </div>
 
         <main>
-          <LeftDrawer 
+          <LeftDrawer
             currentImage={currentImage}
             i18n={props.i18n}
             iiifSequence={sequence}
             layers={layers}
             layerNames={layerNames}
-            open={leftPanelOpen} 
-            present={present} 
+            open={leftPanelOpen}
+            present={present}
             onChangeImage={setCurrentImage} />
 
           <div className="ia-annotated-image-container">
@@ -260,8 +290,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             present={present}
             style={style}
             tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation} 
-            onTabChanged={onRightTabChanged} />
+            beforeSelectAnnotation={beforeSelectAnnotation}
+            onTabChanged={onRightTabChanged}
+          />
         </main>
       </div>
 
@@ -269,7 +300,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         <ManifestErrorDialog
           document={props.document}
           i18n={props.i18n}
-          message={manifestError} />
+          message={manifestError}
+        />
       )}
     </DocumentNotes>
   )

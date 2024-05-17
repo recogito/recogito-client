@@ -1,20 +1,22 @@
 import { Annotorious } from '@annotorious/react';
 import { PluginProvider, type PluginInstallationConfig } from '@components/Plugins';
-import type { DocumentWithContext, Translations } from 'src/Types';
+import type { DocumentWithContext, MyProfile, Translations } from 'src/Types';
 import { ImageAnnotationDesktop } from './ImageAnnotationDesktop';
 import { AuthorColorProvider, ColorState } from '@components/AnnotationDesktop';
 import { FilterState } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 
 export interface ImageAnnotationProps {
 
-  i18n: Translations;
+  channelId: string;
 
   document: DocumentWithContext;
 
-  channelId: string;
+  i18n: Translations;
+
+  me: MyProfile;
 
   plugins: PluginInstallationConfig[];
-  
+
 }
 
 export const ImageAnnotation = (props: ImageAnnotationProps) => {
