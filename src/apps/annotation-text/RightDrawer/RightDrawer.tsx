@@ -5,7 +5,7 @@ import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { AnnotationList, DocumentNotesList } from '@components/AnnotationDesktop';
+import { AnnotationList, DocumentNotesList, useNotes } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
@@ -44,6 +44,10 @@ export const RightDrawer = (props: RightDrawerProps) => {
   const me = props.present.find(isMe)!;
 
   const { filter } = useFilter();
+
+  const { notes } = useNotes();
+
+  const unread = notes.filter(n => n.unread).length;
 
   // Is defined **after** the component mounts
   const el = useRef<HTMLDivElement>(null);
@@ -98,9 +102,17 @@ export const RightDrawer = (props: RightDrawerProps) => {
 
                 <li 
                   className={tab === 'NOTES' ? 'active' : undefined}>
-                  <button onClick={() => setTab('NOTES')}>
-                    <Note size={18} /> {t['Notes']}
-                  </button>
+                  <div className="with-notification">
+                    <button onClick={() => setTab('NOTES')}>
+                      <Note size={18} /> {t['Notes']}
+                    </button>
+                    
+                    {unread > 0 && (
+                      <span className="notification-bubble">
+                        <span>{unread}</span>
+                      </span>
+                    )}
+                  </div>
                 </li>
               </ul>
             </div>

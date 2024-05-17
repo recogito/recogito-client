@@ -122,31 +122,6 @@
   padding-left: 10px;
 }
 
-.anno-toolbar .with-notification {
-  display: inline-block;
-  position: relative;
-}
-
-.anno-toolbar .notification-bubble {
-  all: unset;
-  align-items: center;
-  background-color: var(--bright-blue);
-  border-radius: 999px;
-  border: 1px solid #fff;
-  color: #fff !important;
-  display: flex;
-  gap: 11px;
-  font-size: 9.5px;
-  height: 16px;
-  justify-content: center;
-  margin: 0;
-  padding: 0;
-  position: absolute;
-  right: -5px;
-  top: -3px;
-  width: 16px;
-}
-
 .anno-toolbar-divider {
   border-style: solid;
   border-color: rgba(0, 0, 0, 0.08);
