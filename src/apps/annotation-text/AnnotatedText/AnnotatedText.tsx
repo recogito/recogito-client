@@ -28,6 +28,8 @@ interface AnnotatedTextProps {
 
   layers?: DocumentLayer[];
 
+  layerNames: Map<string, string>;
+
   policies: Policies;
 
   privacy: PrivacyMode;
@@ -54,7 +56,7 @@ interface AnnotatedTextProps {
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { i18n, layers, policies, present, tagVocabulary } = props;
+  const { i18n, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const contentType = props.document.content_type;
 
@@ -137,6 +139,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                   {...props}
                   i18n={i18n}
                   layers={layers}
+                  layerNames={layerNames}
                   present={present}
                   policies={policies}
                   tagVocabulary={tagVocabulary} />

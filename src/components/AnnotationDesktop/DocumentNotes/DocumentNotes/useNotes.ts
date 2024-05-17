@@ -1,5 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import type { Delta } from 'quill/core';
 import { PresentUser, User, useAnnotatorUser } from '@annotorious/react';
 import { DocumentNotesContext } from './DocumentNotes';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
@@ -13,7 +14,7 @@ import {
 
 export const useNotes = () => {
 
-  const { notes, setNotes, channel, layerId, present, onError } = useContext(DocumentNotesContext);
+  const { notes, setNotes, channel, activeLayerId, present, onError } = useContext(DocumentNotesContext);
 
   const unread = notes.filter(n => n.unread);
 
@@ -27,7 +28,7 @@ export const useNotes = () => {
   const markAsRead = (id: string) => 
     setNotes(notes => notes.map(n => n.id === id ? ({ ...n, unread: undefined }) : n));
 
-  const createNote = (text: string, isPrivate = false) => {
+  const createNote = (text: Delta, tags: string[], isPrivate = false) => {
     const before = notes;
 
     const annotationId = uuidv4();
@@ -37,16 +38,24 @@ export const useNotes = () => {
       created_at: new Date(),
       created_by: me,    
       is_private: isPrivate,
-      layer_id: layerId,
+      layer_id: activeLayerId,
       bodies: [{
         id: uuidv4(),
         annotation: annotationId,
         created: new Date(),
         creator: me,      
         purpose: 'commenting',        
-        value: text,
-        layer_id: layerId
-      }]
+        value: JSON.stringify(text),
+        layer_id: activeLayerId
+      }, ...tags.map(tag => ({
+        id: uuidv4(),
+        annotation: annotationId,
+        created: new Date(),
+        creator: me,      
+        purpose: 'tagging',        
+        value: tag,
+        layer_id: activeLayerId
+      }))]
     } as DocumentNote;
 
     // Optimistic update
@@ -106,7 +115,7 @@ export const useNotes = () => {
         bodies: [...n.bodies, body]
       }) : n));
     
-    upsertBody({...body, layer_id: layerId! })
+    upsertBody({...body, layer_id: activeLayerId! })
       .then(({ error }) => {
         if (error) {
           onError(error)
@@ -175,6 +184,7 @@ export const useNotes = () => {
   }
 
   return {
+    activeLayerId,
     notes,
     unread,
     markAllAsRead,

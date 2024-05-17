@@ -2,7 +2,7 @@ import { CaretDown, Detective, PlusCircle } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import type { Translations } from 'src/Types';
 
-interface NewNoteProps {
+interface NewNoteButtonProps {
 
   i18n: Translations;
 
@@ -12,7 +12,7 @@ interface NewNoteProps {
 
 }
 
-export const NewNote = (props: NewNoteProps) => {
+export const NewNoteButton = (props: NewNoteButtonProps) => {
 
   const { t } = props.i18n;
 

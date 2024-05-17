@@ -72,7 +72,8 @@ html, body {
   z-index: 1;
 }
 
-.ta-desktop .annotation-list .annotation:not(.readonly) {
+.ta-desktop .annotation-list .annotation:not(.readonly),
+.ta-desktop .document-notes-list .annotation:not(.readonly) {
   box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 0 0 16px -7px rgba(0, 0, 0, 0.25);
 }
 

@@ -208,7 +208,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layerId={activeLayer?.id}
+      layers={layers}
       present={present}
       onError={() => setConnectionError(true)}>
 
@@ -268,6 +268,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 imageManifestURL={currentImage}
                 isPresentationManifest={isPresentationManifest}
                 layers={layers}
+                layerNames={layerNames}
                 policies={policies}
                 present={present}
                 privacy={privacy}
@@ -285,6 +286,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           <RightDrawer
             i18n={props.i18n}
             layers={layers}
+            layerNames={layerNames}
             open={rightPanelOpen}
             policies={policies}
             present={present}

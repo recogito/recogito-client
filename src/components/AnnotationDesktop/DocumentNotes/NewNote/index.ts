@@ -1,2 +1,2 @@
-export * from './NewNote';
-export * from './NewNoteForm';
+export * from './EmptyNote';
+export * from './NewNoteButton';
