@@ -69,11 +69,13 @@
 }
 
 .anno-sidepanel.document-notes-list .document-notes-list-create-new button {
-  border-color: rgba(0, 0, 0, 0.22);
+  background-color: var(--gray-100);
+  border-color: var(--gray-300);
   color: var(--font-light);
+  font-size: var(--font-tiny);
   margin: 0;
   min-width: auto;
-  padding: 5px 6px 5px 4px;
+  padding: 6px 6px 6px 4px;
 }
 
 .anno-sidepanel.document-notes-list .document-notes-list-create-new button:first-child {
@@ -83,7 +85,7 @@
 
 .anno-sidepanel.document-notes-list .document-notes-list-create-new button:last-child {
   border-radius: 0 4px 4px 0;
-  padding: 5px 0 5px 4px;
+  padding: 6px 0 6px 4px;
 }
 
 .anno-sidepanel.document-notes-list .document-notes-list-create-new button > svg {
