@@ -250,7 +250,7 @@ export const getProjectExtended = (
                   .map((m) => {
                     return {
                       user: m.user,
-                      inGroup: undefined,
+                      inGroup: project.groups.find((g) => g.id === m.groupId),
                       since: '',
                     };
                   }),
