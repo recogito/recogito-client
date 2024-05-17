@@ -3,7 +3,6 @@ import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { Extension, usePlugins } from '@components/Plugins';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import { 
   Annotation as Anno,
@@ -50,8 +49,6 @@ interface AnnotationListProps<T extends Anno> {
 export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) => {
 
   const el = useRef<HTMLUListElement>(null);
-
-  const plugins = usePlugins('annotation.*.annotation-editor');
 
   const all = useAnnotations(150);
   

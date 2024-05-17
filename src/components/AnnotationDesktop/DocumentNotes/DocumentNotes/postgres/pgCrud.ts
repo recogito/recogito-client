@@ -2,7 +2,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import type { DocumentNote, DocumentNoteBody } from '../../Types';
 import { toDate } from './utils';
 
-export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
+export const fetchNotes = (layerIds: string[]): Promise<DocumentNote[]> =>
   new Promise((resolve, reject) => {
     supabase
       .from('annotations')
@@ -56,7 +56,7 @@ export const fetchNotes = (layerId: string): Promise<DocumentNote[]> =>
           value
         ) 
       `)
-      .eq('layer_id', layerId)
+      .in('layer_id', layerIds)
       .is('targets.value', null)
       .then(({ data, error }) => {
         if (error) {

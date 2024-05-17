@@ -208,7 +208,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layerId={activeLayer?.id}
+      layerIds={layers?.map(l => l.id)}
       present={present}
       onError={() => setConnectionError(true)}>
 

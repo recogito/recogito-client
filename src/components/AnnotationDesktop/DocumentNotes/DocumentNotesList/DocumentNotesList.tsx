@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { Sorter, Sorting, SortSelector } from '../SortSelector';
 import { NewNote, NewNoteForm } from '../NewNote';
@@ -12,6 +12,8 @@ import './DocumentNotesList.css';
 interface DocumentNotesListProps {
 
   i18n: Translations;
+
+  layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
 
@@ -26,6 +28,15 @@ interface DocumentNotesListProps {
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const [selected, setSelected] = useState<string | undefined>();
+
+  const activeLayer = useMemo(() => (
+    (props.layers || []).find(l => l.is_active)
+  ), [props.layers]);
+
+  const isReadOnly = (a: DocumentNote) => {
+    console.log('ro', a.layer_id, 'vs', activeLayer?.id)
+    return !(a.layer_id && a.layer_id === activeLayer?.id);
+  } 
 
   const { 
     notes,
@@ -87,6 +98,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               
             <DocumentNotesListItem 
               i18n={props.i18n}
+              isReadOnly={isReadOnly(note)}
               layerNames={props.layerNames}
               note={note} 
               showReplyField={selected === note.id}
