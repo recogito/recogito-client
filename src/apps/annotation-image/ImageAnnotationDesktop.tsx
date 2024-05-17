@@ -7,6 +7,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { TopBar } from '@components/TopBar';
 import type { DocumentLayer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
@@ -21,9 +22,8 @@ import {
   DrawingStyleExpression,
   ImageAnnotation,
   PresentUser,
-  useAnnotator,
+  useAnnotator
 } from '@annotorious/react';
-import { TopBar } from '@components/TopBar';
 
 import './ImageAnnotationDesktop.css';
 
@@ -35,10 +35,11 @@ const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (
   fillOpacity: state?.hovered ? 0.28 : 0.2,
   stroke: '#0080ff',
   strokeOpacity: state?.selected ? 0.9 : 0.5,
-  strokeWidth: state?.selected ? 2 : 1,
+  strokeWidth: state?.selected ? 2 : 1
 });
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
+
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const [loading, setLoading] = useState(true);
@@ -61,7 +62,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     manifestError,
     sequence,
     currentImage,
-    setCurrentImage,
+    setCurrentImage
   } = useIIIF(props.document);
 
   const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
@@ -101,7 +102,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           fillOpacity: state?.hovered ? 0.28 : 0.2,
           stroke: color,
           strokeOpacity: state?.selected ? 0.9 : 0.5,
-          strokeWidth: state?.selected ? 2 : 1,
+          strokeWidth: state?.selected ? 2 : 1
         };
       };
 
@@ -171,7 +172,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   }, [policies]);
 
-  const onZoom = (factor: number) => viewer.current?.viewport.zoomBy(factor);
+  const onZoom = (factor: number) => 
+    viewer.current?.viewport.zoomBy(factor);
 
   useEffect(() => {
     // Need to rethink - we also want popups
@@ -208,20 +210,20 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       channelId={props.channelId}
       layerId={activeLayer?.id}
       present={present}
-      onError={() => setConnectionError(true)}
-    >
-      <div className='anno-desktop ia-desktop'>
+      onError={() => setConnectionError(true)}>
+
+      <div className="anno-desktop ia-desktop">
         <TopBar
           i18n={props.i18n}
           invitations={[]}
           me={props.me}
           projects={[]}
           showNotifications={false}
-          onError={() => {}}
-        />
+          onError={() => setConnectionError(true)} />
+
         {loading && <LoadingOverlay />}
 
-        <div className='header'>
+        <div className="header">
           <Toolbar
             i18n={props.i18n}
             document={props.document}
@@ -238,8 +240,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             onChangeStyle={onChangeStyle}
             onChangeTool={setTool}
             onToggleBranding={() => setShowBranding(!showBranding)}
-            onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
-            onToggleRightDrawer={() => setRightPanelOpen((open) => !open)}
+            onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
+            onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
             onZoom={onZoom}
           />
         </div>
@@ -253,10 +255,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             layerNames={layerNames}
             open={leftPanelOpen}
             present={present}
-            onChangeImage={setCurrentImage}
-          />
+            onChangeImage={setCurrentImage} />
 
-          <div className='ia-annotated-image-container'>
+          <div className="ia-annotated-image-container">
             {policies && currentImage && (
               <AnnotatedImage
                 ref={viewer}
@@ -277,8 +278,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
                 onSaveError={() => setConnectionError(true)}
-                onLoad={() => setLoading(false)}
-              />
+                onLoad={() => setLoading(false)} />
             )}
           </div>
 
@@ -304,5 +304,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         />
       )}
     </DocumentNotes>
-  );
-};
+  )
+
+}

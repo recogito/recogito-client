@@ -1,9 +1,5 @@
 @import '@annotorious/react/annotorious-react.css';
 
-.ia-desktop {
-  margin-top: 60px;
-}
-
 .ia-desktop main {
   background-color: var(--gray-100);
   flex-grow: 1;
