@@ -3,7 +3,7 @@
   padding: 0 12px 20px 12px;
 }
 
-.anno-sidepanel.document-notes-list ul {
+.anno-sidepanel.document-notes-list > ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -11,47 +11,6 @@
 
 .anno-sidepanel.document-notes-list > ul > li {
   margin: 10px 0;
-}
-
-.anno-sidepanel.document-notes-list .annotation-card:not(.private) {
-  background-color: #fff9a8;
-  border-color: #ffee05;
-  box-shadow: 1px 2px 3px -1px rgba(0, 0, 0, 0.08);
-}
-
-.anno-sidepanel.document-notes-list .annotation-card:not(.private) {
-  --border-color: #ffee05;
-  border: 1px solid var(--gray-300);
-  border-radius: 6px;
-  margin: 8px 0;
-}
-
-.anno-sidepanel.document-notes-list .annotation-card:not(.private) .annotation-tag {
-  background-color: #998200;
-  border-color: #8a8100;
-  color: #fff;
-}
-
-.anno-sidepanel.document-notes-list .annotation-tagswidget .add-tag button svg {
-  color: #8a8100;
-}
-
-.anno-sidepanel.document-notes-list .annotation-card-comments-interstitial .label {
-  background-color: #fffbc6;
-  border: 1px solid var(--border-color);
-}
-
-.anno-sidepanel.document-notes-list .annotation-card-comments-container {
-  max-height: none;
-}
-
-.anno-sidepanel.document-notes-list .annotation-card:not(.private) .annotation-tagswidget {
-  background-color: #fffbc7;
-  border-color: #ffee05;
-}
-
-.anno-sidepanel.document-notes-list .annotation-card:not(.private) .annotation-tagswidget input::placeholder {
-  color: #9f891e;
 }
 
 .anno-sidepanel.document-notes-list .document-notes-list-header {
@@ -107,46 +66,6 @@
   text-decoration: underline;
 }
 
-.anno-sidepanel.document-notes-list .create-new-note-form {
-  margin: 0.2em 0 1.8em 0;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form textarea {
-  resize: vertical;
-  width: 100%;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form.private {
-  background-color: #2e3c4a;
-  border-radius: var(--border-radius);
-  padding: 0.35em 0.5em 0.5em 0.5em;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form-footer {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form.private textarea {
-  background-color: #404f5e;
-  border: none;
-  color: var(--gray-100);
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form .privacy-label {
-  align-items: center;
-  color: rgba(255, 255, 255, 0.55);
-  display: flex;
-  font-size: 11.5px;
-  gap: 0.5em;
-  margin-bottom: 0.4em;
-}
-
-.anno-sidepanel.document-notes-list .create-new-note-form.private button.cancel {
-  background-color: transparent;
-  border-color: var(--gray-500);
-  color: var(--gray-400);
-}
 .anno-sidepanel.document-notes-list li .document-notes-list-item {
   outline: solid 2px transparent;
   transition: outline 2s ease-out;
