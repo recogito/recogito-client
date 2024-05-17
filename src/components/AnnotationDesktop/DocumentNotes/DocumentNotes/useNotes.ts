@@ -13,7 +13,7 @@ import {
 
 export const useNotes = () => {
 
-  const { notes, setNotes, channel, layerId, present, onError } = useContext(DocumentNotesContext);
+  const { notes, setNotes, channel, activeLayerId, present, onError } = useContext(DocumentNotesContext);
 
   const unread = notes.filter(n => n.unread);
 
@@ -37,7 +37,7 @@ export const useNotes = () => {
       created_at: new Date(),
       created_by: me,    
       is_private: isPrivate,
-      layer_id: layerId,
+      layer_id: activeLayerId,
       bodies: [{
         id: uuidv4(),
         annotation: annotationId,
@@ -45,7 +45,7 @@ export const useNotes = () => {
         creator: me,      
         purpose: 'commenting',        
         value: text,
-        layer_id: layerId
+        layer_id: activeLayerId
       }]
     } as DocumentNote;
 
@@ -106,7 +106,7 @@ export const useNotes = () => {
         bodies: [...n.bodies, body]
       }) : n));
     
-    upsertBody({...body, layer_id: layerId! })
+    upsertBody({...body, layer_id: activeLayerId! })
       .then(({ error }) => {
         if (error) {
           onError(error)

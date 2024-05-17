@@ -33,10 +33,8 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     (props.layers || []).find(l => l.is_active)
   ), [props.layers]);
 
-  const isReadOnly = (a: DocumentNote) => {
-    console.log('ro', a.layer_id, 'vs', activeLayer?.id)
-    return !(a.layer_id && a.layer_id === activeLayer?.id);
-  } 
+  const isReadOnly = (a: DocumentNote) =>
+    !(a.layer_id && a.layer_id === activeLayer?.id);
 
   const { 
     notes,

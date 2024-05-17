@@ -1,12 +1,15 @@
-import { ReactNode, createContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useEffect, useMemo, useState } from 'react';
 import type { PostgrestError, RealtimeChannel } from '@supabase/supabase-js';
 import type { PresentUser} from '@annotorious/react';
 import type { ChangeEvent } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { fetchNotes, handleBroadcastEvent, handleCDCEvent } from './postgres';
 import type { DocumentNote } from '../Types';
+import type { DocumentLayer } from 'src/Types';
 
 interface DocumentNotesContextValue {
+
+  activeLayerId?: string;
 
   layerIds?: string[];
 
@@ -33,7 +36,7 @@ interface DocumentNotesProps {
 
   channelId: string;
 
-  layerIds?: string[];
+  layers?: DocumentLayer[];
 
   present: PresentUser[];
 
@@ -43,7 +46,11 @@ interface DocumentNotesProps {
 
 export const DocumentNotes = (props: DocumentNotesProps) => {
 
-  const { layerIds, present, onError } = props;
+  const { layers, present, onError } = props;
+
+  const layerIds = useMemo(() => layers?.map(l => l.id), [layers]);
+
+  const activeLayerId = useMemo(() => layers?.find(l => l.is_active)?.id, [layers]);
 
   const [notes, setNotes] = useState<DocumentNote[]>([]);
 
@@ -97,6 +104,7 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
 
   return (
     <DocumentNotesContext.Provider value={{ 
+      activeLayerId,
       notes, 
       setNotes, 
       channel, 
