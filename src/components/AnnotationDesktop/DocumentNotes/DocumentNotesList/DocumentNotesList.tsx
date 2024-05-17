@@ -13,6 +13,8 @@ interface DocumentNotesListProps {
 
   i18n: Translations;
 
+  layerNames: Map<string, string>;
+
   present: PresentUser[];
 
   policies?: Policies;
@@ -32,7 +34,6 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     createNote: _createNote,
     deleteBody,
     deleteNote,
-    makePublic,
     updateBody
   } = useNotes();
 
@@ -86,6 +87,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               
             <DocumentNotesListItem 
               i18n={props.i18n}
+              layerNames={props.layerNames}
               note={note} 
               showReplyField={selected === note.id}
               policies={props.policies}

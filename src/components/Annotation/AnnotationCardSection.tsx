@@ -7,13 +7,13 @@ import { Extension, usePlugins } from '@components/Plugins';
 import { QuillEditor, QuillEditorRoot, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
+import { LayerIcon } from './LayerIcon';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
 import { PublicAnnotationActions } from './PublicAnnotationActions';
 import { TagList } from './TagList';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
-import { LayerIcon } from './LayerIcon';
 
 export interface AnnotationCardSectionProps {
 
@@ -201,7 +201,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 onEditSection={() => setEditable(true)} />
             )}    
           </div>
-        ) : props.index === 0 && (
+        ) : (props.index === 0 && isReadOnly) && (
           <div className="annotation-header-right">
             <LayerIcon 
               layerId={props.annotation.layer_id}

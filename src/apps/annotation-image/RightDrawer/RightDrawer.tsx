@@ -97,6 +97,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
           ) : (
             <DocumentNotesList 
               i18n={props.i18n}
+              layerNames={props.layerNames}
               present={props.present}
               policies={props.policies} 
               tagVocabulary={props.tagVocabulary} />

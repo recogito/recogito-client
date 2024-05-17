@@ -7,6 +7,8 @@ interface DocumentNotesListItemProps {
 
   i18n: Translations;
 
+  layerNames: Map<string, string>;
+
   note: DocumentNote;
 
   policies?: Policies;
@@ -43,6 +45,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
       isNote 
       annotation={props.note as unknown as Annotation}
       i18n={i18n}   
+      layerNames={props.layerNames}
       policies={props.policies}    
       present={props.present}
       showReplyField={props.showReplyField}
