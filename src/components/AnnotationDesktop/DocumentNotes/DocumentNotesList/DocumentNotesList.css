@@ -10,7 +10,13 @@
 }
 
 .anno-sidepanel.document-notes-list > ul > li {
+  border-radius: 5px;
   margin: 10px 0;
+  transition: box-shadow 2s ease-out;
+}
+
+.anno-sidepanel.document-notes-list > ul > li.unread {
+  box-shadow: 0 0 0 2px var(--bright-blue);
 }
 
 .anno-sidepanel.document-notes-list .document-notes-list-header {
