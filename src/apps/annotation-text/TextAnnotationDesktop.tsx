@@ -15,6 +15,7 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { TopBar } from '@components/TopBar';
 import type { TextAnnotationProps } from './TextAnnotation';
 import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
@@ -24,9 +25,9 @@ import type { DocumentLayer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-import { TopBar } from '@components/TopBar';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
+
   const contentType = props.document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
@@ -187,20 +188,18 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       channelId={props.channelId}
       layerId={activeLayer?.id}
       present={present}
-      onError={() => setConnectionError(true)}
-    >
-      <div className='anno-desktop ta-desktop'>
+      onError={() => setConnectionError(true)}>
+      <div className="anno-desktop ta-desktop">
         {loading && <LoadingOverlay />}
 
-        <div className='header'>
+        <div className="header">
           <TopBar
             i18n={props.i18n}
             invitations={[]}
             me={props.me}
             projects={[]}
             showNotifications={false}
-            onError={() => {}}
-          />
+            onError={() => {}} />
 
           <Toolbar
             i18n={props.i18n}
@@ -217,8 +216,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             onChangeStyle={onChangeStyle}
             onToggleBranding={() => setShowBranding(!showBranding)}
             onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
-            onToggleRightDrawer={() => setRightPanelOpen((open) => !open)}
-          />
+            onToggleRightDrawer={() => setRightPanelOpen((open) => !open)} />
         </div>
 
         <main className={className}>
@@ -261,10 +259,10 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             style={style}
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
-            onTabChanged={onRightTabChanged}
-          />
+            onTabChanged={onRightTabChanged} />
         </main>
       </div>
     </DocumentNotes>
-  );
-};
+  )
+
+}
