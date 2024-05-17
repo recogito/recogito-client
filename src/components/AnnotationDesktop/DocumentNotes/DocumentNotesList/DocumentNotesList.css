@@ -1,39 +1,39 @@
-.anno-sidepanel.document-notes-list {
+.anno-drawer-panel.document-notes-list {
   overflow-y: auto;
   padding: 0 12px 20px 12px;
 }
 
-.anno-sidepanel.document-notes-list > ul {
+.anno-drawer-panel.document-notes-list > ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-.anno-sidepanel.document-notes-list > ul > li {
+.anno-drawer-panel.document-notes-list > ul > li {
   border-radius: 5px;
   margin: 10px 0;
   transition: box-shadow 2s ease-out;
 }
 
-.anno-sidepanel.document-notes-list > ul > li.unread {
+.anno-drawer-panel.document-notes-list > ul > li.unread {
   box-shadow: 0 0 0 2px var(--bright-blue);
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-header {
+.anno-drawer-panel.document-notes-list .document-notes-list-header {
   align-items: center;
   display: flex;
   justify-content: space-between;
   padding: 0.7em 8px 0.5em 2px;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-create-new {
+.anno-drawer-panel.document-notes-list .document-notes-list-create-new {
   color: var(--font-light);
   display: flex;
   font-size: var(--font-tiny);
   white-space: nowrap;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-create-new button {
+.anno-drawer-panel.document-notes-list .document-notes-list-create-new button {
   background-color: var(--gray-100);
   border-color: var(--gray-300);
   color: var(--font-light);
@@ -43,40 +43,49 @@
   padding: 6px 6px 6px 4px;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-create-new button:first-child {
+.anno-drawer-panel.document-notes-list .document-notes-list-create-new button:first-child {
   border-right-width: 0;
   border-radius: 4px 0 0 4px;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-create-new button:last-child {
+.anno-drawer-panel.document-notes-list .document-notes-list-create-new button:last-child {
   border-radius: 0 4px 4px 0;
   padding: 6px 0 6px 4px;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-create-new button > svg {
+.anno-drawer-panel.document-notes-list .document-notes-list-create-new button > svg {
   margin: 0 0.4em 0.1em 0.05em;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-sorting {
+.anno-drawer-panel.document-notes-list .document-notes-list-sorting {
   color: var(--font-light);
   font-size: var(--font-tiny);
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-sorting label {
+.anno-drawer-panel.document-notes-list .document-notes-list-sorting label {
   margin-right: 0.5ch;
 }
 
-.anno-sidepanel.document-notes-list .document-notes-list-sorting button {
+.anno-drawer-panel.document-notes-list .document-notes-list-sorting button {
   all: unset;
   cursor: pointer;
   text-decoration: underline;
 }
 
-.anno-sidepanel.document-notes-list li .document-notes-list-item {
-  outline: solid 2px transparent;
-  transition: outline 2s ease-out;
+/*
+.anno-drawer-panel.document-notes-list > ul > li .annotation {
+  margin: 0;
+  transition: margin 500ms ease-in-out, opacity 200ms ease-out; 
 }
 
-.anno-sidepanel.document-notes-list li.unread .document-notes-list-item {
-  outline: solid 2px var(--bright-blue);
+.anno-drawer-panel.document-notes-list.has-selected > ul > li .annotation:not(.selected) {
+  cursor: pointer;
 }
+
+.anno-drawer-panel.document-notes-list > ul > li .annotation.selected {
+  margin: 25px 0;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
+    1px 1px 8px 0 rgba(0, 0, 0, 0.08);
+  transition: margin 300ms ease-out;
+}
+*%

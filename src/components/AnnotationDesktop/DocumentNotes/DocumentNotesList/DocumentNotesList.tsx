@@ -70,8 +70,13 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
     bodies.forEach(b => deleteBody(b as DocumentNoteBody));
 
+  const className= [
+    'anno-drawer-panel document-notes-list',
+    selected ? 'has-selected' : undefined
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className="anno-sidepanel document-notes-list">
+    <div className={className}>
       <div className="document-notes-list-header">
         <NewNoteButton 
           i18n={props.i18n} 
@@ -104,6 +109,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
             <DocumentNotesListItem 
               i18n={props.i18n}
               isReadOnly={isReadOnly(note)}
+              isSelected={selected === note.id}
               layerNames={props.layerNames}
               note={note} 
               showReplyField={selected === note.id && !(isReadOnly(note))}
