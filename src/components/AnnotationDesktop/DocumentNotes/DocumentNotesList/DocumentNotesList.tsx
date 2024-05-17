@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
-import type { AnnotationBody, PresentUser } from '@annotorious/react';
+import type { Delta } from 'quill/core';
+import { User, useAnnotatorUser, type AnnotationBody, type PresentUser } from '@annotorious/react';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { Sorter, Sorting, SortSelector } from '../SortSelector';
-import { NewNote, NewNoteForm } from '../NewNote';
+import { EmptyNote, NewNoteButton } from '../NewNote';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
@@ -26,6 +27,10 @@ interface DocumentNotesListProps {
 }
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
+
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = useMemo(() => props.present.find(p => p.id === user.id) || user, [user]);
 
   const [selected, setSelected] = useState<string | undefined>();
 
@@ -51,10 +56,10 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   const sorted = notes.sort(sorter);
 
   const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
-
-  const createNote = (text: string, isPrivate: boolean) => {
+  
+  const createNote = (content: Delta, isPrivate: boolean) => {
     setNewNote(undefined);
-    _createNote(text, isPrivate);
+    _createNote(content, isPrivate);
   }
 
   const onSelect = (note: DocumentNote) => (evt: React.MouseEvent) => {    
@@ -68,7 +73,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   return (
     <div className="anno-sidepanel document-notes-list">
       <div className="document-notes-list-header">
-        <NewNote 
+        <NewNoteButton 
           i18n={props.i18n} 
           onCreatePublic={() => setNewNote('public')} 
           onCreatePrivate={() => setNewNote('private')} />
@@ -79,10 +84,12 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       </div>
 
       {newNote && (
-        <NewNoteForm 
+        <EmptyNote
           i18n={props.i18n}
           isPrivate={newNote === 'private'} 
-          onCreateNote={createNote}
+          me={me}
+          present={props.present}
+          onSubmit={createNote} 
           onCancel={() => setNewNote(undefined)} />
       )}
 

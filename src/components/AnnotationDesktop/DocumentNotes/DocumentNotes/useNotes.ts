@@ -1,5 +1,6 @@
 import { useContext, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import type { Delta } from 'quill/core';
 import { PresentUser, User, useAnnotatorUser } from '@annotorious/react';
 import { DocumentNotesContext } from './DocumentNotes';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
@@ -27,7 +28,7 @@ export const useNotes = () => {
   const markAsRead = (id: string) => 
     setNotes(notes => notes.map(n => n.id === id ? ({ ...n, unread: undefined }) : n));
 
-  const createNote = (text: string, isPrivate = false) => {
+  const createNote = (text: Delta, isPrivate = false) => {
     const before = notes;
 
     const annotationId = uuidv4();
@@ -44,7 +45,7 @@ export const useNotes = () => {
         created: new Date(),
         creator: me,      
         purpose: 'commenting',        
-        value: text,
+        value: JSON.stringify(text),
         layer_id: activeLayerId
       }]
     } as DocumentNote;
@@ -175,6 +176,7 @@ export const useNotes = () => {
   }
 
   return {
+    activeLayerId,
     notes,
     unread,
     markAllAsRead,

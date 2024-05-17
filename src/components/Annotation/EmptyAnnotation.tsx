@@ -8,7 +8,6 @@ import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/Qu
 import { Extension, usePlugins } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
-import { AnnotationCardSection } from './AnnotationCardSection';
 import { TagList } from './TagList';
 import type { Translations } from 'src/Types';
 
