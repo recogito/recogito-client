@@ -7,6 +7,11 @@
   width: 100%;
 }
 
+.anno-desktop .top-bar-container header {
+  padding: 0 15px;
+  position: relative;
+}
+
 .anno-desktop-overlay {
   background-color: #fff;
   border-radius: var(--border-radius);

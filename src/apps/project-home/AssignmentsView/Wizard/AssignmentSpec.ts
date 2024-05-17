@@ -1,5 +1,5 @@
 import type {
-  DocumentWithLayers,
+  DocumentWithContext,
   ExtendedAssignmentData,
   UserProfile,
 } from 'src/Types';
@@ -13,7 +13,7 @@ export interface AssignmentSpec {
 
   project_id: string;
 
-  documents: DocumentWithLayers[];
+  documents: DocumentWithContext[];
 
   team: UserProfile[];
 
