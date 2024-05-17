@@ -59,7 +59,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
   const plugins = usePlugins('annotation.*.annotation-editor');
 
   const creator: PresentUser | User | undefined = 
-    props.present.find(p => p.id === target.creator?.id) || target.creator;
+    props.present.find(p => p.id === target?.creator?.id) || target?.creator;
 
   const isMine = creator?.id === props.me.id;
 
