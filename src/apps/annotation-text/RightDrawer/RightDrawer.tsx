@@ -17,6 +17,8 @@ interface RightDrawerProps {
 
   layers?: DocumentLayer[];
 
+  layerNames: Map<string, string>;
+
   open: boolean;
 
   policies?: Policies;
@@ -110,6 +112,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                   filter={filter}
                   i18n={props.i18n}
                   layers={props.layers}
+                  layerNames={props.layerNames}
                   me={me}
                   policies={props.policies}
                   present={props.present} 

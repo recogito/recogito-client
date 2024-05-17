@@ -235,6 +235,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               document={props.document}
               i18n={props.i18n}
               layers={layers}
+              layerNames={layerNames}
               policies={policies}
               present={present}
               privacy={privacy}
@@ -252,6 +253,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           <RightDrawer
             i18n={props.i18n}
             layers={layers}
+            layerNames={layerNames}
             open={rightPanelOpen}
             policies={policies}
             present={present}

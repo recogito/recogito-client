@@ -13,6 +13,7 @@ import { TagList } from './TagList';
 import type { Policies, Translations } from 'src/Types';
 
 import './AnnotationCardSection.css';
+import { LayerIcon } from './LayerIcon';
 
 export interface AnnotationCardSectionProps {
 
@@ -31,6 +32,8 @@ export interface AnnotationCardSectionProps {
   isPrivate?: boolean;
 
   isReadOnly?: boolean;
+
+  layerNames: Map<string, string>;
 
   me: User | PresentUser;
 
@@ -178,7 +181,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             createdAt={firstBody.created} />
         </div>
 
-        {canEdit && (
+        {canEdit ? (
           <div className="annotation-header-right">
             {isPrivate ? (
               <PrivateAnnotationActions
@@ -197,6 +200,12 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 onDeleteSection={onDeleteSection}
                 onEditSection={() => setEditable(true)} />
             )}    
+          </div>
+        ) : props.index === 0 && (
+          <div className="annotation-header-right">
+            <LayerIcon 
+              layerId={props.annotation.layer_id}
+              layerNames={props.layerNames} />
           </div>
         )}
       </div>

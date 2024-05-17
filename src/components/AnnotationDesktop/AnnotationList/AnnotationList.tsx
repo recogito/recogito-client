@@ -31,6 +31,8 @@ interface AnnotationListProps<T extends Anno> {
 
   layers?: DocumentLayer[];
 
+  layerNames: Map<string, string>;
+
   me: PresentUser;
 
   present: PresentUser[];
@@ -184,6 +186,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               i18n={props.i18n}
               isReadOnly={isReadOnly(annotation)}
               isSelected={isSelected(annotation)}
+              layerNames={props.layerNames}
               policies={props.policies}
               present={props.present}
               showReplyField={!isReadOnly(annotation) && isSelected(annotation)}

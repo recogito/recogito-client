@@ -3,7 +3,7 @@ import { Chats, Note } from '@phosphor-icons/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { AnnotationList, DocumentNotesList, DrawerPanel } from '@components/AnnotationDesktop';
+import { AnnotationList, DocumentNotesList } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
@@ -15,13 +15,13 @@ interface RightDrawerProps {
 
   layers?: DocumentLayer[];
 
+  layerNames: Map<string, string>;
+
   open: boolean;
 
   policies?: Policies;
 
   present: PresentUser[];
-
-  currentPanel?: DrawerPanel;
 
   style?: DrawingStyleExpression<ImageAnnotation>;
 
@@ -89,6 +89,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
               i18n={props.i18n}
               present={props.present} 
               layers={props.layers}
+              layerNames={props.layerNames}
               me={me}
               policies={props.policies}
               tagVocabulary={props.tagVocabulary}
