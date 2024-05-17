@@ -1,6 +1,6 @@
 .anno-sidepanel.document-notes-list {
   overflow-y: auto;
-  padding: 0 12px 20px 8px;
+  padding: 0 12px 20px 12px;
 }
 
 .anno-sidepanel.document-notes-list ul {
@@ -78,11 +78,11 @@
 
 .anno-sidepanel.document-notes-list .document-notes-list-create-new button:first-child {
   border-right-width: 0;
-  border-radius: 5px 0 0 5px;
+  border-radius: 4px 0 0 4px;
 }
 
 .anno-sidepanel.document-notes-list .document-notes-list-create-new button:last-child {
-  border-radius: 0 5px 5px 0;
+  border-radius: 0 4px 4px 0;
   padding: 5px 0 5px 4px;
 }
 

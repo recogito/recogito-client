@@ -106,7 +106,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               isReadOnly={isReadOnly(note)}
               layerNames={props.layerNames}
               note={note} 
-              showReplyField={selected === note.id}
+              showReplyField={selected === note.id && !(isReadOnly(note))}
               policies={props.policies}
               present={props.present} 
               onCreateBody={createBody}
