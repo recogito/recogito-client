@@ -28,7 +28,7 @@ export const useNotes = () => {
   const markAsRead = (id: string) => 
     setNotes(notes => notes.map(n => n.id === id ? ({ ...n, unread: undefined }) : n));
 
-  const createNote = (text: Delta, isPrivate = false) => {
+  const createNote = (text: Delta, tags: string[], isPrivate = false) => {
     const before = notes;
 
     const annotationId = uuidv4();
@@ -47,7 +47,15 @@ export const useNotes = () => {
         purpose: 'commenting',        
         value: JSON.stringify(text),
         layer_id: activeLayerId
-      }]
+      }, ...tags.map(tag => ({
+        id: uuidv4(),
+        annotation: annotationId,
+        created: new Date(),
+        creator: me,      
+        purpose: 'tagging',        
+        value: tag,
+        layer_id: activeLayerId
+      }))]
     } as DocumentNote;
 
     // Optimistic update

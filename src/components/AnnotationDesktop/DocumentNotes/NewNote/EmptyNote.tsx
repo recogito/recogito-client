@@ -4,8 +4,8 @@ import type { PresentUser, User } from '@annotorious/react';
 import { ArrowRight } from '@phosphor-icons/react';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
 import type { Translations } from 'src/Types';
-import type { DocumentNote } from '../Types';
 import { AuthorAvatar } from '@components/Annotation/AuthorAvatar';
+import { TagList } from './TagList';
 
 interface EmptyNoteProps {
 
@@ -21,7 +21,7 @@ interface EmptyNoteProps {
 
   onCancel(): void;
 
-  onSubmit(content: Delta, isPrivate?: boolean): void;
+  onSubmit(content: Delta, tags: string[], isPrivate?: boolean): void;
 
 }
 
@@ -31,13 +31,19 @@ export const EmptyNote = (props: EmptyNoteProps) => {
 
   const [value, setValue] = useState<Delta | undefined>();
 
+  const [tags, setTags] = useState<string[]>([]);
+
   const onSave = () => {
     if (value) {
-      props.onSubmit(value, props.isPrivate);
+      props.onSubmit(value, tags, props.isPrivate);
     } else {
       props.onCancel();
     }
   }
+
+  const onCreateTag = (tag: string) => setTags(tags => ([...tags, tag]));
+
+  const onDeleteTag = (tag: string) => setTags(tags => tags.filter(t => t !== tag));
 
   const className = [
     'annotation note empty',
@@ -70,7 +76,14 @@ export const EmptyNote = (props: EmptyNoteProps) => {
         </div>
 
         <div className="annotation-footer">
-          <div className="annotation-footer-left" />
+          <div className="annotation-footer-left">
+            <TagList 
+              i18n={props.i18n}
+              tags={tags}
+              vocabulary={props.tagVocabulary}
+              onCreateTag={onCreateTag}  
+              onDeleteTag={onDeleteTag} />
+          </div>
 
           <button 
             className="save save-arrow annotation-footer-right"

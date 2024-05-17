@@ -146,7 +146,6 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
             <TagList 
               isEditable
               i18n={props.i18n}
-              me={props.me}
               tags={tags}
               vocabulary={props.tagVocabulary}
               onCreateTag={onCreateTag}  
