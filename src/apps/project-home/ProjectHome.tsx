@@ -53,7 +53,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   useEffect(() => {
     if (!tab && projectPolicies) {
-      if (isAdmin) {
+      if (isAdmin || project.is_open_edit) {
         setTab('documents');
       } else {
         setTab('assignments');
@@ -162,6 +162,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         onSwitchTab={handleSwitchTab}
         onGotoSettings={handleGotoSettings}
         onGotoUsers={handleGotoUsers}
+        showTabs={!props.project.is_open_edit}
       />
       <div className='project-home' style={{ marginTop: isAdmin ? 240 : 190 }}>
         <ToastProvider>
