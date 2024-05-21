@@ -2,17 +2,17 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument, createProjectDocument } from '@backend/crud';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, Protocol, TaggedContext } from 'src/Types';
+import type { Document, Protocol } from 'src/Types';
 import type { DocumentWithContext } from '../../Types';
 
 /**
  * IIIF configuration:
  * - 'IIIF_CLOUD': the image is uploaded to IIIF Cloud first, then a document
- *   record is created that points to the image on IIIF Cloud. 
+ *   record is created that points to the image on IIIF Cloud.
  * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
  *   is uploaded to Supabase storage.
  */
-const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined = 
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined =
   import.meta.env.PUBLIC_IIIF_CONFIGURATION;
 
 /**
@@ -45,7 +45,7 @@ export const initDocument = (
         file,
         protocol,
         url
-      )
+      );
     } else {
       // If the document is an image upload, the file is first
       // uploaded to the IIIF server, and then treated like a remote

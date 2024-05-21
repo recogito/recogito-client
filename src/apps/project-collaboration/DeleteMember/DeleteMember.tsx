@@ -14,6 +14,8 @@ interface DeleteMemberProps {
 
   member: Member;
 
+  projectId: string;
+
   onDeleteMember(member: Member): void;
 
   onDeleteError(error: PostgrestError): void;
@@ -39,7 +41,7 @@ export const DeleteMember = (props: DeleteMemberProps) => {
   const onDelete = () => {
     setBusy(true);
 
-    removeUserFromProject(supabase, member.user.id, member.inGroup!.id).then(
+    removeUserFromProject(supabase, member.user.id, props.projectId).then(
       ({ error }) => {
         setBusy(false);
 
