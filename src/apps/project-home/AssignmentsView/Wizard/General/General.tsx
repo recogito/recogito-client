@@ -1,5 +1,6 @@
 import type { Translations } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
+import { Warning } from '@phosphor-icons/react';
 
 import './General.css';
 
@@ -46,9 +47,15 @@ export const General = (props: GeneralProps) => {
             value={props.assignment.description || ''}
             onChange={(evt) => props.onChangeDescription(evt.target.value)}
           />
+          <div className='wizard-name-check'>
+            {(!props.assignment.name || props.assignment.name.length === 0) && (
+              <p className='hint warn'>
+                <Warning size={16} /> {t['Unnamed assignment.']}
+              </p>
+            )}
+          </div>
         </section>
       </div>
-
       <section className='wizard-nav'>
         <button onClick={props.onCancel}>{t['Cancel']}</button>
 
