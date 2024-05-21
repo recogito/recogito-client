@@ -2,17 +2,17 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument, createProjectDocument } from '@backend/crud';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, Protocol, TaggedContext } from 'src/Types';
+import type { Document, Protocol } from 'src/Types';
 import type { DocumentWithContext } from '../../Types';
 
 /**
  * IIIF configuration:
  * - 'IIIF_CLOUD': the image is uploaded to IIIF Cloud first, then a document
- *   record is created that points to the image on IIIF Cloud. 
+ *   record is created that points to the image on IIIF Cloud.
  * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
  *   is uploaded to Supabase storage.
  */
-const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined = 
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined =
   import.meta.env.PUBLIC_IIIF_CONFIGURATION;
 
 /**
@@ -45,7 +45,7 @@ export const initDocument = (
         file,
         protocol,
         url
-      )
+      );
     } else {
       // If the document is an image upload, the file is first
       // uploaded to the IIIF server, and then treated like a remote
@@ -138,21 +138,42 @@ const _initDocument = (
   });
 };
 
-export const addDocumentToProject = (
+export const addDocumentsToProject = (
   supabase: SupabaseClient,
   projectId: string,
-  documentId: string
-): Response<Document> =>
-  createProjectDocument(supabase, documentId, projectId).then(
-    // @ts-ignore
-    ({ error, data }) => {
-      if (error || !data) {
-        return { error: error, data: null };
-      }
+  documentIds: string[]
+): Response<Document[] | undefined> =>
+  supabase
+    .rpc('add_documents_to_project_rpc', {
+      _document_ids: documentIds,
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (data) {
+        return supabase
+          .from('documents')
+          .select()
+          .in('id', documentIds)
+          .then(({ data, error }) => {
+            if (error) {
+              return {
+                error,
+                data: [],
+              };
+            }
 
-      return supabase.from('documents').select().eq('id', documentId);
-    }
-  );
+            return {
+              error: null,
+              data: data as Document[],
+            };
+          });
+      } else {
+        return {
+          error: error,
+          data: undefined,
+        };
+      }
+    });
 
 export const removeDocumentsFromProject = (
   supabase: SupabaseClient,
