@@ -182,7 +182,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     <ToastProvider>
       <div className='dashboard-projects-home'>
         <TopBar
-          invitations={props.invitations}
+          invitations={invitations}
           i18n={props.i18n}
           onError={onError}
           projects={projects}
