@@ -46,9 +46,10 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
     if (range) {
       quill.formatText(range.index, range.length, 'link', url);
     } else {
-      quill.insertText(0, url, 'user');
-      quill.setSelection(0, url.length);
-      quill.formatText(0, url.length, 'link', url);
+      const start = quill.getLength();
+      quill.insertText(start, url, 'user');
+      quill.setSelection(start, url.length);
+      quill.formatText(start, url.length, 'link', url);
     }
 
     quill.focus();
@@ -76,7 +77,7 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
   const onSave = (url: string, range?: Range) => {
     if (!quill) return; // Should never happen
 
-    const start = range?.index || 0;
+    const start = range?.index || quill.getLength();
 
     quill.insertEmbed(start, 'image', url, 'user');
     quill.insertEmbed(start + 1, 'block', '<br><p><br></p>');
@@ -110,7 +111,7 @@ export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
 
     const vetted = parseYoutubeURL(url);
     if (vetted) {
-      const start = range?.index || 0;
+      const start = range?.index || quill.getLength();
 
       quill.insertEmbed(start, 'video', vetted);
       quill.insertEmbed(start + 1, 'block', '<br><p><br></p>');
