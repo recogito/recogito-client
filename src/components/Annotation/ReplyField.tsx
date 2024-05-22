@@ -20,8 +20,6 @@ interface ReplyFieldProps {
 
   autoFocus?: boolean;
 
-  scrollIntoView?: boolean;
-
   placeholder: string;
 
   me: PresentUser | User;

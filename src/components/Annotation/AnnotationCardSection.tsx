@@ -83,14 +83,18 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     const bodiesForThisSection = comment ? 
       [comment, ...(tags || [])] : (tags || []);
 
+    // Shorthand
+    const findCreator = (user?: User) =>
+      (present.find(p => p.id === user?.id) || user);
+
     if (bodiesForThisSection.length > 0) {
       // Normal case - section has a comment or tag(s)
-      const creatorIds = new Set(bodiesForThisSection.map(b => b.creator));
+      const creatorIds = new Set(bodiesForThisSection.map(b => b.creator?.id));
       if (creatorIds.size > 1)
         console.warn('Integrity problem: content in this section has multiple creators', annotation);
 
       return [
-        bodiesForThisSection[0].creator,
+        findCreator(bodiesForThisSection[0].creator),
         bodiesForThisSection[0].created
       ];
     } else {
@@ -100,7 +104,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         const firstAnnotationBody = annotation.bodies[0];
         if (firstAnnotationBody) {
           return [
-            firstAnnotationBody.creator || annotation.target?.creator,
+            findCreator(firstAnnotationBody.creator || annotation.target?.creator),
             firstAnnotationBody.created || annotation.target?.created,
           ];
         } else {
@@ -112,7 +116,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         return [undefined, undefined];
       }
     }    
-  }, [annotation, comment, index, tags]);
+  }, [annotation, comment, index, present, tags]);
 
   const isMine = creator?.id === me.id;
 
