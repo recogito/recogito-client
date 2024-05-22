@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -71,7 +71,7 @@ const parseBody = (body?: AnnotationBody): Delta | undefined =>
 
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
-  const { comment, isPrivate, isReadOnly, me, present } = props;
+  const { annotation, comment, index, isPrivate, isReadOnly, me, present, tags } = props;
 
   const { t } = props.i18n;
 
@@ -79,10 +79,44 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const [editable, setEditable] = useState(false);
 
-  const firstBody = props.annotation.bodies[0];
+  const [creator, createdAt] = useMemo(() => {
+    const bodiesForThisSection = comment ? 
+      [comment, ...(tags || [])] : (tags || []);
 
-  const creator: PresentUser | User | undefined = firstBody &&
-    (present.find(p => p.id === firstBody.creator?.id) || firstBody.creator);
+    // Shorthand
+    const findCreator = (user?: User) =>
+      (present.find(p => p.id === user?.id) || user);
+
+    if (bodiesForThisSection.length > 0) {
+      // Normal case - section has a comment or tag(s)
+      const creatorIds = new Set(bodiesForThisSection.map(b => b.creator?.id));
+      if (creatorIds.size > 1)
+        console.warn('Integrity problem: content in this section has multiple creators', annotation);
+
+      return [
+        findCreator(bodiesForThisSection[0].creator),
+        bodiesForThisSection[0].created
+      ];
+    } else {
+      // Unusual, but possible. The first section may have
+      // 0 comments, 0 tag - but bodies from plugins!
+      if (index === 0) {
+        const firstAnnotationBody = annotation.bodies[0];
+        if (firstAnnotationBody) {
+          return [
+            findCreator(firstAnnotationBody.creator || annotation.target?.creator),
+            firstAnnotationBody.created || annotation.target?.created,
+          ];
+        } else {
+          console.warn('Empty annotation - should never happen', annotation);
+          return [undefined, undefined];
+        }
+      } else {
+        console.warn('No comment on reply body - should never happen', annotation);
+        return [undefined, undefined];
+      }
+    }    
+  }, [annotation, comment, index, present, tags]);
 
   const isMine = creator?.id === me.id;
 
@@ -166,7 +200,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.emphasizeOnEntry ? 'is-new' : undefined 
   ].filter(Boolean).join(' ');
 
-  return firstBody && (
+  return (
     <div className={className}>
       <div className="annotation-header">
         <div className="annotation-header-left">
@@ -178,7 +212,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             i18n={props.i18n}
             isPrivate={isPrivate} 
             creator={creator}
-            createdAt={firstBody.created} />
+            createdAt={createdAt} />
         </div>
 
         {canEdit ? (
@@ -226,7 +260,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         <div className="annotation-taglist-wrapper">
           <TagList 
             isEditable={editable}
-            me={props.me}
             i18n={props.i18n}
             tags={props.tags || []}
             vocabulary={props.tagVocabulary}

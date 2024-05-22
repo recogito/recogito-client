@@ -145,6 +145,15 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     store.updateBody(oldValue, newValue);
     
   useEffect(() => {
+    // Scroll the first selected card into view
+    if (selected?.length > 0 && pointerEvent) {
+      setTimeout(() => {
+        const card = el.current?.querySelector('.selected');
+        if (card)
+         card.scrollIntoView({ behavior: 'smooth', block: 'center' });  
+      }, 1);
+    }
+    
     // Don't focus reply before pointer up, otherwise the selection breaks!
     setAutofocus(pointerEvent?.type === 'pointerup');
   }, [pointerEvent, selected.map(s => s.annotation.id).join('-')]);
