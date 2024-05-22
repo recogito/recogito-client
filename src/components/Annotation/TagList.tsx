@@ -13,8 +13,6 @@ interface TagListProps {
 
   isEditable?: boolean;
 
-  me: PresentUser | User;
-
   vocabulary?: string[];
 
   onCreateTag(value: string): void;
@@ -46,7 +44,6 @@ export const TagList = (props: TagListProps) => {
       {props.isEditable && (
         <TagEditor 
           i18n={props.i18n}
-          me={props.me} 
           vocabulary={props.vocabulary}
           onCreateTag={onCreateTag} />
       )}

@@ -6,7 +6,7 @@ html, body {
 
 .ta-desktop .header,
 .ta-desktop .footer {
-  z-index: 20;
+  z-index: 20;  
 }
 
 .ta-desktop main {
@@ -24,7 +24,7 @@ html, body {
 
 .ta-desktop main .r6o-annotatable canvas {
   height: 100%;
-  height: 100dvh;  
+  height: 100dvh;
 }
 
 .ta-desktop main .r6o-annotatable .r6o-span-highlight-layer {
@@ -44,9 +44,7 @@ html, body {
 
 .ta-desktop main .ta-annotated-text-container .page-wrapper {
   background-color: #fff;
-  box-shadow: 
-    0 0 1px rgba(0, 0, 0, 0.34),
-    0 0 16px -8px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.34), 0 0 16px -8px rgba(0, 0, 0, 0.18);
   min-width: 65ch;
   overflow-y: scroll;
   z-index: 10;
@@ -74,15 +72,13 @@ html, body {
   z-index: 1;
 }
 
-.ta-desktop .annotation-list .annotation:not(.readonly) {
-  box-shadow: 
-    0 0 1px 0 rgba(0, 0, 0, 0.18),
-    0 0 16px -7px rgba(0, 0, 0, 0.25);
+.ta-desktop .annotation-list .annotation:not(.readonly),
+.ta-desktop .document-notes-list .annotation:not(.readonly) {
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 0 0 16px -7px rgba(0, 0, 0, 0.25);
 }
 
 .ta-desktop .anno-drawer-panel.annotation-list > ul > li .annotation.selected {
-  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
-    2px 3px 8px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 2px 3px 8px 0 rgba(0, 0, 0, 0.1);
 }
 
 .a9s-popup {
@@ -109,7 +105,7 @@ main.tei.list-open .content-wrapper {
   box-shadow: none;
   overflow-y: hidden;
   width: 100%;
-} 
+}
 
 .ta-desktop main.pdf .spacer {
   display: none;
@@ -135,4 +131,3 @@ main.tei.list-open .content-wrapper {
   border-left: 1px solid var(--gray-300);
   flex-grow: 0.1 !important;
 }
-

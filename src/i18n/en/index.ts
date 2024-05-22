@@ -18,8 +18,12 @@ import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
 
 export default {
-  'annotation-image': { ...annotationCommon, ...annotationImage },
-  'annotation-text': { ...annotationCommon, ...annotationText },
+  'annotation-image': {
+    ...annotationCommon,
+    ...annotationImage,
+    ...accountMenu,
+  },
+  'annotation-text': { ...annotationCommon, ...annotationText, ...accountMenu },
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
@@ -39,7 +43,11 @@ export default {
     ...projectSidedbar,
     ...projectAssignments,
   },
-  'project-settings': { ...projectSettings, ...dashboardProjects },
+  'project-settings': {
+    ...projectSettings,
+    ...dashboardProjects,
+    ...accountMenu,
+  },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': { ...userManagement, ...accountMenu },
 };

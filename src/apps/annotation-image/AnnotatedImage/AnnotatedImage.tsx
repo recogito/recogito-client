@@ -39,6 +39,8 @@ interface AnnotatedImageProps {
 
   layers?: DocumentLayer[];
 
+  layerNames: Map<string, string>;
+
   policies: Policies;
 
   present: PresentUser[];
@@ -65,7 +67,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, layers, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -158,6 +160,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
               {...props}
               i18n={i18n}
               layers={layers}
+              layerNames={layerNames}
               policies={policies}
               present={present}
               tagVocabulary={tagVocabulary} />)} />

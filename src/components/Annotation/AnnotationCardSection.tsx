@@ -7,6 +7,7 @@ import { Extension, usePlugins } from '@components/Plugins';
 import { QuillEditor, QuillEditorRoot, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
+import { LayerIcon } from './LayerIcon';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
 import { PublicAnnotationActions } from './PublicAnnotationActions';
 import { TagList } from './TagList';
@@ -31,6 +32,8 @@ export interface AnnotationCardSectionProps {
   isPrivate?: boolean;
 
   isReadOnly?: boolean;
+
+  layerNames: Map<string, string>;
 
   me: User | PresentUser;
 
@@ -178,7 +181,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             createdAt={firstBody.created} />
         </div>
 
-        {canEdit && (
+        {canEdit ? (
           <div className="annotation-header-right">
             {isPrivate ? (
               <PrivateAnnotationActions
@@ -197,6 +200,12 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 onDeleteSection={onDeleteSection}
                 onEditSection={() => setEditable(true)} />
             )}    
+          </div>
+        ) : (props.index === 0 && isReadOnly) && (
+          <div className="annotation-header-right">
+            <LayerIcon 
+              layerId={props.annotation.layer_id}
+              layerNames={props.layerNames} />
           </div>
         )}
       </div>

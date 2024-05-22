@@ -16,6 +16,8 @@ interface AnnotationPopupProps {
 
   layers?: DocumentLayer[];
 
+  layerNames: Map<string, string>;
+
   present: PresentUser[];
 
   policies?: Policies;
@@ -77,6 +79,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
         annotation={selected}
         i18n={props.i18n}
         isReadOnly={isReadOnly}
+        layerNames={props.layerNames}
         present={props.present}
         showReplyField={!isReadOnly}
         tagVocabulary={props.tagVocabulary} 

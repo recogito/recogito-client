@@ -10,8 +10,6 @@ interface TagEditorProps {
 
   i18n: Translations;
 
-  me: PresentUser | User;
-
   vocabulary?: string[];
 
   onCreateTag(tag: string): void;

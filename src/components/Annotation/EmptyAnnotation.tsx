@@ -8,7 +8,6 @@ import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/Qu
 import { Extension, usePlugins } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
-import { AnnotationCardSection } from './AnnotationCardSection';
 import { TagList } from './TagList';
 import type { Translations } from 'src/Types';
 
@@ -59,7 +58,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
   const plugins = usePlugins('annotation.*.annotation-editor');
 
   const creator: PresentUser | User | undefined = 
-    props.present.find(p => p.id === target.creator?.id) || target.creator;
+    props.present.find(p => p.id === target?.creator?.id) || target?.creator;
 
   const isMine = creator?.id === props.me.id;
 
@@ -147,7 +146,6 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
             <TagList 
               isEditable
               i18n={props.i18n}
-              me={props.me}
               tags={tags}
               vocabulary={props.tagVocabulary}
               onCreateTag={onCreateTag}  

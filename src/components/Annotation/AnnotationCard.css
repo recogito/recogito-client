@@ -25,10 +25,16 @@
 }
 
 .annotation.note {
-  background-color: #F9EEC8;
+  border: 1px solid #f5e5a8;
+  background-color: #f9eec8;
+}
+
+.annotation.note:not(.readonly) > ul > li:not(.interstitial-wrapper) + li {
+  border-color: #f3e096;
 }
 
 .annotation.note.readonly {
+  border-color: #e1d7b4;
   background-color: #e1d7b4;
 }
 

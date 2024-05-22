@@ -7,6 +7,12 @@ interface DocumentNotesListItemProps {
 
   i18n: Translations;
 
+  isSelected?: boolean;
+
+  isReadOnly?: boolean;
+
+  layerNames: Map<string, string>;
+
   note: DocumentNote;
 
   policies?: Policies;
@@ -41,8 +47,11 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
     <AnnotationCard
       autoFocus
       isNote 
+      isSelected={props.isSelected}
       annotation={props.note as unknown as Annotation}
       i18n={i18n}   
+      isReadOnly={props.isReadOnly}
+      layerNames={props.layerNames}
       policies={props.policies}    
       present={props.present}
       showReplyField={props.showReplyField}

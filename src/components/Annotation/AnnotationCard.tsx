@@ -26,6 +26,8 @@ export interface AnnotationCardProps {
   isReadOnly?: boolean;
 
   isSelected?: boolean;
+
+  layerNames: Map<string, string>;
   
   present: PresentUser[];
 
@@ -237,6 +239,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 isPrivate={isPrivate}
                 isReadOnly={props.isReadOnly}
                 isSelected={props.isSelected}
+                layerNames={props.layerNames}
                 me={me}
                 policies={props.policies}
                 present={props.present}
@@ -277,6 +280,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   isPrivate={isPrivate}
                   isReadOnly={props.isReadOnly}
                   isSelected={props.isSelected}
+                  layerNames={props.layerNames}
                   me={me}
                   policies={props.policies}
                   present={props.present}
@@ -305,6 +309,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   isPrivate={isPrivate}
                   isReadOnly={props.isReadOnly}
                   isSelected={props.isSelected}
+                  layerNames={props.layerNames}
                   me={me}
                   policies={props.policies}
                   present={props.present}
