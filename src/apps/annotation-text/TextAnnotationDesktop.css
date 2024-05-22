@@ -58,6 +58,7 @@ html, body {
   min-height: 100%;
   pointer-events: all;
   position: relative;
+  white-space: break-spaces;
   word-wrap: break-word;
 }
 
