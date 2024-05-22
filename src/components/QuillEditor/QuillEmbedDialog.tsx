@@ -28,7 +28,7 @@ interface EmbedDialogProps {
 
   title: ReactNode;
 
-  onSave(selection: Range, url: string): void;
+  onSave(url: string, selection?: Range | null): void;
 
   onCancel(): void;
 
@@ -40,11 +40,18 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
 
   const { quill } = useQuillEditor();
 
-  const onSave = (range: Range, url: string) => {
+  const onSave = (url: string, range?: Range) => {
     if (!quill) return; // Should never happen
 
-    quill.formatText(range.index, range.length, 'link', url);
-    quill.focus();  
+    if (range) {
+      quill.formatText(range.index, range.length, 'link', url);
+    } else {
+      quill.insertText(0, url, 'user');
+      quill.setSelection(0, url.length);
+      quill.formatText(0, url.length, 'link', url);
+    }
+
+    quill.focus();
 
     props.onClose();
   }
@@ -66,12 +73,14 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
 
   const { quill } = useQuillEditor();
 
-  const onSave = (range: Range, url: string) => {
+  const onSave = (url: string, range?: Range) => {
     if (!quill) return; // Should never happen
 
-    quill.insertEmbed(range.index, 'image', url, 'user');
-    quill.insertEmbed(range.index + 1, 'block', '<br><p><br></p>');
-    quill.setSelection({ index: range.index + 1, length: 0 });
+    const start = range?.index || 0;
+
+    quill.insertEmbed(start, 'image', url, 'user');
+    quill.insertEmbed(start + 1, 'block', '<br><p><br></p>');
+    quill.setSelection({ index: start + 1, length: 0 });
     window.setTimeout(() => quill.focus(), 100);
 
     props.onClose();
@@ -96,14 +105,16 @@ export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
 
   const { quill } = useQuillEditor();
 
-  const onSave = (range: Range, url: string) => {
+  const onSave = (url: string, range?: Range) => {
     if (!quill) return; // Should never happen
 
     const vetted = parseYoutubeURL(url);
     if (vetted) {
-      quill.insertEmbed(range.index, 'video', vetted);
-      quill.insertEmbed(range.index + 1, 'block', '<br><p><br></p>');
-      quill.setSelection({ index: range.index + 1, length: 0 });
+      const start = range?.index || 0;
+
+      quill.insertEmbed(start, 'video', vetted);
+      quill.insertEmbed(start + 1, 'block', '<br><p><br></p>');
+      quill.setSelection({ index: start + 1, length: 0 });
       quill.focus();
     }
 
@@ -138,7 +149,7 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
     window.setTimeout(() => quill?.focus(), 1);
   }
 
-  return selection && (
+  return (
     <Dialog.Root open={true}>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay not-annotatable" />
@@ -166,7 +177,7 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
 
             <button 
               className="primary"
-              onClick={() => props.onSave(selection, value)}>
+              onClick={() => props.onSave(value, selection)}>
               {t['Save']}
             </button>
           </div>
