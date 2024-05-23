@@ -176,7 +176,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               setDocuments={onSetDocuments}
               onRemoveDocument={removeDocumentFromAssignments}
             />
-          ) : (
+          ) : tab === 'assignments' ? (
             <AssignmentsView
               i18n={props.i18n}
               project={project}
@@ -188,6 +188,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               setAssignments={setAssignments}
               availableLayers={props.availableLayers}
             />
+          ) : (
+            <div />
           )}
           <Toast
             content={toast}
