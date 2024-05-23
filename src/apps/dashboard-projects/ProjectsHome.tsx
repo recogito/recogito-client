@@ -190,6 +190,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           showNotifications={true}
           onInvitationAccepted={onInvitationAccepted}
           onInvitationDeclined={onInvitationDeclined}
+          isCreator={!isReader}
         />
         <Header
           i18n={props.i18n}

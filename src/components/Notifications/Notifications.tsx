@@ -15,6 +15,8 @@ interface NotificationsProps {
 
   invitations: Invitation[];
 
+  isCreator?: boolean;
+
   onInvitationAccepted(
     invitation: Invitation,
     project: ExtendedProjectData
@@ -109,6 +111,7 @@ export const Notifications = (props: NotificationsProps) => {
         <InvitationConfirmation
           i18n={props.i18n}
           invitation={showConfirmation}
+          isCreator={props.isCreator}
           onClose={() => setShowConfirmation(undefined)}
         />
       )}
