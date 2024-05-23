@@ -1,5 +1,4 @@
 export interface UserProfile {
-
   id: string;
 
   nickname?: string;
@@ -9,12 +8,10 @@ export interface UserProfile {
   last_name?: string;
 
   avatar_url?: string;
-
 }
 
 /** Used in the Admin section */
 export interface ExtendedUserProfile extends UserProfile {
-  
   email_address: string;
 
   last_sign_in_at: string;
@@ -22,31 +19,25 @@ export interface ExtendedUserProfile extends UserProfile {
   org_group_id: string;
 
   org_group_name: string;
-
 }
 
 export type MyProfile = UserProfile & {
-
   created_at: string;
 
   email: string;
 
   isOrgAdmin: boolean;
-
-}
+};
 
 export type Member = {
-
   inGroup: Group | undefined;
 
   since: string;
 
   user: UserProfile;
-
-}
+};
 
 export interface Project {
-
   id: string;
 
   created_at: string;
@@ -64,11 +55,9 @@ export interface Project {
   is_open_join?: boolean;
 
   is_open_edit?: boolean;
-
 }
 
 export interface ExtendedProjectData {
-
   id: string;
 
   created_at: string;
@@ -94,11 +83,9 @@ export interface ExtendedProjectData {
   documents: Document[];
 
   users: Member[];
-
 }
 
 export interface ProjectDocument {
-
   id?: string;
 
   created_at?: string;
@@ -112,11 +99,9 @@ export interface ProjectDocument {
   project_id: string;
 
   document_id: string;
-
 }
 
 export interface Group {
-
   id: string;
 
   name: string;
@@ -126,19 +111,13 @@ export interface Group {
   is_default: boolean;
 
   members: {
-
     user: UserProfile;
 
     since: string;
-
   }[];
-
 }
 
-
-
 export interface Document {
-
   id: string;
 
   created_at?: string;
@@ -160,65 +139,51 @@ export interface Document {
   collection_id?: string;
 
   meta_data?: {
-
     protocol: Protocol;
 
     url: string;
 
     meta?: {
-
       author?: string;
-
     };
-
   };
 
   collection_metadata?: {
-
     revision_number: number;
 
     document_id: string;
-
   };
-
 }
 
 export interface DocumentWithContext extends Document {
-
   context: DocumentContext;
-  
-  layers: DocumentLayer[];
 
+  layers: DocumentLayer[];
 }
 
 export interface DocumentContext {
+  id: string | undefined;
 
-  id: string;
-  
-  name: string;
+  name: string | undefined;
 
-  description: string;
+  description: string | undefined;
 
   project_id: string;
 
   is_project_default: boolean;
 
   layer_contexts?: any;
-
 }
 
 export interface DocumentLayer {
-
   id: string;
 
   is_active: boolean;
 
   document_id: string;
-
 }
 
 export interface Layer {
-
   id: string;
 
   document_id: string;
@@ -230,15 +195,11 @@ export interface Layer {
   description?: string;
 
   is_active_layer: boolean;
-
 }
 
 export interface LayerWithDocument extends Layer {
-
   document: Document;
-
 }
-
 
 export const ContentTypes = [
   'application/pdf',
@@ -253,7 +214,6 @@ export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 export type Protocol = (typeof Protocols)[number];
 
 export interface Context {
-
   id: string;
 
   name: string;
@@ -267,13 +227,11 @@ export interface Context {
   created_at: string;
 
   members: {
-    
     id: string;
 
     user_id: string;
 
     user: {
-
       nickname: string;
 
       first_name: string;
@@ -281,15 +239,11 @@ export interface Context {
       last_name: string;
 
       avatar_url: string;
-
     };
-
   }[];
 
   context_documents: {
-
     document: {
-
       id: string;
 
       name: string;
@@ -299,31 +253,22 @@ export interface Context {
       meta_data: any;
 
       is_private: boolean;
-
     };
-
   }[];
-
 }
 
 export interface TaggedContext extends Context {
-
   tags: Tag[];
-
 }
 
 export interface ExtendedAssignmentData extends Context {
-
   team: {
-
     user: UserProfile;
 
     since: string;
-
   }[];
 
   layers: {
-
     id: string;
 
     name: string;
@@ -333,13 +278,10 @@ export interface ExtendedAssignmentData extends Context {
     document: Document;
 
     is_active_layer: boolean;
-    
   }[];
-
 }
 
 export interface Collection {
-
   created_at?: string;
 
   created_by?: string;
@@ -357,11 +299,9 @@ export interface Collection {
   extension_metadata?: object;
 
   custom_css?: string;
-
 }
 
 export interface TagDefinition {
-
   id: string;
 
   name: string;
@@ -377,11 +317,9 @@ export interface TagDefinition {
   scope: 'organization' | 'project' | 'system';
 
   scope_id?: string;
-
 }
 
 export interface Tag {
-
   id: string;
 
   created_at: string;
@@ -391,11 +329,9 @@ export interface Tag {
   target_id: string;
 
   tag_definition?: TagDefinition;
-
 }
 
 export interface InstalledPlugin {
-
   id: string;
 
   created_at: string;
@@ -416,15 +352,12 @@ export interface InstalledPlugin {
 }
 
 export interface Translations {
-
   lang: string;
 
   t: { [key: string]: string };
-
 }
 
 export interface Invitation {
-
   id: string;
 
   created_at: string;
@@ -440,7 +373,6 @@ export interface Invitation {
   accepted?: boolean;
 
   ignored?: boolean;
-
 }
 
 export type TableName =
@@ -454,17 +386,13 @@ export type TableName =
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
 
 export type Policies = {
-
   get(t: TableName): { has: (operation: OperationType) => boolean };
-
-}
+};
 
 export type LoginMethod = {
-
   name: string;
 
   type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
 
   domain: string;
-
-}
+};

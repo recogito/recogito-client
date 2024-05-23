@@ -53,8 +53,7 @@ export const MembersTable = (props: MembersTableProps) => {
 
   const onSelectRow = (user: UserProfile, checked: Checkbox.CheckedState) => {
     if (checked) setSelected((selected) => [...selected, user.id]);
-    else
-      setSelected((selected) => selected.filter((id) => id !== user.id));
+    else setSelected((selected) => selected.filter((id) => id !== user.id));
   };
 
   const onSelectAll = (checked: Checkbox.CheckedState) => {
@@ -144,6 +143,7 @@ export const MembersTable = (props: MembersTableProps) => {
                   i18n={props.i18n}
                   member={member}
                   me={props.me}
+                  projectId={props.project.id}
                   onDeleteMember={props.onDeleteMember}
                   onDeleteError={props.onDeleteMemberError}
                 />

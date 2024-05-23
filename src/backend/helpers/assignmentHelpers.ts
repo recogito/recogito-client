@@ -13,7 +13,7 @@ export const createAssignmentContext = (
 ): Response<Context> =>
   supabase
     .rpc('create_context_rpc', {
-      _description: description,
+      _description: description || '',
       _name: name,
       _project_id: project_id,
     })

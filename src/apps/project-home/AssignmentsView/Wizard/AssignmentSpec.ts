@@ -81,6 +81,7 @@ export const assignmentSpecToContext = (spec: AssignmentSpec) => {
     description: spec.description,
     project_id: spec.project_id,
     created_at: new Date().toISOString(),
+    is_project_default: !spec.name,
     members: spec.team.map((t) => {
       return {
         id: '',

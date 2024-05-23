@@ -204,11 +204,12 @@ export const updateUserProjectGroup = (
     .then(({ error }) => ({ error, data: !error }));
 
 export const leaveProject = (
-    supabase: SupabaseClient,
-    projectId: string
-): Response<boolean> => 
-  supabase.rpc('leave_project_rpc', {_project_id: projectId})
-  .then((resp) => resp.data);
+  supabase: SupabaseClient,
+  projectId: string
+): Response<boolean> =>
+  supabase
+    .rpc('leave_project_rpc', { _project_id: projectId })
+    .then((resp) => resp.data);
 
 export const leaveGroup = (
   supabase: SupabaseClient,
@@ -228,11 +229,11 @@ export const leaveGroup = (
 export const removeUserFromProject = (
   supabase: SupabaseClient,
   userId: string,
-  typeId: string
+  projectId: string
 ): Response<boolean> =>
   supabase
-    .from('group_users')
-    .delete()
-    .eq('user_id', userId)
-    .eq('type_id', typeId)
-    .then(({ error }) => ({ error, data: !error }));
+    .rpc('remove_user_from_project_rpc', {
+      _project_id: projectId,
+      _user_id: userId,
+    })
+    .then(({ data }) => ({ error: null, data: data }));

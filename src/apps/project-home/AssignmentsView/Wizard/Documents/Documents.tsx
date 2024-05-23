@@ -8,8 +8,11 @@ import {
   Warning,
 } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import type { Document, DocumentWithLayers, Translations } from 'src/Types';
-import type { AssignmentSpec } from '../AssignmentSpec';
+import type { Document, DocumentWithContext, Translations } from 'src/Types';
+import {
+  assignmentSpecToContext,
+  type AssignmentSpec,
+} from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 
 import './Document.css';
@@ -21,7 +24,7 @@ interface DocumentsProps {
 
   documents: Document[];
 
-  onChange(documents: DocumentWithLayers[]): void;
+  onChange(documents: DocumentWithContext[]): void;
 
   onCancel(): void;
 
@@ -37,7 +40,7 @@ export const Documents = (props: DocumentsProps) => {
     useSelectableRows(documents, props.assignment.documents);
 
   useEffect(() => {
-    const docs: DocumentWithLayers[] = [];
+    const docs: DocumentWithContext[] = [];
 
     documents
       .filter((d) => selected.includes(d.id))
@@ -45,6 +48,7 @@ export const Documents = (props: DocumentsProps) => {
         docs.push({
           ...d,
           layers: [],
+          context: assignmentSpecToContext(props.assignment),
         });
       });
     props.onChange(docs);
