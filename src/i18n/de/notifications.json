@@ -2,11 +2,9 @@
   "Notifications": "Benachrichtigungen",
   "You're up to date!": "Alles erledigt!",
   "No notifications": "Keine Benachrichtigungen",
-
   "Invitation": "${sender} lädt dich zum Projekt <strong>${project}</strong> ein.",
-
   "Accept": "Annehmen",
   "Ignore": "Ignorieren",
-
-  "Confirmed": "<strong>${project}</strong> wurde Deinem Dashboard hinzugefügt. Du findest es unter 'Alle' und 'Mit mir geteilt'."
+  "Confirmed-student": "<strong>${project}</strong> has been added to your Dashboard. You will find it under 'My Projects'.",
+  "Confirmed-creator": "<strong>${project}</strong> has been added to your Dashboard. You will find it under 'Shared with me'."
 }
