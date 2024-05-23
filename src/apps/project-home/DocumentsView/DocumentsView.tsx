@@ -1,8 +1,19 @@
 import { DownloadSimple, Plus } from '@phosphor-icons/react';
 import { DocumentCard } from '@components/DocumentCard';
-import { UploadActions, UploadTracker, useDragAndDrop, useUpload } from '@apps/project-home/upload';
+import {
+  UploadActions,
+  UploadTracker,
+  useDragAndDrop,
+  useUpload,
+} from '@apps/project-home/upload';
 import { DocumentLibrary } from '@components/DocumentLibrary';
-import type { Document, Protocol, ExtendedProjectData, Translations, MyProfile } from 'src/Types';
+import type {
+  Document,
+  Protocol,
+  ExtendedProjectData,
+  Translations,
+  MyProfile,
+} from 'src/Types';
 import { useState, useMemo } from 'react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -10,7 +21,7 @@ import { setDocumentPrivacy } from '@backend/crud';
 import { useDocumentList } from '@apps/project-home/useDocumentList';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 import type { ToastContent } from '@components/Toast';
-import '../ProjectHome.css'
+import '../ProjectHome.css';
 import { removeDocumentsFromProject } from '@backend/helpers';
 
 interface DocumentsViewProps {
@@ -31,7 +42,6 @@ interface DocumentsViewProps {
 }
 
 export const DocumentsView = (props: DocumentsViewProps) => {
-
   const [addOpen, setAddOpen] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
   const [documentUpdated, setDocumentUpdated] = useState(false);
@@ -40,14 +50,19 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     (document) => props.setDocuments([...props.documents, document])
   );
 
-  const documentIds = useMemo(() => props.documents.map((d) => d.id), [props.documents]);
+  const documentIds = useMemo(
+    () => props.documents.map((d) => d.id),
+    [props.documents]
+  );
 
-  const defaultContext = props.project.contexts.find((c) => c.is_project_default);
+  const defaultContext = props.project.contexts.find(
+    (c) => c.is_project_default
+  );
 
   const { addDocumentIds } = useDocumentList(
     props.project.id,
     defaultContext?.id,
-    (document) => props.setDocuments([...props.documents, document])
+    (documents) => props.setDocuments([...props.documents, ...documents])
   );
 
   const { t, lang } = props.i18n;
@@ -72,33 +87,37 @@ export const DocumentsView = (props: DocumentsViewProps) => {
 
         setShowUploads(true);
       } else if (typeof accepted === 'string') {
-        validateIIIF(accepted, props.i18n).then(({ isValid, result, error }) => {
-          if (isValid) {
-            addUploads([
-              {
-                name: result?.label || accepted,
-                projectId: props.project.id,
-                contextId: defaultContext!.id,
-                url: accepted,
-                protocol: result?.type === 'image' ? 'IIIF_IMAGE' : 'IIIF_PRESENTATION'
-              },
-            ]);
+        validateIIIF(accepted, props.i18n).then(
+          ({ isValid, result, error }) => {
+            if (isValid) {
+              addUploads([
+                {
+                  name: result?.label || accepted,
+                  projectId: props.project.id,
+                  contextId: defaultContext!.id,
+                  url: accepted,
+                  protocol:
+                    result?.type === 'image'
+                      ? 'IIIF_IMAGE'
+                      : 'IIIF_PRESENTATION',
+                },
+              ]);
 
-            setShowUploads(true);
-          } else {
-            props.setToast({
-              title: 'Error',
-              description: error,
-              type: 'error'
-            })
+              setShowUploads(true);
+            } else {
+              props.setToast({
+                title: 'Error',
+                description: error,
+                type: 'error',
+              });
+            }
           }
-        });
+        );
       }
     }
   };
 
-  const { getInputProps, open } =
-    useDragAndDrop(onDrop);
+  const { getInputProps, open } = useDragAndDrop(onDrop);
 
   const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
     setShowUploads(true);
@@ -109,7 +128,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         projectId: props.project.id,
         contextId: defaultContext!.id,
         url,
-        protocol
+        protocol,
       },
     ]);
   };
@@ -122,10 +141,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     // Optimistic update: remove document from the list
     props.setDocuments(props.documents.filter((d) => d.id !== document.id));
     setDocumentUpdated(true);
-    removeDocumentsFromProject(supabase, props.project.id, [document.id])
-      .then((resp) => {
+    removeDocumentsFromProject(supabase, props.project.id, [document.id]).then(
+      (resp) => {
         if (resp) {
-          props.onRemoveDocument(document)
+          props.onRemoveDocument(document);
           props.setToast({
             title: t['Deleted'],
             description: t['Document deleted successfully.'],
@@ -140,7 +159,8 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             type: 'error',
           });
         }
-      })
+      }
+    );
   };
 
   const onTogglePrivate = (document: Document) => {
@@ -154,9 +174,9 @@ export const DocumentsView = (props: DocumentsViewProps) => {
       props.documents.map((d) =>
         d.id === document.id
           ? {
-            ...d,
-            ...document,
-          }
+              ...d,
+              ...document,
+            }
           : d
       )
     );
@@ -176,10 +196,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     setAddOpen(true);
   };
 
-  const handleAddDocument = (_document: Document) => {
-
-  }
-
   const onDocumentsSelected = (documentIds: string[]) => {
     addDocumentIds(documentIds);
     setAddOpen(false);
@@ -188,12 +204,13 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   return (
     <>
       <header className='project-home-document-header-bar'>
-        <h1>
-          {t['Documents']}
-        </h1>
+        <h1>{t['Documents']}</h1>
         {props.isAdmin && (
           <div className='admin-actions'>
-            <button className='button primary project-home-add-document' onClick={onAddDocument}>
+            <button
+              className='button primary project-home-add-document'
+              onClick={onAddDocument}
+            >
               <Plus size={20} /> <span>{t['Add Document']}</span>
             </button>
             <a
@@ -207,12 +224,8 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         )}
       </header>
 
-      <div
-        className='project-home-grid-wrapper'
-      >
-        <div
-          className='project-home-grid'
-        >
+      <div className='project-home-grid-wrapper'>
+        <div className='project-home-grid'>
           {props.documents.map((document) => (
             <DocumentCard
               key={document.id}
@@ -232,7 +245,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         <DocumentLibrary
           open={addOpen}
           i18n={props.i18n}
-          onAddDocument={handleAddDocument}
           onCancel={() => setAddOpen(false)}
           user={props.user}
           dataDirty={dataDirty || documentUpdated}
@@ -265,5 +277,5 @@ export const DocumentsView = (props: DocumentsViewProps) => {
       />
       <input {...getInputProps()} />
     </>
-  )
-}
+  );
+};

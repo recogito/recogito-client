@@ -22,6 +22,8 @@ interface TopBarProps {
 
   showNotifications?: boolean;
 
+  isCreator?: boolean;
+
   onInvitationAccepted?(
     invitation: Invitation,
     project: ExtendedProjectData
@@ -57,6 +59,7 @@ export const TopBar = (props: TopBarProps) => {
                   : () => {}
               }
               onError={props.onError}
+              isCreator={props.isCreator}
             />
           )}
           <AccountActions i18n={props.i18n} profile={props.me} />
