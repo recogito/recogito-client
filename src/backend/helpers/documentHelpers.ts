@@ -138,21 +138,42 @@ const _initDocument = (
   });
 };
 
-export const addDocumentToProject = (
+export const addDocumentsToProject = (
   supabase: SupabaseClient,
   projectId: string,
-  documentId: string
-): Response<Document> =>
-  createProjectDocument(supabase, documentId, projectId).then(
-    // @ts-ignore
-    ({ error, data }) => {
-      if (error || !data) {
-        return { error: error, data: null };
-      }
+  documentIds: string[]
+): Response<Document[] | undefined> =>
+  supabase
+    .rpc('add_documents_to_project_rpc', {
+      _document_ids: documentIds,
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (data) {
+        return supabase
+          .from('documents')
+          .select()
+          .in('id', documentIds)
+          .then(({ data, error }) => {
+            if (error) {
+              return {
+                error,
+                data: [],
+              };
+            }
 
-      return supabase.from('documents').select().eq('id', documentId);
-    }
-  );
+            return {
+              error: null,
+              data: data as Document[],
+            };
+          });
+      } else {
+        return {
+          error: error,
+          data: undefined,
+        };
+      }
+    });
 
 export const removeDocumentsFromProject = (
   supabase: SupabaseClient,

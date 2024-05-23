@@ -17,7 +17,7 @@
   "Tags": "Tags",
   "Image": "Image",
   "Paste a publicly available URL to the image to insert it into your annotation.": "Paste a publicly available URL to the image to insert it into your annotation.",
-  "Image URL": "Image URL", 
+  "Image URL": "Image URL",
   "YouTube Video": "YouTube Video",
   "Paste a YouTube URL to embed the video into your annotation.": "Paste a YouTube URL to embed the video into your annotation.",
   "YouTube URL": "YouTube URL",
@@ -91,5 +91,6 @@
   "Zoom out": "Zoom out",
   "Add an annotation...": "Add an annotation...",
   "Connection Lost.": "Connection Lost.",
-  "Try refreshing the page.": "Try refreshing the page."
+  "Try refreshing the page.": "Try refreshing the page.",
+  "Show Annotations": "Show Annotations"
 }

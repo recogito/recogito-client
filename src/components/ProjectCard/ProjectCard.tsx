@@ -106,9 +106,11 @@ export const ProjectCard = (props: ProjectCardProps) => {
           {contexts.length > 0 && (
             <li>
               <GraduationCap size={16} />
-              <span className='count'>{contexts.length}</span>
+              <span className='count'>
+                {props.project.is_open_edit ? 1 : contexts.length}
+              </span>
               {!showDocs &&
-                (contexts.length === 1
+                (contexts.length === 1 || props.project.is_open_edit
                   ? ` ${t['assignment']}`
                   : ` ${t['assignments']}`)}
             </li>

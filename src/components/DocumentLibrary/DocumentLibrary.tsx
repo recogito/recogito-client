@@ -51,7 +51,6 @@ export interface DocumentLibraryProps {
   disabledIds: string[];
   dataDirty: boolean;
   clearDirtyFlag(): void;
-  onAddDocument(document: Document): void;
   onCancel(): void;
   UploadActions: React.ReactNode;
   onDocumentsSelected(documentIds: string[]): void;

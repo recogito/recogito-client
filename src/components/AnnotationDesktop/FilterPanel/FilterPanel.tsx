@@ -8,7 +8,6 @@ import type { DocumentLayer, Translations } from 'src/Types';
 import './FilterPanel.css';
 
 interface FilterPanelProps {
-
   i18n: Translations;
 
   layers?: DocumentLayer[];
@@ -16,28 +15,22 @@ interface FilterPanelProps {
   layerNames: Map<string, string>;
 
   present: PresentUser[];
-
 }
 
 export const FilterPanel = (props: FilterPanelProps) => {
-
   return (
-    <div className="anno-drawer-panel filter-panel not-annotatable">
+    <div className='anno-drawer-panel filter-panel not-annotatable'>
       <AnnotationLayers
         i18n={props.i18n}
         layers={props.layers}
-        layerNames={props.layerNames} />
+        layerNames={props.layerNames}
+      />
 
-      <Visibility 
-        i18n={props.i18n} />
+      <Visibility i18n={props.i18n} />
 
-      <Creators 
-        i18n={props.i18n} 
-        present={props.present} />
+      <Creators i18n={props.i18n} present={props.present} />
 
-      <Tags 
-        i18n={props.i18n} />
+      <Tags i18n={props.i18n} />
     </div>
-  )
-
-}
+  );
+};
