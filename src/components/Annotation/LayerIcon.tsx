@@ -1,9 +1,12 @@
 import { Stack } from '@phosphor-icons/react';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import type { Translations } from 'src/Types';
 
 import './LayerIcon.css';
 
 interface LayerIconProps {
+
+  i18n: Translations;
 
   layerId?: string;
 
@@ -12,6 +15,8 @@ interface LayerIconProps {
 }
 
 export const LayerIcon = (props: LayerIconProps) => {
+
+  const { t } = props.i18n;
 
   return props.layerId && (
     <Tooltip.Provider>
@@ -25,7 +30,7 @@ export const LayerIcon = (props: LayerIconProps) => {
         <Tooltip.Content 
           className="tooltip-content"
           side="top">
-          {props.layerNames.get(props.layerId)}
+          {props.layerNames.get(props.layerId) || t['Baselayer']}
         </Tooltip.Content>
       </Tooltip.Root>
     </Tooltip.Provider>
