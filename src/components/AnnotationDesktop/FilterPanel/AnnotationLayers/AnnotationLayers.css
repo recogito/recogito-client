@@ -6,6 +6,22 @@
   padding-left: 6px; 
 }
 
+
+.anno-drawer-panel.filter-panel .filters-annotationlayers.single-layer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0 5px 0;
+}
+
+.filters-annotationlayers.single-layer label {
+  align-items: center;
+  display: flex;
+  font-size: var(--font-tiny);
+  font-weight: 600;
+  gap: 0.5rem;
+}
+
 .filters-annotationlayers h3 {
   font-size: var(--font-tiny);
   font-style: italic;
