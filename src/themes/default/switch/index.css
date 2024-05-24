@@ -1,0 +1,31 @@
+.switch-root {
+  all: unset;
+  background-color: var(--gray-400);
+  border-radius: 9999px;
+  cursor: pointer;
+  height: 23px;
+  position: relative;
+  width: 39px;
+}
+
+.switch-root:focus-visible {
+  box-shadow: 0 0 0 2px black;
+}
+
+.switch-root[data-state='checked'] {
+  background-color: var(--bright-blue);
+}
+
+.switch-thumb {
+  background-color: #fff;
+  border-radius: 50%;
+  display: block;
+  height: 17px;
+  transition: transform 100ms;
+  transform: translateX(3px);
+  width: 17px;
+}
+
+.switch-thumb[data-state='checked'] {
+  transform: translateX(18px);
+}

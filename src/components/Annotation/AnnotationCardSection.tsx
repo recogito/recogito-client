@@ -238,6 +238,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         ) : (props.index === 0 && isReadOnly) && (
           <div className="annotation-header-right">
             <LayerIcon 
+              i18n={props.i18n}
               layerId={props.annotation.layer_id}
               layerNames={props.layerNames} />
           </div>

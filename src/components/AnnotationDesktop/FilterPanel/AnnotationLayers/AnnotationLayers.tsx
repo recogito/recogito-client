@@ -1,5 +1,6 @@
-import { Check, Stack, Eye } from '@phosphor-icons/react';
+import { Check, Stack, EyeSlash } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
+import * as Switch from '@radix-ui/react-switch';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { DocumentLayer, Translations } from 'src/Types';
 import { useFilterSettingsState } from '../FilterState';
@@ -7,14 +8,17 @@ import { useFilterSettingsState } from '../FilterState';
 import './AnnotationLayers.css';
 
 interface AnnotationLayersProps {
+
   i18n: Translations;
 
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
+
 }
 
 export const AnnotationLayers = (props: AnnotationLayersProps) => {
+
   const { t } = props.i18n;
 
   const active = props.layers?.find((l) => l.is_active);
@@ -58,74 +62,78 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
     }
   };
 
-  return (
-    active && (
-      <section className='filters-annotationlayers'>
-        <h2>
-          {props.layers!.length > 1 ? (
-            <>
-              <Stack size={18} /> {t['Annotation Layers']}
-            </>
-          ) : (
-            <>
-              <Eye size={18} /> {t['Show Annotations']}
-            </>
-          )}
-        </h2>
+  return props.layers?.length === 1 && active ? (
+    <section className="filters-annotationlayers single-layer">
+      <label htmlFor="hide-annotations">
+        <EyeSlash size={18} /> {t['Hide Annotations']}
+      </label>
 
-        <section>
-          {props.layers!.length > 1 && <h3>{t['Active']}</h3>}
+      <Switch.Root 
+        className="switch-root" 
+        id="hide-annotations"
+        checked={!isChecked(active.id)}
+        onCheckedChange={checked => 
+          onCheckedChange(active.id, !checked)
+        }>
+        <Switch.Thumb className="switch-thumb" />
+      </Switch.Root>
+    </section>
+  ) : active ? (
+    <section className="filters-annotationlayers">
+      <h2>
+        <Stack size={18} /> {t['Annotation Layers']}
+      </h2>
 
-          <div className='active-layer'>
-            <Checkbox.Root
-              id='active-layer'
-              className='checkbox-root'
-              checked={isChecked(active.id)}
-              onCheckedChange={(checked) =>
-                onCheckedChange(active.id, checked as boolean)
-              }
-            >
-              <Checkbox.Indicator>
-                <Check size={14} weight='bold' />
-              </Checkbox.Indicator>
-            </Checkbox.Root>
+      <section>
+        <h3>{t['Active']}</h3>
 
-            <label htmlFor='active-layer'>
-              {props.layers!.length > 1
-                ? props.layerNames.get(active.id) || t['Baselayer']
-                : t['Show']}
-            </label>
-          </div>
-        </section>
+        <div className="active-layer">
+          <Checkbox.Root
+            id="active-layer"
+            className="checkbox-root"
+            checked={isChecked(active.id)}
+            onCheckedChange={checked =>
+              onCheckedChange(active.id, checked as boolean)
+            }>
+            <Checkbox.Indicator>
+              <Check size={14} weight='bold' />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
 
-        {readOnly.length > 0 && (
-          <section>
-            <h3>{t['Read-Only']}</h3>
-            <ul>
-              {readOnly.map((l) => (
-                <li key={l.id}>
-                  <Checkbox.Root
-                    id={`layer-${l.id}`}
-                    className='checkbox-root'
-                    checked={isChecked(l.id)}
-                    onCheckedChange={(checked) =>
-                      onCheckedChange(l.id, checked as boolean)
-                    }
-                  >
-                    <Checkbox.Indicator>
-                      <Check size={14} weight='bold' />
-                    </Checkbox.Indicator>
-                  </Checkbox.Root>
-
-                  <label htmlFor={`layer-${l.id}`}>
-                    {props.layerNames.get(l.id) || t['Baselayer']}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+          <label htmlFor="active-layer">
+            {props.layerNames.get(active.id) || t['Baselayer']}
+          </label>
+        </div>
       </section>
-    )
-  );
-};
+
+      {readOnly.length > 0 && (
+        <section>
+          <h3>{t['Read-Only']}</h3>
+
+          <ul>
+            {readOnly.map((l) => (
+              <li key={l.id}>
+                <Checkbox.Root
+                  id={`layer-${l.id}`}
+                  className="checkbox-root"
+                  checked={isChecked(l.id)}
+                  onCheckedChange={(checked) =>
+                    onCheckedChange(l.id, checked as boolean)
+                  }>
+                  <Checkbox.Indicator>
+                    <Check size={14} weight='bold' />
+                  </Checkbox.Indicator>
+                </Checkbox.Root>
+
+                <label htmlFor={`layer-${l.id}`}>
+                  {props.layerNames.get(l.id) || t['Baselayer']}
+                </label>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </section>
+  ) : null;
+
+}
