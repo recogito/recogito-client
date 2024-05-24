@@ -41,6 +41,7 @@
   "Edit reply": "Edit reply",
   "Delete annotation": "Delete annotation",
   "Delete reply": "Delete reply",
+  "Hide Annotations": "Hide Annotations",
   "Make annotation public": "Make this annotation public",
   "Save": "Save",
   "Cancel": "Cancel",
@@ -91,6 +92,5 @@
   "Zoom out": "Zoom out",
   "Add an annotation...": "Add an annotation...",
   "Connection Lost.": "Connection Lost.",
-  "Try refreshing the page.": "Try refreshing the page.",
-  "Show Annotations": "Show Annotations"
+  "Try refreshing the page.": "Try refreshing the page."
 }

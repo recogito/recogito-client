@@ -30,6 +30,7 @@
   "Error": "Fehler",
   "Filters": "Filter",
   "First Tag": "Erstes Tag",
+  "Hide Annotations": "Alle Ausblenden",
   "Image": "Bild",
   "Image URL": "Bild URL",
   "Layer": "Annotations-Ebene",
@@ -72,6 +73,5 @@
   "YouTube URL": "YouTube URL",
   "YouTube Video": "YouTube Video",
   "Zoom in": "Zoom +",
-  "Zoom out": "Zoom -",
-  "Show Annotations": "Show Annotations"
+  "Zoom out": "Zoom -"
 }

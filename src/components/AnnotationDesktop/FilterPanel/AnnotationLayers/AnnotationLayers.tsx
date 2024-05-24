@@ -65,7 +65,7 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
   return props.layers?.length === 1 && active ? (
     <section className="filters-annotationlayers single-layer">
       <label htmlFor="hide-annotations">
-        <EyeSlash size={18} /> Hide Annotations
+        <EyeSlash size={18} /> {t['Hide Annotations']}
       </label>
 
       <Switch.Root 
