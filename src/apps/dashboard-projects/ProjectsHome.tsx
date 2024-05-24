@@ -92,22 +92,29 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   // Filtered projects
   const myProjects = projects.filter((p) => p.created_by?.id === me.id);
 
-  const sharedProjects = isReader
-    ? projects.filter(({ created_by, users }) =>
-        users.find((user) => user.user.id === me.id && me.id !== created_by?.id)
-      )
-    : projects.filter(
-        (p) =>
-          p.created_by?.id !== me.id &&
-          p.users.filter((u) => u.user.id === me.id).length > 0
-      );
-
   const openJoinProjects = projects.filter(
     (p) =>
       me.id !== p.created_by?.id &&
       p.is_open_join &&
       p.users.filter((u) => u.user.id === me.id).length === 0
   );
+
+  const sharedProjects = isReader
+    ? projects.filter(({ created_by, users }) =>
+        users.find((user) => user.user.id === me.id && me.id !== created_by?.id)
+      )
+    : me.isOrgAdmin
+    ? projects.filter(
+        (p) =>
+          p.created_by?.id !== me.id &&
+          p.users.filter((u) => u.user.id === me.id).length === 0 &&
+          !p.is_open_join
+      )
+    : projects.filter(
+        (p) =>
+          p.created_by?.id !== me.id &&
+          p.users.filter((u) => u.user.id === me.id).length > 0
+      );
 
   const allProjects = me.isOrgAdmin
     ? projects
