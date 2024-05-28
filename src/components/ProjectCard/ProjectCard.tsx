@@ -57,15 +57,15 @@ export const ProjectCard = (props: ProjectCardProps) => {
 
   const texts = documents.filter(({ content_type }) => content_type);
 
-  const { t } = props.i18n;
+  const { t, lang } = props.i18n;
 
   const showDocs = props.orgPolicies
     ? props.orgPolicies.get('projects').has('INSERT')
     : false;
 
   const onClick = () => {
-    if (!is_open_join || users.length > 0) {
-      window.location.href = `./projects/${id}`;
+    if (!is_open_join || users.length > 0 || props.me.isOrgAdmin) {
+      window.location.pathname = `${lang}/projects/${id}`;
     }
   };
 
@@ -77,7 +77,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
     setJoinProjectOpen(false);
     joinProject(supabase, id).then((resp) => {
       if (resp) {
-        window.location.href = `./projects/${id}`;
+        window.location.pathname = `${lang}/projects/${id}`;
       } else {
         props.onError(props.i18n.t['Something happened']);
       }
