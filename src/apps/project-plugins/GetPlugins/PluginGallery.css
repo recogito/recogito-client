@@ -1,0 +1,87 @@
+.plugin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* This will create flexible columns with a minimum width of 200px */
+  gap: 20px; /* Adjust the gap between cards as needed */
+  list-style: none; /* Remove default list styles */
+  padding: 0;
+  margin: 0;
+}
+
+.plugin-grid li {
+  width: 240px; 
+}
+
+.dialog-content.plugin-gallery {
+  box-sizing: border-box;
+  height: 60vh;
+  max-height: 85vh;
+  max-width: 840px;
+  padding: 25px 30px;
+}
+
+.dialog-content.plugin-gallery h2 {
+  margin: 0.4em 0 1.6em 0;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-card {
+  background-color: var(--gray-50);
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18), 0 2px 8px -2px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item .plugin-installed {
+  align-items: center;
+  background-color: var(--green-500);
+  border-radius: 999px;
+  color: #fff;
+  display: flex;
+  font-size: var(--font-tiny);
+  gap: 0.3em;
+  line-height: 140%;
+  padding: 2px 7px 2px 3px;
+  position: absolute;
+  right: 8px;
+  top: 10px;
+  z-index: 1;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item .thumbnail {
+  position: relative;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item .thumbnail img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item .description {
+  border-top: 1px solid var(--border-light-color);
+  padding: 10px;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item .description h3 {
+  font-size: var(--font-small);
+  font-weight: 500;
+  line-height: 160%;
+  margin: 0;
+  padding: 0;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item .description p {
+  font-size: var(--font-tiny);
+  line-height: 160%;
+  margin: 0;
+}
+
+.dialog-content.plugin-gallery .plugin-gallery-item button {
+  margin-top: 15px;
+  width: 100%;
+}

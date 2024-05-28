@@ -2,14 +2,16 @@ import { useState } from 'react';
 import { Toast, ToastContent, ToastProvider } from '@components/Toast';
 import { InviteUser } from './InviteUser';
 import { MembersTable } from './MembersTable';
-import type { TeamMember } from './TeamMember';
 import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
   Group,
   Translations,
+  Member,
 } from 'src/Types';
+import { TopBar } from '@components/TopBar';
+import { BackButtonBar } from '@components/BackButtonBar';
 
 import './ProjectCollaboration.css';
 
@@ -18,9 +20,13 @@ interface ProjectCollaborationProps {
 
   project: ExtendedProjectData;
 
+  projects: ExtendedProjectData[];
+
   invitations: Invitation[];
 
   me: MyProfile;
+
+  user: MyProfile;
 }
 
 export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
@@ -32,7 +38,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const onChangeGroup = (member: TeamMember, from: Group, to: Group) => {
+  const onChangeGroup = (member: Member, from: Group, to: Group) => {
     // Update member
     const updated = {
       ...member,
@@ -42,6 +48,16 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     // Update project groups
     setProject((project) => ({
       ...project,
+      users: project.users.map((u) => {
+        if (u.user.id === member.user.id) {
+          return {
+            ...u,
+            inGroup: to,
+          };
+        } else {
+          return u;
+        }
+      }),
       groups: project.groups.map((group) =>
         group.id === from.id
           ? // Remove user from this group
@@ -59,14 +75,15 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     }));
   };
 
-  const onDeleteMember = (member: TeamMember) => {
+  const onDeleteMember = (member: Member) => {
     // Remove user from this project
     setProject((project) => ({
       ...project,
+      users: project.users.filter((u) => u.user.id !== member.user.id),
       groups: project.groups.map((group) => ({
         ...group,
-        members: group.members.filter(m => m.user.id !== member.user.id)
-      }))
+        members: group.members.filter((m) => m.user.id !== member.user.id),
+      })),
     }));
   };
 
@@ -108,37 +125,66 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       type: 'error',
     });
 
+  const onError = (error: string) => {
+    setToast({
+      title: t['Something went wrong'],
+      description: t[error] || error,
+      type: 'error',
+    });
+  };
+
   return (
-    <div className='project-collaboration'>
-      <ToastProvider>
-        <h1>{t['Project Team']}</h1>
+    <>
+      <TopBar
+        invitations={props.invitations}
+        i18n={props.i18n}
+        onError={onError}
+        projects={props.projects}
+        me={props.user}
+      />
+      <BackButtonBar
+        i18n={props.i18n}
+        showBackToProjects={false}
+        crumbs={[
+          { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
+          {
+            label: props.project.name,
+            href: `/${props.i18n.lang}/projects/${props.project.id}`,
+          },
+          { label: t['Team'], href: undefined },
+        ]}
+      />
+      <div className='project-collaboration'>
+        <ToastProvider>
+          <h1>{t['Project Team']}</h1>
 
-        <InviteUser
-          i18n={props.i18n}
-          me={props.me}
-          project={project}
-          invitations={invitations}
-          onInvitiationSent={onInvitationSent}
-          onInvitiationError={onInvitationError}
-        />
+          <InviteUser
+            i18n={props.i18n}
+            me={props.me}
+            project={project}
+            invitations={invitations}
+            onInvitiationSent={onInvitationSent}
+            onInvitiationError={onInvitationError}
+          />
 
-        <MembersTable
-          i18n={props.i18n}
-          project={project}
-          invitations={invitations}
-          me={props.me}
-          onChangeGroup={onChangeGroup}
-          onDeleteMember={onDeleteMember}
-          onDeleteMemberError={onDeleteError}
-          onDeleteInvite={onDeleteInvitation}
-          onDeleteInvitationError={onDeleteInviteError}
-        />
+          <MembersTable
+            i18n={props.i18n}
+            project={project}
+            invitations={invitations}
+            me={props.me}
+            onChangeGroup={onChangeGroup}
+            onDeleteMember={onDeleteMember}
+            onDeleteMemberError={onDeleteError}
+            onDeleteInvite={onDeleteInvitation}
+            onDeleteInvitationError={onDeleteInviteError}
+          />
 
-        <Toast
-          content={toast}
-          onOpenChange={(open) => !open && setToast(null)}
-        />
-      </ToastProvider>
-    </div>
+          <Toast
+            content={toast}
+            onOpenChange={(open) => !open && setToast(null)}
+          />
+        </ToastProvider>
+      </div>
+    </>
   );
 };

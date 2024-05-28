@@ -1,17 +1,19 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument, createProjectDocument } from '@backend/crud';
-import { createLayerInContext } from './layerHelpers';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import { getTagsForContext } from './tagHelpers';
-import type {
-  Document,
-  DocumentInContext,
-  DocumentInTaggedContext,
-  Layer,
-  Protocol,
-  TaggedContext,
-} from 'src/Types';
+import type { Document, Protocol } from 'src/Types';
+import type { DocumentWithContext } from '../../Types';
+
+/**
+ * IIIF configuration:
+ * - 'IIIF_CLOUD': the image is uploaded to IIIF Cloud first, then a document
+ *   record is created that points to the image on IIIF Cloud.
+ * - 'SUPABASE_CANTALOUPE': a document record is created first, then the image
+ *   is uploaded to Supabase storage.
+ */
+const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined =
+  import.meta.env.PUBLIC_IIIF_CONFIGURATION;
 
 /**
  * Initializes a new Document in a Context. Process differs for
@@ -31,23 +33,36 @@ export const initDocument = (
   file?: File,
   url?: string,
   protocol?: Protocol
-): Promise<DocumentInContext> => {
+): Promise<Document> => {
   if (file?.type.startsWith('image')) {
-    // If the document is an image upload, the file is first
-    // uploaded to the IIIF server, and then treated like a remote
-    // IIIF source.
-    return uploadImage(supabase, file, name, onProgress).then((iiif) =>
-      _initDocument(
+    if (IIIF_CONFIGURATION === 'SUPABASE_CANTALOUPE') {
+      return _initDocument(
         supabase,
         name,
         projectId,
         contextId,
-        undefined,
-        undefined,
-        'IIIF_IMAGE',
-        iiif.manifest_iiif_url
-      )
-    );
+        onProgress,
+        file,
+        protocol,
+        url
+      );
+    } else {
+      // If the document is an image upload, the file is first
+      // uploaded to the IIIF server, and then treated like a remote
+      // IIIF source.
+      return uploadImage(supabase, file, name, onProgress).then((iiif) =>
+        _initDocument(
+          supabase,
+          name,
+          projectId,
+          contextId,
+          undefined,
+          undefined,
+          'IIIF_IMAGE',
+          iiif.manifest_iiif_url
+        )
+      );
+    }
   } else {
     return _initDocument(
       supabase,
@@ -81,7 +96,7 @@ const _initDocument = (
   file?: File,
   protocol?: Protocol,
   url?: string
-): Promise<DocumentInContext> => {
+): Promise<Document> => {
   // First promise: create the document
   const a: Promise<Document> = new Promise((resolve, reject) =>
     createDocument(
@@ -90,9 +105,9 @@ const _initDocument = (
       file?.type,
       protocol
         ? {
-          protocol,
-          url,
-        }
+            protocol,
+            url,
+          }
         : undefined
     ).then(({ error, data }) => {
       if (error) {
@@ -111,166 +126,140 @@ const _initDocument = (
     })
   );
 
-  // Second promise: create layer in the default context
-  const b: Promise<Layer> = a.then((document) =>
-    createLayerInContext(supabase, document.id, projectId, contextId)
-  );
-
-  return Promise.all([a, b]).then(([document, defaultLayer]) => {
+  return Promise.all([a]).then(([document]) => {
     if (file) {
       return uploadFile(supabase, file, document.id, onProgress).then(() => ({
         ...document,
-        layers: [defaultLayer],
+        layers: [],
       }));
     } else {
-      return { ...document, layers: [defaultLayer] };
+      return { ...document, layers: [] };
     }
   });
 };
 
-export const addDocumentToProject = (
+export const addDocumentsToProject = (
   supabase: SupabaseClient,
   projectId: string,
-  contextId: string,
-  documentId: string
-): Promise<DocumentInContext> => {
-  // First promise: select the document
-  const a: Promise<Document> = new Promise((resolve, reject) =>
-    supabase
-      .from('documents')
-      .select()
-      .eq('id', documentId)
-      .then(({ error, data }) => {
-        if (error) reject(error);
-        else resolve(data[0]);
-      })
-  );
+  documentIds: string[]
+): Response<Document[] | undefined> =>
+  supabase
+    .rpc('add_documents_to_project_rpc', {
+      _document_ids: documentIds,
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (data) {
+        return supabase
+          .from('documents')
+          .select()
+          .in('id', documentIds)
+          .then(({ data, error }) => {
+            if (error) {
+              return {
+                error,
+                data: [],
+              };
+            }
 
-  // Second promise: create layer in the default context
-  const b: Promise<Layer> = a.then((document) =>
-    createLayerInContext(supabase, document.id, projectId, contextId)
-  );
+            return {
+              error: null,
+              data: data as Document[],
+            };
+          });
+      } else {
+        return {
+          error: error,
+          data: undefined,
+        };
+      }
+    });
 
-  // Third promise: Add project document record
-  const c = b.then(() =>
-    createProjectDocument(supabase, documentId, projectId)
-  ).catch(error => console.error(error));
-
-  return Promise.all([a, b, c]).then(([document, defaultLayer]) => {
-    return { ...document, layers: [defaultLayer] };
-  });
-};
+export const removeDocumentsFromProject = (
+  supabase: SupabaseClient,
+  projectId: string,
+  documentIds: [string]
+): Response<boolean> =>
+  supabase
+    .rpc('archive_project_documents_rpc', {
+      _document_ids: documentIds,
+      _project_id: projectId,
+    })
+    .then(({ error, data }) => {
+      return { error, data };
+    });
 
 export const listDocumentsInProject = (
   supabase: SupabaseClient,
   projectId: string
-): Response<DocumentInContext[]> =>
+): Response<Document[]> =>
   supabase
-    .from('documents')
+    .from('project_documents')
     .select(
       `
-      id,
-      created_at,
-      created_by,
-      updated_at,
-      updated_by,
-      name,
-      bucket_id,
-      content_type,
-      meta_data,
-      is_private,
-      layers!inner (
+      *,
+      document:document_id (
         id,
-        document_id,
-        project_id,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by,
         name,
-        description,
-        contexts:layer_contexts!inner (
-          ...contexts!inner (
-            id,
-            name,
-            project_id,
-            is_project_default
-          )
-        )
+        bucket_id,
+        content_type,
+        meta_data,
+        is_private
       )
-    `
+      `
     )
-    .eq('layers.project_id', projectId)
+    .eq('project_id', projectId)
     .then(({ error, data }) => {
       if (error) {
         return { error, data: [] };
       } else {
-        // Simplify layers from list of contexts to single (default) context
-        const inDefaultContext = data
-          .map((d) => ({
-            // @ts-ignore
-            ...d,
-            // @ts-ignore
-            layers: d.layers
-              // @ts-ignore
-              .map(({ contexts, ...l }) => ({
-                ...l,
-                // @ts-ignore
-                context: contexts.find((c) => c.is_project_default),
-                // @ts-ignore
-              }))
-              .filter((l: any) => l.context),
-          }))
-          .filter((d) => d.layers.length > 0);
-        return {
-          error,
-          data: inDefaultContext as unknown as DocumentInContext[],
-        };
+        const docs: Document[] = data.map((datum) => datum.document);
+        return { error, data: docs };
       }
     });
 
 export const listDocumentsInContext = (
   supabase: SupabaseClient,
   contextId: string
-): Response<DocumentInContext[]> =>
+): Response<Document[]> =>
   supabase
-    .from('documents')
+    .from('context_documents')
     .select(
       `
-      id,
-      created_at,
-      created_by,
-      updated_at,
-      updated_by,
-      name,
-      bucket_id,
-      content_type,
-      meta_data,
-      is_private,
-      layers!inner (
+      *,
+      document:document_id (
         id,
-        document_id,
-        project_id,
+        created_at,
+        created_by,
+        updated_at,
+        updated_by,
         name,
-        description,
-        contexts:layer_contexts!inner (
-          ...contexts (
-            id,
-            name,
-            project_id
-          )
-        )
+        bucket_id,
+        content_type,
+        meta_data,
+        is_private
       )
     `
     )
-    .eq('layers.layer_contexts.context_id', contextId)
-    .then(({ error, data }) =>
-      error
-        ? { error, data: [] }
-        : { error, data: data as unknown as DocumentInContext[] }
-    );
+    .eq('context_id', contextId)
+    .then(({ error, data }) => {
+      if (error) {
+        return { error, data: [] };
+      } else {
+        const docs: Document[] = data.map((datum) => datum.document);
+        return { error, data: docs };
+      }
+    });
 
 export const getDocumentInContext = (
   supabase: SupabaseClient,
   documentId: string,
   contextId: string
-): Response<DocumentInTaggedContext | undefined> =>
+): Response<DocumentWithContext | null> =>
   supabase
     .from('documents')
     .select(
@@ -285,62 +274,62 @@ export const getDocumentInContext = (
       content_type,
       meta_data,
       is_private,
-      collection_id,
-      layers!inner (
-        id,
-        document_id,
-        project_id,
-        name,
-        description,
-        contexts:layer_contexts!inner (
-          ...contexts (
-            id,
-            name, 
-            project_id
-          )
-        )
-      )
+      collection_id
     `
     )
     .eq('id', documentId)
-    .eq('layers.layer_contexts.context_id', contextId)
     .single()
     .then(({ error, data }) => {
-      const doc = data;
-
       if (error) {
-        return { error, data: undefined };
-      } else {
-        return getTagsForContext(supabase, contextId).then(
-          ({ error, data }) => {
-            //@ts-ignore
-            const context = doc?.layers[0].contexts[0];
-
-            if (!context)
-              // Should never happen, except for DB integrity issue
-              throw new Error('DocumentInContext without context');
-
-            const documentInContext = {
-              // @ts-ignore
-              ...doc,
-              // @ts-ignore
-              layers: doc.layers.map(({ contexts, ...layer }) => ({
-                ...layer,
-                context: contexts[0],
-              })),
-              context: {
-                ...context,
-                tags: data,
-              },
-            };
-
-            return {
-              error,
-              data: documentInContext as unknown as DocumentInTaggedContext,
-            };
-          }
-        );
+        return { error, data: null };
       }
+      const document: any = data;
+      // Now get the layers
+      return supabase
+        .from('contexts')
+        .select(
+          `
+          id,
+          name,
+          description,
+          project_id,
+          is_project_default,
+          layer_contexts(
+            id,
+            is_active_layer,
+            layer: layers(
+              id,
+              document_id,
+              name,
+              description
+            )
+          )
+        `
+        )
+        .eq('id', contextId)
+        .single()
+        .then(({ data, error }) => {
+          if (error) {
+            return { error, data: null };
+          }
+
+          document.layers = data.layer_contexts
+            // @ts-ignore
+            .filter((c) => c.layer.document_id === documentId)
+            .map((layerContext) => ({
+              // @ts-ignore
+              id: layerContext.layer.id,
+              is_active: layerContext.is_active_layer,
+              document_id: documentId,
+            }));
+          const context = data;
+
+          // @ts-ignore
+          delete context.layer_contexts;
+          document.context = context;
+
+          return { error: null, data: document };
+        });
     });
 
 export const listAllDocuments = (
@@ -355,11 +344,3 @@ export const listAllDocuments = (
     .then(({ error, data }) => {
       return { error, data };
     });
-
-export const isDefaultContext = (context: TaggedContext) =>
-  context.tags?.length > 0 &&
-  context.tags.some(
-    (t) =>
-      t.tag_definition?.scope === 'system' &&
-      t.tag_definition?.name === 'DEFAULT_CONTEXT'
-  );

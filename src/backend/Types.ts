@@ -5,18 +5,16 @@ export type Response<T> = PromiseLike<{
   data: T;
 }>;
 
-export interface ProjectDocument {
-  id: string;
+export type UserRole = {
+  user_id: string;
 
-  created_at: string;
+  role: 'default' | 'admin';
+};
 
-  created_by: string;
-
-  updated_at?: string;
-
-  updated_by?: string;
-
-  project_id: string;
-
+export type AvailableLayers = {
   document_id: string;
-}
+  layer_id: string;
+  context_id: string;
+  is_active: boolean;
+  context_name: string;
+};

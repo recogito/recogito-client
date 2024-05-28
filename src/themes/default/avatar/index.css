@@ -1,9 +1,23 @@
 .avatar {
   border-radius: 50%;
   display: block;
-  position:relative;
+  position: relative;
   height: 38px;
   width: 38px;
+}
+
+.avatar-wrapper {
+  border-radius: 50%;
+  box-sizing: border-box;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.avatar-wrapper.ring {
+  border: 2px solid transparent;
+  padding: 2px;
+  background-color: #fff;
 }
 
 .avatar-image,
@@ -19,6 +33,10 @@
   justify-content: center;
   line-height: 120%;
   width: 100%;
+}
+
+.avatar-border {
+  border: 1px solid white;
 }
 
 .avatar-image {

@@ -1,6 +1,8 @@
 .project-settings {
   padding: 20px 40px;
   width: 100%;
+  box-sizing: border-box;
+  margin-top: 180px;
 }
 
 .project-settings-inputs {
@@ -24,11 +26,11 @@
 }
 
 .project-settings .tagging-vocabulary {
-  background-color: var(--gray-50);
-  border: 1px solid var(--gray-200);
-  border-radius: var(--border-radius);
+  border-top: 1px solid var(--gray-200);
+  border-bottom: 1px solid var(--gray-200);
   max-width: 65ch;
   padding: 20px;
+  z-index: 100;
 }
 
 .project-settings .tagging-vocabulary h2 {
@@ -114,10 +116,203 @@
   margin-top: 24px;
 }
 
-.project-settings-switches {
+.project-settings-input {
+  margin-bottom: 10px;
+}
+
+.project-settings-root {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-settings-dialog-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+.project-settings-switch-root {
+  width: 42px;
+  height: 25px;
+  padding: 0;
+  background-color: var(--gray-200);
+  border-radius: 9999px;
+  position: relative;
+  box-shadow: 0 2px 10px var(--gray-200);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  box-sizing: content-box;
+  display: block;
+  min-width: 42px;
+}
+
+.project-settings-switch-root[data-state='checked'] {
+  background-color: var(--light-blue);
+}
+
+.project-settings-switch-thumb {
+  display: block;
+  width: 21px;
+  height: 21px;
+  background-color: var(--gray-500);
+  border-radius: 9999px;
+  box-shadow: 0 2px 2px var(--bright-blue);
+  transition: transform 100ms;
+  transform: translateX(2px);
+  will-change: transform;
+}
+.project-settings-switch-thumb[data-state='checked'] {
+  transform: translateX(19px);
+  background-color: var(--bright-blue);
+}
+
+.project-settings-switch-label {
+  color: --var(--gray-900);
+  font-size: 15px;
+  line-height: 1;
+  margin-left: 3px;
+}
+
+.project-settings-label {
+  color: --var(--gray-900);
+  margin-bottom: 5px;
+}
+
+.project-settings-label-root {
+  color: --var(--gray-900);
+}
+
+.project-settings-label-detail {
+  color: --var(--gray-900);
+  margin-bottom: 10px;
+}
+
+.project-settings-buttons {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
   margin-top: 24px;
+}
+
+.project-settings-switches {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
+
+.project-settings-visibility {
+  margin-top: 15px;
+}
+
+.project-settings-radio-group-root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.project-settings-radio-group-item {
+  background-color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  min-width: 20px !important;
+  padding: 0 !important;
+}
+
+.project-settings-radio-group-item[data-state='checked'] {
+  border-color: var(--primary);
+}
+
+.project-settings-radio-group-item:hover {
+  background-color: var(--gray-300);
+}
+
+.project-settings-radio-group-item:focus {
+}
+
+.project-settings-radio-group-indicator {
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.project-settings-radio-group-indicator::after {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--primary);
+}
+
+.project-settings-radio-group-label {
+  margin-left: 4px;
+}
+
+.project-settings-radio-group-helper {
+  margin-left: 25px;
+}
+
+.project-plugins {
+  flex-grow: 1;
+  padding: 0 40px 80px 40px;
+}
+
+.project-plugins .browse-plugins {
+  margin-bottom: 3em;
+}
+
+.project-plugins .hint {
+  font-size: var(--font-small);
+  padding-bottom: 0.2em;
+}
+
+.project-plugins h2 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.project-plugins .plugin-admin-tile {
+  background-color: #fff;
+  border: 1px solid var(--gray-200);
+  font-size: var(--font-small);
+  margin-top: 20px;
+  position: relative;
+}
+
+.project-plugins .plugin-admin-tile .uninstall {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.project-plugins .plugin-admin-tile .plugin-meta {
+  border-bottom: 1px solid var(--gray-200);
+  padding: 20px;
+}
+
+.project-plugins .plugin-meta h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.project-plugins .plugin-meta p {
+  margin: 0;
+  padding: 0.4em 0 0 0;
+}
+
+.project-plugins .plugin-meta .description {
+  color: var(--font-light);
+}
+
+.project-plugins .plugin-meta .author {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  padding-top: 0.1em;
+}
+
+.project-plugins .plugin-admin-tile .plugin-admin {
+  padding: 20px;
 }

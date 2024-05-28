@@ -1,0 +1,5 @@
+.autosize-input .autosize-input-measure {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}

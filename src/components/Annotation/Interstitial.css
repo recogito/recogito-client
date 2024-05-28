@@ -1,0 +1,53 @@
+.annotation > ul > li:not(.interstitial-wrapper) + li.interstitial-wrapper {
+  border: none;
+}
+
+.annotation .interstitial {
+  align-items: center;
+  display: flex;
+  font-size: 13px;
+  height: 0;
+  justify-content: center;
+  padding-top: 15px;
+  position: relative;
+}
+.annotation .interstitial-wrapper::after {
+  border-top: 1px solid rgba(0, 0, 0, 0.09);
+  content: '';
+  display: block;
+  height: 15px;
+}
+
+.annotation .interstitial .label {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.09);
+  border-radius: 99999px;
+  box-shadow: none;
+  color: var(--font-light);
+  font-size: 12px;
+  padding: 0 10px;
+  position:relative;
+}
+
+.annotation.readonly .interstitial .label {
+  background-color: var(--gray-300);
+}
+
+.annotation.note .interstitial .label {
+  background-color: #F9EEC8;
+}
+
+.annotation.readonly.note .interstitial .label {
+  background-color: #e1d7b4;
+}
+
+.annotation .interstitial .label:hover {
+  background-color: var(--gray-50);
+  box-shadow: none;
+}
+
+.annotation .interstitial .label svg {
+  padding-left: 1ch;
+  position: relative;
+  top: 1px;
+}

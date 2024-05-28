@@ -3,8 +3,6 @@
 }
 
 .dropdown-content, .dropdown-subcontent {
-  animation-duration: 400ms;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
   background-color: #fff;
   border-radius: var(--border-radius);
   box-shadow:
@@ -14,19 +12,6 @@
   line-height: 160%;
   min-width: 160px;
   padding: 5px 0;
-}
-
-.dropdown-content[data-side='top'], .dropdown-subcontent[data-side='top'] {
-  animation-name: slideDownAndFade;
-}
-.dropdown-content[data-side='right'], .dropdown-subcontent[data-side='right'] {
-  animation-name: slideLeftAndFade;
-}
-.dropdown-content[data-side='bottom'], .dropdown-subcontent[data-side='bottom'] {
-  animation-name: slideUpAndFade;
-}
-.dropdown-content[data-side='left'], .dropdown-subcontent[data-side='left'] {
-  animation-name: slideRightAndFade;
 }
 
 .dropdown-item,

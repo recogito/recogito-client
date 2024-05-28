@@ -1,0 +1,61 @@
+.project-plugins {
+  flex-grow: 1;
+  padding: 0 40px 80px 40px;
+}
+
+.project-plugins .browse-plugins {
+  margin-bottom: 3em;
+}
+
+.project-plugins .hint {
+  font-size: var(--font-small);
+  padding-bottom: 0.2em;
+}
+
+.project-plugins h2 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.project-plugins .plugin-admin-tile {
+  background-color: #fff;
+  border: 1px solid var(--gray-200);
+  font-size: var(--font-small);
+  margin-top: 20px;
+  position: relative;
+}
+
+.project-plugins .plugin-admin-tile .uninstall {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.project-plugins .plugin-admin-tile .plugin-meta {
+  border-bottom: 1px solid var(--gray-200);
+  padding: 20px;
+}
+
+.project-plugins .plugin-meta h3 {
+  margin: 0;
+  padding: 0;
+}
+
+.project-plugins .plugin-meta p {
+  margin: 0;
+  padding: 0.4em 0 0 0;
+}
+
+.project-plugins .plugin-meta .description {
+  color: var(--font-light);
+}
+
+.project-plugins .plugin-meta .author {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  padding-top: 0.1em;
+}
+
+.project-plugins .plugin-admin-tile .plugin-admin {
+  padding: 20px;
+}

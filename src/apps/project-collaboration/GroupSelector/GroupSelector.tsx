@@ -4,14 +4,13 @@ import { CaretDown, Check } from '@phosphor-icons/react';
 import { updateUserProjectGroup } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TinySaveIndicator, SaveState } from '@components/TinySaveIndicator';
-import type { TeamMember } from '../TeamMember';
-import type { Group, Translations } from 'src/Types';
+import type { Group, Member, Translations } from 'src/Types';
 
 interface GroupSelectorProps {
 
   i18n: Translations;
 
-  member: TeamMember;
+  member: Member;
 
   availableGroups: Group[];
 
@@ -29,6 +28,7 @@ interface SelectItemProps {
 
 }
 
+// eslint-disable-next-line react/display-name
 const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, forwardedRef) => (
   <Select.Item className="select-item" {...props} ref={forwardedRef}>
     <Select.ItemIndicator className="select-item-indicator">
@@ -50,20 +50,20 @@ export const GroupSelector = (props: GroupSelectorProps) => {
     const group = props.availableGroups.find(g => g.id === value);
     if (group) {
       // Optimistic update to upwards component state
-      props.onChangeGroup(member.inGroup, group);
+      props.onChangeGroup(member.inGroup!, group);
 
       setState('saving');
 
       updateUserProjectGroup(
-        supabase, 
-        member.user.id, 
-        member.inGroup.id,
+        supabase,
+        member.user.id,
+        member.inGroup!.id,
         value
       ).then(({ error }) => {
         if (error) {
           // Rollback optimistic update
           setState('failed');
-          props.onChangeGroup(group, member.inGroup);
+          props.onChangeGroup(group, member.inGroup!);
         } else {
           setState('success');
         }
@@ -72,8 +72,8 @@ export const GroupSelector = (props: GroupSelectorProps) => {
   }
 
   return (
-    <Select.Root value={props.member.inGroup.id} onValueChange={onValueChange}>
-      <Select.Trigger 
+    <Select.Root value={props.member.inGroup!.id} onValueChange={onValueChange}>
+      <Select.Trigger
         disabled={state === 'saving'}
         className="select-trigger" aria-label={t['Access Level']}>
         <Select.Value />
@@ -82,8 +82,8 @@ export const GroupSelector = (props: GroupSelectorProps) => {
         </Select.Icon>
       </Select.Trigger>
 
-      <TinySaveIndicator 
-        state={state} 
+      <TinySaveIndicator
+        state={state}
         fadeOut={2500} />
 
       <Select.Portal>

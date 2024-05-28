@@ -1,0 +1,130 @@
+.annotation {
+  background-color: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+}
+
+.annotation ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.annotation ul li {
+  overflow: hidden;
+}
+
+.annotation > ul > li:not(.interstitial-wrapper) + li {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.annotation.readonly {
+  background-color: var(--gray-300);
+  border: 1px solid var(--gray-400);
+}
+
+.annotation.note {
+  border: 1px solid #f5e5a8;
+  background-color: #f9eec8;
+}
+
+.annotation.note:not(.readonly) > ul > li:not(.interstitial-wrapper) + li {
+  border-color: #f3e096;
+}
+
+.annotation.note.readonly {
+  border-color: #e1d7b4;
+  background-color: #e1d7b4;
+}
+
+.annotation:not(.note)::before {
+  content: '';
+  border-left: 3px solid var(--card-border);
+  height: 100%;
+  width: 0;
+  position: absolute;
+}
+
+.annotation .annotation-header {
+  align-items: flex-start;
+  display: flex;
+  justify-content: space-between;
+  line-height: 110%;
+  padding: 10px 15px 6px 12px;
+}
+
+.annotation .annotation-header .annotation-header-left {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.annotation .annotation-toolbar-wrapper {
+  padding-bottom: 2px;
+}
+
+.annotation .annotation-comment-wrapper {
+  max-height: 30vh;
+  overflow-y: auto;
+  padding: 5px 12px 5px 12px;
+}
+
+.annotation .quill-rte {
+  padding: 10px;
+  background-color: #F3F4F7;
+  border-radius: 3px;
+  font-family: Inter;
+}
+
+.annotation .quill-rte.ql-disabled {
+  background-color: transparent;
+  padding: 7px 2px 5px 2px;
+}
+
+.annotation .quill-rte .ql-editor.ql-blank::before {
+  color: rgba(0, 0, 0, 0.45);
+}
+
+.annotation.note .quill-rte:not(.ql-disabled) {
+  background-color: #e1d7b4
+}
+
+.annotation .annotation-taglist-wrapper {
+  padding: 0 12px 0 12px;
+}
+
+.annotation .annotation-footer {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 12px 5px 12px;
+}
+
+.annotation .annotation-footer-left {
+  display: flex;
+  flex-wrap: wrap;;
+  gap: 0.5rem;
+}
+
+.annotation button.save {
+  all: unset;
+  background-color: var(--bright-blue);
+  color: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.annotation button.save svg {
+  color: #fff;
+}
+
+.annotation button.save-arrow {
+  align-items: center;
+  border-radius: 50%;
+  display: flex;
+  height: 30px;
+  justify-content: center;
+  width: 30px;
+}
+

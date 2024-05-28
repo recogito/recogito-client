@@ -5,8 +5,13 @@ import type { ChangeEvent } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { fetchNotes, handleBroadcastEvent, handleCDCEvent } from './postgres';
 import type { DocumentNote } from '../Types';
+import type { DocumentLayer } from 'src/Types';
 
 interface DocumentNotesContextValue {
+
+  activeLayerId?: string;
+
+  layerIds?: string[];
 
   notes: DocumentNote[];
 
@@ -15,8 +20,6 @@ interface DocumentNotesContextValue {
   channel: RealtimeChannel | undefined,
 
   setChannel: React.Dispatch<React.SetStateAction<RealtimeChannel | undefined>>;
-
-  layerId?: string;
 
   present: PresentUser[];
 
@@ -33,7 +36,7 @@ interface DocumentNotesProps {
 
   channelId: string;
 
-  layerId?: string;
+  layers?: DocumentLayer[];
 
   present: PresentUser[];
 
@@ -43,15 +46,19 @@ interface DocumentNotesProps {
 
 export const DocumentNotes = (props: DocumentNotesProps) => {
 
-  const { layerId, present, onError } = props;
+  const { layers, present, onError } = props;
+
+  const layerIds = useMemo(() => layers?.map(l => l.id), [layers]);
+
+  const activeLayerId = useMemo(() => layers?.find(l => l.is_active)?.id, [layers]);
 
   const [notes, setNotes] = useState<DocumentNote[]>([]);
 
   const [channel, setChannel] = useState<RealtimeChannel | undefined>();
 
   useEffect(() => {
-    if (layerId) {
-      fetchNotes(layerId)
+    if (layerIds) {
+      fetchNotes(layerIds)
         .then(setNotes)
         .catch(onError);
 
@@ -65,7 +72,7 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
             event: '*', 
             schema: 'public',
             table: 'targets',
-            filter: `layer_id=eq.${props.layerId}`
+            filter: `layer_id=in.(${layerIds.join(', ')})`
           }, 
           handleCDCEvent(props.present, setNotes)
         )
@@ -75,7 +82,7 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
             event: '*', 
             schema: 'public',
             table: 'bodies',
-            filter: `layer_id=eq.${props.layerId}`
+            filter: `layer_id=in.(${layerIds.join(', ')})`
           }, 
           handleCDCEvent(props.present, setNotes)
         )
@@ -93,15 +100,16 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
         setChannel(undefined);
       }
     }
-  }, [layerId, props.present]);
+  }, [layerIds, props.present]);
 
   return (
     <DocumentNotesContext.Provider value={{ 
+      activeLayerId,
       notes, 
       setNotes, 
       channel, 
       setChannel,
-      layerId,
+      layerIds,
       present,
       onError
     }}>

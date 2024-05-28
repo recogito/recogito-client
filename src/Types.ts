@@ -10,10 +10,14 @@ export interface UserProfile {
   avatar_url?: string;
 }
 
+/** Used in the Admin section */
 export interface ExtendedUserProfile extends UserProfile {
   email_address: string;
+
   last_sign_in_at: string;
+
   org_group_id: string;
+
   org_group_name: string;
 }
 
@@ -23,6 +27,14 @@ export type MyProfile = UserProfile & {
   email: string;
 
   isOrgAdmin: boolean;
+};
+
+export type Member = {
+  inGroup: Group | undefined;
+
+  since: string;
+
+  user: UserProfile;
 };
 
 export interface Project {
@@ -40,15 +52,11 @@ export interface Project {
 
   description?: string;
 
-  is_open_join: boolean;
+  is_open_join?: boolean;
 
-  is_open_edit: boolean;
+  is_open_edit?: boolean;
 }
 
-/**
- * Project with additional context data, as used
- * in the project cards.
- */
 export interface ExtendedProjectData {
   id: string;
 
@@ -70,33 +78,27 @@ export interface ExtendedProjectData {
 
   contexts: Context[];
 
-  layers: [
-    {
-      id: string;
-
-      name: string;
-
-      description: string;
-
-      document: {
-        id: string;
-
-        name: string;
-
-        content_type?: ContentType;
-
-        meta_data: {
-          protocol: Protocol;
-
-          url: string;
-
-          meta?: object;
-        };
-      };
-    }
-  ];
-
   groups: Group[];
+
+  documents: Document[];
+
+  users: Member[];
+}
+
+export interface ProjectDocument {
+  id?: string;
+
+  created_at?: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
+  project_id: string;
+
+  document_id: string;
 }
 
 export interface Group {
@@ -108,27 +110,19 @@ export interface Group {
 
   is_default: boolean;
 
-  members: Array<{
+  members: {
     user: UserProfile;
 
     since: string;
-  }>;
-}
-
-export interface GroupMember {
-  user: UserProfile;
-
-  in_group: string;
-
-  since: string;
+  }[];
 }
 
 export interface Document {
   id: string;
 
-  created_at: string;
+  created_at?: string;
 
-  created_by: string;
+  created_by?: string;
 
   updated_at?: string;
 
@@ -140,7 +134,7 @@ export interface Document {
 
   content_type?: ContentType;
 
-  is_private: boolean;
+  is_private?: boolean;
 
   collection_id?: string;
 
@@ -156,15 +150,55 @@ export interface Document {
 
   collection_metadata?: {
     revision_number: number;
+
     document_id: string;
   };
 }
-export interface DocumentInContext extends Document {
-  layers: Layer[];
+
+export interface DocumentWithContext extends Document {
+  context: DocumentContext;
+
+  layers: DocumentLayer[];
 }
 
-export interface DocumentInTaggedContext extends DocumentInContext {
-  context: TaggedContext;
+export interface DocumentContext {
+  id: string | undefined;
+
+  name: string | undefined;
+
+  description: string | undefined;
+
+  project_id: string;
+
+  is_project_default: boolean;
+
+  layer_contexts?: any;
+}
+
+export interface DocumentLayer {
+  id: string;
+
+  is_active: boolean;
+
+  document_id: string;
+}
+
+export interface Layer {
+  id: string;
+
+  document_id: string;
+
+  project_id: string;
+
+  name?: string;
+
+  description?: string;
+
+  is_active_layer: boolean;
+}
+
+export interface LayerWithDocument extends Layer {
+  document: Document;
 }
 
 export const ContentTypes = [
@@ -173,7 +207,7 @@ export const ContentTypes = [
   'text/xml',
 ] as const;
 
-export type ContentType = (typeof ContentTypes)[number];
+export type ContentType = (typeof ContentTypes)[number] | string;
 
 export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
@@ -188,63 +222,83 @@ export interface Context {
 
   project_id: string;
 
-  is_project_default: boolean;
+  is_project_default?: boolean;
+
+  created_at: string;
+
+  members: {
+    id: string;
+
+    user_id: string;
+
+    user: {
+      nickname: string;
+
+      first_name: string;
+
+      last_name: string;
+
+      avatar_url: string;
+    };
+  }[];
+
+  context_documents: {
+    document: {
+      id: string;
+
+      name: string;
+
+      content_type: string;
+
+      meta_data: any;
+
+      is_private: boolean;
+    };
+  }[];
 }
 
 export interface TaggedContext extends Context {
   tags: Tag[];
 }
 
-export interface Layer {
+export interface ExtendedAssignmentData extends Context {
+  team: {
+    user: UserProfile;
+
+    since: string;
+  }[];
+
+  layers: {
+    id: string;
+
+    name: string;
+
+    description: string;
+
+    document: Document;
+
+    is_active_layer: boolean;
+  }[];
+}
+
+export interface Collection {
+  created_at?: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
   id: string;
 
-  document_id: string;
+  name: string;
 
-  project_id: string;
+  extension_id?: string;
 
-  name?: string;
+  extension_metadata?: object;
 
-  description?: string;
-
-  context: Context;
-}
-
-export interface LayerWithDocument extends Layer {
-  document: Document;
-}
-
-export interface ExtendedAssignmentData extends Context {
-  layers: [
-    {
-      id: string;
-
-      name: string;
-
-      description: string;
-
-      document: Document;
-
-      groups: [
-        {
-          id: string;
-
-          name: string;
-
-          description?: string;
-
-          is_admin: boolean;
-
-          is_default: boolean;
-
-          members: Array<{
-            user: UserProfile;
-
-            since: string;
-          }>;
-        }
-      ];
-    }
-  ];
+  custom_css?: string;
 }
 
 export interface TagDefinition {
@@ -275,6 +329,26 @@ export interface Tag {
   target_id: string;
 
   tag_definition?: TagDefinition;
+}
+
+export interface InstalledPlugin {
+  id: string;
+
+  created_at: string;
+
+  created_by?: string;
+
+  updated_at?: string;
+
+  updated_by?: string;
+
+  project_id: string;
+
+  plugin_name: string;
+
+  plugin_id: string;
+
+  plugin_settings?: any;
 }
 
 export interface Translations {
@@ -317,18 +391,8 @@ export type Policies = {
 
 export type LoginMethod = {
   name: string;
-  type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
-  domain: string;
-};
 
-export type Collection = {
-  created_at?: string;
-  created_by?: string;
-  updated_at?: string;
-  updated_by?: string;
-  id: string;
-  name: string;
-  extension_id?: string;
-  extension_metadata?: object;
-  custom_css?: string;
+  type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
+
+  domain: string;
 };

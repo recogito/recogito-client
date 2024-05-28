@@ -1,7 +1,6 @@
 button.unstyled {
   background-color: transparent;
   border: none;
-  border-radius: 0;
   box-shadow: none;
   color: var(--font-light);
   cursor: pointer;
@@ -34,6 +33,6 @@ button.unstyled.icon-only {
 }
 
 button.unstyled.icon-only svg {
-  margin: 1px 0 0 0;  
+  margin: 1px 0 0 0;
   padding: 0;
 }

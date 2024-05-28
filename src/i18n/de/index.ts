@@ -18,8 +18,12 @@ import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
 
 export default {
-  'annotation-image': { ...annotationCommon, ...annotationImage },
-  'annotation-text': { ...annotationCommon, ...annotationText },
+  'annotation-image': {
+    ...annotationCommon,
+    ...annotationImage,
+    ...accountMenu,
+  },
+  'annotation-text': { ...annotationCommon, ...annotationText, ...accountMenu },
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
@@ -32,9 +36,18 @@ export default {
   error: error,
   'project-assignment-details': projectAssignmentDetails,
   'project-assignments': projectAssignments,
-  'project-collaboration': projectCollaboration,
-  'project-home': projectHome,
-  'project-settings': projectSettings,
+  'project-collaboration': { ...projectCollaboration, ...accountMenu },
+  'project-home': {
+    ...projectHome,
+    ...accountMenu,
+    ...projectSidedbar,
+    ...projectAssignments,
+  },
+  'project-settings': {
+    ...projectSettings,
+    ...dashboardProjects,
+    ...accountMenu,
+  },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': userManagement,
 };

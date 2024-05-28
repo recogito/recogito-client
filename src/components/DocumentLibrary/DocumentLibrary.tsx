@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import type {
-  DocumentInContext,
-  Translations,
-  Document,
-  MyProfile,
-  Collection,
-} from 'src/Types';
+import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type {
@@ -57,7 +51,6 @@ export interface DocumentLibraryProps {
   disabledIds: string[];
   dataDirty: boolean;
   clearDirtyFlag(): void;
-  onAddDocument(document: DocumentInContext): void;
   onCancel(): void;
   UploadActions: React.ReactNode;
   onDocumentsSelected(documentIds: string[]): void;
@@ -247,7 +240,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
               revision_count: 0,
             };
             for (let k = 0; k < map[key].length; k++) {
-              const date = new Date(map[key][k].created_at);
+              const date = new Date(map[key][k].created_at as string);
               obj.revisions?.push({
                 ...map[key][k],
                 date_number: date.getTime(),

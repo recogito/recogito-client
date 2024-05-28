@@ -34,9 +34,9 @@ export const PrivacySelector = (props: PrivacySelectorProps) => {
           className="privacy-selector-trigger"
           data-privacy={mode.toLowerCase()}>
           {mode === 'PRIVATE' ? (
-            <Detective size={20} />
+            <Detective size={18} />
           ) : (            
-            <UsersThree size={20} />
+            <UsersThree size={18} />
           )}
           <span>
             {mode === 'PRIVATE' ? t['Private'] : t['Public']}

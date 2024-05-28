@@ -1,0 +1,27 @@
+.layers-checkbox-select-all {
+  margin-left: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.layer-document-name-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.layer-document-name-text {
+  margin-left: 8px;
+}
+
+.layers-checkbox-label {
+  margin-left: 8px;
+  margin-bottom: auto !important;
+}
+
+.layers-checkbox-layer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 60px;
+}

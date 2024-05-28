@@ -10,6 +10,8 @@ interface AvatarProps {
   color?: string;
 
   avatar?: string;
+
+  showBorder?: boolean;
 }
 
 export const formatName = (user: UserProfile) => {
@@ -20,15 +22,7 @@ export const formatName = (user: UserProfile) => {
   if (first_name || last_name) return `${first_name} ${last_name}`.trim();
 
   // Remember that this function returns undefined if user has no (nick)name set!
-};
-
-export const getDisplayName = (user: UserProfile) => {
-  if (user.nickname) return user.nickname;
-
-  const _realname = [user.first_name, user.last_name]
-    .filter((str) => str)
-    .join(' ');
-};
+}
 
 const stringToHash = (str: string) => {
   let hash = 0;
@@ -53,25 +47,26 @@ const getInitials = (name: string): string => {
 export const Avatar = (props: AvatarProps) => {
   const { id, name, color, avatar } = props;
 
-  const backgroundColor = color || `hsl(${stringToHash(id) % 360}, 35%, 68%)`;
+  const fallbackColor = `hsl(${stringToHash(id) % 360}, 35%, 48%)`;
 
   return (
     <RadixAvatar.Root className='avatar'>
-      {avatar && (
-        <RadixAvatar.Image
-          className='avatar-image'
-          title={`${name} avatar`}
-          src={avatar}
-        />
-      )}
+      <span 
+        className={color ? 'avatar-wrapper ring' : 'avatar-wrapper'}
+        style={color ? { borderColor: color } : undefined}>
+        {avatar && (
+          <RadixAvatar.Image
+            className='avatar-image'
+            src={avatar}
+          />
+        )}
 
-      <RadixAvatar.Fallback
-        className='avatar-fallback'
-        title={`${name} avatar image`}
-        style={{ backgroundColor }}
-      >
-        {name ? getInitials(name) : <User size={16} />}
-      </RadixAvatar.Fallback>
+        <RadixAvatar.Fallback
+          className='avatar-fallback'
+          style={{ backgroundColor: fallbackColor }}>
+          {name ? getInitials(name) : <User size={16} />}
+        </RadixAvatar.Fallback>
+      </span>
     </RadixAvatar.Root>
   );
 };

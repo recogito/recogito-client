@@ -16,6 +16,7 @@ export const uploadFile = (
     } else {
       const token = data.session?.access_token;      
       if (!token) {
+        // Shouldn't really happen at this point
         reject('Not authorized');
       } else {
         const uppy = new Uppy({ autoProceed: true });

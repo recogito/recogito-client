@@ -30,11 +30,11 @@ export const UndoStack = (props: UndoStackProps) => {
   
   useEffect(() => {
     if (anno && undoEmpty) {
-      const onCreate = (annotation: Annotation) => {
+      const onUpsert = (annotation: Annotation) => {
         const { current } = created;
         created.current = annotation;
 
-        if (current) {
+        if (current && current.id !== annotation.id) {
           // This happens if the user goes directly from 
           // having one empty annotation open to creating
           // a new one! Delete the previous in this case.
@@ -42,10 +42,12 @@ export const UndoStack = (props: UndoStackProps) => {
         }
       }
       
-      anno.on('createAnnotation', onCreate);
+      anno.on('createAnnotation', onUpsert);
+      anno.on('updateAnnotation', onUpsert);
 
       return () => {
-        anno.off('createAnnotation', onCreate);
+        anno.off('createAnnotation', onUpsert);
+        anno.off('updateAnnotation', onUpsert);
       }
     }
   }, [anno]);
@@ -59,7 +61,7 @@ export const UndoStack = (props: UndoStackProps) => {
       return;
 
     deleteIfEmpty(created.current);
-  }, [selected.map(s => s.annotation.id).join(','), created]);
+  }, [selected.map(s => s.annotation.id).join(',')]);
 
   useEffect(() => {
     const onUnload = () => {

@@ -1,0 +1,21 @@
+.annotation-popup {
+  animation: popupFadeIn 200ms ease-in;
+  border-radius: 5px;
+  box-shadow:
+    1px 2px 4px rgba(0, 0, 0, 0.02),
+    6px 2px 9px rgba(0, 0, 0, 0.03),
+    7px 12px 22px rgba(0, 0, 0, 0.06),
+    12px 24px 73px rgba(0, 0, 0, 0.07);
+  font-family: Inter;
+  width: 340px;
+  z-index: 9999;
+}
+
+@keyframes popupFadeIn  {
+  0% {
+    opacity:0
+  }
+  100% {
+    opacity:1;
+  }
+}

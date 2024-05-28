@@ -9,12 +9,15 @@
 @import './form/index.css';
 @import './mixins/index.css';
 @import './popover/index.css';
+@import './radio/index.css';
 @import './select/index.css';
+@import './switch/index.css';
 @import './table/index.css';
 @import './tabs/index.css';
 @import './toast/index.css';
 @import './tooltip/index.css';
 @import './scroll-area/index.css';
+@import './accordian/index.css';
 
 @font-face {
   font-family: Inter;
@@ -119,10 +122,11 @@
   --orange: #e9b44a;
 
   --gray-900: #202125;
+  --gray-800: #475569;
   --gray-700: #6f747c;
   --gray-600: #818992;
   --gray-500: #93989f;
-  --gray-400: #cbd0d7;
+  --gray-400: #d4d8de;
   --gray-300: #dadee2;
   --gray-200: #e2e5e9;
   --gray-100: #f3f4f7;
@@ -165,11 +169,15 @@
   --input-focus-border-color: var(--bright-blue);
   --input-label-color: var(--font-light);
   --input-text-color: var(--font-dark);
+
+  /** Palette **/
+  --primary: #07529a;
+  --secondary: #b5c8dc;
 }
 
 html,
 body {
-  background-color: var(--gray-100);
+  background-color: white;
   color: var(--gray-900);
   font-family: Inter, Arial, Helvetica, sans-serif;
   font-size: 16px;
@@ -215,6 +223,41 @@ h2 {
 p {
   margin: 0.8em 0;
   padding: 0;
+}
+
+.text-body-small {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 18.2px;
+}
+
+.text-body-small-bold {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18.2px;
+}
+
+.text-body-bold {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18.2px;
+}
+
+.text-body-tiny {
+  font-family: Inter;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 13.31px;
+}
+
+.text-body-large-bold {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 19.36px;
 }
 
 input,

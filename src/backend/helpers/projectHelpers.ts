@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getGroupMembers, zipMembers } from '@backend/crud';
+import { getProjectGroupMembers } from '@backend/crud';
 import type { ExtendedProjectData } from 'src/Types';
 import type { Response } from '@backend/Types';
 
@@ -25,26 +25,34 @@ export const listMyProjectsExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts (
+      groups:project_groups(
         id,
-        project_id,
-        name,
-        is_project_default
+        name
       ),
-      layers (
-        id,
-        name,
-        description,
-        document:documents (
+      project_documents(
+        *,
+        document:documents!project_documents_document_id_fkey(
           id,
           name,
           content_type,
           meta_data
         )
       ),
-      groups:project_groups (
+      contexts:contexts!contexts_project_id_fkey(
         id,
-        name
+        project_id,
+        name,
+        is_project_default,
+        created_at,
+        members:context_users(
+          role_id,
+          user:profiles!context_users_user_id_fkey (
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        )
       )
     `
     )
@@ -52,30 +60,71 @@ export const listMyProjectsExtended = (
       if (error) {
         return { error, data: [] as ExtendedProjectData[] };
       } else {
-        const projects = data;
+        const projects: any = data.map((project) => {
+          const documents: Document[] = [];
+          project.project_documents.forEach((pd) => {
+            if (pd.document) {
+              documents.push(pd.document);
+            }
+          });
+
+          return {
+            ...project,
+            documents,
+          };
+        });
 
         // All group IDs of all projects in `data`
         const groupIds = projects.reduce(
-          (ids, project) => [...ids, ...project.groups.map((g) => g.id)],
+          (ids: any, project: any) => [
+            ...ids,
+            ...project.groups.map((g: any) => g.id),
+          ],
           [] as string[]
         );
 
-        return getGroupMembers(supabase, groupIds).then(({ error, data }) => {
-          if (error) {
-            return { error, data: [] as ExtendedProjectData[] };
-          } else {
-            // Re-assign group members to projects
-            const projectsExtended = projects.map(
-              (p) =>
-                ({
-                  ...p,
-                  groups: zipMembers(p.groups, data),
-                } as unknown as ExtendedProjectData)
-            );
+        return getProjectGroupMembers(supabase, groupIds).then(
+          ({ error, data }) => {
+            if (error) {
+              return { error, data: [] as ExtendedProjectData[] };
+            } else {
+              // Re-assign group members to projects
+              let users: any[] = [];
+              data.forEach(
+                (d) =>
+                  (users = [
+                    ...users,
+                    {
+                      user: d.user,
+                      groupId: d.in_group,
+                    },
+                  ])
+              );
 
-            return { error, data: projectsExtended };
+              users = [...new Set(users)];
+
+              const projectsExtended: ExtendedProjectData[] = projects.map(
+                (p: any) => {
+                  const ids: string[] = p.groups.map((g: any) => g.id);
+                  return {
+                    ...p,
+                    users: users
+                      .filter((u) => ids.includes(u.groupId))
+                      .map((m) => {
+                        return {
+                          user: m.user,
+                          inGroup: undefined,
+                          since: '',
+                        };
+                      }),
+                  } as unknown as ExtendedProjectData;
+                }
+              );
+
+              return { error, data: projectsExtended };
+            }
           }
-        });
+        );
       }
     });
 
@@ -103,28 +152,44 @@ export const getProjectExtended = (
       description,
       is_open_join,
       is_open_edit,
-      contexts (
+      groups:project_groups(
         id,
-        project_id,
-        name,
-        is_project_default
+        name
       ),
-      layers (
-        id,
-        name,
-        description,
-        document:documents (
+      project_documents(
+        *,
+        document:documents!project_documents_document_id_fkey(
           id,
           name,
           content_type,
           meta_data
         )
       ),
-      groups:project_groups (
+      contexts:contexts!contexts_project_id_fkey(
         id,
+        project_id,
         name,
-        is_admin,
-        is_default
+        is_project_default,
+        created_at,
+        members:context_users(
+          id,
+          role_id,
+          user:profiles!context_users_user_id_fkey (
+            id,
+            nickname,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        ),
+        context_documents(
+          document:documents(
+            id,
+            name,
+            content_type,
+            meta_data
+          )
+        )
       )
     `
     )
@@ -138,24 +203,64 @@ export const getProjectExtended = (
 
         const groupIds = project.groups.map((g) => g.id);
 
-        return getGroupMembers(supabase, groupIds).then(({ error, data }) => {
-          if (error) {
-            return { error, data: undefined as unknown as ExtendedProjectData };
-          } else {
-            // Re-assign group members to groups
-            const projectExtended = {
-              ...project,
-              groups: project.groups.map((g) => ({
-                ...g,
-                members: data
-                  .filter((m) => m.in_group === g.id)
-                  .map(({ user, since }) => ({ user, since })),
-              })),
-            } as unknown as ExtendedProjectData;
+        return getProjectGroupMembers(supabase, groupIds).then(
+          ({ error, data }) => {
+            if (error) {
+              return {
+                error,
+                data: undefined as unknown as ExtendedProjectData,
+              };
+            } else {
+              // Re-assign group members to projects
+              let users: any[] = [];
+              data.forEach(
+                (d) =>
+                  (users = [
+                    ...users,
+                    {
+                      user: d.user,
+                      groupId: d.in_group,
+                    },
+                  ])
+              );
+              users = [...new Set(users)];
 
-            return { error, data: projectExtended };
+              // Re-assign group members to groups
+              /*
+                                  users: users
+                      .filter((u) => ids.includes(u.groupId))
+                      .map((m) => {
+                        return {
+                          user: m.user,
+                          inGroup: undefined,
+                          since: '',
+                        };
+              */
+              const ids: string[] = project.groups.map((g: any) => g.id);
+              const projectExtended = {
+                ...project,
+                groups: project.groups.map((g) => ({
+                  ...g,
+                  members: data
+                    .filter((m) => m.in_group === g.id)
+                    .map(({ user, since }) => ({ user, since })),
+                })),
+                users: users
+                  .filter((u) => ids.includes(u.groupId))
+                  .map((m) => {
+                    return {
+                      user: m.user,
+                      inGroup: project.groups.find((g) => g.id === m.groupId),
+                      since: '',
+                    };
+                  }),
+                documents: project.project_documents.map((pd) => pd.document),
+              } as unknown as ExtendedProjectData;
+
+              return { error, data: projectExtended };
+            }
           }
-        });
+        );
       }
     });
 

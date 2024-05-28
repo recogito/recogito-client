@@ -1,0 +1,106 @@
+.project-header-root {
+  margin-top: 10px;
+  background-color: var(--gray-100);
+  padding-left: 40px;
+  padding-right: 40px;
+  position: fixed;
+  top: 90px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.project-header-name-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-header-description-bar {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22.4px;
+}
+
+.project-header-header section.project-header-header-bottom {
+  padding: 6px 25px 0 30px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.project-header-header-bottom ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-header-header-bottom li {
+  display: inline-block;
+}
+
+.project-header-header-bottom li + li {
+  margin-left: 18px;
+}
+
+.project-header-header-bottom li {
+  border-color: transparent;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 0 0 2px 0;
+}
+
+.project-header-header-bottom li button {
+  background: none;
+  border-color: transparent;
+  border-radius: 0;
+  border-style: solid;
+  border-width: 0 0 2px 0;
+  box-shadow: none;
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  padding: 8px 4px;
+}
+
+.project-header-header-bottom .project-header-header-tabs li:hover {
+  border-color: var(--gray-200);
+}
+
+.project-header-header-bottom .project-header-header-tabs li.active {
+  border-color: var(--bright-blue);
+  color: var(--bright-blue);
+  font-weight: 500;
+}
+
+.project-header-header-bottom .project-header-header-tabs li.active button {
+  color: var(--bright-blue);
+  font-weight: 500;
+}
+
+.project-header-header-bottom li button:hover {
+  background: none;
+  box-shadow: none;
+}
+
+.project-header-button-bar {
+  display: flex;
+  flex-direction: row;
+  width: 250px;
+  justify-content: space-between;
+}
+.project-header-button {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 10px 16px 10px 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 130px;
+}
+
+.project-header-button-text {
+  padding-left: 3px;
+}
+
+.project-header-spacer {
+  height: 20px;
+}

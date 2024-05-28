@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import type { PresentUser } from '@annotorious/react';
-import type { Policies, Translations } from 'src/Types';
+import { useMemo, useState } from 'react';
+import type { Delta } from 'quill/core';
+import { User, useAnnotatorUser, type AnnotationBody, type PresentUser } from '@annotorious/react';
+import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { Sorter, Sorting, SortSelector } from '../SortSelector';
-import { NewNote, NewNoteForm } from '../NewNote';
-import type { DocumentNote } from '../Types';
+import { EmptyNote, NewNoteButton } from '../NewNote';
+import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { DocumentNotesListItem } from './DocumentNotesListItem';
 
 import './DocumentNotesList.css';
@@ -12,6 +13,10 @@ import './DocumentNotesList.css';
 interface DocumentNotesListProps {
 
   i18n: Translations;
+
+  layers?: DocumentLayer[];
+
+  layerNames: Map<string, string>;
 
   present: PresentUser[];
 
@@ -23,7 +28,18 @@ interface DocumentNotesListProps {
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
+  const user = useAnnotatorUser();
+
+  const me: PresentUser | User = useMemo(() => props.present.find(p => p.id === user.id) || user, [user]);
+
   const [selected, setSelected] = useState<string | undefined>();
+
+  const activeLayer = useMemo(() => (
+    (props.layers || []).find(l => l.is_active)
+  ), [props.layers]);
+
+  const isReadOnly = (a: DocumentNote) =>
+    !(a.layer_id && a.layer_id === activeLayer?.id);
 
   const { 
     notes,
@@ -32,7 +48,6 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     createNote: _createNote,
     deleteBody,
     deleteNote,
-    makePublic,
     updateBody
   } = useNotes();
 
@@ -41,10 +56,10 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   const sorted = notes.sort(sorter);
 
   const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
-
-  const createNote = (text: string, isPrivate: boolean) => {
+  
+  const createNote = (content: Delta, tags: string[], isPrivate: boolean) => {
     setNewNote(undefined);
-    _createNote(text, isPrivate);
+    _createNote(content, tags, isPrivate);
   }
 
   const onSelect = (note: DocumentNote) => (evt: React.MouseEvent) => {    
@@ -52,10 +67,18 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
     setSelected(note.id);
   }
 
+  const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
+    bodies.forEach(b => deleteBody(b as DocumentNoteBody));
+
+  const className= [
+    'anno-drawer-panel document-notes-list',
+    selected ? 'has-selected' : undefined
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className="anno-sidepanel document-notes-list">
+    <div className={className}>
       <div className="document-notes-list-header">
-        <NewNote 
+        <NewNoteButton 
           i18n={props.i18n} 
           onCreatePublic={() => setNewNote('public')} 
           onCreatePrivate={() => setNewNote('private')} />
@@ -66,10 +89,12 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
       </div>
 
       {newNote && (
-        <NewNoteForm 
+        <EmptyNote
           i18n={props.i18n}
           isPrivate={newNote === 'private'} 
-          onCreateNote={createNote}
+          me={me}
+          present={props.present}
+          onSubmit={createNote} 
           onCancel={() => setNewNote(undefined)} />
       )}
 
@@ -83,15 +108,18 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               
             <DocumentNotesListItem 
               i18n={props.i18n}
+              isReadOnly={isReadOnly(note)}
+              isSelected={selected === note.id}
+              layerNames={props.layerNames}
               note={note} 
-              showReplyForm={selected === note.id}
+              showReplyField={selected === note.id && !(isReadOnly(note))}
               policies={props.policies}
               present={props.present} 
               onCreateBody={createBody}
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}
               onDeleteNote={() => deleteNote(note.id)} 
-              onMakePublic={() => makePublic(note)} />
+              onBulkDeleteBodies={onBulkDeleteBodies} />
           </li>
         ))}
       </ul>

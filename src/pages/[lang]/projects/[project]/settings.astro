@@ -1,43 +1,75 @@
 ---
-import ProjectLayout from '@layouts/project/ProjectLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getMyProfile } from '@backend/crud';
+import { getMyProfile, listPendingInvitations } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import { getProjectExtended } from '@backend/helpers';
+import {
+  getProjectExtended,
+  listMyProjectsExtended,
+  getInstalledPlugins,
+} from '@backend/helpers';
 import { ProjectSettings } from '@apps/project-settings';
+import PluginRegistry from '@components/Plugins/PluginRegistry';
 
 const lang = getLangFromUrl(Astro.url);
 
 const i18n = getTranslations(Astro.request, 'project-settings');
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
 
 const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
-if (profile.error || !profile.data) { 
+if (profile.error || !profile.data) {
   const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
 const project = await getProjectExtended(supabase, projectId as string);
-if (project.error || !project.data) { 
+if (project.error || !project.data) {
   const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, { 
+  return new Response(error.body, {
     headers: { 'Content-Type': 'text/html;charset=utf-8' },
-    status: 404, 
-    statusText: 'Not Found' 
-   }); 
+    status: 404,
+    statusText: 'Not Found',
+  });
+}
+
+const invitations = await listPendingInvitations(supabase, projectId as string);
+
+if (project.error || invitations.error) {
+  const error = await fetch(`${Astro.url}/404`);
+  return new Response(error.body, {
+    headers: { 'Content-Type': 'text/html;charset=utf-8' },
+    status: 404,
+    statusText: 'Not Found',
+  });
+}
+
+const projects = await listMyProjectsExtended(supabase);
+const installedPlugins = await getInstalledPlugins(
+  supabase,
+  projectId as string
+);
+if (installedPlugins.error || !installedPlugins.data) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-<ProjectLayout active="Settings" user={profile.data} project={project.data}>
-  <ProjectSettings 
-    client:load 
-    i18n={i18n} 
-    project={project.data} />
-</ProjectLayout>
+
+<BaseLayout title='Settings'>
+  <ProjectSettings
+    client:load
+    i18n={i18n}
+    project={project.data}
+    invitations={invitations.data}
+    me={profile.data}
+    projects={projects.data}
+    availablePlugins={PluginRegistry.listAvailablePlugins()}
+    installedPlugins={PluginRegistry.resolvePlugins(installedPlugins.data)}
+  />
+</BaseLayout>
 
 <style>
   h1 {

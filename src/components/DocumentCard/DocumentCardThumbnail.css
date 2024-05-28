@@ -1,0 +1,16 @@
+.doc-card-thumbnail-spinner {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.document-card-image-container {
+  width: 200px;
+  height: 200px;
+}
+
+.document-card-image-container img {
+  object-fit: cover;
+}

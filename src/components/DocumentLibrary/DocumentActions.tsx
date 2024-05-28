@@ -40,7 +40,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
       <Root>
         <Trigger asChild>
           <button className='unstyled icon-only'>
-            <DotsThreeVertical weight='bold' size={20} />
+            <DotsThreeVertical weight='bold' size={20} color='black' />
           </button>
         </Trigger>
 

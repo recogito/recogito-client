@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
 import { DocumentCardActions } from './DocumentCardActions';
-import { ContentTypeIcon } from './ContentTypeIcon';
 import { MetadataModal } from './MetadataModal';
 
 import './DocumentCard.css';
+import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 
 interface DocumentCardProps {
   i18n: Translations;
@@ -47,46 +47,40 @@ export const DocumentCard = (props: DocumentCardProps) => {
   };
 
   const onExportTEI = (includePrivate: boolean) =>
-    (window.location.href = props.isDefaultContext
-      ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}&private=${includePrivate}`);
+  (window.location.href = props.isDefaultContext
+    ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
+    : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}&private=${includePrivate}`);
 
   const onExportCSV = (includePrivate: boolean) =>
-    (window.location.href = props.isDefaultContext 
-      ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/csv?document=${document.id}&private=${includePrivate}`);
+  (window.location.href = props.isDefaultContext
+    ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
+    : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/csv?document=${document.id}&private=${includePrivate}`);
 
   return (
     <article className='document-card-container'>
       <div className='document-card' onClick={onClick}>
-        <div className='document-card-body'>
-          <ContentTypeIcon document={document} />
-        </div>
+
+        <DocumentCardThumbnail document={props.document} />
 
         <div className='document-card-footer'>
-          <DocumentCardActions
-            i18n={props.i18n}
-            isAdmin={props.isAdmin}
-            context={context}
-            document={document}
-            onOpen={onOpen}
-            onDelete={props.onDelete}
-            onExportTEI={onExportTEI}
-            onExportCSV={onExportCSV}
-            onEditMetadata={() => setEditable(true)}
-          />
+          <div className='document-card-name'>
+            {document.name}
+          </div>
+          <div className='document-card-actions'>
+            <DocumentCardActions
+              i18n={props.i18n}
+              isAdmin={props.isAdmin}
+              context={context}
+              document={document}
+              onOpen={onOpen}
+              onDelete={props.onDelete}
+              onExportTEI={onExportTEI}
+              onExportCSV={onExportCSV}
+              onEditMetadata={() => setEditable(true)}
+            />
+          </div>
         </div>
       </div>
-
-      <h1>
-        {/* eslint-disable-next-line react/jsx-no-target-blank */}
-        <a
-          target='_blank'
-          href={`/${lang}/annotate/${context.id}/${document.id}`}
-        >
-          {document.name}
-        </a>
-      </h1>
 
       <MetadataModal
         open={editable}

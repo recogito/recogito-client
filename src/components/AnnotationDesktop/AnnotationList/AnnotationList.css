@@ -1,6 +1,6 @@
 .anno-drawer-panel.annotation-list {
   box-sizing: border-box;
-  padding: 0 5px 40px 15px;
+  padding: 0 20px 20px 12px;
 }
 
 .anno-drawer-panel.annotation-list > ul {
@@ -8,6 +8,28 @@
   list-style-type: none;  
   margin: 0;
   padding: 0;
+}
+
+.anno-drawer-panel.annotation-list > ul > li {
+  margin: 10px 0;
+}
+
+.anno-drawer-panel.annotation-list > ul > li .annotation {
+  margin: 0;
+  transition: margin 500ms ease-in-out, opacity 200ms ease-out; 
+}
+
+.anno-drawer-panel.annotation-list.has-selected > ul > li .annotation:not(.selected) {
+  cursor: pointer;
+  filter: grayscale(0.8) contrast(0.65) brightness(1.25);
+  opacity: 0.45;
+}
+
+.anno-drawer-panel.annotation-list > ul > li .annotation.selected {
+  margin: 25px 0;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.18), 
+    1px 1px 8px 0 rgba(0, 0, 0, 0.08);
+  transition: margin 300ms ease-out;
 }
 
 .anno-drawer-panel.annotation-list .annotation-card {
@@ -27,7 +49,7 @@
 .anno-drawer-panel.annotation-list .annotation-list-filter {
   color: var(--font-light);
   font-size: var(--font-tiny);
-  padding: 0.5em 8px 0em 0;
+  padding: 0.5em 2px 0em 0;
   text-align: right;
 }
 

@@ -1,59 +1,115 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
-import type { PresentUser, DrawingStyle, Filter } from '@annotorious/react';
-import type { RecogitoTextAnnotator, TextAnnotation } from '@recogito/react-text-annotator';
+import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
+import type {
+  HighlightStyle,
+  HighlightStyleExpression,
+  RecogitoTextAnnotator,
+  TextAnnotation,
+} from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getAllDocumentLayersInProject, isDefaultContext } from '@backend/helpers';
+import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { ColorState, DocumentNotes, FilterState, DrawerPanel } from '@components/AnnotationDesktop';
-import { BrandFooter, BrandHeader } from '@components/Branding';
+import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
+import type { PrivacyMode } from '@components/PrivacySelector';
+import { TopBar } from '@components/TopBar';
 import type { TextAnnotationProps } from './TextAnnotation';
-import { Menubar } from './Menubar';
+import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
+import { LeftDrawer } from './LeftDrawer/LeftDrawer';
 import { RightDrawer } from './RightDrawer';
-import type { Layer } from 'src/Types';
+import type { DocumentLayer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
-  const anno = useAnnotator<RecogitoTextAnnotator>();
+  const contentType = props.document.content_type;
 
-  const policies = useLayerPolicies(props.document.layers[0].id);
+  const anno = useAnnotator<RecogitoTextAnnotator>();
 
   const [loading, setLoading] = useState(true);
 
   const [showBranding, setShowBranding] = useState(true);
 
+  const policies = useLayerPolicies(props.document.layers[0].id);
+
   const [connectionError, setConnectionError] = useState(false);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const [rightPanel, setRightPanel] = useState<DrawerPanel | undefined>();
-
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [style, setStyle] = useState<((a: TextAnnotation) => DrawingStyle) | undefined>(undefined);
+  const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
 
-  const [filter, setFilter] = useState<Filter | undefined>(undefined);
+  const layerNames = useLayerNames(props.document);
+
+  const activeLayer = useMemo(
+    () =>
+      layers && layers.length > 0
+        ? layers.find((l) => l.is_active) || layers[0]
+        : undefined,
+    [layers]
+  );
+
+  const [leftPanelOpen, setLeftPanelOpen] = useState(false);
+
+  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+
+  const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
+
+  const [activeLayerStyle, setActiveLayerStyle] = useState<
+    HighlightStyleExpression | undefined
+  >(undefined);
+
+  const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+    if (style) {
+      const hse: HighlightStyleExpression = (
+        a: SupabaseAnnotation,
+        state?: AnnotationState
+      ) => ({
+        fill: style(a),
+        fillOpacity: state?.selected ? 0.5 : 0.24,
+      });
+
+      setActiveLayerStyle(() => hse);
+    } else {
+      setActiveLayerStyle(undefined);
+    }
+  };
+
+  const style: HighlightStyleExpression = useMemo(() => {
+    const readOnly = new Set(
+      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
+    );
+
+    const readOnlyStyle = (state?: AnnotationState, z?: number) =>
+      ({
+        fill: state?.selected ? '#000000' : undefined,
+        fillOpacity: state?.selected ? 0.08 : 0,
+        underlineStyle: 'solid',
+        underlineColor: '#000000' as Color,
+        underlineOffset: (z || 0) * 3,
+        underlineThickness: 2,
+      } as HighlightStyle);
+
+    return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
+      a.layer_id && readOnly.has(a.layer_id)
+        ? readOnlyStyle(state, z)
+        : typeof activeLayerStyle === 'function'
+        ? activeLayerStyle(a, state, z)
+        : undefined;
+  }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
 
-  const [layers, setLayers] = useState<Layer[] | undefined>();
-
-  // Default layer is either the first layer in the project context,
-  // or the first layer in the list, if no project context
-  const defaultLayer =
-    layers && layers.length > 0
-      ? layers.find((l) => !l.context.name) || layers[0]
-      : undefined;
-
   useEffect(() => {
     if (policies) {
-      const isDefault = isDefaultContext(props.document.context);
+      const isDefault = props.document.context.is_project_default;
 
       const isAdmin = policies?.get('layers').has('INSERT');
 
@@ -66,7 +122,18 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           props.document.context.project_id
         ).then(({ data, error }) => {
           if (error) console.error(error);
-          else setLayers(data);
+
+          const current = new Set(props.document.layers.map((l) => l.id));
+
+          const toAdd: DocumentLayer[] = data
+            .filter((l) => !current.has(l.id))
+            .map((l) => ({
+              id: l.id,
+              document_id: l.document_id,
+              is_active: false,
+            }));
+
+          setLayers([...props.document.layers, ...toAdd]);
         });
       } else {
         setLayers(props.document.layers);
@@ -74,23 +141,20 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  // max number of avatars displayed in the top right
-  const limit = 5;
+  useEffect(() => {
+    // Need to rethink - we also want popups
+    // when the panel shows Notes. But the design
+    // may still change...
+    setUsePopup(!rightPanelOpen);
+  }, [rightPanelOpen]);
 
-  const onSetRightPanel = (panel?: DrawerPanel) => {
-    if (panel === DrawerPanel.ANNOTATIONS)
-      setUsePopup(false); // Don't use the popup if annotation list is open
-    else if (!usePopup)
-      setUsePopup(true);
-
-    setRightPanel(panel);
-  }
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
+    setUsePopup(tab === 'NOTES');
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
-      // Don't fit the view if the annotation is already selected
+      // Don't scroll if the annotation is already selected
       if (anno.state.selection.isSelected(a)) return;
-
       anno.scrollIntoView(a);
     }
   };
@@ -98,90 +162,109 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const sorting =
     props.document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
-        const pages =
-          a.target.selector[0].pageNumber - b.target.selector[0].pageNumber;
-        return pages === 0
-          ? a.target.selector[0].start - b.target.selector[0].start
-          : pages;
-      }
+          const pages =
+            a.target.selector[0]?.pageNumber - b.target.selector[0]?.pageNumber;
+          return pages === 0
+            ? a.target.selector[0]?.start - b.target.selector[0]?.start
+            : pages;
+        }
       : (a: TextAnnotation, b: TextAnnotation) =>
-        a.target.selector[0].start - b.target.selector[0].start;
+          a.target.selector[0].start - b.target.selector[0].start;
+
+  const className = [
+    'ta-annotated-text-container',
+    contentType === 'text/xml'
+      ? 'tei'
+      : contentType === 'application/pdf'
+      ? 'pdf'
+      : 'text',
+    rightPanelOpen ? 'list-open' : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
-    <FilterState present={present}>
-      <ColorState present={present}>
-        <DocumentNotes
-          channelId={props.channelId}
-          layerId={defaultLayer?.id}
-          present={present}
-          onError={() => setConnectionError(true)}>
+    <DocumentNotes
+      channelId={props.channelId}
+      layers={layers}
+      present={present}
+      onError={() => setConnectionError(true)}>
+      <div className="anno-desktop ta-desktop">
+        {loading && <LoadingOverlay />}
 
-          <div className="anno-desktop ta-desktop">
-            {loading && (
-              <LoadingOverlay />
-            )}
+        <div className="header">
+          <TopBar
+            i18n={props.i18n}
+            invitations={[]}
+            me={props.me}
+            projects={[]}
+            showNotifications={false}
+            onError={() => {}} />
 
-            <div className="header">
-              {showBranding && (
-                <BrandHeader />
-              )}
+          <Toolbar
+            i18n={props.i18n}
+            document={props.document}
+            present={present}
+            privacy={privacy}
+            layers={layers}
+            layerNames={layerNames}
+            leftDrawerOpen={leftPanelOpen}
+            policies={policies}
+            rightDrawerOpen={rightPanelOpen}
+            showConnectionError={connectionError}
+            onChangePrivacy={setPrivacy}
+            onChangeStyle={onChangeStyle}
+            onToggleBranding={() => setShowBranding(!showBranding)}
+            onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
+            onToggleRightDrawer={() => setRightPanelOpen((open) => !open)} />
+        </div>
 
-              <Menubar
-                i18n={props.i18n}
-                document={props.document}
-                present={present}
-                rightPanel={rightPanel}
-                onToggleBranding={() => setShowBranding(!showBranding)}
-                onSetRightDrawer={onSetRightPanel} 
-                showConnectionError={connectionError} />
-            </div>
+        <main className={className}>
+          <LeftDrawer
+            i18n={props.i18n}
+            layers={layers}
+            layerNames={layerNames}
+            open={leftPanelOpen}
+            present={present}
+          />
 
-            <main>
-              <div className="ta-drawer ta-drawer-left" />
+          {policies && (
+            <AnnotatedText
+              activeLayer={activeLayer}
+              channelId={props.channelId}
+              document={props.document}
+              i18n={props.i18n}
+              layers={layers}
+              layerNames={layerNames}
+              policies={policies}
+              present={present}
+              privacy={privacy}
+              style={style}
+              tagVocabulary={tagVocabulary}
+              usePopup={usePopup}
+              onChangePresent={setPresent}
+              onConnectionError={() => setConnectionError(true)}
+              onSaveError={() => setConnectionError(true)}
+              onLoad={() => setLoading(false)}
+              styleSheet={props.styleSheet}
+            />
+          )}
 
-              {policies && (
-                <AnnotatedText
-                  channelId={props.channelId}
-                  defaultLayer={defaultLayer}
-                  document={props.document}
-                  filter={filter}
-                  i18n={props.i18n}
-                  layers={layers}
-                  policies={policies}
-                  present={present}
-                  style={style}
-                  tagVocabulary={tagVocabulary}
-                  usePopup={usePopup}
-                  onChangePresent={setPresent}
-                  onConnectionError={() => setConnectionError(true)}
-                  onSaveError={() => setConnectionError(true)}
-                  onLoad={() => setLoading(false)}
-                  styleSheet={props.styleSheet}
-                />
-              )}
-
-              <RightDrawer
-                currentPanel={rightPanel}
-                i18n={props.i18n}
-                layers={layers}
-                policies={policies}
-                present={present}
-                sorting={sorting}
-                tagVocabulary={tagVocabulary}
-                beforeSelectAnnotation={beforeSelectAnnotation}
-                onChangeAnnotationFilter={f => setFilter(() => f)}
-                onChangeAnnotationStyle={s => setStyle(() => s)} />
-            </main>
-
-            {showBranding && (
-              <div className="footer">
-                <BrandFooter />
-              </div>
-            )}
-          </div>
-        </DocumentNotes>
-      </ColorState>
-    </FilterState>
+          <RightDrawer
+            i18n={props.i18n}
+            layers={layers}
+            layerNames={layerNames}
+            open={rightPanelOpen}
+            policies={policies}
+            present={present}
+            sorting={sorting}
+            style={style}
+            tagVocabulary={tagVocabulary}
+            beforeSelectAnnotation={beforeSelectAnnotation}
+            onTabChanged={onRightTabChanged} />
+        </main>
+      </div>
+    </DocumentNotes>
   )
 
 }

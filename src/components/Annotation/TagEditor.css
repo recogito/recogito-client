@@ -1,0 +1,49 @@
+.annotation .tag-editor-trigger {
+  all: unset;
+  align-items: center;
+  background-color: var(--gray-100);
+  border-radius: 3px;
+  color: var(--font-light);
+  cursor: pointer;
+  display: flex;
+  font-size: 11.5px;
+  gap: 0.375rem;
+  padding: 0 0.5rem 0 0.375rem;
+}
+
+.annotation .tag-editor-trigger svg {
+  margin: 0;
+}
+
+.annotation.note .tag-editor-trigger {
+  background-color: #FCF7E3;
+}
+
+.annotation .tag-editor {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.annotation .tag-editor .tag-editor-actions {
+  align-items: center;
+  display: flex;
+}
+
+.annotation .tag-editor .tag-editor-actions button {
+  padding: 4px 3px 2px 3px;
+  margin-left: 3px;
+}
+
+.annotation .tag-editor .autosuggest {
+  font-size: 11.5px;
+}
+
+.annotation .tag-editor .autosuggest input {
+  background-color: var(--gray-100);
+  border: none;
+  border-radius: 3px;
+  box-sizing: content-box;
+  font-size: 11.5px;
+  outline: none;
+  padding: 0.375rem 0.5rem;
+}

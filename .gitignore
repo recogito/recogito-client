@@ -4,7 +4,6 @@ dist/
 .vscode/
 .idea/
 node_modules/
-
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -13,6 +12,10 @@ pnpm-debug.log*
 .env
 .env.production
 .idea
+
+src/components/Plugins/deployedPlugins.ts
+plugins/**
+public/pdf.worker.min.mjs
 
 .DS_Store
 

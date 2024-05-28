@@ -1,0 +1,28 @@
+.annotation .reply-field {
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 10px;
+}
+
+.annotation.note .reply-field {
+  border-color: #f3e096;
+}
+
+.annotation .reply-field-wrapper {
+  align-items: flex-end;
+  display: flex;
+  gap: 0.5rem;
+  padding: 5px 12px;
+}
+
+.annotation .reply-field-wrapper .quill-rte {
+  max-height: 30vh;
+  overflow-y: auto;
+}
+
+.annotation .reply-field-wrapper button.save.save-arrow {
+  margin-bottom: 4px;
+}
+
+.annotation .reply-field-wrapper .quill-rte {
+  flex-grow: 1;
+}
