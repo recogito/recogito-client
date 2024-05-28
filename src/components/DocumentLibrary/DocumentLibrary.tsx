@@ -388,7 +388,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     },
     {
       label: t['Author'],
-      renderCell: (item) => item.meta_data.meta?.author ? item.meta_data.meta?.author : '',
+      renderCell: (item) =>
+        item.meta_data.meta?.author ? item.meta_data.meta?.author : '',
       select: true,
       pinLeft: true,
       sort: { sortKey: 'AUTHOR' },
@@ -439,25 +440,25 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const myDocuments = documents
     ? documents.filter(
-      (d) =>
-        d.created_by === props.user.id &&
-        !d.collection_id &&
-        (search.length > 0 ? matchesSearch(d) : true)
-    )
+        (d) =>
+          d.created_by === props.user.id &&
+          !d.collection_id &&
+          (search.length > 0 ? matchesSearch(d) : true)
+      )
     : [];
 
   const allDocuments = documents
     ? documents.filter((d) =>
-      search.length > 0
-        ? matchesSearch(d) && !d.collection_id
-        : !d.collection_id
-    )
+        search.length > 0
+          ? matchesSearch(d) && !d.collection_id && !d.is_private
+          : !d.collection_id && !d.is_private
+      )
     : [];
 
   const collectionDocuments = activeCollection
     ? collections[activeCollection - 1].documents.filter((d) =>
-      search.length > 0 ? matchesSearch(d) : true
-    )
+        search.length > 0 ? matchesSearch(d) : true
+      )
     : [];
 
   const selectAll = useRowSelect(
@@ -555,7 +556,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     {
       sortFns: {
         TITLE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
-        AUTHOR: (array) => array.sort((a, b) => a.meta_data.meta?.author.localeCompare(b.meta_data.meta?.author)),
+        AUTHOR: (array) =>
+          array.sort((a, b) =>
+            a.meta_data.meta?.author.localeCompare(b.meta_data.meta?.author)
+          ),
         TYPE: (array) =>
           array.sort((a, b) =>
             (a.content_type || '').localeCompare(b.content_type || '')
