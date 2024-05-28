@@ -18,3 +18,5 @@ plugins/**
 public/pdf.worker.min.mjs
 
 .DS_Store
+
+pdf.worker.min.mjs
