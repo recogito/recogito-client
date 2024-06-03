@@ -85,6 +85,7 @@ if (document.data.content_type === 'text/plain') {
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
 } else if (
+  document.data.content_type?.startsWith('image/') ||
   document.data.meta_data?.protocol === 'IIIF_IMAGE' ||
   document.data.meta_data?.protocol === 'IIIF_PRESENTATION'
 ) {
@@ -140,7 +141,8 @@ if (profile.error || !profile.data) {
 </BaseLayout>
 
 <style>
-  html, body {
-    height: 100%
+  html,
+  body {
+    height: 100%;
   }
 </style>
