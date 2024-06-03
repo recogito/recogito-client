@@ -61,7 +61,7 @@
     "linkedom": "^0.18.0",
     "manifesto.js": "^4.2.17",
     "moment": "^2.30.1",
-    "openseadragon": "^4.1.1",
+    "openseadragon": "4.0.0",
     "papaparse": "^5.4.1",
     "quill": "^2.0.2",
     "react": "^18.3.1",

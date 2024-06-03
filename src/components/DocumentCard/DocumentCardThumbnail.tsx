@@ -4,6 +4,9 @@ import { ContentTypeIcon } from '@components/DocumentCard/ContentTypeIcon';
 import './DocumentCardThumbnail.css';
 import { Spinner } from '@components/Spinner';
 
+const CANTALOUPE_PATH: string | undefined = import.meta.env
+  .PUBLIC_IIIF_CANTALOUPE_PATH;
+
 export interface DocumentCardThumbnailProps {
   document: Document;
 }
@@ -64,6 +67,13 @@ export const DocumentCardThumbnail = (props: DocumentCardThumbnailProps) => {
             width={200}
           />
         )}
+      </div>
+    );
+  } else if (document.content_type?.startsWith('image/')) {
+    const url = `${CANTALOUPE_PATH}/${document.id}/square/max/0/default.jpg`;
+    return (
+      <div className='document-card-image-container'>
+        <img src={url} height={200} width={200} />
       </div>
     );
   } else if (document.meta_data?.protocol === 'IIIF_IMAGE') {
