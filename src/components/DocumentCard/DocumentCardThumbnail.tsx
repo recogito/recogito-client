@@ -3,10 +3,7 @@ import type { Document } from 'src/Types';
 import { ContentTypeIcon } from '@components/DocumentCard/ContentTypeIcon';
 import './DocumentCardThumbnail.css';
 import { Spinner } from '@components/Spinner';
-
-const CANTALOUPE_PATH: string | undefined = import.meta.env
-  .PUBLIC_IIIF_CANTALOUPE_PATH;
-
+import { supabase } from '@backend/supabaseBrowserClient';
 export interface DocumentCardThumbnailProps {
   document: Document;
 }
@@ -28,6 +25,22 @@ export const DocumentCardThumbnail = (props: DocumentCardThumbnailProps) => {
           setUrl(data.thumbnail['@id']);
         } else {
           setUrl(undefined);
+        }
+      });
+  };
+
+  const getImageURLFromStorage = () => {
+    supabase.storage
+      .from('documents')
+      .createSignedUrl(document.id, 3600)
+      .then(({ data, error }) => {
+        if (error) {
+          console.log(
+            `Failed to get signed url for ${document.id}, error: ${error.message}`
+          );
+        } else {
+          setUrl(data?.signedUrl);
+          setLoading(false);
         }
       });
   };
@@ -70,10 +83,22 @@ export const DocumentCardThumbnail = (props: DocumentCardThumbnailProps) => {
       </div>
     );
   } else if (document.content_type?.startsWith('image/')) {
-    const url = `${CANTALOUPE_PATH}/${document.id}/square/max/0/default.jpg`;
+    if (loading && !url) {
+      getImageURLFromStorage();
+    }
     return (
       <div className='document-card-image-container'>
-        <img src={url} height={200} width={200} />
+        {loading ? (
+          <div>
+            <Spinner className='search-icon spinner' size={14} />
+          </div>
+        ) : (
+          <img
+            src={!loading && url ? url : '/img/iiif-manifest-document.png'}
+            height={200}
+            width={200}
+          />
+        )}
       </div>
     );
   } else if (document.meta_data?.protocol === 'IIIF_IMAGE') {
