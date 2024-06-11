@@ -169,6 +169,7 @@ export const getProjectExtended = (
         id,
         project_id,
         name,
+        description,
         is_project_default,
         created_at,
         members:context_users(
