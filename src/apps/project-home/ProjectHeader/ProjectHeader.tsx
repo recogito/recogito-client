@@ -1,5 +1,6 @@
 import type { Translations } from 'src/Types';
 import { Users, Gear } from '@phosphor-icons/react';
+import { useEffect, useState } from 'react';
 
 import './ProjectHeader.css';
 
@@ -18,6 +19,20 @@ interface ProjectHeaderProps {
 
 export const ProjectHeader = (props: ProjectHeaderProps) => {
   const { t } = props.i18n;
+
+  const [expanded, setExpanded] = useState(false);
+  const [showExpand, setShowExpand] = useState(false);
+
+  useEffect(() => {
+    const desc = document.getElementById('project-description');
+    const isTextClamped = desc ? desc.scrollHeight > desc.clientHeight : false;
+
+    if (!expanded) {
+      if (isTextClamped) {
+        setShowExpand(true);
+      }
+    }
+  }, [expanded]);
 
   return (
     <header className='project-header-root'>
@@ -42,7 +57,33 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
           </div>
         )}
       </div>
-      <div className='project-header-description-bar'>{props.description}</div>
+      <div
+        id='project-description'
+        className={
+          expanded
+            ? 'project-header-description-bar-expanded'
+            : 'project-header-description-bar'
+        }
+      >
+        {props.description}
+        {showExpand &&
+          (expanded ? (
+            <button
+              className='show-button'
+              onClick={() => setExpanded(!expanded)}
+            >
+              {t['Show Less']}
+            </button>
+          ) : (
+            <button
+              className='show-button'
+              onClick={() => setExpanded(!expanded)}
+            >
+              {t['Show More']}
+            </button>
+          ))}
+      </div>
+
       <section className='project-header-header-bottom'>
         {props.showTabs && props.currentTab && props.onSwitchTab ? (
           <ul className='project-header-header-tabs'>

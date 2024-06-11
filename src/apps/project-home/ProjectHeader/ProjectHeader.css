@@ -21,6 +21,22 @@
   font-weight: 400;
   font-size: 14px;
   line-height: 22.4px;
+  display: block;
+  display: -webkit-box;
+  line-clamp: 3;
+  line-height: 160%;
+  overflow: hidden;
+  padding: 0 2px;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.project-header-description-bar-expanded {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 22.4px;
 }
 
 .project-header-header section.project-header-header-bottom {
@@ -103,4 +119,15 @@
 
 .project-header-spacer {
   height: 20px;
+}
+
+.show-button {
+  position: absolute;
+  bottom: 3px;
+  right: 10px;
+  z-index: 1000;
+  color: var(--primary);
+  border: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
