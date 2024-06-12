@@ -123,7 +123,7 @@
 
 .show-button {
   position: absolute;
-  bottom: 3px;
+  bottom: -6px;
   right: 10px;
   z-index: 1000;
   color: var(--primary);
