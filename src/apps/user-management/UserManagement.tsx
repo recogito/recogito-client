@@ -157,6 +157,13 @@ export const UserManagement = (props: UserManagementProps) => {
             return;
           } else {
             setUsers(data);
+
+            setToast({
+              title: t['Success'],
+              description: t['User has been invited.'],
+              type: 'success',
+              icon: <CheckFat color='green' />,
+            });
           }
         });
       }

@@ -23,5 +23,6 @@
   "Invite User": "Invite User",
   "Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.": "Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.",
   "Invite": "Invite",
-  "Never": "Never"
+  "Never": "Never",
+  "User has been invited.": "User has been invited."
 }
