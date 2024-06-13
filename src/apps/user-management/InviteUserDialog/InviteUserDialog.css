@@ -1,0 +1,134 @@
+.invite-user-dialog-overlay {
+  background-color: var(--black-a9);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.invite-user-dialog-content {
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 450px;
+  max-height: 85vh;
+  padding: 25px;
+  animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.invite-user-dialog-content:focus {
+  outline: none;
+}
+
+.invite-user-fieldset {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.invite-user-dialog-title {
+  margin: 0;
+  font-weight: 500;
+  color: var(--mauve-12);
+  font-size: 17px;
+}
+
+.invite-user-dialog-description {
+  margin: 10px 0 20px;
+  color: var(--mauve-11);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.invite-user-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 15px;
+  font-size: 15px;
+  line-height: 1;
+  font-weight: 500;
+  height: 35px;
+  margin-left: 20px;
+  gap: 4px;
+}
+
+.invite-user-icon-button {
+  font-family: inherit;
+  border-radius: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--violet-11);
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  height: 25px !important;
+  width: 25px !important;
+  max-width: 30px !important;
+  min-width: 40px;
+  padding: 0 !important;
+}
+
+.invite-user-icon-button:hover {
+  background-color: var(--gray-300) !important;
+}
+
+.invite-user-icon-button:focus {
+  box-shadow: 0 0 0 2px var(--gray-300);
+}
+
+.invite-user-babel {
+  font-size: 15px;
+  color: var(--violet-11);
+  width: 90px;
+  text-align: right;
+}
+
+.invite-user-input {
+  width: 100%;
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  padding: 0 10px;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--violet-11);
+  box-shadow: 0 0 0 1px var(--violet-7);
+  height: 35px;
+}
+.invite-user-input:focus {
+  box-shadow: 0 0 0 2px var(--violet-8);
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentShow {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
