@@ -1,10 +1,10 @@
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
-const IIIF_URL = import.meta.env.IIIF_URL;
-const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
 const IIIF_KEY =
   import.meta.env.IIIF_KEY || import.meta.env.RECOGITO_IIIF_TIGER;
+const IIIF_URL = import.meta.env.IIIF_URL;
+const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
 
 console.log('IIIF_URL: ', IIIF_URL);
 console.log('IIIF_PROJECT_ID', IIIF_PROJECT_ID);
