@@ -9,6 +9,11 @@ const IIIF_KEY =
 console.log('IIIF_URL: ', IIIF_URL);
 console.log('IIIF_PROJECT_ID', IIIF_PROJECT_ID);
 console.log('IIIF_KEY', IIIF_KEY);
+console.log('import.meta.env.IIIF_KEY: ', import.meta.env.IIIF_KEY);
+console.log(
+  'import.meta.env.RECOGITO_IIIF_TIGER: ',
+  import.meta.env.RECOGITO_IIIF_TIGER
+);
 
 export const post: APIRoute = async ({ request, cookies }) => {
   console.log('Entered api/images POST');
