@@ -5,12 +5,8 @@ import { getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { annotationsToCSV } from 'src/util/export/csv';
 
-export const get: APIRoute = async ({ params, request, cookies, url }) => {
-  const supabase = await createSupabaseServerClient(request, cookies);
-  if (!supabase)
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized'}),
-      { status: 401 });
+export const get: APIRoute = async ({ params, cookies, url }) => {
+  const supabase = await createSupabaseServerClient(cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)

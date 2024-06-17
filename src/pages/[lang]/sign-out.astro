@@ -2,6 +2,10 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { Logout } from '@apps/auth-logout';
 import { getTranslations } from '@i18n';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+
+const supabase = await createSupabaseServerClient(Astro.cookies);
+await supabase.auth.signOut();
 ---
 <BaseLayout title="Recogito | Logout">
   <div class="container">

@@ -1,4 +1,5 @@
 ---
+import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { defaultLang, languages } from '@i18n';
 import parser from 'accept-language-parser';
@@ -7,8 +8,13 @@ const accepts = Astro.request.headers.get('accept-language');
 
 const lang = accepts ? parser.pick(Object.keys(languages), accepts) : defaultLang;
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.cookies);
 
-return supabase ? Astro.redirect(`/${lang}/projects`) : Astro.redirect(`/${lang}/sign-in`);
+const me = await getMyProfile(supabase);
+if (me.error || !me.data) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+} else {
+  return Astro.redirect(`/${lang}/projects`);
+}
 ---
 

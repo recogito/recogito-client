@@ -13,8 +13,10 @@ import { getMyProfile } from '@backend/crud';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) {
+const supabase = await createSupabaseServerClient(Astro.cookies);
+
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
 
@@ -101,12 +103,6 @@ const plugins = PluginRegistry.resolvePlugins(
   pluginConfigs.data,
   extensionPoint
 );
-
-const profile = await getMyProfile(supabase);
-if (profile.error || !profile.data) {
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 });
-}
 ---
 
 <BaseLayout title={document.data.name}>

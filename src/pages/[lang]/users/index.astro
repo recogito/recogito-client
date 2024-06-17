@@ -1,5 +1,4 @@
 ---
-import crypto from 'crypto';
 import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
@@ -7,21 +6,14 @@ import { getMyProfile } from '@backend/crud/profiles';
 import { UserManagement } from '@apps/user-management';
 import { getProfilesExtended } from '../../../backend/helpers/profileHelpers';
 import { getOrgGroups } from '../../../backend/crud/groups';
-import type { ExtendedUserProfile } from '../../../Types';
-import { changeOrgGroupMembership } from '@backend/crud/users';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
-}
+const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const { error, data } = await getMyProfile(supabase);
-
 if (error) {
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 });
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
 
 if (!data.isOrgAdmin) {

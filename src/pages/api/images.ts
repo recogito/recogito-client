@@ -1,3 +1,4 @@
+import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
@@ -12,8 +13,10 @@ console.log('IIIF_KEY', IIIF_KEY);
 export const post: APIRoute = async ({ request, cookies }) => {
   console.log('Entered api/images POST');
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(request, cookies);
-  if (!supabase)
+  const supabase = await createSupabaseServerClient(cookies);
+
+  const me = await getMyProfile(supabase);
+  if (me.error || !me.data)
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
     });
