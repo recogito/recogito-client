@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-
 export const getUserOrgRole = (supabase: SupabaseClient, id: string) => 
     supabase
         .from('group_users')

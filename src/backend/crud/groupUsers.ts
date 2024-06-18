@@ -2,6 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
 import type { GroupMember } from 'src/Types';
 
+/*
 export const getGroupMembers = (
   supabase: SupabaseClient,
   groupIds: string[]
@@ -26,6 +27,7 @@ export const getGroupMembers = (
       error,
       data: data as unknown as GroupMember[],
     }));
+*/
 
 export const getProjectGroupMembers = (
   supabase: SupabaseClient,
@@ -59,7 +61,7 @@ interface EmptyGroup {
   name: string;
 }
 
-// Takes the given group and member lists as input, and 'distributes'
+/* Takes the given group and member lists as input, and 'distributes'
 // members across groups, resulting in a list of proper Group object.
 export const zipMembers = (groups: EmptyGroup[], members: GroupMember[]) =>
   groups.map((g) => ({
@@ -68,3 +70,4 @@ export const zipMembers = (groups: EmptyGroup[], members: GroupMember[]) =>
       .filter((m) => m.in_group === g.id)
       .map(({ user, since }) => ({ user, since })),
   }));
+*/
