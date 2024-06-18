@@ -1,6 +1,6 @@
 ---
 import crypto from 'crypto';
-import HeaderLayout from '@layouts/HeaderLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
@@ -50,15 +50,18 @@ if (groupsError) {
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
+
+const canInviteUsers = import.meta.env.PUBLIC_ENABLE_USER_INVITE === 'TRUE';
 ---
 
-<HeaderLayout title='User Management'>
+<BaseLayout title='User Management'>
   <UserManagement
     i18n={getTranslations(Astro.request, 'user-management')}
     profiles={profiles}
     me={me}
     groups={groups}
+    canInvite={canInviteUsers}
     client:only
   />
-</HeaderLayout>
+</BaseLayout>
 <style></style>

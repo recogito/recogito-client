@@ -11,8 +11,11 @@ import { changeOrgGroupMembership, deleteUser } from '@backend/crud/users';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { CheckFat, WarningDiamond, ArrowLeft } from '@phosphor-icons/react';
 import './UserManagement.css';
-import { AccountActions } from '@components/AccountActions';
 import { DeleteWarningMessage } from './DeleteWarningMessage';
+import { TopBar } from '@components/TopBar';
+import { InviteUserDialog } from './InviteUserDialog';
+import { inviteUserToOrg } from '@backend/helpers';
+import { getProfilesExtended } from '@backend/helpers/profileHelpers';
 
 const changeGroupMembership = async (
   user: ExtendedUserProfile,
@@ -27,6 +30,8 @@ interface UserManagementProps {
   profiles: ExtendedUserProfile[];
 
   groups: Group[];
+
+  canInvite: boolean | undefined;
 
   me: MyProfile;
 }
@@ -142,9 +147,39 @@ export const UserManagement = (props: UserManagementProps) => {
     });
   };
 
+  const handleInviteUser = (email: string) => {
+    inviteUserToOrg(supabase, email).then((success) => {
+      if (success) {
+        // update local user list
+        getProfilesExtended(supabase).then(({ error, data }) => {
+          if (error) {
+            console.log('Error retrieving user list: ', error.message);
+            return;
+          } else {
+            setUsers(data);
+
+            setToast({
+              title: t['Success'],
+              description: t['User has been invited.'],
+              type: 'success',
+              icon: <CheckFat color='green' />,
+            });
+          }
+        });
+      }
+    });
+  };
+
   return (
     <div className='user-management'>
       <ToastProvider>
+        <TopBar
+          invitations={[]}
+          i18n={props.i18n}
+          onError={(error) => console.log(error)}
+          projects={[]}
+          me={props.me}
+        />
         <div className='user-management-header'>
           <div>
             <a
@@ -156,28 +191,34 @@ export const UserManagement = (props: UserManagementProps) => {
             </a>
             <h1>{t['User Management']}</h1>
           </div>
-          <div>
-            <AccountActions i18n={props.i18n} profile={props.me} />
-          </div>
         </div>
         <div className='user-management-content'>
-          <label htmlFor='search'>{t['Search Users']}</label>
-          <input
-            autoFocus
-            id='search'
-            type='text'
-            className='user-management-search'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <UsersTable
-            i18n={props.i18n}
-            me={props.me}
-            users={filteredUsers}
-            groups={props.groups}
-            onDeleteUser={onDeleteUser}
-            onChangeGroup={changeGroup}
-          />
+          <div className='user-management-actions'>
+            <div>
+              <label htmlFor='search'>{t['Search Users']}</label>
+              <input
+                autoFocus
+                id='search'
+                type='text'
+                className='user-management-search'
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            {props.canInvite && (
+              <InviteUserDialog onSave={handleInviteUser} i18n={props.i18n} />
+            )}
+          </div>
+          <div className='user-management-table'>
+            <UsersTable
+              i18n={props.i18n}
+              me={props.me}
+              users={filteredUsers}
+              groups={props.groups}
+              onDeleteUser={onDeleteUser}
+              onChangeGroup={changeGroup}
+            />
+          </div>
 
           <Toast
             content={toast}
