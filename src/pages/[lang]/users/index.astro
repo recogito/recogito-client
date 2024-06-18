@@ -43,7 +43,6 @@ if (groupsError) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-
 <HeaderLayout title='User Management'>
   <UserManagement
     i18n={getTranslations(Astro.request, 'user-management')}
@@ -53,4 +52,3 @@ if (groupsError) {
     client:only='react'
   />
 </HeaderLayout>
-<style></style>

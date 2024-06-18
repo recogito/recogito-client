@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import type { DocumentInTaggedContext, Translations } from 'src/Types';
+import type { DocumentWithContext, Translations } from 'src/Types';
 import { Button } from '@components/Button';
 
 interface ManifestErrorDialogProps {
 
   i18n: Translations;
 
-  document: DocumentInTaggedContext;
+  document: DocumentWithContext;
 
   message: string;
 

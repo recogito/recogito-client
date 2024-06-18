@@ -1,8 +1,9 @@
 import type { Document } from 'src/Types';
 import { ContentTypeIcon } from '@components/DocumentCard/ContentTypeIcon';
-import './DocumentCardThumbnail.css';
 import { IIIFPresentationThumbnail } from './IIIFPresentationThumbnail';
 import { IIIFImageThumbnail } from './IIIFImageThumbnail';
+
+import './DocumentCardThumbnail.css';
 
 export interface DocumentCardThumbnailProps {
 
