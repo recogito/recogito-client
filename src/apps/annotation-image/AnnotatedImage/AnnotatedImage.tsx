@@ -7,15 +7,17 @@ import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
-import {
+import type {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyleExpression,
   ImageAnnotation,
+  PresentUser
+} from '@annotorious/react';
+import {
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,
   PointerSelectAction,
-  PresentUser,
   useAnnotator
 } from '@annotorious/react';
 

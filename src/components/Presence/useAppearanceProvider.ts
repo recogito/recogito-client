@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { Appearance, AppearanceProvider, PresentUser, User } from '@annotorious/react';
 import labels from './anonymous-identities.json';
-import { AuthorColors, useAuthorColors } from '@components/AnnotationDesktop';
+import { type AuthorColors, useAuthorColors } from '@components/AnnotationDesktop';
 
 const IDENTITIES = labels.map(name => `Anonymous ${name}`);
 
