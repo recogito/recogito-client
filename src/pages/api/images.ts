@@ -10,7 +10,7 @@ const IIIF_KEY = import.meta.env.IIIF_KEY;
 // console.log('IIIF_PROJECT_ID', IIIF_PROJECT_ID);
 // console.log('IIIF_KEY', IIIF_KEY);
 
-export const post: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   // console.log('Entered api/images POST');
   // Verify if the user is logged in
   const supabase = await createSupabaseServerClient(cookies);
