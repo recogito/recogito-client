@@ -54,20 +54,3 @@ export const getProjectGroupMembers = (
       error,
       data: data as unknown as GroupMember[],
     }));
-
-interface EmptyGroup {
-  id: string;
-
-  name: string;
-}
-
-/* Takes the given group and member lists as input, and 'distributes'
-// members across groups, resulting in a list of proper Group object.
-export const zipMembers = (groups: EmptyGroup[], members: GroupMember[]) =>
-  groups.map((g) => ({
-    ...g,
-    members: members
-      .filter((m) => m.in_group === g.id)
-      .map(({ user, since }) => ({ user, since })),
-  }));
-*/

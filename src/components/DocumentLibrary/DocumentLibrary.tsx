@@ -13,7 +13,7 @@ import {
   SelectClickTypes,
 } from '@table-library/react-table-library/select';
 import './DocumentLibrary.css';
-import type { TableNode } from '@table-library/react-table-library';
+import type { TableNode } from '@table-library/react-table-library/types/table';
 import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline';
 import type { Action } from '@table-library/react-table-library/types/common';

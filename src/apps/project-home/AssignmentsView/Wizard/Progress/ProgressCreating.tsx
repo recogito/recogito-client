@@ -59,7 +59,7 @@ export const ProgressCreating = (props: ProgressProps) => {
                   const layers: string[] = [];
                   props.assignment.documents.forEach((doc) => {
                     doc.layers.forEach((layer) => {
-                      if (layer.context.id !== props.assignment.id) {
+                      if (layer.context!.id !== props.assignment.id) {
                         layers.push(layer.id);
                       }
                     });

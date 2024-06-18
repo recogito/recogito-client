@@ -170,7 +170,7 @@ export interface DocumentContext {
 
   project_id: string;
 
-  is_project_default: boolean;
+  is_project_default?: boolean;
 
   layer_contexts?: any;
 }
@@ -181,6 +181,12 @@ export interface DocumentLayer {
   is_active: boolean;
 
   document_id: string;
+
+  project_id: string;
+
+  name?: string;
+
+  context?: DocumentContext;
 }
 
 export interface Layer {
@@ -395,4 +401,16 @@ export type LoginMethod = {
   type: 'username_password' | 'saml' | 'oauth' | 'magic_link' | 'keycloak';
 
   domain: string;
+};
+
+export type GroupMember = {
+  user: {
+    id: string;
+    nickname: string;
+    first_name: string;
+    last_name: string;
+    avatar_url: string;
+  };
+  in_group: string;
+  since: string;
 };
