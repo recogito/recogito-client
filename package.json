@@ -16,9 +16,9 @@
   "dependencies": {
     "@allmaps/iiif-parser": "1.0.0-beta.37",
     "@annotorious/react": "3.0.0-rc.29",
-    "@astrojs/netlify": "^2.6.0",
-    "@astrojs/node": "^5.3.6",
-    "@astrojs/react": "^2.3.2",
+    "@astrojs/netlify": "^5.3.1",
+    "@astrojs/node": "^8.3.1",
+    "@astrojs/react": "^3.6.0",
     "@phosphor-icons/react": "^2.1.6",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
@@ -48,7 +48,7 @@
     "@uppy/core": "3.11.3",
     "@uppy/xhr-upload": "3.6.4",
     "accept-language-parser": "^1.5.0",
-    "astro": "^2.10.15",
+    "astro": "^4.10.3",
     "classnames": "^2.5.1",
     "confetti-explosion-react": "^0.1.2",
     "crypto-js": "4.2.0",
@@ -71,7 +71,7 @@
     "uuid": "10.0.0"
   },
   "devDependencies": {
-    "@astrojs/ts-plugin": "^1.2.0",
+    "@astrojs/ts-plugin": "^1.8.0",
     "@types/accept-language-parser": "^1.5.6",
     "@types/crypto-js": "4.2.2",
     "@types/openseadragon": "3.0.10",

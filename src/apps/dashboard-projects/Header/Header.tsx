@@ -11,7 +11,7 @@ import type {
 } from 'src/Types';
 import { ProjectFilter } from '../ProjectsHome';
 import { HeaderSearchAction } from '../../../components/Search';
-import { HeaderSortAction, SortFunction } from '../../../components/Sort';
+import { HeaderSortAction, type SortFunction } from '../../../components/Sort';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 
 import './Header.css';

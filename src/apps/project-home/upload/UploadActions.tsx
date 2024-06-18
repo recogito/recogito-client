@@ -1,7 +1,7 @@
-import { ReactNode, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { File, LinkSimple, Plus } from '@phosphor-icons/react';
-import { IIIFDialog, IIIFManifest } from './dialogs';
+import { IIIFDialog, type IIIFManifest } from './dialogs';
 import type { Protocol, Translations } from 'src/Types';
 
 import './UploadActions.css';

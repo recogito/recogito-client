@@ -8,7 +8,7 @@ import type {
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
-import { ToastProvider, Toast, ToastContent } from '@components/Toast';
+import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
 import { Header, type SortFunction } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';

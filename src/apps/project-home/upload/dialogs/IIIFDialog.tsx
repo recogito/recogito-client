@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';

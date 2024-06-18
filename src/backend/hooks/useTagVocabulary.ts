@@ -1,4 +1,5 @@
-import { Annotation, StoreChangeEvent, useAnnotationStore } from '@annotorious/react';
+import { useAnnotationStore } from '@annotorious/react';
+import type { Annotation, StoreChangeEvent } from '@annotorious/react';
 import { getProjectTagVocabulary } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useEffect, useState } from 'react';
