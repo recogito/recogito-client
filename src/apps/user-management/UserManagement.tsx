@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { UsersTable } from './UsersTable';
 import type {
   MyProfile,
@@ -10,9 +10,10 @@ import type {
 import { changeOrgGroupMembership, deleteUser } from '@backend/crud/users';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { CheckFat, WarningDiamond, ArrowLeft } from '@phosphor-icons/react';
-import './UserManagement.css';
 import { AccountActions } from '@components/AccountActions';
 import { DeleteWarningMessage } from './DeleteWarningMessage';
+
+import './UserManagement.css';
 
 const changeGroupMembership = async (
   user: ExtendedUserProfile,

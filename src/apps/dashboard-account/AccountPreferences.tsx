@@ -3,7 +3,8 @@ import { useFormik } from 'formik';
 import { ArrowLeft } from '@phosphor-icons/react';
 import { updateMyProfile } from '@backend/crud/profiles';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { Toast, ToastProvider } from '@components/Toast';
+import type { ToastContent } from '@components/Toast';
 import type { Translations, MyProfile } from 'src/Types';
 import { getGravatar } from './getGravatar';
 

@@ -1,19 +1,19 @@
+import { useState } from 'react';
 import { joinProject } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
 import { Avatar } from '@components/Avatar';
+import { OwnerPill } from '@components/OwnerPill';
+import { ProjectCardActions } from '@components/ProjectCard/ProjectCardActions';
+import { JoinProjectDialog } from '@components/ProjectCard/JoinProjectDialog';
+import { OpenJoin } from '@components/ProjectCard/OpenJoin';
 import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
   Translations,
 } from 'src/Types';
-import { ProjectCardActions } from '@components/ProjectCard/ProjectCardActions';
-import { OpenJoin } from '@components/ProjectCard/OpenJoin';
 
 import './ProjectEntry.css';
-import { JoinProjectDialog } from '@components/ProjectCard/JoinProjectDialog';
-import { useState } from 'react';
-import { supabase } from '@backend/supabaseBrowserClient';
-import { OwnerPill } from '@components/OwnerPill';
 
 interface ProjectsEntryProps {
   i18n: Translations;

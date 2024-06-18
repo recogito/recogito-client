@@ -21,8 +21,9 @@ import { setDocumentPrivacy } from '@backend/crud';
 import { useDocumentList } from '@apps/project-home/useDocumentList';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 import type { ToastContent } from '@components/Toast';
-import '../ProjectHome.css';
 import { removeDocumentsFromProject } from '@backend/helpers';
+
+import '../ProjectHome.css';
 
 interface DocumentsViewProps {
   isAdmin: boolean;

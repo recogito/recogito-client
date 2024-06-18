@@ -1,9 +1,10 @@
-import { ReactNode, forwardRef, useState } from 'react';
+import { forwardRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
 import { updateUserProjectGroup } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { TinySaveIndicator, SaveState } from '@components/TinySaveIndicator';
+import { TinySaveIndicator, type SaveState } from '@components/TinySaveIndicator';
 import type { Group, Member, Translations } from 'src/Types';
 
 interface GroupSelectorProps {

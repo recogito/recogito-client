@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { PresentUser } from '@annotorious/react';
-import { CETEIcean, HighlightStyleExpression, TEIAnnotator, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import { CETEIcean, TEIAnnotator, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import { UndoStack } from '@components/AnnotationDesktop';
 import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';

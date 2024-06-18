@@ -1,24 +1,24 @@
 import { useState } from 'react';
+import type { AvailableLayers } from '@backend/Types';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
-import type {
-  Document,
-  DocumentWithLayers,
-  ExtendedProjectData,
-  Translations,
-  UserProfile,
-} from 'src/Types';
 import type { AssignmentSpec } from './AssignmentSpec';
 import { Documents } from './Documents';
 import { Team } from './Team';
 import { General } from './General';
 import { Verify } from './Verify';
 import { Layers } from './Layers';
+import { ProgressCreating, ProgressUpdating } from './Progress';
+import type {
+  Document,
+  DocumentWithContext,
+  ExtendedProjectData,
+  Translations,
+  UserProfile,
+} from 'src/Types';
 
 import './AssignmentWizard.css';
-import { ProgressCreating, ProgressUpdating } from './Progress';
-import type { AvailableLayers } from '@backend/Types';
 
 interface AssignmentWizardProps {
   i18n: Translations;
@@ -72,7 +72,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const onChangeName = (name: string) =>
     setAssignment((assignment) => ({ ...assignment, name }));
 
-  const onChangeDocuments = (documents: DocumentWithLayers[]) => {
+  const onChangeDocuments = (documents: DocumentWithContext[]) => {
     setAssignment((assignment) => ({ ...assignment, documents }));
   };
 
@@ -97,7 +97,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
     );
 
     if (docIdx > -1) {
-      const copy: DocumentWithLayers = JSON.parse(
+      const copy: DocumentWithContext = JSON.parse(
         JSON.stringify(copyAssignment.documents[docIdx])
       );
 

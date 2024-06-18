@@ -1,12 +1,13 @@
+import { CaretDown } from '@phosphor-icons/react';
 import { ProjectsEntry } from './ProjectEntry';
+import type { SortFunction } from '../Header';
 import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
   Translations,
 } from 'src/Types';
-import type { SortFunction } from '../Header';
-import { CaretDown } from '@phosphor-icons/react';
+
 import './ProjectList.css';
 
 export interface ProjectsListProps {

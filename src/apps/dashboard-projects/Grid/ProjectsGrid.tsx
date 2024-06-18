@@ -1,11 +1,11 @@
 import { ProjectCard } from '@components/ProjectCard';
+import type { SortFunction } from '../Header';
 import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
   Translations,
 } from 'src/Types';
-import type { SortFunction } from '../Header';
 
 export interface ProjectsGridProps {
   i18n: Translations;

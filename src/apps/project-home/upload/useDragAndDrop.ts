@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { FileRejection, useDropzone } from 'react-dropzone';
+import { type FileRejection, useDropzone } from 'react-dropzone';
 
 export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: FileRejection[]) => void) => {
 

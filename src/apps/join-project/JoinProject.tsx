@@ -1,6 +1,7 @@
 import { joinProject } from '@backend/helpers';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
+
 import './JoinProject.css';
 
 interface JoinProjectProps {

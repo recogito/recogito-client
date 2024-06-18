@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Context, Translations, UserProfile, Document } from 'src/Types';
 import { Pencil, Trash } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
@@ -5,7 +6,6 @@ import { DocumentCard } from '@components/DocumentCard';
 import { ConfirmDelete } from './ConfirmDelete';
 
 import './AssignmentDetail.css';
-import { useState } from 'react';
 
 interface AssignmentDetailProps {
   assignment: Context;

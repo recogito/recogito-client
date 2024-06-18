@@ -1,10 +1,4 @@
 import { useEffect, useState } from 'react';
-import type {
-  ExtendedProjectData,
-  Invitation,
-  MyProfile,
-  Translations,
-} from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
@@ -16,6 +10,12 @@ import { ProjectsList } from './List';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
 import { TopBar } from '@components/TopBar';
 import type { ToggleDisplayOptions } from '@components/ToggleDisplay';
+import type {
+  ExtendedProjectData,
+  Invitation,
+  MyProfile,
+  Translations,
+} from 'src/Types';
 
 import './ProjectsHome.css';
 
