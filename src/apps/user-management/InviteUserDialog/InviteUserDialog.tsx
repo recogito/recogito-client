@@ -32,12 +32,12 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Overlay className='invite-user-dialog-overlay' />
-        <Dialog.Content className='invite-user-dialog-content'>
-          <Dialog.Title className='invite-user-dialog-title'>
+        <Dialog.Overlay className='dialog-overlay' />
+        <Dialog.Content className='dialog-content'>
+          <Dialog.Title className='dialog-title'>
             {t['Invite User']}
           </Dialog.Title>
-          <Dialog.Description className='invite-user-dialog-description'>
+          <Dialog.Description className='dialog-description'>
             {
               t[
                 'Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.'
