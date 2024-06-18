@@ -3,19 +3,6 @@ import { getUser } from '@backend/auth';
 import type { Response } from '@backend/Types';
 import type { MyProfile } from 'src/Types';
 
-/*
-export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
-  getUser(supabase)
-    .then(user =>
-      supabase
-        .from('profiles')
-        .select()
-        .eq('id', user?.id)
-        .single()
-        .then(({ error, data }) => ({ error, data: data as MyProfile })))
-    .catch(error => ({ error: error as PostgrestError, data: null as unknown as MyProfile }));
-*/
-
 export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
   getUser(supabase)
     .then((user) =>

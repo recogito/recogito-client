@@ -1,6 +1,7 @@
 import type { Translations } from 'src/Types';
-import './OpenJoin.css';
 import { SignIn } from '@phosphor-icons/react';
+
+import './OpenJoin.css';
 
 interface OpenJoinProps {
   projectId: string;

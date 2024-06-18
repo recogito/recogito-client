@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
-import { Annotation, Annotator, useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
+import type { Annotation, Annotator } from '@annotorious/react';
+import { useAnnotationStore, useAnnotator, useSelection } from '@annotorious/react';
 
 interface UndoStackProps {
 

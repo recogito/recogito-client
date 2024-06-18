@@ -1,7 +1,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import type { ExtendedProjectData, Project, Translations } from 'src/Types';
-import './JoinProjectDialog.css';
 import { X } from '@phosphor-icons/react';
+import type { ExtendedProjectData, Translations } from 'src/Types';
+
+import './JoinProjectDialog.css';
 
 interface JoinProjectDialogProps {
   open: boolean;

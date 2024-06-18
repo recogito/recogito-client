@@ -1,7 +1,8 @@
 import { useContext, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Delta } from 'quill/core';
-import { PresentUser, User, useAnnotatorUser } from '@annotorious/react';
+import { useAnnotatorUser } from '@annotorious/react';
+import type { PresentUser, User } from '@annotorious/react';
 import { DocumentNotesContext } from './DocumentNotes';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { 

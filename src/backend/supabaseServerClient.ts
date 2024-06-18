@@ -17,7 +17,7 @@ const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) =
   const refreshToken = cookies.get('sb-refresh-token');
   const accessToken = cookies.get('sb-access-token');
 
-  if (refreshToken.value && accessToken.value) {
+  if (refreshToken?.value && accessToken?.value) {
     return await supabase.auth.setSession({ 
       refresh_token: refreshToken.value, 
       access_token: accessToken.value 

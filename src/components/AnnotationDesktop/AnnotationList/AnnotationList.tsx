@@ -4,21 +4,23 @@ import { AnnotationCard } from '@components/Annotation';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
-import { 
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { 
   Annotation as Anno,
   AnnotationBody,
-  type Annotator,
-  PresentUser, 
+  Annotator,
+  DrawingStyleExpression,
+  PresentUser
+} from '@annotorious/react';
+import { 
   useAnnotations,
   useAnnotator,
   useSelection,
   useViewportState,
-  useAnnotationStore,
-  DrawingStyleExpression
+  useAnnotationStore
 } from '@annotorious/react';
 
 import './AnnotationList.css';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 
 interface AnnotationListProps<T extends Anno> {
 
