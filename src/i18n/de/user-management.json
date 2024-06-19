@@ -17,6 +17,7 @@
   "Delete_Warning_Message": "Dieser Vorgang kann nicht rückgängig gemacht werden! Der Benutzer kann sich nicht mehr einloggen. Seine Inhalten werden anonymisiert. Bist Du sicher dass du fortfahren möchtest?",
   "Cancel": "Abbrechen",
   "User successfully deleted.": "Benutzer wurde gelöscht.",
+  "Back to Projects": "Zurück zu Projekte",
   "Invite User": "Benutzer einladen",
   "Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.": "Lade einen BenutzerIn ein. Die Person erhält eine E-Mail über die sie ihre Kontodetails bestätigen kann.",
   "Invite": "Einladen",
