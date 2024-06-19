@@ -11,7 +11,7 @@ export default defineConfig({
   }),
   vite: {
     ssr: {
-      noExternal: ['@radix-ui/*', '@phosphor-icons/*'],
+      noExternal: ['clsx']
     }
   }
 });
