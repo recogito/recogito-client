@@ -6,5 +6,6 @@ export * from './pluginHelpers';
 export * from './policyHelpers';
 export * from './projectHelpers';
 export * from './tagHelpers';
-export * from './userPermissionsHelpers'
-export * from './contextHelpers'
+export * from './userPermissionsHelpers';
+export * from './contextHelpers';
+export * from './userHelpers';

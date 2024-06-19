@@ -19,5 +19,10 @@
   "Delete_Warning_Message": "Deleting a user in not reversible. The user will no longer be able to login and their content will be anonymized. Do you wish to proceed?",
   "Cancel": "Cancel",
   "User successfully deleted.": "User successfully deleted.",
-  "Back to Projects": "Back to Projects"
+  "Back to Projects": "Back to Projects",
+  "Invite User": "Invite User",
+  "Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.": "Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.",
+  "Invite": "Invite",
+  "Never": "Never",
+  "User has been invited.": "User has been invited."
 }
