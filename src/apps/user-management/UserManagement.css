@@ -8,7 +8,7 @@
 
 .user-management-header {
   box-sizing: border-box;
-  padding: 20px 40px;
+  padding: 70px 40px 0 40px;
   width: 100%;
   display: flex;
   flex-direction: row;
@@ -32,6 +32,12 @@
   padding: 0.4em 0.6em;
 }
 
+.user-management-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 .user-management p.anonymous-warning a {
   color: var(--red-500);
   text-decoration: underline;
@@ -40,4 +46,14 @@
   margin-left: 10px;
   z-index: 100;
   position: relative;
+}
+
+.user-management-invite-button {
+  margin-left: 32px;
+}
+
+.user-management-table {
+  height: calc(100vh - 260px);
+  overflow-y: auto;
+  margin-top: 10px;
 }
