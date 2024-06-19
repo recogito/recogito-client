@@ -5,13 +5,13 @@ import {
   addDocumentsToContext,
   addReadOnlyLayersToContext,
 } from '@backend/helpers';
+import type { UserRole } from '@backend/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { ProgressProps, ProgressState } from './Progress';
 
 import './Progress.css';
-import type { UserRole } from '@backend/Types';
 
 export const ProgressCreating = (props: ProgressProps) => {
   const { t } = props.i18n;
