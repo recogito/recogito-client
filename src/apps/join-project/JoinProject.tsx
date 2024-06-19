@@ -34,7 +34,7 @@ export const JoinProject = (props: JoinProjectProps) => {
     <div className='join-project-root'>
 
       <div className='join-project-title'>
-        {`${t['Join']} ${['Project']} ${props.project.name}?`}
+        {`${t['Join']}: ${['Project']} ${props.project.name}?`}
       </div>
 
       <div className='join-project-description'>

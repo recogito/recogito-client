@@ -137,7 +137,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
               className='primary'
               onClick={() => setEditing(NEW_ASSIGNMENT)}
             >
-              <GraduationCap size={20} /> <span>New Assignment</span>
+              <GraduationCap size={20} /> <span>{t['New Assignment']}</span>
             </Button>
 
             {editing && (

@@ -26,7 +26,7 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
 
         <Dialog.Content className='dialog-content'>
           <Dialog.Title className='dialog-title'>
-            {`${t['Join']} ${props.project.name}`}
+            {`${t['Join']}: ${props.project.name}`}
           </Dialog.Title>
 
           <Dialog.Description className='dialog-description'>
