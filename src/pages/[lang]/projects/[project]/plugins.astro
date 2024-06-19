@@ -9,16 +9,13 @@ import PluginRegistry from '@components/Plugins/PluginRegistry';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase)
-  return Astro.redirect(`/${lang}/sign-in`);
+const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) { 
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 }); 
+  return Astro.redirect(`/${lang}/sign-in`);
 }
 
 const project = await getProjectExtended(supabase, projectId as string);

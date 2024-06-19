@@ -8,16 +8,11 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
-}
+const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
-  const path = Astro.url.protocol + '//' + Astro.url.host;
-  const error = await fetch(`${path}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 });
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
 
 const projects = await listMyProjectsExtended(supabase);
