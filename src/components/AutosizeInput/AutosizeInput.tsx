@@ -1,4 +1,5 @@
-import { InputHTMLAttributes, useLayoutEffect, useRef, useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+import type { InputHTMLAttributes } from 'react';
 
 import './AutosizeInput.css';
 

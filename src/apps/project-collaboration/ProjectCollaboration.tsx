@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { Toast, ToastProvider } from '@components/Toast';
+import type { ToastContent } from '@components/Toast';
 import { InviteUser } from './InviteUser';
 import { MembersTable } from './MembersTable';
 import type {

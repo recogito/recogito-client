@@ -1,8 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useProjectPolicies } from '@backend/hooks/usePolicies';
-import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { Toast, ToastProvider } from '@components/Toast';
+import type { ToastContent } from '@components/Toast';
 import { ProjectHeader } from './ProjectHeader';
-
+import { TopBar } from '@components/TopBar';
+import { BackButtonBar } from '@components/BackButtonBar';
+import { useAssignments } from '@backend/hooks';
+import type { AvailableLayers } from '@backend/Types';
+import { DocumentsView } from './DocumentsView';
+import { AssignmentsView } from './AssignmentsView';
 import type {
   Context,
   Document,
@@ -13,12 +19,6 @@ import type {
 } from 'src/Types';
 
 import './ProjectHome.css';
-import { TopBar } from '@components/TopBar';
-import { BackButtonBar } from '@components/BackButtonBar';
-import { DocumentsView } from './DocumentsView';
-import { AssignmentsView } from './AssignmentsView';
-import { useAssignments } from '@backend/hooks';
-import type { AvailableLayers } from '@backend/Types';
 
 export interface ProjectHomeProps {
   i18n: Translations;

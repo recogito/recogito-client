@@ -5,6 +5,6 @@
   "Invitation": "${sender} lädt dich zum Projekt <strong>${project}</strong> ein.",
   "Accept": "Annehmen",
   "Ignore": "Ignorieren",
-  "Confirmed-student": "<strong>${project}</strong> has been added to your Dashboard. You will find it under 'My Projects'.",
-  "Confirmed-creator": "<strong>${project}</strong> has been added to your Dashboard. You will find it under 'Shared with me'."
+  "Confirmed-student": "<strong>${project}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Meine Projekte'.",
+  "Confirmed-creator": "<strong>${project}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Mit mir geteilt'."
 }

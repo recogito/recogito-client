@@ -48,7 +48,7 @@ const availableLayers = await getAvailableLayers(supabase, projectId as string);
 
 <BaseLayout title='Projects Home'>
   <ProjectHome
-    client:only
+    client:only='react'
     i18n={i18n}
     projects={projects.data}
     project={project.data}

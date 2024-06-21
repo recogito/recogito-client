@@ -1,13 +1,12 @@
+import { AccountActions } from '@components/AccountActions';
 import { Notifications } from '@components/Notifications';
+import config from 'src/config.json';
 import type {
   Invitation,
   Translations,
   ExtendedProjectData,
   MyProfile,
 } from 'src/Types';
-
-import config from 'src/config.json';
-import { AccountActions } from '@components/AccountActions';
 
 import './TopBar.css';
 

@@ -1,9 +1,9 @@
-import type { Translations } from "src/Types"
-import { ArrowLeft, CaretRight } from "@phosphor-icons/react";
+import { useState } from 'react';
+import { ArrowLeft, CaretRight } from '@phosphor-icons/react';
+import { LoadingOverlay } from '@components/LoadingOverlay';
+import type { Translations } from 'src/Types';
 
 import './BackButtonBar.css';
-import { useState } from "react";
-import { LoadingOverlay } from "@components/LoadingOverlay";
 
 interface BackButtonBarProps {
   i18n: Translations;

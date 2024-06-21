@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useAnnotator, Annotation, Annotator, PresentUser, User } from '@annotorious/react';
+import { useAnnotator } from '@annotorious/react';
+import type { Annotation, Annotator, PresentUser, User } from '@annotorious/react';
 import { type SupabasePluginConfig, SupabasePlugin as Supabase } from '@recogito/annotorious-supabase';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { useAppearanceProvider } from '@components/Presence';

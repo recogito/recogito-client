@@ -25,10 +25,9 @@ if (!projects.data || !invitations.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-
 <BaseLayout title='Dashboard'>
   <ProjectsHome
-    client:only
+    client:only="react"
     me={me.data}
     projects={projects.data}
     invitations={invitations.data}

@@ -138,7 +138,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     className='create-project-label-detail text-body-large-bold'
                     htmlFor='firstName'
                   >
-                    {t['Project Visibility']}
+                    {t['Project Type']}
                   </Label.Root>
                   <RadioGroup.Root
                     className='create-project-radio-group-root'

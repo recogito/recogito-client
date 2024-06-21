@@ -1,4 +1,5 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import type { Annotation, Filter, User } from '@annotorious/react';
 import type { FilterSetting } from './FilterSetting';
 

@@ -4,9 +4,9 @@ import { Bell, X } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
 import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
+import { InvitationConfirmation } from './InvitiationConfirmation';
 
 import './Notifications.css';
-import { InvitationConfirmation } from './InvitiationConfirmation';
 
 const { Close, Content, Portal, Root, Trigger } = Popover;
 

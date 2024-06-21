@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Trash } from '@phosphor-icons/react';
 import { deleteInstalledPlugin, updatePluginSettings } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { Extension, PluginMetadata, type PluginInstallationConfig } from '@components/Plugins';
+import { Extension } from '@components/Plugins';
+import type { PluginMetadata, PluginInstallationConfig } from '@components/Plugins';
 import { GetPlugins } from './GetPlugins';
 import type { ExtendedProjectData } from 'src/Types';
 

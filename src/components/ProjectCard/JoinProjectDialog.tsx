@@ -1,7 +1,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import type { ExtendedProjectData, Project, Translations } from 'src/Types';
-import './JoinProjectDialog.css';
 import { X } from '@phosphor-icons/react';
+import type { ExtendedProjectData, Translations } from 'src/Types';
+
+import './JoinProjectDialog.css';
 
 interface JoinProjectDialogProps {
   open: boolean;
@@ -25,7 +26,7 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
 
         <Dialog.Content className='dialog-content'>
           <Dialog.Title className='dialog-title'>
-            {`${t['Join']} ${props.project.name}`}
+            {`${t['Join']}: ${props.project.name}`}
           </Dialog.Title>
 
           <Dialog.Description className='dialog-description'>

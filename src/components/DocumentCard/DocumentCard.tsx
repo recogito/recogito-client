@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
 import { DocumentCardActions } from './DocumentCardActions';
+import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
 
 import './DocumentCard.css';
-import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 
 interface DocumentCardProps {
   i18n: Translations;

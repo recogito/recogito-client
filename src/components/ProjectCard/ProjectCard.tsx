@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { OwnerPill } from '@components/OwnerPill';
 import {
   Article,
   GraduationCap,
@@ -14,12 +17,9 @@ import type {
 } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
 import { OpenJoin } from './OpenJoin';
+import { JoinProjectDialog } from './JoinProjectDialog';
 
 import './ProjectCard.css';
-import { JoinProjectDialog } from './JoinProjectDialog';
-import { useState } from 'react';
-import { supabase } from '@backend/supabaseBrowserClient';
-import { OwnerPill } from '@components/OwnerPill';
 
 interface ProjectCardProps {
   i18n: Translations;

@@ -2,10 +2,7 @@ import { useState } from 'react';
 import { TimeAgo } from '@components/TimeAgo';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
-import {
-  declineInvitation,
-  joinProject,
-} from '@backend/helpers/invitationHelpers';
+import { declineInvitation, joinProject } from '@backend/helpers/invitationHelpers';
 import type { Invitation, ExtendedProjectData, Translations } from 'src/Types';
 
 import './InvitationItem.css';

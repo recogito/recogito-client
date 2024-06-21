@@ -2,6 +2,11 @@ import { useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
+import { CreateProjectDialog } from '@components/CreateProjectDialog';
+import { HeaderSearchAction } from '@components/Search';
+import { HeaderSortAction, type SortFunction } from '@components/Sort';
+import { ToggleDisplay, type ToggleDisplayOptions } from '@components/ToggleDisplay';
+import { ProjectFilter } from '../ProjectsHome';
 import type {
   Invitation,
   MyProfile,
@@ -9,16 +14,8 @@ import type {
   Translations,
   Policies,
 } from 'src/Types';
-import { ProjectFilter } from '../ProjectsHome';
-import { HeaderSearchAction } from '../../../components/Search';
-import { HeaderSortAction, SortFunction } from '../../../components/Sort';
-import { CreateProjectDialog } from '@components/CreateProjectDialog';
 
 import './Header.css';
-import {
-  ToggleDisplay,
-  type ToggleDisplayOptions,
-} from '@components/ToggleDisplay';
 
 interface HeaderProps {
   i18n: Translations;

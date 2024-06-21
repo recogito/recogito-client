@@ -5,10 +5,10 @@ import {
   HeaderCell,
   Cell,
 } from '@table-library/react-table-library/table';
-import { CellSelect, Select } from '@table-library/react-table-library/select';
+import { CellSelect, type Select } from '@table-library/react-table-library/select';
 import type { Translations } from 'src/Types';
 import type { Theme } from '@table-library/react-table-library/theme';
-import type { TableNode } from '@table-library/react-table-library';
+import type { TableNode } from '@table-library/react-table-library/types/table';
 import type {
   Column,
   //CompactTable,

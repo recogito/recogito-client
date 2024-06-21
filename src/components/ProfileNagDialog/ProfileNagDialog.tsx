@@ -1,7 +1,8 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import type { Translations } from 'src/Types';
-import './ProfileNagDialog.css';
 import { X } from '@phosphor-icons/react';
+import type { Translations } from 'src/Types';
+
+import './ProfileNagDialog.css';
 
 interface ProfileNagDialogProps {
 

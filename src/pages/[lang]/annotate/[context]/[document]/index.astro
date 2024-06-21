@@ -115,7 +115,7 @@ const plugins = PluginRegistry.resolvePlugins(
   {
     viewer === 'OPENSEADRAGON' ? (
       <ImageAnnotation
-        client:only
+        client:only='react'
         i18n={getTranslations(Astro.request, 'annotation-image')}
         document={document.data}
         channelId={channelId}
@@ -124,7 +124,7 @@ const plugins = PluginRegistry.resolvePlugins(
       />
     ) : (
       <TextAnnotation
-        client:only
+        client:only='react'
         i18n={getTranslations(Astro.request, 'annotation-text')}
         document={document.data}
         channelId={channelId}

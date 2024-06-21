@@ -1,6 +1,5 @@
-import Moment from 'react-moment';
-
-import 'moment/locale/de';
+import { format } from 'date-fns';
+import { de } from 'date-fns/locale'
 
 interface TimestampProps {
 
@@ -12,10 +11,12 @@ interface TimestampProps {
 
 export const Timestamp = (props: TimestampProps) => {
 
+  const locale = props.locale === 'de' ? de : undefined;
+
   return (
-    <Moment format="LT MMM DD" locale={props.locale}>
-      {props.datetime}
-    </Moment>
+    <span>
+      {format(props.datetime, 'HH:mm MMM dd', { locale })}
+    </span>
   )
 
 }

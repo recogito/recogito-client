@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { updateProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { EditableText } from '@components/EditableText';
-import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
 import type { ExtendedProjectData } from 'src/Types';
 
 import './ProjectTitle.css';

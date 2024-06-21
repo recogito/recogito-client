@@ -4,7 +4,7 @@ import type { Color, PresentUser } from '@annotorious/react';
 import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import { PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
+import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';

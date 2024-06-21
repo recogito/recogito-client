@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useState } from 'react';
+import { type ReactNode, useMemo, useState } from 'react';
 import type { Range } from 'quill';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Image, Video } from '@phosphor-icons/react';

@@ -1,12 +1,12 @@
 import { GroupSelector } from '../GroupSelector';
+import { Trash } from '@phosphor-icons/react';
+import { Button } from '@components/Button';
 import type {
   Translations,
   ExtendedUserProfile,
   UserProfile,
   Group,
 } from 'src/Types';
-import { Trash } from '@phosphor-icons/react';
-import { Button } from '@components/Button';
 
 import './UsersTable.css';
 

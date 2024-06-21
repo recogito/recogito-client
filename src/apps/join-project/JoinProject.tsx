@@ -1,6 +1,7 @@
 import { joinProject } from '@backend/helpers';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
+
 import './JoinProject.css';
 
 interface JoinProjectProps {
@@ -33,7 +34,7 @@ export const JoinProject = (props: JoinProjectProps) => {
     <div className='join-project-root'>
 
       <div className='join-project-title'>
-        {`${t['Join']} ${['Project']} ${props.project.name}?`}
+        {`${t['Join']}: ${['Project']} ${props.project.name}?`}
       </div>
 
       <div className='join-project-description'>

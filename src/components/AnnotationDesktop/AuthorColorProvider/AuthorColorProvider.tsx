@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useMemo } from 'react';
+import { type ReactNode, createContext, useContext, useMemo } from 'react';
 import { type AuthorColors, createAuthorPalette } from './AuthorColors';
 
 // @ts-ignore

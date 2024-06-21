@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import { archiveAssignment, getAssignment } from '@backend/helpers';
+import type { AvailableLayers } from '@backend/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
-import {
-  AssignmentSpec,
-  AssignmentWizard,
-  contextToAssignmentSpec,
-} from './Wizard';
+import type { ToastContent } from '@components/Toast';
+import { assignmentSpecToContext } from './Wizard';
+import { AssignmentDetail } from './AssignmentDetail';
+import { AssignmentsList } from './AssignmentsList';
+import { AssignmentWizard, contextToAssignmentSpec } from './Wizard';
+import type { AssignmentSpec } from './Wizard';
 import type {
   Context,
   Document,
@@ -15,12 +17,8 @@ import type {
   MyProfile,
   Translations,
 } from 'src/Types';
-import { AssignmentsList } from './AssignmentsList';
+
 import './AssignmentsView.css';
-import type { ToastContent } from '@components/Toast';
-import { AssignmentDetail } from './AssignmentDetail';
-import { assignmentSpecToContext } from './Wizard';
-import type { AvailableLayers } from '@backend/Types';
 
 interface AssignmentsViewProps {
   i18n: Translations;
@@ -139,7 +137,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
               className='primary'
               onClick={() => setEditing(NEW_ASSIGNMENT)}
             >
-              <GraduationCap size={20} /> <span>New Assignment</span>
+              <GraduationCap size={20} /> <span>{t['New Assignment']}</span>
             </Button>
 
             {editing && (

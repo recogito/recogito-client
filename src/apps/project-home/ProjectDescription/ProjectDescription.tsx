@@ -4,8 +4,8 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import TextareaAutosize from 'react-textarea-autosize';
 import { updateProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
-import type { ExtendedProjectData, Policies, Translations } from 'src/Types';
+import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import type { ExtendedProjectData, Translations } from 'src/Types';
 
 import './ProjectDescription.css';
 

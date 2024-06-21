@@ -1,7 +1,7 @@
-import React from 'react';
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import './ConfirmDelete.css';
 import type { Translations } from 'src/Types';
+
+import './ConfirmDelete.css';
 
 interface ConfirmDeleteProps {
   open: boolean;

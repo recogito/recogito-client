@@ -1,6 +1,7 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import type { Translations } from 'src/Types';
 import { Warning } from '@phosphor-icons/react';
+
 import './DeleteWarningMessage.css';
 
 interface DeleteWarningMessageProps {
