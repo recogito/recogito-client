@@ -5,7 +5,7 @@
   "We found a Gravatar for your address.": "We found a Gravatar for your address.",
   "Use as my Avatar.": "Use as my Avatar.",
   "Public Information": "Public Information",
-  "Other users can see this information about you. All fields are optional.": "Other users can see this information about you. If you enter a Display Name, that will be shown as the author of an annotation, otherwise First Name and Last Name will be shown. You must fill out either a Display Name or First Name, Last Name.",
+  "Other users can see this information about you. All fields are optional.": "You must fill out either a Display Name or a First Name and Last Name. The name you enter will be displayed on your annotations. If you enter both a Display Name and your First and Last Names, only your Display name will be shown to other users.",
   "Nickname": "Display Name",
   "First Name": "First Name",
   "Last Name": "Last Name",

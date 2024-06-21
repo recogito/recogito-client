@@ -5,13 +5,12 @@
   "We found a Gravatar for your address.": "Wir haben einen Gravatar für Deine Addresse gefunden.",
   "Use as my Avatar.": "Verwenden.",
   "Public Information": "Öffentliche Information",
-  "Other users can see this information about you. All fields are optional.":
-    "Andere Benutzer können diese Informationen über Dich sehen. Alle Felder sind optional.",
+  "Other users can see this information about you. All fields are optional.": "You must fill out either a Display Name or a First Name and Last Name. The name you enter will be displayed on your annotations. If you enter both a Display Name and your First and Last Names, only your Display name will be shown to other users.",
   "Nickname": "Nickname",
   "First Name": "Vorname",
   "Last Name": "Nachname",
   "Avatar URL": "Avatar URL",
   "Profile updated": "Benutzerprofil aktualisiert",
   "Something went wrong": "Etwas ist falsch gelaufen",
-  "Could not update your profile information.": "Profilinformation konnte nicht aktualisiert werden." 
+  "Could not update your profile information.": "Profilinformation konnte nicht aktualisiert werden."
 }
