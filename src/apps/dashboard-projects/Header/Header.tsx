@@ -5,7 +5,10 @@ import { Button } from '@components/Button';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
 import { HeaderSortAction, type SortFunction } from '@components/Sort';
-import { ToggleDisplay, type ToggleDisplayOptions } from '@components/ToggleDisplay';
+import {
+  ToggleDisplay,
+  type ToggleDisplayOptions,
+} from '@components/ToggleDisplay';
 import { ProjectFilter } from '../ProjectsHome';
 import type {
   Invitation,
@@ -75,17 +78,6 @@ export const Header = (props: HeaderProps) => {
     setCreateProjectOpen(true);
 
     setCreating(true);
-    //
-    // initProject(supabase, t['Untitled Project'])
-    //   .then(project => {
-    //     props.onProjectCreated(project);
-    //     setCreating(false);
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //     setCreating(false);
-    //     props.onError('Something went wrong');
-    //   });
   };
 
   const handleSaveProject = (
@@ -106,6 +98,7 @@ export const Header = (props: HeaderProps) => {
           setCreating(false);
           props.onError('Something went wrong');
         } else {
+          setCreating(false);
           props.onProjectCreated(data);
           window.location.href = `/${props.i18n.lang}/projects/${data[0].id}`;
         }
@@ -198,7 +191,10 @@ export const Header = (props: HeaderProps) => {
         </ul>
         <CreateProjectDialog
           open={createProjectOpen}
-          onClose={() => setCreateProjectOpen(false)}
+          onClose={() => {
+            setCreateProjectOpen(false);
+            setCreating(false);
+          }}
           onSaveProject={handleSaveProject}
           i18n={props.i18n}
         />
