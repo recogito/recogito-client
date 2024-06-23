@@ -12,7 +12,7 @@ export default defineConfig({
   }),
   vite: {
     ssr: {
-      noExternal: ['clsx']
+      noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*']
     },
     optimizeDeps: {
       esbuildOptions: {
