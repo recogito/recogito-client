@@ -11,7 +11,7 @@ export default defineConfig({
   }),
   vite: {
     ssr: {
-      noExternal: ['clsx']
+      noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*', '@recogito/annotorious-supabase']
     }
   }
 });
