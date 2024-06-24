@@ -7,7 +7,7 @@ const supabaseServerUrl =
 
 const invitesAllowed = import.meta.env.PUBLIC_ENABLE_USER_INVITE;
 
-export const post: APIRoute = async ({ request, cookies }) => {
+export const POST: APIRoute = async ({ request, cookies }) => {
   // Should this be callable at all?
   if (!invitesAllowed) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -16,7 +16,7 @@ export const post: APIRoute = async ({ request, cookies }) => {
   }
 
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(request, cookies);
+  const supabase = await createSupabaseServerClient(cookies);
   if (!supabase) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
