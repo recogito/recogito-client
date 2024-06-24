@@ -3,7 +3,7 @@ import { joinProject } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useState } from 'react';
 import { Spinner } from '@components/Spinner';
-import { RequestResultMessage } from './RequestResultMessage';
+import { RequestResultMessage } from './RequestResultMessage.tsx';
 
 interface ProjectRequestProps {
   i18n: Translations;
@@ -25,6 +25,8 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
     RequestState.INIT
   );
 
+  const [messageOpen, setMessageOpen] = useState(false);
+
   const handleRequest = () => {
     setRequestState(RequestState.REQUESTING);
     joinProject(supabase, props.projectId).then((resp) => {
@@ -33,7 +35,14 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
       } else {
         setRequestState(RequestState.FAILURE);
       }
+
+      setMessageOpen(true);
     });
+  };
+
+  const handleClose = () => {
+    setMessageOpen(false);
+    window.location.href = `/${props.i18n.lang}/projects`;
   };
 
   const url = new URLSearchParams(window.location.search);
@@ -73,6 +82,10 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
       <Spinner />
     </div>;
   } else {
-    <RequestResultMessage i18n={props.i18n} open={} />;
+    <RequestResultMessage
+      i18n={props.i18n}
+      open={messageOpen}
+      onClose={handleClose}
+    />;
   }
 };

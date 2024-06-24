@@ -7,8 +7,7 @@ import './RequestResultMessage.css';
 interface RequestResultMessageProps {
   open: boolean;
   i18n: Translations;
-  onCancel(): void;
-  onConfirm(): void;
+  onClose(): void;
 }
 
 export const RequestResultMessage = (props: RequestResultMessageProps) => {
@@ -29,20 +28,12 @@ export const RequestResultMessage = (props: RequestResultMessageProps) => {
           <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
             <AlertDialog.Cancel asChild>
               <button
-                className='request-result-button'
-                onClick={props.onCancel}
+                className='request-result-button-red'
+                onClick={props.onClose}
               >
-                {t['Cancel']}
+                {t['OK']}
               </button>
             </AlertDialog.Cancel>
-            <AlertDialog.Action asChild>
-              <button
-                className='request-result-button-red'
-                onClick={props.onConfirm}
-              >
-                {t['Delete User']}
-              </button>
-            </AlertDialog.Action>
           </div>
         </AlertDialog.Content>
       </AlertDialog.Portal>
