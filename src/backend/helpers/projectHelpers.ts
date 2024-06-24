@@ -279,6 +279,23 @@ export const joinProject = (supabase: SupabaseClient, projectId: string) =>
       }
     });
 
+export const requestJoinProject = (
+  supabase: SupabaseClient,
+  projectId: string
+) =>
+  supabase
+    .rpc('request_join_project_rpc', {
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('Error requesting joining a project', error);
+        return false;
+      } else {
+        return data as unknown as boolean;
+      }
+    });
+
 export const updateProject = (
   supabase: SupabaseClient,
   id: string,

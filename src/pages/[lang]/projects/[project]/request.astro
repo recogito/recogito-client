@@ -1,5 +1,5 @@
 ---
-import HeaderLayout from '@layouts/HeaderLayout.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getLangFromUrl, getTranslations } from '@i18n';
@@ -7,7 +7,7 @@ import { ProjectRequest } from '@apps/project-request';
 
 const lang = getLangFromUrl(Astro.url);
 
-const i18n = getTranslations(Astro.request, 'dashboard-projects');
+const i18n = getTranslations(Astro.request, 'project-request');
 
 const supabase = await createSupabaseServerClient(Astro.cookies);
 
@@ -19,9 +19,14 @@ if (profile.error || !profile.data) {
 }
 ---
 
-<HeaderLayout title='join'>
-  <ProjectRequest client:load i18n={i18n} projectId={projectId as string} />
-</HeaderLayout>
+<BaseLayout title='join'>
+  <ProjectRequest
+    client:only='react'
+    i18n={i18n}
+    projectId={projectId as string}
+    user={profile.data}
+  />
+</BaseLayout>
 
 <style>
   h1 {

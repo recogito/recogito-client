@@ -51,5 +51,5 @@ export default {
   },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': { ...userManagement, ...accountMenu },
-  'project-request': projectRequest,
+  'project-request': { ...projectRequest, ...accountMenu },
 };
