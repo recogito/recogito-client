@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
-    "build-node": "astro build --config astro.config.node.mjs",
+    "build": "NODE_OPTIONS=--max_old_space_size=4096 && astro build",
+    "build-node": "NODE_OPTIONS=--max_old_space_size=4096 && astro build --config astro.config.node.mjs",
     "preview-node": "node --max-old-space-size=4096 ./dist/server/entry.mjs",
     "install-plugin": "node ./plugins/install-plugin.js",
     "astro": "astro",
