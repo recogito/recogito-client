@@ -23,9 +23,8 @@ if (!data.isOrgAdmin) {
 const me = data;
 let profiles;
 
-const { error: errorProfiles, data: profData } = await getProfilesExtended(
-  supabase
-);
+const { error: errorProfiles, data: profData } =
+  await getProfilesExtended(supabase);
 
 if (errorProfiles) {
   console.log(errorProfiles);
@@ -53,7 +52,6 @@ const canInviteUsers = import.meta.env.PUBLIC_ENABLE_USER_INVITE === 'TRUE';
     me={me}
     groups={groups}
     canInvite={canInviteUsers}
-    client:only
+    client:only='react'
   />
 </BaseLayout>
-
