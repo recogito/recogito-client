@@ -84,6 +84,12 @@ export const ProjectCard = (props: ProjectCardProps) => {
     });
   };
 
+  const count = users.length;
+
+  const userList = count < 11 ? users : users.slice(0, 10);
+
+  const plusUsers = count < 11 ? 0 : count - 10;
+
   return (
     <div className='project-card'>
       <div className='project-card-body' onClick={onClick}>
@@ -142,7 +148,8 @@ export const ProjectCard = (props: ProjectCardProps) => {
       />
       <div className='project-card-footer'>
         <div className='avatar-stack'>
-          {users.map((member) => (
+          {plusUsers > 0 && `       + ${plusUsers} ${t['More']}`}
+          {userList.map((member) => (
             <Avatar
               key={member.user.id}
               id={member.user.id}

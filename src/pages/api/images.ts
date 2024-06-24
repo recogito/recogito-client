@@ -6,12 +6,7 @@ const IIIF_URL = import.meta.env.IIIF_URL;
 const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
 const IIIF_KEY = import.meta.env.IIIF_KEY;
 
-// console.log('IIIF_URL: ', IIIF_URL);
-// console.log('IIIF_PROJECT_ID', IIIF_PROJECT_ID);
-// console.log('IIIF_KEY', IIIF_KEY);
-
 export const POST: APIRoute = async ({ request, cookies }) => {
-  // console.log('Entered api/images POST');
   // Verify if the user is logged in
   const supabase = await createSupabaseServerClient(cookies);
 
