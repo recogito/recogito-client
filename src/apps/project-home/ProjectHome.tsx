@@ -14,6 +14,7 @@ import type {
   Document,
   ExtendedProjectData,
   Invitation,
+  JoinRequest,
   MyProfile,
   Translations,
 } from 'src/Types';
@@ -30,6 +31,8 @@ export interface ProjectHomeProps {
   documents: Document[];
 
   invitations: Invitation[];
+
+  requests: JoinRequest[];
 
   availableLayers: AvailableLayers[];
 
@@ -158,6 +161,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         isAdmin={isAdmin || false}
         name={props.project.name}
         description={props.project.description || ''}
+        requests={props.requests}
         currentTab={isAdmin ? tab : undefined}
         onSwitchTab={handleSwitchTab}
         onGotoSettings={handleGotoSettings}

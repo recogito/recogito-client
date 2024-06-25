@@ -38,7 +38,7 @@ export const RequestResultMessage = (props: RequestResultMessageProps) => {
                   'The admin of the project has been sent your request. Once approved you will be added to the project'
                 ]
               : t[
-                  'Your request failed to send. Please check that you are not already a member or retry the link'
+                  'Your request failed to send. Perhaps you have already requested membership?'
                 ]}
           </AlertDialog.Description>
           <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
