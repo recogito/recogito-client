@@ -41,7 +41,7 @@
     "@react-spring/web": "^9.7.3",
     "@recogito/annotorious-supabase": "1.0.0-rc.11",
     "@recogito/react-pdf-annotator": "1.0.0-rc.23",
-    "@recogito/react-text-annotator": "3.0.0-rc.32",
+    "@recogito/react-text-annotator": "3.0.0-rc.33",
     "@supabase/ssr": "0.4.0",
     "@supabase/supabase-js": "2.43.6",
     "@table-library/react-table-library": "^4.1.7",
