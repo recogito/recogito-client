@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import type { PresentUser } from '@annotorious/react';
-import { CETEIcean, TEIAnnotator, TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import { UndoStack } from '@components/AnnotationDesktop';
-import { DynamicStyle } from '@components/DynamicStyle';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import { PDFViewer } from '../PDFViewer';
 import { useContent } from '../useContent';
-import { behaviors } from './teiBehaviors';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
+import { AnnotatedPDF } from './AnnotatedPDF';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -84,22 +83,13 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
       <div className="page-wrapper">
         <div className="content-wrapper">
           {contentType === 'text/xml' && text ? (
-            <>
-              <DynamicStyle style={props.styleSheet} />
-            
-              <TEIAnnotator
-                filter={filter}
-                style={props.style}
-                presence={{
-                  font: '500 12px Inter, Arial, Helvetica, sans-serif',
-                }}>
-                <CETEIcean 
-                  tei={text} 
-                  behaviors={behaviors} />
-              </TEIAnnotator>
-            </>
+            <AnnotatedTEI
+              filter={filter}
+              style={props.style}
+              styleSheet={props.styleSheet} 
+              text={text} />            
           ) : contentType === 'application/pdf' && text ? (
-            <PDFViewer
+            <AnnotatedPDF
               document={props.document}
               filter={filter}
               style={props.style}
