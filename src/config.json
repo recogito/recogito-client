@@ -10,7 +10,7 @@
     "contrast_color": "white",
     "bottom_logos_enabled": false,
     "top_logos_enabled": false,
-    "footer_message": "Powered by Recogito",
+    "footer_message": "Powered by Recogito Studio",
     "favicon": "favicon.svg"
   },
   "authentication": {
