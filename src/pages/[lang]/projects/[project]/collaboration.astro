@@ -30,8 +30,6 @@ const invitations = await listPendingInvitations(supabase, projectId as string);
 
 const requests = await listPendingRequests(supabase, projectId as string);
 
-console.log(requests);
-
 if (project.error || invitations.error) {
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
