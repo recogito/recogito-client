@@ -1,5 +1,5 @@
 .animated-icon.check svg polyline {
-  animation: checkmark 0.25s ease-in-out 0.7s backwards
+  animation: checkmark 0.25s ease-in-out 0.7s backwards;
 }
 
 .animated-icon.check svg circle.outline {
@@ -11,21 +11,36 @@
 .animated-icon.check svg circle.fill {
   fill: var(--green-500);
   animation: checkmark-circle-fill 0.6s ease-in-out 0.7s backwards;
-} 
+}
+
+.animated-icon.minus svg polyline {
+  animation: checkmark 0.25s ease-in-out 0.7s backwards;
+}
+
+.animated-icon.minus svg circle.outline {
+  stroke: var(--red-500);
+  stroke-width: 6px;
+  animation: checkmark-circle-outline 0.6s ease-in-out backwards;
+}
+
+.animated-icon.minus svg circle.fill {
+  fill: var(--red-500);
+  animation: checkmark-circle-fill 0.6s ease-in-out 0.7s backwards;
+}
 
 @keyframes checkmark {
   0% {
-    stroke-dashoffset: 100px
+    stroke-dashoffset: 100px;
   }
 
   100% {
-    stroke-dashoffset: 0px
+    stroke-dashoffset: 0px;
   }
 }
 
 @keyframes checkmark-circle-outline {
   0% {
-    stroke-dashoffset: 480px
+    stroke-dashoffset: 480px;
   }
 
   100% {

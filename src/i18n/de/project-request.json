@@ -1,0 +1,12 @@
+{
+  "Do you wish to request membership in project": "Möchtest Du diesem Projekt beitreten?",
+  "Request": "Anfrage abschicken",
+  "Cancel": "Abbrechen",
+  "OK": "OK",
+  "Request for Membership Sent!": "Beitrittsanfrage wurde abgesendendet.",
+  "Request for Membership Failed!": "Beitrittsanfrage konnte nicht gesendet werden.",
+  "The admin of the project has been sent your request. Once approved you will be added to the project": "Deine Beitrittsanfrage wurde zur Genehmigung an die ProjektadministratorInnen gesendet.",
+  "Your request failed to send. Perhaps you have already requested membership?": "Deine Beitrittsanfrage konnte nicht gesendet werden. Möglicherweise hast Du bereits eine Anfrage gesendet?",
+  "You are already a member of this project. You can navigate to it from the Projects screen > My Projects": "Du bist bereits Mitglied in diesem Projekt. Du findest das Projekt auf deinem Startbildschirm unter 'Meine Projekte'.",
+  "Go To Project": "Zum Projekt"
+}

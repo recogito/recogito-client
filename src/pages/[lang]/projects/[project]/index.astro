@@ -1,6 +1,10 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getMyProfile, listMyInvites } from '@backend/crud';
+import {
+  getMyProfile,
+  listMyInvites,
+  listPendingRequests,
+} from '@backend/crud';
 import { getAvailableLayers, listMyProjectsExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
@@ -13,7 +17,7 @@ const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
 const projectId = Astro.params.project;
@@ -44,6 +48,8 @@ const invitations = await listMyInvites(supabase);
 const projects = await listMyProjectsExtended(supabase);
 
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
+
+const requests = await listPendingRequests(supabase, projectId as string);
 ---
 
 <BaseLayout title='Projects Home'>
@@ -52,6 +58,7 @@ const availableLayers = await getAvailableLayers(supabase, projectId as string);
     i18n={i18n}
     projects={projects.data}
     project={project.data}
+    requests={requests.data}
     documents={documents.data}
     user={profile.data}
     invitations={invitations.data}

@@ -155,13 +155,13 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       <RadioGroup.Item
                         className='create-project-radio-group-item'
                         value='assignments'
-                        id='r1'
+                        id='r3'
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
                       <label
                         className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r1'
+                        htmlFor='r3'
                       >
                         {t['Assignments']}
                       </label>
@@ -177,13 +177,13 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       <RadioGroup.Item
                         className='create-project-radio-group-item'
                         value='single_team'
-                        id='r2'
+                        id='r4'
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
                       <label
                         className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r2'
+                        htmlFor='r4'
                       >
                         {t['Single Team']}
                       </label>

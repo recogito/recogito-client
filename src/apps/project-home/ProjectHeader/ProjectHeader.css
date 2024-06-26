@@ -131,3 +131,17 @@
   background-color: transparent !important;
   box-shadow: none !important;
 }
+
+.project-header-pip {
+  background-color: red;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 9px;
+  font-weight: bold;
+  height: 1tpx;
+  line-height: 15px;
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  width: 15px;
+}

@@ -1,5 +1,10 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { ExtendedProjectData, Invitation, Project } from 'src/Types';
+import type {
+  ExtendedProjectData,
+  Invitation,
+  JoinRequest,
+  Project,
+} from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 
@@ -149,6 +154,36 @@ export const listPendingInvitations = (
     .is('accepted', false)
     .is('ignored', false)
     .then(({ error, data }) => ({ error, data: data as Invitation[] }));
+
+export const listPendingRequests = (
+  supabase: SupabaseClient,
+  projectId: string
+): Response<JoinRequest[]> =>
+  supabase
+    .from('join_requests')
+    .select(
+      `
+      id,
+      created_at,
+      project_id,
+      user_id,
+      accepted,
+      ignored,
+      user: user_id (
+        id,
+        first_name,
+        last_name,
+        nickname,
+        avatar_url
+      )
+    `
+    )
+    .eq('project_id', projectId)
+    .is('accepted', false)
+    .then(({ error, data }) => ({
+      error,
+      data: data as unknown as JoinRequest[],
+    }));
 
 export const listProjectUsers = async (
   supabase: SupabaseClient,
