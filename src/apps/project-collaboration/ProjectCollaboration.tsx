@@ -287,53 +287,56 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
             onDeleteInvitationError={onDeleteInviteError}
           />
 
-          <div className='project-collaboration-request-header'>
-            <h1>{t['Join Requests']}</h1>
-            <div className='project-collaboration-ignored-switch'>
-              <label htmlFor='show-ignored'>{t['Show Ignored']}</label>
+          {!props.project.is_open_join && (
+            <>
+              <div className='project-collaboration-request-header'>
+                <h1>{t['Join Requests']}</h1>
+                <div className='project-collaboration-ignored-switch'>
+                  <label htmlFor='show-ignored'>{t['Show Ignored']}</label>
 
-              <Switch.Root
-                className='switch-root'
-                id='show-ignored'
-                checked={showIgnored}
-                onCheckedChange={setShowIgnored}
-              >
-                <Switch.Thumb className='switch-thumb' />
-              </Switch.Root>
-            </div>
-          </div>
-          <div className='project-collaboration-link-container'>
-            <label htmlFor='join-link'>{t['Join Link']}</label>
-            <InfoTooltip content={t['copy_link_info']} />
-            <input
-              className='project-collaboration-link-input'
-              value={encodeURI(link)}
-              disabled
-            ></input>
-            <Button
-              className='primary project-collaboration-link-button'
-              onClick={handleCopyLink}
-            >
-              {t['Copy Link']}
-            </Button>
-          </div>
+                  <Switch.Root
+                    className='switch-root'
+                    id='show-ignored'
+                    checked={showIgnored}
+                    onCheckedChange={setShowIgnored}
+                  >
+                    <Switch.Thumb className='switch-thumb' />
+                  </Switch.Root>
+                </div>
+              </div>
+              <div className='project-collaboration-link-container'>
+                <label htmlFor='join-link'>{t['Join Link']}</label>
+                <InfoTooltip content={t['copy_link_info']} />
+                <input
+                  className='project-collaboration-link-input'
+                  value={encodeURI(link)}
+                  disabled
+                ></input>
+                <Button
+                  className='primary project-collaboration-link-button'
+                  onClick={handleCopyLink}
+                >
+                  {t['Copy Link']}
+                </Button>
+              </div>
 
-          {requests.filter((r) => (showIgnored ? true : !r.ignored)).length >
-          0 ? (
-            <JoinRequestsTable
-              i18n={props.i18n}
-              project={project}
-              requests={requests}
-              onAcceptUser={handleAddUser}
-              showIgnored={showIgnored}
-              onIgnoreUser={handleIgnoreUser}
-            />
-          ) : (
-            <div className='project-collaboration-no-requests'>
-              {t['No Open Join Requests']}
-            </div>
+              {requests.filter((r) => (showIgnored ? true : !r.ignored))
+                .length > 0 ? (
+                <JoinRequestsTable
+                  i18n={props.i18n}
+                  project={project}
+                  requests={requests}
+                  onAcceptUser={handleAddUser}
+                  showIgnored={showIgnored}
+                  onIgnoreUser={handleIgnoreUser}
+                />
+              ) : (
+                <div className='project-collaboration-no-requests'>
+                  {t['No Open Join Requests']}
+                </div>
+              )}
+            </>
           )}
-
           <Toast
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}

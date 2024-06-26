@@ -33,7 +33,7 @@
 }
 
 .project-collaboration-request-header {
-  width: 50%;
+  width: 750px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -47,7 +47,7 @@
 }
 
 .project-collaboration-link-container {
-  width: 50%;
+  width: 750px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -60,7 +60,7 @@
 }
 
 .project-collaboration-no-requests {
-  width: 50%;
+  width: 750px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
