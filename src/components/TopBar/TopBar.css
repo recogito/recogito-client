@@ -25,7 +25,7 @@
 
 .top-bar-separator {
   width: 2px;
-  height: 20px;
+  height: 30px;
   margin-left: 5px;
   background-color: white;
 }
@@ -33,6 +33,11 @@
 .top-bar-site_name {
   padding-left: 5px;
   color: var(--siteColor);
+  opacity: 0.8;
+  font-size: 12px;
+  padding-top: 3px;
+  text-transform: uppercase;
+  font-weight: 600;
 }
 
 .top-bar-actions {

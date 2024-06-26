@@ -22,7 +22,7 @@ const backgroundColor = config.branding.background_color;
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={getLangFromUrl(Astro.url)}>
   <head>
     <!-- HEAD-DYNAMIC-SCRIPT -->
@@ -35,9 +35,7 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
   <body>
     <header>
       <div class='branding-container'>
-        <div class='platform'>
-          {config.branding.platform_name}
-        </div>
+        <img src='/img/recogito-studio-logo.svg' height={40} />
         <div class='separator'></div>
         <div class='site_name'>{config.branding.site_name}</div>
       </div>
@@ -136,6 +134,11 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
   .site_name {
     padding-left: 5px;
     color: var(--siteColor);
+    opacity: 0.8;
+    font-size: 12px;
+    padding-top: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
   }
 
   .blurb {
