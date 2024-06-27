@@ -85,6 +85,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           {contentType === 'text/xml' && text ? (
             <AnnotatedTEI
               filter={filter}
+              initialLoadComplete={!loading}
               style={props.style}
               styleSheet={props.styleSheet} 
               text={text} />            

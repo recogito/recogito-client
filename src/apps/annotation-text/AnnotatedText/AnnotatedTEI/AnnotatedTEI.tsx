@@ -1,13 +1,16 @@
-import type { Filter } from '@annotorious/react';
+import { useAnnotator, type Filter } from '@annotorious/react';
 import { DynamicStyle } from '@components/DynamicStyle';
 import { CETEIcean, TEIAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import { behaviors } from './behaviors';
 import { useEmbeddedTEIAnnotations } from './useEmbeddedAnnotations';
+import { useEffect } from 'react';
 
 interface AnnotatedTEIProps {
   
   filter?: Filter;
+
+  initialLoadComplete: boolean;
   
   style?: HighlightStyleExpression;
 
@@ -19,7 +22,15 @@ interface AnnotatedTEIProps {
 
 export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
 
+  const anno = useAnnotator();
+
   const embedded = useEmbeddedTEIAnnotations(props.text);
+
+  useEffect(() => {
+    if (anno && embedded.length > 0 && props.initialLoadComplete) {
+      anno.setAnnotations(embedded, false);
+    }
+  }, [anno, embedded, props.initialLoadComplete]);
 
   return (
     <>
