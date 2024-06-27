@@ -83,9 +83,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   };
 
   const style: HighlightStyleExpression = useMemo(() => {
-    const readOnly = new Set(
-      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
-    );
+    // In practice, there should only ever be one active layer
+    const activeLayers = 
+      new Set((layers || []).filter(l => l.is_active).map(l => l.id))
 
     const readOnlyStyle = (state?: AnnotationState, z?: number) =>
       ({
@@ -98,11 +98,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       } as HighlightStyle);
 
     return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
-      a.layer_id && readOnly.has(a.layer_id)
+      a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state, z)
         : typeof activeLayerStyle === 'function'
         ? activeLayerStyle(a, state, z)
-        : undefined;
+        : activeLayerStyle;
   }, [activeLayerStyle, layers]);
 
   const [usePopup, setUsePopup] = useState(true);
@@ -129,8 +129,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             .filter((l) => !current.has(l.id))
             .map((l) => ({
               id: l.id,
-              document_id: l.document_id,
               is_active: false,
+              document_id: l.document_id,
+              project_id: props.document.context.project_id
             }));
 
           setLayers([...props.document.layers, ...toAdd]);
