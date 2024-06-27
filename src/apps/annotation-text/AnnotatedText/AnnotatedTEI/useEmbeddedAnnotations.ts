@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import type { TextAnnotation } from '@recogito/react-text-annotator';
 
 interface ListAnnotation {
@@ -20,20 +21,22 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
     const standoffElements = doc.querySelectorAll('TEI > teiHeader > standOff');
 
-    const annotationLayers = Array.from(standoffElements).reduce<ListAnnotation[]>((lists, standoffEl) => {
+    const annotationLayers = Array.from(standoffElements).reduce<ListAnnotation[]>((lists, standoffEl, idx) => {
       const annotationsElements = standoffEl.querySelectorAll('listAnnotation > annotation');
 
       const annotations = Array.from(annotationsElements).map(el => {
         const id = el.getAttribute('xml:id');
         const [startSelector, endSelector] = el.getAttribute('target')?.split(' ') as [string, string];
 
-        const noteElements = el.querySelectorAll('note');
+        const noteElements = Array.from(el.querySelectorAll('note')).map(node => node.textContent);
+
+        console.log(noteElements);
 
         return {
-          id: id?.replace('uid-', ''),
-          layer_id: 'FOOBAR',
+          id,
+          layer_id: `TEI Standoff ${idx + 1}`,
           target: {
-            annotation: id?.replace('uid-', ''),
+            annotation: id,
             selector: [{
               startSelector: {
                 type: 'XPathSelector',
@@ -45,7 +48,11 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
               }
             }]
           },
-          bodies: []
+          bodies: noteElements.map(value => ({
+            id: uuidv4(),
+            annotation: id,
+            value
+          }))
         } as unknown as TextAnnotation
       });
 
