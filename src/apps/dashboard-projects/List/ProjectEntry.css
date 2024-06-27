@@ -17,6 +17,19 @@
   width: 30%;
 }
 
+.project-entry-description-entry {
+  display: block;
+  display: -webkit-box;
+  height: 3.2em;
+  line-clamp: 2;
+  line-height: 150%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
 .project-entry-assignments-with-docs {
   width: 7%;
   text-align: center;
