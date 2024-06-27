@@ -28,9 +28,9 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
         const id = el.getAttribute('xml:id');
         const [startSelector, endSelector] = el.getAttribute('target')?.split(' ') as [string, string];
 
-        const noteElements = Array.from(el.querySelectorAll('note')).map(node => node.textContent);
+        const notes = Array.from(el.querySelectorAll('note')).map(node => node.textContent);
 
-        console.log(noteElements);
+        const tags = Array.from(el.querySelectorAll('rs[ana]')).reduce<string[]>((all, el) => [...all, ...el.getAttribute('ana')!.split(' ')],[]);
 
         return {
           id,
@@ -48,11 +48,19 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
               }
             }]
           },
-          bodies: noteElements.map(value => ({
-            id: uuidv4(),
-            annotation: id,
-            value
-          }))
+          bodies: [
+            ...notes.map(value => ({
+              id: uuidv4(),
+              annotation: id,
+              value
+            })),
+            ...tags.map(value => ({
+              id: uuidv4(),
+              annotation: id,
+              purpose: 'tagging',
+              value
+            }))
+          ]
         } as unknown as TextAnnotation
       });
 
