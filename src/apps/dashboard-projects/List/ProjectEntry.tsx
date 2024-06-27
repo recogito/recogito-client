@@ -83,7 +83,9 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
       </div>
       <div className='project-entry-description'>
         {description ? (
-          <div className='text-body-small'>{description}</div>
+          <div className='project-entry-description-entry text-body-small'>
+            {description}
+          </div>
         ) : (
           <p className='no-description'>{props.i18n.t['No description.']}</p>
         )}
