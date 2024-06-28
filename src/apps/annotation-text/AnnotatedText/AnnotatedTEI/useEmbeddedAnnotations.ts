@@ -48,9 +48,12 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
     const standoffElements = doc.querySelectorAll('TEI > teiHeader > standOff');
 
     const annotationLists = Array.from(standoffElements).reduce<AnnotationList[]>((lists, standoffEl, idx) => {
-      const layerId =  `tei_standoff_${idx + 1}`;
+      const layerId =  standoffElements.length > 1 ? `tei_standoff_${idx + 1}` : 'tei_standoff';
 
-      const layer = { id: layerId, name: `TEI Standoff ${idx+1}`};
+      const layer = { 
+        id: layerId, 
+        name: standoffElements.length > 1 ? `TEI Standoff ${idx+1}` : 'TEI Standoff'
+      };
 
       const annotationElements = standoffEl.querySelectorAll('listAnnotation > annotation');
       const annotations = Array.from(annotationElements).map(el => {
@@ -111,7 +114,12 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
               id: uuidv4(),
               annotation: id,
               purpose: 'tagging',
-              value: tag
+              value: tag,
+              // Maybe not the greatest convention - but we'll attribute
+              // all tags to the annotation creator. The issue: we current don't have a
+              // mechanism implemented in our TEI export that associates users with
+              // tags. (I'm not sure there even is a mechansim in TEI!)
+              creator: created ? users.find(u => u.id === created.who) : undefined
             }))
           ]
         } as unknown as TextAnnotation

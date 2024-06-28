@@ -70,8 +70,7 @@ const getTags = (annotation: SupabaseAnnotation) => {
   const allTags = annotation
     .bodies.filter(b => b.purpose === 'tagging');
   
-    const creator = getCreator(annotation);
-
+  const creator = getCreator(annotation);
   if (creator) {
     const byCreator = allTags
       .filter(b => b.creator?.id === creator?.id);
