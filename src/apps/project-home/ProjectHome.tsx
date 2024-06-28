@@ -167,6 +167,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         onGotoSettings={handleGotoSettings}
         onGotoUsers={handleGotoUsers}
         showTabs={!props.project.is_open_edit}
+        isOpenJoin={Boolean(props.project.is_open_join)}
       />
       <div className='project-home' style={{ marginTop: isAdmin ? 240 : 190 }}>
         <ToastProvider>

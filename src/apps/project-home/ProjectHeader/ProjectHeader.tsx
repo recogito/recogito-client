@@ -10,6 +10,7 @@ interface ProjectHeaderProps {
   isAdmin: boolean;
   i18n: Translations;
   showTabs: boolean;
+  isOpenJoin: boolean;
 
   requests: JoinRequest[];
 
@@ -50,7 +51,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
             >
               <Users color='black' size={20} />
               <div className='project-header-button-text'>{t['Team']}</div>
-              {Boolean(requestCount > 0) && (
+              {Boolean(requestCount > 0) && !props.isOpenJoin && (
                 <div className='project-header-pip'>{requestCount}</div>
               )}
             </button>
