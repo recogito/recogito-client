@@ -33,6 +33,13 @@ if (project.error || !project.data) {
   });
 }
 
+const user = project.data.users.find((u) => u.user.id === profile.data.id);
+
+if (!user) {
+  return Astro.redirect(
+    `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
+  );
+}
 const documents = await listDocumentsInProject(supabase, projectId as string);
 
 if (documents.error) {
