@@ -6,11 +6,11 @@ import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
-import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
 import { AnnotatedPDF } from './AnnotatedPDF';
+import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, Translations } from 'src/Types';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -52,6 +52,8 @@ interface AnnotatedTextProps {
 
   onLoad(): void;
 
+  onLoadEmbeddedLayers(layers: EmbeddedLayer[]): void;
+
 }
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
@@ -88,7 +90,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               initialLoadComplete={!loading}
               style={props.style}
               styleSheet={props.styleSheet} 
-              text={text} />            
+              text={text} 
+              onLoadEmbeddedLayers={props.onLoadEmbeddedLayers} />            
           ) : contentType === 'application/pdf' && text ? (
             <AnnotatedPDF
               document={props.document}

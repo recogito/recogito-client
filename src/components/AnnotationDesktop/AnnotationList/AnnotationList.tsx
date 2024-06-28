@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
@@ -30,7 +30,7 @@ interface AnnotationListProps<T extends Anno> {
 
   i18n: Translations;
 
-  layers?: DocumentLayer[];
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
 

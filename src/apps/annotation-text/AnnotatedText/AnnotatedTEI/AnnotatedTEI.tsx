@@ -5,6 +5,7 @@ import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import { behaviors } from './behaviors';
 import { useEmbeddedTEIAnnotations } from './useEmbeddedAnnotations';
 import { useEffect } from 'react';
+import type { EmbeddedLayer } from 'src/Types';
 
 interface AnnotatedTEIProps {
   
@@ -18,19 +19,26 @@ interface AnnotatedTEIProps {
 
   text?: string;
 
+  onLoadEmbeddedLayers(layers: EmbeddedLayer[]): void;
+
 }
 
 export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
 
   const anno = useAnnotator();
 
-  const embedded = useEmbeddedTEIAnnotations(props.text);
+  const { layers, annotations } = useEmbeddedTEIAnnotations(props.text);
 
   useEffect(() => {
-    if (anno && embedded.length > 0 && props.initialLoadComplete) {
-      anno.setAnnotations(embedded, false);
+    if (anno && annotations.length > 0 && props.initialLoadComplete) {
+      anno.setAnnotations(annotations, false);
     }
-  }, [anno, embedded, props.initialLoadComplete]);
+  }, [anno, annotations, props.initialLoadComplete]);
+
+  useEffect(() => {
+    if (layers.length > 0)
+      props.onLoadEmbeddedLayers(layers);
+  }, [layers]);
 
   return (
     <>

@@ -1,8 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { TextAnnotation } from '@recogito/react-text-annotator';
+import type { EmbeddedLayer } from 'src/Types';
 
-interface ListAnnotation {
+interface AnnotationList {
+
+  layer: EmbeddedLayer;
 
   annotations: TextAnnotation[];
 
@@ -10,7 +13,7 @@ interface ListAnnotation {
 
 export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
-  const [annotations, setAnnotations] = useState<TextAnnotation[]>([]);
+  const [annotationLists, setAnnotationLists] = useState<AnnotationList[]>([]);
 
   useEffect(() => {
     if (!xml) return;
@@ -21,11 +24,15 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
     const standoffElements = doc.querySelectorAll('TEI > teiHeader > standOff');
 
-    const annotationLayers = Array.from(standoffElements).reduce<ListAnnotation[]>((lists, standoffEl, idx) => {
-      const annotationsElements = standoffEl.querySelectorAll('listAnnotation > annotation');
+    const annotationLists = Array.from(standoffElements).reduce<AnnotationList[]>((lists, standoffEl, idx) => {
+      const layerId =  `tei_standoff_${idx + 1}`;
 
-      const annotations = Array.from(annotationsElements).map(el => {
+      const layer = { id: layerId, name: `TEI Standoff ${idx+1}`};
+
+      const annotationElements = standoffEl.querySelectorAll('listAnnotation > annotation');
+      const annotations = Array.from(annotationElements).map(el => {
         const id = el.getAttribute('xml:id');
+
         const [startSelector, endSelector] = el.getAttribute('target')?.split(' ') as [string, string];
 
         const notes = Array.from(el.querySelectorAll('note')).map(node => node.textContent);
@@ -34,7 +41,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
         return {
           id,
-          layer_id: `TEI Standoff ${idx + 1}`,
+          layer_id: layerId,
           target: {
             annotation: id,
             selector: [{
@@ -64,13 +71,17 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
         } as unknown as TextAnnotation
       });
 
-      // Just a hack
-      setAnnotations(annotations);
-
-      return [...lists, { annotations } as ListAnnotation];
+      return [...lists, { layer, annotations }];
     }, []);
+
+    setAnnotationLists(annotationLists);
   }, [xml]);
 
-  return annotations;
+  const annotations = useMemo(() => 
+    annotationLists.reduce<TextAnnotation[]>((all, list) => ([...all, ...list.annotations]), []), [annotationLists]); 
+
+  const layers = useMemo(() => annotationLists.map(l => l.layer), [annotationLists]);
+
+  return { layers, annotations };
   
 }
