@@ -2,7 +2,7 @@ import { Check, Stack, EyeSlash } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Switch from '@radix-ui/react-switch';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { DocumentLayer, Translations } from 'src/Types';
+import type { Layer, Translations } from 'src/Types';
 import { useFilterSettingsState } from '../FilterState';
 
 import './AnnotationLayers.css';
@@ -11,7 +11,7 @@ interface AnnotationLayersProps {
 
   i18n: Translations;
 
-  layers?: DocumentLayer[];
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
 

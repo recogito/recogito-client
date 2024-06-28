@@ -67,20 +67,23 @@ const getCreator = (annotation: SupabaseAnnotation) =>
  * Apply some basic sanity checking here! 
  */
 const getTags = (annotation: SupabaseAnnotation) => {
-  const creator = getCreator(annotation);
-
-  if (!creator) return [];
-
   const allTags = annotation
     .bodies.filter(b => b.purpose === 'tagging');
+  
+  const creator = getCreator(annotation);
+  if (creator) {
+    const byCreator = allTags
+      .filter(b => b.creator?.id === creator?.id);
 
-  const byCreator = allTags
-    .filter(b => b.creator?.id === creator?.id);
+    if (allTags.length !== byCreator.length)
+      console.warn('Integrity warning: annotation has tags not created by annotation creator', annotation);
 
-  if (allTags.length !== byCreator.length)
-    console.warn('Integrity warning: annotation has tags not created by annotation creator', annotation);
-
-  return byCreator;
+    return byCreator;
+  } else {
+    // Edge case: embedded Annotations (TEI!) could be without
+    // creator. In this case, just add all tags.
+    return allTags;
+  }
 }
 
 export const AnnotationCard = (props: AnnotationCardProps) => {

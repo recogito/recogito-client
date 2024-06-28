@@ -158,6 +158,6 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
   }
   
   teiHeader.appendChild(standOffEl);
-  
+
   return document.toString();
 }

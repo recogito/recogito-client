@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Delta } from 'quill/core';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { type Sorter, Sorting, SortSelector } from '../SortSelector';
 import { EmptyNote, NewNoteButton } from '../NewNote';
@@ -15,7 +15,7 @@ interface DocumentNotesListProps {
 
   i18n: Translations;
 
-  layers?: DocumentLayer[];
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
 

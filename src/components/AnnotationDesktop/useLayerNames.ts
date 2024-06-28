@@ -1,21 +1,9 @@
 import { useEffect, useState } from 'react';
 import { getAvailableLayers } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { DocumentWithContext } from 'src/Types';
+import type { DocumentWithContext, EmbeddedLayer } from 'src/Types';
 
-export interface NamedLayer {
-
-  layer_id: string;
-
-  context_id?: string;
-
-  context_name?: string;
-
-  is_active: boolean;
-
-}
-
-export const useLayerNames = (document: DocumentWithContext) => {
+export const useLayerNames = (document: DocumentWithContext, embeddedLayers?: EmbeddedLayer[]) => {
 
   const [names, setNames] = useState<Map<string, string>>(new Map());
 
@@ -32,10 +20,20 @@ export const useLayerNames = (document: DocumentWithContext) => {
           .filter(l => l.layer_id && l.is_active && l.context_name)
           .map(l => [l.layer_id, l.context_name] as [string, string]);
         
-        setNames(new Map([...entries]))
+        setNames(names => new Map([...names.entries(), ...entries]))
       }
     });
   }, [document]);
+
+  useEffect(() => {
+    if (embeddedLayers) {
+      const entries = embeddedLayers
+        .filter(l => l.name)
+        .map(l => [l.id, l.name] as [string, string]);
+
+      setNames(names => new Map([...names.entries(), ...entries]))
+    }
+  }, [embeddedLayers]);
 
   return names;
 

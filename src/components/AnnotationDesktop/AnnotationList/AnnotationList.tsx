@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
@@ -30,7 +30,7 @@ interface AnnotationListProps<T extends Anno> {
 
   i18n: Translations;
 
-  layers?: DocumentLayer[];
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
 
@@ -114,7 +114,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     // when they are new, but keeps the reply field open
     // after adding a reply
     const hasReplies =
-      store.getAnnotation(annotation.id)!.bodies.filter(b => b.purpose === 'commenting').length > 1;
+      store && store.getAnnotation(annotation.id)!.bodies.filter(b => b.purpose === 'commenting').length > 1;
 
     if (!hasReplies)
       anno.state.selection.clear();
@@ -128,23 +128,23 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
     !(a.layer_id && a.layer_id === activeLayer?.id);
 
   const onDeleteAnnotation = (annotation: Anno) => 
-    store.deleteAnnotation(annotation);
+    store?.deleteAnnotation(annotation);
 
   const onUpdateAnnotation = (updated: SupabaseAnnotation) =>
-    store.updateAnnotation(updated);
+    store?.updateAnnotation(updated);
 
   const onCreateBody = (body: AnnotationBody) =>
-    store.addBody(body);
+    store?.addBody(body);
 
   const onDeleteBody = (body: AnnotationBody) =>
-    store.deleteBody(body);
+    store?.deleteBody(body);
 
   const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
     // TODO to replace with store.bulkDeleteBodies once supported in Annotorious!
-    bodies.forEach(b => store.deleteBody(b));
+    bodies.forEach(b => store?.deleteBody(b));
 
   const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
-    store.updateBody(oldValue, newValue);
+    store?.updateBody(oldValue, newValue);
     
   useEffect(() => {
     // Scroll the first selected card into view

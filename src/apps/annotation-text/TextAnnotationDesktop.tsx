@@ -21,7 +21,7 @@ import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
 import { LeftDrawer } from './LeftDrawer/LeftDrawer';
 import { RightDrawer } from './RightDrawer';
-import type { DocumentLayer } from 'src/Types';
+import type { DocumentLayer, EmbeddedLayer } from 'src/Types';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
@@ -44,16 +44,22 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const tagVocabulary = useTagVocabulary(props.document.context.project_id);
 
-  const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
+  const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
 
-  const layerNames = useLayerNames(props.document);
+  const [embeddedLayers, setEmbeddedLayers] = useState<EmbeddedLayer[] | undefined>();
+
+  const layers = useMemo(() => (
+    [...(documentLayers || []), ...(embeddedLayers || [])]
+  ), [documentLayers, embeddedLayers]);
+
+  const layerNames = useLayerNames(props.document, embeddedLayers);
 
   const activeLayer = useMemo(
     () =>
-      layers && layers.length > 0
-        ? layers.find((l) => l.is_active) || layers[0]
+      documentLayers && documentLayers.length > 0
+        ? documentLayers.find((l) => l.is_active) || documentLayers[0]
         : undefined,
-    [layers]
+    [documentLayers]
   );
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
@@ -83,9 +89,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   };
 
   const style: HighlightStyleExpression = useMemo(() => {
-    const readOnly = new Set(
-      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
-    );
+    // In practice, there should only ever be one active layer
+    const activeLayers = 
+      new Set((documentLayers || []).filter(l => l.is_active).map(l => l.id))
 
     const readOnlyStyle = (state?: AnnotationState, z?: number) =>
       ({
@@ -98,12 +104,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       } as HighlightStyle);
 
     return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
-      a.layer_id && readOnly.has(a.layer_id)
+      a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state, z)
         : typeof activeLayerStyle === 'function'
         ? activeLayerStyle(a, state, z)
-        : undefined;
-  }, [activeLayerStyle, layers]);
+        : activeLayerStyle;
+  }, [activeLayerStyle, documentLayers]);
 
   const [usePopup, setUsePopup] = useState(true);
 
@@ -129,14 +135,15 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             .filter((l) => !current.has(l.id))
             .map((l) => ({
               id: l.id,
-              document_id: l.document_id,
               is_active: false,
+              document_id: l.document_id,
+              project_id: props.document.context.project_id
             }));
 
-          setLayers([...props.document.layers, ...toAdd]);
+          setDocumentLayers([...props.document.layers, ...toAdd]);
         });
       } else {
-        setLayers(props.document.layers);
+        setDocumentLayers(props.document.layers);
       }
     }
   }, [policies]);
@@ -186,7 +193,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layers={layers}
+      layers={documentLayers}
       present={present}
       onError={() => setConnectionError(true)}>
       <div className="anno-desktop ta-desktop">
@@ -206,7 +213,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             document={props.document}
             present={present}
             privacy={privacy}
-            layers={layers}
+            layers={documentLayers}
             layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
             policies={policies}
@@ -234,7 +241,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               channelId={props.channelId}
               document={props.document}
               i18n={props.i18n}
-              layers={layers}
+              layers={documentLayers}
               layerNames={layerNames}
               policies={policies}
               present={present}
@@ -246,6 +253,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               onConnectionError={() => setConnectionError(true)}
               onSaveError={() => setConnectionError(true)}
               onLoad={() => setLoading(false)}
+              onLoadEmbeddedLayers={setEmbeddedLayers}
               styleSheet={props.styleSheet}
             />
           )}

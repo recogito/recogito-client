@@ -4,7 +4,7 @@ import { getAllDocumentLayersInProject, getProjectPolicies } from '@backend/help
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { mergeAnnotations } from 'src/util';
+import { mergeAnnotations, sanitizeFilename } from 'src/util';
 
 export const GET: APIRoute = async ({ params, cookies, url }) => {
   // Verify if the user is logged in
@@ -74,8 +74,12 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
     mergeAnnotations(xml, annotations.data) : 
     mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
 
-  const filename = document.data.name.endsWith('.xml') ?
-    document.data.name : `${document.data.name}.tei.xml`
+  const { name } = document.data;
+
+  const filename = 
+    name.endsWith('.tei.xml') ? sanitizeFilename(name.replace('.tei.xml', '')) + '.tei.xml' :
+    name.endsWith('.xml') ? sanitizeFilename(name.replace('.xml', '')) + '.xml' :
+    sanitizeFilename(name) + '.tei.xml';
 
   return new Response(    
     merged,

@@ -7,6 +7,10 @@
   width: 30px;
 }
 
+.has-selected .annotation:not(.selected) .layer-icon {
+  pointer-events: none;
+}
+
 .annotation .layer-icon svg {
   display: block;
   margin: 1px 0 0 0;

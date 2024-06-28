@@ -7,7 +7,7 @@ import type { Annotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, useNotes } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
 
@@ -15,7 +15,7 @@ interface RightDrawerProps {
 
   i18n: Translations;
 
-  layers?: DocumentLayer[];
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
 
