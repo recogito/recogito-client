@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { PresentUser, useAnnotations } from '@annotorious/react';
+import { type PresentUser, useAnnotations } from '@annotorious/react';
 import { enumerateCreators } from '@components/AnnotationDesktop';
 
 export const useCreators = (present: PresentUser[]) => {

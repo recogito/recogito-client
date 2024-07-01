@@ -1,29 +1,27 @@
 ---
+import { ProjectSettings } from '@apps/project-settings';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile, listPendingInvitations } from '@backend/crud';
+import PluginRegistry from '@components/Plugins/PluginRegistry';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import {
   getProjectExtended,
   listMyProjectsExtended,
   getInstalledPlugins,
 } from '@backend/helpers';
-import { ProjectSettings } from '@apps/project-settings';
-import PluginRegistry from '@components/Plugins/PluginRegistry';
 
 const lang = getLangFromUrl(Astro.url);
 
 const i18n = getTranslations(Astro.request, 'project-settings');
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-if (!supabase) return Astro.redirect(`/${lang}/sign-in`);
+const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 });
+  return Astro.redirect(`/${lang}/sign-in`);
 }
 
 const project = await getProjectExtended(supabase, projectId as string);
@@ -57,7 +55,6 @@ if (installedPlugins.error || !installedPlugins.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
-
 <BaseLayout title='Settings'>
   <ProjectSettings
     client:load

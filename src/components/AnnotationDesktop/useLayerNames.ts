@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { getAvailableLayers } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';

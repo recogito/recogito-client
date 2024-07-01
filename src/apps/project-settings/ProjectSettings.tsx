@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { Trash } from '@phosphor-icons/react';
+import * as Label from '@radix-ui/react-label';
+import * as RadioGroup from '@radix-ui/react-radio-group';
 import {
   clearProjectTagVocabulary,
   getProjectTagVocabulary,
@@ -7,30 +10,24 @@ import {
   deleteInstalledPlugin,
   updatePluginSettings,
 } from '@backend/helpers';
+import { GetPlugins } from '@apps/project-plugins/GetPlugins';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
-import { SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
-import { Toast, ToastContent, ToastProvider } from '@components/Toast';
+import { TopBar } from '@components/TopBar';
+import { BackButtonBar } from '@components/BackButtonBar';
+import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
+import { SettingsHeader } from './SettingsHeader';
+import type { PluginMetadata, PluginInstallationConfig } from '@components/Plugins';
+import { Extension } from '@components/Plugins';
 import type {
   ExtendedProjectData,
   Invitation,
   Translations,
   MyProfile,
 } from 'src/Types';
-import * as Label from '@radix-ui/react-label';
-import { TopBar } from '@components/TopBar';
-import { BackButtonBar } from '@components/BackButtonBar';
-import * as RadioGroup from '@radix-ui/react-radio-group';
 
 import './ProjectSettings.css';
-import { SettingsHeader } from './SettingsHeader';
-import {
-  PluginMetadata,
-  PluginInstallationConfig,
-  Extension,
-} from '@components/Plugins';
-import { Trash } from '@phosphor-icons/react';
-import { GetPlugins } from '@apps/project-plugins/GetPlugins';
 
 interface ProjectSettingsProps {
   invitations: Invitation[];

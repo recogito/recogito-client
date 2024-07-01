@@ -15,14 +15,14 @@ import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
 import { useIIIF, ManifestErrorDialog } from './IIIF';
-import {
+import { useAnnotator } from '@annotorious/react';
+import type {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
   Color,
   DrawingStyleExpression,
   ImageAnnotation,
   PresentUser,
-  useAnnotator
 } from '@annotorious/react';
 
 import './ImageAnnotationDesktop.css';

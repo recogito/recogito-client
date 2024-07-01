@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IIIF, LanguageString } from '@allmaps/iiif-parser';
+import { IIIF, type LanguageString } from '@allmaps/iiif-parser';
 import type { Translations } from 'src/Types';
 
 /**

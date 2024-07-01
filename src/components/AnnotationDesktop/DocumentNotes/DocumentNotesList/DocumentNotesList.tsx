@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import type { Delta } from 'quill/core';
-import { User, useAnnotatorUser, type AnnotationBody, type PresentUser } from '@annotorious/react';
+import { useAnnotatorUser } from '@annotorious/react';
+import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
-import { Sorter, Sorting, SortSelector } from '../SortSelector';
+import { type Sorter, Sorting, SortSelector } from '../SortSelector';
 import { EmptyNote, NewNoteButton } from '../NewNote';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { DocumentNotesListItem } from './DocumentNotesListItem';

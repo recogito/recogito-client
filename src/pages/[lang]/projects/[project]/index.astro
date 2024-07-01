@@ -9,16 +9,11 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-
-if (!supabase) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
-}
+const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
-  const error = await fetch(`${Astro.url}/500`);
-  return new Response(error.body, { headers: error.headers, status: 500 });
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
 
 const projectId = Astro.params.project;
@@ -53,7 +48,7 @@ const availableLayers = await getAvailableLayers(supabase, projectId as string);
 
 <BaseLayout title='Projects Home'>
   <ProjectHome
-    client:only
+    client:only='react'
     i18n={i18n}
     projects={projects.data}
     project={project.data}

@@ -1,5 +1,4 @@
 import { X } from '@phosphor-icons/react';
-import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { Translations } from 'src/Types';
 import { TagEditor } from '@components/Annotation/TagEditor';
 

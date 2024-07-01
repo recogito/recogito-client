@@ -96,6 +96,8 @@
 .project-card-footer .avatar-stack {
   display: flex;
   flex-direction: row-reverse;
+  align-items: center;
+  font-size: small;
 }
 
 .project-card-footer .avatar-stack .avatar {

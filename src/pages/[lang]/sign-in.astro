@@ -8,13 +8,12 @@ import config from '../../config.json';
 const methods = config.authentication.methods;
 const splashURL = config.branding.home_banner;
 ---
-
 <LoginLayout title=''>
   <div class='container'>
     <Login
+      client:only='react'
       i18n={getTranslations(Astro.request, 'auth-login')}
       methods={methods as LoginMethod[]}
-      client:only='react'
       splashURL={splashURL}
     />
   </div>

@@ -1,5 +1,6 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { SquaresFour, ListBullets } from '@phosphor-icons/react';
+
 import './ToggleDisplay.css';
 
 export type ToggleDisplayOptions = 'cards' | 'rows';
@@ -21,10 +22,11 @@ export const ToggleDisplay = (props: ToggleDisplayProps) => {
       }
     >
       <ToggleGroup.Item className='toggle-display-item' value='cards'>
-        <SquaresFour />
+        <SquaresFour size={16} />
       </ToggleGroup.Item>
+      
       <ToggleGroup.Item className='toggle-display-item' value='rows'>
-        <ListBullets />
+        <ListBullets size={16} />
       </ToggleGroup.Item>
     </ToggleGroup.Root>
   );

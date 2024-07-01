@@ -1,5 +1,5 @@
 import { animated, easings, useTransition } from '@react-spring/web';
-import type { Filter, PresentUser } from '@annotorious/react';
+import type { PresentUser } from '@annotorious/react';
 import { FilterPanel } from '@components/AnnotationDesktop/FilterPanel';
 import type { DocumentLayer, Translations } from 'src/Types';
 

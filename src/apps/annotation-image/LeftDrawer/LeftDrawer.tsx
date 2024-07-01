@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Chats, Faders, Files, Note } from '@phosphor-icons/react';
+import { Faders, Files } from '@phosphor-icons/react';
 import type { Sequence } from 'manifesto.js';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';

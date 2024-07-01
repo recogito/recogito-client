@@ -1,3 +1,4 @@
+import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
@@ -5,20 +6,13 @@ const IIIF_KEY = import.meta.env.IIIF_KEY || import.meta.env.RECOGITO_TIGER;
 const IIIF_URL = import.meta.env.IIIF_URL;
 const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
 
-console.log('IIIF_URL: ', IIIF_URL);
-console.log('IIIF_PROJECT_ID', IIIF_PROJECT_ID);
-console.log('IIIF_KEY', IIIF_KEY);
-console.log('import.meta.env.IIIF_KEY: ', import.meta.env.IIIF_KEY);
-console.log(
-  'import.meta.env.RECOGITO_IIIF_TIGER: ',
-  import.meta.env.RECOGITO_TIGER
-);
+export const POST: APIRoute = async ({ request, cookies }) => {
 
-export const post: APIRoute = async ({ request, cookies }) => {
-  console.log('Entered api/images POST');
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(request, cookies);
-  if (!supabase)
+  const supabase = await createSupabaseServerClient(cookies);
+
+  const me = await getMyProfile(supabase);
+  if (me.error || !me.data)
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
     });
@@ -39,7 +33,7 @@ export const post: APIRoute = async ({ request, cookies }) => {
   formData.append('resource[project_id]', IIIF_PROJECT_ID);
   formData.append('resource[content]', file);
 
-  console.log('Calling IIIF fetch');
+  // console.log('Calling IIIF fetch');
   return fetch(IIIF_URL, {
     headers: {
       'X-API-KEY': IIIF_KEY,

@@ -1,4 +1,3 @@
-import React from 'react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import { Info } from '@phosphor-icons/react';
 import './InfoTooltip.css';

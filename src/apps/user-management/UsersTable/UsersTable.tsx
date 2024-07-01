@@ -1,12 +1,12 @@
 import { GroupSelector } from '../GroupSelector';
+import { Trash } from '@phosphor-icons/react';
+import { Button } from '@components/Button';
 import type {
   Translations,
   ExtendedUserProfile,
   UserProfile,
   Group,
 } from 'src/Types';
-import { Trash } from '@phosphor-icons/react';
-import { Button } from '@components/Button';
 
 import './UsersTable.css';
 
@@ -54,7 +54,11 @@ export const UsersTable = (props: UsersTableProps) => {
             <td>{user.last_name}</td>
             <td>{user.nickname}</td>
             <td>{user.email_address}</td>
-            <td>{new Date(user.last_sign_in_at).toLocaleString()}</td>
+            <td>
+              {user.last_sign_in_at
+                ? new Date(user.last_sign_in_at).toLocaleString()
+                : t['Never']}
+            </td>
             <td>{user.id}</td>
 
             <td>

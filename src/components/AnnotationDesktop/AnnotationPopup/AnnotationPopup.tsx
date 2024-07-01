@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
 import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { Extension, usePlugins } from '@components/Plugins';
+import { usePlugins } from '@components/Plugins';
 import { AnnotationCard } from '@components/Annotation';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 

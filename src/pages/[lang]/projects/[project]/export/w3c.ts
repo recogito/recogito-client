@@ -35,13 +35,9 @@ const crosswalkTarget = (target: any) => {
   }
 }
 
-export const get: APIRoute = async ({ params, request, cookies }) => {
+export const GET: APIRoute = async ({ params, cookies }) => {
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(request, cookies);
-  if (!supabase)
-    return new Response(
-      JSON.stringify({ error: 'Unauthorized'}),
-      { status: 401 });
+  const supabase = await createSupabaseServerClient(cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)
