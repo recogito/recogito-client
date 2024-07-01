@@ -2,11 +2,12 @@ import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
+const IIIF_KEY = import.meta.env.IIIF_KEY || import.meta.env.RECOGITO_TIGER;
 const IIIF_URL = import.meta.env.IIIF_URL;
 const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
-const IIIF_KEY = import.meta.env.IIIF_KEY;
 
 export const POST: APIRoute = async ({ request, cookies }) => {
+
   // Verify if the user is logged in
   const supabase = await createSupabaseServerClient(cookies);
 
