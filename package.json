@@ -16,7 +16,7 @@
   "dependencies": {
     "@allmaps/iiif-parser": "1.0.0-beta.37",
     "@annotorious/react": "3.0.0-rc.30",
-    "@astrojs/netlify": "^5.3.4",
+    "@astrojs/netlify": "^5.3.5",
     "@astrojs/node": "^8.3.2",
     "@astrojs/react": "^3.6.0",
     "@phosphor-icons/react": "^2.1.7",
@@ -39,7 +39,7 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@react-spring/web": "^9.7.3",
-    "@recogito/annotorious-supabase": "1.0.0-rc.12",
+    "@recogito/annotorious-supabase": "1.0.0-rc.14",
     "@recogito/react-pdf-annotator": "1.0.0-rc.23",
     "@recogito/react-text-annotator": "3.0.0-rc.35",
     "@supabase/ssr": "0.4.0",
@@ -48,7 +48,7 @@
     "@uppy/core": "3.11.3",
     "@uppy/xhr-upload": "3.6.4",
     "accept-language-parser": "^1.5.0",
-    "astro": "^4.11.3",
+    "astro": "^4.11.4",
     "classnames": "^2.5.1",
     "confetti-explosion-react": "^0.1.2",
     "crypto-js": "4.2.0",
@@ -84,6 +84,6 @@
     "@typescript-eslint/parser": "^7.13.1",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.2",
-    "typescript": "5.5.2"
+    "typescript": "5.5.3"
   }
 }
