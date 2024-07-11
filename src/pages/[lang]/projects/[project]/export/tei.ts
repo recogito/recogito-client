@@ -6,9 +6,9 @@ import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { mergeAnnotations } from 'src/util';
 
-export const GET: APIRoute = async ({ params, cookies, url }) => {
+export const GET: APIRoute = async ({ request, params, cookies, url }) => {
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)

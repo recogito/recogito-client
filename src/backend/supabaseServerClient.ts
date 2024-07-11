@@ -1,13 +1,68 @@
-import type { AstroCookies } from 'astro';
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import type { AstroCookies } from 'astro';
+import {
+  type CookieOptions,
+  createBrowserSupabaseClient as _createBrowserSupabaseClient,
+  createServerSupabaseClient as _createServerSupabaseClient,
+  type SupabaseClientOptionsWithoutAuth
+} from '@supabase/auth-helpers-shared';
 
 const supabaseServerUrl = 
   import.meta.env.SUPABASE_SERVERCLIENT_URL ||
   import.meta.env.PUBLIC_SUPABASE;
 
-const supabaseAPIKey =
-  import.meta.env.PUBLIC_SUPABASE_API_KEY;
+export async function createSupabaseServerClient(
+  request: Request,
+  cookies: AstroCookies,
+  {
+    supabaseUrl,
+    supabaseKey,
+    options,
+    cookieOptions
+  }: {
+    supabaseUrl: string;
+    supabaseKey: string;
+    options?: SupabaseClientOptionsWithoutAuth;
+    cookieOptions?: CookieOptions;
+  } = {
+    supabaseUrl: supabaseServerUrl,
+    supabaseKey: import.meta.env.PUBLIC_SUPABASE_API_KEY,
+    //@ts-ignore
+    cookieOptions: {
+      name: 'sb-auth-token'
+    }
+  }
+) {
+
+  const client = _createServerSupabaseClient({
+    supabaseUrl,
+    supabaseKey,
+    getRequestHeader: (key) => request.headers.get(key) as (string | undefined),
+
+    getCookie(name) {
+      return cookies.get(name)?.value;
+    },
+
+    setCookie(name, value, options) {
+      cookies.set(name, value, options);
+    },
+
+    options: {
+      ...options,
+      global: {
+        ...options?.global,
+        headers: {
+          ...options?.global?.headers
+        }
+      }
+    },
+    cookieOptions
+  });
+
+  const success = await refreshSession(client, cookies);
+  // return success ? client : null;
+  return client;
+}
 
 const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) => {  
   const { data: { session }} = await supabase.auth.getSession();
@@ -23,28 +78,4 @@ const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) =
       access_token: accessToken.value 
     }).then(({ error }) => !error)
   }
-}
-
-export const createSupabaseServerClient = (
-  cookies: AstroCookies
-) => {
-  const supabase = createServerClient(
-    supabaseServerUrl,
-    supabaseAPIKey,
-    {
-      cookies: {
-        get(key: string) {
-          return cookies.get(key)?.value;
-        },
-        set(key: string, value: string, options: CookieOptions) {
-          cookies.set(key, value, options);
-        },
-        remove(key: string, options) {
-          cookies.delete(key, options);
-        }
-      }
-    }
-  );
-
-  return refreshSession(supabase, cookies).then(() => supabase);
 }

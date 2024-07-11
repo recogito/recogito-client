@@ -9,7 +9,7 @@ const IIIF_PROJECT_ID = import.meta.env.IIIF_PROJECT_ID;
 export const POST: APIRoute = async ({ request, cookies }) => {
 
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const me = await getMyProfile(supabase);
   if (me.error || !me.data)

@@ -8,7 +8,7 @@ const accepts = Astro.request.headers.get('accept-language');
 
 const lang = accepts ? parser.pick(Object.keys(languages), accepts) : defaultLang;
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
