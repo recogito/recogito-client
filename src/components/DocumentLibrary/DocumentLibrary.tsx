@@ -205,10 +205,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             .range(start, start + DOCUMENTS_PER_FETCH - 1);
 
           if (docsResp.error) {
-            console.error(
-              'Error retrieving collection documents: ',
-              docsResp.error
-            );
+            console.error('Error retrieving documents: ', docsResp.error);
 
             setLoading(false);
             setDocuments(docs);
