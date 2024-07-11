@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { IIIF, type LanguageString } from '@allmaps/iiif-parser';
+import { IIIF } from '@allmaps/iiif-parser';
+import { getCanvasLabel } from 'src/util';
 import type { Translations } from 'src/Types';
 
 /**
@@ -37,29 +38,6 @@ interface ValidationResult {
 
 }
 
-const getDefaultLabel = (dict: LanguageString | undefined, lang: string) => {
-  if (!dict)
-    return;
-
-  const localized = dict[lang];
-  if (localized) {
-    return localized[0];
-  } else {
-    // Fallback #1
-    const en = dict['en'];
-    if (en) {
-      return en[0];
-    } else {
-      // Fallback #2
-      const values = Object.values(dict).reduce<string[]>((flattened, value) => {
-        return Array.isArray(value) ? [...flattened, ...value] : [...flattened, value]
-      }, []);
-
-      return values.length > 0 ? values[0] : undefined;
-    }
-  }
-}
-
 export const validateIIIF = (url: string, i18n: Translations): Promise<ValidationResult> => {
   if (isValidHTTPSURL(url)) {
     return fetch(url)
@@ -79,7 +57,7 @@ export const validateIIIF = (url: string, i18n: Translations): Promise<Validatio
               } as ValidationResult;
             } else if (parsed.type === 'manifest') {
               // Presentation API v1/2/3
-              const label = getDefaultLabel(parsed.label, i18n.lang);
+              const label = getCanvasLabel(parsed.label, i18n.lang);
               return {
                 isValid: true,
                 result: {
