@@ -24,6 +24,7 @@ import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
 import { CheckCircle } from '@phosphor-icons/react';
+import { LoadingOverlay } from '@components/LoadingOverlay';
 
 export type LibraryDocument = Pick<
   Document,
@@ -61,6 +62,8 @@ export interface DocumentLibraryProps {
   isAdmin: boolean | undefined;
 }
 
+const DOCUMENTS_PER_FETCH = 1000;
+
 export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const { t } = props.i18n;
   const { UploadActions } = props;
@@ -83,6 +86,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     Document | undefined
   >();
   const [publicWarningOpen, setPublicWarningOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleTogglePrivate = (document: Document) => {
     if (document.is_private) {
@@ -176,13 +180,53 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   useEffect(() => {
     async function getDocuments() {
-      const resp = await supabase
+      setLoading(true);
+      const countResp = await supabase
         .from('documents')
-        .select(
-          'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private, collection_id, collection_metadata'
+        .select('*', { count: 'exact', head: true });
+
+      if (countResp.error) {
+        console.log('Error retrieving document count');
+        setLoading(false);
+        setDocuments([]);
+      } else {
+        let docs: LibraryDocument[] = [];
+
+        let start = 0;
+        const iterations = Math.ceil(
+          (countResp?.count || 0) / DOCUMENTS_PER_FETCH
         );
 
-      setDocuments(resp.data);
+        console.log(
+          `Fetch Iterations: ${iterations}, count: ${countResp?.count}, DOCUMENTS_PER_FETCH: ${DOCUMENTS_PER_FETCH} `
+        );
+
+        for (let i = 0; i < iterations; i++) {
+          const docsResp = await supabase
+            .from('documents')
+            .select(
+              'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private, collection_id, collection_metadata'
+            )
+            .range(start, start + DOCUMENTS_PER_FETCH - 1);
+
+          if (docsResp.error) {
+            console.error(
+              'Error retrieving collection documents: ',
+              docsResp.error
+            );
+
+            setLoading(false);
+            setDocuments(docs);
+            return;
+          }
+
+          docs = [...docs, ...docsResp.data];
+          start += DOCUMENTS_PER_FETCH;
+        }
+
+        setLoading(false);
+        setDocuments(docs);
+      }
     }
 
     if (!documents) {
@@ -574,6 +618,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   return (
     <>
+      {loading && props.open && <LoadingOverlay />}
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
           <Dialog.Overlay className='dialog-overlay' />
