@@ -32,6 +32,7 @@ html, body {
   z-index: 5;
 }
 
+.r6o-presence-layer, 
 .ta-desktop main .r6o-annotatable .r6o-highlight-layer.presence {
   z-index: 10;
 }

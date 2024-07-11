@@ -23,10 +23,6 @@ const isSupported = (manifest: Manifest) => {
   return true;
 };
 
-/**
- * TODO add additional checks on the document metadata, to ensure
- * we are dealing with a IIIF (image or presentation) manifest.
- */
 export const useIIIF = (document: DocumentWithContext) => {
   const [sequence, setSequence] = useState<Sequence | undefined>();
 
@@ -49,7 +45,6 @@ export const useIIIF = (document: DocumentWithContext) => {
 
     const url = isUploadedFile
       ? // Locally uploaded image - for now, assume this is served via built-in IIIF
-        // TODO how to construct the right IIIF URL?
         `${CANTALOUPE_PATH}/${document.id}/info.json`
       : document.meta_data?.url;
 
@@ -58,7 +53,7 @@ export const useIIIF = (document: DocumentWithContext) => {
       return;
     }
 
-    if (url.endsWith('info.json')) {
+    if (url.endsWith('info.json')  || url.includes('info.json?')) {
       if (isUploadedFile) {
         // For uploaded files, we need to include the auth token
         // into image requests

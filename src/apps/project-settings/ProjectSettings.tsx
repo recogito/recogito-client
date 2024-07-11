@@ -364,7 +364,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                           className='project-settings-label-detail text-body-large-bold'
                           htmlFor='firstName'
                         >
-                          {t['Project Visibility']}
+                          {t['Project Type']}
                         </Label.Root>
                         <RadioGroup.Root
                           className='project-settings-radio-group-root'
