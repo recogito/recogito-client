@@ -196,11 +196,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         const iterations = Math.ceil(
           (countResp?.count || 0) / DOCUMENTS_PER_FETCH
         );
-
-        console.log(
-          `Fetch Iterations: ${iterations}, count: ${countResp?.count}, DOCUMENTS_PER_FETCH: ${DOCUMENTS_PER_FETCH} `
-        );
-
         for (let i = 0; i < iterations; i++) {
           const docsResp = await supabase
             .from('documents')
