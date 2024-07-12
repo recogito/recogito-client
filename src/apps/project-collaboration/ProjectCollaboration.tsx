@@ -23,6 +23,7 @@ import { Button } from '@components/Button';
 import { InfoTooltip } from '@components/InfoTooltip';
 
 import './ProjectCollaboration.css';
+import { InviteListOfUsers } from './InviteListOfUsers/InviteListOfUsers';
 
 interface ProjectCollaborationProps {
   i18n: Translations;
@@ -266,6 +267,14 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           <h1>{t['Project Team']}</h1>
 
           <InviteUser
+            i18n={props.i18n}
+            me={props.me}
+            project={project}
+            invitations={invitations}
+            onInvitiationSent={onInvitationSent}
+            onInvitiationError={onInvitationError}
+          />
+          <InviteListOfUsers
             i18n={props.i18n}
             me={props.me}
             project={project}

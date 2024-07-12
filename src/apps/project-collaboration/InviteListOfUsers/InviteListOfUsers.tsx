@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Envelope, UserPlus, X } from '@phosphor-icons/react';
-import { useFormik } from 'formik';
-import { supabase } from '@backend/supabaseBrowserClient';
-import { inviteUserToProject } from '@backend/crud';
+import { Envelope, UsersFour, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type {
   ExtendedProjectData,
@@ -12,6 +9,9 @@ import type {
   Translations,
 } from 'src/Types';
 import type { PostgrestError } from '@supabase/supabase-js';
+import Dropzone from 'react-dropzone';
+
+import './InviteListOfUsers.css';
 
 interface InviteListOfUsersProps {
   i18n: Translations;
@@ -19,18 +19,12 @@ interface InviteListOfUsersProps {
   me: MyProfile;
 
   project: ExtendedProjectData;
-
-  invitations: Invitation[];
-
-  onInvitiationSent(invitation: Invitation): void;
-
-  onInvitiationError(error: PostgrestError): void;
 }
 
 export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
   const { lang, t } = props.i18n;
 
-  const { me, project } = props;
+  const { me } = props;
 
   const [open, _setOpen] = useState(false);
 
@@ -45,71 +39,13 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
     : undefined;
 
   const setOpen = (open: boolean) => {
-    formik.resetForm();
     setError(undefined);
     _setOpen(open);
   };
 
-  const sendInvitation = (email: string, group: string) => {
-    setBusy(true);
-
-    // Waits until the invite was processed in the backend
-    const a = new Promise((resolve) => {
-      inviteUserToProject(supabase, email, project, group, invitedBy).then(
-        ({ error, data }) => {
-          if (error) {
-            props.onInvitiationError(error);
-          } else {
-            props.onInvitiationSent(data);
-          }
-
-          resolve(null);
-        }
-      );
-
-      resolve(null);
-    });
-
-    // Waits for fixed amount of time, so that confetti can complete
-    const b = new Promise((resolve) => {
-      setTimeout(() => resolve(null), 1500);
-    });
-
-    // Waits for whatever is takes longer and closes the dialog
-    return Promise.all([a, b]).then(() => {
-      setBusy(false);
-      setOpen(false);
-    });
+  const handleFileDropped = (files) => {
+    console.log(files);
   };
-
-  const onSubmit = (values: { email: string; group: string }) => {
-    const { email, group } = values;
-
-    // Because you never know what users do...
-    const toMyself = props.me.email === email;
-
-    const hasInvitation = props.invitations.some(
-      (i) => i.email.toLowerCase() === email.toLowerCase()
-    );
-
-    if (toMyself) {
-      setError(t['You cannot send an invitation to yourself.']);
-    } else if (hasInvitation) {
-      setError(t['This user already has an invitation waiting.']);
-    } else {
-      sendInvitation(email, group).then(() => formik.resetForm());
-    }
-  };
-
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      // TODO maybe a better way to handle this?
-      // Default to last in list
-      group: project.groups[project.groups.length - 1].id,
-    },
-    onSubmit,
-  });
 
   return (
     <>
@@ -118,8 +54,8 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
         className='primary'
         onClick={() => setOpen(true)}
       >
-        <UserPlus size={20} />
-        <span>{t['Add a user']}</span>
+        <UsersFour size={20} />
+        <span>{t['Add list of users']}</span>
       </button>
 
       {!invitedBy && (
@@ -141,52 +77,33 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
 
           <Dialog.Content className='invite-users dialog-content'>
             <Dialog.Title className='dialog-title'>
-              {t['Invite User to Project']}
+              {t['Invite Users to the Project']}
             </Dialog.Title>
 
-            <Dialog.Description className='dialog-description'>
-              {t['Enter e-mail and access level.']}
-            </Dialog.Description>
+            <Dropzone
+              onDrop={(acceptedFiles) => handleFileDropped(acceptedFiles)}
+              multiple={false}
+            >
+              {({ getRootProps, getInputProps }) => (
+                <section className='invite-list-section'>
+                  <div {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <p>{t['invite-list-instructions']}</p>
+                    <p>{t['invite-list-instructions-2']}</p>
+                    <img
+                      src='/img/invite-user-list.png'
+                      height={200}
+                      width={350}
+                    ></img>
+                  </div>
+                </section>
+              )}
+            </Dropzone>
 
-            <form onSubmit={formik.handleSubmit}>
-              <fieldset>
-                <div className='field'>
-                  <label>{t['E-Mail']}</label>
-                  <input
-                    id='email'
-                    name='email'
-                    type='email'
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
-                    required
-                  />
-                </div>
-
-                <div className='field'>
-                  <label>{t['Access Level']}</label>
-
-                  <select
-                    id='group'
-                    name='group'
-                    onChange={formik.handleChange}
-                    value={formik.values.group}
-                  >
-                    {props.project.groups.map((group) => (
-                      <option key={group.id} value={group.id}>
-                        {t[group.name]}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {error && <div className='error'>{error}</div>}
-              </fieldset>
-
-              <Button busy={busy} confetti className='primary' type='submit'>
-                <Envelope size={20} />
-                <span>{t['Send invitation']}</span>
-              </Button>
-            </form>
+            <Button busy={busy} confetti className='primary' type='submit'>
+              <Envelope size={20} />
+              <span>{t['Send invitation']}</span>
+            </Button>
 
             <Dialog.Close asChild>
               <button
