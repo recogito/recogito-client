@@ -58,9 +58,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const {
     authToken,
+    canvases,
     isPresentationManifest,
     manifestError,
-    sequence,
     currentImage,
     setCurrentImage
   } = useIIIF(props.document);
@@ -162,6 +162,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               id: l.id,
               document_id: l.document_id,
               is_active: false,
+              project_id: props.document.context.project_id
             }));
 
           setLayers([...props.document.layers, ...toAdd]);
@@ -248,9 +249,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
         <main>
           <LeftDrawer
+            iiifCanvases={canvases}
             currentImage={currentImage}
             i18n={props.i18n}
-            iiifSequence={sequence}
             layers={layers}
             layerNames={layerNames}
             open={leftPanelOpen}

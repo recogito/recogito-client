@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Faders, Files } from '@phosphor-icons/react';
-import type { Sequence } from 'manifesto.js';
+import type { Canvas } from '@allmaps/iiif-parser';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';
 import { IIIFThumbnailStrip } from '../IIIF';
@@ -15,7 +15,7 @@ interface LeftDrawerProps {
 
   i18n: Translations;
 
-  iiifSequence?: Sequence;
+  iiifCanvases: Canvas[];
 
   layers?: DocumentLayer[];
 
@@ -77,8 +77,9 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
               present={props.present} />
           ) : (
             <IIIFThumbnailStrip 
+              canvases={props.iiifCanvases} 
               currentImage={props.currentImage}
-              sequence={props.iiifSequence} 
+              i18n={props.i18n}
               onSelect={props.onChangeImage} />
           )}
         </div>

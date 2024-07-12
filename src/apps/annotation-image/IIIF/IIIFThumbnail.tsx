@@ -1,14 +1,14 @@
-import type { Resource } from 'manifesto.js';
+import type { Canvas } from '@allmaps/iiif-parser';
 
 interface IIIFThumnailProps {
   
-  image: Resource;
+  canvas: Canvas;
 
 }
 
 export const IIIFThumbnail = (props: IIIFThumnailProps) => {
 
-  const src = `${props.image.getServices()[0].id}/full/120,/0/default.jpg`;
+  const src = `${props.canvas.image.uri}/full/120,/0/default.jpg`;
 
   return (
     <div className="thumbnail-wrapper">

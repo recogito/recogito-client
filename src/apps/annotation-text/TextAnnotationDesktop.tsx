@@ -131,6 +131,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               id: l.id,
               document_id: l.document_id,
               is_active: false,
+              project_id: props.document.context.project_id
             }));
 
           setLayers([...props.document.layers, ...toAdd]);
