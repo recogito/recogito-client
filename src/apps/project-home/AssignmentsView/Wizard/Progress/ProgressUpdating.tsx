@@ -14,6 +14,7 @@ import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { ProgressProps, ProgressState } from './Progress';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import type { UserRole } from '@backend/Types';
+import deepDiff from 'deep-diff';
 
 import './Progress.css';
 
@@ -62,7 +63,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
   const { name, description, documents, team, id } = props.assignment;
 
-  const [state, setState] = useState<ProgressState>('idle');
+  const [state, setState] = useState<ProgressState>('updating_assignment');
 
   const context: any = {
     id: previous.id!,
@@ -73,9 +74,12 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
   };
 
   useEffect(() => {
-    setState('updating_assignment');
-
     const update = async () => {
+      const diff = deepDiff.diff(previous.documents, documents);
+
+      console.log(diff);
+      setState('success');
+      return;
       // Step 1. Update name/description if needed.
       if (name !== previous.name || description !== previous.description)
         await updateAssignmentContext(supabase, context.id, name!, description);
@@ -115,6 +119,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
           });
 
           if (readOnlyLayers.length > 0) {
+            console.log('Adding Read-Only Layers: ', readOnlyLayers);
             const resultROLayers = await addReadOnlyLayersToContext(
               supabase,
               id as string,
@@ -152,6 +157,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
             }
           }
           if (readOnlyLayers.length > 0) {
+            console.log('Adding Read-Only Layers: ', readOnlyLayers);
             const resultROLayers = await addReadOnlyLayersToContext(
               supabase,
               id as string,
@@ -182,6 +188,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
           }
 
           if (removeReadOnlyLayers.length > 0) {
+            console.log('Removing Read-Only Layers: ', removeReadOnlyLayers);
             const resultROLayers = await removeReadOnlyLayersFromContext(
               supabase,
               id as string,
@@ -252,12 +259,14 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
       setState('success');
     };
 
-    update()
-      .then(() => props.onSaved(props.assignment))
-      .catch((error) => {
-        setState('failed');
-        props.onError(error);
-      });
+    if (state === 'updating_assignment') {
+      update()
+        .then(() => props.onSaved(props.assignment))
+        .catch((error) => {
+          setState('failed');
+          props.onError(error);
+        });
+    }
   }, []);
 
   return (
