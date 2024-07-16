@@ -29,6 +29,9 @@ export async function createSupabaseServerClient(
   }
 ) {
 
+  console.log('request', request);
+  console.log('cookies', cookies);
+
   const client = _createSupabaseClient(
     supabaseUrl,
     supabaseKey,
