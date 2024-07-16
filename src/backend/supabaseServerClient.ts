@@ -82,8 +82,10 @@ const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) =
     return await supabase.auth.setSession({ 
       refresh_token: refreshToken.value, 
       access_token: accessToken.value 
-    }).then(({ error }) => {
+    }).then(({ data, error }) => {
       console.log('error?', error);
+      console.log('user', data.user);
+      console.log('session', data.session);
       return !error
     }).catch(error => {
       console.log('Error: could not set auth session', error);
