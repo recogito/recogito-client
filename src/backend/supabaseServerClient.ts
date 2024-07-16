@@ -28,10 +28,6 @@ export async function createSupabaseServerClient(
     supabaseKey: supabaseAPIKey
   }
 ) {
-
-  console.log('request', request);
-  console.log('cookies', cookies);
-
   const client = _createSupabaseClient(
     supabaseUrl,
     supabaseKey,
@@ -48,10 +44,12 @@ export async function createSupabaseServerClient(
           // getRequestHeader: (key: string) => request.headers.get(key) as (string | undefined),
 
           getItem: (name: string) => {
+            console.log('getting cookie', name, cookies.get(name)?.value?.substring(0, 100))
             return cookies.get(name)?.value as string;
           },
 
           setItem: (name: string, value: string) => {
+            console.log('setting cookie', name, value.substring(0, 100));
             cookies.set(name, value);
           },
 
