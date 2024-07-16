@@ -11,6 +11,7 @@ const lang = getLangFromUrl(Astro.url);
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const me = await getMyProfile(supabase);
+console.log('me', me);
 if (me.error || !me.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }

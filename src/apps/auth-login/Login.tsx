@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
@@ -20,7 +20,6 @@ const clearCookies = () => {
   const expires = new Date(0).toUTCString();
   document.cookie = `sb-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-  document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 };
 
 export const Login = (props: {
@@ -35,16 +34,21 @@ export const Login = (props: {
 
   const [currentMethod, setCurrentMethod] = useState<LoginMethod | undefined>();
 
-  const url = new URLSearchParams(window.location.search);
-  let redirectUrl = url.get('redirect-to');
-  if (redirectUrl) {
-    localStorage.setItem('redirect-to', redirectUrl);
-  } else {
-    redirectUrl = localStorage.getItem('redirect-to');
-    if (redirectUrl && redirectUrl.length === 0) {
-      redirectUrl = null;
+  const redirectUrl = useMemo(() => {
+    const url = new URLSearchParams(window.location.search);
+
+    let redirectUrl = url.get('redirect-to');
+    if (redirectUrl) {
+      localStorage.setItem('redirect-to', redirectUrl);
+    } else {
+      redirectUrl = localStorage.getItem('redirect-to');
+      if (redirectUrl && redirectUrl.length === 0) {
+        redirectUrl = null;
+      }
     }
-  }
+
+    return redirectUrl;
+  }, [window.location.search]);
 
   useEffect(() => {
     supabase.auth.onAuthStateChange((event, session) => {
@@ -52,6 +56,7 @@ export const Login = (props: {
         clearCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
+        
         if (redirectUrl) {
           window.location.href = redirectUrl;
           localStorage.setItem('redirect-to', '');
@@ -65,6 +70,7 @@ export const Login = (props: {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
+          
           if (redirectUrl) {
             window.location.href = redirectUrl;
             localStorage.setItem('redirect-to', '');

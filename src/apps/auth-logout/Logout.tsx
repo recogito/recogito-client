@@ -8,7 +8,6 @@ import './Logout.css';
 
 const clearCookies = () => {
   const expires = new Date(0).toUTCString();
-  document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 }
