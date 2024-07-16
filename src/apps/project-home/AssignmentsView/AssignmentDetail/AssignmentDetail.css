@@ -16,7 +16,7 @@
   width: 100%;
   padding-top: 10px;
   padding-left: 32px;
-  max-height: 460px;
+  max-height: calc(100vh - 380px);
   overflow-y: auto;
 }
 

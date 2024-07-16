@@ -53,7 +53,6 @@
     "confetti-explosion-react": "^0.1.2",
     "crypto-js": "4.2.0",
     "date-fns": "^3.6.0",
-    "deep-diff": "^1.0.2",
     "formik": "2.4.6",
     "linkedom": "0.18.4",
     "manifesto.js": "4.2.17",

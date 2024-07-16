@@ -14,7 +14,6 @@ import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { ProgressProps, ProgressState } from './Progress';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import type { UserRole } from '@backend/Types';
-import deepDiff from 'deep-diff';
 
 import './Progress.css';
 
@@ -75,11 +74,6 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
 
   useEffect(() => {
     const update = async () => {
-      const diff = deepDiff.diff(previous.documents, documents);
-
-      console.log(diff);
-      setState('success');
-      return;
       // Step 1. Update name/description if needed.
       if (name !== previous.name || description !== previous.description)
         await updateAssignmentContext(supabase, context.id, name!, description);
@@ -103,7 +97,6 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
         );
 
         if (!resultAddDocs) {
-          console.error('Failed to add documents to context');
           setState('failed');
           props.onError('Failed to add documents to context');
         }
@@ -111,28 +104,54 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
         // - check for added read only layers on new documents
         for (let i = 0; i < documentChanges.added.length; i++) {
           const doc = documentChanges.added[i];
-          const readOnlyLayers: string[] = [];
-          doc.layers.forEach((layer) => {
-            if (!layer.is_active) {
-              readOnlyLayers.push(layer.id);
+          const prevDoc = previous.documents.find((d) => (d.id = doc.id));
+          const layerDiff = diff(prevDoc!.layers, doc.layers);
+          if (layerDiff.added.length > 0) {
+            // Look for added layers
+            const readOnlyLayers: string[] = [];
+            for (let i = 0; i < layerDiff.added.length; i++) {
+              readOnlyLayers.push(layerDiff.added[i].id);
             }
-          });
+            doc.layers.forEach((layer) => {
+              if (!layer.is_active) {
+                readOnlyLayers.push(layer.id);
+              }
+            });
 
-          if (readOnlyLayers.length > 0) {
-            console.log('Adding Read-Only Layers: ', readOnlyLayers);
-            const resultROLayers = await addReadOnlyLayersToContext(
-              supabase,
-              id as string,
-              readOnlyLayers
-            );
-            if (!resultROLayers) {
-              console.error(
-                'Failed to add document read only layers to context'
+            if (readOnlyLayers.length > 0) {
+              // console.log('Adding Read-Only Layers: ', readOnlyLayers);
+              const resultROLayers = await addReadOnlyLayersToContext(
+                supabase,
+                id as string,
+                readOnlyLayers
               );
-              setState('failed');
-              props.onError(
-                'Failed to add document read only layers to context'
+              if (!resultROLayers) {
+                props.onError(
+                  'Failed to add document read only layers to context'
+                );
+              }
+            }
+          }
+          if (layerDiff.removed.length > 0) {
+            //  Now look for removed layers
+            const removeReadOnlyLayers: string[] = [];
+            for (let i = 0; i < layerDiff.removed.length; i++) {
+              removeReadOnlyLayers.push(layerDiff.removed[i].id);
+            }
+
+            if (removeReadOnlyLayers.length > 0) {
+              // console.log('Removing Read-Only Layers: ', removeReadOnlyLayers);
+              const resultROLayers = await removeReadOnlyLayersFromContext(
+                supabase,
+                id as string,
+                removeReadOnlyLayers
               );
+              if (!resultROLayers.data) {
+                setState('failed');
+                props.onError(
+                  'Failed to remove document read only layers to context'
+                );
+              }
             }
           }
         }
@@ -143,61 +162,43 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
         const doc = documentChanges.unchanged[i];
         const prevDoc = previous.documents.find((d) => (d.id = doc.id));
 
-        if (prevDoc) {
+        const layerDiff = diff(prevDoc!.layers, doc.layers);
+        if (layerDiff.added.length > 0) {
           // Look for added layers
           const readOnlyLayers: string[] = [];
-          for (let i = 0; i < doc.layers.length; i++) {
-            const layer = doc.layers[i];
-
-            // Is is in the prev assignment?
-            const prevLayer = prevDoc.layers.find((l) => l.id === layer.id);
-
-            if (!prevLayer) {
-              readOnlyLayers.push(layer.id);
-            }
+          for (let i = 0; i < layerDiff.added.length; i++) {
+            readOnlyLayers.push(layerDiff.added[i].id);
           }
           if (readOnlyLayers.length > 0) {
-            console.log('Adding Read-Only Layers: ', readOnlyLayers);
+            // console.log('Adding Read-Only Layers: ', readOnlyLayers);
             const resultROLayers = await addReadOnlyLayersToContext(
               supabase,
               id as string,
               readOnlyLayers
             );
             if (!resultROLayers.data) {
-              console.error(
-                'Failed to add document read only layers to context'
-              );
               setState('failed');
               props.onError(
                 'Failed to add document read only layers to context'
               );
             }
           }
-
+        }
+        if (layerDiff.removed.length > 0) {
           //  Now look for removed layers
           const removeReadOnlyLayers: string[] = [];
-          for (let i = 0; i < prevDoc.layers.length; i++) {
-            const layer = prevDoc.layers[i];
-
-            // Is is in the current assignment?
-            const currentLayer = doc.layers.find((l) => l.id === layer.id);
-
-            if (!currentLayer) {
-              removeReadOnlyLayers.push(layer.id);
-            }
+          for (let i = 0; i < layerDiff.removed.length; i++) {
+            removeReadOnlyLayers.push(layerDiff.removed[i].id);
           }
 
           if (removeReadOnlyLayers.length > 0) {
-            console.log('Removing Read-Only Layers: ', removeReadOnlyLayers);
+            // console.log('Removing Read-Only Layers: ', removeReadOnlyLayers);
             const resultROLayers = await removeReadOnlyLayersFromContext(
               supabase,
               id as string,
               removeReadOnlyLayers
             );
             if (!resultROLayers.data) {
-              console.error(
-                'Failed to remove document read only layers to context'
-              );
               setState('failed');
               props.onError(
                 'Failed to remove document read only layers to context'
@@ -227,7 +228,6 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
           setState('success');
           props.onSaved(props.assignment);
         } else {
-          console.error('Failed to add users to context');
           setState('failed');
           props.onError('Failed to add users to context');
         }
@@ -250,7 +250,6 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
           setState('success');
           props.onSaved(props.assignment);
         } else {
-          console.error('Failed to remove users from context');
           setState('failed');
           props.onError('Failed to remove users from context');
         }
