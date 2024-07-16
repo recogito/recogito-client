@@ -55,6 +55,9 @@ export const Login = (props: {
       if (event === 'SIGNED_OUT') {
         clearCookies();
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        console.log(event);
+        console.log(session);
+
         setCookies(session);
         
         if (redirectUrl) {
