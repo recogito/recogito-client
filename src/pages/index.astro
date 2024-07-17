@@ -13,11 +13,13 @@ const supabase = await createSupabaseServerClient(Astro.cookies);
 console.log('[index] success. retrieving my profile.');
 
 const me = await getMyProfile(supabase);
-console.log('got my profile:')
+console.log('[index] got my profile:')
 console.log(me);
 if (me.error || !me.data) {
+  console.log('[index] User not logged in - redirecting to sign-in')
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 } else {
+  console.log('[index] user logged in redirecting to:' + `/${lang}/projects`);
   return Astro.redirect(`/${lang}/projects`);
 }
 ---
