@@ -1,10 +1,11 @@
 .assignment-list-list {
-  max-height: 440px;
+  height: calc(100vh - 380px);
   overflow-y: auto;
+  width: 480px;
 }
 
 .assignments-list-item {
-  width: 404px;
+  width: 390px;
   height: 80px;
   border-bottom: 1px solid var(--gray-200);
   padding-left: 30px;
