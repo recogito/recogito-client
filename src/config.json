@@ -23,7 +23,7 @@
       {
         "name": "Sign in with SSO",
         "type": "saml",
-        "domain": "example.com"
+        "domain": "performantsoftware.com"
       },
       {
         "name": "Send Magic Link",
