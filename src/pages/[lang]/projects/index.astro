@@ -8,14 +8,14 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
-console.log('[index] creating SSR client');
+console.log('[projects index] creating SSR client');
 
 const supabase = await createSupabaseServerClient(Astro.cookies);
 
-console.log('[index] fetching my profile');
+console.log('[projects index] fetching my profile');
 
 const me = await getMyProfile(supabase);
-console.log('[index] me:')
+console.log('[projects index] me:')
 console.log(me);
 
 if (me.error || !me.data) {

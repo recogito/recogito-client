@@ -2,6 +2,8 @@
 import { getTranslations } from '@i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
+console.log('[astro 500]');
+
 const { t } = getTranslations(Astro.request, 'error');
 ---
 <BaseLayout title="Recogito | Error">

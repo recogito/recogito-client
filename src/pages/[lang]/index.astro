@@ -3,11 +3,15 @@ import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl } from '@i18n';
 
+console.log('[lang index] creating client');
 const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const lang = getLangFromUrl(Astro.url);
 
 const me = await getMyProfile(supabase);
+console.log('[lang index] me');
+console.log(me);
+
 if (me.error || !me.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 } else {
