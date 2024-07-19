@@ -8,7 +8,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
-console.log('[projects index] creating SSR client');
+console.log(`[projects ${lang} index] creating SSR client`);
 
 const supabase = await createSupabaseServerClient(Astro.cookies);
 
