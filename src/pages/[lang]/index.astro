@@ -15,6 +15,7 @@ console.log(me);
 if (me.error || !me.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 } else {
-  return Astro.redirect(`/${lang}/projects`);
+  console.log('[lang index] redirecting to: ', `/${lang}/projects/`);
+  return Astro.redirect(`/${lang}/projects/`);
 }
 ---
