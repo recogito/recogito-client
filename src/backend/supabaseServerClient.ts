@@ -10,9 +10,14 @@ const supabaseAPIKey =
   import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) => {  
+  console.log('checking SSR session');
   const { data: { session }} = await supabase.auth.getSession();
-  if (session)
+  if (session) {
+    console.log('SSR session is valid');
     return true;
+  }
+
+  console.log('no longer valid - refreshing');
 
   const refreshToken = cookies.get('sb-refresh-token');
   const accessToken = cookies.get('sb-access-token');
@@ -21,7 +26,20 @@ const refreshSession = async (supabase: SupabaseClient, cookies: AstroCookies) =
     return await supabase.auth.setSession({ 
       refresh_token: refreshToken.value, 
       access_token: accessToken.value 
-    }).then(({ error }) => !error)
+    }).then(({ data, error }) => {
+      if (error)
+        console.error('Error refreshing session!', error);
+      else 
+        console.log('session refreshed successfully', data);
+        
+      return !error
+    })
+  } else {
+    if (!refreshToken?.value)
+      console.warn('refresh token missing!');
+
+    if (!accessToken?.value)
+      console.warn('access token missing');
   }
 }
 

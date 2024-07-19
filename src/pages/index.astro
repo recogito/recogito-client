@@ -8,13 +8,19 @@ const accepts = Astro.request.headers.get('accept-language');
 
 const lang = accepts ? parser.pick(Object.keys(languages), accepts) : defaultLang;
 
+console.log('[index] creating the server client');
 const supabase = await createSupabaseServerClient(Astro.cookies);
+console.log('[index] success. retrieving my profile.');
 
 const me = await getMyProfile(supabase);
+console.log('[index] got my profile:')
+console.log(me);
 if (me.error || !me.data) {
+  console.log('[index] User not logged in - redirecting to sign-in')
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 } else {
-  return Astro.redirect(`/${lang}/projects`);
+  console.log('[index] user logged in redirecting to: ' + `/${lang}/projects/`);
+  return Astro.redirect(`/${lang}/projects/`);
 }
 ---
 
