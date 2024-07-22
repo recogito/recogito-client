@@ -74,16 +74,12 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
           ) : (
             <p className='no-creator-rights'>
               {t["You don't have creator rights"]}{' '}
-              {invitations === 0 ? (
-                <span
-                  dangerouslySetInnerHTML={{ __html: t['Read the tutorial'] }}
-                ></span>
-              ) : invitations === 1 ? (
+              {invitations === 1 ? (
                 <>
                   {t['Fret not one'].split('${icon}')[0]} <Bell size={18} />
                   {t['Fret not one'].split('${icon}')[1]}
                 </>
-              ) : (
+              ) : invitations > 1 && (
                 <>
                   {t['Fret not more']
                     .split('${icon}')[0]
