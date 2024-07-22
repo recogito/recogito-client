@@ -8,16 +8,9 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
-console.log(`[projects ${lang} index] creating SSR client`);
-
 const supabase = await createSupabaseServerClient(Astro.cookies);
 
-console.log('[projects index] fetching my profile');
-
 const me = await getMyProfile(supabase);
-console.log('[projects index] me:')
-console.log(me);
-
 if (me.error || !me.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
