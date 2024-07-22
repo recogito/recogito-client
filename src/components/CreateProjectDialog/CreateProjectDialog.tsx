@@ -88,9 +88,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     value === 'public' ? setOpenJoin(true) : setOpenJoin(false)
                   }
                 >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className='create-project-radio-group-item'>
                     <RadioGroup.Item
-                      className='create-project-radio-group-item'
+                      className='create-project-radio-group-button'
                       value='private'
                       id='r1'
                     >
@@ -110,9 +110,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       ]
                     }
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className='create-project-radio-group-item'>
                     <RadioGroup.Item
-                      className='create-project-radio-group-item'
+                      className='create-project-radio-group-button'
                       value='public'
                       id='r2'
                     >
@@ -151,9 +151,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                         : setOpenEdit(true)
                     }
                   >
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className='create-project-radio-group-item'>
                       <RadioGroup.Item
-                        className='create-project-radio-group-item'
+                        className='create-project-radio-group-button'
                         value='assignments'
                         id='r1'
                       >
@@ -173,9 +173,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                         ]
                       }
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className='create-project-radio-group-item'>
                       <RadioGroup.Item
-                        className='create-project-radio-group-item'
+                        className='create-project-radio-group-button'
                         value='single_team'
                         id='r2'
                       >

@@ -12,6 +12,7 @@
   display: flex;
   justify-content: flex-end;
 }
+
 .create-project-switch-root {
   width: 42px;
   height: 25px;
@@ -41,6 +42,7 @@
   transform: translateX(2px);
   will-change: transform;
 }
+
 .create-project-switch-thumb[data-state='checked'] {
   transform: translateX(19px);
   background-color: var(--bright-blue);
@@ -92,6 +94,12 @@
 }
 
 .create-project-radio-group-item {
+  align-items: center;
+  display: flex;
+  gap: 0.25rem;
+} 
+
+.create-project-radio-group-button {
   background-color: white;
   width: 20px;
   height: 20px;
@@ -100,11 +108,11 @@
   padding: 0 !important;
 }
 
-.create-project-radio-group-item[data-state='checked'] {
+.create-project-radio-group-button[data-state='checked'] {
   border-color: var(--primary);
 }
 
-.create-project-radio-group-item:hover {
+.create-project-radio-group-button:hover {
   background-color: var(--gray-300);
 }
 
