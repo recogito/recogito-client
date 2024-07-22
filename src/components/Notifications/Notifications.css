@@ -17,8 +17,8 @@ button.unstyled.icon-only.notification-actions-trigger {
   height: 1tpx;
   line-height: 15px;
   position: absolute;
-  right: -5px;
-  top: -5px;
+  right: 0;
+  top: 0;
   width: 15px;
 }
 
