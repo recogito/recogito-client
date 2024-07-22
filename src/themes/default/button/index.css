@@ -110,6 +110,7 @@ button.icon-only {
   display: inline-flex;
   justify-content: center;
   min-width: auto;
+  padding: 0;
 }
 
 button.icon-only svg {
