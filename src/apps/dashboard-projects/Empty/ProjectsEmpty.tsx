@@ -22,17 +22,9 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
 
   const { t } = props.i18n;
 
-  const [fetching, setFetching] = useState(false);
+  const [busy, setBusy] = useState(false);
 
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
-
-  const onCreateProject = () => {
-    if (fetching) return;
-
-    setFetching(true);
-
-    setCreateProjectOpen(true);
-  };
 
   const handleSaveProject = (
     name: string,
@@ -40,6 +32,8 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
     openJoin: boolean,
     openEdit: boolean
   ) => {
+    setBusy(true);
+
     supabase
       .rpc('create_project_rpc', {
         _description: description,
@@ -49,9 +43,10 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
       })
       .then(({ data, error }) => {
         if (error) {
-          setFetching(false);
+          setBusy(false);
           props.onError('Something went wrong');
         } else {
+          setBusy(false);
           props.onProjectCreated(data);
           window.location.href = `/${props.i18n.lang}/projects/${data[0].id}`;
         }
@@ -71,9 +66,8 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
           {canCreateProjects ? (
             <Button
               className='primary lg'
-              onClick={onCreateProject}
-              busy={fetching}
-            >
+              onClick={() => setCreateProjectOpen(true)}
+              busy={busy}>
               <RocketLaunch size={20} />{' '}
               <span>{t['Start Your First Annotation Project']}</span>
             </Button>
@@ -102,6 +96,7 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
           )}
         </div>
       </div>
+
       <CreateProjectDialog
         open={createProjectOpen}
         onClose={() => setCreateProjectOpen(false)}
