@@ -1,9 +1,9 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 
 export const getUser = (supabase: SupabaseClient): Promise<User> =>
-  supabase.auth.getSession().then(({ error }) => {
-    if (error) {
-      throw error;
+  supabase.auth.getSession().then(({ error, data }) => {
+    if (error || !data?.session) {
+      throw error || 'Unauthorized';
     } else {
       return supabase.auth.getUser().then(({ error, data }) => {
         if (error) {
