@@ -18,6 +18,7 @@ import type {
 } from 'src/Types';
 
 import './ProjectsHome.css';
+import { useLocalStorageBackedState } from 'src/util/hooks';
 
 export interface ProjectsHomeProps {
   i18n: Translations;
@@ -62,7 +63,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [showProfileNag, setShowProfileNag] = useState(false);
 
-  const [display, setDisplay] = useState<ToggleDisplayValue>('cards');
+  const [display, setDisplay] = useLocalStorageBackedState('rs-dashboard-display', 'cards');
 
   const isReader = policies ? !policies.get('projects').has('INSERT') : true;
 
@@ -117,10 +118,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.created_by?.id !== me.id &&
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
-
-  const allProjects = me.isOrgAdmin
-    ? projects
-    : [...new Set([...myProjects, ...sharedProjects, ...openJoinProjects])];
 
   const filteredProjects = isReader
     ? filter === ProjectFilter.MINE
