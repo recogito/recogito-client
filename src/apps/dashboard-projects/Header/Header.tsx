@@ -7,7 +7,7 @@ import { HeaderSearchAction } from '@components/Search';
 import { HeaderSortAction, type SortFunction } from '@components/Sort';
 import {
   ToggleDisplay,
-  type ToggleDisplayOptions,
+  type ToggleDisplayValue,
 } from '@components/ToggleDisplay';
 import { ProjectFilter } from '../ProjectsHome';
 import type {
@@ -52,9 +52,9 @@ interface HeaderProps {
 
   onSetProjects(projects: ExtendedProjectData[]): void;
 
-  display: ToggleDisplayOptions;
+  display: ToggleDisplayValue;
 
-  onSetDisplay(display: ToggleDisplayOptions): void;
+  onSetDisplay(display: ToggleDisplayValue): void;
 }
 
 export const Header = (props: HeaderProps) => {
