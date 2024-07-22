@@ -2,17 +2,3 @@
   display: flex;
   justify-content: space-between;
 }
-
-.join-project-dialog-button-join {
-  min-height: 34px;
-  height: 34px;
-  background-color: var(--dark-blue);
-  color: var(--gray-100);
-}
-
-.join-project-dialog-button-cancel {
-  min-height: 34px;
-  height: 34px;
-  background-color: var(--gray-300);
-  color: var(--gray-900);
-}
