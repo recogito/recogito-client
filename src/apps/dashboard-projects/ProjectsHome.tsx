@@ -63,7 +63,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [showProfileNag, setShowProfileNag] = useState(false);
 
-  const [display, setDisplay] = useLocalStorageBackedState('rs-dashboard-display', 'cards');
+  const [display, setDisplay] = useLocalStorageBackedState<ToggleDisplayValue>('rs-dashboard-display', 'cards');
 
   const isReader = policies ? !policies.get('projects').has('INSERT') : true;
 
