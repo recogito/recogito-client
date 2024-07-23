@@ -10,6 +10,7 @@ import { ProjectsList } from './List';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
 import { TopBar } from '@components/TopBar';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
+import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   ExtendedProjectData,
   Invitation,
@@ -18,7 +19,7 @@ import type {
 } from 'src/Types';
 
 import './ProjectsHome.css';
-import { useLocalStorageBackedState } from 'src/util/hooks';
+
 
 export interface ProjectsHomeProps {
   i18n: Translations;
