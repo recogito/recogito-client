@@ -17,7 +17,7 @@
 }
 
 .project-card-header .owner-pill {
-  margin-right: 5px;
+  margin-right: -5px;
 }
 
 .project-card:hover {

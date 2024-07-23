@@ -61,8 +61,8 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
         id='project-description'
         className={
           expanded
-            ? 'project-header-description-bar-expanded'
-            : 'project-header-description-bar'
+            ? 'project-header-description-bar expanded'
+            : 'project-header-description-bar collapsed'
         }
       >
         {props.description}

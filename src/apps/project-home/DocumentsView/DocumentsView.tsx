@@ -205,7 +205,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   return (
     <>
       <header className='project-home-document-header-bar'>
-        <h1>{t['Documents']}</h1>
+        <h2>{t['Documents']}</h2>
         {props.isAdmin && (
           <div className='admin-actions'>
             <button

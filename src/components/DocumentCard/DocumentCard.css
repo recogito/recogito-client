@@ -27,8 +27,9 @@
   display: flex;
   height: 56px;
   width: 200px;
+  line-height: 120%;
   flex-wrap: wrap;
-  padding-left: 8px;
+  padding: 8px;
   position: relative;
   background-color: var(--gray-200);
 }
@@ -41,7 +42,7 @@
 
 .document-card-name {
   font-family: Inter;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   width: 90%;
   display: -webkit-box;

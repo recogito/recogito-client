@@ -1,19 +1,33 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 .project-home {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
-  padding-top: 20px;
-  padding-left: 40px;
-  padding-right: 40px;
   position: relative;
   background-color: white;
 }
 
-.project-home h1 {
-  margin-bottom: 0.4em;
+.project-home-document-header-bar {
+  align-items: center;
+  box-shadow: 
+    0 0 3px -1px rgba(0, 0, 0, 0.9),
+    0 0 12px -4px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px 30px;
 }
 
-.project-home h1 > span {
+.project-home h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.project-home h2 > span {
   display: inline-block;
   border: 1px dashed transparent;
   border-radius: var(--border-radius);
@@ -29,7 +43,10 @@
 
 .project-home .admin-actions {
   display: flex;
-  width: 500px;
+}
+
+.project-home .admin-actions button {
+  white-space: nowrap;
 }
 
 .project-home-add-document {
@@ -38,6 +55,7 @@
 
 .project-home-grid-wrapper {
   flex-grow: 1;
+  padding: 0 30px;
   position: relative;
 }
 
@@ -128,14 +146,4 @@
   font-size: var(--font-tiny);
   margin: 0;
   letter-spacing: 0.01ch;
-}
-
-.project-home-document-header-bar {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 80px;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 4px -2px rgba(0, 0, 0, 0.15);
 }
