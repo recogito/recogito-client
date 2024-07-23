@@ -224,9 +224,6 @@
   background-color: var(--gray-300);
 }
 
-.project-settings-radio-group-item:focus {
-}
-
 .project-settings-radio-group-indicator {
   display: flex;
   align-items: center;
