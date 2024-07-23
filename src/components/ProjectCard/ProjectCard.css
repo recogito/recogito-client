@@ -16,6 +16,10 @@
   justify-content: space-between;
 }
 
+.project-card-header .owner-pill {
+  margin-right: 5px;
+}
+
 .project-card:hover {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 8px -2px rgba(0, 0, 0, 0.28);
 }
