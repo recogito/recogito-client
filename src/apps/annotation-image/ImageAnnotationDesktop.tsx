@@ -93,7 +93,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   useEffect(() => {
     // The 'pages' sidebar should be open by default
     // in case of multi-page IIIF images
-    if (canvases.length > 0)
+    if (canvases.length > 1)
       setLeftPanelOpen(true);
   }, [canvases]);
 
