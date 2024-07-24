@@ -1,5 +1,5 @@
 import Quill from 'quill';
-import { Delta, Op, type QuillOptions } from 'quill/core';
+import { Delta, type Op, type QuillOptions } from 'quill/core';
 import { useEffect, useRef } from 'react';
 import { useQuillEditor } from './QuillEditorRoot';
 import type { Translations } from 'src/Types';
