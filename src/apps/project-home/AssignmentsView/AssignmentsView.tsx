@@ -130,7 +130,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
   return (
     <div className='project-assignments'>
       <header className='project-assignments-document-header-bar'>
-        <h1>{t['Assignments']}</h1>
+        <h2>{t['Assignments']}</h2>
         {props.isAdmin && (
           <>
             <Button

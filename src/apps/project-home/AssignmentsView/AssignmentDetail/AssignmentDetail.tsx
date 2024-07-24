@@ -35,7 +35,6 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
 
   return (
     <div className='assignment-detail-container'>
-      <div className='assignment-detail-divider' />
       <div className='assignment-detail-pane'>
         <div className='assignment-detail-title-row'>
           <div className='assignment-detail-title'>

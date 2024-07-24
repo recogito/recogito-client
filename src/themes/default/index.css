@@ -181,8 +181,10 @@ body {
   color: var(--gray-900);
   font-family: Inter, Arial, Helvetica, sans-serif;
   font-size: 16px;
+  height: 100%;
   line-height: 160%;
   margin: 0;
+  min-height: 100%;
   padding: 0;
 }
 

@@ -3,24 +3,33 @@ import { SquaresFour, ListBullets } from '@phosphor-icons/react';
 
 import './ToggleDisplay.css';
 
-export type ToggleDisplayOptions = 'cards' | 'rows';
+export type ToggleDisplayValue = 'cards' | 'rows';
 
 interface ToggleDisplayProps {
-  display: ToggleDisplayOptions;
-  onChangeDisplay(display: ToggleDisplayOptions): void;
+
+  display: ToggleDisplayValue;
+
+  onChangeDisplay(display: ToggleDisplayValue): void;
+
 }
 
 export const ToggleDisplay = (props: ToggleDisplayProps) => {
+
+  // Note that the Radix toggle group can have a value of undefined.
+  // In our case, we want to emulate radio group behavior!
+  const onValueChange = (value?: string) => {
+    if (value)
+      props.onChangeDisplay(value as ToggleDisplayValue);
+  }
+
   return (
     <ToggleGroup.Root
       className='toggle-display-group'
       type='single'
       aria-label='Text alignment'
       value={props.display}
-      onValueChange={(value) =>
-        props.onChangeDisplay(value as ToggleDisplayOptions)
-      }
-    >
+      onValueChange={onValueChange}>
+
       <ToggleGroup.Item className='toggle-display-item' value='cards'>
         <SquaresFour size={16} />
       </ToggleGroup.Item>
@@ -29,5 +38,6 @@ export const ToggleDisplay = (props: ToggleDisplayProps) => {
         <ListBullets size={16} />
       </ToggleGroup.Item>
     </ToggleGroup.Root>
-  );
-};
+  )
+
+}

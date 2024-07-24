@@ -9,7 +9,8 @@ import { ProjectsGrid } from './Grid';
 import { ProjectsList } from './List';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
 import { TopBar } from '@components/TopBar';
-import type { ToggleDisplayOptions } from '@components/ToggleDisplay';
+import type { ToggleDisplayValue } from '@components/ToggleDisplay';
+import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   ExtendedProjectData,
   Invitation,
@@ -18,6 +19,7 @@ import type {
 } from 'src/Types';
 
 import './ProjectsHome.css';
+
 
 export interface ProjectsHomeProps {
   i18n: Translations;
@@ -62,7 +64,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [showProfileNag, setShowProfileNag] = useState(false);
 
-  const [display, setDisplay] = useState<ToggleDisplayOptions>('cards');
+  const [display, setDisplay] = useLocalStorageBackedState<ToggleDisplayValue>('rs-dashboard-display', 'cards');
 
   const isReader = policies ? !policies.get('projects').has('INSERT') : true;
 
@@ -118,10 +120,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
 
-  const allProjects = me.isOrgAdmin
-    ? projects
-    : [...new Set([...myProjects, ...sharedProjects, ...openJoinProjects])];
-
   const filteredProjects = isReader
     ? filter === ProjectFilter.MINE
       ? sharedProjects
@@ -152,11 +150,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     setProjects((projects) => projects.filter((p) => p.id !== project.id));
 
   const onLeaveProject = (project: ExtendedProjectData) => {
-    project.contexts = [];
-
-    setProjects((projects) =>
-      projects.map((p) => (p.id === project.id ? project : p))
-    );
+    project.contexts = []; // Not sure what this is for
+    setProjects(projects => projects.filter(p => p.id !== project.id));
   };
 
   const onError = (error: string) =>
@@ -227,7 +222,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onSetDisplay={setDisplay}
         />
 
-        {allProjects.length === 0 ? (
+        {filteredProjects.length === 0 ? (
           policies && (
             <ProjectsEmpty
               i18n={props.i18n}

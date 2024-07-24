@@ -25,7 +25,7 @@ export const BackButtonBar = (props: BackButtonBarProps) => {
           window.location.href = `/${props.i18n.lang}/projects`;
         }}
         >
-          <ArrowLeft style={{ paddingRight: 7 }} />
+          <ArrowLeft size={18} />
           {props.i18n.t['Back to Projects']}
         </div>
 

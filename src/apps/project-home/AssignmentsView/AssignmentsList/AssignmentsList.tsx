@@ -19,7 +19,7 @@ export const AssignmentsList = (props: AssignmentsListProps) => {
   return (
     <div className='assignment-list-list' >
       {props.assignments.map(assignment => (
-        <div className={assignment.id === props.currentAssignment ? 'assignments-list-item-active' : 'assignments-list-item'}
+        <div className={assignment.id === props.currentAssignment ? 'assignments-list-item active' : 'assignments-list-item'}
           key={assignment.id}
           onClick={() => props.onAssignmentSelect(assignment)}
         >
