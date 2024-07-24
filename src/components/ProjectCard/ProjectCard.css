@@ -16,11 +16,17 @@
   justify-content: space-between;
 }
 
+.project-card-header .owner-pill {
+  margin-right: -5px;
+}
+
 .project-card:hover {
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 8px -2px rgba(0, 0, 0, 0.28);
 }
 
 .project-card-body {
+  display: flex;
+  flex-direction: column;
   flex-grow: 1;
   padding: 15px 20px 5px 15px;
 }
@@ -61,8 +67,12 @@
 }
 
 .project-card-body ul.document-stats {
+  align-items: flex-end;
   color: var(--font-light);
+  display: flex;
+  flex-grow: 1;
   font-size: 11.5px;
+  justify-content: flex-end;
   list-style-type: none;
   margin: 0;
   padding: 0;

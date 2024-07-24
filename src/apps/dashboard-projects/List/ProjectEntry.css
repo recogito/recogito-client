@@ -4,6 +4,7 @@
   flex-direction: row;
   align-items: center;
   height: 64px;
+  font-size: var(--font-tiny);
   border-bottom: 1px solid var(--gray-200);
 }
 

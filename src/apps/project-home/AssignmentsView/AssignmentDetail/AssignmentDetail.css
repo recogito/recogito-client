@@ -1,23 +1,11 @@
 .assignment-detail-container {
-  display: flex;
   flex-grow: 1;
-  flex-direction: row;
-  width: 67%;
-  align-items: stretch;
-}
-
-.assignment-detail-divider {
-  width: 30px;
-  margin-left: 30px;
-  border-right: 1px solid var(--gray-200);
 }
 
 .assignment-detail-pane {
-  width: 100%;
   padding-top: 10px;
-  padding-left: 32px;
-  max-height: 460px;
-  overflow-y: auto;
+  padding-left: 20px;
+  border-left: 1px solid var(--gray-200);
 }
 
 .assignment-detail-title-row {
@@ -34,20 +22,15 @@
   line-height: 27px;
 }
 
-.assignment-detail-buttons {
-  float: right;
-  width: 200px;
-}
-
 .assignment-detail-description-row {
-  padding-top: 14px;
+  padding: 14px 30px 0 0;
   display: flex;
   flex-direction: row;
 }
 
 .assignment-detail-description {
+  flex-grow: 1;
   font-size: 14px;
-  width: 60%;
   font-weight: 400;
   color: var(--gray-600);
   max-height: 150px;
@@ -55,6 +38,7 @@
 }
 
 .assignment-detail-team {
+  flex: 0 0 auto;
   font-size: 14px;
   font-weight: 600;
   margin-left: 10px;
@@ -70,10 +54,14 @@
   margin-left: -8px;
 }
 
+.assignment-detail-team-avatar .avatar {
+ border: 2px solid var(--gray-50);
+ height: 34px;
+ width: 34px;
+}
+
 .assignment-detail-buttons {
   display: flex;
   flex-direction: row;
-  width: 275px;
-  justify-content: space-between;
   margin-right: 30px;
 }

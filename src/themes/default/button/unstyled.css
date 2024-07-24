@@ -26,13 +26,15 @@ button.unstyled:not(:disabled):hover {
 button.unstyled.icon-only {
   border: 2px solid transparent;
   border-radius: 50%;
-  width: 34px;
   height: 34px;
   outline: none;
-  padding: 2px;
+  padding: 0;
+  width: 34px;
 }
 
 button.unstyled.icon-only svg {
+  height: 100%;
   margin: 1px 0 0 0;
-  padding: 0;
+  padding: 0.5rem;
+  width: 100%;
 }

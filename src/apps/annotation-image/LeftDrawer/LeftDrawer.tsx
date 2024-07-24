@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Faders, Files } from '@phosphor-icons/react';
-import type { Sequence } from 'manifesto.js';
+import type { Canvas } from '@allmaps/iiif-parser';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';
 import { IIIFThumbnailStrip } from '../IIIF';
@@ -15,7 +15,7 @@ interface LeftDrawerProps {
 
   i18n: Translations;
 
-  iiifSequence?: Sequence;
+  iiifCanvases: Canvas[];
 
   layers?: DocumentLayer[];
 
@@ -35,6 +35,11 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
 
   const [tab, setTab] = useState<'FILTERS' | 'PAGES'>('FILTERS');
 
+  useEffect(() => {
+    if (!props.open && props.iiifCanvases.length > 1)
+      setTab('PAGES');
+  }, [props.iiifCanvases]);
+
   const transition = useTransition([props.open], {
     from: { transform: 'translateX(-140px)', opacity: 0 },
     enter: { transform: 'translateX(0px)', opacity: 1 },
@@ -50,23 +55,25 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       className="anno-drawer ia-drawer ia-left-drawer"
       style={style}>
       <aside>
-        <div className="tablist">
-          <ul>
-            <li 
-              className={tab === 'FILTERS' ? 'active' : undefined}>
-              <button onClick={() => setTab('FILTERS')}>
-                <Faders size={18} /> {t['Filters']}
-              </button>
-            </li>
+        {props.iiifCanvases.length > 1 && (
+          <div className="tablist">
+            <ul>
+              <li 
+                className={tab === 'FILTERS' ? 'active' : undefined}>
+                <button onClick={() => setTab('FILTERS')}>
+                  <Faders size={18} /> {t['Filters']}
+                </button>
+              </li>
 
-            <li 
-              className={tab === 'PAGES' ? 'active' : undefined}>
-              <button onClick={() => setTab('PAGES')}>
-                <Files size={18} /> {t['Pages']}
-              </button>
-            </li>
-          </ul>
-        </div>
+              <li 
+                className={tab === 'PAGES' ? 'active' : undefined}>
+                <button onClick={() => setTab('PAGES')}>
+                  <Files size={18} /> {t['Pages']}
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
 
         <div className="tabcontent">
           {tab === 'FILTERS' ? (
@@ -77,8 +84,9 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
               present={props.present} />
           ) : (
             <IIIFThumbnailStrip 
+              canvases={props.iiifCanvases} 
               currentImage={props.currentImage}
-              sequence={props.iiifSequence} 
+              i18n={props.i18n}
               onSelect={props.onChangeImage} />
           )}
         </div>

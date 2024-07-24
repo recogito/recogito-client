@@ -35,13 +35,13 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
 
           <div className='join-project-dialog-button-container'>
             <button
-              className='join-project-dialog-button-cancel'
+              className='flat'
               onClick={props.onClose}
             >
               {t['Cancel']}
             </button>
             <button
-              className='join-project-dialog-button-join'
+              className='primary flat'
               onClick={props.onJoin}
             >
               {t['Join']}

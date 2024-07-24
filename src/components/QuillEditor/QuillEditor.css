@@ -21,6 +21,8 @@
 
 .quill-rte .ql-editor img {
   display: inline-block;
+  max-height: 30vh;
+  max-width: 100%;
 }
 
 .quill-rte-toolbar {

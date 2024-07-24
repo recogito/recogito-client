@@ -1,12 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
-import type {
-  HighlightStyle,
-  HighlightStyleExpression,
-  RecogitoTextAnnotator,
-  TextAnnotation,
-} from '@recogito/react-text-annotator';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -21,7 +15,14 @@ import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
 import { LeftDrawer } from './LeftDrawer/LeftDrawer';
 import { RightDrawer } from './RightDrawer';
+import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { DocumentLayer } from 'src/Types';
+import type {
+  HighlightStyle,
+  HighlightStyleExpression,
+  RecogitoTextAnnotator,
+  TextAnnotation,
+} from '@recogito/react-text-annotator';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
@@ -131,12 +132,18 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               id: l.id,
               document_id: l.document_id,
               is_active: false,
+              project_id: props.document.context.project_id
             }));
 
           setLayers([...props.document.layers, ...toAdd]);
         });
       } else {
-        setLayers(props.document.layers);
+        const distinct = deduplicateLayers(props.document.layers);
+
+        if (props.document.layers.length !== distinct.length)
+          console.warn('Layers contain duplicates', props.document.layers);
+
+        setLayers(distinct);
       }
     }
   }, [policies]);

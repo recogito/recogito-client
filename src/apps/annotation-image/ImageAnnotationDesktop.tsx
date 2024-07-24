@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
+import { useAnnotator } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
@@ -8,14 +9,14 @@ import { LoadingOverlay } from '@components/LoadingOverlay';
 import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
-import type { DocumentLayer } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
 import { useIIIF, ManifestErrorDialog } from './IIIF';
-import { useAnnotator } from '@annotorious/react';
+import { deduplicateLayers } from 'src/util/deduplicateLayers';
+import type { DocumentLayer } from 'src/Types';
 import type {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
@@ -58,9 +59,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const {
     authToken,
+    canvases,
     isPresentationManifest,
     manifestError,
-    sequence,
     currentImage,
     setCurrentImage
   } = useIIIF(props.document);
@@ -88,6 +89,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const [activeLayerStyle, setActiveLayerStyle] = useState<
     DrawingStyleExpression<ImageAnnotation>
   >(() => DEFAULT_STYLE);
+
+  useEffect(() => {
+    // The 'pages' sidebar should be open by default
+    // in case of multi-page IIIF images
+    if (canvases.length > 1)
+      setLeftPanelOpen(true);
+  }, [canvases]);
 
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
@@ -162,12 +170,18 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               id: l.id,
               document_id: l.document_id,
               is_active: false,
+              project_id: props.document.context.project_id
             }));
 
           setLayers([...props.document.layers, ...toAdd]);
         });
       } else {
-        setLayers(props.document.layers);
+        const distinct = deduplicateLayers(props.document.layers);
+
+        if (props.document.layers.length !== distinct.length)
+          console.warn('Layers contain duplicates', props.document.layers);
+
+        setLayers(distinct);
       }
     }
   }, [policies]);
@@ -250,7 +264,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           <LeftDrawer
             currentImage={currentImage}
             i18n={props.i18n}
-            iiifSequence={sequence}
+            iiifCanvases={canvases}
             layers={layers}
             layerNames={layerNames}
             open={leftPanelOpen}

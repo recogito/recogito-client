@@ -1,12 +1,7 @@
 .project-header-root {
-  margin-top: 10px;
   background-color: var(--gray-100);
-  padding-left: 40px;
-  padding-right: 40px;
-  position: fixed;
-  top: 90px;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 0 30px;
+  position: relative;
   z-index: 10;
 }
 
@@ -17,31 +12,37 @@
   align-items: center;
 }
 
+.project-header-name-bar h1 {
+  font-size: 1.4rem;
+}
+
 .project-header-description-bar {
   font-weight: 400;
   font-size: 14px;
-  line-height: 22.4px;
   display: block;
-  display: -webkit-box;
-  line-clamp: 3;
   line-height: 160%;
+  max-height: 3rem;
   overflow: hidden;
   padding: 0 2px;
   text-overflow: ellipsis;
   word-wrap: break-word;
   -webkit-box-orient: vertical;
+  transition: all 500ms ease;
+}
+
+.project-header-description-bar.collapsed {
+  display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 2;
 }
 
-.project-header-description-bar-expanded {
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 22.4px;
+.project-header-description-bar.expanded {
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
-.project-header-header section.project-header-header-bottom {
-  padding: 6px 25px 0 30px;
-  border-bottom: 1px solid var(--gray-200);
+section.project-header-header-bottom {
+  padding-top: 15px;
 }
 
 .project-header-header-bottom ul {
@@ -74,7 +75,7 @@
   box-shadow: none;
   color: var(--font-light);
   font-size: var(--font-tiny);
-  padding: 8px 4px;
+  padding: 8px 4px 4px 4px;
 }
 
 .project-header-header-bottom .project-header-header-tabs li:hover {
@@ -103,14 +104,19 @@
   width: 250px;
   justify-content: space-between;
 }
+
 .project-header-button {
   border: 1px solid black;
   border-radius: 4px;
-  padding: 10px 16px 10px 16px;
+  box-shadow: none;
+  padding: 8px 16px;
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 130px;
+}
+
+.project-header-button svg {
+  flex: 0 0 auto;
 }
 
 .project-header-button-text {
@@ -123,7 +129,7 @@
 
 .show-button {
   position: absolute;
-  bottom: -6px;
+  bottom: 0;
   right: 10px;
   z-index: 1000;
   color: var(--primary);

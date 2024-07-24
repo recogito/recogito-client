@@ -15,9 +15,9 @@ export const OpenJoin = (props: OpenJoinProps) => {
 
   return (
     <div className='open-join-bar'>
-      <button className='open-join-button' onClick={props.onJoin}>
+      <button className='primary sm flat' onClick={props.onJoin}>
         <div>{t['Join']}</div>
-        <SignIn color='white' />
+        <SignIn size={16} />
       </button>
     </div>
   );

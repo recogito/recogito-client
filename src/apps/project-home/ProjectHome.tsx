@@ -152,7 +152,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         projects={props.projects}
         me={props.user}
       />
+
       <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
+
       <ProjectHeader
         i18n={props.i18n}
         isAdmin={isAdmin || false}
@@ -164,7 +166,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         onGotoUsers={handleGotoUsers}
         showTabs={!props.project.is_open_edit}
       />
-      <div className='project-home' style={{ marginTop: isAdmin ? 240 : 190 }}>
+
+      <div className='project-home'>
         <ToastProvider>
           {tab === 'documents' ? (
             <DocumentsView
