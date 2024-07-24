@@ -59,7 +59,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   // Org Admin, Go ahead and use the Service Key to invite
-  const supa = createClient(
+  const supa = await createClient(
     supabaseServerUrl,
     import.meta.env.SUPABASE_SERVICE_KEY
   );
