@@ -1,5 +1,5 @@
 import Quill from 'quill';
-import { Delta, type QuillOptions } from 'quill/core';
+import { Delta, Op, type QuillOptions } from 'quill/core';
 import { useEffect, useRef } from 'react';
 import { useQuillEditor } from './QuillEditorRoot';
 import type { Translations } from 'src/Types';
@@ -34,6 +34,16 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
   const { quill, setQuill } = useQuillEditor();
 
+  const isBase64Image = (op: Op) => {
+    if (typeof op.insert !== 'object') 
+      return false;
+
+    return (
+      typeof op.insert?.image === 'string' &&
+      op.insert.image.startsWith('data:image/')
+    );
+  }
+
   useEffect(() => {
     const options: QuillOptions = {
       placeholder: props.placeholder,
@@ -45,15 +55,13 @@ export const QuillEditor = (props: QuillEditorProps) => {
     if (props.value)
       quill.setContents(props.value);
 
-    const onChange = () => {
-      const maxSize = props.maxImageSize || DEFAULT_MAX_IMAGE_SIZE;
+    const maxSize = props.maxImageSize || DEFAULT_MAX_IMAGE_SIZE;
 
+    const onChange = () => {
       const ops = quill.getContents().ops;
 
       const filteredOps = 
-        ops.filter(op => 
-          typeof op.insert !== 'object' || 
-          (typeof op.insert.image === 'string' && op.insert.image.length < maxSize));
+        ops.filter(op => !isBase64Image(op) || ((op.insert as any).image as string).length < maxSize);
 
       if (ops.length !== filteredOps.length)  
         // Note that this will re-trigger onChange
