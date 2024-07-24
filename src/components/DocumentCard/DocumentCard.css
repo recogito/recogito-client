@@ -26,25 +26,24 @@
   box-sizing: border-box;
   display: flex;
   height: 56px;
+  justify-content: space-between;
   width: 200px;
   line-height: 120%;
   flex-wrap: wrap;
-  padding: 8px;
+  padding: 12px 3px 12px 8px;
   position: relative;
   background-color: var(--gray-200);
 }
 
-.document-card-actions {
-  position: absolute;
-  top: 10px;
-  right: 1px;
+.document-card-actions button.unstyled.icon-only {
+  height: 38px;
+  width: 38px;
 }
 
 .document-card-name {
   font-family: Inter;
   font-size: 14px;
   font-weight: 500;
-  width: 90%;
   display: -webkit-box;
   line-clamp: 2;
   overflow: hidden;
