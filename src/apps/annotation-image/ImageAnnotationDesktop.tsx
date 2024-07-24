@@ -90,6 +90,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     DrawingStyleExpression<ImageAnnotation>
   >(() => DEFAULT_STYLE);
 
+  useEffect(() => {
+    // The 'pages' sidebar should be open by default
+    // in case of multi-page IIIF images
+    if (canvases.length > 1)
+      setLeftPanelOpen(true);
+  }, [canvases]);
+
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
       const hse: DrawingStyleExpression<ImageAnnotation> = (
@@ -255,9 +262,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
         <main>
           <LeftDrawer
-            iiifCanvases={canvases}
             currentImage={currentImage}
             i18n={props.i18n}
+            iiifCanvases={canvases}
             layers={layers}
             layerNames={layerNames}
             open={leftPanelOpen}
