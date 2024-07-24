@@ -55,7 +55,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       className="anno-drawer ia-drawer ia-left-drawer"
       style={style}>
       <aside>
-        {props.iiifCanvases.length > 0 && (
+        {props.iiifCanvases.length > 1 && (
           <div className="tablist">
             <ul>
               <li 
