@@ -13,8 +13,6 @@ interface LeftDrawerProps {
 
   currentImage?: string;
 
-  defaultTab?: 'FILTERS' | 'PAGES';
-
   i18n: Translations;
 
   iiifCanvases: Canvas[];
@@ -35,12 +33,12 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
 
   const { t } = props.i18n;
 
-  const [tab, setTab] = useState<'FILTERS' | 'PAGES'>(props.defaultTab || 'FILTERS');
+  const [tab, setTab] = useState<'FILTERS' | 'PAGES'>('FILTERS');
 
   useEffect(() => {
-    if (!props.open && props.defaultTab)
-      setTab(props.defaultTab);
-  }, [props.defaultTab]);
+    if (!props.open && props.iiifCanvases.length > 0)
+      setTab('PAGES');
+  }, [props.iiifCanvases]);
 
   const transition = useTransition([props.open], {
     from: { transform: 'translateX(-140px)', opacity: 0 },
@@ -57,23 +55,25 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
       className="anno-drawer ia-drawer ia-left-drawer"
       style={style}>
       <aside>
-        <div className="tablist">
-          <ul>
-            <li 
-              className={tab === 'FILTERS' ? 'active' : undefined}>
-              <button onClick={() => setTab('FILTERS')}>
-                <Faders size={18} /> {t['Filters']}
-              </button>
-            </li>
+        {props.iiifCanvases.length > 0 && (
+          <div className="tablist">
+            <ul>
+              <li 
+                className={tab === 'FILTERS' ? 'active' : undefined}>
+                <button onClick={() => setTab('FILTERS')}>
+                  <Faders size={18} /> {t['Filters']}
+                </button>
+              </li>
 
-            <li 
-              className={tab === 'PAGES' ? 'active' : undefined}>
-              <button onClick={() => setTab('PAGES')}>
-                <Files size={18} /> {t['Pages']}
-              </button>
-            </li>
-          </ul>
-        </div>
+              <li 
+                className={tab === 'PAGES' ? 'active' : undefined}>
+                <button onClick={() => setTab('PAGES')}>
+                  <Files size={18} /> {t['Pages']}
+                </button>
+              </li>
+            </ul>
+          </div>
+        )}
 
         <div className="tabcontent">
           {tab === 'FILTERS' ? (

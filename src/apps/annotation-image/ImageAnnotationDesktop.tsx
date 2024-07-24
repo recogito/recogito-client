@@ -263,7 +263,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         <main>
           <LeftDrawer
             currentImage={currentImage}
-            defaultTab={canvases.length > 0 ? 'PAGES' : undefined}
             i18n={props.i18n}
             iiifCanvases={canvases}
             layers={layers}
