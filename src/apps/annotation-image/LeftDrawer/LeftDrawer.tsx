@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Faders, Files } from '@phosphor-icons/react';
 import type { Canvas } from '@allmaps/iiif-parser';
 import type { PresentUser } from '@annotorious/react';
@@ -12,6 +12,8 @@ import './LeftDrawer.css';
 interface LeftDrawerProps {
 
   currentImage?: string;
+
+  defaultTab?: 'FILTERS' | 'PAGES';
 
   i18n: Translations;
 
@@ -33,7 +35,12 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
 
   const { t } = props.i18n;
 
-  const [tab, setTab] = useState<'FILTERS' | 'PAGES'>('FILTERS');
+  const [tab, setTab] = useState<'FILTERS' | 'PAGES'>(props.defaultTab || 'FILTERS');
+
+  useEffect(() => {
+    if (!props.open && props.defaultTab)
+      setTab(props.defaultTab);
+  }, [props.defaultTab]);
 
   const transition = useTransition([props.open], {
     from: { transform: 'translateX(-140px)', opacity: 0 },
