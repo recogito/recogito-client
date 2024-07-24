@@ -36,7 +36,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
   const [tab, setTab] = useState<'FILTERS' | 'PAGES'>('FILTERS');
 
   useEffect(() => {
-    if (!props.open && props.iiifCanvases.length > 0)
+    if (!props.open && props.iiifCanvases.length > 1)
       setTab('PAGES');
   }, [props.iiifCanvases]);
 
