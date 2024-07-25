@@ -231,7 +231,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           i18n={props.i18n}
           invitations={[]}
           me={props.me}
-          projects={[]}
           showNotifications={false}
           onError={() => setConnectionError(true)} />
 

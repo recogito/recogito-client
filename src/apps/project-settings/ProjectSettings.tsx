@@ -31,9 +31,9 @@ import './ProjectSettings.css';
 
 interface ProjectSettingsProps {
   invitations: Invitation[];
-  projects: ExtendedProjectData[];
 
   me: MyProfile;
+  
   i18n: Translations;
 
   project: ExtendedProjectData;
@@ -244,7 +244,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         invitations={props.invitations}
         i18n={props.i18n}
         onError={onError}
-        projects={props.projects}
         me={props.me}
       />
       <BackButtonBar

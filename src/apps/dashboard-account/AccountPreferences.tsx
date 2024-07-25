@@ -6,7 +6,8 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { Avatar } from '@components/Avatar';
 import { Toast, ToastProvider } from '@components/Toast';
 import type { ToastContent } from '@components/Toast';
-import type { Translations, MyProfile } from 'src/Types';
+import { TopBar } from '@components/TopBar';
+import type { Translations, MyProfile, Invitation } from 'src/Types';
 import { getGravatar } from './getGravatar';
 
 import './AccountPreferences.css';
@@ -14,6 +15,8 @@ import './AccountPreferences.css';
 interface AccountPreferencesProps {
 
   i18n: Translations;
+
+  invitations: Invitation[];
 
   profile: MyProfile;
 
@@ -32,6 +35,13 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
   useEffect(() => {
     getGravatar(profile.email).then(setGravatar);
   }, []);
+
+  const onError = (error: string) =>
+    setError({
+      title: t['Something went wrong'],
+      description: t[error] || error,
+      type: 'error',
+    });
 
   const formik = useFormik({
     initialValues: {
@@ -63,6 +73,13 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
   return (
     <ToastProvider>
       <div className="dashboard-account-preferences">
+        <TopBar
+          i18n={props.i18n}
+          invitations={props.invitations}
+          onError={onError}
+          me={profile}
+          showNotifications={true} />
+
         <main>
           <a href={`/${lang}/projects`}>
             <ArrowLeft className="text-bottom" size={16} /><span>Back</span>

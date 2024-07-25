@@ -140,7 +140,6 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
         invitations={props.invitations}
         i18n={props.i18n}
         onError={onError}
-        projects={props.projects}
         me={props.user}
       />
       <BackButtonBar
