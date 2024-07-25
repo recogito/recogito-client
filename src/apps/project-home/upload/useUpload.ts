@@ -71,7 +71,6 @@ export const useUpload = (onImport: (document: Document) => void) => {
           supabase,
           i.name,
           i.projectId,
-          i.contextId,
           (progress) => onProgress(id, progress, 'uploading'),
           i.file,
           i.url,
@@ -80,8 +79,7 @@ export const useUpload = (onImport: (document: Document) => void) => {
           setDataDirty(true);
           onSuccess(id, document);
         })
-      )
-      .catch((error) => {
+      ).catch((error) => {
         onError(id, error);
       });
 

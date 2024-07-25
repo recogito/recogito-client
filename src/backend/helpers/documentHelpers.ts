@@ -28,7 +28,6 @@ export const initDocument = (
   supabase: SupabaseClient,
   name: string,
   projectId: string,
-  contextId: string,
   onProgress?: (progress: number) => void,
   file?: File,
   url?: string,
@@ -40,7 +39,6 @@ export const initDocument = (
         supabase,
         name,
         projectId,
-        contextId,
         onProgress,
         file,
         protocol,
@@ -55,7 +53,6 @@ export const initDocument = (
           supabase,
           name,
           projectId,
-          contextId,
           undefined,
           undefined,
           'IIIF_IMAGE',
@@ -68,7 +65,6 @@ export const initDocument = (
       supabase,
       name,
       projectId,
-      contextId,
       onProgress,
       file,
       protocol,
@@ -91,7 +87,6 @@ const _initDocument = (
   supabase: SupabaseClient,
   name: string,
   projectId: string,
-  contextId: string,
   onProgress?: (progress: number) => void,
   file?: File,
   protocol?: Protocol,
@@ -128,10 +123,22 @@ const _initDocument = (
 
   return Promise.all([a]).then(([document]) => {
     if (file) {
-      return uploadFile(supabase, file, document.id, onProgress).then(() => ({
-        ...document,
-        layers: [],
-      }));
+      return uploadFile(supabase, file, document.id, onProgress)
+        .then(() => {
+          throw 'This is a dummy error for debugging';
+          return {
+            ...document,
+            layers: []
+          };
+        }).catch(error => {
+          console.error('File upload failed - rolling back', error);
+
+          return removeDocumentsFromProject(supabase, projectId, [document.id])
+            .then(() => {
+              // Forward original error after rollback
+              throw error;
+            });
+        });
     } else {
       return { ...document, layers: [] };
     }
