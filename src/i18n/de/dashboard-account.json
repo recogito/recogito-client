@@ -2,15 +2,17 @@
   "Account Preferences": "Account Einstellungen",
   "Your User Profile": "Dein Benutzerprofil",
   "E-Mail": "E-Mail",
-  "We found a Gravatar for your address.": "Wir haben einen Gravatar für Deine Addresse gefunden.",
+  "We found a Gravatar for your address.": "Deine Adresse hat einen Gravatar.",
   "Use as my Avatar.": "Verwenden.",
   "Public Information": "Öffentliche Information",
-  "Other users can see this information about you. All fields are optional.": "Gib entweder einen Anzeigenamen oder einen Vor- und Nachnamen ein. Der eingegebene Name wird in den Annotationen angezeigt. Wenn Du sowohl einen Anzeigenamen als auch einen Vor- und Nachnamen eingibst, wird anderen Benutzern nur der Anzeigename angezeigt.",
+  "Other users can see this information about you. All fields are optional.": "Die angegebenen Namen sind für andere Benutzer sichtbar. Wenn Du sowohl einen Anzeigenamen als auch einen Vor- und Nachnamen eingibst, wird anderen Benutzern nur der Anzeigename angezeigt.",
   "Nickname": "Anzeigename",
   "First Name": "Vorname",
   "Last Name": "Nachname",
   "Avatar URL": "Avatar URL",
   "Profile updated": "Benutzerprofil aktualisiert",
   "Something went wrong": "Etwas ist falsch gelaufen",
-  "Could not update your profile information.": "Profilinformation konnte nicht aktualisiert werden."
+  "Could not update your profile information.": "Profilinformation konnte nicht aktualisiert werden.",
+  "Save": "Speichern",
+  "Cancel": "Abbrechen"
 }
