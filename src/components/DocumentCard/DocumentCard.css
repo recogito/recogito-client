@@ -25,6 +25,7 @@
 .document-card-footer {
   align-items: center;
   background-color: var(--gray-100);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
   box-sizing: border-box;
   display: flex;
   height: 56px;
