@@ -23,16 +23,15 @@
 }
 
 .document-card-footer {
+  align-items: center;
+  background-color: var(--gray-100);
   box-sizing: border-box;
   display: flex;
   height: 56px;
   justify-content: space-between;
-  width: 200px;
   line-height: 120%;
-  flex-wrap: wrap;
-  padding: 12px 3px 12px 8px;
+  padding: 3px 3px 3px 8px;
   position: relative;
-  background-color: var(--gray-200);
 }
 
 .document-card-actions button.unstyled.icon-only {

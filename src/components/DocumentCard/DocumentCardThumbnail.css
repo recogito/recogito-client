@@ -4,6 +4,7 @@
 }
 
 .document-card-image-container img {
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
   object-fit: cover;
 }
 
