@@ -36,9 +36,10 @@ export const TopBar = (props: TopBarProps) => {
     <div className='top-bar-container'>
       <header>
         <div className='top-bar-branding'>
-          <div className='top-bar-platform'>
+          <img src='/img/recogito-studio-logo.svg' height={40} />
+          {/* <div className='top-bar-platform'>
             {config.branding.platform_name}
-          </div>
+          </div> */}
           <div className='top-bar-separator'></div>
           <div className='top-bar-site_name'>{config.branding.site_name}</div>
         </div>
