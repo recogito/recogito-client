@@ -16,6 +16,7 @@ import projectHome from './project-home.json';
 import projectSettings from './project-settings.json';
 import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
+import projectRequest from './project-request.json';
 
 export default {
   'annotation-image': {
@@ -27,7 +28,7 @@ export default {
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
-  'dashboard-account': { ...dashboardAccount },
+  'dashboard-account': { ...dashboardAccount, ...accountMenu },
   'dashboard-projects': {
     ...dashboardProjects,
     ...notifications,
@@ -50,4 +51,5 @@ export default {
   },
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': { ...userManagement, ...accountMenu },
+  'project-request': { ...projectRequest, ...accountMenu },
 };

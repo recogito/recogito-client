@@ -88,9 +88,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     value === 'public' ? setOpenJoin(true) : setOpenJoin(false)
                   }
                 >
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className='create-project-radio-group-item'>
                     <RadioGroup.Item
-                      className='create-project-radio-group-item'
+                      className='create-project-radio-group-button'
                       value='private'
                       id='r1'
                     >
@@ -110,9 +110,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       ]
                     }
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className='create-project-radio-group-item'>
                     <RadioGroup.Item
-                      className='create-project-radio-group-item'
+                      className='create-project-radio-group-button'
                       value='public'
                       id='r2'
                     >
@@ -151,17 +151,17 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                         : setOpenEdit(true)
                     }
                   >
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className='create-project-radio-group-item'>
                       <RadioGroup.Item
-                        className='create-project-radio-group-item'
+                        className='create-project-radio-group-button'
                         value='assignments'
-                        id='r1'
+                        id='r3'
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
                       <label
                         className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r1'
+                        htmlFor='r3'
                       >
                         {t['Assignments']}
                       </label>
@@ -173,17 +173,17 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                         ]
                       }
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div className='create-project-radio-group-item'>
                       <RadioGroup.Item
-                        className='create-project-radio-group-item'
+                        className='create-project-radio-group-button'
                         value='single_team'
-                        id='r2'
+                        id='r4'
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
                       <label
                         className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r2'
+                        htmlFor='r4'
                       >
                         {t['Single Team']}
                       </label>

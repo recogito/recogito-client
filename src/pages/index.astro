@@ -14,7 +14,7 @@ const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 } else {
-  return Astro.redirect(`/${lang}/projects`);
+  return Astro.redirect(`/${lang}/projects/`);
 }
 ---
 

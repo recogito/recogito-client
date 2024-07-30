@@ -12,7 +12,7 @@ const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
 const projects = await listMyProjectsExtended(supabase);
@@ -25,9 +25,10 @@ if (!projects.data || !invitations.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
+
 <BaseLayout title='Dashboard'>
   <ProjectsHome
-    client:only="react"
+    client:only='react'
     me={me.data}
     projects={projects.data}
     invitations={invitations.data}

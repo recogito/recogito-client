@@ -1,15 +1,21 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 
 export const getUser = (supabase: SupabaseClient): Promise<User> =>
-  supabase.auth.getUser().then(({ error, data: { user } }) => {
-    if (error) {
-      throw error;
-    } else if (user === null) {
-      throw 'Unauthorized';
-    } else if (user.role !== 'authenticated') {
-      throw 'Unauthorized';
+  supabase.auth.getSession().then(({ error, data }) => {
+    if (error || !data?.session) {
+      throw error || 'Unauthorized';
     } else {
-      return user;
+      return supabase.auth.getUser().then(({ error, data }) => {
+        if (error) {
+          throw error;
+        } else if (!data.user) {
+          throw 'Unauthorized';
+        } else if (data.user.role !== 'authenticated') {
+          throw 'Unauthorized';
+        } else {
+          return data.user;
+        }
+      });
     }
   });
 

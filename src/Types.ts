@@ -377,6 +377,22 @@ export interface Invitation {
   ignored?: boolean;
 }
 
+export interface JoinRequest {
+  id: string;
+
+  created_at: string;
+
+  user_id: string;
+
+  project_id: string;
+
+  accepted?: boolean;
+
+  ignored?: boolean;
+
+  user: UserProfile;
+}
+
 export type TableName =
   | 'bodies'
   | 'documents'

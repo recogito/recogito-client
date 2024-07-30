@@ -14,6 +14,7 @@ import type {
   Document,
   ExtendedProjectData,
   Invitation,
+  JoinRequest,
   MyProfile,
   Translations,
 } from 'src/Types';
@@ -30,6 +31,8 @@ export interface ProjectHomeProps {
   documents: Document[];
 
   invitations: Invitation[];
+
+  requests: JoinRequest[];
 
   availableLayers: AvailableLayers[];
 
@@ -149,22 +152,26 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         invitations={props.invitations}
         i18n={props.i18n}
         onError={onError}
-        projects={props.projects}
         me={props.user}
       />
+
       <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
+
       <ProjectHeader
         i18n={props.i18n}
         isAdmin={isAdmin || false}
         name={props.project.name}
         description={props.project.description || ''}
+        requests={props.requests}
         currentTab={isAdmin ? tab : undefined}
         onSwitchTab={handleSwitchTab}
         onGotoSettings={handleGotoSettings}
         onGotoUsers={handleGotoUsers}
         showTabs={!props.project.is_open_edit}
+        isOpenJoin={Boolean(props.project.is_open_join)}
       />
-      <div className='project-home' style={{ marginTop: isAdmin ? 240 : 190 }}>
+
+      <div className='project-home'>
         <ToastProvider>
           {tab === 'documents' ? (
             <DocumentsView

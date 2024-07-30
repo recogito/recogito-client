@@ -96,6 +96,19 @@
   position: absolute;
 }
 
+.dropdown-divider {
+  border-top: 1px solid var(--gray-200);
+  margin: 0.25rem 0.5rem;
+}
+
+.dropdown-label {
+  color: var(--gray-500);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0.125rem 10px 0 10px;
+  margin: 0 5px;
+}
+
 @keyframes slideUpAndFade {
   from {
     opacity: 0;

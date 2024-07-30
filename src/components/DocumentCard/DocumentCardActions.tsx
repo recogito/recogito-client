@@ -68,7 +68,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
           <button 
             className="unstyled icon-only"
             aria-label={`${t['Menu actions for document:']} ${props.document.name}`}>
-            <DotsThreeVertical weight="bold" size={20}/>
+            <DotsThreeVertical weight="bold" size={22}/>
           </button>
         </Trigger>
 

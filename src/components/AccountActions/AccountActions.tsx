@@ -105,10 +105,15 @@ export const AccountActions = (props: AccountProps) => {
               <SignOut size={16} />
               <a href={`/${lang}/sign-out`}>{t['Sign out']}</a>
             </Item>
+
             {props.profile.isOrgAdmin && (
               <>
-                <div className='divider' />
-                <div className='site-text'>{t['Site Administration']}</div>
+                <div className='dropdown-divider' />
+
+                <div className='dropdown-label'>
+                  {t['Site Administration']}
+                </div>
+
                 <Item
                   className='dropdown-item'
                   onSelect={goto(`/${lang}/users`)}

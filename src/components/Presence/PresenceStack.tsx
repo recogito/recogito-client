@@ -3,10 +3,10 @@ import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import * as Popover from '@radix-ui/react-popover';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { getDisplayName } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 
 import './PresenceStack.css';
-import { getDisplayName } from '@components/AnnotationDesktop';
 
 interface PresenceStackProps {
 
