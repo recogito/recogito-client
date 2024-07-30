@@ -12,10 +12,10 @@ import './TopBar.css';
 
 interface TopBarProps {
   i18n: Translations;
-  invitations: Invitation[];
-  me: MyProfile;
 
-  projects: ExtendedProjectData[];
+  invitations: Invitation[];
+
+  me: MyProfile;
 
   onError(error: string): void;
 

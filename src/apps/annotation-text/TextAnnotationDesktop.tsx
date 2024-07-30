@@ -204,7 +204,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             i18n={props.i18n}
             invitations={[]}
             me={props.me}
-            projects={[]}
             showNotifications={false}
             onError={() => {}} />
 

@@ -1,22 +1,29 @@
 .dashboard-account-preferences {
   font-size: var(--font-small);
+  margin-top: 60px;
 }
 
 .dashboard-account-preferences main {
   margin: 0 auto;
-  max-width: 900px;
-  padding: 30px 40px;
+  max-width: 65ch;
+  padding: 20px 40px;
 }
 
 .dashboard-account-preferences h2 {
-  margin-top: 3.5em;
+  margin-top: 3.5rem;
 } 
 
 .dashboard-account-preferences fieldset {
   margin-bottom: 2.5em;
 }
 
+.dashboard-account-preferences fieldset input {
+  flex-grow: 1;
+}
+
 .dashboard-account-preferences .field {
+  align-items: center;
+  font-weight: 500;
   margin: 0.6em 0;
 }
 
@@ -26,6 +33,7 @@
 }
 
 .dashboard-account-preferences .field input {
+  background-color: var(--gray-50);
   width: 320px;
 }
 
@@ -41,4 +49,18 @@
   margin: 0 8px 0 5px;
   vertical-align: top;
   width: 24px;
+}
+
+.dashboard-account-preferences .public-information-hint {
+  color: var(--font-light);
+  line-height: 170%;
+}
+
+.dashboard-account-preferences .actions {
+  display: flex;
+  justify-content: flex-end;
+} 
+
+.dashboard-account-preferences .actions button {
+  padding: 10px 24px;
 }

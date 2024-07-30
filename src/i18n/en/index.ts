@@ -28,7 +28,7 @@ export default {
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
-  'dashboard-account': { ...dashboardAccount },
+  'dashboard-account': { ...dashboardAccount, ...accountMenu },
   'dashboard-projects': {
     ...dashboardProjects,
     ...notifications,
