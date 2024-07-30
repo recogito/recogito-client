@@ -39,7 +39,7 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
         <div className='assignment-detail-title-row'>
           <div className='assignment-detail-title'>
             {props.assignment.is_project_default
-              ? t['Project Base Assignment']
+              ? t['Project Baselayer']
               : props.assignment.name}
           </div>
           {props.isAdmin && !props.assignment.is_project_default && (
