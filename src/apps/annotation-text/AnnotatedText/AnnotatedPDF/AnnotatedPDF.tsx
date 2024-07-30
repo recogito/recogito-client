@@ -8,7 +8,7 @@ import type { Filter } from '@annotorious/react';
 
 import '@recogito/react-pdf-annotator/react-pdf-annotator.css';
 
-interface PDFViewerProps {
+interface AnnotatedPDFProps {
 
   document: DocumentWithContext;
 
@@ -22,7 +22,7 @@ interface PDFViewerProps {
 
 }
 
-export const PDFViewer = (props: PDFViewerProps) => {
+export const AnnotatedPDF = (props: AnnotatedPDFProps) => {
 
   const [downloadURL, setDownloadURL] = useState<string | undefined>();
 

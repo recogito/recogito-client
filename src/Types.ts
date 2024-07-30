@@ -178,7 +178,7 @@ export interface DocumentContext {
 export interface DocumentLayer {
   id: string;
 
-  is_active: boolean;
+  is_active?: boolean;
 
   document_id: string;
 
@@ -189,21 +189,17 @@ export interface DocumentLayer {
   context?: DocumentContext;
 }
 
-export interface Layer {
+export interface EmbeddedLayer {
   id: string;
-
-  document_id: string;
-
-  project_id: string;
 
   name?: string;
 
-  description?: string;
-
-  is_active_layer: boolean;
+  is_active?: boolean;
 }
 
-export interface LayerWithDocument extends Layer {
+export type Layer = DocumentLayer | EmbeddedLayer;
+
+export interface LayerWithDocument extends DocumentLayer {
   document: Document;
 }
 

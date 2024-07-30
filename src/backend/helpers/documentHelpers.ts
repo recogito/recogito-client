@@ -125,7 +125,6 @@ const _initDocument = (
     if (file) {
       return uploadFile(supabase, file, document.id, onProgress)
         .then(() => {
-          throw 'This is a dummy error for debugging';
           return {
             ...document,
             layers: []

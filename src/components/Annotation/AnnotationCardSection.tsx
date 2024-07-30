@@ -93,9 +93,14 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       if (creatorIds.size > 1)
         console.warn('Integrity problem: content in this section has multiple creators', annotation);
 
+      const createdAt = bodiesForThisSection[0].created || 
+        // Unusual, but may be the case for embedded annotations - if
+        // the body doesn't have a timestamp, then fall back to the target creation
+        // timestamp for the first body.
+        (index === 0 ? annotation.target.created : undefined);
       return [
         findCreator(bodiesForThisSection[0].creator),
-        bodiesForThisSection[0].created
+        createdAt
       ];
     } else {
       // Unusual, but possible. The first section may have
