@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Envelope, UsersFour, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
@@ -8,7 +8,7 @@ import type {
   MyProfile,
   Translations,
 } from 'src/Types';
-import type { PostgrestError } from '@supabase/supabase-js';
+import papa from 'papaparse';
 import Dropzone from 'react-dropzone';
 
 import './InviteListOfUsers.css';
@@ -43,9 +43,20 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
     _setOpen(open);
   };
 
-  const handleFileDropped = (files) => {
-    console.log(files);
-  };
+  const handleFileDropped = useCallback((acceptedFiles: File[]) => {
+    const reader = new FileReader();
+
+    reader.onabort = () => console.log('file reading was aborted');
+    reader.onerror = () => console.log('file reading failed');
+    reader.onload = () => {
+      // Parse CSV file
+      const data: any = papa.parse(reader.result as string);
+      console.log(data);
+    };
+
+    // read file contents
+    reader.readAsText(acceptedFiles[0]);
+  }, []);
 
   return (
     <>
@@ -83,6 +94,7 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
             <Dropzone
               onDrop={(acceptedFiles) => handleFileDropped(acceptedFiles)}
               multiple={false}
+              accept={{ 'text/csv': ['.csv'] }}
             >
               {({ getRootProps, getInputProps }) => (
                 <section className='invite-list-section'>
