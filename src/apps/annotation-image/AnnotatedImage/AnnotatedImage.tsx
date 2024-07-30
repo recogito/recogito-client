@@ -17,7 +17,7 @@ import {
   OpenSeadragonAnnotator,
   OpenSeadragonPopup,
   OpenSeadragonViewer,
-  PointerSelectAction,
+  UserSelectAction,
   useAnnotator
 } from '@annotorious/react';
 
@@ -110,7 +110,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     const canEdit = isActiveLayer && (
       annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
-    return canEdit ? PointerSelectAction.EDIT : PointerSelectAction.SELECT;
+    return canEdit ? UserSelectAction.EDIT : UserSelectAction.SELECT;
   }
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     <OpenSeadragonAnnotator
       autoSave
       drawingEnabled={drawingEnabled}
-      pointerSelectAction={selectAction}
+      userSelectAction={selectAction}
       tool={props.tool || 'rectangle'}
       filter={filter}
       style={props.style}>
