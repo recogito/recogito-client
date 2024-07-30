@@ -206,7 +206,7 @@ export const getProjectExtended = (
 
         const groupIds = project.groups.map((g) => g.id);
 
-        console.log('Project: ', JSON.stringify(project, null, 2));
+        // console.log('Project: ', JSON.stringify(project, null, 2));
 
         return getProjectGroupMembers(supabase, groupIds).then(
           ({ error, data }) => {
