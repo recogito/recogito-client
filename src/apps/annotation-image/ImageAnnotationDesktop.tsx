@@ -272,7 +272,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             onChangeImage={setCurrentImage} />
 
           <div className="ia-annotated-image-container">
-            {policies && currentImage && (
+            {policies && currentImage && activeLayer && (
               <AnnotatedImage
                 ref={viewer}
                 activeLayer={activeLayer}
