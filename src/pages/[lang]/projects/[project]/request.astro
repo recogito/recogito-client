@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getMyProfile } from '@backend/crud';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { ProjectRequest } from '@apps/project-request';
+import { getProjectExtended } from '@backend/helpers';
+
+const lang = getLangFromUrl(Astro.url);
+
+const i18n = getTranslations(Astro.request, 'project-request');
+
+const supabase = await createSupabaseServerClient(Astro.cookies);
+
+const projectId = Astro.params.project;
+
+const project = await getProjectExtended(supabase, projectId as string);
+
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
+}
+---
+
+<BaseLayout title='join'>
+  <ProjectRequest
+    client:only='react'
+    i18n={i18n}
+    projectId={projectId as string}
+    user={profile.data}
+    isAlreadyMember={Boolean(project.data)}
+  />
+</BaseLayout>
+
+<style>
+  h1 {
+    padding-left: 40px !important;
+  }
+</style>

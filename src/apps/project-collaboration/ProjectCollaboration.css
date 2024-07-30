@@ -29,3 +29,43 @@
   line-height: 170%;
   padding: 10px 0;
 }
+
+.project-collaboration-request-header {
+  width: 750px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-collaboration-ignored-switch {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.project-collaboration-link-container {
+  width: 750px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.project-collaboration-link-input {
+  width: 500px;
+  margin-left: 10px;
+}
+
+.project-collaboration-no-requests {
+  width: 750px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.project-collaboration-link-button {
+  height: 36px;
+  margin-left: 10px;
+}

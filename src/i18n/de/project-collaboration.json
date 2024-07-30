@@ -34,5 +34,22 @@
   "Could not delete user.": "Benutzer konnte nicht entfernt werden.",
   "Could not send invitation.": "Einladung konnte nicht abgeschickt werden.",
   "Team": "Team",
-  "Projects": "Projekte"
+  "Projects": "Projekte",
+  "Join Requests": "Beitrittsanfragen",
+  "Accept": "Akzeptieren",
+  "Ignore": "Ignorieren",
+  "Ignored": "Ignoriert",
+  "Show Ignored": "Ignorierte anzeigen",
+  "User Added": "Benutzer hinzugefügt",
+  "was successfully added to project.": "wurde erfolgreich zum Projekt hinzugefügt.",
+  "Adding User Failed!": "Etwas ist schiefgelaufen",
+  "was not added to project.": "konnte dem Projekt nicht hinzugefügt werden.",
+  "No Open Join Requests": "Keine offenen Beitrittsanfragen",
+  "Join Link": "Beitrittslink",
+  "Copy Link": "Link kopieren",
+  "copy_link_info": "Mit diesem Link kannst Du Benutzer in das Projekt einladen.",
+  "Copied to clipboard": "In die Zwischenablage kopiert",
+  "You can now distribute this link to invite users.": "Du kannst nun mit diesem Link Benutzer in das Projekt einladen.",
+  "Request Ignored": "Beitrittsanfrage Ignoriert",
+  "request to join the project has been ignored.": "Die Beitrittsanfrage wurde ignoriert."
 }
