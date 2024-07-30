@@ -53,7 +53,7 @@
   "Could not open the assignment.": "Der Arbeitsauftrag konnte nicht geöffnet werden.",
   "Edit": "Edit",
   "Project Baselayer": "Basisebene",
-  "base_assignment_description": "Jedes Dokument im Projekt hat eine Basisebene. Annotationen die du in der Basisebene machst, kannst du als schreibgeschützte Annotationen in Arbeitsaufträge übernehmen.",
+  "base_assignment_description": "Jedes Dokument im Projekt erhält automatisch eine Basisebene. Annotationen in der Basisebene können als schreibgeschützte Ebene in Arbeitsaufträgen angezeigt werden.",
   "Import read only layers from other assignments to add to each document.": "Importiere Ebenen aus anderen Arbeitsaufträgen um sie schreibgeschützt in diesem Arbeitsauftrag anzuzeigen.",
   "Optional": "Optional",
   "Select All": "Alles auswählen",
