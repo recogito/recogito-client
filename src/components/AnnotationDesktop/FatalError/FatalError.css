@@ -1,0 +1,12 @@
+.fatal-error {
+  max-width: 800px;
+}
+
+.fatal-error code {
+  background-color: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: 5px;
+  display:block;
+  margin: 1rem 0;
+  padding: 0.5rem;
+}
