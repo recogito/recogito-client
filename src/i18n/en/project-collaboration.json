@@ -56,5 +56,9 @@
   "Copied to clipboard": "Copied to clipboard",
   "You can now distribute this link to invite users.": "You can now distribute this link to invite users.",
   "Request Ignored": "Request Ignored",
-  "request to join the project has been ignored.": "request to join the project has been ignored."
+  "request to join the project has been ignored.": "request to join the project has been ignored.",
+  "Invitation List": "Invitation List",
+  "Send Invitations": "Send Invitations",
+  "Invitations Sent": "Invitations Sent",
+  "Invitations were sent to your list of users.": "Invitations were sent to your list of users."
 }

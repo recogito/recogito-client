@@ -53,5 +53,9 @@
   "Request Ignored": "Beitrittsanfrage Ignoriert",
   "request to join the project has been ignored.": "Die Beitrittsanfrage wurde ignoriert.",
   "Invite Users to the Project": "Invite Users to the Project",
-  "Add list of users": "Add list of users"
+  "Add list of users": "Add list of users",
+  "Invitation List": "Invitation List",
+  "Send Invitations": "Send Invitations",
+  "Invitations Sent": "Invitations Sent",
+  "Invitations were sent to your list of users.": "Invitations were sent to your list of users."
 }

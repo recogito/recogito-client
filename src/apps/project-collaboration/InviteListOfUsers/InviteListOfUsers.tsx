@@ -2,23 +2,26 @@ import { useState, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Envelope, UsersFour, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import type {
-  ExtendedProjectData,
-  Invitation,
-  MyProfile,
-  Translations,
-} from 'src/Types';
-import papa from 'papaparse';
+import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import papa, { type ParseResult } from 'papaparse';
 import Dropzone from 'react-dropzone';
 
 import './InviteListOfUsers.css';
 
+export type InviteListEntry = {
+  email: string;
+  role: 'student' | 'admin';
+};
 interface InviteListOfUsersProps {
   i18n: Translations;
 
   me: MyProfile;
 
   project: ExtendedProjectData;
+
+  onError(error: string): void;
+
+  onSend(invites: InviteListEntry[]): void;
 }
 
 export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
@@ -28,9 +31,7 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
 
   const [open, _setOpen] = useState(false);
 
-  const [busy, setBusy] = useState(false);
-
-  const [error, setError] = useState<string | undefined>(undefined);
+  const [csv, setCsv] = useState<InviteListEntry[] | undefined>();
 
   const invitedBy = me.nickname
     ? me.nickname
@@ -39,8 +40,42 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
     : undefined;
 
   const setOpen = (open: boolean) => {
-    setError(undefined);
+    setCsv(undefined);
     _setOpen(open);
+  };
+
+  const parseUsers = (users: string[][]) => {
+    const validateEmail = (email: string) => {
+      return email.match(
+        // eslint-disable-next-line no-useless-escape
+        /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+    };
+
+    const getRole = (role: string) => {
+      if (role.toLowerCase() === 'Admin'.toLowerCase()) {
+        return 'admin';
+      } else if (role.toLowerCase() === 'Student'.toLowerCase()) {
+        return 'student';
+      }
+
+      return undefined;
+    };
+
+    const result: InviteListEntry[] = [];
+    users.forEach((u) => {
+      const role = getRole(u[1]);
+      if (role && validateEmail(u[0])) {
+        result.push({
+          email: u[0],
+          role,
+        });
+      } else {
+        props.onError(`Invalid email or address: ${u[0]}, ${u[1]}`);
+      }
+    });
+
+    return result;
   };
 
   const handleFileDropped = useCallback((acceptedFiles: File[]) => {
@@ -50,13 +85,24 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
     reader.onerror = () => console.log('file reading failed');
     reader.onload = () => {
       // Parse CSV file
-      const data: any = papa.parse(reader.result as string);
-      console.log(data);
+      const result: ParseResult<string[]> = papa.parse(reader.result as string);
+      if (result.errors.length === 0) {
+        setCsv(parseUsers(result.data) || undefined);
+      } else {
+        props.onError(result.errors.toString());
+      }
     };
 
     // read file contents
     reader.readAsText(acceptedFiles[0]);
   }, []);
+
+  const handleSend = () => {
+    setOpen(false);
+    if (csv) {
+      props.onSend(csv);
+    }
+  };
 
   return (
     <>
@@ -91,30 +137,63 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
               {t['Invite Users to the Project']}
             </Dialog.Title>
 
-            <Dropzone
-              onDrop={(acceptedFiles) => handleFileDropped(acceptedFiles)}
-              multiple={false}
-              accept={{ 'text/csv': ['.csv'] }}
-            >
-              {({ getRootProps, getInputProps }) => (
-                <section className='invite-list-section'>
-                  <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <p>{t['invite-list-instructions']}</p>
-                    <p>{t['invite-list-instructions-2']}</p>
-                    <img
-                      src='/img/invite-user-list.png'
-                      height={200}
-                      width={350}
-                    ></img>
-                  </div>
-                </section>
-              )}
-            </Dropzone>
+            {!csv ? (
+              <Dropzone
+                onDrop={(acceptedFiles) => handleFileDropped(acceptedFiles)}
+                multiple={false}
+                accept={{ 'text/csv': ['.csv'] }}
+              >
+                {({ getRootProps, getInputProps }) => (
+                  <section className='invite-list-section'>
+                    <div {...getRootProps()}>
+                      <input {...getInputProps()} />
+                      <p>{t['invite-list-instructions']}</p>
+                      <p>{t['invite-list-instructions-2']}</p>
+                      <img
+                        src='/img/invite-user-list.png'
+                        height={200}
+                        width={350}
+                      ></img>
+                    </div>
+                  </section>
+                )}
+              </Dropzone>
+            ) : (
+              <div className='invite-table-container'>
+                <h2>{t['Invitation List']}</h2>
+                <table className='users-table'>
+                  <thead>
+                    <tr>
+                      <th>{t['E-Mail']}</th>
+                      <th>{t['Access Level']}</th>
+                    </tr>
+                  </thead>
 
-            <Button busy={busy} confetti className='primary' type='submit'>
+                  <tbody>
+                    {csv!.map((user) => (
+                      <tr key={user.email}>
+                        <td>{user.email}</td>
+                        <td>
+                          {user.role === 'student'
+                            ? t['Project Students']
+                            : t['Project Admins']}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            <Button
+              confetti
+              className='primary'
+              type='submit'
+              disabled={!csv}
+              onClick={handleSend}
+            >
               <Envelope size={20} />
-              <span>{t['Send invitation']}</span>
+              <span>{t['Send Invitations']}</span>
             </Button>
 
             <Dialog.Close asChild>
