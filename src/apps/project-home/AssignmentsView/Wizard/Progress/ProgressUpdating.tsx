@@ -104,7 +104,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
         // - check for added read only layers on new documents
         for (let i = 0; i < documentChanges.added.length; i++) {
           const doc = documentChanges.added[i];
-          const prevDoc = previous.documents.find((d) => (d.id = doc.id));
+          const prevDoc = previous.documents.find((d) => d.id === doc.id);
           const layerDiff = diff(prevDoc!.layers, doc.layers);
           if (layerDiff.added.length > 0) {
             // Look for added layers
@@ -160,7 +160,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
       // Step 3 - check for added read only layers documents
       for (let i = 0; i < documentChanges.unchanged.length; i++) {
         const doc = documentChanges.unchanged[i];
-        const prevDoc = previous.documents.find((d) => (d.id = doc.id));
+        const prevDoc = previous.documents.find((d) => d.id === doc.id);
 
         const layerDiff = diff(prevDoc!.layers, doc.layers);
         if (layerDiff.added.length > 0) {
