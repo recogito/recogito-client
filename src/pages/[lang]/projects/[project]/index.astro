@@ -36,9 +36,13 @@ if (project.error || !project.data) {
 const user = project.data.users.find((u) => u.user.id === profile.data.id);
 
 if (!user && !profile.data.isOrgAdmin) {
-  return Astro.redirect(
-    `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
-  );
+  if (project.data.is_open_join) {
+    return Astro.redirect(
+      `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
+    );
+  } else {
+    return Astro.redirect(`/${lang}/projects`);
+  }
 }
 const documents = await listDocumentsInProject(supabase, projectId as string);
 
