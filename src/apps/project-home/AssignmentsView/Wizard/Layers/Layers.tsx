@@ -19,7 +19,10 @@ interface LayersProps {
 
   documents: Document[];
 
-  onChange(op: 'add' | 'remove', documentId: string, layerId: string): void;
+  onChange(
+    op: 'add' | 'remove',
+    documentLayers: { documentId: string; layerId: string }[]
+  ): void;
 
   onCancel(): void;
 
@@ -154,26 +157,32 @@ export const Layers = (props: LayersProps) => {
                 className='checkbox-root'
                 checked={isAllSelected}
                 onCheckedChange={(checked) => {
+                  const documentLayers: {
+                    documentId: string;
+                    layerId: string;
+                  }[] = [];
                   if (checked) {
                     val.layers.forEach((layer) => {
                       if (!layer.selected) {
-                        props.onChange(
-                          'add',
-                          layer.document_id,
-                          layer.layer_id
-                        );
+                        documentLayers.push({
+                          documentId: layer.document_id,
+                          layerId: layer.layer_id,
+                        });
                       }
                     });
+
+                    props.onChange('add', documentLayers);
                   } else {
                     val.layers.forEach((layer) => {
                       if (layer.selected) {
-                        props.onChange(
-                          'remove',
-                          layer.document_id,
-                          layer.layer_id
-                        );
+                        documentLayers.push({
+                          documentId: layer.document_id,
+                          layerId: layer.layer_id,
+                        });
                       }
                     });
+
+                    props.onChange('remove', documentLayers);
                   }
                 }}
               >
@@ -198,11 +207,9 @@ export const Layers = (props: LayersProps) => {
                     className='checkbox-root'
                     checked={l.selected}
                     onCheckedChange={(checked) =>
-                      props.onChange(
-                        checked ? 'add' : 'remove',
-                        l.document_id,
-                        l.layer_id
-                      )
+                      props.onChange(checked ? 'add' : 'remove', [
+                        { documentId: l.document_id, layerId: l.layer_id },
+                      ])
                     }
                   >
                     <Checkbox.Indicator>
