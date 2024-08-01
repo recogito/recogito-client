@@ -35,7 +35,7 @@ if (project.error || !project.data) {
 
 const user = project.data.users.find((u) => u.user.id === profile.data.id);
 
-if (!user) {
+if (!user && !profile.data.isOrgAdmin) {
   return Astro.redirect(
     `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
   );
