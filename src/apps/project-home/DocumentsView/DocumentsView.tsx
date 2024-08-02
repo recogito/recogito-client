@@ -48,7 +48,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   const [documentUpdated, setDocumentUpdated] = useState(false);
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
-    (document) => props.setDocuments([...props.documents, document])
+    (documents) => props.setDocuments([...props.documents, ...documents])
   );
 
   const documentIds = useMemo(
