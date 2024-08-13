@@ -15,17 +15,20 @@ const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
-  return Astro.redirect(`/${lang}/sign-in`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
+console.log('Here!');
 const invitation = await supabase
   .from('invites')
   .select()
   .eq('email', profile.data.email)
   .eq('project_id', projectId)
+  .eq('accepted', false)
   .single();
 
 if (invitation.error) {
+  console.log('Now here!', invitation.error);
   return Astro.redirect(`/${lang}/projects`);
 }
 ---
