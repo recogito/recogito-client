@@ -56,7 +56,7 @@ export interface DocumentLibraryProps {
   UploadActions: React.ReactNode;
   onDocumentsSelected(documentIds: string[]): void;
   onUpdated(document: Document): void;
-  onDelete(document: Document): void;
+  onDeleteFromLibrary?(document: Document): void;
   onTogglePrivate(document: Document): void;
   onError(error: string): void;
   isAdmin: boolean | undefined;
@@ -341,7 +341,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           <DocumentActions
             i18n={props.i18n}
             onDelete={() =>
-              currentDocument ? props.onDelete(currentDocument) : {}
+              props.onDeleteFromLibrary
+                ? props.onDeleteFromLibrary(item as Document)
+                : {}
             }
             showPrivate={true}
             isPrivate={item.is_private}
@@ -388,7 +390,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           <DocumentActions
             i18n={props.i18n}
             onDelete={() =>
-              currentDocument ? props.onDelete(currentDocument) : {}
+              currentDocument && props.onDeleteFromLibrary
+                ? props.onDeleteFromLibrary(currentDocument)
+                : {}
             }
             isAdmin={item.created_by === props.user.id}
             onEditMetadata={() => {
