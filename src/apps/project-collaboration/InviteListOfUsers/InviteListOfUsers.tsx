@@ -12,6 +12,7 @@ export type InviteListEntry = {
   email: string;
   role: 'student' | 'admin';
 };
+
 interface InviteListOfUsersProps {
   i18n: Translations;
 
@@ -89,7 +90,8 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
       if (result.errors.length === 0) {
         setCsv(parseUsers(result.data) || undefined);
       } else {
-        props.onError(result.errors.toString());
+        const errors = result.errors.map(e => e.message).join('\n');
+        props.onError(errors);
       }
     };
 
@@ -149,11 +151,7 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
                       <input {...getInputProps()} />
                       <p>{t['invite-list-instructions']}</p>
                       <p>{t['invite-list-instructions-2']}</p>
-                      <img
-                        src='/img/invite-user-list.png'
-                        height={200}
-                        width={350}
-                      ></img>
+                      <img src='/img/invite-user-list.png' />
                     </div>
                   </section>
                 )}

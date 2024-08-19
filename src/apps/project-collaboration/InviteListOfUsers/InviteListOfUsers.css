@@ -21,3 +21,7 @@
   padding-top: 12px;
   padding-bottom: 12px;
 }
+
+.dialog-content.invite-users img {
+  max-width: 100%;
+}
