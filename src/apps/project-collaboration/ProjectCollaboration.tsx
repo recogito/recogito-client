@@ -21,13 +21,14 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { formatName } from '@components/Avatar';
 import { Button } from '@components/Button';
 import { InfoTooltip } from '@components/InfoTooltip';
+import { inviteUsersToProject } from '@backend/crud';
 import {
   InviteListOfUsers,
   type InviteListEntry,
-} from './InviteListOfUsers/InviteListOfUsers';
-import { inviteUsersToProject } from '@backend/crud';
+} from './InviteListOfUsers';
 
 import './ProjectCollaboration.css';
+
 interface ProjectCollaborationProps {
   i18n: Translations;
 
