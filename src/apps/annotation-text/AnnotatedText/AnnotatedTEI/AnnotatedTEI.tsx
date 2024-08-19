@@ -29,9 +29,6 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
 
   const { layers, annotations } = useEmbeddedTEIAnnotations(props.text);
 
-  console.log(layers, annotations);
-  
-
   useEffect(() => {
     if (anno && annotations.length > 0 && props.initialLoadComplete) {
       anno.setAnnotations(annotations, false);
