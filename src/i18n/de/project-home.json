@@ -71,5 +71,6 @@
   "Select Revision": "Version auswählen",
   "Latest Revision": "Neueste Version",
   "Show More": "Mehr...",
-  "Show Less": "Weniger..."
+  "Show Less": "Weniger...",
+  "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.": "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed."
 }

@@ -118,7 +118,11 @@ export const DocumentActions = (props: DocumentActionsProps) => {
         open={confirming}
         i18n={props.i18n}
         title={t['Are you sure?']}
-        description={t['Are you sure you want to delete this document?']}
+        description={
+          t[
+            'Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.'
+          ]
+        }
         cancelLabel={t['Cancel']}
         confirmLabel={
           <>
