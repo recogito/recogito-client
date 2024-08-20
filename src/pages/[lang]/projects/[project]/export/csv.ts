@@ -28,11 +28,11 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
       JSON.stringify({ error: 'Unauthorized'}),
       { status: 401 });
 
-  const isAdmin = policies.data.get('projects').has('UPDATE') || profile.data.isOrgAdmin;
-  if (!isAdmin)
-  return new Response(
-    JSON.stringify({ error: 'Unauthorized'}),
-    { status: 401 });
+  const hasSelectPermissions = policies.data.get('project_documents').has('SELECT') || profile.data.isOrgAdmin;
+  if (!hasSelectPermissions)
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized'}),
+      { status: 401 });
 
   const documentId = url.searchParams.get('document');
 

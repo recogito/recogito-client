@@ -399,6 +399,7 @@ export type TableName =
   | 'contexts'
   | 'layers'
   | 'projects'
+  | 'project_documents'
   | 'targets';
 
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
