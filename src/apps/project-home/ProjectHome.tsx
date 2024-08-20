@@ -9,6 +9,7 @@ import { useAssignments } from '@backend/hooks';
 import type { AvailableLayers } from '@backend/Types';
 import { DocumentsView } from './DocumentsView';
 import { AssignmentsView } from './AssignmentsView';
+import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   Context,
   Document,
@@ -48,9 +49,13 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const [tab, setTab] = useState<'documents' | 'assignments' | undefined>();
   const [documents, setDocuments] = useState<Document[]>(props.documents);
+
   const [project, setProject] = useState(props.project);
+
+  const [tab, setTab] = useLocalStorageBackedState<'documents' | 'assignments' | undefined>(
+    `tab-${props.project.id}`, undefined
+  );
 
   const { assignments, setAssignments } = useAssignments(project);
 
