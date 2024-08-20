@@ -68,4 +68,5 @@
 .project-collaboration-link-button {
   height: 36px;
   margin-left: 10px;
+  white-space: nowrap;
 }
