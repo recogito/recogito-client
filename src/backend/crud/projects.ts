@@ -7,7 +7,7 @@ import type {
 } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
-import type { ApiPostInviteUserToProject } from 'src/pages/api/invite-user-to-project';
+import type { ApiPostInviteUserToProject } from 'src/Types';
 
 export const createProject = (
   supabase: SupabaseClient,

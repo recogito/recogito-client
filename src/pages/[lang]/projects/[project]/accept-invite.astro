@@ -18,7 +18,6 @@ if (profile.error || !profile.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
-console.log('Here!');
 const invitation = await supabase
   .from('invites')
   .select()
@@ -27,8 +26,7 @@ const invitation = await supabase
   .eq('accepted', false)
   .single();
 
-if (invitation.error) {
-  console.log('Now here!', invitation.error);
+if (!invitation.data || invitation.error) {
   return Astro.redirect(`/${lang}/projects`);
 }
 ---

@@ -7,14 +7,7 @@ import {
   type TReaderDocument,
   renderToStaticMarkup,
 } from '@usewaypoint/email-builder';
-
-export type ApiPostInviteUserToProject = {
-  email: string;
-  projectId: string;
-  projectName: string;
-  projectGroupId: string;
-  invitedBy: string;
-};
+import type { ApiPostInviteUserToProject } from 'src/Types';
 
 export const POST: APIRoute = async ({ request, cookies, url }) => {
   // Verify if the user is logged in
@@ -117,7 +110,10 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
           },
         },
         props: {
-          text: `${body.invitedBy} ${t['has invited you to join the']} ${body.projectName} ${t['project on']} ${url.host}. ${t['Use the button below to accept the invitation, or accept the invitation from the Notifications button next time you log in.']}`,
+          text: t['_welcome_message_']
+            .replace('${sender}', body.invitedBy)
+            .replace('${project_name}', body.projectName)
+            .replace('${host}', url.host),
         },
       },
     },
