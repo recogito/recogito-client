@@ -6,7 +6,7 @@
     "welcome_blurb": "Recogito is the premier Text and Image Annotation system",
     "site_color": "#fbbb33",
     "home_banner": "https://iiif-staging.archivengine.com/iiif/3/1ylyaluscm668rynn5a7d6mwsqe6;1/full/max/0/default.jpg",
-    "background_color": "black",
+    "background_color": "#07529A",
     "contrast_color": "white",
     "bottom_logos_enabled": false,
     "top_logos_enabled": false,
@@ -16,7 +16,7 @@
   "authentication": {
     "methods": [
       {
-        "name": "Username and Password",
+        "name": "Sign in with Username and Password",
         "type": "username_password",
         "domain": ""
       },
@@ -24,11 +24,6 @@
         "name": "Sign in with SSO",
         "type": "saml",
         "domain": "example.com"
-      },
-      {
-        "name": "Send Magic Link",
-        "type": "magic_link",
-        "domain": ""
       },
       {
         "name": "Sign in with Keycloak",

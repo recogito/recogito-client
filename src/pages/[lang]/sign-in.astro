@@ -9,25 +9,10 @@ const methods = config.authentication.methods;
 const splashURL = config.branding.home_banner;
 ---
 <LoginLayout title=''>
-  <div class='container'>
-    <Login
-      client:only='react'
-      i18n={getTranslations(Astro.request, 'auth-login')}
-      methods={methods as LoginMethod[]}
-      splashURL={splashURL}
-    />
-  </div>
+  <Login
+    client:only='react'
+    i18n={getTranslations(Astro.request, 'auth-login')}
+    methods={methods as LoginMethod[]}
+    splashURL={splashURL}
+  />
 </LoginLayout>;
-
-<style>
-  .container {
-    align-items: center;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-</style>

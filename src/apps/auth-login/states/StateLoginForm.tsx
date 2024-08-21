@@ -8,10 +8,6 @@ import { isValidEmail } from '../validation';
 
 export interface StateSignInFormProps {
   i18n: Translations;
-
-  onSendLink(): void;
-
-  onSignInWithSSO(domain: string): void;
 }
 
 export const StateLoginForm = (props: StateSignInFormProps) => {
@@ -28,11 +24,10 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
   const onSignIn = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
-    setLoading(true);
-
     if (!isValidEmail(email)) {
       setError(t['Please enter a valid email address']);
     } else {
+      setLoading(true);
       setError('');
 
       supabase.auth
@@ -42,7 +37,8 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
         })
         .then(({ error }) => {
           if (error) setError(t['Invalid email or password']);
-        });
+        })
+        .finally(() => setLoading(false));
     }
   };
 
@@ -51,60 +47,54 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
   }, []);
 
   return (
-    <div className='login'>
-      <main>
-        <h1>{t['Welcome Back']}</h1>
-        <p>{t['Log into your account']}</p>
+    <div className='login-email'>
+      <form>
+        <TextInput
+          autoComplete={false}
+          error={Boolean(error)}
+          id='email'
+          name='email'
+          label={t['Email']}
+          className='lg w-full'
+          onChange={setEmail}
+        />
 
-        <div className='login-email'>
-          <form>
-            <TextInput
-              autoComplete={false}
-              error={Boolean(error)}
-              id='email'
-              name='email'
-              label={t['Email']}
-              className='lg w-full'
-              onChange={setEmail}
-            />
+        <TextInput
+          autoComplete={false}
+          id='password'
+          name='password'
+          label={t['Password']}
+          type='password'
+          className='lg w-full'
+          onChange={setPassword}
+        />
 
-            <TextInput
-              autoComplete={false}
-              id='password'
-              name='password'
-              label={t['Password']}
-              type='password'
-              className='lg w-full'
-              onChange={setPassword}
-            />
+        {error && (
+          <p className='error'>
+            <WarningOctagon
+              className='icon text-bottom'
+              size={18}
+              weight='fill'
+            />{' '}
+            {error}
+          </p>
+        )}
 
-            {error && (
-              <p className='error'>
-                <WarningOctagon
-                  className='icon text-bottom'
-                  size={18}
-                  weight='fill'
-                />{' '}
-                {error}
-              </p>
-            )}
-
-            <Button
-              className='primary lg w-full'
-              busy={loading}
-              onClick={onSignIn}
-            >
-              <span>{t['Sign In']}</span>
-            </Button>
-          </form>
-
-          <div className='forgot-password'>
-            <a href={`/${props.i18n.lang}/forgot-password`}>
-              {t['Forgot password?']}
-            </a>
-          </div>
+        <div className='forgot-password'>
+          <a href={`/${props.i18n.lang}/forgot-password`}>
+            {t['Forgot password?']}
+          </a>
         </div>
-      </main>
+
+        <Button
+          className='primary lg w-full'
+          busy={loading}
+          onClick={onSignIn}
+        >
+          <span>{t['Sign In']}</span>
+        </Button>
+      </form>
+
     </div>
   );
 };

@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import { LoginAccordion } from '@apps/auth-login/LoginAccordion';
+import { LoginMethods } from '@apps/auth-login/methods.ts';
+import { Button } from '@components/Button';
+import classNames from 'classnames';
+import React, { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
 import type { LoginMethod, Translations } from 'src/Types';
-import { StateChecking, StateLoginForm, StateMagicLink } from './states';
-import { LoginMethodSelector } from '@apps/auth-login/LoginMethodSelector';
+import { StateChecking, StateLoginForm } from './states';
 
 import './Login.css';
 
@@ -30,10 +33,8 @@ export const Login = (props: {
 }) => {
   const [isChecking, setIsChecking] = useState(true);
 
-  const [sendLink, setSendLink] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-
-  const [currentMethod, setCurrentMethod] = useState<LoginMethod | undefined>();
+  const [primary, ...loginMethods] = props.methods;
+  const { t } = props.i18n;
 
   const url = new URLSearchParams(window.location.search);
   let redirectUrl = url.get('redirect-to');
@@ -109,75 +110,61 @@ export const Login = (props: {
       });
   };
 
-  const onMethodChanged = (method: LoginMethod) => {
-    setCurrentMethod(method);
-    if (method.type === 'username_password') {
-      setShowLogin(true);
-      setSendLink(false);
-    } else if (method.type === 'magic_link') {
-      setSendLink(true);
-      setShowLogin(false);
-    } else if (method.type === 'saml') {
-      setSendLink(false);
-      setShowLogin(false);
-      signInWithSSO(method.domain);
-    } else if (method.type === 'keycloak') {
-      setSendLink(false);
-      setShowLogin(false);
-      signInWithKeycloak();
+  const renderLoginButton = useCallback((method: LoginMethod, className = null) => {
+    if (method.type === LoginMethods.username_password) {
+      return (
+        <LoginAccordion
+          key={method.type}
+          label={t[method.name]}
+        >
+          <StateLoginForm
+            i18n={props.i18n}
+          />
+        </LoginAccordion>
+      );
     }
-  };
 
-  if (isChecking) {
+    if (method.type === LoginMethods.saml) {
+      return (
+        <Button
+          className={classNames(className, 'lg w-full')}
+          key={method.type}
+          onClick={() => signInWithSSO(method.domain)}
+        >
+          <span>{t[method.name]}</span>
+        </Button>
+      );
+    }
+
     return (
-      <div id='login-selector' className='login-background-container'>
-        <StateChecking />
-      </div>
+      <Button
+        className={classNames(className, 'lg w-full')}
+        key={method.type}
+        onClick={signInWithKeycloak}
+      >
+        <span>{t[method.name]}</span>
+      </Button>
     )
-  } else if (sendLink) {
-    return (
-      <div className='login-background-container'>
-        <div id='login-selector' className='login-selector'>
-          <LoginMethodSelector
-            i18n={props.i18n}
-            availableMethods={props.methods}
-            currentMethod={currentMethod}
-            onChangeMethod={onMethodChanged}
-          />
+  }, [signInWithKeycloak, signInWithSSO, t]);
+
+  return (
+    <div className='login-background-container'>
+      { isChecking && (
+        <StateChecking />
+      )}
+      { !isChecking && (
+        <div className='login'>
+          <main>
+            <h1>{t['Welcome Back']}</h1>
+            <h2>{t['Log into your account']}</h2>
+            { primary.type === LoginMethods.username_password && (
+              <StateLoginForm i18n={props.i18n} />
+            )}
+            { primary.type !== LoginMethods.username_password && renderLoginButton(primary, 'primary') }
+            { loginMethods && loginMethods.map(renderLoginButton) }
+          </main>
         </div>
-        <StateMagicLink i18n={props.i18n} />;
-      </div>
-    );
-  } else if (showLogin) {
-    return (
-      <div className='login-background-container'>
-        <div id='login-selector' className='login-selector'>
-          <LoginMethodSelector
-            i18n={props.i18n}
-            availableMethods={props.methods}
-            currentMethod={currentMethod}
-            onChangeMethod={onMethodChanged}
-          />
-        </div>
-        <StateLoginForm
-          i18n={props.i18n}
-          onSendLink={() => setSendLink(true)}
-          onSignInWithSSO={signInWithSSO}
-        />
-      </div>
-    );
-  } else {
-    return (
-      <div className='login-background-container'>
-        <div id='login-selector' className='login-selector'>
-          <LoginMethodSelector
-            i18n={props.i18n}
-            availableMethods={props.methods}
-            currentMethod={currentMethod}
-            onChangeMethod={onMethodChanged}
-          />
-        </div>
-      </div>
-    );
-  }
+      )}
+    </div>
+  );
 };

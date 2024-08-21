@@ -1,6 +1,10 @@
 ---
-import HeaderLayout from '../HeaderLayout.astro';
-import config from '../../config.json';
+import { getLangFromUrl } from '@i18n';
+import config from 'src/config.json';
+import Footer from '../../branding/Footer';
+import Header from '../../branding/Header';
+
+import '@themes/default/index.css';
 
 export interface Props {
   title: string;
@@ -8,63 +12,107 @@ export interface Props {
 
 const { title } = Astro.props;
 
+const message = config.branding.footer_message;
 const siteColor = config.branding.site_color;
+const textColor = config.branding.contrast_color;
+const useFooter = config.branding.bottom_logos_enabled;
+const useHeader = config.branding.top_logos_enabled;
+const backgroundColor = config.branding.background_color;
 const splashURL = config.branding.home_banner;
 
-const backgroundStyle = `background: url(${splashURL}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
+const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 ---
 
-<HeaderLayout title={title}>
-  <div class='background' style={backgroundStyle}></div>
-  <slot />
-</HeaderLayout>
+<!doctype html>
+<html lang={getLangFromUrl(Astro.url)}>
+<head>
+  <!-- HEAD-DYNAMIC-SCRIPT -->
+  <meta charset='UTF-8' />
+  <meta name='viewport' content='width=device-width, initial-scale=1' />
+  <meta name='generator' content={Astro.generator} />
+  <link rel='icon' type='image/x-icon' href={favicon} />
+  <title>{title}</title>
+</head>
+<body>
+<header>
+  <div class='branding-container'>
+    <img src='/img/recogito-studio-logo.svg' height={40} />
+    <div class='separator'></div>
+    <div class='site_name'>{config.branding.site_name}</div>
+  </div>
+  <div class='bottom_links'>
+    {useHeader && <Header contrastColor={textColor} />}
+  </div>
+</header>
+<div class='container'>
+  <div class='slot-container'>
+    <div style={{ flexGrow: '1' }}>
+      <slot />
+    </div>
+    <footer>
+      <div class='blurb'>
+        {message || ''}
+      </div>
+      <div class='bottom_links'>
+        {useFooter && <Footer contrastColor={textColor} />}
+      </div>
+    </footer>
+  </div>
+  <div class='img-container'>
+    <img class='banner-img' src={splashURL} />
+  </div>
+</div>
+<script>
+  // @ts-ignore
+  window.onUsersnapLoad = function (api: any) {
+    api.init();
+    api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
+  };
 
-<style define:vars={{ siteColor }}>
-  .login-background-img {
-    object-fit: cover;
-    width: 100%;
+  var script = document.createElement('script');
+  // @ts-ignore
+  script.defer = 1;
+  script.src = `https://widget.usersnap.com/global/load/${
+    import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY
+  }?onload=onUsersnapLoad`;
+
+  document.getElementsByTagName('head')[0].appendChild(script);
+</script>
+</body>
+</html>
+<style define:vars={{ siteColor, backgroundColor, textColor }}>
+  body {
     height: 100%;
     overflow: hidden;
   }
-  .background {
-    position: absolute;
-    top: 0;
-    bottom: 0;
+
+  .slot-container {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    min-height: calc(100vh - 100px);
+    justify-content: space-between;
+    flex-basis: 40%;
   }
 
   header {
-    width: 100%;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--gray-200);
+    align-items: center;
+    background-color: var(--backgroundColor);
     box-sizing: border-box;
     display: flex;
-    align-items: center;
-    height: 50px;
+    height: 60px;
+    justify-content: space-between;
     padding: 0 40px;
-    background-color: var(--gray-900);
+    width: 100%;
+    z-index: 9999;
   }
 
   footer {
-    border-top: 1px solid var(--gray-200);
-    box-sizing: border-box;
-    display: flex;
     align-items: center;
-    height: 50px;
-    padding: 0 40px;
-    background-color: var(--gray-900);
-  }
-
-  main {
-    box-sizing: border-box;
+    background-color: var(--backgroundColor);
     display: flex;
-    flex-grow: 1;
-    padding: 0;
-    position: relative;
-    width: 100%;
+    height: 80px;
+    justify-content: space-between;
+    padding: 0 40px;
+    z-index: 1000;
   }
 
   .branding-container {
@@ -74,23 +122,60 @@ const backgroundStyle = `background: url(${splashURL}) no-repeat center fixed;ba
   }
 
   .platform {
-    color: white;
+    color: var(--textColor);
   }
 
   .separator {
     width: 2px;
     height: 20px;
     margin-left: 5px;
-    background-color: white;
+    background-color: var(--textColor);
   }
 
   .site_name {
     padding-left: 5px;
-    color: var(--siteColor);
+    color: var(--textColor);
+    opacity: 0.8;
+    font-size: 12px;
+    padding-top: 4px;
+    text-transform: uppercase;
+    font-weight: 600;
   }
 
   .blurb {
-    color: white;
+    color: var(--textColor);
     font-size: 14px;
+  }
+
+  .top_links {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .bottom_links {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .link {
+    width: 45px;
+    height: 45px;
+  }
+
+  .container {
+    display: flex;
+    height: calc(100vh - 60px);
+  }
+
+  .img-container {
+    flex-basis: 60%;
+    height: 100%;
+  }
+
+  .banner-img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
 </style>
