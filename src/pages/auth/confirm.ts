@@ -2,7 +2,7 @@ import { createServerClient, parseCookieHeader } from '@supabase/ssr';
 import type { EmailOtpType } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 
-export const GET: APIRoute = async ({ request, cookies, redirect }) => {
+export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
   const requestUrl = new URL(request.url);
   const token_hash = requestUrl.searchParams.get('token_hash');
   const type = requestUrl.searchParams.get('type') as EmailOtpType | null;
@@ -33,5 +33,7 @@ export const GET: APIRoute = async ({ request, cookies, redirect }) => {
       return redirect(next);
   }
 
-  return redirect('/auth/auth-code-error');
+  const path = url.protocol + '//' + url.host;
+  const error = await fetch(`${path}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
 }
