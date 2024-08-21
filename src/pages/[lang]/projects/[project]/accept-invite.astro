@@ -1,0 +1,42 @@
+---
+import HeaderLayout from '@layouts/HeaderLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getMyProfile } from '@backend/crud';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { AcceptInvite as AcceptInviteApp } from '@apps/accept-invite';
+
+const lang = getLangFromUrl(Astro.url);
+
+const i18n = getTranslations(Astro.request, 'dashboard-projects');
+
+const supabase = await createSupabaseServerClient(Astro.cookies);
+
+const projectId = Astro.params.project;
+
+const profile = await getMyProfile(supabase);
+if (profile.error || !profile.data) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
+}
+
+const invitation = await supabase
+  .from('invites')
+  .select()
+  .eq('email', profile.data.email)
+  .eq('project_id', projectId)
+  .eq('accepted', false)
+  .single();
+
+if (!invitation.data || invitation.error) {
+  return Astro.redirect(`/${lang}/projects`);
+}
+---
+
+<HeaderLayout title='accept-invite'>
+  <AcceptInviteApp client:load i18n={i18n} invitation={invitation.data} />
+</HeaderLayout>
+
+<style>
+  h1 {
+    padding-left: 40px !important;
+  }
+</style>

@@ -21,6 +21,11 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { formatName } from '@components/Avatar';
 import { Button } from '@components/Button';
 import { InfoTooltip } from '@components/InfoTooltip';
+import { inviteUsersToProject } from '@backend/crud';
+import {
+  InviteListOfUsers,
+  type InviteListEntry,
+} from './InviteListOfUsers';
 
 import './ProjectCollaboration.css';
 
@@ -133,6 +138,16 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     setInvitations((invitations) => [...invitations, invitation]);
   };
 
+  const onInvitationsSent = (invites: Invitation[]) => {
+    setToast({
+      title: t['Invitations Sent'],
+      description: t['Invitations were sent to your list of users.'],
+      type: 'success',
+    });
+
+    setInvitations((invitations) => [...invitations, ...invites]);
+  };
+
   const onInvitationError = () =>
     setToast({
       title: t['Something went wrong'],
@@ -146,6 +161,33 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       description: t[error] || error,
       type: 'error',
     });
+  };
+
+  const handleSendInvitations = (invites: InviteListEntry[]) => {
+    // Waits until the invite was processed in the backend
+    const invitedBy = props.me.nickname
+      ? props.me.nickname
+      : props.me.first_name || props.me.last_name
+      ? [props.me.first_name, props.me.last_name].join(' ')
+      : undefined;
+
+    const groupMap: { [key: string]: string } = {};
+    props.project.groups.forEach((g) => {
+      if (g.is_admin) {
+        groupMap['admin'] = g.id;
+      } else if (g.is_default) {
+        groupMap['student'] = g.id;
+      }
+    });
+    inviteUsersToProject(supabase, invites, project, groupMap, invitedBy).then(
+      ({ error, data }) => {
+        if (error) {
+          onInvitationError();
+        } else {
+          onInvitationsSent(data);
+        }
+      }
+    );
   };
 
   const handleAddUser = (userId: string) => {
@@ -273,7 +315,13 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
             onInvitiationSent={onInvitationSent}
             onInvitiationError={onInvitationError}
           />
-
+          <InviteListOfUsers
+            i18n={props.i18n}
+            me={props.me}
+            project={project}
+            onError={onError}
+            onSend={handleSendInvitations}
+          />
           <MembersTable
             i18n={props.i18n}
             project={project}

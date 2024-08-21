@@ -6,7 +6,7 @@ export const useLocalStorageBackedState = <T>(key: string, defaultValue: T) => {
 
   useEffect(() => {
     const saved = localStorage.getItem(key);
-
+    
     if (saved) {
       try {
         setValue(JSON.parse(saved) as T);
@@ -17,7 +17,10 @@ export const useLocalStorageBackedState = <T>(key: string, defaultValue: T) => {
   }, [key]);
 
   useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
+    if (value === undefined)
+      localStorage.removeItem(key);
+    else
+      localStorage.setItem(key, JSON.stringify(value));
   }, [value]);
 
   return [value, setValue] as const;
