@@ -8,6 +8,7 @@ import type {
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 import type { ApiPostInviteUserToProject } from 'src/Types';
+import type { InviteListEntry } from '@apps/project-collaboration/InviteListOfUsers/InviteListOfUsers';
 
 export const createProject = (
   supabase: SupabaseClient,
@@ -157,6 +158,30 @@ export const inviteUserToProject = (
       }
     });
   });
+
+export const inviteUsersToProject = (
+  supabase: SupabaseClient,
+  users: InviteListEntry[],
+  project: Project | ExtendedProjectData,
+  groupIds: { [key: string]: string },
+  invitedBy?: string
+): Response<Invitation[]> => {
+  return supabase
+    .from('invites')
+    .insert(
+      users.map((u) => {
+        return {
+          email: u.email.toLowerCase(),
+          project_id: project.id,
+          project_name: project.name,
+          project_group_id: groupIds[u.role],
+          invited_by_name: invitedBy,
+        };
+      })
+    )
+    .select()
+    .then(({ error, data }) => ({ error, data: data as Invitation[] }));
+};
 
 export const retrievePendingInvites = async (
   supabase: SupabaseClient,

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { ConfirmedAction } from '@components/ConfirmedAction';
+import { ConfirmDeleteDialog } from './ConfirmDeleteDialog';
 import type { Translations } from 'src/Types';
 import {
   DotsThreeVertical,
@@ -35,8 +35,17 @@ export const DocumentActions = (props: DocumentActionsProps) => {
 
   const [confirming, setConfirming] = useState(false);
 
+  const handleDelete = () => {
+    setConfirming(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    setConfirming(false);
+    props.onDelete!();
+  };
+
   return (
-    <ConfirmedAction.Root open={confirming} onOpenChange={setConfirming}>
+    <>
       <Root>
         <Trigger asChild>
           <button className='unstyled icon-only'>
@@ -46,7 +55,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
 
         <Portal>
           <Content
-            className='dropdown-content no-icons'
+            className='dropdown-content no-icons doc-lib-dropdown'
             sideOffset={5}
             align='start'
           >
@@ -71,12 +80,12 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                     </span>
                   </Item>
                 )}
-                <ConfirmedAction.Trigger>
-                  <Item className='dropdown-item'>
+                {props.isPrivate && (
+                  <Item className='dropdown-item' onSelect={handleDelete}>
                     <Trash size={16} className='destructive' />{' '}
                     <span>{t['Delete document']}</span>
                   </Item>
-                </ConfirmedAction.Trigger>
+                )}
               </>
             ) : (
               <>
@@ -105,18 +114,24 @@ export const DocumentActions = (props: DocumentActionsProps) => {
         </Portal>
       </Root>
 
-      <ConfirmedAction.Dialog
+      <ConfirmDeleteDialog
+        open={confirming}
         i18n={props.i18n}
         title={t['Are you sure?']}
-        description={t['Are you sure you want to delete this document?']}
+        description={
+          t[
+            'Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.'
+          ]
+        }
         cancelLabel={t['Cancel']}
         confirmLabel={
           <>
             <Trash size={16} /> <span>{t['Delete document']}</span>
           </>
         }
-        onConfirm={props.onDelete!}
+        onConfirm={handleDeleteConfirm}
+        onClose={() => setConfirming(false)}
       />
-    </ConfirmedAction.Root>
+    </>
   );
 };
