@@ -3,7 +3,7 @@ import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getLangFromUrl } from '@i18n';
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const lang = getLangFromUrl(Astro.url);
 

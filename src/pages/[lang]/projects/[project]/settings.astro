@@ -11,7 +11,7 @@ const lang = getLangFromUrl(Astro.url);
 
 const i18n = getTranslations(Astro.request, 'project-settings');
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const projectId = Astro.params.project;
 

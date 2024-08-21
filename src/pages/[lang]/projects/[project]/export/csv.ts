@@ -5,8 +5,8 @@ import { getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { annotationsToCSV } from 'src/util/export/csv';
 
-export const GET: APIRoute = async ({ params, cookies, url }) => {
-  const supabase = await createSupabaseServerClient(cookies);
+export const GET: APIRoute = async ({ cookies, params, request, url }) => {
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)

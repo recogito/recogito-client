@@ -1,5 +1,5 @@
 import type { AstroCookies } from 'astro';
-import { createServerClient, type CookieOptions } from '@supabase/ssr';
+import { createServerClient, parseCookieHeader } from '@supabase/ssr';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 const supabaseServerUrl = 
@@ -10,22 +10,19 @@ const supabaseAPIKey =
   import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 export const createSupabaseServerClient = (
-  cookies: AstroCookies
+  request: Request, cookies: AstroCookies
 ) => {
   const supabase = createServerClient(
     supabaseServerUrl,
     supabaseAPIKey,
     {
       cookies: {
-        get(key: string) {
-          return cookies.get(key)?.value;
+        getAll() {
+          return parseCookieHeader(request.headers.get('Cookie') ?? '')
         },
-        set(key: string, value: string, options: CookieOptions) {
-          cookies.set(key, value, options);
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => cookies.set(name, value, options))
         },
-        remove(key: string, options) {
-          cookies.delete(key, options);
-        }
       }
     }
   );
