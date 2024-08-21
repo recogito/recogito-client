@@ -17,6 +17,7 @@ import projectSettings from './project-settings.json';
 import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
 import projectRequest from './project-request.json';
+import email from './email.json';
 
 export default {
   'annotation-image': {
@@ -52,4 +53,5 @@ export default {
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': { ...userManagement, ...accountMenu },
   'project-request': { ...projectRequest, ...accountMenu },
+  email: email,
 };
