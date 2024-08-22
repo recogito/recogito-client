@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { GraduationCap } from '@phosphor-icons/react';
+import { DownloadSimple, GraduationCap } from '@phosphor-icons/react';
 import { archiveAssignment, getAssignment } from '@backend/helpers';
 import type { AvailableLayers } from '@backend/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -41,7 +41,7 @@ interface AssignmentsViewProps {
 }
 
 export const AssignmentsView = (props: AssignmentsViewProps) => {
-  const { t } = props.i18n;
+  const { t, lang } = props.i18n;
 
   const { project } = props;
 
@@ -154,6 +154,14 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
             )}
           </>
         )}
+
+        <a
+          href={`/${lang}/projects/${props.project.id}/export/csv?context=${currentAssignment?.id}`}
+          className='button'
+        >
+          <DownloadSimple size={20} />
+          <span>{t['Export annotations as CSV']}</span>
+        </a>
       </header>
       {props.assignments &&
         props.assignments.length > 0 &&

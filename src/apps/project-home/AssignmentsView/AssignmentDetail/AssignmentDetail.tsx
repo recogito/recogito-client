@@ -95,7 +95,6 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
             {props.assignment.context_documents.map(({ document }) => (
               <DocumentCard
                 key={document.id}
-                isDefaultContext
                 isAdmin={false}
                 i18n={props.i18n}
                 document={document as Document}

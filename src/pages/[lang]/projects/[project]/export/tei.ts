@@ -1,10 +1,95 @@
 import type { APIRoute } from 'astro';
 import { Visibility } from '@recogito/annotorious-supabase';
-import { getAllDocumentLayersInProject, getProjectPolicies } from '@backend/helpers';
+import { getAllDocumentLayersInProject, getAssignment, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { mergeAnnotations, sanitizeFilename } from 'src/util';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Document, Project } from 'src/Types';
+
+const exportForProject = async (supabase: SupabaseClient, url: URL, projectId: string, document: Document, xml: string) => {
+  // At the project level, all layers in the project will be exported
+  const layers = await getAllDocumentLayersInProject(supabase, document.id, projectId);
+  if (layers.error)
+    return new Response(
+      JSON.stringify({ message: 'Internal server error' }), 
+      { status: 500 }); 
+
+  const layerIds = layers.data.map(l => l.id);
+
+  // Download annotations on all layers
+  const annotations = await getAnnotations(supabase, layerIds);
+  if (annotations.error)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving annotations' }), 
+      { status: 500 }); 
+
+  // Exclude private, if necessary
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const merged = includePrivate ? 
+    mergeAnnotations(xml, annotations.data) : 
+    mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
+
+  const { name } = document;
+
+  const filename = 
+    name.endsWith('.tei.xml') ? sanitizeFilename(name.replace('.tei.xml', '')) + '.tei.xml' :
+    name.endsWith('.xml') ? sanitizeFilename(name.replace('.xml', '')) + '.xml' :
+    sanitizeFilename(name) + '.tei.xml';
+
+  return new Response(    
+    merged,
+    { 
+      headers: { 
+        'Content-Type': 'text/xml',
+        'Content-Disposition': `attachment;filename=${filename}`
+      },
+      status: 200 
+    }
+  );
+}
+
+const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId: string, document: Document, xml: string) => {
+  const assignment = await getAssignment(supabase, contextId);
+  if (assignment.error || !assignment.data) {
+    const error = await fetch(`${url}/404`);
+    return new Response(error.body, { 
+      headers: { 'Content-Type': 'text/html;charset=utf-8' },
+      status: 404, 
+      statusText: 'Not Found' 
+     }); 
+  }
+
+  // At the assignment level, only the assignment layer will be exported
+  const annotations = await getAnnotations(supabase, assignment.data.layers.map(l => l.id));
+  if (annotations.error)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving annotations' }), 
+      { status: 500 }); 
+
+  // Exclude private, if necessary
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const merged = includePrivate ? 
+    mergeAnnotations(xml, annotations.data) : 
+    mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
+
+  const filename = document.name.endsWith('.xml') ?
+    sanitizeFilename(document.name) : sanitizeFilename(`${document.name}-${assignment.data.name}.tei.xml`)
+
+  return new Response(    
+    merged,
+    { 
+      headers: { 
+        'Content-Type': 'text/xml',
+        'Content-Disposition': `attachment;filename=${filename}`
+      },
+      status: 200 
+    }
+  );
+}
 
 export const GET: APIRoute = async ({ params, cookies, url }) => {
   // Verify if the user is logged in
@@ -24,9 +109,8 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
       JSON.stringify({ error: 'Unauthorized'}),
       { status: 401 });
 
-  // At the project level, only admins can export annotations
-  const isAdmin = policies.data.get('projects').has('UPDATE') || profile.data.isOrgAdmin;
-  if (!isAdmin)
+  const hasSelectPermissions = policies.data.get('project_documents').has('SELECT') || profile.data.isOrgAdmin;
+  if (!hasSelectPermissions)
     return new Response(
       JSON.stringify({ error: 'Unauthorized'}),
       { status: 401 });
@@ -51,45 +135,11 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
 
   const xml = await content.data.text();
 
-  // At the project level, all layers in the project will be exported
-  const layers = await getAllDocumentLayersInProject(supabase, documentId, projectId);
-  if (layers.error)
-    return new Response(
-      JSON.stringify({ message: 'Internal server error' }), 
-      { status: 500 }); 
+  const contextId = url.searchParams.get('context');
 
-  const layerIds = layers.data.map(l => l.id);
-
-  // Download annotations on all layers
-  const annotations = await getAnnotations(supabase, layerIds);
-  if (annotations.error)
-    return new Response(
-      JSON.stringify({ message: 'Error retrieving annotations' }), 
-      { status: 500 }); 
-
-  // Exclude private, if necessary
-  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
-
-  const merged = includePrivate ? 
-    mergeAnnotations(xml, annotations.data) : 
-    mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
-
-  const { name } = document.data;
-
-  const filename = 
-    name.endsWith('.tei.xml') ? sanitizeFilename(name.replace('.tei.xml', '')) + '.tei.xml' :
-    name.endsWith('.xml') ? sanitizeFilename(name.replace('.xml', '')) + '.xml' :
-    sanitizeFilename(name) + '.tei.xml';
-
-  return new Response(    
-    merged,
-    { 
-      headers: { 
-        'Content-Type': 'text/xml',
-        'Content-Disposition': `attachment;filename=${filename}`
-      },
-      status: 200 
-    }
-  );
-
-};
+  if (contextId) {
+    return exportForAssignment(supabase, url, contextId, document.data, xml);
+  } else {
+    return exportForProject(supabase, url, projectId, document.data, xml);
+  }
+}
