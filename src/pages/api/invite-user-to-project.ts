@@ -9,8 +9,6 @@ import {
 } from '@usewaypoint/email-builder';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 
-console.log('Host: ', import.meta.env.MAIL_HOST);
-console.log('Port: ', import.meta.env.MAIL_PORT);
 export const POST: APIRoute = async ({ request, cookies, url }) => {
   // Verify if the user is logged in
   const supabase = await createSupabaseServerClient(cookies);
