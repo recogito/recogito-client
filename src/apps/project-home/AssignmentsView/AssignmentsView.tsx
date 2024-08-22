@@ -42,7 +42,7 @@ interface AssignmentsViewProps {
 }
 
 export const AssignmentsView = (props: AssignmentsViewProps) => {
-  const { t, lang } = props.i18n;
+  const { t } = props.i18n;
 
   const { project } = props;
 
