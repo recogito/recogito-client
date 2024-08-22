@@ -6,7 +6,7 @@ import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { mergeAnnotations, sanitizeFilename } from 'src/util';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Document, Project } from 'src/Types';
+import type { Document } from 'src/Types';
 
 const exportForProject = async (supabase: SupabaseClient, url: URL, projectId: string, document: Document, xml: string) => {
   // At the project level, all layers in the project will be exported
@@ -76,8 +76,9 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
     mergeAnnotations(xml, annotations.data) : 
     mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
 
-  const filename = document.name.endsWith('.xml') ?
-    sanitizeFilename(document.name) : sanitizeFilename(`${document.name}-${assignment.data.name}.tei.xml`)
+  const filename = document.name.endsWith('.xml')
+    ? `${sanitizeFilename(document.name.slice(0, -4))}-${sanitizeFilename(assignment.data.name)}.xml`
+    : `${sanitizeFilename(document.name)}-${sanitizeFilename(assignment.data.name)}.xml`;
 
   return new Response(    
     merged,

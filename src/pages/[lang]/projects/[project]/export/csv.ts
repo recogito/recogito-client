@@ -39,8 +39,8 @@ const exportForProject = async (supabase: SupabaseClient, url: URL, project: Pro
   const csv = annotationsToCSV(annotations.data, layers.data, includePrivate);
 
   const filename = documentId
-    ? sanitizeFilename(`${layers.data[0].document.name}.csv`)
-    : sanitizeFilename(`project-${project.name}.csv`);
+    ? `${sanitizeFilename(layers.data[0].document.name)}.csv`
+    : `project-${sanitizeFilename(project.name)}.csv`;
 
   return new Response(    
     csv,
@@ -86,14 +86,16 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
 
   const csv = annotationsToCSV(annotations.data, assignment.data.layers, includePrivate);
 
+  const filename = documentId
+    ? `${sanitizeFilename(layers[0].document.name)}-assignment-${sanitizeFilename(assignment.data.name)}.csv`
+    : `${sanitizeFilename(assignment.data.name)}.csv`;
+
   return new Response(    
     csv,
     { 
       headers: { 
         'Content-Type': 'text/csv',
-        'Content-Disposition': documentId
-          ? sanitizeFilename(`attachment;filename=${layers[0].document.name}-assignment-${assignment.data.name}.csv`)
-          : sanitizeFilename(`attachment;filename=assignment-${assignment.data.name}.csv`)
+        'Content-Disposition': `attachment;filename=${filename}`
       },
       status: 200 
     }

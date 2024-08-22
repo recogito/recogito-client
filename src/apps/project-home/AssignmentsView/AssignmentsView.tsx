@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { DownloadSimple, GraduationCap } from '@phosphor-icons/react';
+import { GraduationCap } from '@phosphor-icons/react';
 import { archiveAssignment, getAssignment } from '@backend/helpers';
 import type { AvailableLayers } from '@backend/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -55,7 +55,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
 
   const currentAssignment = useMemo(() => {
     if (currentAssignmentId && props.assignments) {
-      return props.assignments.find(c => c.id === currentAssignmentId);
+      return props.assignments.find(c => c.id === currentAssignmentId) || props.assignments[0];
     } else if (props.assignments && props.assignments.length > 0) {
       return props.assignments[0];
     }
@@ -157,14 +157,6 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
             )}
           </>
         )}
-
-        <a
-          href={`/${lang}/projects/${props.project.id}/export/csv?context=${currentAssignment?.id}`}
-          className='button'
-        >
-          <DownloadSimple size={20} />
-          <span>{t['Export annotations as CSV']}</span>
-        </a>
       </header>
       {props.assignments &&
         props.assignments.length > 0 &&
