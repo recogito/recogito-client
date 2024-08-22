@@ -136,3 +136,11 @@
   padding: 25px;
   z-index: 9999;
 }
+
+.doc-lib-confirm-overlay {
+  z-index: 10000 !important;
+}
+
+.doc-lib-confirm-content {
+  z-index: 10100 !important;
+}

@@ -427,3 +427,11 @@ export type GroupMember = {
   in_group: string;
   since: string;
 };
+
+export type ApiPostInviteUserToProject = {
+  email: string;
+  projectId: string;
+  projectName: string;
+  projectGroupId: string;
+  invitedBy: string;
+};

@@ -22,6 +22,13 @@ if (profile.error || !profile.data) {
 
 const projectId = Astro.params.project;
 
+// Is this someone who is accepting an invite?
+const accept = Astro.url.searchParams.get('accept-invite');
+
+if (accept) {
+  return Astro.redirect(`/${lang}/projects/${projectId}/accept-invite`);
+}
+
 const project = await getProjectExtended(supabase, projectId as string);
 
 if (project.error || !project.data) {
@@ -35,10 +42,14 @@ if (project.error || !project.data) {
 
 const user = project.data.users.find((u) => u.user.id === profile.data.id);
 
-if (!user) {
-  return Astro.redirect(
-    `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
-  );
+if (!user && !profile.data.isOrgAdmin) {
+  if (project.data.is_open_join) {
+    return Astro.redirect(
+      `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
+    );
+  } else {
+    return Astro.redirect(`/${lang}/projects`);
+  }
 }
 const documents = await listDocumentsInProject(supabase, projectId as string);
 
