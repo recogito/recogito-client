@@ -17,7 +17,6 @@
 }
 
 .login-accordion > .accordion-item > .accordion-content {
-  background-color: var(--button-background-color);
   padding: 1em 1em 2em 1em;
 }
 

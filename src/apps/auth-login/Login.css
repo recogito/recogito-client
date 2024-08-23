@@ -59,6 +59,10 @@ h2 {
   margin-top: 1em;
 }
 
+.login button:not(.primary) {
+  background-color: white;
+}
+
 .login-separator {
   display: flex;
   flex-direction: row;
