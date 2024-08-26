@@ -20,6 +20,7 @@ import projectRequest from './project-request.json';
 import email from './email.json';
 
 export default {
+  'annotation-common': annotationCommon,
   'annotation-image': {
     ...annotationCommon,
     ...annotationImage,

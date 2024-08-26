@@ -4,16 +4,24 @@ import { getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { annotationsToCSV } from 'src/util/export/csv';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getTranslations } from '@i18n';
 import { sanitizeFilename } from 'src/util';
-import type {Project } from 'src/Types';
+import type {Project, Translations } from 'src/Types';
 import { 
   getAllDocumentLayersInProject, 
   getAllLayersInProject, 
   getProjectPolicies, 
-  getAssignment
+  getAssignment,
+  getAvailableLayers
 } from '@backend/helpers';
 
-const exportForProject = async (supabase: SupabaseClient, url: URL, project: Project, documentId: string | null) => {
+const exportForProject = async (
+  supabase: SupabaseClient, 
+  url: URL, 
+  project: Project, 
+  documentId: string | null,
+  i18n: Translations
+) => {
   // Retrieve all layers, or just for the selected document, based on
   // URL query param
   const layers = documentId ? 
@@ -27,6 +35,7 @@ const exportForProject = async (supabase: SupabaseClient, url: URL, project: Pro
 
   const layerIds = layers.data.map(l => l.id);
 
+  // Get annotations for all layers
   const annotations = await getAnnotations(supabase, layerIds);
   if (annotations.error) { 
     return new Response(
@@ -34,9 +43,24 @@ const exportForProject = async (supabase: SupabaseClient, url: URL, project: Pro
       { status: 500 }); 
   }
 
+  // Retrieve meta for all layers in project, so we have the name
+  // of the context each layer belongs to
+  const layerMeta = await getAvailableLayers(supabase, project.id);
+
+  if (layerMeta.error || !layerMeta.data || layerMeta.data.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 }); 
+
   const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
 
-  const csv = annotationsToCSV(annotations.data, layers.data, includePrivate);
+  const csv = annotationsToCSV(
+    annotations.data, 
+    layers.data, 
+    layerMeta.data, 
+    includePrivate,
+    i18n,
+  );
 
   const filename = documentId
     ? `${sanitizeFilename(layers.data[0].document.name)}.csv`
@@ -54,7 +78,13 @@ const exportForProject = async (supabase: SupabaseClient, url: URL, project: Pro
   );
 }
 
-const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId: string, documentId: string | null) => {
+const exportForAssignment = async (
+  supabase: SupabaseClient, 
+  url: URL, 
+  contextId: string, 
+  documentId: string | null,
+  i18n: Translations
+) => {
   const assignment = await getAssignment(supabase, contextId);
   if (assignment.error || !assignment.data) {
     const error = await fetch(`${url}/404`);
@@ -82,9 +112,23 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
       JSON.stringify({ message: 'Error retrieving annotations' }), 
       { status: 500 }); 
 
+  // Retrieve meta for all layers in project, so we have the name
+  // of the context each layer belongs to
+  const layerMeta = await getAvailableLayers(supabase, assignment.data.project_id);
+
+  if (layerMeta.error || !layerMeta.data || layerMeta.data.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 }); 
+
   const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
 
-  const csv = annotationsToCSV(annotations.data, assignment.data.layers, includePrivate);
+  const csv = annotationsToCSV(
+    annotations.data, 
+    assignment.data.layers, 
+    layerMeta.data, 
+    includePrivate,
+    i18n);
 
   const filename = documentId
     ? `${sanitizeFilename(layers[0].document.name)}-assignment-${sanitizeFilename(assignment.data.name)}.csv`
@@ -102,7 +146,9 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
   );
 }
 
-export const GET: APIRoute = async ({ params, cookies, url }) => {
+export const GET: APIRoute = async ({ cookies, params, request, url }) => {
+  const i18n = getTranslations(request, 'annotation-common');
+
   const supabase = await createSupabaseServerClient(cookies);
 
   const profile = await getMyProfile(supabase);
@@ -135,8 +181,8 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
   const contextId = url.searchParams.get('context');
 
   if (contextId) {
-    return exportForAssignment(supabase, url, contextId, documentId);
+    return exportForAssignment(supabase, url, contextId, documentId, i18n);
   } else {
-    return exportForProject(supabase, url, project.data, documentId);
+    return exportForProject(supabase, url, project.data, documentId, i18n);
   }
 }
