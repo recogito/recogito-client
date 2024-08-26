@@ -54,7 +54,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           error={Boolean(error)}
           id='email'
           name='email'
-          label={t['Email']}
+          label={t['Username']}
           className='lg w-full'
           onChange={setEmail}
         />
