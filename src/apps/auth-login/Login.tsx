@@ -28,7 +28,7 @@ const clearCookies = () => {
 
 export const Login = (props: {
   i18n: Translations;
-  splashURL: string;
+  logo: boolean;
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
@@ -131,7 +131,7 @@ export const Login = (props: {
           key={method.type}
           onClick={() => signInWithSSO(method.domain)}
         >
-          <span>{t[method.name]}</span>
+          <span>{ method.name }</span>
         </Button>
       );
     }
@@ -154,15 +154,13 @@ export const Login = (props: {
       )}
       { !isChecking && (
         <div className='login'>
-          <main>
-            <h1>{t['Welcome Back']}</h1>
-            <h2>{t['Log into your account']}</h2>
-            { primary.type === LoginMethods.username_password && (
-              <StateLoginForm i18n={props.i18n} />
-            )}
-            { primary.type !== LoginMethods.username_password && renderLoginButton(primary, 'primary') }
-            { loginMethods && loginMethods.map(renderLoginButton) }
-          </main>
+          <h1>{t['Welcome Back']}</h1>
+          <h2>{t['Log into your account']}</h2>
+          { primary.type === LoginMethods.username_password && (
+            <StateLoginForm i18n={props.i18n} />
+          )}
+          { primary.type !== LoginMethods.username_password && renderLoginButton(primary, 'primary') }
+          { loginMethods && loginMethods.map(renderLoginButton) }
         </div>
       )}
     </div>

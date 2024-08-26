@@ -1,36 +1,51 @@
 ---
-import Footer from '../../branding/Footer';
-import HeaderLayout from '../HeaderLayout.astro';
-import config from '../../config.json';
+import { BrandFooter } from '@components/Branding/BrandFooter';
+import { Logo } from '@components/Logo';
+import { getTranslations } from '@i18n';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
+import config from 'src/config.json';
 
 export interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const i18n = getTranslations(Astro.request, 'branding');
+const { t } = i18n;
 
 const backgroundColor = config.branding.background_color;
-const message = config.branding.footer_message;
 const splashURL = config.branding.home_banner;
 const textColor = config.branding.contrast_color;
 const useFooter = config.branding.bottom_logos_enabled;
+const useTopLogo = config.branding.top_logo_enabled;
 ---
 
 <HeaderLayout footer={false} title={title}>
-  <div class='container'>
-    <div class='slot-container'>
-      <div style={{ flexGrow: '1' }}>
+  <div class='content-container'>
+    <main>
+      <div class='slot-container'>
+        { useTopLogo && (
+          <div class='top-logo'>
+            <img src='/img/branding/login/content-logo.svg' />
+          </div>
+        )}
         <slot />
       </div>
-      <footer>
-        <div class='blurb'>
-          {message || ''}
-        </div>
-        <div class='bottom_links'>
-          {useFooter && <Footer contrastColor={textColor} />}
-        </div>
-      </footer>
-    </div>
+      <div class='footer-container'>
+        { useFooter && (
+          <div class='bottom-logo'>
+            <span>{t['powered by']}</span>
+            <Logo
+              color='#004F9F'
+              contrastColor='black'
+              height={42}
+              width={230}
+            />
+          </div>
+        )}
+        <BrandFooter i18n={i18n} />
+      </div>
+    </main>
     <div class='img-container'>
       <img class='banner-img' src={splashURL} />
     </div>
@@ -42,11 +57,6 @@ const useFooter = config.branding.bottom_logos_enabled;
     overflow: hidden;
   }
 
-  .blurb {
-    color: var(--textColor);
-    font-size: 14px;
-  }
-
   .banner-img {
     object-fit: cover;
     width: 100%;
@@ -54,9 +64,27 @@ const useFooter = config.branding.bottom_logos_enabled;
     overflow: hidden;
   }
 
-  .container {
+  .content-container {
     display: flex;
     height: calc(100vh - 60px);
+  }
+
+  footer {
+    align-items: center;
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+    display: flex;
+    height: 80px;
+    justify-content: space-between;
+    z-index: 1000;
+  }
+
+  .footer-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
   }
 
   .img-container {
@@ -64,20 +92,26 @@ const useFooter = config.branding.bottom_logos_enabled;
     height: 100%;
   }
 
-  .slot-container {
+  .bottom-logo {
+    display: flex;
+    flex-direction: column;
+    margin-top: 2em;
+    flex-grow: 1;
+    align-items: center;
+  }
+
+  main {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     min-height: calc(100vh - 100px);
   }
 
-  footer {
-    align-items: center;
-    background-color: var(--backgroundColor);
-    display: flex;
-    height: 80px;
-    justify-content: space-between;
-    padding: 0 40px;
-    z-index: 1000;
+  .slot-container {
+    padding: 0 80px;
+  }
+
+  .top-logo {
+    margin: 2em 0 1em 0;
   }
 </style>

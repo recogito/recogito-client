@@ -1,18 +1,17 @@
 ---
-import LoginLayout from '@layouts/login/LoginLayout.astro';
 import { Login } from '@apps/auth-login';
 import { getTranslations } from '@i18n';
-import type { LoginMethod } from '../../Types';
+import LoginLayout from '@layouts/login/LoginLayout.astro';
 import config from '../../config.json';
+import type { LoginMethod } from '../../Types';
 
 const methods = config.authentication.methods;
-const splashURL = config.branding.home_banner;
 ---
+
 <LoginLayout title=''>
   <Login
     client:only='react'
     i18n={getTranslations(Astro.request, 'auth-login')}
     methods={methods as LoginMethod[]}
-    splashURL={splashURL}
   />
 </LoginLayout>;
