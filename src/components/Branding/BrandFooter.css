@@ -1,6 +1,7 @@
-footer.brand-footer > .bottom_links {
+footer.brand-footer > .bottom-links {
   display: flex;
   flex-direction: row;
+  width: 100%;
 }
 
 footer.brand-footer > .logo-container {

@@ -54,20 +54,24 @@ const useFooter = config.branding.bottom_logos_enabled;
 </HeaderLayout>
 
 <style define:vars={{ backgroundColor, textColor }}>
-  body {
-    overflow: hidden;
-  }
-
   .banner-img {
     object-fit: cover;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+  }
+
+  .bottom-logo {
+    display: flex;
+    flex-direction: column;
+    margin: 2em 0;
+    flex-grow: 1;
+    align-items: center;
   }
 
   .content-container {
     display: flex;
-    height: calc(100vh - 60px);
+    height: 100%;
+    //height: calc(100vh - 60px);
   }
 
   footer {
@@ -90,22 +94,14 @@ const useFooter = config.branding.bottom_logos_enabled;
 
   .img-container {
     flex-basis: 60%;
-    height: 100%;
-  }
-
-  .bottom-logo {
-    display: flex;
-    flex-direction: column;
-    margin-top: 2em;
-    flex-grow: 1;
-    align-items: center;
+    overflow: hidden;
   }
 
   main {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    min-height: calc(100vh - 100px);
+    min-height: calc(100vh - 60px);
   }
 
   .slot-container {

@@ -32,7 +32,7 @@ h1 {
 
 h2 {
   color: #747577;
-  margin: 0;
+  margin: 0 0 1em 0;
 }
 
 .login .error,
@@ -46,10 +46,6 @@ h2 {
   font-size: var(--font-tiny);
   margin: 1em 0 1.5em 0;
   text-align: right;
-}
-
-.login .login-email {
-  margin-top: 1em;
 }
 
 .login button:not(.primary) {
