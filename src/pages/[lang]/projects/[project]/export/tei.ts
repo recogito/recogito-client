@@ -61,9 +61,14 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
       statusText: 'Not Found' 
      }); 
   }
-
+  
   // At the assignment level, only the assignment layer will be exported
-  const annotations = await getAnnotations(supabase, assignment.data.layers.map(l => l.id));
+  const annotations = await getAnnotations(
+    supabase, 
+    assignment.data.layers
+      .filter(l => l.document.id === document.id)
+      .map(l => l.id));
+
   if (annotations.error)
     return new Response(
       JSON.stringify({ message: 'Error retrieving annotations' }), 
