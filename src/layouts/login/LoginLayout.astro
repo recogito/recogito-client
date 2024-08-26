@@ -14,19 +14,19 @@ const i18n = getTranslations(Astro.request, 'branding');
 const { t } = i18n;
 
 const backgroundColor = config.branding.background_color;
+const loginLogo = config.branding.login_logo;
 const splashURL = config.branding.home_banner;
 const textColor = config.branding.contrast_color;
 const useFooter = config.branding.bottom_logos_enabled;
-const useTopLogo = config.branding.top_logo_enabled;
 ---
 
 <HeaderLayout footer={false} title={title}>
   <div class='content-container'>
     <main>
       <div class='slot-container'>
-        { useTopLogo && (
+        { loginLogo && loginLogo.length > 0 && (
           <div class='top-logo'>
-            <img src='/img/branding/login/content-logo.svg' />
+            <img src={`/img/branding/login/${loginLogo}`} />
           </div>
         )}
         <slot />

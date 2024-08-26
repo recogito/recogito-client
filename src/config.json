@@ -9,7 +9,8 @@
     "background_color": "#07529A",
     "contrast_color": "white",
     "bottom_logos_enabled": false,
-    "top_logo_enabled": false,
+    "top_logo": "",
+    "login_logo": "",
     "favicon": "favicon.svg"
   },
   "authentication": {
