@@ -1,0 +1,21 @@
+form > .field {
+  display: block;
+}
+
+form > .field > label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 100%;
+}
+
+form > .field > input {
+  background-color: #FAFAFA;
+  border-color: #E1E3E6;
+  height: 38px;
+  width: 100%;
+  box-shadow: none;
+}
+
+form > .field > input:focus {
+  border-color: #E1E3E6;
+}

@@ -54,18 +54,10 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     </script>
   </body>
 </html>
+
 <style define:vars={{ siteColor, backgroundColor, textColor }}>
   body {
     height: 100%;
-  }
-
-  .slot-container {
-    bottom: 0;
-    flex-direction: column;
-    margin: 60px 0 80px 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
   }
 
   footer {
@@ -92,5 +84,14 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     position: fixed;
     width: 100%;
     z-index: 9999;
+  }
+
+  .slot-container {
+    bottom: 0;
+    flex-direction: column;
+    margin: 60px 0 80px 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 </style>
