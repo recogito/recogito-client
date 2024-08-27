@@ -3,6 +3,7 @@ form > .field {
 }
 
 form > .field > label {
+  display: block;
   font-size: 0.8rem;
   font-weight: 600;
   width: 100%;
@@ -11,9 +12,10 @@ form > .field > label {
 form > .field > input {
   background-color: #FAFAFA;
   border-color: #E1E3E6;
+  box-shadow: none;
+  display: block;
   height: 38px;
   width: 100%;
-  box-shadow: none;
 }
 
 form > .field > input:focus {
