@@ -5,6 +5,7 @@ import annotationText from './annotation-text.json';
 import authForgotPassword from './auth-forgot-password.json';
 import authLogin from './auth-login.json';
 import authResetPassword from './auth-reset-password.json';
+import branding from './branding.json';
 import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
@@ -30,6 +31,7 @@ export default {
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
+  branding: branding,
   'dashboard-account': { ...dashboardAccount, ...accountMenu },
   'dashboard-projects': {
     ...dashboardProjects,

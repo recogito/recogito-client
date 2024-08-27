@@ -142,7 +142,7 @@ export const Login = (props: {
         key={method.type}
         onClick={signInWithKeycloak}
       >
-        <span>{t[method.name]}</span>
+        <span>{ method.name }</span>
       </Button>
     )
   }, [signInWithKeycloak, signInWithSSO, t]);

@@ -16,8 +16,5 @@
   "Your email address": "Your email address",
   "Send Magic Link": "Send Magic Link",
   "Link Sent": "Link Sent",
-  "Check your email for the Magic Link.": "Check your email for the Magic Link.",
-  "Sign in with SSO": "Sign in with SSO",
-  "Sign in with Keycloak": "Sign in with Keycloak",
-  "Sign in with Username and Password": "Sign in with Username and Password"
+  "Check your email for the Magic Link.": "Check your email for the Magic Link."
 }
