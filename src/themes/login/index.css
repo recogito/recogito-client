@@ -1,23 +1,23 @@
-form > .field {
+form.login > .field {
   display: block;
 }
 
-form > .field > label {
+form.login > .field > label {
   display: block;
   font-size: 0.8rem;
   font-weight: 600;
   width: 100%;
 }
 
-form > .field > input {
-  background-color: #FAFAFA;
-  border-color: #E1E3E6;
+form.login > .field > input {
+  background-color: var(--gray-50);
+  border-color: var(--gray-200);
   box-shadow: none;
   display: block;
   height: 38px;
   width: 100%;
 }
 
-form > .field > input:focus {
-  border-color: #E1E3E6;
+form.login > .field > input:focus {
+  border-color: var(--gray-200);
 }

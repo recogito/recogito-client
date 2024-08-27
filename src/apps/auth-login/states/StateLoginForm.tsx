@@ -48,7 +48,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
 
   return (
     <div className='login-email'>
-      <form>
+      <form className='login'>
         <TextInput
           autoComplete={false}
           error={Boolean(error)}
