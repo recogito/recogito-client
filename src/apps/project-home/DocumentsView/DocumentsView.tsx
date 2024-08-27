@@ -251,7 +251,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           {props.documents.map((document) => (
             <DocumentCard
               key={document.id}
-              isDefaultContext
               isAdmin={props.isAdmin}
               i18n={props.i18n}
               document={document}

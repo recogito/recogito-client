@@ -41,7 +41,7 @@ interface AssignmentsViewProps {
   setAssignments(assignemnts: Context[]): void;
 }
 
-export const AssignmentsView = (props: AssignmentsViewProps) => {  
+export const AssignmentsView = (props: AssignmentsViewProps) => {
   const { t } = props.i18n;
 
   const { project } = props;
