@@ -1,5 +1,5 @@
 import CustomFooter from '@branding/Footer';
-import { Logo } from '@components/Logo';
+import { RecogitoLogo } from '@components/RecogitoLogo';
 import config from 'src/config.json';
 import type { Translations } from '../../Types';
 import './BrandFooter.css';
@@ -35,7 +35,7 @@ export const BrandFooter = ({ i18n, ...rest }: Props) => {
           className='logo-container'
         >
           <span>{t['powered by']}</span>
-          <Logo
+          <RecogitoLogo
             color='#FBBA00'
             contrastColor='white'
             height={42}
