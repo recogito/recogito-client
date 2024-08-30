@@ -8,7 +8,7 @@ export interface Props {
   title: string;
 }
 
-const { title, footer = true } = Astro.props;
+const { title } = Astro.props;
 const i18n = getTranslations(Astro.request, 'branding');
 
 const siteColor = config.branding.site_color;
@@ -33,9 +33,6 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     <div class='slot-container'>
       <slot />
     </div>
-    { footer && (
-      <BrandFooter i18n={i18n} />
-    )}
     <script>
       // @ts-ignore
       window.onUsersnapLoad = function (api: any) {

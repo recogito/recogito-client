@@ -110,57 +110,54 @@ export const Login = (props: {
       });
   };
 
-  const renderLoginButton = useCallback((method: LoginMethod, className = null) => {
-    if (method.type === LoginMethods.username_password) {
-      return (
-        <LoginAccordion
-          key={method.type}
-          label={t[method.name]}
-        >
-          <StateLoginForm
-            i18n={props.i18n}
-          />
-        </LoginAccordion>
-      );
-    }
+  const renderLoginButton = useCallback(
+    (method: LoginMethod, className: string | null = null) => {
+      if (method.type === LoginMethods.username_password) {
+        return (
+          <LoginAccordion key={method.type} label={method.name}>
+            <StateLoginForm i18n={props.i18n} />
+          </LoginAccordion>
+        );
+      }
 
-    if (method.type === LoginMethods.saml) {
+      if (method.type === LoginMethods.saml) {
+        return (
+          <Button
+            className={classNames(className, 'lg w-full')}
+            key={method.type}
+            onClick={() => signInWithSSO(method.domain)}
+          >
+            <span>{method.name}</span>
+          </Button>
+        );
+      }
+
       return (
         <Button
           className={classNames(className, 'lg w-full')}
           key={method.type}
-          onClick={() => signInWithSSO(method.domain)}
+          onClick={signInWithKeycloak}
         >
-          <span>{ method.name }</span>
+          <span>{method.name}</span>
         </Button>
       );
-    }
-
-    return (
-      <Button
-        className={classNames(className, 'lg w-full')}
-        key={method.type}
-        onClick={signInWithKeycloak}
-      >
-        <span>{ method.name }</span>
-      </Button>
-    )
-  }, [signInWithKeycloak, signInWithSSO, t]);
+    },
+    [signInWithKeycloak, signInWithSSO, t]
+  );
 
   return (
     <div className='login-background-container'>
-      { isChecking && (
-        <StateChecking />
-      )}
-      { !isChecking && (
+      {isChecking && <StateChecking />}
+      {!isChecking && (
         <div className='login'>
           <h1>{t['Welcome Back']}</h1>
           <h2>{t['Log into your account']}</h2>
-          { primary.type === LoginMethods.username_password && (
+          {primary.type === LoginMethods.username_password && (
             <StateLoginForm i18n={props.i18n} />
           )}
-          { primary.type !== LoginMethods.username_password && renderLoginButton(primary, 'primary') }
-          { loginMethods && loginMethods.map(renderLoginButton) }
+          {primary.type !== LoginMethods.username_password &&
+            renderLoginButton(primary, 'primary')}
+          {loginMethods && loginMethods.map((m) => renderLoginButton(m))}
         </div>
       )}
     </div>

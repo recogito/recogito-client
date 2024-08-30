@@ -8,9 +8,10 @@ import '@themes/login/index.css';
 
 export interface Props {
   title: string;
+  showLogo: boolean;
 }
 
-const { title } = Astro.props;
+const { title, showLogo } = Astro.props;
 const i18n = getTranslations(Astro.request, 'branding');
 const { t } = i18n;
 
@@ -21,29 +22,33 @@ const textColor = config.branding.contrast_color;
 const useFooter = config.branding.bottom_logos_enabled;
 ---
 
-<HeaderLayout footer={false} title={title}>
+<HeaderLayout title={title}>
   <div class='content-container'>
     <main>
       <div class='slot-container'>
-        { loginLogo && loginLogo.length > 0 && (
-          <div class='top-logo'>
-            <img src={`/img/branding/login/${loginLogo}`} />
-          </div>
-        )}
+        {
+          loginLogo && loginLogo.length > 0 && (
+            <div class='top-logo'>
+              <img src={`/img/branding/login/${loginLogo}`} />
+            </div>
+          )
+        }
         <slot />
       </div>
       <div class='footer-container'>
-        { useFooter && (
-          <div class='bottom-logo'>
-            <span>{t['powered by']}</span>
-            <Logo
-              color='#004F9F'
-              contrastColor='black'
-              height={42}
-              width={230}
-            />
-          </div>
-        )}
+        {
+          useFooter && showLogo && (
+            <div class='bottom-logo'>
+              <span>{t['powered by']}</span>
+              <RecogitoLogo
+                color='#004F9F'
+                contrastColor='black'
+                height={42}
+                width={230}
+              />
+            </div>
+          )
+        }
         <BrandFooter i18n={i18n} />
       </div>
     </main>
@@ -63,7 +68,7 @@ const useFooter = config.branding.bottom_logos_enabled;
   .bottom-logo {
     display: flex;
     flex-direction: column;
-    margin: 2em 0;
+    margin: 1em 0;
     flex-grow: 1;
     align-items: center;
   }

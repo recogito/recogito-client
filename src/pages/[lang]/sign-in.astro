@@ -8,7 +8,12 @@ import type { LoginMethod } from '../../Types';
 const methods = config.authentication.methods;
 ---
 
-<LoginLayout title=''>
+<LoginLayout
+  title=''
+  showLogo={config.branding.login_logo === ''
+    ? methods.length < 4
+    : methods.length < 3}
+>
   <Login
     client:only='react'
     i18n={getTranslations(Astro.request, 'auth-login')}

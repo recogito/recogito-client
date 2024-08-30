@@ -4,7 +4,10 @@ header.brand-header > .brand-header-container {
   align-items: center;
 }
 
-header.brand-header > .brand-header-container > .separator {
+header.brand-header
+  > .brand-header-container
+  > .branding-left-slot
+  > .separator {
   width: 2px;
   height: 20px;
   margin-left: 5px;
@@ -12,12 +15,20 @@ header.brand-header > .brand-header-container > .separator {
   z-index: 9999;
 }
 
-header.brand-header > .brand-header-container > .site-name {
+header.brand-header
+  > .brand-header-container
+  > .branding-left-slot
+  > .site-name {
   padding-left: 5px;
   color: var(--textColor);
-  opacity: 0.8;
-  font-size: 12px;
+  font-size: 20px;
   padding-top: 4px;
-  text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 500;
+}
+
+.branding-left-slot {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
