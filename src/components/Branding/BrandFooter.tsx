@@ -1,24 +1,48 @@
 import CustomFooter from '@branding/Footer';
+import { RecogitoLogo } from '@components/RecogitoLogo';
 import config from 'src/config.json';
+import type { Translations } from '../../Types';
+import './BrandFooter.css';
 
-import './Branding.css';
+const {
+  bottom_logos_enabled: useFooter,
+  contrast_color: textColor
+} = config.branding;
 
-export const BrandFooter = () => {
+interface Props {
+  i18n: Translations;
+}
 
-  const { 
-    bottom_logos_enabled, 
-    contrast_color, 
-    footer_message } = config.branding;
+export const BrandFooter = ({ i18n, ...rest }: Props) => {
+  const { t } = i18n;
 
   return (
-    <footer className="branding">
-      <div className="branding-blurb">
-        {footer_message || ''}
-      </div>
-      <div className="branding-right-slot">
-        {bottom_logos_enabled && <CustomFooter contrastColor={contrast_color} />}
-      </div>
+    <footer
+      className='brand-footer'
+      {...rest}
+    >
+      { useFooter && (
+        <div
+          className='bottom-links'
+        >
+          <CustomFooter
+            contrastColor={textColor}
+          />
+        </div>
+      )}
+      { !useFooter && (
+        <div
+          className='logo-container'
+        >
+          <span>{t['powered by']}</span>
+          <RecogitoLogo
+            color='#FBBA00'
+            contrastColor='white'
+            height={42}
+            width={230}
+          />
+        </div>
+      )}
     </footer>
-  )
-
-}
+  );
+};

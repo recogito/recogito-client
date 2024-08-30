@@ -34,7 +34,13 @@ export const TextInput = (props: TextInputProps) => {
 
   return (
     <div
-      className={props.error ? "input-wrapper error" : "input-wrapper"}>
+      className={props.error ? "field error" : "field"}
+    >
+      <label
+        htmlFor={props.name}
+      >
+        { props.label }
+      </label>
       <input 
         autoComplete={props.autoComplete === false ? 'off' : undefined}
         type={props.type || 'text'}
@@ -43,12 +49,8 @@ export const TextInput = (props: TextInputProps) => {
         className={props.className} 
         data-filled={value !== ''}
         value={value}
-        onChange={onChange}/>
-
-        <label htmlFor={props.name}>
-          <span className="label-background" />
-          {props.label}
-        </label> 
+        onChange={onChange}
+      />
     </div>
   )
 

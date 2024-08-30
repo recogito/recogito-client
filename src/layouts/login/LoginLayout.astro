@@ -1,96 +1,114 @@
 ---
-import HeaderLayout from '../HeaderLayout.astro';
-import config from '../../config.json';
+import { BrandFooter } from '@components/Branding/BrandFooter';
+import { RecogitoLogo } from '@components/RecogitoLogo';
+import { getTranslations } from '@i18n';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
+import config from 'src/config.json';
+import '@themes/login/index.css';
 
 export interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const i18n = getTranslations(Astro.request, 'branding');
+const { t } = i18n;
 
-const siteColor = config.branding.site_color;
+const backgroundColor = config.branding.background_color;
+const loginLogo = config.branding.login_logo;
 const splashURL = config.branding.home_banner;
-
-const backgroundStyle = `background: url(${splashURL}) no-repeat center fixed;background-size: cover;width: 100%; overflow: hidden`;
+const textColor = config.branding.contrast_color;
+const useFooter = config.branding.bottom_logos_enabled;
 ---
 
-<HeaderLayout title={title}>
-  <div class='background' style={backgroundStyle}></div>
-  <slot />
+<HeaderLayout footer={false} title={title}>
+  <div class='content-container'>
+    <main>
+      <div class='slot-container'>
+        { loginLogo && loginLogo.length > 0 && (
+          <div class='top-logo'>
+            <img src={`/img/branding/login/${loginLogo}`} />
+          </div>
+        )}
+        <slot />
+      </div>
+      <div class='footer-container'>
+        { useFooter && (
+          <div class='bottom-logo'>
+            <span>{t['powered by']}</span>
+            <Logo
+              color='#004F9F'
+              contrastColor='black'
+              height={42}
+              width={230}
+            />
+          </div>
+        )}
+        <BrandFooter i18n={i18n} />
+      </div>
+    </main>
+    <div class='img-container'>
+      <img class='banner-img' src={splashURL} />
+    </div>
+  </div>
 </HeaderLayout>
 
-<style define:vars={{ siteColor }}>
-  .login-background-img {
+<style define:vars={{ backgroundColor, textColor }}>
+  .banner-img {
     object-fit: cover;
     width: 100%;
     height: 100%;
-    overflow: hidden;
-  }
-  .background {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    min-height: calc(100vh - 100px);
   }
 
-  header {
-    width: 100%;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--gray-200);
-    box-sizing: border-box;
+  .bottom-logo {
     display: flex;
+    flex-direction: column;
+    margin: 2em 0;
+    flex-grow: 1;
     align-items: center;
-    height: 50px;
-    padding: 0 40px;
-    background-color: var(--gray-900);
+  }
+
+  .content-container {
+    display: flex;
+    height: 100%;
   }
 
   footer {
-    border-top: 1px solid var(--gray-200);
-    box-sizing: border-box;
-    display: flex;
     align-items: center;
-    height: 50px;
-    padding: 0 40px;
-    background-color: var(--gray-900);
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+    display: flex;
+    height: 80px;
+    justify-content: space-between;
+    z-index: 1000;
+  }
+
+  .footer-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+  }
+
+  .img-container {
+    background-color: var(--gray-50);
+    flex-basis: 65%;
+    overflow: hidden;
   }
 
   main {
-    box-sizing: border-box;
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
-    padding: 0;
-    position: relative;
-    width: 100%;
+    min-height: calc(100vh - 60px);
   }
 
-  .branding-container {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
+  .slot-container {
+    padding: 0 80px;
   }
 
-  .platform {
-    color: white;
-  }
-
-  .separator {
-    width: 2px;
-    height: 20px;
-    margin-left: 5px;
-    background-color: white;
-  }
-
-  .site_name {
-    padding-left: 5px;
-    color: var(--siteColor);
-  }
-
-  .blurb {
-    color: white;
-    font-size: 14px;
+  .top-logo {
+    margin: 2em 0 1em 0;
   }
 </style>
