@@ -1,6 +1,10 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getMyProfile, listMyInvites } from '@backend/crud';
+import {
+  getMyProfile,
+  listMyInvites,
+  listPendingRequests,
+} from '@backend/crud';
 import { getAvailableLayers, listMyProjectsExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
@@ -13,10 +17,17 @@ const supabase = await createSupabaseServerClient(Astro.cookies);
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
 const projectId = Astro.params.project;
+
+// Is this someone who is accepting an invite?
+const accept = Astro.url.searchParams.get('accept-invite');
+
+if (accept) {
+  return Astro.redirect(`/${lang}/projects/${projectId}/accept-invite`);
+}
 
 const project = await getProjectExtended(supabase, projectId as string);
 
@@ -29,6 +40,19 @@ if (project.error || !project.data) {
   });
 }
 
+console.log('Project: ', project.data);
+
+const user = project.data.users.find((u) => u.user.id === profile.data.id);
+
+if (!user && !profile.data.isOrgAdmin) {
+  if (project.data.is_open_join) {
+    return Astro.redirect(
+      `/${lang}/projects/${projectId}/join?redirect-to=${Astro.url}`
+    );
+  } else {
+    return Astro.redirect(`/${lang}/projects`);
+  }
+}
 const documents = await listDocumentsInProject(supabase, projectId as string);
 
 if (documents.error) {
@@ -44,6 +68,8 @@ const invitations = await listMyInvites(supabase);
 const projects = await listMyProjectsExtended(supabase);
 
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
+
+const requests = await listPendingRequests(supabase, projectId as string);
 ---
 
 <BaseLayout title='Projects Home'>
@@ -52,6 +78,7 @@ const availableLayers = await getAvailableLayers(supabase, projectId as string);
     i18n={i18n}
     projects={projects.data}
     project={project.data}
+    requests={requests.data}
     documents={documents.data}
     user={profile.data}
     invitations={invitations.data}

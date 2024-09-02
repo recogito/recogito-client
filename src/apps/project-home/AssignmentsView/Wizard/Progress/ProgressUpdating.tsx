@@ -104,13 +104,11 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
         // - check for added read only layers on new documents
         for (let i = 0; i < documentChanges.added.length; i++) {
           const doc = documentChanges.added[i];
-          const prevDoc = previous.documents.find((d) => (d.id = doc.id));
-          const layerDiff = diff(prevDoc!.layers, doc.layers);
-          if (layerDiff.added.length > 0) {
+          if (doc.layers.length > 0) {
             // Look for added layers
             const readOnlyLayers: string[] = [];
-            for (let i = 0; i < layerDiff.added.length; i++) {
-              readOnlyLayers.push(layerDiff.added[i].id);
+            for (let i = 0; i < doc.layers.length; i++) {
+              readOnlyLayers.push(doc.layers[i].id);
             }
             doc.layers.forEach((layer) => {
               if (!layer.is_active) {
@@ -132,35 +130,13 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
               }
             }
           }
-          if (layerDiff.removed.length > 0) {
-            //  Now look for removed layers
-            const removeReadOnlyLayers: string[] = [];
-            for (let i = 0; i < layerDiff.removed.length; i++) {
-              removeReadOnlyLayers.push(layerDiff.removed[i].id);
-            }
-
-            if (removeReadOnlyLayers.length > 0) {
-              // console.log('Removing Read-Only Layers: ', removeReadOnlyLayers);
-              const resultROLayers = await removeReadOnlyLayersFromContext(
-                supabase,
-                id as string,
-                removeReadOnlyLayers
-              );
-              if (!resultROLayers.data) {
-                setState('failed');
-                props.onError(
-                  'Failed to remove document read only layers to context'
-                );
-              }
-            }
-          }
         }
       }
 
       // Step 3 - check for added read only layers documents
       for (let i = 0; i < documentChanges.unchanged.length; i++) {
         const doc = documentChanges.unchanged[i];
-        const prevDoc = previous.documents.find((d) => (d.id = doc.id));
+        const prevDoc = previous.documents.find((d) => d.id === doc.id);
 
         const layerDiff = diff(prevDoc!.layers, doc.layers);
         if (layerDiff.added.length > 0) {

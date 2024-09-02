@@ -189,7 +189,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           invitations={invitations}
           i18n={props.i18n}
           onError={onError}
-          projects={projects}
           me={me}
           showNotifications={true}
           onInvitationAccepted={onInvitationAccepted}

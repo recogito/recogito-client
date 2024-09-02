@@ -74,7 +74,7 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
             {t['Please enter the email you use to sign in.']}
           </p>
 
-          <form>
+          <form className='login'>
             <TextInput
               autoComplete={false}
               error={Boolean(error)}

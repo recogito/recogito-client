@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { initDocument } from '@backend/helpers';
@@ -7,9 +7,28 @@ import type { Upload, UploadProgress, UploadStatus } from './Upload';
 
 let queue = Promise.resolve();
 
-export const useUpload = (onImport: (document: Document) => void) => {
+export const useUpload = (onImport: (documents: Document[]) => void) => {
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
   const [dataDirty, setDataDirty] = useState(false);
+
+  // Using useRef here because it is synchronous so we ensure that
+  // onImport is called with all successful documents
+  const completedDocs = useRef<Document[]>([]);
+
+  useEffect(() => {
+    if (uploads.length > 0) {
+      let completeCount = 0;
+      uploads.forEach((u) => {
+        if (u.status === 'success' || u.status === 'failed') {
+          completeCount++;
+        }
+      });
+
+      if (completeCount === uploads.length) {
+        onImport(completedDocs.current);
+      }
+    }
+  }, [uploads]);
 
   const onProgress = (id: string, progress: number, status: UploadStatus) => {
     setUploads((prev) =>
@@ -38,7 +57,7 @@ export const useUpload = (onImport: (document: Document) => void) => {
       )
     );
 
-    onImport(document);
+    completedDocs.current = [...completedDocs.current, document];
   };
 
   const onError = (id: string, message: string) => {
@@ -71,7 +90,6 @@ export const useUpload = (onImport: (document: Document) => void) => {
           supabase,
           i.name,
           i.projectId,
-          i.contextId,
           (progress) => onProgress(id, progress, 'uploading'),
           i.file,
           i.url,

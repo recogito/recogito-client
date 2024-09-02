@@ -154,7 +154,9 @@ export const getProjectExtended = (
       is_open_edit,
       groups:project_groups(
         id,
-        name
+        name,
+        is_default,
+        is_admin
       ),
       project_documents(
         *,
@@ -204,7 +206,7 @@ export const getProjectExtended = (
 
         const groupIds = project.groups.map((g) => g.id);
 
-        console.log('Project: ', JSON.stringify(project, null, 2));
+        // console.log('Project: ', JSON.stringify(project, null, 2));
 
         return getProjectGroupMembers(supabase, groupIds).then(
           ({ error, data }) => {
@@ -278,6 +280,59 @@ export const joinProject = (supabase: SupabaseClient, projectId: string) =>
         return false;
       } else {
         return data as unknown as boolean;
+      }
+    });
+
+export const requestJoinProject = (
+  supabase: SupabaseClient,
+  projectId: string
+) =>
+  supabase
+    .rpc('request_join_project_rpc', {
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('Error requesting joining a project', error);
+        return false;
+      } else {
+        return data as unknown as boolean;
+      }
+    });
+
+export const acceptJoinRequest = (
+  supabase: SupabaseClient,
+  projectId: string,
+  requestId: string
+) =>
+  supabase
+    .rpc('accept_join_request_rpc', {
+      _request_id: requestId,
+      _project_id: projectId,
+    })
+    .then(({ data, error }) => {
+      if (error) {
+        console.error('Error add user to project', error);
+        return false;
+      } else {
+        return data as unknown as boolean;
+      }
+    });
+
+export const ignoreJoinRequest = (
+  supabase: SupabaseClient,
+  requestId: string
+) =>
+  supabase
+    .from('join_requests')
+    .update({ ignored: true })
+    .eq('id', requestId)
+    .then(({ error }) => {
+      if (error) {
+        console.error('Error ignoring join request', error);
+        return false;
+      } else {
+        return true;
       }
     });
 

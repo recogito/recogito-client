@@ -5,11 +5,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile, listPendingInvitations } from '@backend/crud';
 import PluginRegistry from '@components/Plugins/PluginRegistry';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import {
-  getProjectExtended,
-  listMyProjectsExtended,
-  getInstalledPlugins,
-} from '@backend/helpers';
+import { getProjectExtended, getInstalledPlugins } from '@backend/helpers';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -35,8 +31,7 @@ if (project.error || !project.data) {
 }
 
 const invitations = await listPendingInvitations(supabase, projectId as string);
-
-if (project.error || invitations.error) {
+if (invitations.error || !invitations.data) {
   const error = await fetch(`${Astro.url}/404`);
   return new Response(error.body, {
     headers: { 'Content-Type': 'text/html;charset=utf-8' },
@@ -45,11 +40,11 @@ if (project.error || invitations.error) {
   });
 }
 
-const projects = await listMyProjectsExtended(supabase);
 const installedPlugins = await getInstalledPlugins(
   supabase,
   projectId as string
 );
+
 if (installedPlugins.error || !installedPlugins.data) {
   const error = await fetch(`${Astro.url}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
@@ -62,7 +57,6 @@ if (installedPlugins.error || !installedPlugins.data) {
     project={project.data}
     invitations={invitations.data}
     me={profile.data}
-    projects={projects.data}
     availablePlugins={PluginRegistry.listAvailablePlugins()}
     installedPlugins={PluginRegistry.resolvePlugins(installedPlugins.data)}
   />
