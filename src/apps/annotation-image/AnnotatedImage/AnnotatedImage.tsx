@@ -15,7 +15,7 @@ import type {
 } from '@annotorious/react';
 import {
   OpenSeadragonAnnotator,
-  OpenSeadragonPopup,
+  OpenSeadragonAnnotationPopup,
   OpenSeadragonViewer,
   UserSelectAction,
   useAnnotator
@@ -156,7 +156,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
         options={options} />
 
       {props.usePopup && (
-        <OpenSeadragonPopup
+        <OpenSeadragonAnnotationPopup
           popup={props => (
             <AnnotationPopup
               {...props}
