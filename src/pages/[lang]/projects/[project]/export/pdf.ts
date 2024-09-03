@@ -1,24 +1,68 @@
 import type { APIRoute } from 'astro';
+import { AnnotationFactory } from 'annotpdf';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { canExport as _canExport } from './_common';
 import { getDocument } from '@backend/crud';
 import type { Document } from 'src/Types';
+import { getAllDocumentLayersInProject, getAnnotations } from '@backend/helpers';
+import { Visibility } from '@recogito/annotorious-supabase';
+import type { PDFSelector } from '@recogito/react-pdf-annotator';
+import { serializeQuill } from 'src/util';
 
-const exportForProject = (
+const exportForProject = async (
   supabase: SupabaseClient, 
   url: URL, 
   projectId: string,
   document: Document,
-  pdf: string
+  pdf: Uint8Array
 ) => {
+  // At the project level, all layers in the project will be exported
+  const layers = await getAllDocumentLayersInProject(supabase, document.id, projectId);
+  if (layers.error)
+    return new Response(
+      JSON.stringify({ message: 'Internal server error' }), 
+      { status: 500 }); 
 
-  // TODO
+  const layerIds = layers.data.map(l => l.id);
+
+  // Download annotations on all layers
+  const all = await getAnnotations(supabase, layerIds);
+  if (all.error)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving annotations' }), 
+      { status: 500 }); 
+
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const annotations = includePrivate 
+    ? all.data
+    : all.data.filter(a => a.visibility !== Visibility.PRIVATE);
+
+  const factory = new AnnotationFactory(pdf)
+
+  annotations.forEach(annotation => {
+    (annotation.target.selector as PDFSelector[]).forEach(selector => {
+      factory.createHighlightAnnotation({
+        page: selector.pageNumber - 1,
+        contents: annotation.bodies
+          .filter(b => b.purpose === 'commenting' && b.value)
+          .map(b => serializeQuill(b.value!)).join('\n\n'),
+        author: annotation.target.creator?.name,
+        creationDate: annotation.target.created,
+        color: { r: 255, g: 255, b: 0 },
+        quadPoints: selector.quadpoints,
+        opacity: 0.5
+      });
+    });
+  });
+
+  const pdfWithAnnotations = factory.write();
 
   const filename = 'file.pdf';
 
-  return new Response(    
-    'hello world',
+  return new Response(
+    pdfWithAnnotations.buffer,
     { 
       headers: { 
         'Content-Type': 'application/pdf',
@@ -34,7 +78,7 @@ const exportForAssignment = (
   url: URL, 
   contextId: string,
   document: Document,
-  pdf: string
+  pdf: Uint8Array
 ) => {
 
   // TODO
@@ -83,14 +127,14 @@ export const GET: APIRoute = async ({ params, cookies, url }) => {
       JSON.stringify({ message: 'Internal server error' }), 
       { status: 500 }); 
 
-  const pdf = await content.data.text();
+  const pdf = await content.data.arrayBuffer();
 
   const contextId = url.searchParams.get('context');
 
   if (contextId) {
-    return exportForAssignment(supabase, url, contextId, document.data, pdf);
+    return exportForAssignment(supabase, url, contextId, document.data,  new Uint8Array(pdf));
   } else {
-    return exportForProject(supabase, url, projectId, document.data, pdf);
+    return exportForProject(supabase, url, projectId, document.data,  new Uint8Array(pdf));
   }
 
 }
