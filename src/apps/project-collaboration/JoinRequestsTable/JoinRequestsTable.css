@@ -1,0 +1,54 @@
+.join-requests-table {
+  max-width: 760px;
+}
+
+.join-requests-table tbody td:nth-child(2) {
+  padding-left: 10%;
+}
+
+.join-requests-table tbody td {
+  width: 50%;
+}
+
+.join-requests-table td button.select-trigger:disabled {
+  background-color: var(--button-background-color);
+  border-color: var(--button-border-color);
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0),
+    0 2px 3px -2px rgba(0, 0, 0, 0.12);
+  color: var(--button-font-color);
+  cursor: auto;
+}
+
+.join-requests-table td button {
+  min-width: 120px;
+  padding: 4px 8px;
+  font-weight: 500;
+}
+
+.join-requests-table td .anonymous-member {
+  color: var(--font-light);
+}
+
+.join-requests-table td .anonymous-member button {
+  height: 24px;
+  margin-left: 2px;
+  padding: 0;
+  vertical-align: sub;
+  width: 24px;
+}
+
+.join-requests-table td .anonymous-member button svg {
+  left: 0;
+  position: relative;
+  top: 0;
+}
+
+.join-requests-table td .anonymous-member button:hover svg {
+  color: var(--font-dark);
+}
+
+.join-requests-table td .invitation-sent {
+  color: var(--font-light);
+  display: inline-block;
+  padding: 0 0.9em;
+}

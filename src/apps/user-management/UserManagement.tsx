@@ -178,7 +178,6 @@ export const UserManagement = (props: UserManagementProps) => {
           invitations={[]}
           i18n={props.i18n}
           onError={(error) => console.log(error)}
-          projects={[]}
           me={props.me}
         />
         <div className='user-management-header'>

@@ -9,16 +9,20 @@ import { useAssignments } from '@backend/hooks';
 import type { AvailableLayers } from '@backend/Types';
 import { DocumentsView } from './DocumentsView';
 import { AssignmentsView } from './AssignmentsView';
+import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   Context,
   Document,
   ExtendedProjectData,
   Invitation,
+  JoinRequest,
   MyProfile,
   Translations,
 } from 'src/Types';
 
 import './ProjectHome.css';
+import { getAvailableLayers } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -30,6 +34,8 @@ export interface ProjectHomeProps {
   documents: Document[];
 
   invitations: Invitation[];
+
+  requests: JoinRequest[];
 
   availableLayers: AvailableLayers[];
 
@@ -45,9 +51,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const [tab, setTab] = useState<'documents' | 'assignments' | undefined>();
   const [documents, setDocuments] = useState<Document[]>(props.documents);
+
   const [project, setProject] = useState(props.project);
+  const [availableLayers, setAvailableLayers] = useState<
+    AvailableLayers[] | undefined
+  >();
+
+  const [tab, setTab] = useLocalStorageBackedState<'documents' | 'assignments' | undefined>(
+    `tab-${props.project.id}`, undefined
+  );
 
   const { assignments, setAssignments } = useAssignments(project);
 
@@ -60,6 +73,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       }
     }
   }, [isAdmin]);
+
+  useEffect(() => {
+    if (props.availableLayers) {
+      setAvailableLayers(props.availableLayers);
+    }
+  }, [props.availableLayers]);
 
   const handleSwitchTab = (tab: 'documents' | 'assignments') => {
     setTab(tab);
@@ -143,13 +162,29 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     setProject(copy);
   };
 
+  const handleSetAssignments = (assignments: Context[]) => {
+    setAssignments(assignments);
+
+    // We need to get the available layers again
+    getAvailableLayers(supabase, props.project.id).then(({ data, error }) => {
+      if (!error) {
+        setAvailableLayers(data);
+      } else {
+        setToast({
+          title: t['Something went wrong'],
+          description: error.message,
+          type: 'error',
+        });
+      }
+    });
+  };
+
   return (
     <>
       <TopBar
         invitations={props.invitations}
         i18n={props.i18n}
         onError={onError}
-        projects={props.projects}
         me={props.user}
       />
 
@@ -160,11 +195,13 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         isAdmin={isAdmin || false}
         name={props.project.name}
         description={props.project.description || ''}
+        requests={props.requests}
         currentTab={isAdmin ? tab : undefined}
         onSwitchTab={handleSwitchTab}
         onGotoSettings={handleGotoSettings}
         onGotoUsers={handleGotoUsers}
         showTabs={!props.project.is_open_edit}
+        isOpenJoin={Boolean(props.project.is_open_join)}
       />
 
       <div className='project-home'>
@@ -189,8 +226,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               assignments={assignments}
               setToast={setToast}
               isAdmin={isAdmin as boolean}
-              setAssignments={setAssignments}
-              availableLayers={props.availableLayers}
+              setAssignments={handleSetAssignments}
+              availableLayers={availableLayers || []}
             />
           ) : (
             <div />

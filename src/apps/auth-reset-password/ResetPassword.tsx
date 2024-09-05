@@ -64,7 +64,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
         <main>
           <h1>{t['Reset Password']}</h1>
 
-          <form>
+          <form className='login'>
             <TextInput
               type="password"
               autoComplete={false}

@@ -38,9 +38,15 @@ export const uploadFile = (
           onProgress && onProgress(progress);
         });
 
+        uppy.on('error', error => {
+          reject(error);
+        });
+
         uppy.upload().then(result => {
           resolve(result);
-        });
+        }).catch(error => {
+          reject(error);
+        })
       }
     }
   });

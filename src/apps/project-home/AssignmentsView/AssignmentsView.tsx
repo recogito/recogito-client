@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { GraduationCap } from '@phosphor-icons/react';
 import { archiveAssignment, getAssignment } from '@backend/helpers';
 import type { AvailableLayers } from '@backend/Types';
@@ -10,6 +10,7 @@ import { AssignmentDetail } from './AssignmentDetail';
 import { AssignmentsList } from './AssignmentsList';
 import { AssignmentWizard, contextToAssignmentSpec } from './Wizard';
 import type { AssignmentSpec } from './Wizard';
+import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   Context,
   Document,
@@ -47,21 +48,24 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
 
   const [editing, setEditing] = useState<AssignmentSpec | undefined>();
 
-  const [currentAssignment, setCurrentAssignment] = useState<
-    Context | undefined
-  >();
+  const [currentAssignmentId, setCurrentAssignmentId] = useLocalStorageBackedState<string | undefined>(
+    `selected-assignment-${props.project.id}`, 
+    props.assignments && props.assignments.length > 0 ? props.assignments[0].id : undefined
+  );
+
+  const currentAssignment = useMemo(() => {
+    if (currentAssignmentId && props.assignments) {
+      return props.assignments.find(c => c.id === currentAssignmentId) || props.assignments[0];
+    } else if (props.assignments && props.assignments.length > 0) {
+      return props.assignments[0];
+    }
+  }, [currentAssignmentId, props.assignments]);
 
   const NEW_ASSIGNMENT = {
     project_id: project.id,
     documents: [],
     team: [],
   };
-
-  useEffect(() => {
-    if (props.assignments && props.assignments.length > 0) {
-      setCurrentAssignment(props.assignments[0]);
-    }
-  }, [props.assignments]);
 
   const onAssignmentSaved = (spec: AssignmentSpec) => {
     const assignment = assignmentSpecToContext(spec);
@@ -123,9 +127,8 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
     });
   };
 
-  const handleAssignmentSelected = (assignment: Context) => {
-    setCurrentAssignment(assignment);
-  };
+  const handleAssignmentSelected = (assignment: Context) =>
+    setCurrentAssignmentId(assignment.id);
 
   return (
     <div className='project-assignments'>

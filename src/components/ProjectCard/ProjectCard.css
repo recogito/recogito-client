@@ -10,10 +10,11 @@
 }
 
 .project-card-header {
-  width: 100%;
+  align-items: flex-start;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  width: 100%;
 }
 
 .project-card-header .owner-pill {

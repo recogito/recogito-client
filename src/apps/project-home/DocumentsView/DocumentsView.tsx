@@ -17,7 +17,7 @@ import type {
 import { useState, useMemo } from 'react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { setDocumentPrivacy } from '@backend/crud';
+import { archiveDocument, setDocumentPrivacy } from '@backend/crud';
 import { useDocumentList } from '@apps/project-home/useDocumentList';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 import type { ToastContent } from '@components/Toast';
@@ -48,7 +48,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   const [documentUpdated, setDocumentUpdated] = useState(false);
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
-    (document) => props.setDocuments([...props.documents, document])
+    (documents) => props.setDocuments([...props.documents, ...documents])
   );
 
   const documentIds = useMemo(
@@ -164,6 +164,27 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     );
   };
 
+  // This actually archives the document
+  const onDeleteDocumentFromLibrary = (document: Document) => {
+    archiveDocument(supabase, document.id).then(({ data }) => {
+      if (data) {
+        props.setToast({
+          title: t['Deleted'],
+          description: t['Document deleted successfully.'],
+          type: 'success',
+        });
+
+        setDocumentUpdated(true);
+      } else {
+        props.setToast({
+          title: t['Something went wrong'],
+          description: t['Could not delete the document.'],
+          type: 'error',
+        });
+      }
+    });
+  };
+
   const onTogglePrivate = (document: Document) => {
     setDocumentPrivacy(supabase, document.id, !document.is_private).then(() =>
       setDocumentUpdated(true)
@@ -230,7 +251,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           {props.documents.map((document) => (
             <DocumentCard
               key={document.id}
-              isDefaultContext
               isAdmin={props.isAdmin}
               i18n={props.i18n}
               document={document}
@@ -264,7 +284,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           disabledIds={documentIds}
           onUpdated={onUpdateDocument}
           onError={onError}
-          onDelete={onDeleteDocument}
+          onDeleteFromLibrary={onDeleteDocumentFromLibrary}
           onTogglePrivate={onTogglePrivate}
           isAdmin={props.isAdmin}
         />

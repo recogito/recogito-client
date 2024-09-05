@@ -50,8 +50,12 @@ body {
   white-space: nowrap;
 }
 
+.project-home .admin-actions button svg {
+  flex: 0 0 auto;
+}
+
 .project-home-add-document {
-  width: 200px;
+  min-width: 200px;
 }
 
 .project-home-grid-wrapper {

@@ -168,8 +168,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             .filter((l) => !current.has(l.id))
             .map((l) => ({
               id: l.id,
-              document_id: l.document_id,
               is_active: false,
+              document_id: l.document_id,
               project_id: props.document.context.project_id
             }));
 
@@ -231,7 +231,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           i18n={props.i18n}
           invitations={[]}
           me={props.me}
-          projects={[]}
           showNotifications={false}
           onError={() => setConnectionError(true)} />
 

@@ -1,50 +1,6 @@
 import type { Response } from '@backend/Types';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Layer, LayerWithDocument, UserProfile } from 'src/Types';
-
-export const createLayerInContext = (
-  supabase: SupabaseClient,
-  document_id: string,
-  project_id: string,
-  context_id: string,
-  name?: string,
-  description?: string
-): Promise<Layer> =>
-  new Promise((resolve, reject) => {
-    supabase
-      .from('layers')
-      .insert({
-        document_id,
-        project_id,
-        name,
-        description,
-      })
-      .select()
-      .single()
-      .then(({ error, data }) => {
-        const layer = data as Layer;
-
-        if (error || !data) {
-          reject(error);
-        } else {
-          supabase
-            .from('layer_contexts')
-            .insert({
-              layer_id: layer.id,
-              context_id,
-            })
-            .select()
-            .single()
-            .then(({ error, data }) => {
-              if (error || !data) {
-                reject(error);
-              } else {
-                resolve(layer);
-              }
-            });
-        }
-      });
-  });
+import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
+import type { LayerWithDocument, UserProfile } from 'src/Types';
 
 export const addUsersToLayer = (
   supabase: SupabaseClient,
@@ -125,135 +81,6 @@ export const removeUsersFromLayer = (
       });
   });
 
-/**
- * Retrieves all layers on the given documents
- * in this project.
- */
-export const getAllDocumentLayersInProject = (
-  supabase: SupabaseClient,
-  documentId: string,
-  projectId: string
-): Response<LayerWithDocument[]> =>
-  supabase
-    .from('layers')
-    .select(
-      `
-      id, 
-      document_id,
-      document:documents (
-        *
-      ),
-      project_id, 
-      name,
-      description,
-      contexts:layer_contexts (
-        ...contexts (
-          id,
-          name,        
-          project_id
-        )
-      )
-    `
-    )
-    .eq('project_id', projectId)
-    .eq('document_id', documentId)
-    .then(({ data, error }) => {
-      if (error) {
-        return { error, data: [] };
-      } else {
-        // @ts-ignore
-        const flattened = data?.map(({ contexts, ...layer }) => ({
-          ...layer,
-          context: contexts[0],
-        }));
-        return { error, data: flattened as unknown as LayerWithDocument[] };
-      }
-    });
-
-/**
- * Returns ALL layers for ALL documents
- * in this project.
- */
-export const getAllLayersInProject = (
-  supabase: SupabaseClient,
-  projectId: string
-): Response<LayerWithDocument[]> =>
-  supabase
-    .from('layers')
-    .select(
-      `
-      id,  
-      document_id, 
-      document:documents (
-        *
-      ),
-      project_id, 
-      name,
-      description,
-      contexts:layer_contexts (
-        ...contexts (
-          id,
-          name,        
-          project_id
-        )
-      )
-    `
-    )
-    .eq('project_id', projectId)
-    .then(({ data, error }) => {
-      if (error) {
-        return { error, data: [] };
-      } else {
-        // @ts-ignore
-        const flattened = data?.map(({ contexts, ...layer }) => ({
-          ...layer,
-          context: contexts[0],
-        }));
-        return { error, data: flattened as unknown as LayerWithDocument[] };
-      }
-    });
-
-/**
- * Returns ALL layers for ALL documents
- * in the given context.
- */
-export const getAllLayersInContext = (
-  supabase: SupabaseClient,
-  contextId: string
-): Response<Layer[]> =>
-  supabase
-    .from('layers')
-    .select(
-      `
-      id,  
-      document_id, 
-      project_id, 
-      name,
-      description,
-      contexts:layer_contexts!inner (
-        context_id,
-        ...contexts (
-          id,
-          name,        
-          project_id
-        )
-      )
-    `
-    )
-    .eq('layer_contexts.context_id', contextId)
-    .then(({ data, error }) => {
-      if (error) {
-        return { error, data: [] };
-      } else {
-        // @ts-ignore
-        const flattened = data?.map(({ contexts, ...layer }) => ({
-          ...layer,
-          context: contexts[0],
-        }));
-        return { error, data: flattened as unknown as Layer[] };
-      }
-    });
-
 export const addReadOnlyLayersToContext = (
   supabase: SupabaseClient,
   contextId: string,
@@ -271,7 +98,7 @@ export const addReadOnlyLayersToContext = (
         return { error, data };
       }
     });
-
+  
 export const removeReadOnlyLayersFromContext = (
   supabase: SupabaseClient,
   contextId: string,
@@ -289,3 +116,95 @@ export const removeReadOnlyLayersFromContext = (
         return { error, data };
       }
     });
+  
+/** Common code for all layer queries **/
+const LAYERS_QUERY = 
+  `
+  id, 
+  document_id,
+  document:documents (
+    *
+  ),
+  project_id, 
+  name,
+  description,
+  contexts:layer_contexts!inner (
+    ...contexts!inner (
+      id,
+      name,  
+      project_id
+    )
+  )
+  `;
+
+const flattenLayerResponse = ({ data, error }: { data: any, error: PostgrestError | null }) => {
+  if (error) {
+    return { error, data: [] };
+  } else {
+    // @ts-ignore
+    const flattened = data?.map(({ contexts, ...layer }) => ({
+      ...layer,
+      context: contexts[0],
+    }));
+    return { error, data: flattened as unknown as LayerWithDocument[] };
+  }
+}
+
+/**
+ * Returns ALL layers for ALL documents
+ * in this project.
+ */
+export const getAllLayersInProject = (
+  supabase: SupabaseClient,
+  projectId: string
+): Response<LayerWithDocument[]> =>
+  supabase
+    .from('layers')
+    .select(LAYERS_QUERY)
+    .eq('project_id', projectId)
+    .then(flattenLayerResponse);
+
+/**
+ * Returns ALL layers for ALL documents
+ * in this context.
+ */
+export const getAllLayersInContext = (
+  supabase: SupabaseClient,
+  contextId: string
+): Response<LayerWithDocument[]> =>
+  supabase
+    .from('layers')
+    .select(LAYERS_QUERY)
+    .eq('contexts.context_id', contextId)
+    .then(flattenLayerResponse);
+
+/**
+ * Retrieves all layers on the given documents
+ * in this project.
+ */
+export const getAllDocumentLayersInProject = (
+  supabase: SupabaseClient,
+  documentId: string,
+  projectId: string
+): Response<LayerWithDocument[]> =>
+  supabase
+    .from('layers')
+    .select(LAYERS_QUERY)
+    .eq('project_id', projectId)
+    .eq('document_id', documentId)
+    .then(flattenLayerResponse);
+
+export const getAllDocumentLayersInContext = (
+  supabase: SupabaseClient,
+  documentId: string,
+  contextId: string
+): Response<LayerWithDocument[]> =>
+  supabase
+    .from('layers')
+    .select(LAYERS_QUERY)
+    .eq('document_id', documentId)
+    .eq('contexts.context_id', contextId)
+    .then(flattenLayerResponse);
+
+
+

@@ -1,4 +1,4 @@
-import type { Translations } from 'src/Types';
+import type { JoinRequest, Translations } from 'src/Types';
 import { Users, Gear } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +10,9 @@ interface ProjectHeaderProps {
   isAdmin: boolean;
   i18n: Translations;
   showTabs: boolean;
+  isOpenJoin: boolean;
+
+  requests: JoinRequest[];
 
   currentTab?: 'assignments' | 'documents' | undefined;
   onSwitchTab?(tab: 'assignments' | 'documents'): void;
@@ -34,6 +37,8 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
     }
   }, [expanded]);
 
+  const requestCount = props.requests.filter((r) => !r.ignored).length;
+
   return (
     <header className='project-header-root'>
       <div className='project-header-name-bar'>
@@ -46,6 +51,9 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
             >
               <Users color='black' size={20} />
               <div className='project-header-button-text'>{t['Team']}</div>
+              {Boolean(requestCount > 0) && !props.isOpenJoin && (
+                <div className='project-header-pip'>{requestCount}</div>
+              )}
             </button>
             <button
               className='project-header-button'

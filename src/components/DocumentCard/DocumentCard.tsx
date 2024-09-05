@@ -11,8 +11,6 @@ interface DocumentCardProps {
 
   isAdmin?: boolean;
 
-  isDefaultContext?: boolean;
-
   context: Context;
 
   document: Document;
@@ -47,15 +45,15 @@ export const DocumentCard = (props: DocumentCardProps) => {
   };
 
   const onExportTEI = (includePrivate: boolean) =>
-  (window.location.href = props.isDefaultContext
-    ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
-    : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/tei?document=${document.id}&private=${includePrivate}`);
+    window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`;
 
   const onExportCSV = (includePrivate: boolean) =>
-  (window.location.href = props.isDefaultContext
-    ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
-    : `/${lang}/projects/${props.context.project_id}/assignments/${context.id}/export/csv?document=${document.id}&private=${includePrivate}`);
-
+    window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`;
+  
   return (
     <article className='document-card-container'>
       <div className='document-card' onClick={onClick}>

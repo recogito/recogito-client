@@ -81,51 +81,52 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
   const onChangeLayers = (
     op: 'add' | 'remove',
-    documentId: string,
-    layerId: string
+    documentLayers: { documentId: string; layerId: string }[]
   ) => {
     const copyAssignment: AssignmentSpec = JSON.parse(
       JSON.stringify(assignment)
     );
 
-    const layer = props.availableLayers.find(
-      (l) => l.document_id === documentId && l.layer_id === layerId
-    );
-
-    const docIdx = copyAssignment.documents.findIndex(
-      (d) => d.id === documentId
-    );
-
-    if (docIdx > -1) {
-      const copy: DocumentWithContext = JSON.parse(
-        JSON.stringify(copyAssignment.documents[docIdx])
+    documentLayers.forEach(({ documentId, layerId }) => {
+      const layer = props.availableLayers.find(
+        (l) => l.document_id === documentId && l.layer_id === layerId
       );
 
-      if (op === 'remove') {
-        const idx = copy.layers.findIndex((l) => l.id === layerId);
-        if (idx > -1) {
-          copy.layers.splice(idx, 1);
+      const docIdx = copyAssignment.documents.findIndex(
+        (d) => d.id === documentId
+      );
+
+      if (docIdx > -1) {
+        const copy: DocumentWithContext = JSON.parse(
+          JSON.stringify(copyAssignment.documents[docIdx])
+        );
+
+        if (op === 'remove') {
+          const idx = copy.layers.findIndex((l) => l.id === layerId);
+          if (idx > -1) {
+            copy.layers.splice(idx, 1);
+            copyAssignment.documents.splice(docIdx, 1, copy);
+            setAssignment(copyAssignment);
+          }
+        } else {
+          copy.layers.push({
+            id: layerId,
+            document_id: documentId,
+            project_id: assignment.project_id,
+            name: '',
+            is_active: layer!.is_active,
+            context: {
+              id: layer?.context_id,
+              name: assignment.name,
+              description: assignment.description,
+              project_id: assignment.project_id,
+            },
+          });
           copyAssignment.documents.splice(docIdx, 1, copy);
           setAssignment(copyAssignment);
         }
-      } else {
-        copy.layers.push({
-          id: layerId,
-          document_id: documentId,
-          project_id: assignment.project_id,
-          name: '',
-          is_active: layer!.is_active,
-          context: {
-            id: layer?.context_id,
-            name: assignment.name,
-            description: assignment.description,
-            project_id: assignment.project_id,
-          },
-        });
-        copyAssignment.documents.splice(docIdx, 1, copy);
-        setAssignment(copyAssignment);
       }
-    }
+    });
   };
 
   const onChangeDescription = (description: string) =>

@@ -1,12 +1,9 @@
+import { ErrorBoundary } from 'react-error-boundary';
 import { Annotorious } from '@annotorious/react';
 import { type PluginInstallationConfig, PluginProvider } from '@components/Plugins';
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
 import type { DocumentWithContext, MyProfile, Translations } from 'src/Types';
-import {
-  AuthorColorProvider,
-  ColorState,
-  FilterState,
-} from '@components/AnnotationDesktop';
+import { AuthorColorProvider, ColorState, FatalError, FilterState } from '@components/AnnotationDesktop';
 
 export interface TextAnnotationProps {
 
@@ -26,18 +23,25 @@ export interface TextAnnotationProps {
 
 export const TextAnnotation = (props: TextAnnotationProps) => {
 
+  const { i18n } = props;
+
   return (
-    <PluginProvider plugins={props.plugins}>
-      <AuthorColorProvider>
-        <FilterState>
-          <ColorState>
-            <Annotorious>
-              <TextAnnotationDesktop {...props} />
-            </Annotorious>
-          </ColorState>
-        </FilterState>
-      </AuthorColorProvider>
-    </PluginProvider>
+    <ErrorBoundary 
+      fallbackRender={props => (
+        <FatalError {...props} i18n={i18n} />
+      )}>
+      <PluginProvider plugins={props.plugins}>
+        <AuthorColorProvider>
+          <FilterState>
+            <ColorState>
+              <Annotorious>
+                <TextAnnotationDesktop {...props} />
+              </Annotorious>
+            </ColorState>
+          </FilterState>
+        </AuthorColorProvider>
+      </PluginProvider>
+    </ErrorBoundary>
   )
 
 }

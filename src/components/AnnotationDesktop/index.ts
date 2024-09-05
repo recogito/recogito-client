@@ -5,6 +5,7 @@ export * from './ColorCoding';
 export * from './DeleteSelected';
 export * from './DocumentNotes';
 export * from './ErrorBadge';
+export * from './FatalError';
 export * from './FilterPanel';
 export * from './UndoStack';
 export * from './useLayerNames';

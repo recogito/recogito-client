@@ -144,7 +144,9 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         confirmLabel={
           <>
             <Trash size={16} />
-            <span>{isMine ? t['Delete project'] : t['Leave project']}</span>
+            <span>
+              {isMine || isOrgAdmin ? t['Delete project'] : t['Leave project']}
+            </span>
           </>
         }
         onConfirm={isMine || isOrgAdmin ? onDeleteProject : onLeaveProject}

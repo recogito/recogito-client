@@ -4,6 +4,12 @@
   justify-content: center;
 }
 
+.login button,
+.login :is(button, a.button) + :is(button, a.button) {
+  margin-left: 0;
+  margin-top: 1em;
+}
+
 .login :is(button, a.button) + :is(button, a.button),
 .login .input-wrapper + button,
 .login .input-wrapper + .input-wrapper,
@@ -12,21 +18,23 @@
   margin-top: 1em;
 }
 
-.login,
-.login-magic-link {
+.login {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   height: 100%;
   width: 100%;
 }
 
-main {
-  margin: auto;
-  background-color: var(--gray-100);
-  width: 400px;
-  height: 375px;
-  padding: 30px;
+h1 {
+  font-size: 2em;
+  margin: 0.5em 0;
 }
+
+h2 {
+  color: #747577;
+  margin: 0 0 1em 0;
+}
+
 .login .error,
 .login-magic-link .error {
   font-size: var(--font-tiny);
@@ -36,8 +44,12 @@ main {
 .login .forgot-password {
   display: block;
   font-size: var(--font-tiny);
-  margin: 1em 0;
-  text-align: center;
+  margin: 1em 0 1.5em 0;
+  text-align: right;
+}
+
+.login button:not(.primary) {
+  background-color: white;
 }
 
 .login-separator {

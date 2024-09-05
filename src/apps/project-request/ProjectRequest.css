@@ -1,0 +1,34 @@
+.project-request-root {
+  width: 100%;
+  height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.project-request-title {
+  font-size: x-large;
+  margin-bottom: 20px;
+}
+
+.project-request-description {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.project-request-dialog-button-join {
+  background-color: var(--brighter-blue);
+  color: var(--gray-200);
+}
+
+.project-request-spinner-container {
+  overflow: hidden;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
