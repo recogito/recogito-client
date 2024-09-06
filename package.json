@@ -4,7 +4,7 @@
   "version": "1.0.0.beta.6",
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev --host",
+    "start": "astro dev",
     "build": "NODE_OPTIONS=--max_old_space_size=4096 && astro build",
     "build-node": "NODE_OPTIONS=--max_old_space_size=4096 && astro build --config astro.config.node.mjs",
     "preview-node": "node --max-old-space-size=4096 ./dist/server/entry.mjs",
