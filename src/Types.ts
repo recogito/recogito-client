@@ -399,6 +399,7 @@ export type TableName =
   | 'contexts'
   | 'layers'
   | 'projects'
+  | 'project_documents'
   | 'targets';
 
 export type OperationType = 'SELECT' | 'INSERT' | 'UPDATE' | 'DELETE';
@@ -425,4 +426,11 @@ export type GroupMember = {
   };
   in_group: string;
   since: string;
+};
+
+export type ApiPostInviteUserToProject = {
+  users: { email: string; projectGroupId: string }[];
+  projectId: string;
+  projectName: string;
+  invitedBy: string;
 };

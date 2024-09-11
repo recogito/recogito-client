@@ -1,2 +1,1 @@
-export * from './RecogitoCircleLogo';
-export * from './RecogitoLogo';
+export * from './RecogitoLogo.tsx';

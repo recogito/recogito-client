@@ -7,6 +7,7 @@ import type {
 } from 'src/Types';
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
+import type { ApiPostInviteUserToProject } from 'src/Types';
 import type { InviteListEntry } from '@apps/project-collaboration/InviteListOfUsers/InviteListOfUsers';
 
 export const createProject = (
@@ -99,25 +100,63 @@ export const updateProject = (
     .single()
     .then(({ error, data }) => ({ error, data: data as Project }));
 
+// export const inviteUserToProject = (
+//   supabase: SupabaseClient,
+//   email: string,
+//   project: Project | ExtendedProjectData,
+//   groupId: string,
+//   invitedBy?: string
+// ): Response<Invitation> =>
+//   supabase
+//     .from('invites')
+//     .insert({
+//       email: email.toLowerCase(),
+//       project_id: project.id,
+//       project_name: project.name,
+//       project_group_id: groupId,
+//       invited_by_name: invitedBy,
+//     })
+//     .select()
+//     .single()
+//     .then(({ error, data }) => ({ error, data: data as Invitation }));
+
 export const inviteUserToProject = (
   supabase: SupabaseClient,
   email: string,
   project: Project | ExtendedProjectData,
   groupId: string,
   invitedBy?: string
-): Response<Invitation> =>
-  supabase
-    .from('invites')
-    .insert({
-      email: email.toLowerCase(),
-      project_id: project.id,
-      project_name: project.name,
-      project_group_id: groupId,
-      invited_by_name: invitedBy,
-    })
-    .select()
-    .single()
-    .then(({ error, data }) => ({ error, data: data as Invitation }));
+): Promise<Invitation> =>
+  new Promise((resolve, reject) => {
+    const payload: ApiPostInviteUserToProject = {
+      users: [{ email: email, projectGroupId: groupId }],
+      projectId: project.id,
+      projectName: project.name,
+      invitedBy: invitedBy || '',
+    };
+
+    return supabase.auth.getSession().then(({ error, data }) => {
+      // Get Supabase session token first
+      if (error) {
+        // Shouldn't really happen at this point
+        reject(error);
+      } else {
+        const token = data.session?.access_token;
+        if (!token) {
+          // Shouldn't really happen at this point
+          reject('Not authorized');
+        } else {
+          fetch('/api/invite-user-to-project', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then(({ data }) => resolve(data as Invitation));
+        }
+      }
+    });
+  });
 
 export const inviteUsersToProject = (
   supabase: SupabaseClient,
@@ -126,6 +165,39 @@ export const inviteUsersToProject = (
   groupIds: { [key: string]: string },
   invitedBy?: string
 ): Response<Invitation[]> => {
+  new Promise((resolve, reject) => {
+    const payload: ApiPostInviteUserToProject = {
+      users: users.map((u) => ({
+        email: u.email,
+        projectGroupId: groupIds[u.role],
+      })),
+      projectId: project.id,
+      projectName: project.name,
+      invitedBy: invitedBy || '',
+    };
+
+    return supabase.auth.getSession().then(({ error, data }) => {
+      // Get Supabase session token first
+      if (error) {
+        // Shouldn't really happen at this point
+        reject(error);
+      } else {
+        const token = data.session?.access_token;
+        if (!token) {
+          // Shouldn't really happen at this point
+          reject('Not authorized');
+        } else {
+          fetch('/api/invite-user-to-project', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then(({ data }) => resolve(data as Invitation));
+        }
+      }
+    });
+  });
   return supabase
     .from('invites')
     .insert(

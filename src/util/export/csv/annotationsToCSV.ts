@@ -1,8 +1,9 @@
 import Papa from 'papaparse';
 import { Visibility } from '@recogito/annotorious-supabase';
 import type { SupabaseAnnotation, SupabaseAnnotationBody, SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
-import type { Document } from 'src/Types';
+import type { Document, Translations } from 'src/Types';
 import { serializeQuill } from '../serializeQuillComment';
+import type { AvailableLayers } from '@backend/Types';
 
 /** Helpers **/
 const serializeBodyValue = (b: SupabaseAnnotationBody) =>
@@ -74,7 +75,9 @@ const getQuote = (t: SupabaseAnnotationTarget) => {
 export const annotationsToCSV = (
   annotations: SupabaseAnnotation[], 
   layers: { id: string, document: Document }[],
-  includePrivate: boolean
+  projectLayers: AvailableLayers[],
+  includePrivate: boolean,
+  i18n: Translations
 ) => {
   const filtered = includePrivate 
     ? annotations
@@ -83,6 +86,11 @@ export const annotationsToCSV = (
   const findDocument = (layerId: string) =>
     layers.find(l => l.id === layerId)?.document;
 
+  const getLayerName = (layerId?: string) => {
+    const meta = projectLayers.find(l => l.is_active && l.layer_id === layerId);
+    return meta?.context_name ? meta.context_name : i18n.t['Baselayer'];
+  }
+
   const csv = filtered.reduce((csv, a) => {
     const doc = findDocument(a.layer_id!)!;
 
@@ -90,6 +98,7 @@ export const annotationsToCSV = (
       const row: any = {
         annotation_id: a.id,
         document: doc.name,
+        layer: getLayerName(a.layer_id),
         text_quote: getQuote(a.target), 
         target: serializeTarget(a.target),
         body_purpose: body.purpose,

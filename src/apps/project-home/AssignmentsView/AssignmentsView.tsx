@@ -41,7 +41,7 @@ interface AssignmentsViewProps {
   setAssignments(assignemnts: Context[]): void;
 }
 
-export const AssignmentsView = (props: AssignmentsViewProps) => {  
+export const AssignmentsView = (props: AssignmentsViewProps) => {
   const { t } = props.i18n;
 
   const { project } = props;
@@ -55,7 +55,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
 
   const currentAssignment = useMemo(() => {
     if (currentAssignmentId && props.assignments) {
-      return props.assignments.find(c => c.id === currentAssignmentId);
+      return props.assignments.find(c => c.id === currentAssignmentId) || props.assignments[0];
     } else if (props.assignments && props.assignments.length > 0) {
       return props.assignments[0];
     }

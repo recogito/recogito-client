@@ -36,7 +36,14 @@ export const TopBar = (props: TopBarProps) => {
     <div className='top-bar-container'>
       <header>
         <div className='top-bar-branding'>
-          <img src='/img/recogito-studio-logo.svg' height={40} />
+          <img
+            src={
+              config.branding.top_logo && config.branding.top_logo !== ''
+                ? `/img/${config.branding.top_logo}`
+                : '/img/recogito-studio-logo.svg'
+            }
+            height={40}
+          />
           {/* <div className='top-bar-platform'>
             {config.branding.platform_name}
           </div> */}

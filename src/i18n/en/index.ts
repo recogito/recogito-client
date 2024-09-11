@@ -5,6 +5,7 @@ import annotationText from './annotation-text.json';
 import authForgotPassword from './auth-forgot-password.json';
 import authLogin from './auth-login.json';
 import authResetPassword from './auth-reset-password.json';
+import branding from './branding.json';
 import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
@@ -17,8 +18,10 @@ import projectSettings from './project-settings.json';
 import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
 import projectRequest from './project-request.json';
+import email from './email.json';
 
 export default {
+  'annotation-common': annotationCommon,
   'annotation-image': {
     ...annotationCommon,
     ...annotationImage,
@@ -28,6 +31,7 @@ export default {
   'auth-forgot-password': authForgotPassword,
   'auth-login': authLogin,
   'auth-reset-password': authResetPassword,
+  'branding': branding,
   'dashboard-account': { ...dashboardAccount, ...accountMenu },
   'dashboard-projects': {
     ...dashboardProjects,
@@ -52,4 +56,5 @@ export default {
   'project-sidebar': { ...projectSidedbar, ...accountMenu },
   'user-management': { ...userManagement, ...accountMenu },
   'project-request': { ...projectRequest, ...accountMenu },
+  email: email,
 };

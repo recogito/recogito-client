@@ -1,0 +1,14 @@
+footer.brand-footer > .bottom-links {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+footer.brand-footer > .logo-container {
+  display: flex;
+  justify-content: center;
+  gap: 1em;
+  align-items: center;
+  width: 100%;
+  font-weight: lighter;
+}

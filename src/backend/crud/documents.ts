@@ -87,6 +87,29 @@ export const setDocumentPrivacy = (
     .single()
     .then(({ error, data }) => ({ error, data: data as Document }));
 
+export const archiveDocument = (
+  supabase: SupabaseClient,
+  documentId: string
+): Response<boolean> =>
+  supabase
+    .rpc('archive_document_rpc', {
+      _document_id: documentId,
+    })
+    .then(({ data }) => {
+      if (data) {
+        return {
+          error: null,
+          data: true,
+        };
+      }
+      return {
+        error: {
+          message: 'Failed to archive document',
+        } as PostgrestError,
+        data: false,
+      };
+    });
+
 export const getDocument = (
   supabase: SupabaseClient,
   documentId: string

@@ -1,0 +1,5 @@
+{
+  "Hello Recogito Studio User": "Hallo Recogito Studio Benutzer",
+  "_welcome_message_": "${sender} hat Dich in das Projekt ${project_name} auf ${host} eingeladen. Du kannst diese Einladung mit Klick auf den Button akzeptieren, oder über das Menü \"Benachrichtigungen\" in deinem Recogito Dashboard.",
+  "_you_have_been_invited_": "Du wurdest in ein Projekt eingeladen"
+}

@@ -22,6 +22,13 @@ if (profile.error || !profile.data) {
 
 const projectId = Astro.params.project;
 
+// Is this someone who is accepting an invite?
+const accept = Astro.url.searchParams.get('accept-invite');
+
+if (accept) {
+  return Astro.redirect(`/${lang}/projects/${projectId}/accept-invite`);
+}
+
 const project = await getProjectExtended(supabase, projectId as string);
 
 if (project.error || !project.data) {
@@ -32,6 +39,8 @@ if (project.error || !project.data) {
     statusText: 'Not Found',
   });
 }
+
+console.log('Project: ', project.data);
 
 const user = project.data.users.find((u) => u.user.id === profile.data.id);
 

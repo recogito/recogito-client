@@ -1,22 +1,18 @@
 ---
-import { getLangFromUrl } from '@i18n';
-import config from 'src/config.json';
-import Footer from '../branding/Footer';
-import Header from '../branding/Header';
-
+import { BrandFooter, BrandHeader } from '@components/Branding';
+import { getLangFromUrl, getTranslations } from '@i18n';
 import '@themes/default/index.css';
+import config from 'src/config.json';
 
 export interface Props {
   title: string;
 }
 
 const { title } = Astro.props;
+const i18n = getTranslations(Astro.request, 'branding');
 
-const message = config.branding.footer_message;
 const siteColor = config.branding.site_color;
 const textColor = config.branding.contrast_color;
-const useFooter = config.branding.bottom_logos_enabled;
-const useHeader = config.branding.top_logos_enabled;
 const backgroundColor = config.branding.background_color;
 
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
@@ -33,27 +29,10 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     <title>{title}</title>
   </head>
   <body>
-    <header>
-      <div class='branding-container'>
-        <img src='/img/recogito-studio-logo.svg' height={40} />
-        <div class='separator'></div>
-        <div class='site_name'>{config.branding.site_name}</div>
-      </div>
-      <div class='bottom_links'>
-        {useHeader && <Header contrastColor={textColor} />}
-      </div>
-    </header>
+    <BrandHeader />
     <div class='slot-container'>
       <slot />
     </div>
-    <footer>
-      <div class='blurb'>
-        {message || ''}
-      </div>
-      <div class='bottom_links'>
-        {useFooter && <Footer contrastColor={textColor} />}
-      </div>
-    </footer>
     <script>
       // @ts-ignore
       window.onUsersnapLoad = function (api: any) {
@@ -72,91 +51,40 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     </script>
   </body>
 </html>
+
 <style define:vars={{ siteColor, backgroundColor, textColor }}>
   body {
     height: 100%;
   }
 
-  .slot-container {
-    bottom: 0;
-    flex-direction: column;
-    margin: 50px 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-  }
-
-  header {
-    align-items: center;
-    background-color: var(--backgroundColor);
-    border-bottom: 1px solid var(--textColor);
-    box-sizing: border-box;
-    display: flex;
-    height: 50px;
-    justify-content: space-between;
-    padding: 0 40px;
-    position: fixed;
-    width: 100%;
-    z-index: 9999;
-  }
-
   footer {
     align-items: center;
     background-color: var(--backgroundColor);
-    border-top: 1px solid var(--textColor);
     bottom: 0;
+    color: var(--textColor);
     display: flex;
-    height: 50px;
+    height: 80px;
     justify-content: space-between;
-    padding: 0 40px;
     position: fixed;
     width: 100%;
     z-index: 1000;
   }
 
-  .branding-container {
+  header {
+    align-items: center;
+    background-color: var(--backgroundColor);
     box-sizing: border-box;
     display: flex;
-    align-items: center;
+    height: 60px;
+    justify-content: space-between;
+    padding: 0 40px;
+    width: 100%;
+    z-index: 9999;
   }
 
-  .platform {
-    color: var(--textColor);
+  .slot-container {
+    flex-direction: column;
+    margin: 0;
+    width: 100%;
   }
-
-  .separator {
-    width: 2px;
-    height: 20px;
-    margin-left: 5px;
-    background-color: var(--textColor);
-  }
-
-  .site_name {
-    padding-left: 5px;
-    color: var(--siteColor);
-    opacity: 0.8;
-    font-size: 12px;
-    padding-top: 4px;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-
-  .blurb {
-    color: var(--textColor);
-    font-size: 14px;
-  }
-
-  .top_links {
-    display: flex;
-    flex-direction: row;
-  }
-  .bottom_links {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .link {
-    width: 45px;
-    height: 45px;
-  }
-</style>../branding/Header
+</style>
