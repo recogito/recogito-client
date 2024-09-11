@@ -149,7 +149,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         if (props.document.layers.length !== distinct.length)
           console.warn('Layers contain duplicates', props.document.layers);
 
-        setDocumentLayers(props.document.layers);
+        setDocumentLayers(distinct);
       }
     }
   }, [policies]);
