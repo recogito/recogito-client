@@ -8,7 +8,7 @@ import type { Document } from 'src/Types';
 import { getAllDocumentLayersInProject, getAnnotations, getAssignment, getAvailableLayers } from '@backend/helpers';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFSelector } from '@recogito/react-pdf-annotator';
-import { quillToPDFRichText } from 'src/util';
+import { quillToPDFRichText, sanitizeFilename } from 'src/util';
 
 const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
   const factory = new AnnotationFactory(pdf)
@@ -30,6 +30,14 @@ const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[])
   });
 
   return factory.write();
+}
+
+const sanitizeName = (name: string) => {
+  return 
+    // Should always be the case, but you never know
+    name.endsWith('.pdf') 
+      ? sanitizeFilename(name.substring(0, name.length - 4) + '.pdf') 
+      : sanitizeFilename(name) + '.tei.xml';
 }
 
 const exportForProject = async (
@@ -63,7 +71,7 @@ const exportForProject = async (
 
   const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
 
-  const filename = 'file.pdf';
+  const filename = sanitizeName(document.name);
 
   return new Response(
     pdfWithAnnotations.buffer,
@@ -119,7 +127,7 @@ const exportForAssignment = async (
 
   const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
 
-  const filename = 'file.pdf';
+  const filename = sanitizeName(document.name);
 
   return new Response(
     pdfWithAnnotations.buffer,
