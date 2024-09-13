@@ -8,7 +8,7 @@ import type { Document } from 'src/Types';
 import { getAllDocumentLayersInProject, getAnnotations } from '@backend/helpers';
 import { Visibility } from '@recogito/annotorious-supabase';
 import type { PDFSelector } from '@recogito/react-pdf-annotator';
-import { serializeQuill } from 'src/util';
+import { quillToPDFRichText } from 'src/util';
 
 const exportForProject = async (
   supabase: SupabaseClient, 
@@ -45,9 +45,9 @@ const exportForProject = async (
     (annotation.target.selector as PDFSelector[]).forEach(selector => {
       factory.createHighlightAnnotation({
         page: selector.pageNumber - 1,
-        contents: annotation.bodies
+        richtextString: annotation.bodies
           .filter(b => b.purpose === 'commenting' && b.value)
-          .map(b => serializeQuill(b.value!)).join('\n\n'),
+          .map(b => quillToPDFRichText(b.value!)).join('\n\n'),
         author: annotation.target.creator?.name,
         creationDate: annotation.target.created,
         color: { r: 255, g: 255, b: 0 },
