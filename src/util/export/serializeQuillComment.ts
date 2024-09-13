@@ -30,15 +30,21 @@ export const quillToPDFRichText = (value: string) => {
       return { insert: `${op.insert} ${op.attributes.link}` };
 
     // Images are not supported in PDF annotations
-    if (typeof op.insert === 'object' && 'image' in op.insert) {
-      if (typeof op.insert.image === 'string') {
-        if (op.insert.image.startsWith('data:'))
-          // Remove inline base64 images
-          return undefined; 
-        else
-          // If the image is via URL, add the URL instead
-          return { insert: op.insert.image }
+    if (typeof op.insert === 'object') {
+      if ('image' in op.insert) {
+        if (typeof op.insert.image === 'string') {
+          if (op.insert.image.startsWith('data:'))
+            // Remove inline base64 images
+            return undefined; 
+          else
+            // If the image is via URL, add the URL instead
+            return { insert: op.insert.image }
+        }
       }
+
+      // Video URL
+      if ('video' in op.insert)
+        return { insert: op.insert.video }
     }
 
     return op;

@@ -32,13 +32,8 @@ const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[])
   return factory.write();
 }
 
-const sanitizeName = (name: string) => {
-  return 
-    // Should always be the case, but you never know
-    name.endsWith('.pdf') 
-      ? sanitizeFilename(name.substring(0, name.length - 4) + '.pdf') 
-      : sanitizeFilename(name) + '.tei.xml';
-}
+const sanitizeName = (name: string) =>
+  name.split('.').map(str => sanitizeFilename(str)).join('.');
 
 const exportForProject = async (
   supabase: SupabaseClient, 
