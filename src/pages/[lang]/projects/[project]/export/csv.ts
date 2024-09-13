@@ -115,7 +115,6 @@ const exportForAssignment = async (
   // Retrieve meta for all layers in project, so we have the name
   // of the context each layer belongs to
   const layerMeta = await getAvailableLayers(supabase, assignment.data.project_id);
-
   if (layerMeta.error || !layerMeta.data || layerMeta.data.length === 0)
     return new Response(
       JSON.stringify({ message: 'Error retrieving layers' }), 

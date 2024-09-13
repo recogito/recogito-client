@@ -5,10 +5,32 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { canExport as _canExport } from './_common';
 import { getDocument } from '@backend/crud';
 import type { Document } from 'src/Types';
-import { getAllDocumentLayersInProject, getAnnotations } from '@backend/helpers';
-import { Visibility } from '@recogito/annotorious-supabase';
+import { getAllDocumentLayersInProject, getAnnotations, getAssignment, getAvailableLayers } from '@backend/helpers';
+import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFSelector } from '@recogito/react-pdf-annotator';
 import { quillToPDFRichText } from 'src/util';
+
+const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
+  const factory = new AnnotationFactory(pdf)
+
+  annotations.forEach(annotation => {
+    (annotation.target.selector as PDFSelector[]).forEach(selector => {
+      factory.createHighlightAnnotation({
+        page: selector.pageNumber - 1,
+        richtextString: annotation.bodies
+          .filter(b => b.purpose === 'commenting' && b.value)
+          .map(b => quillToPDFRichText(b.value!)).join('\n\n'),
+        author: annotation.target.creator?.name,
+        creationDate: annotation.target.created,
+        color: { r: 255, g: 255, b: 0 },
+        quadPoints: selector.quadpoints,
+        opacity: 0.5
+      });
+    });
+  });
+
+  return factory.write();
+}
 
 const exportForProject = async (
   supabase: SupabaseClient, 
@@ -39,25 +61,7 @@ const exportForProject = async (
     ? all.data
     : all.data.filter(a => a.visibility !== Visibility.PRIVATE);
 
-  const factory = new AnnotationFactory(pdf)
-
-  annotations.forEach(annotation => {
-    (annotation.target.selector as PDFSelector[]).forEach(selector => {
-      factory.createHighlightAnnotation({
-        page: selector.pageNumber - 1,
-        richtextString: annotation.bodies
-          .filter(b => b.purpose === 'commenting' && b.value)
-          .map(b => quillToPDFRichText(b.value!)).join('\n\n'),
-        author: annotation.target.creator?.name,
-        creationDate: annotation.target.created,
-        color: { r: 255, g: 255, b: 0 },
-        quadPoints: selector.quadpoints,
-        opacity: 0.5
-      });
-    });
-  });
-
-  const pdfWithAnnotations = factory.write();
+  const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
 
   const filename = 'file.pdf';
 
@@ -73,20 +77,52 @@ const exportForProject = async (
   );
 }
 
-const exportForAssignment = (
+const exportForAssignment = async (
   supabase: SupabaseClient, 
   url: URL, 
   contextId: string,
   document: Document,
   pdf: Uint8Array
 ) => {
+  const assignment = await getAssignment(supabase, contextId);
+  if (assignment.error || !assignment.data) {
+    const error = await fetch(`${url}/404`);
+    return new Response(error.body, { 
+      headers: { 'Content-Type': 'text/html;charset=utf-8' },
+      status: 404, 
+      statusText: 'Not Found' 
+    });
+  }
 
-  // TODO
+  // Retrieve all layers, or just for the selected document
+  const layers = document.id 
+    ? assignment.data.layers.filter(l => l.document.id === document.id) 
+    : assignment.data.layers;
+
+  // Should never happen
+  if (layers.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 });
+
+  const all = await getAnnotations(supabase, layers.map(l => l.id));
+  if (all.error)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving annotations' }), 
+      { status: 500 }); 
+
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const annotations = includePrivate 
+    ? all.data
+    : all.data.filter(a => a.visibility !== Visibility.PRIVATE);
+
+  const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
 
   const filename = 'file.pdf';
 
-  return new Response(    
-    'hello world',
+  return new Response(
+    pdfWithAnnotations.buffer,
     { 
       headers: { 
         'Content-Type': 'application/pdf',
