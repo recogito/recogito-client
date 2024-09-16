@@ -1,3 +1,3 @@
 export * from './DocumentNotes';
 export * from './DocumentNotesList';
-export * from './DocumentNotesMenuIcon';
+export * from './DocumentNotesTabButton';
