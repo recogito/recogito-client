@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { AnnotationFactory } from 'annotpdf';
+import { format } from 'date-fns';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { canExport as _canExport } from './_common';
@@ -11,15 +12,48 @@ import type { PDFSelector } from '@recogito/react-pdf-annotator';
 import { quillToPDFRichText, sanitizeFilename } from 'src/util';
 
 const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
-  const factory = new AnnotationFactory(pdf)
+  const factory = new AnnotationFactory(pdf);
+
+  const toRichText = (annotation: SupabaseAnnotation) => {
+    const comments = 
+      annotation.bodies.filter(b => b.purpose === 'commenting' && b.value);
+
+    const tags =
+      annotation.bodies.filter(b => b.purpose === 'tagging' && b.value);
+
+    // Should never happen
+    if (comments.length + tags.length === 0) return '';
+
+    const [comment, ...replies] = comments;
+
+    // Initial comment doesn't need author/timestamp, since that's
+    // already in the PDF annotation metadata.
+    let richText = quillToPDFRichText(comment.value!) + '\n\n';
+
+    for (const reply of replies) {
+      if (reply.creator?.name && reply.created)
+        richText += `<p>- ${reply.creator.name} (${format(reply.created, 'HH:mm MMM dd')})</p>\n\n`;
+      else if (reply.creator?.name)
+        richText += `<p>- ${reply.creator.name}</p>\n\n`;
+      else if (reply.created)
+        richText += `<p>- Anonymous (${format(reply.created, 'HH:mm MMM dd')})</p>\n\n`;
+      else
+        richText += '<p>-</p>\n\n';
+
+      richText += quillToPDFRichText(reply.value!);
+    }
+
+    if (tags.length > 0)
+      richText += `<p>${tags.map(b => `[<i>${b.value}</i>]`).join(' ')}</p>\n\n`;
+
+    return `<html><body>${richText}</body></html>`;
+  }
 
   annotations.forEach(annotation => {
     (annotation.target.selector as PDFSelector[]).forEach(selector => {
       factory.createHighlightAnnotation({
         page: selector.pageNumber - 1,
-        richtextString: annotation.bodies
-          .filter(b => b.purpose === 'commenting' && b.value)
-          .map(b => quillToPDFRichText(b.value!)).join('\n\n'),
+        richtextString: toRichText(annotation),
         author: annotation.target.creator?.name,
         creationDate: annotation.target.created,
         color: { r: 255, g: 255, b: 0 },
