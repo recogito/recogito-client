@@ -44,7 +44,7 @@ const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[])
     }
 
     if (tags.length > 0)
-      richText += `<p>${tags.map(b => `[<i>${b.value}</i>]`).join(' ')}</p>\n\n`;
+      richText += `<p>${tags.map(b => `<span color="gray">[<i>${b.value}</i>]</span>`).join(' ')}</p>\n\n`;
 
     return `<html><body>${richText}</body></html>`;
   }
