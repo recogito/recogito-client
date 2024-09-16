@@ -27,7 +27,7 @@ export const quillToPDFRichText = (value: string) => {
   const ops = input.ops.map(op => {
     // Links are not supported in PDF annotations - turn to plaintext
     if (op.attributes?.link) 
-      return { insert: `${op.insert} ${op.attributes.link}` };
+      return { insert: `${op.insert} (${op.attributes.link})` };
 
     // Images are not supported in PDF annotations
     if (typeof op.insert === 'object') {
