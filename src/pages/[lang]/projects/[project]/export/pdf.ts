@@ -6,7 +6,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { canExport as _canExport } from './_common';
 import { getDocument } from '@backend/crud';
 import type { Document } from 'src/Types';
-import { getAllDocumentLayersInProject, getAnnotations, getAssignment, getAvailableLayers } from '@backend/helpers';
+import { getAllDocumentLayersInProject, getAnnotations, getAssignment } from '@backend/helpers';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFSelector } from '@recogito/react-pdf-annotator';
 import { quillToPDFRichText, sanitizeFilename } from 'src/util';
@@ -32,11 +32,11 @@ const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[])
 
     for (const reply of replies) {
       if (reply.creator?.name && reply.created)
-        richText += `<p>- ${reply.creator.name} (${format(reply.created, 'HH:mm MMM dd')})</p>\n\n`;
+        richText += `<p>- ${reply.creator.name} (${format(reply.created, 'HH:mm, MMM dd yyyy')})</p>\n\n`;
       else if (reply.creator?.name)
         richText += `<p>- ${reply.creator.name}</p>\n\n`;
       else if (reply.created)
-        richText += `<p>- Anonymous (${format(reply.created, 'HH:mm MMM dd')})</p>\n\n`;
+        richText += `<p>- Anonymous (${format(reply.created, 'HH:mm, MMM dd yyyy')})</p>\n\n`;
       else
         richText += '<p>-</p>\n\n';
 
