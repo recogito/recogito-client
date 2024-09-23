@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import type { PresentUser } from '@annotorious/react';
 import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import { UndoStack } from '@components/AnnotationDesktop';
+import { SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
@@ -126,6 +126,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               privacyMode={props.privacy === 'PRIVATE'}
             />
           )}
+
+          <SelectionURLState backButton />
 
           {props.usePopup && (
             <TextAnnotatorPopup

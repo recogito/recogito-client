@@ -1,11 +1,9 @@
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { UndoStack } from '@components/AnnotationDesktop';
+import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
@@ -154,6 +152,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
         ref={ref}
         className="ia-osd-container"
         options={options} />
+
+      <SelectionURLState backButton />
 
       {props.usePopup && (
         <OpenSeadragonPopup
