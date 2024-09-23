@@ -2,7 +2,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { getDefaultTranslations, getTranslations } from '@i18n';
+import { getDefaultTranslations } from '@i18n';
 import { type TReaderDocument, renderToStaticMarkup } from '@usewaypoint/email-builder';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 
