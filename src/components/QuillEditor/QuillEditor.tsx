@@ -6,6 +6,7 @@ import type { Translations } from 'src/Types';
 
 import './QuillEditor.css';
 import 'quill/dist/quill.core.css';
+import { getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
 
 // Limit default Base64 encoded images to 64k
 const DEFAULT_MAX_IMAGE_SIZE = 64 * 1024;
@@ -51,7 +52,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
     };
 
     const quill = new Quill(el.current!, options);
-
+  
     if (props.value)
       quill.setContents(props.value);
 
@@ -70,12 +71,49 @@ export const QuillEditor = (props: QuillEditorProps) => {
       props.onChange && props.onChange(quill.getContents());
     }
 
+    const onPaste = (evt: ClipboardEvent) => {
+      const text = evt.clipboardData?.getData('Text');
+
+      if (text && isAnnotationLink(text)) {
+        // Yay - we confirmed that an annotation link was pasted!
+        // Quill will have inserted the link somewhere at the user cursor
+        // position and merged it with the surrounding plaintext.
+        const { ops } = quill.getContents();
+
+        const withThisLink = ops.filter(op => 
+            typeof op.insert === 'string' 
+              && !op.attributes 
+              && op.insert.includes(text));
+
+        if (withThisLink.length > 0) {
+          // Found un-formatted occurrences of this link!
+          const short = getAnnotationShortLink(text);
+
+          const formatLink = (op: Op): Op[] => {
+            const { before, after } = splitStringBy((op.insert as string), text)
+
+            return [
+              { insert: before },
+              { insert: `@${short}`, attributes: { link: text } },
+              { insert: after }
+            ].filter(op => op.insert); // Remove empty
+          }
+
+          const next = ops.reduce<Op[]>((all, op) => 
+            withThisLink.includes(op) ? [...all, ...formatLink(op)] : [...all, op], []);
+          quill.setContents(next);
+        }
+      }
+    }
+
     quill.on('text-change', onChange);
+    quill.root.addEventListener('paste', onPaste);
 
     setQuill(quill);
 
     return () => {
       quill.off('text-change', onChange);
+      quill.root.removeEventListener('paste', onPaste);
     }
   }, []);
 
