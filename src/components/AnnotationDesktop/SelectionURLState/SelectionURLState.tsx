@@ -51,6 +51,8 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
   
     // Keep state in sync with the hash
     history.replaceState({ selected: uuids }, '', window.location.href);
+
+    return uuids;
   }, [anno]);
 
   useEffect(() => {
@@ -85,7 +87,13 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
   }, [anno, updateURL, selectAnnotationsFromHash]);
 
   useEffect(() => {
-    if (loaded) selectAnnotationsFromHash();
+    if (loaded) {
+      // Initial load
+      const uuids = selectAnnotationsFromHash();
+
+      // if (uuids.length > 0)
+      //   anno.scrollIntoView(uuids[0]);
+    }
   }, [loaded]);
 
   return null;
