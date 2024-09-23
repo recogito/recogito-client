@@ -7,7 +7,6 @@ export const isEmpty = (value: Delta) => {
 }
 
 export const isAnnotationLink = (str: string) => {
-
   try {
     const url = new URL(str);
 
@@ -24,7 +23,7 @@ export const isAnnotationLink = (str: string) => {
       return false;
 
     // Check if there's a 'selected' UUID
-    const hash = window.location.hash.slice(1);
+    const hash = url.hash.slice(1);
     const params = new URLSearchParams(hash);
     const selected = params.get('selected');
 
@@ -33,13 +32,13 @@ export const isAnnotationLink = (str: string) => {
 
     const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
     return isUUID.test(selected);
-  } catch (error) {
+  } catch {
     return false;
   }
 }
 
 export const getAnnotationShortLink = (str: string) => {
-  const hash = window.location.hash.slice(1);
+  const hash = new URL(str).hash.slice(1);
   const params = new URLSearchParams(hash);
   const uuid = params.get('selected')!;
 

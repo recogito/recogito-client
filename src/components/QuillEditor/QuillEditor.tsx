@@ -1,12 +1,13 @@
-import Quill from 'quill';
-import { Delta, type Op, type QuillOptions } from 'quill/core';
 import { useEffect, useRef } from 'react';
+import Quill from 'quill';
+import { Delta } from 'quill/core';
+import type { Op, QuillOptions } from 'quill/core';
 import { useQuillEditor } from './QuillEditorRoot';
+import { getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
 import type { Translations } from 'src/Types';
 
 import './QuillEditor.css';
 import 'quill/dist/quill.core.css';
-import { getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
 
 // Limit default Base64 encoded images to 64k
 const DEFAULT_MAX_IMAGE_SIZE = 64 * 1024;
@@ -59,7 +60,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
     const maxSize = props.maxImageSize || DEFAULT_MAX_IMAGE_SIZE;
 
     const onChange = () => {
-      const ops = quill.getContents().ops;
+      const { ops } = quill.getContents();
 
       const filteredOps = 
         ops.filter(op => !isBase64Image(op) || ((op.insert as any).image as string).length < maxSize);
@@ -79,6 +80,11 @@ export const QuillEditor = (props: QuillEditorProps) => {
         // Quill will have inserted the link somewhere at the user cursor
         // position and merged it with the surrounding plaintext.
         const { ops } = quill.getContents();
+
+        // Get current selection, so we can restore cursor position
+        const range = quill.getSelection();
+
+        const cursorPos = range?.index;
 
         const withThisLink = ops.filter(op => 
             typeof op.insert === 'string' 
@@ -101,7 +107,11 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
           const next = ops.reduce<Op[]>((all, op) => 
             withThisLink.includes(op) ? [...all, ...formatLink(op)] : [...all, op], []);
+
           quill.setContents(next);
+
+          if (cursorPos)
+            quill.setSelection({ index: cursorPos, length: 0 });
         }
       }
     }
