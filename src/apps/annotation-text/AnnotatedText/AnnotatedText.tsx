@@ -109,6 +109,10 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             </TextAnnotator>
           )}
 
+          {(text && !pdfLoading) && (
+            <SelectionURLState backButton />
+          )}
+
           <UndoStack undoEmpty={true} />
 
           {layers && (
@@ -126,8 +130,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               privacyMode={props.privacy === 'PRIVATE'}
             />
           )}
-
-          <SelectionURLState backButton />
 
           {props.usePopup && (
             <TextAnnotatorPopup
