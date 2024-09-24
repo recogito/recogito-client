@@ -85,10 +85,7 @@ export const Login = (props: {
         domain: domain,
       })
       .then(({ data, error }) => {
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-          localStorage.setItem('redirect-to', '');
-        } else if (data?.url) {
+        if (data?.url) {
           window.location.href = data.url;
         } else {
           console.error(error);
@@ -105,10 +102,7 @@ export const Login = (props: {
         },
       })
       .then(({ data, error }) => {
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-          localStorage.setItem('redirect-to', '');
-        } else if (data?.url) {
+        if (data?.url) {
           window.location.href = data.url;
         } else {
           console.error(error);
