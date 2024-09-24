@@ -15,5 +15,14 @@
   "Something went wrong": "Something went wrong",
   "Project Name": "Project Name",
   "Project Description": "Project Description",
-  "Plugins": "Plugins"
+  "Plugins": "Plugins",
+  "Tagging": "Tagging",
+  "Project Status": "Project Status",
+  "status_message": "Projects can be either Active or Locked. Locked projects are read only but still accessible by the project members. Locked Public Projects cannot be joined by new members. Only Organization Admins can Unlock a project once locked.",
+  "Current Status": "Current Status",
+  "Locked": "Locked",
+  "Active": "Active",
+  "Lock Project": "Lock Project",
+  "Unlock Project": "Unlock Project",
+  "lock_warning_message": "Once a project is locked, it will become read-only for all project members, including yourself. The project will still be accessible by all project members, but no new members can be added. Only an Organization Admin can undo this action."
 }

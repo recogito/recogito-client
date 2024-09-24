@@ -5,6 +5,7 @@ import { Button } from '@components/Button';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
 import { HeaderSortAction, type SortFunction } from '@components/Sort';
+import { HeaderFilterAction, type Filters } from '@components/Filter';
 import {
   ToggleDisplay,
   type ToggleDisplayValue,
@@ -34,6 +35,8 @@ interface HeaderProps {
   filter: ProjectFilter;
 
   onChangeFilter(f: ProjectFilter): void;
+
+  onChangeDisplay(f: Filters): void;
 
   onChangeSort(sortFn: SortFunction, name: string): void;
 
@@ -175,7 +178,12 @@ export const Header = (props: HeaderProps) => {
               onChangeSearch={props.onChangeSearch}
             />
           </li>
-
+          <li>
+            <HeaderFilterAction
+              i18n={props.i18n}
+              onChangeFilter={props.onChangeDisplay}
+            />
+          </li>
           <li>
             <HeaderSortAction
               i18n={props.i18n}

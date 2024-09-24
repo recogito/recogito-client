@@ -7,6 +7,7 @@ import {
   getProjectTagVocabulary,
   setProjectTagVocabulary,
   updateProject,
+  lockProject,
   deleteInstalledPlugin,
   updatePluginSettings,
 } from '@backend/helpers';
@@ -15,10 +16,16 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { TopBar } from '@components/TopBar';
 import { BackButtonBar } from '@components/BackButtonBar';
-import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import {
+  type SaveState,
+  TinySaveIndicator,
+} from '@components/TinySaveIndicator';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { SettingsHeader } from './SettingsHeader';
-import type { PluginMetadata, PluginInstallationConfig } from '@components/Plugins';
+import type {
+  PluginMetadata,
+  PluginInstallationConfig,
+} from '@components/Plugins';
 import { Extension } from '@components/Plugins';
 import type {
   ExtendedProjectData,
@@ -26,14 +33,16 @@ import type {
   Translations,
   MyProfile,
 } from 'src/Types';
+import { Lock } from '@phosphor-icons/react';
 
 import './ProjectSettings.css';
+import { LockWarningMessage } from './LockWarningMessage';
 
 interface ProjectSettingsProps {
   invitations: Invitation[];
 
   me: MyProfile;
-  
+
   i18n: Translations;
 
   project: ExtendedProjectData;
@@ -58,9 +67,10 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [project, setProject] = useState<ExtendedProjectData | undefined>();
-  const [tab, setTab] = useState<'settings' | 'plugins' | undefined>(
-    'settings'
-  );
+  const [tab, setTab] = useState<
+    'settings' | 'plugins' | 'tagging' | undefined
+  >('settings');
+  const [lockOpen, setLockOpen] = useState(false);
 
   useEffect(() => {
     getProjectTagVocabulary(supabase, props.project.id).then(
@@ -178,7 +188,8 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
       name,
       description,
       openJoin,
-      openEdit
+      openEdit,
+      props.project.is_locked || false
     ).then((result) => {
       if (result) {
         setProject({
@@ -193,6 +204,48 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         setState('failed');
       }
     });
+  };
+
+  const handleRequestLockProject = () => {
+    setLockOpen(true);
+  };
+
+  const handleLockProject = () => {
+    setState('saving');
+
+    if (project?.is_locked) {
+      updateProject(
+        supabase,
+        props.project.id,
+        name,
+        description,
+        openJoin,
+        openEdit,
+        !project?.is_locked
+      ).then((result) => {
+        if (result) {
+          setProject({
+            ...props.project,
+            name: name,
+            description: description,
+            is_open_join: openJoin,
+            is_open_edit: openEdit,
+          });
+          setState('success');
+        } else {
+          setState('failed');
+        }
+      });
+    } else {
+      lockProject(supabase, props.project.id).then((result) => {
+        if (result) {
+          setState('success');
+          window.location.href = `/${props.i18n.lang}/projects`;
+        } else {
+          setState('failed');
+        }
+      });
+    }
   };
 
   const clearVocabulary = () => {
@@ -266,57 +319,119 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             currentTab={tab}
           />
           {tab === 'settings' && (
-            <>
-              <div className='tagging-vocabulary'>
-                <div className='project-settings-root'>
+            <div className='tagging-vocabulary'>
+              <div className='project-settings-root'>
+                <Label.Root
+                  className='project-settings-label-detail text-body-large-bold'
+                  htmlFor='firstName'
+                >
+                  {t['Project Details']}
+                </Label.Root>
+                <Label.Root className='project-settings-label text-body-small-bold'>
+                  {t['Name']}
+                </Label.Root>
+                <input
+                  className='project-settings-input'
+                  type='text'
+                  value={name}
+                  placeholder={t['Name your project']}
+                  onChange={(evt) => setName(evt.target.value)}
+                />
+                <Label.Root className='project-settings-label text-body-small-bold'>
+                  {t['Description']}
+                </Label.Root>
+                <input
+                  type='text'
+                  value={description}
+                  placeholder={t['Describe your project']}
+                  onChange={(evt) => setDescription(evt.target.value)}
+                />
+                <div className='project-settings-visibility'>
                   <Label.Root
                     className='project-settings-label-detail text-body-large-bold'
                     htmlFor='firstName'
                   >
-                    {t['Project Details']}
+                    {t['Project Visibility']}
                   </Label.Root>
-                  <Label.Root className='project-settings-label text-body-small-bold'>
-                    {t['Name']}
-                  </Label.Root>
-                  <input
-                    className='project-settings-input'
-                    type='text'
-                    value={name}
-                    placeholder={t['Name your project']}
-                    onChange={(evt) => setName(evt.target.value)}
-                  />
-                  <Label.Root className='project-settings-label text-body-small-bold'>
-                    {t['Description']}
-                  </Label.Root>
-                  <input
-                    type='text'
-                    value={description}
-                    placeholder={t['Describe your project']}
-                    onChange={(evt) => setDescription(evt.target.value)}
-                  />
-                  <div className='project-settings-visibility'>
-                    <Label.Root
-                      className='project-settings-label-detail text-body-large-bold'
-                      htmlFor='firstName'
+                  <div className='project-settings-switches'>
+                    <RadioGroup.Root
+                      className='project-settings-radio-group-root'
+                      defaultValue='private'
+                      value={visibility}
+                      aria-label='View density'
+                      onValueChange={(value) =>
+                        value === 'public'
+                          ? setOpenJoin(true)
+                          : setOpenJoin(false)
+                      }
                     >
-                      {t['Project Visibility']}
-                    </Label.Root>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='private'
+                          id='r1'
+                        >
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='r1'
+                        >
+                          {t['Private']}
+                        </label>
+                      </div>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Project admins choose the users that can join this project'
+                          ]
+                        }
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='public'
+                          id='r2'
+                        >
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='r2'
+                        >
+                          {t['Public']}
+                        </label>
+                      </div>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Any registered user can join this project without an invitation'
+                          ]
+                        }
+                      </div>
+                    </RadioGroup.Root>
                     <div className='project-settings-switches'>
+                      <Label.Root
+                        className='project-settings-label-detail text-body-large-bold'
+                        htmlFor='firstName'
+                      >
+                        {t['Project Type']}
+                      </Label.Root>
                       <RadioGroup.Root
                         className='project-settings-radio-group-root'
-                        defaultValue='private'
-                        value={visibility}
+                        defaultValue='assignments'
+                        value={type}
                         aria-label='View density'
                         onValueChange={(value) =>
-                          value === 'public'
-                            ? setOpenJoin(true)
-                            : setOpenJoin(false)
+                          value === 'assignments'
+                            ? setOpenEdit(false)
+                            : setOpenEdit(true)
                         }
                       >
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <RadioGroup.Item
                             className='project-settings-radio-group-item'
-                            value='private'
+                            value='assignments'
                             id='r1'
                           >
                             <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
@@ -325,20 +440,20 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                             className='project-settings-radio-group-label text-body-small-bold'
                             htmlFor='r1'
                           >
-                            {t['Private']}
+                            {t['Assignments']}
                           </label>
                         </div>
                         <div className='project-settings-radio-group-helper text-body-small'>
                           {
                             t[
-                              'Project admins choose the users that can join this project'
+                              'Project admins create assignments with specific documents and team members'
                             ]
                           }
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <RadioGroup.Item
                             className='project-settings-radio-group-item'
-                            value='public'
+                            value='single_team'
                             id='r2'
                           >
                             <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
@@ -347,127 +462,106 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                             className='project-settings-radio-group-label text-body-small-bold'
                             htmlFor='r2'
                           >
-                            {t['Public']}
+                            {t['Single Team']}
                           </label>
                         </div>
                         <div className='project-settings-radio-group-helper text-body-small'>
-                          {
-                            t[
-                              'Any registered user can join this project without an invitation'
-                            ]
-                          }
+                          {t['Project members can annotate any document']}
                         </div>
                       </RadioGroup.Root>
-                      <div className='project-settings-switches'>
-                        <Label.Root
-                          className='project-settings-label-detail text-body-large-bold'
-                          htmlFor='firstName'
-                        >
-                          {t['Project Type']}
-                        </Label.Root>
-                        <RadioGroup.Root
-                          className='project-settings-radio-group-root'
-                          defaultValue='assignments'
-                          value={type}
-                          aria-label='View density'
-                          onValueChange={(value) =>
-                            value === 'assignments'
-                              ? setOpenEdit(false)
-                              : setOpenEdit(true)
-                          }
-                        >
-                          <div
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            <RadioGroup.Item
-                              className='project-settings-radio-group-item'
-                              value='assignments'
-                              id='r1'
-                            >
-                              <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
-                            </RadioGroup.Item>
-                            <label
-                              className='project-settings-radio-group-label text-body-small-bold'
-                              htmlFor='r1'
-                            >
-                              {t['Assignments']}
-                            </label>
-                          </div>
-                          <div className='project-settings-radio-group-helper text-body-small'>
-                            {
-                              t[
-                                'Project admins create assignments with specific documents and team members'
-                              ]
-                            }
-                          </div>
-                          <div
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            <RadioGroup.Item
-                              className='project-settings-radio-group-item'
-                              value='single_team'
-                              id='r2'
-                            >
-                              <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
-                            </RadioGroup.Item>
-                            <label
-                              className='project-settings-radio-group-label text-body-small-bold'
-                              htmlFor='r2'
-                            >
-                              {t['Single Team']}
-                            </label>
-                          </div>
-                          <div className='project-settings-radio-group-helper text-body-small'>
-                            {t['Project members can annotate any document']}
-                          </div>
-                        </RadioGroup.Root>
-                      </div>
                     </div>
-                    <div className='buttons project-settings-buttons'>
-                      <Button
-                        busy={state === 'saving'}
-                        className='primary'
-                        onClick={saveProjectSettings}
-                        disabled={saveDisabled}
-                      >
-                        <span>{t['Save']}</span>
-                      </Button>
+                  </div>
+                  <div className='buttons project-settings-buttons'>
+                    <Button
+                      busy={state === 'saving'}
+                      className='primary'
+                      onClick={saveProjectSettings}
+                      disabled={saveDisabled}
+                    >
+                      <span>{t['Save']}</span>
+                    </Button>
 
-                      <TinySaveIndicator
-                        resultOnly
-                        state={state}
-                        fadeOut={2500}
-                      />
-                    </div>
+                    <TinySaveIndicator
+                      resultOnly
+                      state={state}
+                      fadeOut={2500}
+                    />
                   </div>
                 </div>
               </div>
-
-              <div className='tagging-vocabulary'>
-                <h2>{t['Tagging Vocabulary']}</h2>
-
-                <p>{t['You can pre-define a tagging vocabulary']}</p>
-
-                <p>{t['The terms will appear as autocomplete options']}</p>
-
-                <textarea value={vocabulary.join('\n')} onChange={onChange} />
-
-                <div className='buttons'>
-                  <Button onClick={clearVocabulary}>
-                    <span>{t['Clear']}</span>
-                  </Button>
-                  <Button
-                    busy={state === 'saving'}
-                    className='primary'
-                    onClick={saveVocabulary}
-                  >
-                    <span>{t['Save']}</span>
-                  </Button>
-
-                  <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
+              <div className='project-settings-divider' />
+              <Label.Root
+                className='project-settings-label-detail text-body-large-bold'
+                htmlFor='projectStatus'
+              >
+                {t['Project Status']}
+              </Label.Root>
+              <div className='project-settings-status-helper text-body-small'>
+                {t['status_message']}
+              </div>
+              <div className='project-settings-status-row'>
+                <div className='text-body-small-bold'>
+                  {`${t['Current Status']}:`}
+                </div>
+                <div
+                  className={
+                    project?.is_locked
+                      ? 'project-status-locked'
+                      : 'project-status-active'
+                  }
+                >
+                  {project?.is_locked ? (
+                    <>
+                      <Lock size={16} />
+                      <div className='text-body-small'>{t['Locked']}</div>
+                    </>
+                  ) : (
+                    <div className='text-body-small'>{t['Active']}</div>
+                  )}
                 </div>
               </div>
-            </>
+              <div className='buttons project-settings-buttons'>
+                <Button
+                  busy={state === 'saving'}
+                  className='primary'
+                  onClick={handleRequestLockProject}
+                >
+                  <Lock size={32} />
+                  <span>
+                    {project?.is_locked
+                      ? t['Unlock Project']
+                      : t['Lock Project']}
+                  </span>
+                </Button>
+                <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
+              </div>
+            </div>
+          )}
+          {tab === 'tagging' && (
+            <div className='tagging-vocabulary'>
+              <h2>{t['Tagging Vocabulary']}</h2>
+
+              <p>{t['You can pre-define a tagging vocabulary']}</p>
+
+              <p>{t['The terms will appear as autocomplete options']}</p>
+
+              <textarea value={vocabulary.join('\n')} onChange={onChange} />
+
+              <div className='buttons'>
+                <Button onClick={clearVocabulary}>
+                  <span>{t['Clear']}</span>
+                </Button>
+                <Button
+                  busy={state === 'saving'}
+                  className='primary'
+                  onClick={saveVocabulary}
+                >
+                  <span>{t['Save']}</span>
+                </Button>
+
+                <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
+              </div>
+            </div>
           )}
           {tab === 'plugins' && (
             <div className='project-plugins'>
@@ -549,6 +643,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           <Toast
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}
+          />
+          <LockWarningMessage
+            open={lockOpen}
+            i18n={props.i18n}
+            onCancel={() => setLockOpen(false)}
+            onConfirm={handleLockProject}
           />
         </ToastProvider>
       </div>

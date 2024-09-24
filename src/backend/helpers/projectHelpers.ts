@@ -25,6 +25,7 @@ export const listMyProjectsExtended = (
       description,
       is_open_join,
       is_open_edit,
+      is_locked,
       groups:project_groups(
         id,
         name
@@ -152,6 +153,7 @@ export const getProjectExtended = (
       description,
       is_open_join,
       is_open_edit,
+      is_locked,
       groups:project_groups(
         id,
         name,
@@ -342,7 +344,8 @@ export const updateProject = (
   name: string,
   description: string,
   is_open_join: boolean,
-  is_open_edit: boolean
+  is_open_edit: boolean,
+  is_locked: boolean
 ) =>
   supabase
     .from('projects')
@@ -351,9 +354,20 @@ export const updateProject = (
       is_open_edit: is_open_edit,
       name: name,
       description: description,
+      is_locked: is_locked,
     })
     .eq('id', id)
     .then(({ error }) => {
       if (error) return false;
+      else return true;
+    });
+
+export const lockProject = (supabase: SupabaseClient, id: string) =>
+  supabase
+    .rpc('lock_project_rpc', {
+      _project_id: id,
+    })
+    .then(({ data }) => {
+      if (data) return false;
       else return true;
     });

@@ -1,8 +1,9 @@
-import { Check, FunnelSimple } from '@phosphor-icons/react';
+import { Check, CaretDown } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 import type { SortFunction } from './SortFunction';
+import './HeaderSortAction.css';
 
 interface HeaderSortActionProps {
   i18n: Translations;
@@ -26,6 +27,13 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
 
   const [sort, setSort] = useState<keyof typeof Sorters | undefined>();
 
+  useEffect(() => {
+    if (!sort) {
+      setSort('Name');
+      props.onChangeSort(Sorters['Name'], 'Name');
+    }
+  }, [sort]);
+
   const changeSort = (key: keyof typeof Sorters) => () => {
     setSort(key);
     props.onChangeSort(Sorters[key], key);
@@ -44,7 +52,11 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
     <Dropdown.Root>
       <Dropdown.Trigger asChild>
         <button>
-          <FunnelSimple size={16} /> <span>{t['Sort']}</span>
+          <div className='header-sort-row'>
+            <div>{`${t['Sort']}: `}</div>
+            <div className='header-sort-name '>{t[sort || 'Name']}</div>
+            <CaretDown size={16} />
+          </div>
         </button>
       </Dropdown.Trigger>
 

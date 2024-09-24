@@ -55,6 +55,8 @@ export interface Project {
   is_open_join?: boolean;
 
   is_open_edit?: boolean;
+
+  is_locked?: boolean;
 }
 
 export interface ExtendedProjectData {
@@ -75,6 +77,8 @@ export interface ExtendedProjectData {
   is_open_join?: boolean;
 
   is_open_edit?: boolean;
+
+  is_locked?: boolean;
 
   contexts: Context[];
 
