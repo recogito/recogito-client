@@ -127,16 +127,18 @@ const _initDocument = (
         .then(() => {
           return {
             ...document,
-            layers: []
+            layers: [],
           };
-        }).catch(error => {
+        })
+        .catch((error) => {
           console.error('File upload failed - rolling back', error);
 
-          return removeDocumentsFromProject(supabase, projectId, [document.id])
-            .then(() => {
-              // Forward original error after rollback
-              throw error;
-            });
+          return removeDocumentsFromProject(supabase, projectId, [
+            document.id,
+          ]).then(() => {
+            // Forward original error after rollback
+            throw error;
+          });
         });
     } else {
       return { ...document, layers: [] };
@@ -309,6 +311,9 @@ export const getDocumentInContext = (
               name,
               description
             )
+          ),
+          project: projects(
+            is_locked
           )
         `
         )
@@ -316,6 +321,7 @@ export const getDocumentInContext = (
         .single()
         .then(({ data, error }) => {
           if (error) {
+            //console.error(error);
             return { error, data: null };
           }
 
@@ -333,6 +339,8 @@ export const getDocumentInContext = (
           // @ts-ignore
           delete context.layer_contexts;
           document.context = context;
+          // @ts-ignore
+          document.project_is_locked = data.project.is_locked;
 
           return { error: null, data: document };
         });

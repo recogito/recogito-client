@@ -176,6 +176,8 @@ export interface DocumentContext {
 
   is_project_default?: boolean;
 
+  project_is_locked?: boolean;
+
   layer_contexts?: any;
 }
 
