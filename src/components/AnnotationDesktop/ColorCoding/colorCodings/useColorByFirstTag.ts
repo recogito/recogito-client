@@ -14,7 +14,9 @@ export const useColorByFirstTag = (): ColorCoding => {
 
   const annotations = useAnnotations(500);
 
-  const { getColor } = useMemo(() => createPalette(PALETTE), []);
+  const tags = useMemo(() => enumerateTags(annotations), [annotations]);
+
+  const { getColor } = useMemo(() => createPalette(PALETTE), [tags.join('-')]);
 
   const style = useMemo(() => {
     return (annotation: SupabaseAnnotation): Color => {
@@ -29,9 +31,8 @@ export const useColorByFirstTag = (): ColorCoding => {
   }, [getColor]);
 
   const legend = useMemo(() => {
-    const tags = enumerateTags(annotations);
     return tags.map(tag => ({ color: getColor(tag) as Color, label: tag }));
-  }, [getColor, annotations]);
+  }, [tags]);
 
   return { name: 'tag', style, legend }; 
 

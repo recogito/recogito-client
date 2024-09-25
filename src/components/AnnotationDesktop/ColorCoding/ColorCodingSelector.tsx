@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
@@ -24,10 +25,20 @@ interface ColorCodingSelectorProps {
 
 }
 
+type Coding = 'creator' | 'layer' | 'tag' | 'privacy';
+
 export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const { t } = props.i18n;
 
+  const [current, setCurrent] = useState<Coding | undefined>();
+
+  // TODO: this is actually super in-efficient! Doesn't make much
+  // difference for now, but should be improved. Instead of hooks 
+  // (which compute all codings on every change), we should
+  // pack this into components. This way: i) only the
+  // current color coding will be computed, ii) no coding will 
+  // be computed if the legend is not open.
   const byCreator = useColorByCreator(props.present);
   
   const byFirstTag = useColorByFirstTag();
@@ -38,23 +49,25 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const { setColorCoding } = useColorCodingState();
 
-  const onChange = (key: string) => {
-    if (key === 'creator') {
+  // Quick hack to make color legends update without having to
+  // refresh the page. Inefficient, but works for now.
+  useEffect(() => {
+    if (current === 'creator') {
       setColorCoding(byCreator);
-    } else if (key === 'layer') {
+    } else if (current === 'layer') {
       setColorCoding(byLayer);
-    } else if (key === 'tag') {
+    } else if (current === 'tag') {
       setColorCoding(byFirstTag);
-    } else if (key === 'privacy') {
+    } else if (current === 'privacy') {
       setColorCoding(byPrivacy);
     } else {
       setColorCoding(undefined);
     }
-  }
+  }, [current, byCreator, byFirstTag, byLayer, byPrivacy]);
 
   return (
     <Select.Root 
-      onValueChange={onChange}
+      onValueChange={value => setCurrent(value as Coding)}
       defaultValue="none">
       <Select.Trigger 
         className="select-trigger color-coding-selector-trigger" 
