@@ -35,9 +35,9 @@ const crosswalkTarget = (target: any) => {
   }
 }
 
-export const GET: APIRoute = async ({ params, cookies }) => {
+export const GET: APIRoute = async ({ cookies, params, request }) => {
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)

@@ -149,7 +149,7 @@ const exportForAssignment = async (
 export const GET: APIRoute = async ({ cookies, params, request, url }) => {
   const i18n = getTranslations(request, 'annotation-common');
 
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)
