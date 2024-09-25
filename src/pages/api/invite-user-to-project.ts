@@ -2,11 +2,8 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { getTranslations } from '@i18n';
-import {
-  type TReaderDocument,
-  renderToStaticMarkup,
-} from '@usewaypoint/email-builder';
+import { getDefaultTranslations } from '@i18n';
+import { type TReaderDocument, renderToStaticMarkup } from '@usewaypoint/email-builder';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
@@ -55,7 +52,8 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     respData.push(inviteResponse.data);
 
-    const i18n = getTranslations(request, 'email');
+    const i18n = getDefaultTranslations('email');
+
     const { t, lang } = i18n;
 
     const config: TReaderDocument = {
