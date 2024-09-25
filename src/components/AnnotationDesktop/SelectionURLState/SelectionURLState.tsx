@@ -9,6 +9,8 @@ interface SelectionURLStateProps {
 
   onInitialSelect?(annotationId: string): void;
 
+  onInitialSelectError?(annotationId: string): void;
+
 }
 
 export const SelectionURLState = (props: SelectionURLStateProps) => {
@@ -40,22 +42,33 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
     }
   }, [props.backButton]);
 
-  // Set the Annotorious selection in response to a browser history event.
-  const selectAnnotationsFromHash = useCallback(() => {
+  const getSelectedForHash = useCallback(() => {
     const hash = window.location.hash.slice(1);
     const params = new URLSearchParams(hash);
     const selectedString = params.get('selected');
     
-    const uuids = selectedString ? selectedString.split(',') : [];
-    
-    muteSelection.current = true;
-    anno?.setSelected(uuids);
-  
-    // Keep state in sync with the hash
-    history.replaceState({ selected: uuids }, '', window.location.href);
+    // IDs in the hash
+    const ids = selectedString ? selectedString.split(',') : [];
 
-    return uuids;
+    // Fetch annotations from the store, if they exist
+    const annotations = ids.map(uuid => anno.getAnnotationById(uuid)!).filter(Boolean);
+    
+    return { ids, annotations }; 
   }, [anno]);
+
+  // Set the Annotorious selection in response to a browser history event.
+  const selectAnnotationsFromHash = useCallback(() => {
+    const { ids, annotations } = getSelectedForHash();
+
+    if (annotations.length > 0) {
+      muteSelection.current = true;
+      anno?.setSelected(annotations.map(a => a.id));
+    
+      // Keep state in sync with the hash
+      history.replaceState({ selected: ids }, '', window.location.href);
+      return true;
+    }
+  }, [anno, getSelectedForHash]);
 
   useEffect(() => {
     if (!anno) return;
@@ -91,12 +104,18 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
   useEffect(() => {
     if (loaded) {
       // Initial load
-      const uuids = selectAnnotationsFromHash();
+      const { ids, annotations } = getSelectedForHash();
 
-      if (props.onInitialSelect && uuids.length > 0)
-        props.onInitialSelect(uuids[0]);
+      if (ids.length > 0 && (ids.length === annotations.length)) {
+        selectAnnotationsFromHash();
+
+        if (props.onInitialSelect) props.onInitialSelect(ids[0]);
+      } else if (ids.length > 0) {
+        // Some IDs in the hash don't actually exist as annotations
+        if (props.onInitialSelectError) props.onInitialSelectError(ids[0]);
+      }
     }
-  }, [loaded]);
+  }, [loaded, getSelectedForHash, selectAnnotationsFromHash]);
 
   return null;
 
