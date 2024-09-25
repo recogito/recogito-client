@@ -1,5 +1,7 @@
 import type { Translations } from 'src/Types';
 
+const DEFAULT_LANG: string = import.meta.env.PUBLIC_DEFAULT_LANGUAGE;
+
 import de from './de';
 import en from './en';
 
@@ -8,7 +10,7 @@ export const languages = {
   de: 'Deutsch',
 };
 
-export const defaultLang = 'en';
+export const defaultLang = (DEFAULT_LANG || 'en') as keyof typeof languages;
 
 const labels = { de, en };
 
@@ -30,4 +32,16 @@ export const getTranslations = (request: Request, dictionary: keyof typeof defau
       ...labels[lang][dictionary]
     }
   };
+}
+
+export const getDefaultTranslations = (dictionary: keyof typeof defaultLabels): Translations => {
+  const lang = defaultLang;
+
+  return {
+    lang,
+    t: {
+      ...defaultLabels[dictionary],
+      ...labels[lang][dictionary]
+    }
+  }
 }
