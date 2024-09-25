@@ -129,10 +129,50 @@ export const inviteUserToProject = (
 ): Promise<Invitation> =>
   new Promise((resolve, reject) => {
     const payload: ApiPostInviteUserToProject = {
-      email,
+      users: [{ email: email, projectGroupId: groupId }],
       projectId: project.id,
       projectName: project.name,
-      projectGroupId: groupId,
+      invitedBy: invitedBy || '',
+    };
+
+    return supabase.auth.getSession().then(({ error, data }) => {
+      // Get Supabase session token first
+      if (error) {
+        // Shouldn't really happen at this point
+        reject(error);
+      } else {
+        const token = data.session?.access_token;
+        if (!token) {
+          // Shouldn't really happen at this point
+          reject('Not authorized');
+        } else {
+          fetch('/api/invite-user-to-project', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+            body: JSON.stringify(payload),
+          })
+            .then((res) => res.json())
+            .then(({ data }) => resolve(data[0] as Invitation));
+        }
+      }
+    });
+  });
+
+export const inviteUsersToProject = (
+  supabase: SupabaseClient,
+  users: InviteListEntry[],
+  project: Project | ExtendedProjectData,
+  groupIds: { [key: string]: string },
+  invitedBy?: string
+): Response<Invitation[]> => {
+  new Promise((resolve, reject) => {
+    const payload: ApiPostInviteUserToProject = {
+      users: users.map((u) => ({
+        email: u.email,
+        projectGroupId: groupIds[u.role],
+      })),
+      projectId: project.id,
+      projectName: project.name,
       invitedBy: invitedBy || '',
     };
 
@@ -158,14 +198,6 @@ export const inviteUserToProject = (
       }
     });
   });
-
-export const inviteUsersToProject = (
-  supabase: SupabaseClient,
-  users: InviteListEntry[],
-  project: Project | ExtendedProjectData,
-  groupIds: { [key: string]: string },
-  invitedBy?: string
-): Response<Invitation[]> => {
   return supabase
     .from('invites')
     .insert(

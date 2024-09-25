@@ -429,9 +429,8 @@ export type GroupMember = {
 };
 
 export type ApiPostInviteUserToProject = {
-  email: string;
+  users: { email: string; projectGroupId: string }[];
   projectId: string;
   projectName: string;
-  projectGroupId: string;
   invitedBy: string;
 };

@@ -83,6 +83,11 @@ export const Login = (props: {
     supabase.auth
       .signInWithSSO({
         domain: domain,
+        options: {
+          redirectTo: redirectUrl
+            ? redirectUrl
+            : `/${props.i18n.lang}/projects`,
+        },
       })
       .then(({ data, error }) => {
         if (data?.url) {
@@ -99,6 +104,9 @@ export const Login = (props: {
         provider: 'keycloak',
         options: {
           scopes: 'openid',
+          redirectTo: redirectUrl
+            ? redirectUrl
+            : `/${props.i18n.lang}/projects`,
         },
       })
       .then(({ data, error }) => {

@@ -3,7 +3,7 @@ import { Chats, Note } from '@phosphor-icons/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
-import { AnnotationList, DocumentNotesList } from '@components/AnnotationDesktop';
+import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
@@ -74,9 +74,9 @@ export const RightDrawer = (props: RightDrawerProps) => {
 
             <li 
               className={tab === 'NOTES' ? 'active' : undefined}>
-              <button onClick={() => setTab('NOTES')}>
-                <Note size={18} /> {t['Notes']}
-              </button>
+              <DocumentNotesTabButton
+                i18n={props.i18n}
+                onClick={() => setTab('NOTES')} />
             </li>
           </ul>
         </div>
