@@ -7,6 +7,8 @@ interface SelectionURLStateProps {
 
   backButton?: boolean;
 
+  onInitialSelect?(annotationId: string): void;
+
 }
 
 export const SelectionURLState = (props: SelectionURLStateProps) => {
@@ -91,8 +93,8 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
       // Initial load
       const uuids = selectAnnotationsFromHash();
 
-      // if (uuids.length > 0)
-      //   anno.scrollIntoView(uuids[0]);
+      if (props.onInitialSelect && uuids.length > 0)
+        props.onInitialSelect(uuids[0]);
     }
   }, [loaded]);
 
