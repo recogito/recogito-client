@@ -46,7 +46,7 @@ export const DeleteSelected = (props: DeleteSelectedProps) => {
     !isReadOnly;
 
   const onDeleteSelection = () =>
-    store.bulkDeleteAnnotation(selected.map((s) => s.annotation));
+    store!.bulkDeleteAnnotation(selected.map((s) => s.annotation));
 
   return isDeletable && (
     <>
