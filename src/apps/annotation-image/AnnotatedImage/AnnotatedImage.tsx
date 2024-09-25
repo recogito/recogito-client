@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -55,6 +55,8 @@ interface AnnotatedImageProps {
 
   usePopup: boolean;
 
+  onChangeImage(url: string): void;
+
   onChangePresent(present: PresentUser[]): void;
 
   onConnectionError(): void;
@@ -71,6 +73,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
+  const [initialAnnotations, setInitialAnnotations] = useState<SupabaseAnnotation[]>([]);
+
   const [drawingEnabled, setDrawingEnabled] = useState(false);
 
   const { filter } = useFilter();
@@ -81,6 +85,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   useEffect(() => {
     annoRef.current = anno;
   }, [anno]);
+
+  const onInitialLoad = (annotations: SupabaseAnnotation[]) => {
+    // In case of IIIF: the annotations in the callback are ALL annotations 
+    // for this document, not just the ones for the current page.
+    setInitialAnnotations(annotations);
+    props.onLoad();
+  }
 
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
@@ -99,7 +110,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     preserveImageSizeOnResize: true
   }), [props.imageManifestURL]);
 
-  const selectAction = (annotation: SupabaseAnnotation) => {
+  const selectAction = useCallback((annotation: SupabaseAnnotation) => {
     // Directly after creation, annotations have no
     // layer_id (because it gets added later through 
     // the storage plugin).
@@ -114,7 +125,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
     return canEdit ? UserSelectAction.EDIT : UserSelectAction.SELECT;
-  }
+  }, [props.activeLayer?.id, policies]);
 
   useEffect(() => {
     if (props.tool) {
@@ -124,6 +135,24 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       setDrawingEnabled(false);
     }
   }, [props.tool]);
+
+  const onInitialSelectError = (annotationId: string) => {
+    // This error will happen if the initial select hits an 
+    // annotation that's not in the current image's anno store.
+    // This is the expected case if the annotation is in this document,
+    // but on a different page!
+    const annotation = initialAnnotations.find(a => a.id === annotationId);
+
+    if (annotation) {
+      const { source } = annotation.target.selector as any;
+      if (source) {
+        console.log('annotation on different page', source);
+        props.onChangeImage(source);
+      }
+    } else {
+      console.warn(`Attempted to select ${annotationId} from hash - does not exist`);
+    }
+  }
 
   return (
     <OpenSeadragonAnnotator
@@ -146,7 +175,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={props.privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
-          onInitialLoad={props.onLoad}
+          onInitialLoad={onInitialLoad}
           onPresence={props.onChangePresent}
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
@@ -158,7 +187,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
         className="ia-osd-container"
         options={options} />
 
-      <SelectionURLState backButton />
+      <SelectionURLState 
+        backButton 
+        onInitialSelectError={onInitialSelectError} />
 
       {props.usePopup && (
         <OpenSeadragonAnnotationPopup

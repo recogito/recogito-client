@@ -289,6 +289,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 tagVocabulary={tagVocabulary}
                 tool={tool}
                 usePopup={usePopup}
+                onChangeImage={setCurrentImage}
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
                 onSaveError={() => setConnectionError(true)}
