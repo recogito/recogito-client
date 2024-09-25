@@ -81,9 +81,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
       props.onLoad();
   }, [loading]);
 
-  const onInitialSelect = (annotationId: string) => {
-    anno.scrollIntoView(annotationId);
-  }
+  const onInitialSelect = (annotationId: string) => anno.scrollIntoView(annotationId);
 
   return (
     <div 
