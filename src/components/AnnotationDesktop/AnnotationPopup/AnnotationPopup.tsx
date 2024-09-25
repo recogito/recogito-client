@@ -10,7 +10,9 @@ import './AnnotationPopup.css';
 
 interface AnnotationPopupProps {
 
-  selected: { annotation: Anno; editable?: boolean }[];
+  annotation: Anno; 
+
+  editable?: boolean
 
   i18n: Translations;
 
@@ -39,7 +41,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
   const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
-  const selected = props.selected[0].annotation as SupabaseAnnotation;
+  const selected = props.annotation as SupabaseAnnotation;
 
   const activeLayer = useMemo(() => (
     (props.layers || []).find(l => l.is_active)
@@ -52,23 +54,23 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
     anno.state.selection.clear();
 
   const onDeleteAnnotation = (annotation: Anno) => 
-    store.deleteAnnotation(annotation);
+    store!.deleteAnnotation(annotation);
 
   const onUpdateAnnotation = (updated: SupabaseAnnotation) =>
-    store.updateAnnotation(updated);
+    store!.updateAnnotation(updated);
 
   const onCreateBody = (body: AnnotationBody) =>
-    store.addBody(body);
+    store!.addBody(body);
 
   const onDeleteBody = (body: AnnotationBody) =>
-    store.deleteBody(body);
+    store!.deleteBody(body);
 
   const onBulkDeleteBodies = (bodies: AnnotationBody[]) =>
     // TODO to replace with store.bulkDeleteBodies once supported in Annotorious!
-    bodies.forEach(b => store.deleteBody(b));
+    bodies.forEach(b => store!.deleteBody(b));
 
   const onUpdateBody = (oldValue: AnnotationBody, newValue: AnnotationBody) => 
-    store.updateBody(oldValue, newValue);
+    store!.updateBody(oldValue, newValue);
 
   return (
     <div
