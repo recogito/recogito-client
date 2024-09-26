@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import type { Canvas } from '@allmaps/iiif-parser';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
@@ -47,10 +46,6 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
       </div>
     )
   }
-
-  useEffect(() => {
-    console.log('activity change', props.activeUsers);
-  }, [props.activeUsers]);
 
   return (
     <AutoSizer className="ia-thumbnail-strip">

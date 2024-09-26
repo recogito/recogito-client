@@ -39,7 +39,7 @@
     "@radix-ui/react-toggle-group": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@react-spring/web": "^9.7.4",
-    "@recogito/annotorious-supabase": "1.0.2",
+    "@recogito/annotorious-supabase": "file:../annotorious-supabase",
     "@recogito/react-pdf-annotator": "1.0.0-rc.30",
     "@recogito/react-text-annotator": "3.0.0-rc.46",
     "@supabase/ssr": "0.5.1",

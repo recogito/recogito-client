@@ -17,20 +17,19 @@ export const useOffPagePresence = (present: PresentUser[]) => {
 
       const entries = Object.entries(active);
 
-      const updated = 
-        entries.some(([s, _]) => s === source) 
-          // This source already has activity
-          ? entries.map(([s, users]) => {
-              if (s === source) {
-                // Add user to this source
-                return [s, [...new Set([...users, user.id])]];
-              } else {
-                // Remove user from all other sources
-                return [s, users.filter(id => id !== user.id)];
-              }
-            })
-          // First activity on this source
-          : [...entries, [source, [user.id]]];
+      const updated = entries.some(([s, _]) => s === source) 
+        // This source already has activity
+        ? entries.map(([s, users]) => s === source 
+            // Add user to this source
+            ? [s, [...new Set([...users, user.id])]]
+            // Remove user from all other sources
+            : [s, users.filter(id => id !== user.id)])
+        // First activity on this source
+        : [
+            // Remove user from other sources
+            ...entries.map(([s, users]) => ([s, users.filter(id => id !== user.id)])), 
+            [source, [user.id]]
+          ];
           
       // Remove sources that no longer have activity
       const next = Object.fromEntries(updated.filter(([_, users]) => users.length > 0));
