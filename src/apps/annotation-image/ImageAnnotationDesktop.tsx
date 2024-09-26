@@ -14,7 +14,7 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
-import { useIIIF, useOffPagePresence, ManifestErrorDialog } from './IIIF';
+import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { DocumentLayer } from 'src/Types';
 import type {
@@ -66,7 +66,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     setCurrentImage
   } = useIIIF(props.document);
 
-  const { activeUsers, onOffPageActivity } = useOffPagePresence(present);
+  const { activeUsers, onPageActivity } = useMultiPagePresence(present);
 
   const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
 
@@ -302,7 +302,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 onChangeImage={setCurrentImage}
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
-                onOffPageActivity={onOffPageActivity}
+                onPageActivity={onPageActivity}
                 onSaveError={() => setConnectionError(true)}
                 onLoad={() => setLoading(false)} />
             )}

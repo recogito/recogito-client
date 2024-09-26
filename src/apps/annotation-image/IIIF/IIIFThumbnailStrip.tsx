@@ -2,7 +2,7 @@ import type { Canvas } from '@allmaps/iiif-parser';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { IIIFThumbnail } from './IIIFThumbnail';
-import type { ActiveUsers } from './useOffPagePresence';
+import type { ActiveUsers } from './useMultiPagePresence';
 import { getCanvasLabel } from 'src/util';
 import type { Translations } from 'src/Types';
 

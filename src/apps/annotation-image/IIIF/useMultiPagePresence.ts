@@ -1,17 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { OffPageActivityEvent } from '@recogito/annotorious-supabase';
-import type { PresentUser } from '@annotorious/react';
+import type { PresentUser, User } from '@annotorious/react';
 
 // Active user IDs per source
 export type ActiveUsers = { [source: string]: PresentUser[] };
 
-export const useOffPagePresence = (present: PresentUser[]) => {
+export const useMultiPagePresence = (present: PresentUser[], source?: string) => {
 
   // Track active user IDs per source
   const [active, setActivity] = useState<{ [source: string]: string[] }>({});
 
   // Update activity map for every off-page activity event
-  const onOffPageActivity = useCallback((event: OffPageActivityEvent) => {
+  const onPageActivity = useCallback((event: { source: string, user: User }) => {
     setActivity(active => {
       const { source, user } = event;
 
@@ -66,7 +65,7 @@ export const useOffPagePresence = (present: PresentUser[]) => {
 
   return {
     activeUsers,
-    onOffPageActivity
+    onPageActivity
   }
 
 }

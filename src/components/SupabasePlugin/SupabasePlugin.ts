@@ -66,8 +66,7 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
     }
   }, [
     anno, 
-    props.onPresence,
-    props.onSelectionChange
+    props.onPresence
   ]);
 
   useEffect(() => {

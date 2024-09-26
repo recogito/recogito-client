@@ -3,13 +3,14 @@ import type OpenSeadragon from 'openseadragon';
 import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import type { SupabaseAnnotation, OffPageActivityEvent } from '@recogito/annotorious-supabase';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyleExpression,
   ImageAnnotation,
-  PresentUser
+  PresentUser,
+  User
 } from '@annotorious/react';
 import {
   OpenSeadragonAnnotator,
@@ -61,7 +62,7 @@ interface AnnotatedImageProps {
 
   onConnectionError(): void;
 
-  onOffPageActivity(event: OffPageActivityEvent): void;
+  onPageActivity(event: { source: string, user: User }): void;
 
   onSaveError(): void;
 
@@ -154,6 +155,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     }
   }
 
+  const onSelectionChange = (user: PresentUser) =>
+    props.onPageActivity({ source: props.imageManifestURL, user });
+
   return (
     <OpenSeadragonAnnotator
       autoSave
@@ -176,11 +180,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           privacyMode={props.privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
           onInitialLoad={onInitialLoad}
-          onOffPageActivity={props.onOffPageActivity}
+          onOffPageActivity={props.onPageActivity}
           onPresence={props.onChangePresent}
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
-          onSaveError={props.onSaveError} />
+          onSaveError={props.onSaveError} 
+          onSelectionChange={onSelectionChange} />
       }
 
       <OpenSeadragonViewer
