@@ -3,13 +3,16 @@ import { Faders, Files } from '@phosphor-icons/react';
 import type { Canvas } from '@allmaps/iiif-parser';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';
+import { FilterPanel } from '@components/AnnotationDesktop';
 import { IIIFThumbnailStrip } from '../IIIF';
+import type { ActiveUsers } from '../IIIF/useOffPagePresence';
 import type { DocumentLayer, Translations } from 'src/Types';
-import { FilterPanel } from '@components/AnnotationDesktop/FilterPanel';
 
 import './LeftDrawer.css';
 
 interface LeftDrawerProps {
+
+  activeUsers: ActiveUsers;
 
   currentImage?: string;
 
@@ -84,6 +87,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
               present={props.present} />
           ) : (
             <IIIFThumbnailStrip 
+              activeUsers={props.activeUsers}
               canvases={props.iiifCanvases} 
               currentImage={props.currentImage}
               i18n={props.i18n}

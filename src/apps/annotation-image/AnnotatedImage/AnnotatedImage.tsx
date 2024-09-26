@@ -3,7 +3,7 @@ import type OpenSeadragon from 'openseadragon';
 import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { SupabaseAnnotation, OffPageActivityEvent } from '@recogito/annotorious-supabase';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
@@ -60,6 +60,8 @@ interface AnnotatedImageProps {
   onChangePresent(present: PresentUser[]): void;
 
   onConnectionError(): void;
+
+  onOffPageActivity(event: OffPageActivityEvent): void;
 
   onSaveError(): void;
 
@@ -174,6 +176,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           privacyMode={props.privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
           onInitialLoad={onInitialLoad}
+          onOffPageActivity={props.onOffPageActivity}
           onPresence={props.onChangePresent}
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}

@@ -1,13 +1,17 @@
+import { useEffect } from 'react';
 import type { Canvas } from '@allmaps/iiif-parser';
 import { FixedSizeList } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 import { IIIFThumbnail } from './IIIFThumbnail';
+import type { ActiveUsers } from './useOffPagePresence';
 import { getCanvasLabel } from 'src/util';
 import type { Translations } from 'src/Types';
 
 import './IIIFThumbnailStrip.css';
 
 interface IIIFThumbnailStripProps {
+
+  activeUsers: ActiveUsers;
 
   canvases: Canvas[];
 
@@ -26,18 +30,27 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
   const Row = ({ index, style }: { index: number, style: React.CSSProperties}) => {   
     const canvas = props.canvases[index];
 
-    const label = getCanvasLabel(canvas.label, props.i18n.lang);
+    const source = `${canvas.image.uri}/info.json`;
 
+    const label = getCanvasLabel(canvas.label, props.i18n.lang);
+    
     return (
       <div 
         className={`thumbnail-strip-item${isSelected(canvas) ? ' selected': ''}`} 
         style={style} 
-        onClick={() => props.onSelect(`${canvas.image.uri}/info.json`)}>
-        <IIIFThumbnail canvas={canvas} />
+        onClick={() => props.onSelect(source)}>
+        <IIIFThumbnail 
+          activeUsers={props.activeUsers[source]}
+          canvas={canvas}
+          i18n={props.i18n} />
         <span className="label">{label}</span>
       </div>
     )
   }
+
+  useEffect(() => {
+    console.log('activity change', props.activeUsers);
+  }, [props.activeUsers]);
 
   return (
     <AutoSizer className="ia-thumbnail-strip">

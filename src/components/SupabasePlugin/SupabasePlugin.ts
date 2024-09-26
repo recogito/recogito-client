@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { Annotation, Annotator, PresentUser, User } from '@annotorious/react';
-import { type SupabasePluginConfig, SupabasePlugin as Supabase } from '@recogito/annotorious-supabase';
+import { SupabasePlugin as Supabase } from '@recogito/annotorious-supabase';
+import type { SupabasePluginConfig, OffPageActivityEvent } from '@recogito/annotorious-supabase';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { useAppearanceProvider } from '@components/Presence';
 
@@ -21,6 +22,8 @@ export type SupabasePluginProps = SupabasePluginConfig & {
   onInitialLoadError?(error: PostgrestError): void,
 
   onIntegrityError?(message: string): void,
+
+  onOffPageActivity?(event: OffPageActivityEvent): void,
 
   onPresence?(users: PresentUser[]): void,
 
@@ -50,6 +53,7 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
       supabase.on('initialLoad', annotations => props.onInitialLoad && props.onInitialLoad(annotations));
       supabase.on('initialLoadError', error => props.onInitialLoadError && props.onInitialLoadError(error));
       supabase.on('integrityError', message => props.onIntegrityError && props.onIntegrityError(message));
+      supabase.on('offPageActivity', event => props.onOffPageActivity && props.onOffPageActivity(event));
       supabase.on('presence', users => props.onPresence && props.onPresence(users));
       supabase.on('saveError', error => props.onSaveError && props.onSaveError(error));
       supabase.on('selectionChange', user => props.onSelectionChange && props.onSelectionChange(user));
