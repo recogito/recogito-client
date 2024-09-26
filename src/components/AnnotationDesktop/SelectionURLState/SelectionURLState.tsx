@@ -1,5 +1,5 @@
 import { Origin, useAnnotator } from '@annotorious/react';
-import type { Annotation, Annotator, StoreChangeEvent } from '@annotorious/react';
+import type { Annotation, Annotator } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -85,7 +85,7 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
     }
 
     // Listen to initial load, so we can trigger initial hash selection
-    const onInitialLoad = (event: StoreChangeEvent<Annotation>) => {
+    const onInitialLoad = () => {
       setLoaded(true);
       anno.state.store.unobserve(onInitialLoad);
     }
@@ -96,6 +96,8 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
     window.addEventListener('popstate', selectAnnotationsFromHash);
 
     return () => {
+      setLoaded(false);
+
       anno.off('selectionChanged', onSelect);
       window.removeEventListener('popstate', selectAnnotationsFromHash);
     }
@@ -111,6 +113,7 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
 
         if (props.onInitialSelect) props.onInitialSelect(ids[0]);
       } else if (ids.length > 0) {
+
         // Some IDs in the hash don't actually exist as annotations
         if (props.onInitialSelectError) props.onInitialSelectError(ids[0]);
       }

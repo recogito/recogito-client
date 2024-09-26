@@ -145,10 +145,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
     if (annotation) {
       const { source } = annotation.target.selector as any;
-      if (source) {
-        console.log('annotation on different page', source);
+      if (source)
         props.onChangeImage(source);
-      }
     } else {
       console.warn(`Attempted to select ${annotationId} from hash - does not exist`);
     }
@@ -187,7 +185,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
         className="ia-osd-container"
         options={options} />
 
-      <SelectionURLState 
+      <SelectionURLState
         backButton 
         onInitialSelectError={onInitialSelectError} />
 
