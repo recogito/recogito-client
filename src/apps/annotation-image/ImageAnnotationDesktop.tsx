@@ -302,7 +302,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 onChangeImage={setCurrentImage}
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
-                onPageActivity={onPageActivity}
+                onPageActivity={canvases.length > 1 ? onPageActivity : undefined}
                 onSaveError={() => setConnectionError(true)}
                 onLoad={() => setLoading(false)} />
             )}

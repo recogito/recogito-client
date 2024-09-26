@@ -62,7 +62,7 @@ interface AnnotatedImageProps {
 
   onConnectionError(): void;
 
-  onPageActivity(event: { source: string, user: User }): void;
+  onPageActivity?(event: { source: string, user: User }): void;
 
   onSaveError(): void;
 
@@ -156,7 +156,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   }
 
   const onSelectionChange = (user: PresentUser) =>
-    props.onPageActivity({ source: props.imageManifestURL, user });
+    props.onPageActivity!({ source: props.imageManifestURL, user });
 
   return (
     <OpenSeadragonAnnotator
@@ -185,7 +185,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
           onSaveError={props.onSaveError} 
-          onSelectionChange={onSelectionChange} />
+          onSelectionChange={props.onPageActivity ? onSelectionChange : undefined} />
       }
 
       <OpenSeadragonViewer
