@@ -6,7 +6,7 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -221,6 +221,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   };
 
+  const onGoToImage = (source: string) => {
+    // When navigating via the thumbnail strip, clear the selection from the
+    // hash, otherwise we'll get looped right back.
+    clearSelectionURLHash(); 
+    setCurrentImage(source);
+  }
+
   return (
     <DocumentNotes
       channelId={props.channelId}
@@ -271,7 +278,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             layerNames={layerNames}
             open={leftPanelOpen}
             present={present}
-            onChangeImage={setCurrentImage} />
+            onChangeImage={onGoToImage} />
 
           <div className="ia-annotated-image-container">
             {policies && currentImage && activeLayer && (
