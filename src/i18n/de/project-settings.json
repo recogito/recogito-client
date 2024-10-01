@@ -17,5 +17,6 @@
   "Active": "Active",
   "Lock Project": "Lock Project",
   "Unlock Project": "Unlock Project",
-  "lock_warning_message": "Once a project is locked, it will become read-only for all project members, including yourself. The project will still be accessible by all project members, but no new members can be added. Only an Organization Admin can undo this action."
+  "lock_warning_message": "Once a project is locked, it will become read-only for all project members, including yourself. The project will still be accessible by all project members, but no new members can be added. Only an Organization Admin can undo this action.",
+  "unlock_message": "When a project is unlocked, there will be no project administrators. Be sure to designate one on the Teams page."
 }

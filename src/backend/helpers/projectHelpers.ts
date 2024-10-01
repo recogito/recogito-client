@@ -368,6 +368,5 @@ export const lockProject = (supabase: SupabaseClient, id: string) =>
       _project_id: id,
     })
     .then(({ data }) => {
-      if (data) return false;
-      else return true;
+      return data;
     });

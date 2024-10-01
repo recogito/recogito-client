@@ -210,8 +210,13 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     setLockOpen(true);
   };
 
+  const handleRequestUnlockProject = () => {
+    setLockOpen(true);
+  };
+
   const handleLockProject = () => {
     setState('saving');
+    setLockOpen(false);
 
     if (project?.is_locked) {
       updateProject(
@@ -230,6 +235,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             description: description,
             is_open_join: openJoin,
             is_open_edit: openEdit,
+            is_locked: !project?.is_locked,
           });
           setState('success');
         } else {
@@ -524,7 +530,11 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                 <Button
                   busy={state === 'saving'}
                   className='primary'
-                  onClick={handleRequestLockProject}
+                  onClick={
+                    project?.is_locked
+                      ? handleRequestUnlockProject
+                      : handleRequestLockProject
+                  }
                 >
                   <Lock size={32} />
                   <span>
@@ -647,6 +657,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           <LockWarningMessage
             open={lockOpen}
             i18n={props.i18n}
+            isLocked={!!project?.is_locked}
             onCancel={() => setLockOpen(false)}
             onConfirm={handleLockProject}
           />

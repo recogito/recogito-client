@@ -7,12 +7,13 @@ import './LockWarningMessage.css';
 interface LockWarningMessageProps {
   open: boolean;
   i18n: Translations;
+  isLocked: boolean;
   onCancel(): void;
   onConfirm(): void;
 }
 
 export const LockWarningMessage = (props: LockWarningMessageProps) => {
-  const { open } = props;
+  const { open, isLocked } = props;
   const { t } = props.i18n;
   return (
     <AlertDialog.Root open={open}>
@@ -21,10 +22,10 @@ export const LockWarningMessage = (props: LockWarningMessageProps) => {
         <AlertDialog.Content className='lock-warning-content'>
           <AlertDialog.Title className='lock-warning-title'>
             <Warning fill='red' className='warning-icon' size={24} />
-            {t['Lock Project']}
+            {isLocked ? t['Unlock Project'] : t['Lock Project']}
           </AlertDialog.Title>
           <AlertDialog.Description className='lock-warning-description'>
-            {t['lock_warning_message']}
+            {isLocked ? t['unlock_message'] : t['lock_warning_message']}
           </AlertDialog.Description>
           <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
             <AlertDialog.Cancel asChild>
@@ -37,7 +38,7 @@ export const LockWarningMessage = (props: LockWarningMessageProps) => {
                 className='lock-warning-button-red'
                 onClick={props.onConfirm}
               >
-                {t['Lock Project']}
+                {isLocked ? t['Unlock Project'] : t['Lock Project']}
               </button>
             </AlertDialog.Action>
           </div>
