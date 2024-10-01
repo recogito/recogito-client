@@ -152,7 +152,7 @@ export const inviteUserToProject = (
             body: JSON.stringify(payload),
           })
             .then((res) => res.json())
-            .then(({ data }) => resolve(data as Invitation));
+            .then(({ data }) => resolve(data[0] as Invitation));
         }
       }
     });

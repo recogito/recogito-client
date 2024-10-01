@@ -2,12 +2,18 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { getTranslations } from '@i18n';
-import {
-  type TReaderDocument,
-  renderToStaticMarkup,
-} from '@usewaypoint/email-builder';
+import { getDefaultTranslations } from '@i18n';
+import { type TReaderDocument, renderToStaticMarkup } from '@usewaypoint/email-builder';
 import type { ApiPostInviteUserToProject } from 'src/Types';
+
+const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
+const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
+const MAIL_USERNAME =
+  process.env.MAIL_USERNAME || import.meta.env.MAIL_USERNAME;
+const MAIL_PASSWORD =
+  process.env.MAIL_PASSWORD || import.meta.env.MAIL_PASSWORD;
+const MAIL_FROM_ADDRESS =
+  process.env.MAIL_FROM_ADDRESS || import.meta.env.MAIL_FROM_ADDRESS;
 
 export const POST: APIRoute = async ({ request, cookies, url }) => {
   // Verify if the user is logged in
@@ -46,7 +52,8 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     respData.push(inviteResponse.data);
 
-    const i18n = getTranslations(request, 'email');
+    const i18n = getDefaultTranslations('email');
+
     const { t, lang } = i18n;
 
     const config: TReaderDocument = {
@@ -152,17 +159,17 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     const transporter = nodemailer.createTransport({
       // @ts-ignore
-      host: import.meta.env.MAIL_HOST,
-      port: import.meta.env.MAIL_PORT,
+      host: MAIL_HOST,
+      port: MAIL_PORT,
       tls: true,
       auth: {
-        user: import.meta.env.MAIL_USERNAME,
-        pass: import.meta.env.MAIL_PASSWORD,
+        user: MAIL_USERNAME,
+        pass: MAIL_PASSWORD,
       },
     });
 
     const mailOptions = {
-      from: import.meta.env.MAIL_FROM_ADDRESS,
+      from: MAIL_FROM_ADDRESS,
       to: user.email.toLowerCase(),
       subject: t['_you_have_been_invited_'],
       html: html,
