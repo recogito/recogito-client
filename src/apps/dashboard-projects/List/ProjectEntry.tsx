@@ -57,7 +57,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
 
   const onClick = () => {
     if (!is_open_join || users.length > 0) {
-      window.location.href = `./projects/${id}`;
+      window.location.href = `/${props.i18n.lang}/projects/${id}`;
     }
   };
 
