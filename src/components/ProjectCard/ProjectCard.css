@@ -9,8 +9,8 @@
   transition: all 0.25s ease-in-out;
 }
 
-.project-card-locked {
-  background-color: var(--gray-100) !important;
+.project-card.project-card-locked {
+  background-color: var(--gray-100);
 }
 
 .project-card-header {
