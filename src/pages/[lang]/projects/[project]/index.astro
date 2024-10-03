@@ -40,8 +40,6 @@ if (project.error || !project.data) {
   });
 }
 
-console.log('Project: ', project.data);
-
 const user = project.data.users.find((u) => u.user.id === profile.data.id);
 
 if (!user && !profile.data.isOrgAdmin) {
