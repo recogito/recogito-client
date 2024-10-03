@@ -78,9 +78,10 @@ const exportForProject = async (
   );
 }
 
-const exportForAssignment = async (
+const exportForContext = async (
   supabase: SupabaseClient, 
   url: URL, 
+  project: Project,
   contextId: string, 
   documentId: string | null,
   i18n: Translations
@@ -130,9 +131,11 @@ const exportForAssignment = async (
     includePrivate,
     i18n);
 
+  const assignmentName = assignment.data.name || project.name;
+
   const filename = documentId
-    ? `${sanitizeFilename(layers[0].document.name)}-assignment-${sanitizeFilename(assignment.data.name)}.csv`
-    : `${sanitizeFilename(assignment.data.name)}.csv`;
+    ? `${sanitizeFilename(layers[0].document.name)}-assignment-${sanitizeFilename(assignmentName)}.csv`
+    : `${sanitizeFilename(assignmentName)}.csv`;
 
   return new Response(    
     csv,
@@ -181,7 +184,7 @@ export const GET: APIRoute = async ({ cookies, params, request, url }) => {
   const contextId = url.searchParams.get('context');
 
   if (contextId) {
-    return exportForAssignment(supabase, url, contextId, documentId, i18n);
+    return exportForContext(supabase, url, project.data, contextId, documentId, i18n);
   } else {
     return exportForProject(supabase, url, project.data, documentId, i18n);
   }
