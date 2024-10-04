@@ -4,12 +4,18 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE;
 
+type Meta = {
+
+  type: string;
+
+}
+
 export const uploadFile = (
   supabase: SupabaseClient, 
   file: File,
   name: string,
   onProgress?: (progress: number) => void
-): Promise<UploadResult> => new Promise((resolve, reject) => {
+): Promise<void> => new Promise((resolve, reject) => {
   return supabase.auth.getSession().then(({ error, data }) => {
     if (error) {
       reject(error)
@@ -19,7 +25,7 @@ export const uploadFile = (
         // Shouldn't really happen at this point
         reject('Not authorized');
       } else {
-        const uppy = new Uppy({ autoProceed: true });
+        const uppy = new Uppy<Meta, any>({ autoProceed: true });
 
         uppy.use(XHR, {
           endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${name}`,
@@ -30,8 +36,8 @@ export const uploadFile = (
 
         uppy.addFile({
           name,
-          type: file.type,
-          data: file
+          data: file,
+          meta: { type: file.type }
         });
 
         uppy.on('progress', progress => {
@@ -42,8 +48,8 @@ export const uploadFile = (
           reject(error);
         });
 
-        uppy.upload().then(result => {
-          resolve(result);
+        uppy.upload().then(() => {
+          resolve();
         }).catch(error => {
           reject(error);
         })
