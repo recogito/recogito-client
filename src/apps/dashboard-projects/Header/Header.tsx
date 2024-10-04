@@ -4,8 +4,9 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
-import { HeaderSortAction, type SortFunction } from '@components/Sort';
-import { HeaderFilterAction, type Filters } from '@components/Filter';
+import { HeaderSortAction } from './Sort';
+import type { SortFunction } from '@components/Sort';
+import { HeaderFilterAction, type Filters } from './Filter';
 import {
   ToggleDisplay,
   type ToggleDisplayValue,

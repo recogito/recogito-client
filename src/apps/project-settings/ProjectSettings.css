@@ -28,7 +28,6 @@
   max-width: 65ch;
   padding: 20px 0;
   z-index: 100;
-  height: calc(100vh - 230px);
   overflow-y: auto;
 }
 

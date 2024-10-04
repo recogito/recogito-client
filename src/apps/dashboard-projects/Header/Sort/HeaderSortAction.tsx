@@ -2,7 +2,7 @@ import { Check, CaretDown } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { useEffect, useState } from 'react';
 import type { ExtendedProjectData, Translations } from 'src/Types';
-import type { SortFunction } from './SortFunction';
+import type { SortFunction } from '../../../../components/Sort/SortFunction';
 import './HeaderSortAction.css';
 
 interface HeaderSortActionProps {
