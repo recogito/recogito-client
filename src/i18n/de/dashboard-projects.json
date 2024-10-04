@@ -70,10 +70,10 @@
   "Project members can annotate any document": "Projektmitglieder können alle Dokumente uneingeschränkt annotieren.",
   "Accept invitation to": "Einladung akzeptieren",
   "You have been invited to this project by": "Du wurdest eingeladen von",
-  "Locked": "Locked",
-  "all": "All",
-  "active": "Active",
-  "locked": "Locked",
-  "View": "View",
-  "Unlock Project": "Unlock Project"
+  "Locked": "Gesperrt",
+  "all": "Alle",
+  "active": "Aktiv",
+  "locked": "Gesperrt",
+  "View": "Status",
+  "Unlock Project": "Projekt entsperren"
 }
