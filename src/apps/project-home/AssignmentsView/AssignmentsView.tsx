@@ -48,14 +48,20 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
 
   const [editing, setEditing] = useState<AssignmentSpec | undefined>();
 
-  const [currentAssignmentId, setCurrentAssignmentId] = useLocalStorageBackedState<string | undefined>(
-    `selected-assignment-${props.project.id}`, 
-    props.assignments && props.assignments.length > 0 ? props.assignments[0].id : undefined
-  );
+  const [currentAssignmentId, setCurrentAssignmentId] =
+    useLocalStorageBackedState<string | undefined>(
+      `selected-assignment-${props.project.id}`,
+      props.assignments && props.assignments.length > 0
+        ? props.assignments[0].id
+        : undefined
+    );
 
   const currentAssignment = useMemo(() => {
     if (currentAssignmentId && props.assignments) {
-      return props.assignments.find(c => c.id === currentAssignmentId) || props.assignments[0];
+      return (
+        props.assignments.find((c) => c.id === currentAssignmentId) ||
+        props.assignments[0]
+      );
     } else if (props.assignments && props.assignments.length > 0) {
       return props.assignments[0];
     }
@@ -99,11 +105,6 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
     });
 
   const onDeleteAssignment = (assignment: Context) => {
-    // Optimistic update: remove assignment from the list
-    props.setAssignments(
-      (props.assignments || []).filter((a) => a.id !== assignment.id)
-    );
-
     archiveAssignment(supabase, assignment.id as string).then((data) => {
       if (!data) {
         // Roll back
@@ -118,6 +119,9 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           type: 'error',
         });
       } else {
+        props.setAssignments(
+          (props.assignments || []).filter((a) => a.id !== assignment.id)
+        );
         props.setToast({
           title: t['Deleted'],
           description: t['Assignment deleted successfully.'],
