@@ -1,4 +1,4 @@
-import Uppy, { type UploadResult } from '@uppy/core';
+import Uppy from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
