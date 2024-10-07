@@ -174,6 +174,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
             />
             <AssignmentDetail
               assignment={currentAssignment}
+              groups={project.groups}
               onEditAssignment={() => onEditAssignment(currentAssignment)}
               onDeleteAssignment={(assignment) =>
                 onDeleteAssignment(assignment)
