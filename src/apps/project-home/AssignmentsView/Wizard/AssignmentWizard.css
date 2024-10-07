@@ -88,3 +88,7 @@
 .assignment-wizard .tabs-content p.hint.warn {
   color: var(--red-500);
 }
+
+.assignment-wizard .tabs-content p.hint.check {
+  color: var(--orange);
+}

@@ -18,7 +18,7 @@
   "Select at least 1 document": "Wähle mindestens 1 Dokument",
   "Selected 1 document": "1 Dokument ausgewählt",
   "Selected ${n} documents": "${n} Dokumente ausgewählt",
-  "Add people to the assignment.": "Weise diesem Arbeitsauftrag ein Projektteam zu.",
+  "Add people to the assignment.": "Add people to the assignment. Note that all Project Administrators will have access by default and cannot be removed from an assignment.",
   "Name": "Name",
   "Instructions": "Beschreibung",
   "Member since": "Mitglied seit",
@@ -26,8 +26,8 @@
   "Anonymous team member": "Anonymes Teammitglied",
   "This user has not provided a profile name.": "Dieses Teammitglied hat keinen Profilnamen angegeben.",
   "Select at least 1 team member": "Wähle mindestens 1 Teammitglied",
-  "Selected 1 team member": "1 Teammitglied ausgewählt",
-  "Selected ${n} team members": "${n} Teammitglieder ausgewählt",
+  "Selected 1 team member": "Selected 1 additional team member",
+  "Selected ${n} team members": "Selected ${n} additional team members",
   "Add a name and instructions for this assignment.": "Bitte gib einen Namen und eine Beschreibung für diesen Arbeitsauftrag ein.",
   "Almost Ready!": "Fast geschafft!",
   "Verify and confirm this assignment.": "Kontrolliere und bestätige den Arbeitsauftrag.",
@@ -58,5 +58,5 @@
   "Optional": "Optional",
   "Select All": "Alles auswählen",
   "Base Assignment": "Basis-Arbeitsauftrag",
-  "You have not added any team members.": "Du hast noch keine Teammitglieder eingeladen."
+  "You have not added any team members.": "You have not added any team members. Only Project Administrators will be able to access this assignment."
 }
