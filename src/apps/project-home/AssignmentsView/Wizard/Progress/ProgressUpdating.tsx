@@ -212,7 +212,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
       // Members were removed (and some documents existed previously)
       if (memberChanges.removed.length > 0) {
         const arr: string[] = [];
-        team.forEach((member) => {
+        memberChanges.removed.forEach((member) => {
           arr.push(member.id);
         });
 
