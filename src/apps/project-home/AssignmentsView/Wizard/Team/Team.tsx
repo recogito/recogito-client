@@ -144,7 +144,7 @@ export const Team = (props: TeamProps) => {
     <>
       <div className='row tab-team'>
         <section className='column'>
-          <h1>{t['Step']} 2</h1>
+          <h1>{t['Step']} 4</h1>
           <p>{t['Add people to the assignment.']}</p>
         </section>
 
