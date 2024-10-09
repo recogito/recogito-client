@@ -128,7 +128,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
     return canEdit ? UserSelectAction.EDIT : UserSelectAction.SELECT;
-  }, [props.activeLayer?.id, policies]);
+  }, [annoRef, props.activeLayer?.id, policies]);
 
   useEffect(() => {
     if (props.tool) {

@@ -59,7 +59,7 @@ export const uploadImage = (
         });
       
         uppy.upload().then(result => {
-          if (result.successful.length === 1) {
+          if (result?.successful?.length === 1) {
             const response = 
               result.successful[0].response?.body?.resource as unknown as IIIFResponse;
 

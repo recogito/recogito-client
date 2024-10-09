@@ -11,31 +11,19 @@ const clearCookies = () => {
   document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-access-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
-}
+};
 
 export const Logout = (props: { i18n: Translations }) => {
-
-  const [error, setError] = useState(false);
-
   useEffect(() => {
-    supabase.auth.signOut().then(({ error }) => {
-      if (error) {
-        setError(true);
-      } else {
-        clearCookies();
-        window.location.href = `/${props.i18n.lang}/sign-in`;
-      }
+    supabase.auth.signOut().then(() => {
+      clearCookies();
+      window.location.href = `/${props.i18n.lang}/sign-in`;
     });
   }, []);
 
-  return error ? (
-    <div className="logout logout-error">
-      <SmileySad className="text-bottom" size={24} /> {props.i18n.t['Something went wrong.']}
-    </div>
-  ) : (
-    <div className="logout logout-processing">
+  return (
+    <div className='logout logout-processing'>
       <Spinner size={24} />
     </div>
-  )
-
-}
+  );
+};
