@@ -16,4 +16,5 @@
 
 .anno-drawer.ia-left-drawer aside .tabcontent {
   flex: 1;
+  overflow-x: hidden;
 }

@@ -2,7 +2,7 @@ import { LoginAccordion } from '@apps/auth-login/LoginAccordion';
 import { LoginMethods } from '@apps/auth-login/methods.ts';
 import { Button } from '@components/Button';
 import classNames from 'classnames';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
@@ -54,8 +54,8 @@ export const Login = (props: {
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
         if (redirectUrl) {
+          localStorage.removeItem('redirect-to');
           window.location.href = redirectUrl;
-          localStorage.setItem('redirect-to', '');
         } else {
           window.location.href = `/${props.i18n.lang}/projects`;
         }
@@ -67,8 +67,8 @@ export const Login = (props: {
         supabase.auth.getSession().then(({ data: { session } }) => {
           setCookies(session);
           if (redirectUrl) {
+            localStorage.removeItem('redirect-to');
             window.location.href = redirectUrl;
-            localStorage.setItem('redirect-to', '');
           } else {
             window.location.href = `/${props.i18n.lang}/projects`;
           }
@@ -91,6 +91,7 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
+          localStorage.removeItem('redirect-to');
           window.location.href = data.url;
         } else {
           console.error(error);
@@ -111,6 +112,7 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
+          localStorage.removeItem('redirect-to');
           window.location.href = data.url;
         } else {
           console.error(error);
