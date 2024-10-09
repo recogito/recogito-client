@@ -17,12 +17,15 @@ const backgroundColor = config.branding.background_color;
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={getLangFromUrl(Astro.url)}>
   <head>
     <!-- HEAD-DYNAMIC-SCRIPT -->
     <meta charset='UTF-8' />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, interactive-widget=resizes-content" />
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1, minimum-scale=1, interactive-widget=resizes-content'
+    />
     <meta name='generator' content={Astro.generator} />
     <link rel='icon' type='image/x-icon' href={favicon} />
     <title>{title}</title>
@@ -50,4 +53,3 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 </html>
 
 <style define:vars={{ siteColor, backgroundColor, textColor }}></style>
-

@@ -49,9 +49,12 @@
   width: auto;
 }
 
-.dashboard-header section.dashboard-header-bottom .dashboard-header-bottom-actions {
-  align-items: baseline;
+.dashboard-header
+  section.dashboard-header-bottom
+  .dashboard-header-bottom-actions {
+  align-items: center;
   display: flex;
+  flex-direction: row;
 }
 
 .dashboard-header section.dashboard-header-bottom {

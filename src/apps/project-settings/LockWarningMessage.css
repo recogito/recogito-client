@@ -1,0 +1,20 @@
+.lock-warning-title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.lock-warning-button-red {
+  background-color: var(--red-200);
+}
+
+.lock-warning-button-red:hover {
+  background-color: var(--red-500);
+}
+.lock-warning-button-red:focus {
+  box-shadow: 0 0 0 2px var(--red-500);
+}
+
+.warning-icon {
+  margin-right: 5px;
+}

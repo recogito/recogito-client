@@ -8,5 +8,15 @@
   "Error loading tag vocabulary.": "Fehler beim Laden des Tag-Vokabulars.",
   "Error saving tag vocabulary.": "Fehler beim Speichern des Tag-Vokabulars.",
   "Something went wrong": "Etwas ist schiefgelaufen",
-  "Name and Access Settings": "Name and Access Settings"
+  "Name and Access Settings": "Name und Zugriffseinstellungen",
+  "Tagging": "Tagging",
+  "Project Status": "Projektstatus",
+  "status_message": "Projekte können aktiv oder gesperrt sein. Gesperrte Projekte sind schreibgeschützt. Projektmitglieder können sie aber immer noch öffnen. Es können keine neuen Mitglieder mehr eingeladen werden. Gesperrten öffentlichen Projekten können keine neuen Mitglieder mehr beitreten. Nur Dein Organisations-Administrator kann ein gesperrtes Projekt wieder entsperren.",
+  "Current Status": "Status",
+  "Locked": "Gesperrt",
+  "Active": "Aktiv",
+  "Lock Project": "Projekt Sperren",
+  "Unlock Project": "Projekt Entsperren",
+  "lock_warning_message": "Ein gesperrtes Projekt kann nicht mehr annotiert oder verändert werden. Projektmitglieder können das Projekt immer noch öffnen. Aber es können keine neuen Mitglieder eingeladen werden. Nur Dein Organisations-Administrator kann diese Operation rückgangig machen.",
+  "unlock_message": "Achtung: Nach dem Entsperren des Projektes gibt es keine Projekt-Administratoren. Vergiß nicht, zumindest einen Benutzer zum Projekt-Administrator zu befördern."
 }

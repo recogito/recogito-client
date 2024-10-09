@@ -19,7 +19,7 @@ import type {
 } from 'src/Types';
 
 import './ProjectsHome.css';
-
+import type { Filters } from '@components/Filter';
 
 export interface ProjectsHomeProps {
   i18n: Translations;
@@ -64,7 +64,12 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [showProfileNag, setShowProfileNag] = useState(false);
 
-  const [display, setDisplay] = useLocalStorageBackedState<ToggleDisplayValue>('rs-dashboard-display', 'cards');
+  const [display, setDisplay] = useLocalStorageBackedState<ToggleDisplayValue>(
+    'rs-dashboard-display',
+    'cards'
+  );
+
+  const [include, setInclude] = useState<Filters>('active');
 
   const isReader = policies ? !policies.get('projects').has('INSERT') : true;
 
@@ -120,7 +125,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
 
-  const filteredProjects = isReader
+  let filteredProjects = isReader
     ? filter === ProjectFilter.MINE
       ? sharedProjects
       : // Am I one of the users in the groups?
@@ -138,6 +143,13 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     ? sharedProjects
     : [];
 
+  filteredProjects =
+    include === 'all'
+      ? filteredProjects
+      : include === 'active'
+      ? filteredProjects.filter((p) => !p.is_locked)
+      : filteredProjects.filter((p) => p.is_locked);
+
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
 
@@ -151,7 +163,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onLeaveProject = (project: ExtendedProjectData) => {
     project.contexts = []; // Not sure what this is for
-    setProjects(projects => projects.filter(p => p.id !== project.id));
+    setProjects((projects) => projects.filter((p) => p.id !== project.id));
   };
 
   const onError = (error: string) =>
@@ -182,6 +194,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       invitations.filter((i) => i.id !== invitation.id)
     );
 
+  filteredProjects;
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
@@ -207,6 +220,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           invitations={invitations}
           filter={filter}
           onChangeFilter={setFilter}
+          onChangeDisplay={setInclude}
           onChangeSearch={setSearch}
           onChangeSort={(fn: any, name: string): void => {
             setSort(() => fn);

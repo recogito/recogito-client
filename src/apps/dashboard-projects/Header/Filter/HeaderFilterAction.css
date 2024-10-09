@@ -1,0 +1,10 @@
+.header-filter-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.header-filter-bold {
+  color: black;
+}

@@ -5,8 +5,8 @@ import './SettingsHeader.css';
 interface SettingsHeaderProps {
   i18n: Translations;
 
-  currentTab?: 'settings' | 'plugins' | undefined;
-  onSwitchTab?(tab: 'settings' | 'plugins'): void;
+  currentTab?: 'settings' | 'plugins' | 'tagging' | undefined;
+  onSwitchTab?(tab: 'settings' | 'plugins' | 'tagging'): void;
 }
 
 export const SettingsHeader = (props: SettingsHeaderProps) => {
@@ -24,6 +24,14 @@ export const SettingsHeader = (props: SettingsHeaderProps) => {
               }}
             >
               <button>{t['Project Settings']}</button>
+            </li>
+            <li
+              className={props.currentTab === 'tagging' ? 'active' : undefined}
+              onClick={() => {
+                props.onSwitchTab && props.onSwitchTab('tagging');
+              }}
+            >
+              <button>{t['Tagging']}</button>
             </li>
             <li
               className={props.currentTab === 'plugins' ? 'active' : undefined}

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { joinProject } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Avatar } from '@components/Avatar';
-import { OwnerPill } from '@components/OwnerPill';
+import { LockedPill } from '@components/LockedPill';
 import { ProjectCardActions } from '@components/ProjectCard/ProjectCardActions';
 import { JoinProjectDialog } from '@components/ProjectCard/JoinProjectDialog';
 import { OpenJoin } from '@components/ProjectCard/OpenJoin';
@@ -42,7 +42,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
     name,
     is_open_join,
     documents,
-    created_by,
+    is_locked,
   } = props.project;
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
@@ -130,7 +130,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
         ))}
       </div>
       <div className='project-entry-actions'>
-        {created_by.id === props.me.id && <OwnerPill i18n={props.i18n} />}
+        {is_locked && <LockedPill i18n={props.i18n} />}
         {users.length > 0 && (
           <ProjectCardActions
             i18n={props.i18n}

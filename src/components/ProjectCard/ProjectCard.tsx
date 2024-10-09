@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { OwnerPill } from '@components/OwnerPill';
+import { LockedPill } from '@components/LockedPill';
 import {
   Article,
   GraduationCap,
@@ -47,8 +47,8 @@ export const ProjectCard = (props: ProjectCardProps) => {
     users,
     name,
     is_open_join,
+    is_locked,
     documents,
-    created_by,
   } = props.project;
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
@@ -91,17 +91,17 @@ export const ProjectCard = (props: ProjectCardProps) => {
   const plusUsers = count < 11 ? 0 : count - 10;
 
   return (
-    <div className='project-card'>
+    <div
+      className={
+        is_locked ? 'project-card project-card-locked' : 'project-card'
+      }
+    >
       <div className='project-card-body' onClick={onClick}>
         <div className='project-card-header'>
           <h1>
             <a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a>
           </h1>
-          {created_by.id === props.me.id ? (
-            <OwnerPill i18n={props.i18n} />
-          ) : (
-            <div />
-          )}
+          {is_locked ? <LockedPill i18n={props.i18n} /> : <div />}
         </div>
         {description ? (
           <p>{description}</p>
@@ -146,7 +146,13 @@ export const ProjectCard = (props: ProjectCardProps) => {
         project={props.project}
         onJoin={handleConfirmJoin}
       />
-      <div className='project-card-footer'>
+      <div
+        className={
+          is_locked
+            ? 'project-card-footer project-card-locked'
+            : 'project-card-footer'
+        }
+      >
         <div className='avatar-stack'>
           {plusUsers > 0 && `       + ${plusUsers} ${t['More']}`}
           {userList.map((member) => (
