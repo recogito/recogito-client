@@ -18,7 +18,7 @@
   "Select at least 1 document": "Select at least 1 document",
   "Selected 1 document": "Selected 1 document",
   "Selected ${n} documents": "Selected ${n} documents",
-  "Add people to the assignment.": "Add people to the assignment",
+  "Add people to the assignment.": "Add people to the assignment. Note that all Project Administrators will have access by default and cannot be removed from an assignment.",
   "Name": "Name",
   "Instructions": "Instructions",
   "Member since": "Member since",
@@ -26,8 +26,8 @@
   "Anonymous team member": "Anonymous team member",
   "This user has not provided a profile name.": "This user has not provided a profile name.",
   "Select at least 1 team member": "Select at least 1 team member",
-  "Selected 1 team member": "Selected 1 team member",
-  "Selected ${n} team members": "Selected ${n} team members",
+  "Selected 1 team member": "Selected 1 additional team member",
+  "Selected ${n} team members": "Selected ${n} additional team members",
   "Add a name and instructions for this assignment.": "Add a name and instructions for this assignment.",
   "Almost Ready!": "Almost Ready!",
   "Verify and confirm this assignment.": "Verify and confirm this assignment.",
@@ -61,5 +61,5 @@
   "Optional": "Optional",
   "Select All": "Select All",
   "Base Assignment": "Base Assignment",
-  "You have not added any team members.": "You have not added any team members."
+  "You have not added any team members.": "You have not added any team members. Only Project Administrators will be able to access this assignment."
 }
