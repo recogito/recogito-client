@@ -69,7 +69,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
     setJoinProjectOpen(false);
     joinProject(supabase, id).then((resp) => {
       if (resp) {
-        window.location.href = `./projects/${id}`;
+        window.location.pathname = `/${props.i18n.lang}/projects/${id}`;
       } else {
         props.onError(props.i18n.t['Something happened']);
       }

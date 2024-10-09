@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useMemo, useRef, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -101,7 +101,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     preserveImageSizeOnResize: true
   }), [props.imageManifestURL]);
 
-  const selectAction = (annotation: SupabaseAnnotation) => {
+  const selectAction = useCallback((annotation: SupabaseAnnotation) => {
     // Directly after creation, annotations have no
     // layer_id (because it gets added later through 
     // the storage plugin).
@@ -116,7 +116,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
     return canEdit ? UserSelectAction.EDIT : UserSelectAction.SELECT;
-  }
+  }, [annoRef, props.activeLayer, policies]);
 
   useEffect(() => {
     if (props.tool) {

@@ -58,7 +58,7 @@ export const Documents = (props: DocumentsProps) => {
     <>
       <div className='row tab-documents'>
         <section className='column'>
-          <h1>{t['Step']} 1</h1>
+          <h1>{t['Step']} 2</h1>
           <p>{t['Add documents to this assignment.']}</p>
         </section>
 
