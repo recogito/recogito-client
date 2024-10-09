@@ -5,7 +5,10 @@ import slugify from 'slugify';
 export const sanitizeFilename = (unsafe: string) => {
   const slugified = slugify(unsafe, {
     replacement: '_', 
-    strict: true
+    remove: /[*+~.()'"!:@]/g, 
+    lower: false,
+    strict: false, 
+    locale: 'en'
   });
 
   return sanitize(slugified);

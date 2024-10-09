@@ -1,7 +1,7 @@
 import { DOMParser } from 'linkedom';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { User } from '@annotorious/react';
-import { serializeQuill } from '../serializeQuillComment';
+import { quillToPlainText } from '../serializeQuillComment';
 
 /** Returns the target or body that was changed most recently **/
 const getLastChangedAt = (annotation: SupabaseAnnotation) => {
@@ -129,7 +129,7 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
           Array.from(new Set([b.creator, b.updatedBy].filter(Boolean).map(user => `#uid-${user!.id}`)));
         noteEl.setAttribute('resp', contributors.join(' '));
 
-        const text = b.format === 'Quill' ? serializeQuill(b.value) : b.value;
+        const text = b.format === 'Quill' ? quillToPlainText(b.value) : b.value;
         noteEl.appendChild(document.createTextNode(text));
         annotationEl.appendChild(noteEl);
       }

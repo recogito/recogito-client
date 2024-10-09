@@ -10,6 +10,7 @@ import {
   Detective,
   DotsThreeVertical, 
   DownloadSimple,
+  FilePdf,
   PencilSimple, 
   Trash,
   UsersThree
@@ -37,6 +38,8 @@ interface DocumentCardActionsProps {
 
   onExportTEI?(includePrivate?: boolean): void;
 
+  onExportPDF?(includePrivate?: boolean): void;
+
 }
 
 export const DocumentCardActions = (props: DocumentCardActionsProps) => {
@@ -54,6 +57,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
   const onExportTEI = (includePrivate: boolean) => () =>
     props.onExportTEI && props.onExportTEI(includePrivate);
+
+  const onExportPDF = (includePrivate: boolean) => () =>
+    props.onExportPDF && props.onExportPDF(includePrivate);
 
   const onExportCSV = (includePrivate: boolean) => () =>
     props.onExportCSV && props.onExportCSV(includePrivate);
@@ -101,6 +107,32 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     </Item>
 
                     <Item className="dropdown-item" onSelect={onExportTEI(true)}>
+                      <Detective size={16} /> {t['Include my private annotations']}
+                    </Item>
+                  </SubContent>
+                </Portal>
+              </Sub>
+            )}
+
+            {props.document.content_type === 'application/pdf' && (
+              <Sub>
+                <SubTrigger className="dropdown-subtrigger">
+                  <FilePdf size={16} /> <span>{t['Export PDF file']}</span>
+                  <div className="right-slot">
+                    <CaretRight size={16} />
+                  </div>
+                </SubTrigger>
+
+                <Portal>
+                  <SubContent
+                    className="dropdown-subcontent"
+                    alignOffset={-5}>
+
+                    <Item className="dropdown-item" onSelect={onExportPDF(false)}>
+                      <UsersThree size={16} /> {t['Public annotations only']}
+                    </Item>
+
+                    <Item className="dropdown-item" onSelect={onExportPDF(true)}>
                       <Detective size={16} /> {t['Include my private annotations']}
                     </Item>
                   </SubContent>
