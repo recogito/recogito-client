@@ -48,6 +48,8 @@ interface Member {
   user: UserProfile;
 
   since: string;
+
+  isAdmin: boolean;
 }
 
 type Field = 'name' | 'since';
@@ -61,7 +63,6 @@ interface Sorting {
 // Flattens list of groups to the list of members, sorted by 'since'
 const getMembers = (groups: Group[], sorting?: Sorting): Member[] =>
   groups
-    .filter((g) => !g.is_admin)
     .reduce(
       (members, group) => [
         ...members,
@@ -70,6 +71,7 @@ const getMembers = (groups: Group[], sorting?: Sorting): Member[] =>
           name: user.nickname!, // TODO just a hack for now
           user,
           since,
+          isAdmin: group.is_admin,
         })),
       ],
       [] as Member[]
@@ -142,7 +144,7 @@ export const Team = (props: TeamProps) => {
     <>
       <div className='row tab-team'>
         <section className='column'>
-          <h1>{t['Step']} 2</h1>
+          <h1>{t['Step']} 4</h1>
           <p>{t['Add people to the assignment.']}</p>
         </section>
 
@@ -187,7 +189,8 @@ export const Team = (props: TeamProps) => {
                   <td>
                     <Checkbox.Root
                       className='checkbox-root'
-                      checked={selected.includes(member.id)}
+                      checked={member.isAdmin || selected.includes(member.id)}
+                      disabled={member.isAdmin}
                       onCheckedChange={(checked) =>
                         toggleSelected(member, checked)
                       }
@@ -196,7 +199,7 @@ export const Team = (props: TeamProps) => {
                         <CheckSquare size={20} weight='fill' />
                       </Checkbox.Indicator>
 
-                      {!selected.includes(member.id) && (
+                      {!selected.includes(member.id) && !member.isAdmin && (
                         <span>
                           <Square size={20} />
                         </span>
@@ -227,7 +230,7 @@ export const Team = (props: TeamProps) => {
               <Check size={16} /> {t['Selected 1 team member']}
             </p>
           ) : (
-            <p className='hint ok'>
+            <p className={selected.length === 0 ? 'hint check' : 'hint ok'}>
               <Check size={16} />{' '}
               {t['Selected ${n} team members'].replace(
                 '${n}',

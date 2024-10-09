@@ -34,6 +34,7 @@
 }
 
 .dialog-content form .field {
+  align-items: center;
   font-size: var(--font-tiny);
 }
 

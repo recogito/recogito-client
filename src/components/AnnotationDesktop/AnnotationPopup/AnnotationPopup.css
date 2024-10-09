@@ -1,4 +1,6 @@
-.annotation-popup {
+.annotation-popup,
+.a9s-popup,
+.r6o-popup {
   animation: popupFadeIn 200ms ease-in;
   border-radius: 5px;
   box-shadow:

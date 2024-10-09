@@ -17,8 +17,13 @@ export const getDisplayName = (user?: PresentUser | User) => {
 }
 
 /** Determines the list of unique creators in the given annotation list **/
-export const enumerateCreators = (present: PresentUser[], annotations: SupabaseAnnotation[]) =>
-  annotations.reduce<User[]>((enumerated, a) => {
+export const enumerateCreators = (present: PresentUser[], annotations: SupabaseAnnotation[], visibleLayers?: string[]) => {
+  const layerIds = visibleLayers ? new Set(visibleLayers) : undefined;
+
+  return annotations.reduce<User[]>((enumerated, a) => {
+    // If there is a layer filter, ignore annotations outside of visible layers
+    if (layerIds && a.layer_id && !layerIds.has(a.layer_id)) return enumerated;
+    
     const presentCreator = present.find(p => p.id === a.target.creator?.id);
     if (presentCreator) {
       const exists = enumerated.find(u => u.id === presentCreator.id);
@@ -33,10 +38,16 @@ export const enumerateCreators = (present: PresentUser[], annotations: SupabaseA
       }
     }
   }, []);
+}
 
 /** Determines the list of unique tags in the given annotation list **/
-export const enumerateTags = (annotations: SupabaseAnnotation[]) => 
-  annotations.reduce<AnnotationBody[]>((enumerated, annotation) => {
+export const enumerateTags = (annotations: SupabaseAnnotation[], visibleLayers?: string[]) => {
+  const layerIds = visibleLayers ? new Set(visibleLayers) : undefined;
+
+  return annotations.reduce<AnnotationBody[]>((enumerated, annotation) => {
+    // If there is a layer filter, ignore annotations outside of visible layers
+    if (layerIds && annotation.layer_id && !layerIds.has(annotation.layer_id)) return enumerated;
+    
     const tags = annotation.bodies.filter(b => b.purpose === 'tagging');
     return [...enumerated, ...tags];
   }, [])
@@ -48,3 +59,4 @@ export const enumerateTags = (annotations: SupabaseAnnotation[]) =>
       return firstOccurrences;
     }
   }, [] as string[]);
+}
