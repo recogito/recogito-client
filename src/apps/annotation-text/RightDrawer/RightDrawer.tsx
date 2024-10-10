@@ -113,6 +113,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                   currentStyle={props.style}
                   filter={filter}
                   i18n={props.i18n}
+                  isProjectLocked={props.isProjectLocked}
                   layers={props.layers}
                   layerNames={props.layerNames}
                   me={me}
@@ -124,6 +125,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                 ) : (
                   <DocumentNotesList 
                     i18n={props.i18n}
+                    isProjectLocked={props.isProjectLocked}
                     layers={props.layers}
                     layerNames={props.layerNames}
                     present={props.present}

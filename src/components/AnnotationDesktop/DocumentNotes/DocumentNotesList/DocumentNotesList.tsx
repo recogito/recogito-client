@@ -15,6 +15,8 @@ interface DocumentNotesListProps {
 
   i18n: Translations;
 
+  isProjectLocked: boolean;
+
   layers?: Layer[];
 
   layerNames: Map<string, string>;
