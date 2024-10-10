@@ -43,7 +43,7 @@ html, body {
   justify-content: flex-end;
 }
 
-.ta-desktop main .ta-annotated-text-container.read-only ::selection {
+.ta-desktop main .ta-annotated-text-container.is-locked ::selection {
   background-color: rgba(0, 0, 0, 0.08);
 }
 

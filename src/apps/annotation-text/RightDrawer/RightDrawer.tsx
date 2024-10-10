@@ -15,7 +15,7 @@ interface RightDrawerProps {
 
   i18n: Translations;
 
-  isReadOnly: boolean;
+  isProjectLocked: boolean;
 
   layers?: Layer[];
 

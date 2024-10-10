@@ -26,7 +26,7 @@ interface AnnotatedTextProps {
 
   i18n: Translations;
 
-  isReadOnly: boolean;
+  isLocked: boolean;
 
   layers?: DocumentLayer[];
 
@@ -60,7 +60,7 @@ interface AnnotatedTextProps {
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { i18n, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const contentType = props.document.content_type;
 
@@ -81,12 +81,9 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
       props.onLoad();
   }, [loading]);
 
-
-  console.log('annotating enabled', !props.isReadOnly);
-
   return (
-    <div className={props.isReadOnly 
-      ? 'ta-annotated-text-container read-only'
+    <div className={isLocked 
+      ? 'ta-annotated-text-container is-locked'
       : 'ta-annotated-text-container'}>
       <div className="page-wrapper">
         <div className="content-wrapper">
@@ -94,7 +91,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             <AnnotatedTEI
               filter={filter}
               initialLoadComplete={!loading}
-              isReadOnly={props.isReadOnly}
+              isLocked={isLocked}
               style={props.style}
               styleSheet={props.styleSheet} 
               text={text} 
@@ -103,13 +100,13 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             <AnnotatedPDF
               document={props.document}
               filter={filter}
-              isReadOnly={props.isReadOnly}
+              isLocked={isLocked}
               style={props.style}
               onRendered={() => setPDFLoading(false)} />
           ) : text && (
             <TextAnnotator
               filter={filter}
-              annotatingEnabled={!props.isReadOnly}
+              annotatingEnabled={!isLocked}
               style={props.style}
               presence={{
                 font: '500 12px Inter, Arial, Helvetica, sans-serif',
@@ -142,6 +139,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               <AnnotationPopup
                 {...props}
                 i18n={i18n}
+                isProjectLocked={isLocked}
                 layers={layers}
                 layerNames={layerNames}
                 present={present}

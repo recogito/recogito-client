@@ -14,7 +14,7 @@ interface AnnotatedPDFProps {
 
   filter?: Filter;
 
-  isReadOnly: boolean;
+  isLocked: boolean;
 
   style?: HighlightStyleExpression;
 

@@ -218,7 +218,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
           <Toolbar
             i18n={props.i18n}
-            isReadOnly={isLocked}
+            isProjectLocked={isLocked}
             document={props.document}
             present={present}
             privacy={privacy}
@@ -250,7 +250,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               channelId={props.channelId}
               document={props.document}
               i18n={props.i18n}
-              isReadOnly={isLocked}
+              isLocked={isLocked}
               layers={documentLayers}
               layerNames={layerNames}
               policies={policies}
@@ -270,7 +270,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
           <RightDrawer
             i18n={props.i18n}
-            isReadOnly={isLocked}
+            isProjectLocked={isLocked}
             layers={layers}
             layerNames={layerNames}
             open={rightPanelOpen}

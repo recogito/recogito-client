@@ -15,7 +15,7 @@ interface ToolbarProps {
 
   i18n: Translations;
 
-  isReadOnly: boolean;
+  isProjectLocked: boolean;
 
   layers?: DocumentLayer[];
 

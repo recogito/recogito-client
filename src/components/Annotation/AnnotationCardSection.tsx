@@ -19,8 +19,6 @@ export interface AnnotationCardSectionProps {
 
   annotation: SupabaseAnnotation;
 
-  isSelected?: boolean;
-
   comment?: AnnotationBody;
 
   emphasizeOnEntry?: boolean;
@@ -31,7 +29,11 @@ export interface AnnotationCardSectionProps {
 
   isPrivate?: boolean;
 
+  isProjectLocked?: boolean;
+
   isReadOnly?: boolean;
+
+  isSelected?: boolean;
 
   layerNames: Map<string, string>;
 
@@ -71,7 +73,7 @@ const parseBody = (body?: AnnotationBody): Delta | undefined =>
 
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
-  const { annotation, comment, index, isPrivate, isReadOnly, me, present, tags } = props;
+  const { annotation, comment, index, isProjectLocked, isPrivate, isReadOnly, me, present, tags } = props;
 
   const { t } = props.i18n;
 
@@ -126,7 +128,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   const isMine = creator?.id === me.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
-  const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT'));
+  const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT')) && !isProjectLocked;
 
   const [commentValue, setCommentValue] = useState<Delta | undefined>(parseBody(comment));
 

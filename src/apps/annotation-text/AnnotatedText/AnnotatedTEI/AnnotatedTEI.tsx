@@ -13,7 +13,7 @@ interface AnnotatedTEIProps {
 
   initialLoadComplete: boolean;
 
-  isReadOnly: boolean;
+  isLocked: boolean;
   
   style?: HighlightStyleExpression;
 
