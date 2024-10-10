@@ -15,6 +15,8 @@ interface ToolbarProps {
 
   i18n: Translations;
 
+  isLocked: boolean;
+
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
@@ -115,12 +117,16 @@ export const Toolbar = (props: ToolbarProps) => {
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-center">
-        <PrivacySelector
-          mode={props.privacy}
-          i18n={props.i18n}
-          onChangeMode={props.onChangePrivacy} />
+        {!props.isLocked && (
+          <>
+            <PrivacySelector
+              mode={props.privacy}
+              i18n={props.i18n}
+              onChangeMode={props.onChangePrivacy} />
 
-        <div className="anno-toolbar-divider" />
+            <div className="anno-toolbar-divider" />
+          </>
+        )}
 
         {isPDF && (
           <div className="anno-toolbar-group">
@@ -129,10 +135,12 @@ export const Toolbar = (props: ToolbarProps) => {
           </div>
         )}
 
-        <DeleteSelected
-          activeLayer={props.layers?.find(l => l.is_active)}
-          i18n={props.i18n}
-          policies={props.policies} />
+        {!props.isLocked && (
+          <DeleteSelected
+            activeLayer={props.layers?.find(l => l.is_active)}
+            i18n={props.i18n}
+            policies={props.policies} />
+        )}
 
         <ColorCodingSelector 
           i18n={props.i18n} 

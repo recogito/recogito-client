@@ -15,6 +15,8 @@ interface DocumentNotesListProps {
 
   i18n: Translations;
 
+  isProjectLocked: boolean;
+
   layers?: Layer[];
 
   layerNames: Map<string, string>;
@@ -79,17 +81,21 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   return (
     <div className={className}>
       <div className="document-notes-list-header">
-        <NewNoteButton 
-          i18n={props.i18n} 
-          onCreatePublic={() => setNewNote('public')} 
-          onCreatePrivate={() => setNewNote('private')} />
+        {props.isProjectLocked ? (
+          <div className="spacer" />
+        ) : (
+          <NewNoteButton 
+            i18n={props.i18n} 
+            onCreatePublic={() => setNewNote('public')} 
+            onCreatePrivate={() => setNewNote('private')} />
+        )}
 
         <SortSelector 
           i18n={props.i18n}
           onChange={sorter => setSorter(() => sorter)} />
       </div>
 
-      {newNote && (
+      {(!props.isProjectLocked && newNote) && (
         <EmptyNote
           i18n={props.i18n}
           isPrivate={newNote === 'private'} 
@@ -109,6 +115,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               
             <DocumentNotesListItem 
               i18n={props.i18n}
+              isProjectLocked={props.isProjectLocked}
               isReadOnly={isReadOnly(note)}
               isSelected={selected === note.id}
               layerNames={props.layerNames}

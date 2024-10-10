@@ -35,6 +35,8 @@ interface AnnotatedImageProps {
 
   i18n: Translations;
 
+  isLocked: boolean;
+
   imageManifestURL: string;
 
   isPresentationManifest?: boolean;
@@ -69,7 +71,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -102,6 +104,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   }), [props.imageManifestURL]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
+    if (props.isLocked) return UserSelectAction.SELECT;
+    
     // Directly after creation, annotations have no
     // layer_id (because it gets added later through 
     // the storage plugin).
@@ -116,7 +120,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
     return canEdit ? UserSelectAction.EDIT : UserSelectAction.SELECT;
-  }, [annoRef, props.activeLayer, policies]);
+  }, [annoRef, props.activeLayer, policies, props.isLocked]);
 
   useEffect(() => {
     if (props.tool) {
@@ -130,7 +134,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   return (
     <OpenSeadragonAnnotator
       autoSave
-      drawingEnabled={drawingEnabled}
+      drawingEnabled={drawingEnabled && !isLocked}
       userSelectAction={selectAction}
       tool={props.tool || 'rectangle'}
       filter={filter}
@@ -166,6 +170,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
             <AnnotationPopup
               {...props}
               i18n={i18n}
+              isProjectLocked={isLocked}
               layers={layers}
               layerNames={layerNames}
               policies={policies}

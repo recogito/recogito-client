@@ -23,6 +23,8 @@ export interface AnnotationCardProps {
 
   isNote?: boolean;
 
+  isProjectLocked?: boolean;
+
   isReadOnly?: boolean;
 
   isSelected?: boolean;
@@ -212,7 +214,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   return (
     <div ref={el}>
-      {isNew ? (
+      {!props.isProjectLocked && isNew ? (
         <EmptyAnnotation 
           annotation={annotation} 
           autoFocus={props.autoFocus}
@@ -240,6 +242,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 i18n={props.i18n}
                 index={0}
                 isPrivate={isPrivate}
+                isProjectLocked={props.isProjectLocked}
                 isReadOnly={props.isReadOnly}
                 isSelected={props.isSelected}
                 layerNames={props.layerNames}
@@ -281,6 +284,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   i18n={props.i18n}
                   index={index + 1}
                   isPrivate={isPrivate}
+                  isProjectLocked={props.isProjectLocked}
                   isReadOnly={props.isReadOnly}
                   isSelected={props.isSelected}
                   layerNames={props.layerNames}
@@ -310,6 +314,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   i18n={props.i18n}
                   index={comments.length - 1}
                   isPrivate={isPrivate}
+                  isProjectLocked={props.isProjectLocked}
                   isReadOnly={props.isReadOnly}
                   isSelected={props.isSelected}
                   layerNames={props.layerNames}
@@ -329,7 +334,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             )}
           </ul>
 
-          {replyFieldTransition((style, open) => open && (
+          {!props.isProjectLocked && (replyFieldTransition((style, open) => open && (
             <animated.div style={style}>
               <ReplyField
                 autoFocus
@@ -341,7 +346,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 beforeSubmit={beforeReply} 
                 onSubmit={onReply} />
             </animated.div>
-          ))}
+          )))}
         </div>
       )}
     </div>

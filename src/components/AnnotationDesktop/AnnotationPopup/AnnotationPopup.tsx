@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { type AnnotationBody, useAnnotationStore, useAnnotator, useAnnotatorUser } from '@annotorious/react';
-import type { Annotation as Anno, PresentUser, User } from '@annotorious/react';
+import { type AnnotationBody, useAnnotationStore, useAnnotator } from '@annotorious/react';
+import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { usePlugins } from '@components/Plugins';
 import { AnnotationCard } from '@components/Annotation';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 
@@ -15,6 +14,8 @@ interface AnnotationPopupProps {
   editable?: boolean
 
   i18n: Translations;
+
+  isProjectLocked: boolean;
 
   layers?: DocumentLayer[];
 
@@ -32,13 +33,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
   
   const anno = useAnnotator();
 
-  const user = useAnnotatorUser();
-
   const store = useAnnotationStore();
-
-  const plugins = usePlugins('annotation.*.annotation-editor');
-
-  const me: PresentUser | User = props.present.find(p => p.id === user.id) || user;
 
   // Popup only supports a single selected annotation for now
   const selected = props.annotation as SupabaseAnnotation;
@@ -80,6 +75,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
         autoFocus
         annotation={selected}
         i18n={props.i18n}
+        isProjectLocked={props.isProjectLocked}
         isReadOnly={isReadOnly}
         layerNames={props.layerNames}
         present={props.present}
