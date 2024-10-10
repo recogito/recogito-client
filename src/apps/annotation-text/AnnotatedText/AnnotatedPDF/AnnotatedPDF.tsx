@@ -37,6 +37,7 @@ export const AnnotatedPDF = (props: AnnotatedPDFProps) => {
   return downloadURL && (
     <PDFAnnotator 
       pdfUrl={downloadURL} 
+      annotatingEnabled={!props.isLocked}
       filter={props.filter}
       // @ts-ignore - this is fixed in the next pdf-annotator release!
       style={props.style}

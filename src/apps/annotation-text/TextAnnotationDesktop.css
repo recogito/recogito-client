@@ -43,8 +43,8 @@ html, body {
   justify-content: flex-end;
 }
 
-.ta-desktop main .ta-annotated-text-container.is-locked ::selection {
-  background-color: rgba(0, 0, 0, 0.08);
+.ta-desktop main .ta-annotated-text-container.is-locked *::selection {
+  background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .ta-desktop main .ta-annotated-text-container .page-wrapper {
