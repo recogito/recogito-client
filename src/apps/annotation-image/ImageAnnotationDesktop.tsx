@@ -41,6 +41,9 @@ const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
+  // @ts-ignore
+  const isLocked = props.document.project_is_locked;
+
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const [loading, setLoading] = useState(true);
@@ -239,6 +242,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         <div className="header">
           <Toolbar
             i18n={props.i18n}
+            isLocked={isLocked}
             document={props.document}
             present={present}
             privacy={privacy}
@@ -279,6 +283,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 channelId={props.channelId}
                 i18n={props.i18n}
                 imageManifestURL={currentImage}
+                isLocked={isLocked}
                 isPresentationManifest={isPresentationManifest}
                 layers={layers}
                 layerNames={layerNames}
@@ -298,6 +303,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
           <RightDrawer
             i18n={props.i18n}
+            isLocked={isLocked}
             layers={layers}
             layerNames={layerNames}
             open={rightPanelOpen}

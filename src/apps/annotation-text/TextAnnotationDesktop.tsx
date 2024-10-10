@@ -218,7 +218,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
           <Toolbar
             i18n={props.i18n}
-            isProjectLocked={isLocked}
+            isLocked={isLocked}
             document={props.document}
             present={present}
             privacy={privacy}

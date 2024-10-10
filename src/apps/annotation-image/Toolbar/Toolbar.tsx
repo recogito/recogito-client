@@ -23,6 +23,8 @@ interface ToolbarProps {
 
   i18n: Translations;
 
+  isLocked: boolean;
+
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
@@ -127,36 +129,40 @@ export const Toolbar = (props: ToolbarProps) => {
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-center">
-        <PrivacySelector
-          mode={props.privacy}
-          i18n={props.i18n}
-          onChangeMode={props.onChangePrivacy} />
+        {!props.isLocked && (
+          <>
+            <PrivacySelector
+              mode={props.privacy}
+              i18n={props.i18n}
+              onChangeMode={props.onChangePrivacy} />
 
-        <div className="anno-toolbar-divider" />
+            <div className="anno-toolbar-divider" />
 
-        <button
-          className={props.tool === undefined ? 'active' : undefined}
-          aria-label={t['Pan and zoom the image, select annotations']}
-          onClick={() => props.onChangeTool(undefined)}>
-          <Cursor size={18} />
-        </button>
+            <button
+              className={props.tool === undefined ? 'active' : undefined}
+              aria-label={t['Pan and zoom the image, select annotations']}
+              onClick={() => props.onChangeTool(undefined)}>
+              <Cursor size={18} />
+            </button>
 
-        <button
-          className={props.tool === 'rectangle' ? 'active' : undefined}
-          aria-label={t['Create rectangle annotations']}
-          onClick={() => props.onChangeTool('rectangle')}>
-          <Rectangle />
-        </button>
+            <button
+              className={props.tool === 'rectangle' ? 'active' : undefined}
+              aria-label={t['Create rectangle annotations']}
+              onClick={() => props.onChangeTool('rectangle')}>
+              <Rectangle />
+            </button>
 
-        <button
-          className={props.tool === 'polygon' ? 'active' : undefined}
-          aria-label={t['Create polygon annotations']}
-          onClick={() => props.onChangeTool('polygon')}>
-          <Polygon />
-        </button>
+            <button
+              className={props.tool === 'polygon' ? 'active' : undefined}
+              aria-label={t['Create polygon annotations']}
+              onClick={() => props.onChangeTool('polygon')}>
+              <Polygon />
+            </button>
 
-        <div className="anno-toolbar-divider" />
-        
+            <div className="anno-toolbar-divider" />
+          </>
+        )}
+
         <button onClick={() => props.onZoom(2)}>
           <MagnifyingGlassPlus size={18} />
         </button>
@@ -167,10 +173,12 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <div className="anno-toolbar-divider" />
 
-        <DeleteSelected
-          activeLayer={props.layers?.find(l => l.is_active)}
-          i18n={props.i18n}
-          policies={props.policies} />
+        {!props.isLocked && (
+          <DeleteSelected
+            activeLayer={props.layers?.find(l => l.is_active)}
+            i18n={props.i18n}
+            policies={props.policies} />
+        )}
 
         <ColorCodingSelector 
           i18n={props.i18n} 

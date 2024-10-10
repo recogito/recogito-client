@@ -15,7 +15,7 @@ interface ToolbarProps {
 
   i18n: Translations;
 
-  isProjectLocked: boolean;
+  isLocked: boolean;
 
   layers?: DocumentLayer[];
 
@@ -117,7 +117,7 @@ export const Toolbar = (props: ToolbarProps) => {
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-center">
-        {!props.isProjectLocked && (
+        {!props.isLocked && (
           <>
             <PrivacySelector
               mode={props.privacy}
@@ -135,7 +135,7 @@ export const Toolbar = (props: ToolbarProps) => {
           </div>
         )}
 
-        {!props.isProjectLocked && (
+        {!props.isLocked && (
           <DeleteSelected
             activeLayer={props.layers?.find(l => l.is_active)}
             i18n={props.i18n}
