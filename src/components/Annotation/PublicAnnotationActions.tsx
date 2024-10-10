@@ -1,8 +1,8 @@
-import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { DotsThree, Pencil, Trash } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
 import { useState } from 'react';
+import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { DotsThree, LinkSimple, Pencil, Trash } from '@phosphor-icons/react';
 import { AdminOverrideAlert } from '@components/AnnotationDesktop';
+import type { Translations } from 'src/Types';
 
 interface PublicAnnotationActionsProps {
 
@@ -11,6 +11,8 @@ interface PublicAnnotationActionsProps {
   isFirst: boolean;
 
   isMine: boolean;
+
+  onCopyLink(): void;
 
   onDeleteAnnotation(): void;
 
@@ -33,7 +35,7 @@ export const PublicAnnotationActions = (props: PublicAnnotationActionsProps) => 
       return () => setPromptedFn(() => fn);
     }
   }
-
+  
   const onClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
     evt.stopPropagation();
@@ -56,6 +58,13 @@ export const PublicAnnotationActions = (props: PublicAnnotationActionsProps) => 
         <Dropdown.Portal>
           <Dropdown.Content asChild sideOffset={5} align="start" onClick={onClick}>
             <div className='dropdown-content no-icons'>
+              <Dropdown.Item
+                className='dropdown-item'
+                onSelect={props.onCopyLink}>
+                <LinkSimple size={16} />
+                <span>{t['Copy link to annotation']}</span>
+              </Dropdown.Item>
+
               <Dropdown.Item
                 className='dropdown-item'
                 onSelect={withPrompt(props.onEditSection)}>

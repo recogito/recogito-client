@@ -6,7 +6,7 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -14,7 +14,7 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
-import { useIIIF, ManifestErrorDialog } from './IIIF';
+import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { DocumentLayer } from 'src/Types';
 import type {
@@ -65,6 +65,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     currentImage,
     setCurrentImage
   } = useIIIF(props.document);
+
+  const { activeUsers, onPageActivity } = useMultiPagePresence(present);
 
   const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
 
@@ -219,6 +221,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   };
 
+  const onGoToImage = (source: string) => {
+    // When navigating via the thumbnail strip, clear the selection from the
+    // hash, otherwise we'll get looped right back.
+    clearSelectionURLHash(); 
+    setCurrentImage(source);
+  }
+
   return (
     <DocumentNotes
       channelId={props.channelId}
@@ -261,6 +270,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
         <main>
           <LeftDrawer
+            activeUsers={activeUsers}
             currentImage={currentImage}
             i18n={props.i18n}
             iiifCanvases={canvases}
@@ -268,7 +278,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             layerNames={layerNames}
             open={leftPanelOpen}
             present={present}
-            onChangeImage={setCurrentImage} />
+            onChangeImage={onGoToImage} />
 
           <div className="ia-annotated-image-container">
             {policies && currentImage && activeLayer && (
@@ -289,8 +299,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 tagVocabulary={tagVocabulary}
                 tool={tool}
                 usePopup={usePopup}
+                onChangeImage={setCurrentImage}
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
+                onPageActivity={canvases.length > 1 ? onPageActivity : undefined}
                 onSaveError={() => setConnectionError(true)}
                 onLoad={() => setLoading(false)} />
             )}

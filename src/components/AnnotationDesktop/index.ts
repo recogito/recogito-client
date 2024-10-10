@@ -1,5 +1,6 @@
 export * from './AdminOverrideAlert';
 export * from './AnnotationList';
+export * from './AnnotationPopup';
 export * from './AuthorColorProvider';
 export * from './ColorCoding';
 export * from './DeleteSelected';
@@ -7,6 +8,7 @@ export * from './DocumentNotes';
 export * from './ErrorBadge';
 export * from './FatalError';
 export * from './FilterPanel';
+export * from './SelectionURLState';
 export * from './UndoStack';
 export * from './useLayerNames';
 export * from './utils';
