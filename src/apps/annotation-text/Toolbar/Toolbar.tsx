@@ -15,6 +15,8 @@ interface ToolbarProps {
 
   i18n: Translations;
 
+  isReadOnly: boolean;
+
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;

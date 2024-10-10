@@ -14,6 +14,8 @@ interface AnnotatedPDFProps {
 
   filter?: Filter;
 
+  isReadOnly: boolean;
+
   style?: HighlightStyleExpression;
 
   onRendered?(): void;

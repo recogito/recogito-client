@@ -29,6 +29,9 @@ import '@recogito/react-text-annotator/react-text-annotator.css';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
+  // @ts-ignore
+  const isLocked = props.document.project_is_locked;
+
   const contentType = props.document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
@@ -215,6 +218,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
           <Toolbar
             i18n={props.i18n}
+            isReadOnly={isLocked}
             document={props.document}
             present={present}
             privacy={privacy}
@@ -246,6 +250,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               channelId={props.channelId}
               document={props.document}
               i18n={props.i18n}
+              isReadOnly={isLocked}
               layers={documentLayers}
               layerNames={layerNames}
               policies={policies}
@@ -265,6 +270,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
           <RightDrawer
             i18n={props.i18n}
+            isReadOnly={isLocked}
             layers={layers}
             layerNames={layerNames}
             open={rightPanelOpen}

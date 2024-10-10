@@ -12,6 +12,8 @@ interface AnnotatedTEIProps {
   filter?: Filter;
 
   initialLoadComplete: boolean;
+
+  isReadOnly: boolean;
   
   style?: HighlightStyleExpression;
 

@@ -15,6 +15,8 @@ interface RightDrawerProps {
 
   i18n: Translations;
 
+  isReadOnly: boolean;
+
   layers?: Layer[];
 
   layerNames: Map<string, string>;
