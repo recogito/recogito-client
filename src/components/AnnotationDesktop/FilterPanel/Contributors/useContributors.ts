@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { type PresentUser, useAnnotations } from '@annotorious/react';
-import { enumerateCreators, useFilterSettingsState } from '@components/AnnotationDesktop';
+import { enumerateContributors, useFilterSettingsState } from '@components/AnnotationDesktop';
 
-export const useCreators = (present: PresentUser[]) => {
+export const useContributors = (present: PresentUser[]) => {
 
   const annotations = useAnnotations(250);
 
@@ -10,10 +10,10 @@ export const useCreators = (present: PresentUser[]) => {
 
   const visibleLayers = layerSettings?.state;
 
-  const creators = useMemo(() => (
-    enumerateCreators(present, annotations, visibleLayers)
+  const contributors = useMemo(() => (
+    enumerateContributors(present, annotations, visibleLayers)
   ), [present, annotations, visibleLayers]);
 
-  return creators;
+  return contributors;
 
 }

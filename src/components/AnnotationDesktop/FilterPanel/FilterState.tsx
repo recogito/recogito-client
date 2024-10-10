@@ -9,9 +9,9 @@ interface FilterStateContextValue {
   
   setLayerSettings: React.Dispatch<React.SetStateAction<FilterSetting<string[] | undefined> | undefined>>;
 
-  creatorSettings?: FilterSetting<User[]>;
+  contributorSettings?: FilterSetting<User[]>;
 
-  setCreatorSettings: React.Dispatch<React.SetStateAction<FilterSetting<User[]> | undefined>>;
+  setContributorSettings: React.Dispatch<React.SetStateAction<FilterSetting<User[]> | undefined>>;
 
   tagSettings?: FilterSetting<string[]>;
   
@@ -39,7 +39,7 @@ export const FilterState = (props: FilterStateProps) => {
   const [layerSettings, setLayerSettings] = 
     useState<FilterSetting<string[] | undefined> | undefined> ();
 
-  const [creatorSettings, setCreatorSettings] = 
+  const [contributorSettings, setContributorSettings] = 
     useState<FilterSetting<User[]> | undefined>();
 
   const [tagSettings, setTagSettings] = 
@@ -54,7 +54,7 @@ export const FilterState = (props: FilterStateProps) => {
   useEffect(() => {
     const filters = [
       layerSettings?.filter!,
-      creatorSettings?.filter!,
+      contributorSettings?.filter!,
       tagSettings?.filter!,
       visibilitySettings?.filter!
     ].filter(Boolean);
@@ -65,14 +65,14 @@ export const FilterState = (props: FilterStateProps) => {
     } else {
       setChained(undefined); 
     }
-  }, [layerSettings, creatorSettings, tagSettings, visibilitySettings]);
+  }, [layerSettings, contributorSettings, tagSettings, visibilitySettings]);
 
   return (
     <FilterStateContext.Provider value={{ 
       layerSettings,
       setLayerSettings,
-      creatorSettings,
-      setCreatorSettings,
+      contributorSettings,
+      setContributorSettings,
       tagSettings,
       setTagSettings,
       visibilitySettings,
@@ -90,14 +90,14 @@ export const useFilterSettingsState = () => useContext(FilterStateContext);
 export const useFilter = () => {
   const { 
     layerSettings,
-    creatorSettings, 
+    contributorSettings, 
     tagSettings, 
     visibilitySettings, 
     filter 
   } = useContext(FilterStateContext);
 
   // Number of filter conditions chained in the filter
-  const numConditions = [layerSettings, creatorSettings, tagSettings, visibilitySettings].filter(Boolean).length;
+  const numConditions = [layerSettings, contributorSettings, tagSettings, visibilitySettings].filter(Boolean).length;
 
   return { filter, numConditions };
 }
