@@ -12,6 +12,7 @@
   "You must set a name": "Du musst einen Namen oder Nickname in Deinen <a href=\"${url}\">Profileinstellungen</a> angeben, bevor Du andere Benutzer einladen kannst.",
   "Invite User to Project": "Benutzer Einladen",
   "Enter e-mail and access level.": "Bitte gib die E-mail Adresse und Berechtigungsstufe an.",
+  "E-Mail": "E-Mail",
   "Send invitation": "Einladung abschicken",
   "You cannot send an invitation to yourself.": "Wir wissen, wie schön es ist, sich begehrt zu fühlen. Aber du kannst leider keine Einladung an dich selbst senden.",
   "This user already has an invitation waiting.": "Auf diesen Benutzer wartet bereits eine Einladung.",
