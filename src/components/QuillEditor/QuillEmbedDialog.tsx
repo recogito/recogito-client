@@ -48,6 +48,11 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
         quill.insertText(range.index, url, 'link', url);
       else
         quill.format('link', url);
+    } else {
+      const start = quill.getLength();
+      quill.insertText(start, url, 'user');
+      quill.setSelection(start, url.length);
+      quill.formatText(start, url.length, 'link', url);
     }
 
     quill.focus();
