@@ -113,7 +113,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             firstAnnotationBody.created || annotation.target?.created,
           ];
         } else {
-          console.warn('Empty annotation - should never happen', annotation);
+          // console.warn('Empty annotation - should never happen', annotation);
           return [undefined, undefined];
         }
       } else {

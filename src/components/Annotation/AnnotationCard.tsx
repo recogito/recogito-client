@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
@@ -123,7 +124,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   // If this is my annotation and has no bodies on mount, it's a new annotation
   const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
 
-  // Update isNew when anntoation changes
+  // Update isNew when annotation changes
   useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
@@ -153,7 +154,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   });
 
   const onSubmit = () => {
-    setIsNew(false);
+    if ((document as any).startViewTransition === 'function')
+      document.startViewTransition(() => flushSync(() => setIsNew(false)));
+    else 
+      setIsNew(false);
+
     props.onSubmit();
   }
 
@@ -213,24 +218,29 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   return (
     <div ref={el}>
       {isNew ? (
-        <EmptyAnnotation 
-          annotation={annotation} 
-          autoFocus={props.autoFocus}
-          i18n={props.i18n}
-          isSelected={props.isSelected}
-          me={me} 
-          present={props.present}
-          tagVocabulary={props.tagVocabulary}
-          onBulkDeleteBodies={props.onBulkDeleteBodies}
-          onCreateBody={props.onCreateBody} 
-          onDeleteAnnotation={props.onDeleteAnnotation}
-          onDeleteBody={props.onDeleteBody}
-          onMakePublic={onMakePublic} 
-          onSubmit={onSubmit}
-          onUpdateAnnotation={props.onUpdateAnnotation} 
-          onUpdateBody={props.onUpdateBody} />   
+        <div
+          style={{
+            viewTransitionName: annotation.id
+          }}>
+          <EmptyAnnotation 
+            annotation={annotation} 
+            autoFocus={props.autoFocus}
+            i18n={props.i18n}
+            isSelected={props.isSelected}
+            me={me} 
+            present={props.present}
+            tagVocabulary={props.tagVocabulary}
+            onBulkDeleteBodies={props.onBulkDeleteBodies}
+            onCreateBody={props.onCreateBody} 
+            onDeleteAnnotation={props.onDeleteAnnotation}
+            onDeleteBody={props.onDeleteBody}
+            onMakePublic={onMakePublic} 
+            onSubmit={onSubmit}
+            onUpdateAnnotation={props.onUpdateAnnotation} 
+            onUpdateBody={props.onUpdateBody} />  
+        </div> 
       ) : (
-        <div style={borderStyle} className={className}>
+        <div style={{ ...borderStyle, viewTransitionName: annotation.id}} className={className}>
           <ul>
             <li>
               <AnnotationCardSection
