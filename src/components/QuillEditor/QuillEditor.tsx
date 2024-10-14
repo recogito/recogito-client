@@ -93,7 +93,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
     if (!quill) return;
 
     if (props.autoFocus)
-     quill.focus({ preventScroll: true });
+      quill.focus({ preventScroll: true });
   }, [quill, props.autoFocus]);
 
   useEffect(() => {

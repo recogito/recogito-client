@@ -43,13 +43,11 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
   const onSave = (url: string, range?: Range) => {
     if (!quill) return; // Should never happen
 
-    if (range) {
-      quill.formatText(range.index, range.length, 'link', url);
-    } else {
-      const start = quill.getLength();
-      quill.insertText(start, url, 'user');
-      quill.setSelection(start, url.length);
-      quill.formatText(start, url.length, 'link', url);
+    if (range) { // Range is defined, unless the editor has no focus or is disabled
+      if (range.length === 0)
+        quill.insertText(range.index, url, 'link', url);
+      else
+        quill.format('link', url);
     }
 
     quill.focus();
@@ -62,6 +60,7 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
       i18n={props.i18n}
       title={t['Link']} 
       placeholder={t['Enter link']}
+      message={t['Type or paste a link to insert it into your annotation.']}
       onSave={onSave}
       onCancel={props.onClose} />
   )
