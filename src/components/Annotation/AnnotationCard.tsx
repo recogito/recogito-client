@@ -154,10 +154,11 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   });
 
   const onSubmit = () => {
-    if ((document as any).startViewTransition === 'function')
+    if (typeof (document as any).startViewTransition === 'function') {
       document.startViewTransition(() => flushSync(() => setIsNew(false)));
-    else 
+    } else {
       setIsNew(false);
+    }
 
     props.onSubmit();
   }
@@ -218,29 +219,24 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   return (
     <div ref={el}>
       {isNew ? (
-        <div
-          style={{
-            viewTransitionName: annotation.id
-          }}>
-          <EmptyAnnotation 
-            annotation={annotation} 
-            autoFocus={props.autoFocus}
-            i18n={props.i18n}
-            isSelected={props.isSelected}
-            me={me} 
-            present={props.present}
-            tagVocabulary={props.tagVocabulary}
-            onBulkDeleteBodies={props.onBulkDeleteBodies}
-            onCreateBody={props.onCreateBody} 
-            onDeleteAnnotation={props.onDeleteAnnotation}
-            onDeleteBody={props.onDeleteBody}
-            onMakePublic={onMakePublic} 
-            onSubmit={onSubmit}
-            onUpdateAnnotation={props.onUpdateAnnotation} 
-            onUpdateBody={props.onUpdateBody} />  
-        </div> 
+        <EmptyAnnotation 
+          annotation={annotation} 
+          autoFocus={props.autoFocus}
+          i18n={props.i18n}
+          isSelected={props.isSelected}
+          me={me} 
+          present={props.present}
+          tagVocabulary={props.tagVocabulary}
+          onBulkDeleteBodies={props.onBulkDeleteBodies}
+          onCreateBody={props.onCreateBody} 
+          onDeleteAnnotation={props.onDeleteAnnotation}
+          onDeleteBody={props.onDeleteBody}
+          onMakePublic={onMakePublic} 
+          onSubmit={onSubmit}
+          onUpdateAnnotation={props.onUpdateAnnotation} 
+          onUpdateBody={props.onUpdateBody} />  
       ) : (
-        <div style={{ ...borderStyle, viewTransitionName: annotation.id}} className={className}>
+        <div style={borderStyle} className={className}>
           <ul>
             <li>
               <AnnotationCardSection
