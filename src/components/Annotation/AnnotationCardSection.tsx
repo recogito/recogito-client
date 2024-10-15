@@ -244,6 +244,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 <PrivateAnnotationActions
                   i18n={props.i18n} 
                   isFirst={props.index === 0}
+                  onCopyLink={onCopyLink}
                   onDeleteAnnotation={props.onDeleteAnnotation}
                   onDeleteSection={onDeleteSection}
                   onEditSection={() => setEditable(true)}
@@ -253,6 +254,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                   i18n={props.i18n} 
                   isFirst={props.index === 0} 
                   isMine={isMine}
+                  onCopyLink={onCopyLink}
                   onDeleteAnnotation={props.onDeleteAnnotation}
                   onDeleteSection={onDeleteSection}
                   onEditSection={() => setEditable(true)} />
@@ -292,19 +294,19 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       )}
 
       {editable && (
-          <div className="annotation-section-footer align-right">
-            <button 
-              className="sm flat unstyled"
-              onClick={() => setEditable(false)}>
-              {t['Cancel']}
-            </button>
+        <div className="annotation-section-footer align-right">
+          <button 
+            className="sm flat unstyled"
+            onClick={() => setEditable(false)}>
+            {t['Cancel']}
+          </button>
 
-            <button 
-              className="sm flat primary"
-              onClick={onSave}>
-              {t['Save']}
-            </button>
-          </div>
+          <button 
+            className="sm flat primary"
+            onClick={onSave}>
+            {t['Save']}
+          </button>
+        </div>
       )}
 
       {props.index === 0 ? plugins.map(plugin => (
