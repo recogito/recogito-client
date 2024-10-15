@@ -16,13 +16,15 @@
 
 .ia-thumbnail-strip .thumbnail-strip-item .label {
   overflow: hidden;
+  position: relative;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .ia-thumbnail-strip .thumbnail {
-  padding: 3px;
   border-radius: calc(var(--border-radius) + 5px);
+  padding: 3px;
+  position: relative;
 }
 
 .ia-thumbnail-strip .thumbnail-strip-item.selected .thumbnail {
@@ -40,4 +42,27 @@
   height: 120px;
   object-fit: cover;
   width: 120px;
+}
+
+.ia-thumbnail-strip .thumbnail .source-activity {
+  bottom: 10px;
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+}
+
+.ia-thumbnail-strip .thumbnail .source-activity li {
+  border: 1px solid #fff;
+  border-radius: 50%;
+  display: block;
+  height: 12px;
+  margin-left: -4px;
+  width: 12px;
+}
+
+.ia-thumbnail-strip .thumbnail .source-activity li > span {
+  display: none;
 }

@@ -2,13 +2,13 @@ import Papa from 'papaparse';
 import { Visibility } from '@recogito/annotorious-supabase';
 import type { SupabaseAnnotation, SupabaseAnnotationBody, SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
 import type { Document, Translations } from 'src/Types';
-import { serializeQuill } from '../serializeQuillComment';
+import { quillToPlainText } from '../serializeQuillComment';
 import type { AvailableLayers } from '@backend/Types';
 
 /** Helpers **/
 const serializeBodyValue = (b: SupabaseAnnotationBody) =>
   b.value 
-    ? b.format === 'Quill' ? serializeQuill(b.value) : b.value 
+    ? b.format === 'Quill' ? quillToPlainText(b.value) : b.value 
     : undefined;
 
 const serializeTarget = (t: SupabaseAnnotationTarget) => {

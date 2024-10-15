@@ -193,6 +193,18 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.onCreateBody(tag);
   }
 
+  const onCopyLink = () => {
+    const withoutHash = 
+      location.protocol + '//'+
+      location.hostname +
+      (location.port ? ':' + location.port : '') +
+      location.pathname+
+      (location.search ? location.search : '');
+
+    const link = withoutHash + '#selected=' + annotation.id;
+    navigator.clipboard.writeText(link);
+  }
+
   useEffect(() => {
     // Stop editing when annotation is deselected
     if (!props.isSelected)
