@@ -26,6 +26,8 @@ interface AnnotatedTextProps {
 
   i18n: Translations;
 
+  isLocked: boolean;
+
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
@@ -58,7 +60,7 @@ interface AnnotatedTextProps {
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { i18n, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const contentType = props.document.content_type;
 
@@ -84,14 +86,16 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
   const onInitialSelect = (annotationId: string) => anno.scrollIntoView(annotationId);
 
   return (
-    <div 
-      className="ta-annotated-text-container">
+    <div className={isLocked 
+      ? 'ta-annotated-text-container is-locked'
+      : 'ta-annotated-text-container'}>
       <div className="page-wrapper">
         <div className="content-wrapper">
           {contentType === 'text/xml' && text ? (
             <AnnotatedTEI
               filter={filter}
               initialLoadComplete={!loading}
+              isLocked={isLocked}
               style={props.style}
               styleSheet={props.styleSheet} 
               text={text} 
@@ -100,11 +104,13 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             <AnnotatedPDF
               document={props.document}
               filter={filter}
+              isLocked={isLocked}
               style={props.style}
               onRendered={() => setPDFLoading(false)} />
           ) : text && (
             <TextAnnotator
               filter={filter}
+              annotatingEnabled={!isLocked}
               style={props.style}
               presence={{
                 font: '500 12px Inter, Arial, Helvetica, sans-serif',
@@ -139,15 +145,16 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
           {props.usePopup && (
             <TextAnnotatorPopup
-                popup={(props) => (
-                <AnnotationPopup
-                  {...props}
-                  i18n={i18n}
-                  layers={layers}
-                  layerNames={layerNames}
-                  present={present}
-                  policies={policies}
-                  tagVocabulary={tagVocabulary} />
+              popup={(props) => (
+              <AnnotationPopup
+                {...props}
+                i18n={i18n}
+                isProjectLocked={isLocked}
+                layers={layers}
+                layerNames={layerNames}
+                present={present}
+                policies={policies}
+                tagVocabulary={tagVocabulary} />
               )}
             />
           )}

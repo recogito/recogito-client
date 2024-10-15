@@ -30,6 +30,8 @@ interface AnnotationListProps<T extends Anno> {
 
   i18n: Translations;
 
+  isProjectLocked: boolean;
+
   layers?: Layer[];
 
   layerNames: Map<string, string>;
@@ -192,6 +194,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               autoFocus={autofocus}
               borderColor={getBorderColor(annotation)}
               i18n={props.i18n}
+              isProjectLocked={props.isProjectLocked}
               isReadOnly={isReadOnly(annotation)}
               isSelected={isSelected(annotation)}
               layerNames={props.layerNames}

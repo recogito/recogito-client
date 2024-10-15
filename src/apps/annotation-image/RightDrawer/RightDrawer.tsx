@@ -13,6 +13,8 @@ interface RightDrawerProps {
 
   i18n: Translations;
 
+  isLocked: boolean;
+
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
@@ -87,6 +89,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
               currentStyle={props.style}
               filter={filter}
               i18n={props.i18n}
+              isProjectLocked={props.isLocked}
               present={props.present} 
               layers={props.layers}
               layerNames={props.layerNames}
@@ -97,6 +100,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
           ) : (
             <DocumentNotesList 
               i18n={props.i18n}
+              isProjectLocked={props.isLocked}
               layers={props.layers}
               layerNames={props.layerNames}
               present={props.present}

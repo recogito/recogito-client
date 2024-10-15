@@ -12,6 +12,8 @@ interface AnnotatedTEIProps {
   filter?: Filter;
 
   initialLoadComplete: boolean;
+
+  isLocked: boolean;
   
   style?: HighlightStyleExpression;
 
@@ -46,6 +48,7 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
     
       <TEIAnnotator
         filter={props.filter}
+        annotatingEnabled={!props.isLocked}
         style={props.style}
         presence={{
           font: '500 12px Inter, Arial, Helvetica, sans-serif',

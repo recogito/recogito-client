@@ -7,6 +7,8 @@ interface DocumentNotesListItemProps {
 
   i18n: Translations;
 
+  isProjectLocked: boolean;
+
   isSelected?: boolean;
 
   isReadOnly?: boolean;
@@ -47,6 +49,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
     <AnnotationCard
       autoFocus
       isNote 
+      isProjectLocked={props.isProjectLocked}
       isSelected={props.isSelected}
       annotation={props.note as unknown as Annotation}
       i18n={i18n}   
