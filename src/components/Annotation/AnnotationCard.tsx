@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
@@ -22,6 +23,8 @@ export interface AnnotationCardProps {
   i18n: Translations;
 
   isNote?: boolean;
+
+  isProjectLocked?: boolean;
 
   isReadOnly?: boolean;
 
@@ -123,7 +126,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   // If this is my annotation and has no bodies on mount, it's a new annotation
   const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
 
-  // Update isNew when anntoation changes
+  // Update isNew when annotation changes
   useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
@@ -153,7 +156,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   });
 
   const onSubmit = () => {
-    setIsNew(false);
+    if (typeof (document as any).startViewTransition === 'function') {
+      document.startViewTransition(() => flushSync(() => setIsNew(false)));
+    } else {
+      setIsNew(false);
+    }
+
     props.onSubmit();
   }
 
@@ -212,7 +220,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
 
   return (
     <div ref={el}>
-      {isNew ? (
+      {!props.isProjectLocked && isNew ? (
         <EmptyAnnotation 
           annotation={annotation} 
           autoFocus={props.autoFocus}
@@ -228,7 +236,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           onMakePublic={onMakePublic} 
           onSubmit={onSubmit}
           onUpdateAnnotation={props.onUpdateAnnotation} 
-          onUpdateBody={props.onUpdateBody} />   
+          onUpdateBody={props.onUpdateBody} />  
       ) : (
         <div style={borderStyle} className={className}>
           <ul>
@@ -240,6 +248,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 i18n={props.i18n}
                 index={0}
                 isPrivate={isPrivate}
+                isProjectLocked={props.isProjectLocked}
                 isReadOnly={props.isReadOnly}
                 isSelected={props.isSelected}
                 layerNames={props.layerNames}
@@ -281,6 +290,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   i18n={props.i18n}
                   index={index + 1}
                   isPrivate={isPrivate}
+                  isProjectLocked={props.isProjectLocked}
                   isReadOnly={props.isReadOnly}
                   isSelected={props.isSelected}
                   layerNames={props.layerNames}
@@ -310,6 +320,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   i18n={props.i18n}
                   index={comments.length - 1}
                   isPrivate={isPrivate}
+                  isProjectLocked={props.isProjectLocked}
                   isReadOnly={props.isReadOnly}
                   isSelected={props.isSelected}
                   layerNames={props.layerNames}
@@ -329,7 +340,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             )}
           </ul>
 
-          {replyFieldTransition((style, open) => open && (
+          {!props.isProjectLocked && (replyFieldTransition((style, open) => open && (
             <animated.div style={style}>
               <ReplyField
                 autoFocus
@@ -341,7 +352,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 beforeSubmit={beforeReply} 
                 onSubmit={onReply} />
             </animated.div>
-          ))}
+          )))}
         </div>
       )}
     </div>

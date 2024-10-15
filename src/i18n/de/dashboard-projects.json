@@ -69,5 +69,11 @@
   "Project admins create assignments with specific documents and team members": "Projektadministratoren erstellen Arbeitsaufträge und weisen sie bestimmten Projektmitgliedern zu.",
   "Project members can annotate any document": "Projektmitglieder können alle Dokumente uneingeschränkt annotieren.",
   "Accept invitation to": "Einladung akzeptieren",
-  "You have been invited to this project by": "Du wurdest eingeladen von"
+  "You have been invited to this project by": "Du wurdest eingeladen von",
+  "Locked": "Gesperrt",
+  "all": "Alle",
+  "active": "Aktiv",
+  "locked": "Gesperrt",
+  "View": "Status",
+  "Unlock Project": "Projekt entsperren"
 }

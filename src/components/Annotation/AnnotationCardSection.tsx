@@ -4,7 +4,7 @@ import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
 import { Extension, usePlugins } from '@components/Plugins';
-import { QuillEditor, QuillEditorRoot, isEmpty } from '@components/QuillEditor';
+import { QuillEditor, QuillEditorRoot, QuillEditorToolbar, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { LayerIcon } from './LayerIcon';
@@ -19,8 +19,6 @@ export interface AnnotationCardSectionProps {
 
   annotation: SupabaseAnnotation;
 
-  isSelected?: boolean;
-
   comment?: AnnotationBody;
 
   emphasizeOnEntry?: boolean;
@@ -31,7 +29,11 @@ export interface AnnotationCardSectionProps {
 
   isPrivate?: boolean;
 
+  isProjectLocked?: boolean;
+
   isReadOnly?: boolean;
+
+  isSelected?: boolean;
 
   layerNames: Map<string, string>;
 
@@ -71,7 +73,7 @@ const parseBody = (body?: AnnotationBody): Delta | undefined =>
 
 export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
-  const { annotation, comment, index, isPrivate, isReadOnly, me, present, tags } = props;
+  const { annotation, comment, index, isProjectLocked, isPrivate, isReadOnly, me, present, tags } = props;
 
   const { t } = props.i18n;
 
@@ -113,7 +115,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
             firstAnnotationBody.created || annotation.target?.created,
           ];
         } else {
-          console.warn('Empty annotation - should never happen', annotation);
+          // console.warn('Empty annotation - should never happen', annotation);
           return [undefined, undefined];
         }
       } else {
@@ -126,7 +128,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   const isMine = creator?.id === me.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
-  const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT'));
+  const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT')) && !isProjectLocked;
 
   const [commentValue, setCommentValue] = useState<Delta | undefined>(parseBody(comment));
 
@@ -193,6 +195,18 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.onCreateBody(tag);
   }
 
+  const onCopyLink = () => {
+    const withoutHash = 
+      location.protocol + '//'+
+      location.hostname +
+      (location.port ? ':' + location.port : '') +
+      location.pathname+
+      (location.search ? location.search : '');
+
+    const link = withoutHash + '#selected=' + annotation.id;
+    navigator.clipboard.writeText(link);
+  }
+
   useEffect(() => {
     // Stop editing when annotation is deselected
     if (!props.isSelected)
@@ -207,60 +221,67 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   return (
     <div className={className}>
-      <div className="annotation-header">
-        <div className="annotation-header-left">
-          <AuthorAvatar 
-            author={creator}
-            isPrivate={isPrivate} />
+      <QuillEditorRoot>
+        <div className="annotation-header">
+          <div className="annotation-header-left">
+            <AuthorAvatar 
+              author={creator}
+              isPrivate={isPrivate} />
 
-          <AuthorDetails 
-            i18n={props.i18n}
-            isPrivate={isPrivate} 
-            creator={creator}
-            createdAt={createdAt} />
+            {!editable &&  (
+              <AuthorDetails 
+                i18n={props.i18n}
+                isPrivate={isPrivate} 
+                creator={creator}
+                createdAt={createdAt} />
+            )}
+          </div>
+
+          {editable ? (
+            <QuillEditorToolbar
+              i18n={props.i18n} />
+          ) : canEdit ? (
+            <div className="annotation-header-right">
+              {isPrivate ? (
+                <PrivateAnnotationActions
+                  i18n={props.i18n} 
+                  isFirst={props.index === 0}
+                  onCopyLink={onCopyLink}
+                  onDeleteAnnotation={props.onDeleteAnnotation}
+                  onDeleteSection={onDeleteSection}
+                  onEditSection={() => setEditable(true)}
+                  onMakePublic={props.onMakePublic}/>
+              ) : (
+                <PublicAnnotationActions 
+                  i18n={props.i18n} 
+                  isFirst={props.index === 0} 
+                  isMine={isMine}
+                  onCopyLink={onCopyLink}
+                  onDeleteAnnotation={props.onDeleteAnnotation}
+                  onDeleteSection={onDeleteSection}
+                  onEditSection={() => setEditable(true)} />
+              )}    
+            </div>
+          ) : (props.index === 0 && isReadOnly) && (
+            <div className="annotation-header-right">
+              <LayerIcon 
+                i18n={props.i18n}
+                layerId={props.annotation.layer_id}
+                layerNames={props.layerNames} />
+            </div>
+          )}
         </div>
 
-        {canEdit ? (
-          <div className="annotation-header-right">
-            {isPrivate ? (
-              <PrivateAnnotationActions
-                i18n={props.i18n} 
-                isFirst={props.index === 0}
-                onDeleteAnnotation={props.onDeleteAnnotation}
-                onDeleteSection={onDeleteSection}
-                onEditSection={() => setEditable(true)}
-                onMakePublic={props.onMakePublic}/>
-            ) : (
-              <PublicAnnotationActions 
-                i18n={props.i18n} 
-                isFirst={props.index === 0} 
-                isMine={isMine}
-                onDeleteAnnotation={props.onDeleteAnnotation}
-                onDeleteSection={onDeleteSection}
-                onEditSection={() => setEditable(true)} />
-            )}    
-          </div>
-        ) : (props.index === 0 && isReadOnly) && (
-          <div className="annotation-header-right">
-            <LayerIcon 
-              i18n={props.i18n}
-              layerId={props.annotation.layer_id}
-              layerNames={props.layerNames} />
-          </div>
-        )}
-      </div>
-
-      {(commentValue || editable) && (
-        <div className="annotation-comment-wrapper">
-          <QuillEditorRoot>
+        {(commentValue || editable) && (
+          <div className="annotation-comment-wrapper">
             <QuillEditor 
               i18n={props.i18n}
               readOnly={!editable}
               value={commentValue} 
               onChange={setCommentValue} />
-          </QuillEditorRoot>
-        </div>
-      )}
+          </div>
+        )}
+      </QuillEditorRoot>
 
       {(props.index === 0 && ((props.tags || []).length > 0 || editable)) && (
         <div className="annotation-taglist-wrapper">
@@ -275,19 +296,19 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       )}
 
       {editable && (
-          <div className="annotation-section-footer align-right">
-            <button 
-              className="sm flat unstyled"
-              onClick={() => setEditable(false)}>
-              {t['Cancel']}
-            </button>
+        <div className="annotation-section-footer align-right">
+          <button 
+            className="sm flat unstyled"
+            onClick={() => setEditable(false)}>
+            {t['Cancel']}
+          </button>
 
-            <button 
-              className="sm flat primary"
-              onClick={onSave}>
-              {t['Save']}
-            </button>
-          </div>
+          <button 
+            className="sm flat primary"
+            onClick={onSave}>
+            {t['Save']}
+          </button>
+        </div>
       )}
 
       {props.index === 0 ? plugins.map(plugin => (

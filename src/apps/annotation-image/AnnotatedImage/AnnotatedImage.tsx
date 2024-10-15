@@ -1,17 +1,16 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { UndoStack } from '@components/AnnotationDesktop';
+import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
-import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import type { DocumentLayer, Policies, Translations } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyleExpression,
   ImageAnnotation,
-  PresentUser
+  PresentUser,
+  User
 } from '@annotorious/react';
 import {
   OpenSeadragonAnnotator,
@@ -35,6 +34,8 @@ interface AnnotatedImageProps {
 
   i18n: Translations;
 
+  isLocked: boolean;
+
   imageManifestURL: string;
 
   isPresentationManifest?: boolean;
@@ -57,9 +58,13 @@ interface AnnotatedImageProps {
 
   usePopup: boolean;
 
+  onChangeImage(url: string): void;
+
   onChangePresent(present: PresentUser[]): void;
 
   onConnectionError(): void;
+
+  onPageActivity?(event: { source: string, user: User }): void;
 
   onSaveError(): void;
 
@@ -69,9 +74,11 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
+
+  const [initialAnnotations, setInitialAnnotations] = useState<SupabaseAnnotation[]>([]);
 
   const [drawingEnabled, setDrawingEnabled] = useState(false);
 
@@ -83,6 +90,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   useEffect(() => {
     annoRef.current = anno;
   }, [anno]);
+
+  const onInitialLoad = (annotations: SupabaseAnnotation[]) => {
+    // In case of IIIF: the annotations in the callback are ALL annotations 
+    // for this document, not just the ones for the current page.
+    setInitialAnnotations(annotations);
+    props.onLoad();
+  }
 
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: props.imageManifestURL,
@@ -102,6 +116,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   }), [props.imageManifestURL]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
+    if (props.isLocked) return UserSelectAction.SELECT;
+    
     // Directly after creation, annotations have no
     // layer_id (because it gets added later through 
     // the storage plugin).
@@ -116,7 +132,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       annotation.target.creator?.id === me?.id || policies.get('layers').has('INSERT'));
 
     return canEdit ? UserSelectAction.EDIT : UserSelectAction.SELECT;
-  }, [annoRef, props.activeLayer, policies]);
+  }, [annoRef, props.activeLayer?.id, policies, props.isLocked]);
 
   useEffect(() => {
     if (props.tool) {
@@ -127,10 +143,29 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     }
   }, [props.tool]);
 
+  const onInitialSelectError = (annotationId: string) => {
+    // This error will happen if the initial select hits an 
+    // annotation that's not in the current image's anno store.
+    // This is the expected case if the annotation is in this document,
+    // but on a different page!
+    const annotation = initialAnnotations.find(a => a.id === annotationId);
+
+    if (annotation) {
+      const { source } = annotation.target.selector as any;
+      if (source)
+        props.onChangeImage(source);
+    } else {
+      console.warn(`Attempted to select ${annotationId} from hash - does not exist`);
+    }
+  }
+
+  const onSelectionChange = (user: PresentUser) =>
+    props.onPageActivity!({ source: props.imageManifestURL, user });
+
   return (
     <OpenSeadragonAnnotator
       autoSave
-      drawingEnabled={drawingEnabled}
+      drawingEnabled={drawingEnabled && !isLocked}
       userSelectAction={selectAction}
       tool={props.tool || 'rectangle'}
       filter={filter}
@@ -148,11 +183,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={props.privacy === 'PRIVATE'} 
           source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
-          onInitialLoad={props.onLoad}
+          onInitialLoad={onInitialLoad}
+          onOffPageActivity={props.onPageActivity}
           onPresence={props.onChangePresent}
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
-          onSaveError={props.onSaveError} />
+          onSaveError={props.onSaveError} 
+          onSelectionChange={props.onPageActivity ? onSelectionChange : undefined} />
       }
 
       <OpenSeadragonViewer
@@ -160,12 +197,17 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
         className="ia-osd-container"
         options={options} />
 
+      <SelectionURLState
+        backButton 
+        onInitialSelectError={onInitialSelectError} />
+
       {props.usePopup && (
         <OpenSeadragonAnnotationPopup
           popup={props => (
             <AnnotationPopup
               {...props}
               i18n={i18n}
+              isProjectLocked={isLocked}
               layers={layers}
               layerNames={layerNames}
               policies={policies}

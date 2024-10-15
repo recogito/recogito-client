@@ -28,6 +28,7 @@
   max-width: 65ch;
   padding: 20px 0;
   z-index: 100;
+  overflow-y: auto;
 }
 
 .project-settings .tagging-vocabulary h2 {
@@ -310,4 +311,49 @@
 
 .project-plugins .plugin-admin-tile .plugin-admin {
   padding: 20px;
+}
+
+.project-settings-divider {
+  height: 2px;
+  border-top: 1px solid var(--gray-200);
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.project-settings-status-helper {
+  margin-top: 12px;
+  margin-bottom: 32px;
+}
+
+.project-settings-status-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.project-status-locked {
+  background-color: var(--gray-200);
+  display: flex;
+  flex-direction: row;
+  border-radius: 14px;
+  padding: 0 16px 0 16px;
+  width: 70px;
+  height: 28px;
+  align-items: center;
+  justify-content: space-around;
+  gap: 6px;
+}
+
+.project-status-active {
+  display: flex;
+  flex-direction: row;
+  border-radius: 14px;
+  background-color: #0da01247;
+  padding: 0 16px 0 16px;
+  width: 70px;
+  height: 28px;
+  align-items: center;
+  justify-content: space-around;
 }
