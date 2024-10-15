@@ -193,6 +193,18 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.onCreateBody(tag);
   }
 
+  const onCopyLink = () => {
+    const withoutHash = 
+      location.protocol + '//'+
+      location.hostname +
+      (location.port ? ':' + location.port : '') +
+      location.pathname+
+      (location.search ? location.search : '');
+
+    const link = withoutHash + '#selected=' + annotation.id;
+    navigator.clipboard.writeText(link);
+  }
+
   useEffect(() => {
     // Stop editing when annotation is deselected
     if (!props.isSelected)
@@ -226,6 +238,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
               <PrivateAnnotationActions
                 i18n={props.i18n} 
                 isFirst={props.index === 0}
+                onCopyLink={onCopyLink}
                 onDeleteAnnotation={props.onDeleteAnnotation}
                 onDeleteSection={onDeleteSection}
                 onEditSection={() => setEditable(true)}
@@ -235,6 +248,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
                 i18n={props.i18n} 
                 isFirst={props.index === 0} 
                 isMine={isMine}
+                onCopyLink={onCopyLink}
                 onDeleteAnnotation={props.onDeleteAnnotation}
                 onDeleteSection={onDeleteSection}
                 onEditSection={() => setEditable(true)} />
