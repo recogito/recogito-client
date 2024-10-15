@@ -49,6 +49,11 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`;
 
+  const onExportPDF = (includePrivate: boolean) =>
+    window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&context=${context.id}&private=${includePrivate}`;
+    
   const onExportCSV = (includePrivate: boolean) =>
     window.location.href = props.context.is_project_default
       ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
@@ -73,6 +78,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
               onOpen={onOpen}
               onDelete={props.onDelete}
               onExportTEI={onExportTEI}
+              onExportPDF={onExportPDF}
               onExportCSV={onExportCSV}
               onEditMetadata={() => setEditable(true)}
             />
