@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
@@ -125,7 +126,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   // If this is my annotation and has no bodies on mount, it's a new annotation
   const [isNew, setIsNew] = useState(annotation.bodies.length === 0);
 
-  // Update isNew when anntoation changes
+  // Update isNew when annotation changes
   useEffect(() => setIsNew(annotation.bodies.length === 0), [annotation.id, props.isSelected]);
 
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
@@ -155,7 +156,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   });
 
   const onSubmit = () => {
-    setIsNew(false);
+    if (typeof (document as any).startViewTransition === 'function') {
+      document.startViewTransition(() => flushSync(() => setIsNew(false)));
+    } else {
+      setIsNew(false);
+    }
+
     props.onSubmit();
   }
 
@@ -230,7 +236,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           onMakePublic={onMakePublic} 
           onSubmit={onSubmit}
           onUpdateAnnotation={props.onUpdateAnnotation} 
-          onUpdateBody={props.onUpdateBody} />   
+          onUpdateBody={props.onUpdateBody} />  
       ) : (
         <div style={borderStyle} className={className}>
           <ul>

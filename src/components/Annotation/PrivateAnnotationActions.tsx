@@ -1,5 +1,5 @@
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { DotsThree, Pencil, Trash, UsersThree } from '@phosphor-icons/react';
+import { DotsThree, LinkSimple, Pencil, Trash, UsersThree } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 
 interface PrivateAnnotationActionsProps {
@@ -7,6 +7,8 @@ interface PrivateAnnotationActionsProps {
   i18n: Translations;
 
   isFirst: boolean;
+
+  onCopyLink(): void;
 
   onDeleteAnnotation(): void;
 
@@ -36,6 +38,13 @@ export const PrivateAnnotationActions = (props: PrivateAnnotationActionsProps) =
 
       <Dropdown.Content asChild sideOffset={5} align="start" onClick={onClick}>
         <div className="dropdown-content no-icons">
+          <Dropdown.Item
+            className='dropdown-item'
+            onSelect={props.onCopyLink}>
+            <LinkSimple size={16} />
+            <span>{t['Copy link to annotation']}</span>
+          </Dropdown.Item>
+          
           <Dropdown.Item
             className='dropdown-item'
             onSelect={props.onEditSection}>

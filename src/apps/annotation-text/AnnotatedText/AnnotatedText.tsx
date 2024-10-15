@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import type { PresentUser } from '@annotorious/react';
+import { useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import { UndoStack } from '@components/AnnotationDesktop';
+import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
+import { SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
@@ -64,6 +64,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   const contentType = props.document.content_type;
 
+  const anno = useAnnotator<RecogitoTextAnnotator>();
+
   const text = useContent(props.document);
 
   const [annotationsLoading, setAnnotationsLoading] = useState(true);
@@ -80,6 +82,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
     if (!loading)
       props.onLoad();
   }, [loading]);
+
+  const onInitialSelect = (annotationId: string) => anno.scrollIntoView(annotationId);
 
   return (
     <div className={isLocked 
@@ -113,6 +117,12 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               }}>
               <p className='plaintext'>{text}</p>
             </TextAnnotator>
+          )}
+
+          {(text && !pdfLoading) && (
+            <SelectionURLState 
+              backButton 
+              onInitialSelect={onInitialSelect} />
           )}
 
           <UndoStack undoEmpty={true} />

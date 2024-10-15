@@ -13,9 +13,10 @@
   "All annotations": "All Annotations",
   "Public annotations only": "Public annotations only",
   "Private annotations only": "Private annotations only",
-  "Creators": "Creators",
+  "Contributors": "Contributors",
   "Tags": "Tags",
   "Image": "Image",
+  "Type or paste a link to insert it into your annotation.": "Type or paste a link to insert it into your annotation.",
   "Paste a publicly available URL to the image to insert it into your annotation.": "Paste a publicly available URL to the image to insert it into your annotation.",
   "Image URL": "Image URL",
   "YouTube Video": "YouTube Video",
@@ -93,5 +94,6 @@
   "Zoom out": "Zoom out",
   "Add an annotation...": "Add an annotation...",
   "Connection Lost.": "Connection Lost.",
-  "Try refreshing the page.": "Try refreshing the page."
+  "Try refreshing the page.": "Try refreshing the page.",
+  "Copy link to annotation": "Copy link to annotation"
 }
