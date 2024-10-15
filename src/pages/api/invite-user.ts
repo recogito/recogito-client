@@ -16,7 +16,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
   if (!supabase) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
