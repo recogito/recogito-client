@@ -1,6 +1,6 @@
 import type { PresentUser } from '@annotorious/react';
 import { AnnotationLayers } from './AnnotationLayers';
-import { Creators } from './Creators';
+import { Contributors } from './Contributors';
 import { Tags } from './Tags';
 import { Visibility } from './Visibility';
 import type { Layer, Translations } from 'src/Types';
@@ -28,9 +28,12 @@ export const FilterPanel = (props: FilterPanelProps) => {
         layers={props.layers}
         layerNames={props.layerNames} />
 
-      <Visibility i18n={props.i18n} />
+      <Visibility 
+        i18n={props.i18n} />
 
-      <Creators i18n={props.i18n} present={props.present} />
+      <Contributors 
+        i18n={props.i18n} 
+        present={props.present} />
 
       <Tags i18n={props.i18n} />
     </div>
