@@ -121,7 +121,7 @@ export const MembersTable = (props: MembersTableProps) => {
             </td>
 
             <td>
-              {isOwner(member.user) ? (
+              {isOwner(member.user) && member.inGroup?.is_admin ? (
                 <button disabled className='owner'>
                   {t['Owner']}
                 </button>

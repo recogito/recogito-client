@@ -9,6 +9,10 @@
   transition: all 0.25s ease-in-out;
 }
 
+.project-card.project-card-locked {
+  background-color: var(--gray-100);
+}
+
 .project-card-header {
   align-items: flex-start;
   display: flex;
