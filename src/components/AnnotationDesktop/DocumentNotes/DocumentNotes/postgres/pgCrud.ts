@@ -45,6 +45,7 @@ export const fetchNotes = (layerIds: string[]): Promise<DocumentNote[]> =>
             last_name,
             avatar:avatar_url
           ),
+          format,
           purpose,
           value,
           layer_id
@@ -107,6 +108,7 @@ export const insertNote = (note: DocumentNote) => {
         annotation_id: b.annotation,
         created_at: b.created,
         created_by: b.creator.id,
+        format: b.format,
         purpose: b.purpose,
         value: b.value,
         layer_id: b.layer_id

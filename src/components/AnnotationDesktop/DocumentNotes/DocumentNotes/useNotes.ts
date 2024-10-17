@@ -46,6 +46,7 @@ export const useNotes = () => {
         created: new Date(),
         creator: me,      
         purpose: 'commenting',        
+        format: 'Quill',
         value: JSON.stringify(text),
         layer_id: activeLayerId
       }, ...tags.map(tag => ({
