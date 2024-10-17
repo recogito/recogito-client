@@ -71,6 +71,15 @@ const getQuote = (t: SupabaseAnnotationTarget) => {
   }
 }
 
+const getIIIFSource = (annotation: SupabaseAnnotation) => {
+  const t = annotation.target;
+  const selector = t.selector && Array.isArray(t.selector) ? t.selector[0] : t.selector;
+  // Only IIIF annotations have a selector['source'] property
+  return selector && selector.source;
+}
+
+const hasIIIFAnnotations = (annotations: SupabaseAnnotation[]) => annotations.some(getIIIFSource);
+
 /** Crosswalks a list of annotations to CSV using Papaparse **/
 export const annotationsToCSV = (
   annotations: SupabaseAnnotation[], 
@@ -91,14 +100,19 @@ export const annotationsToCSV = (
     return meta?.context_name ? meta.context_name : i18n.t['Baselayer'];
   }
 
+  const hasIIIF = hasIIIFAnnotations(annotations);
+
   const csv = filtered.reduce((csv, a) => {
     const doc = findDocument(a.layer_id!)!;
 
     return [...csv, ...a.bodies.map(body => {
+      // Papaparse will retain this ordering!
       const row: any = {
         annotation_id: a.id,
         document: doc.name,
         layer: getLayerName(a.layer_id),
+        // This should actually use the CANVAS ID, but we don't have that...
+        iiif_image: getIIIFSource(a),
         text_quote: getQuote(a.target), 
         target: serializeTarget(a.target),
         body_purpose: body.purpose,
@@ -110,7 +124,10 @@ export const annotationsToCSV = (
       }
 
       if (includePrivate)
-        row.is_private =  a.visibility === Visibility.PRIVATE;
+        row.is_private = a.visibility === Visibility.PRIVATE;
+
+      if (!hasIIIF)
+        delete row.iiif_image;
 
       return row;
     })]
