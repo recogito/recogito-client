@@ -48,7 +48,7 @@
   "Something went wrong": "Something went wrong",
   "Could not create the document.": "Could not create the document.",
   "Could not rename the document.": "Could not rename the document.",
-  "Could not delete the document.": "Could not delete the document.",
+  "Could not delete the document.": "Could not delete the document. Perhaps it is use in a current project?",
   "Document Library": "Document Library",
   "Select a document or upload a new one.": "Select a document or upload a new one. Be sure to follow your country's copyright restrictions.",
   "Add Document": "Add Document",
