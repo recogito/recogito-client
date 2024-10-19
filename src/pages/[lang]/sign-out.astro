@@ -4,7 +4,7 @@ import { Logout } from '@apps/auth-logout';
 import { getTranslations } from '@i18n';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 await supabase.auth.signOut();
 ---
 <BaseLayout title="Recogito | Logout">
