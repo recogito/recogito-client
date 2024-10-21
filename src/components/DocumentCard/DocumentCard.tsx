@@ -1,12 +1,12 @@
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useState } from 'react';
-import { DocumentViewRight } from 'src/Types';
 import type { Context, Document, Translations } from 'src/Types';
+import { DocumentViewRight } from 'src/Types';
+
+import './DocumentCard.css';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
-import { buildURL} from '@util/url';
-
-import './DocumentCard.css';
 
 interface DocumentCardProps {
   i18n: Translations;
@@ -34,9 +34,12 @@ export const DocumentCard = (props: DocumentCardProps) => {
   const [editable, setEditable] = useState(false);
 
   const onOpen = (tab: boolean) => {
-    const url = buildURL(`/${lang}/annotate/${context.id}/${document.id}`, null, {
-      rtab: props.rtab || DocumentViewRight.closed
-    });
+    const search = getSearchParameters();
+
+    const hash = getHashParameters();
+    hash.set('rtab', props.rtab || DocumentViewRight.closed);
+
+    const url = buildURL(`/${lang}/annotate/${context.id}/${document.id}`, search, hash);
 
     if (tab) {
       window.open(url, '_blank');

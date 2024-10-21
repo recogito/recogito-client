@@ -5,17 +5,15 @@
  * @param search
  * @param hash
  */
-export const buildURL = (baseUrl, search, hash) => {
+export const buildURL = (baseUrl: string, search: URLSearchParams, hash: URLSearchParams) => {
   let url = baseUrl;
 
   if (search) {
-    const searchParams = new URLSearchParams(search);
-    url = `${url}?${searchParams.toString()}`;
+    url = `${url}?${search.toString()}`;
   }
 
   if (hash) {
-    const hashParams = new URLSearchParams(hash);
-    url = `${url}#${hashParams.toString()}`;
+    url = `${url}#${hash.toString()}`;
   }
 
   return url;
@@ -26,7 +24,7 @@ export const buildURL = (baseUrl, search, hash) => {
  *
  * @param name
  */
-export const getHashParameter = (name) => {
+export const getHashParameter = (name: string) => {
   const parameters = getHashParameters();
   return parameters.get(name);
 };
@@ -35,3 +33,19 @@ export const getHashParameter = (name) => {
  * Returns the hash parameters for the current URL.
  */
 export const getHashParameters = () => new URLSearchParams(window.location.hash.substring(1));
+
+/**
+ * Returns the search parameter value with the passed name for the current URL.
+ *
+ * @param name
+ */
+export const getSearchParameter = (name: string) => {
+  const parameters = getSearchParameters();
+  return parameters.get(name);
+};
+
+/**
+ * Returns the search parameters for the current URL.
+ */
+export const getSearchParameters = () => new URLSearchParams(window.location.search.substring(1));
+
