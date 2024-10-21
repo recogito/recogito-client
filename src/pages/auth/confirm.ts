@@ -10,17 +10,19 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
 
   if (token_hash && type) {
     const supabase = createServerClient(
-      import.meta.env.PUBLIC_SUPABASE_URL,
-      import.meta.env.PUBLIC_SUPABASE_ANON_KEY,
+      import.meta.env.PUBLIC_SUPABASE,
+      import.meta.env.PUBLIC_SUPABASE_API_KEY,
       {
         cookies: {
           getAll() {
-            return parseCookieHeader(request.headers.get('Cookie') ?? '')
+            return parseCookieHeader(request.headers.get('Cookie') ?? '');
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => cookies.set(name, value, options))
-          }
-        }
+            cookiesToSet.forEach(({ name, value, options }) =>
+              cookies.set(name, value, options)
+            );
+          },
+        },
       }
     );
 
@@ -29,11 +31,10 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
       token_hash,
     });
 
-    if (!error)
-      return redirect(next);
+    if (!error) return redirect(next);
   }
 
   const path = url.protocol + '//' + url.host;
   const error = await fetch(`${path}/500`);
   return new Response(error.body, { headers: error.headers, status: 500 });
-}
+};
