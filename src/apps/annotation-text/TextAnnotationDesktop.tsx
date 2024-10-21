@@ -1,3 +1,4 @@
+import { useAnnotationsView } from '@util/hooks/useAnnotationsView.ts';
 import { useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
@@ -68,7 +69,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const { rightPanelOpen, rightPanelTab, setRightPanelOpen } = useAnnotationsView();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -269,6 +270,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           )}
 
           <RightDrawer
+            defaultTab={rightPanelTab}
             i18n={props.i18n}
             isProjectLocked={isLocked}
             layers={layers}

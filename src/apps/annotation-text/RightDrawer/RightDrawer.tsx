@@ -1,17 +1,19 @@
-import { useEffect, useRef, useState } from 'react';
-import { Chats } from '@phosphor-icons/react';
-import { animated, easings, useSpring, useTransition } from '@react-spring/web';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { Annotation, PresentUser } from '@annotorious/react';
-import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { Chats } from '@phosphor-icons/react';
+import { animated, easings, useSpring, useTransition } from '@react-spring/web';
+import { isMe } from '@recogito/annotorious-supabase';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import { useEffect, useRef, useState } from 'react';
 import type { Layer, Policies, Translations } from 'src/Types';
 
 import './RightDrawer.css';
 
 interface RightDrawerProps {
+
+  defaultTab: 'ANNOTATIONS' | 'NOTES';
 
   i18n: Translations;
 
@@ -70,7 +72,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
     }
   });
 
-  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
+  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>(props.defaultTab);
 
   useEffect(() => {
     if (props.onTabChanged)

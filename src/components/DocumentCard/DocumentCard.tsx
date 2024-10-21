@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { DocumentViewRight } from 'src/Types';
 import type { Context, Document, Translations } from 'src/Types';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
+import { buildURL} from '@util/url';
 
 import './DocumentCard.css';
 
@@ -20,6 +22,8 @@ interface DocumentCardProps {
   onUpdate?(document: Document): void;
 
   onError?(error: string): void;
+
+  rtab?: DocumentViewRight;
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
@@ -30,10 +34,15 @@ export const DocumentCard = (props: DocumentCardProps) => {
   const [editable, setEditable] = useState(false);
 
   const onOpen = (tab: boolean) => {
-    if (tab)
-      window.open(`/${lang}/annotate/${context.id}/${document.id}`, '_blank');
-    else
-      window.location.href = `/${lang}/annotate/${context.id}/${document.id}`;
+    const url = buildURL(`/${lang}/annotate/${context.id}/${document.id}`, null, {
+      rtab: props.rtab || DocumentViewRight.closed
+    });
+
+    if (tab) {
+      window.open(url, '_blank');
+    } else {
+      window.location.href = url;
+    }
   };
 
   const onClick = (evt: React.MouseEvent) => {
