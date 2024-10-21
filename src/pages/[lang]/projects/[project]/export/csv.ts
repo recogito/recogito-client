@@ -7,6 +7,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { getTranslations } from '@i18n';
 import { sanitizeFilename } from 'src/util';
 import type {Project, Translations } from 'src/Types';
+
 import { 
   getAllDocumentLayersInProject, 
   getAllLayersInProject, 
@@ -151,7 +152,7 @@ const exportForContext = async (
 export const GET: APIRoute = async ({ cookies, params, request, url }) => {
   const i18n = getTranslations(request, 'annotation-common');
 
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)

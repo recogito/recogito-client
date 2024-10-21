@@ -8,7 +8,7 @@ import { listMyInvites } from '@backend/crud';
 
 const i18n = getTranslations(Astro.request, 'dashboard-account');
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const { error, data } = await getMyProfile(supabase);
 if (error || !data) {
