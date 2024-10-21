@@ -59,6 +59,12 @@ export interface Project {
   is_locked?: boolean;
 }
 
+export enum DocumentViewRight {
+  closed = 'closed',
+  annotations = 'annotations',
+  notes = 'notes'
+}
+
 export interface ExtendedProjectData {
   id: string;
 
@@ -87,6 +93,8 @@ export interface ExtendedProjectData {
   documents: Document[];
 
   users: Member[];
+
+  document_view_right: DocumentViewRight;
 }
 
 export interface ProjectDocument {

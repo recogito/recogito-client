@@ -13,7 +13,8 @@
       "@i18n": ["src/i18n/index.ts"],
       "@layouts/*": ["src/layouts/*"],
       "@plugins": ["src/plugins"],
-      "@themes/*": ["src/themes/*"]
+      "@themes/*": ["src/themes/*"],
+      "@util/*": ["src/util/*"]
     },
     "resolveJsonModule": true,
     "plugins": [

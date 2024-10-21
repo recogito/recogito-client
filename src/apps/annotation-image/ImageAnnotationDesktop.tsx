@@ -1,3 +1,4 @@
+import { useAnnotationsView } from '@util/hooks/useAnnotationsView.ts';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { useAnnotator } from '@annotorious/react';
@@ -9,6 +10,7 @@ import { LoadingOverlay } from '@components/LoadingOverlay';
 import { clearSelectionURLHash, DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
+import { DocumentViewRight } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
@@ -87,7 +89,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const { rightPanelOpen, rightPanelTab, setRightPanelOpen } = useAnnotationsView();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -314,6 +316,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           </div>
 
           <RightDrawer
+            defaultTab={rightPanelTab}
             i18n={props.i18n}
             isLocked={isLocked}
             layers={layers}

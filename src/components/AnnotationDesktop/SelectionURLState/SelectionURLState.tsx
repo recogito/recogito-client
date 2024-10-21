@@ -1,6 +1,7 @@
 import { Origin, useAnnotator } from '@annotorious/react';
 import type { Annotation, Annotator } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 interface SelectionURLStateProps {
@@ -26,12 +27,14 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
 
   // Update the URL in response to a selection event.
   const updateURL = useCallback((selected: string[]) => {
-    const hash = selected.length > 0 
-      ? `selected=${selected.join(',')}`
-      : '';
+    const search = getSearchParameters();
+    const hash = getHashParameters();
 
-    const nextURL = 
-      `${window.location.pathname}${window.location.search}#${hash}`;
+    if (selected.length > 0) {
+      hash.set('selected', selected.join(','))
+    }
+
+    const nextURL = buildURL(window.location.pathname, search, hash);
 
     if (props.backButton) {
       // pushState creates a history entry for the Back button
