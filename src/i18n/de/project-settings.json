@@ -18,5 +18,12 @@
   "Lock Project": "Projekt Sperren",
   "Unlock Project": "Projekt Entsperren",
   "lock_warning_message": "Ein gesperrtes Projekt kann nicht mehr annotiert oder verändert werden. Projektmitglieder können das Projekt immer noch öffnen. Aber es können keine neuen Mitglieder eingeladen werden. Nur Dein Organisations-Administrator kann diese Operation rückgangig machen.",
-  "unlock_message": "Achtung: Nach dem Entsperren des Projektes gibt es keine Projekt-Administratoren. Vergiß nicht, zumindest einen Benutzer zum Projekt-Administrator zu befördern."
+  "unlock_message": "Achtung: Nach dem Entsperren des Projektes gibt es keine Projekt-Administratoren. Vergiß nicht, zumindest einen Benutzer zum Projekt-Administrator zu befördern.",
+  "Document View (Right Panel)": "Annotations-Ansicht (Rechte Seitenleiste)",
+  "Closed": "Geschlossen",
+  "Annotations": "Annotationsliste",
+  "Notes": "Notizen",
+  "Right panel will be closed by default when opening a document": "Die rechte Seitenleiste ist beim Öffnen des Dokuments geschlossen",
+  "Right panel will display annotations when opening a document": "Die rechte Seitenlesite zeigt beim Öffnen des Dokuments die Annotationsliste",
+  "Right panel will display notes when opening a document": "Die rechte Seitenleiste zeigt beim Öffnen des Dokuments die Notizen-Liste"
 }
