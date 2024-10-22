@@ -6,6 +6,7 @@ import { TinySaveIndicator, type SaveState } from '@components/TinySaveIndicator
 import type { ExtendedProjectData, Translations } from 'src/Types';
 
 import './TagSettings.css';
+import { TagColorPicker } from './TagColorPicker';
 
 interface TagSettingsProps {
 
@@ -82,6 +83,22 @@ export const TagSettings = (props: TagSettingsProps) => {
 
       <p>{t['The terms will appear as autocomplete options']}</p>
 
+      {vocabulary.length > 0 && (
+        <table>
+          <tbody>
+            {vocabulary.map(term => (
+              <tr>
+                <td>{term}</td>
+
+                <td>
+                  <TagColorPicker />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
       <textarea 
         value={vocabulary.join('\n')} onChange={onChange} />
 
@@ -89,6 +106,7 @@ export const TagSettings = (props: TagSettingsProps) => {
         <Button onClick={clearVocabulary}>
           <span>{t['Clear']}</span>
         </Button>
+
         <Button
           busy={saveState === 'saving'}
           className='primary'
