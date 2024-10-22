@@ -1,0 +1,24 @@
+.project-settings .tag-settings h2 {
+  margin-top: 0.2em;
+}
+
+.project-settings .tag-settings p {
+  font-size: var(--font-small);
+  line-height: 160%;
+}
+
+.project-settings .tag-settings textarea {
+  height: 12em;
+  line-height: 150%;
+  margin: 0.5em 0;
+  max-width: 65ch;
+  min-width: 30ch;
+  resize: none;
+  width: 45ch;
+}
+
+.project-settings .tag-settings .buttons {
+  display: flex;
+  gap: 0.2em;
+  align-items: center;
+}
