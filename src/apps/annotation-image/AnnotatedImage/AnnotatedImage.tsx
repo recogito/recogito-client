@@ -4,7 +4,7 @@ import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@compo
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyleExpression,
@@ -52,7 +52,7 @@ interface AnnotatedImageProps {
 
   style?: DrawingStyleExpression<ImageAnnotation>;
 
-  tagVocabulary: string[];
+  tagVocabulary: VocabularyTerm[];
 
   tool?: string;
 
@@ -74,7 +74,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { authToken, i18n, isLocked, layers, layerNames, policies, present } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -86,6 +86,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   // Workaround
   const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
+
+  const tagVocabulary = useMemo(() => props.tagVocabulary.map(t => t.label), [props.tagVocabulary])
 
   useEffect(() => {
     annoRef.current = anno;
