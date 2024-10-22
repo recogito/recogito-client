@@ -22,6 +22,8 @@ export const TagSettings = (props: TagSettingsProps) => {
 
   const { t } = props.i18n;
 
+  const [inputVal, setInputVal] = useState<string>('');
+
   const [vocabulary, setVocabulary] = useState<string[]>([]);
 
   const [saveState, setSaveState] = useState<SaveState>('idle');
@@ -37,11 +39,6 @@ export const TagSettings = (props: TagSettingsProps) => {
       }
     );
   }, []);
-
-  const onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = evt.target;
-    setVocabulary(value.split('\n'));
-  };
 
   const saveVocabulary = () => {
     setSaveState('saving');
@@ -75,6 +72,9 @@ export const TagSettings = (props: TagSettingsProps) => {
       });
   };
 
+  const onAddTags = () =>
+    setVocabulary(vocab => ([...vocab, ...inputVal.split('\n')]));
+
   return (
     <div className='tag-settings tab-container'>
       <h2>{t['Tagging Vocabulary']}</h2>
@@ -99,12 +99,9 @@ export const TagSettings = (props: TagSettingsProps) => {
         </table>
       )}
 
-      <textarea 
-        value={vocabulary.join('\n')} onChange={onChange} />
-
       <div className='buttons'>
         <Button onClick={clearVocabulary}>
-          <span>{t['Clear']}</span>
+          <span>Clear Vocabulary</span>
         </Button>
 
         <Button
@@ -118,6 +115,17 @@ export const TagSettings = (props: TagSettingsProps) => {
           resultOnly 
           state={saveState} 
           fadeOut={2500} />
+      </div>
+
+      <div>
+        <div>
+          <textarea 
+            placeholder={'Tag A\nTag B\n...'} 
+            value={inputVal}
+            onChange={evt => setInputVal(evt.target.value)} />
+        </div>
+
+        <button onClick={onAddTags}>Add</button>
       </div>
     </div>
   )
