@@ -74,7 +74,7 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, isLocked, layers, layerNames, policies, present } = props;
+  const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -86,8 +86,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   // Workaround
   const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
-
-  const tagVocabulary = useMemo(() => props.tagVocabulary.map(t => t.label), [props.tagVocabulary])
 
   useEffect(() => {
     annoRef.current = anno;
@@ -214,7 +212,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
               layerNames={layerNames}
               policies={policies}
               present={present}
-              tagVocabulary={tagVocabulary} />)} />
+              tagVocabulary={tagVocabulary?.map(t => t.label)} />)} />
       )}
     </OpenSeadragonAnnotator>
   )
