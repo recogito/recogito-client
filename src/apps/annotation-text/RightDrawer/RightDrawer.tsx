@@ -7,7 +7,7 @@ import type { Annotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './RightDrawer.css';
 
@@ -31,7 +31,7 @@ interface RightDrawerProps {
 
   style?: HighlightStyleExpression;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   beforeSelectAnnotation(a?: Annotation): void;
 
@@ -120,7 +120,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                   policies={props.policies}
                   present={props.present} 
                   sorting={props.sorting}
-                  tagVocabulary={props.tagVocabulary}
+                  tagVocabulary={props.tagVocabulary?.map(t => t.label)}
                   beforeSelect={props.beforeSelectAnnotation} />
                 ) : (
                   <DocumentNotesList 
@@ -130,7 +130,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                     layerNames={props.layerNames}
                     present={props.present}
                     policies={props.policies} 
-                    tagVocabulary={props.tagVocabulary} />
+                    tagVocabulary={props.tagVocabulary?.map(t => t.label)} />
                 )}
             </div>
           </aside>
