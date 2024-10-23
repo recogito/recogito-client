@@ -1,4 +1,3 @@
-import { useAnnotationsView } from '@util/hooks/useAnnotationsView.ts';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { useAnnotator } from '@annotorious/react';
@@ -7,10 +6,9 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { clearSelectionURLHash, DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
-import { DocumentViewRight } from 'src/Types';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
@@ -89,7 +87,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const { rightPanelOpen, rightPanelTab, setRightPanelOpen } = useAnnotationsView();
+  const {
+    rightPanelOpen,
+    rightPanelTab,
+    setRightPanelOpen,
+    setRightPanelTab,
+    usePopup
+  } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -151,8 +155,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     };
   }, [activeLayerStyle, layers]);
 
-  const [usePopup, setUsePopup] = useState(true);
-
   useEffect(() => {
     if (policies) {
       const isDefault = props.document.context.is_project_default;
@@ -196,15 +198,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onZoom = (factor: number) => 
     viewer.current?.viewport.zoomBy(factor);
 
-  useEffect(() => {
-    // Need to rethink - we also want popups
-    // when the panel shows Notes. But the design
-    // may still change...
-    setUsePopup(!rightPanelOpen);
-  }, [rightPanelOpen]);
-
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
-    setUsePopup(tab === 'NOTES');
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
@@ -316,7 +310,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           </div>
 
           <RightDrawer
-            defaultTab={rightPanelTab}
             i18n={props.i18n}
             isLocked={isLocked}
             layers={layers}
@@ -328,6 +321,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
             onTabChanged={onRightTabChanged}
+            tab={rightPanelTab}
           />
         </main>
       </div>
