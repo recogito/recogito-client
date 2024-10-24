@@ -1,7 +1,7 @@
 import type { Response } from '@backend/Types';
 import { createTag, findTagDefinition } from '@backend/crud/tags';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Tag, TagDefinition } from 'src/Types';
+import type { Tag, TagDefinition, VocabularyTerm } from 'src/Types';
 
 export const createSystemTag = (
   supabase: SupabaseClient, 
@@ -73,7 +73,7 @@ export const getTagsForContexts = (
 export const getProjectTagVocabulary = (
   supabase: SupabaseClient,
   projectId: string
-): Response<TagDefinition[]> =>
+): Response<VocabularyTerm[]> =>
   supabase
     .from('tag_definitions')
     .select(`
@@ -84,8 +84,18 @@ export const getProjectTagVocabulary = (
       scope_id
     `)
     .match({ scope: 'project', scope_id: projectId })
-    .then(({ error, data }) => error || !data ?
-      ({ error, data: [] }) : ({ error, data: data as unknown as TagDefinition[] }));
+    .then(({ error, data }) => { 
+      if (error || !data) {
+        return  { error, data: [] };
+      } else {
+        return  { 
+          error, 
+          data: data.map(def => ({ 
+            label: def.name
+          } as VocabularyTerm))
+        };
+      }
+    });
 
 export const clearProjectTagVocabulary = (
   supabase: SupabaseClient,
@@ -106,7 +116,7 @@ export const clearProjectTagVocabulary = (
 export const setProjectTagVocabulary = (
   supabase: SupabaseClient,
   projectId: string,
-  terms: string[]
+  terms: VocabularyTerm[]
 ): Promise<void> => 
   // Clear vocab first
   clearProjectTagVocabulary(supabase, projectId)
@@ -116,7 +126,7 @@ export const setProjectTagVocabulary = (
         .insert(terms.map(term => ({
           scope: 'project',
           scope_id: projectId,
-          name: term
+          name: term.label
         })))
         .then(({ error }) => {
           if (error)
