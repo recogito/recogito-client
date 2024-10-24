@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { WarningOctagon } from '@phosphor-icons/react';
 import { TextInput } from '@components/TextInput';
-import type { Translations } from 'src/Types';
+import type { ApiAcceptOrgInvite, Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 
-import './ResetPassword.css';
+import './AcceptOrgInvite.css';
 
-interface ResetPasswordProps {
+interface AcceptOrgInviteProps {
   i18n: Translations;
+  token: string;
 }
 
-export const ResetPassword = (props: ResetPasswordProps) => {
+export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
   const { t } = props.i18n;
 
   const [password, setPassword] = useState('');
@@ -27,7 +28,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
 
   const [success, setSuccess] = useState(false);
 
-  const onResetPassword = (evt: React.MouseEvent) => {
+  const onAcceptOrgInvite = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
     if (password !== verification) {
@@ -35,21 +36,27 @@ export const ResetPassword = (props: ResetPasswordProps) => {
     } else {
       setBusy(true);
 
-      supabase.auth.resetPasswordForEmail(email).then(({ error }) => {
-        if (error) {
-          console.error(error);
-          setError(t[error.message] || t['Could not reset password']);
-        } else {
-          supabase.auth.updateUser({ password }).then(({ error }) => {
-            if (error) {
-              console.error(error);
-              setError(t[error.message] || t['Could not reset password']);
-            } else {
-              setSuccess(true);
-            }
-          });
-        }
+      const payload: ApiAcceptOrgInvite = {
+        email,
+        password,
+        token: props.token,
+      };
 
+      console.log(props.token);
+
+      fetch('/api/accept-new-user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }).then((response) => {
+        if (!response.ok) {
+          console.error(response.status);
+          setError(t['Could not set new password']);
+        } else {
+          setSuccess(true);
+        }
         setBusy(false);
       });
     }
@@ -62,10 +69,8 @@ export const ResetPassword = (props: ResetPasswordProps) => {
           <div className='success'>
             <AnimatedCheck size={38} />
             <p>
-              {t['Password reset.']}{' '}
-              <a href={`/${props.i18n.lang}/projects`}>
-                {t['Go to dashboard.']}
-              </a>
+              {t['Credentials updated.']}{' '}
+              <a href={`/${props.i18n.lang}/sign-in`}>{t['Login']}</a>
             </p>
           </div>
         </main>
@@ -117,7 +122,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
             <Button
               busy={busy}
               className='primary lg w-full'
-              onClick={onResetPassword}
+              onClick={onAcceptOrgInvite}
             >
               <span>{t['Set Password']}</span>
             </Button>
