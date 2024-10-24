@@ -29,6 +29,7 @@
 }
 
 .project-settings .tag-settings td {
+  color: var(--text-dark);
   padding: 0.25rem 0.325rem 0.25rem 0.8rem;
 }
 

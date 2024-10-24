@@ -10,19 +10,20 @@ interface TagColorPickerProps {
 
 export const TagColorPicker = (props: TagColorPickerProps) => {
 
-  const [color, setColor] = useState<string>('#ffffff');
+  const [color, setColor] = useState<string>('');
 
-  const brightness = getBrightness(color);
+  const brightness = color ? getBrightness(color) : 1;
 
   return (
     <div className="tag-color-picker">
       <button
         className="color-preview"
         style={{ 
-          backgroundColor: color
+          backgroundColor: color || '#ffffff',
+          borderColor: color || undefined
         }}
-        onClick={() => setColor(e => getRandomColor())}>
-        <ArrowClockwise style={{ color: brightness > 0.5 ? '#000' : '#fff' }} />
+        onClick={() => setColor(() => getRandomColor())}>
+        <ArrowClockwise style={{ color: brightness > 0.5 ? '#000000' : '#ffffff' }} />
       </button>
 
       <input 

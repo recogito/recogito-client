@@ -3,10 +3,10 @@ import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { clearProjectTagVocabulary, getProjectTagVocabulary, setProjectTagVocabulary } from '@backend/helpers';
 import type { SaveState } from '@components/TinySaveIndicator';
+import { TagColorPicker } from './TagColorPicker';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 
 import './TagSettings.css';
-import { TagColorPicker } from './TagColorPicker';
 
 interface TagSettingsProps {
 
@@ -112,8 +112,8 @@ export const TagSettings = (props: TagSettingsProps) => {
             <table>
               <thead>
                 <tr>
-                  <th>Tag</th>
-                  <th>Color</th>
+                  <th>{t['Tag']}</th>
+                  <th>{t['Color']}</th>
                 </tr>
               </thead>
               <tbody>
@@ -134,7 +134,7 @@ export const TagSettings = (props: TagSettingsProps) => {
                 className="sm"
                 busy={clearState === 'saving'}
                 onClick={clearVocabulary}>
-                <span>Clear All</span>
+                <span>{t['Clear All']}</span>
               </Button>
 
               <Button 
@@ -142,7 +142,7 @@ export const TagSettings = (props: TagSettingsProps) => {
                 className="sm primary"
                 busy={clearState === 'saving'}
                 onClick={clearVocabulary}>
-                <span>Save</span>
+                <span>{t['Save']}</span>
               </Button>
             </div>
           </div>
