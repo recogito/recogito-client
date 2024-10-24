@@ -3,9 +3,6 @@ import { Trash } from '@phosphor-icons/react';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import {
-  clearProjectTagVocabulary,
-  getProjectTagVocabulary,
-  setProjectTagVocabulary,
   updateProject,
   lockProject,
   deleteInstalledPlugin,
@@ -34,11 +31,13 @@ import type {
   MyProfile,
 } from 'src/Types';
 import { Lock } from '@phosphor-icons/react';
+import { LockWarningMessage } from './LockWarningMessage';
+import { TagSettings } from './TagSettings';
 
 import './ProjectSettings.css';
-import { LockWarningMessage } from './LockWarningMessage';
 
 interface ProjectSettingsProps {
+
   invitations: Invitation[];
 
   me: MyProfile;
@@ -50,18 +49,21 @@ interface ProjectSettingsProps {
   availablePlugins: PluginMetadata[];
 
   installedPlugins: PluginInstallationConfig[];
+
 }
 
 export const ProjectSettings = (props: ProjectSettingsProps) => {
+  
   const { t } = props.i18n;
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const [vocabulary, setVocabulary] = useState<string[]>([]);
   const [installedPlugins, setInstalledPlugins] = useState(
     props.installedPlugins
   );
+
   const [state, setState] = useState<SaveState>('idle');
+
   const [openEdit, setOpenEdit] = useState(false);
   const [openJoin, setOpenJoin] = useState(false);
   const [name, setName] = useState('');
@@ -71,22 +73,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     'settings' | 'plugins' | 'tagging' | undefined
   >('settings');
   const [lockOpen, setLockOpen] = useState(false);
-
-  useEffect(() => {
-    getProjectTagVocabulary(supabase, props.project.id).then(
-      ({ error, data }) => {
-        if (error) {
-          setToast({
-            title: t['Something went wrong'],
-            description: t['Error loading tag vocabulary.'],
-            type: 'error',
-          });
-        } else {
-          setVocabulary(data.map((t) => t.name));
-        }
-      }
-    );
-  }, []);
 
   useEffect(() => {
     if (props.project) {
@@ -152,31 +138,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         }
       }
     );
-  };
-
-  const onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = evt.target;
-    setVocabulary(value.split('\n'));
-  };
-
-  const saveVocabulary = () => {
-    setState('saving');
-
-    setProjectTagVocabulary(supabase, props.project.id, vocabulary)
-      .then(() => {
-        setState('success');
-      })
-      .catch((error) => {
-        console.error(error);
-
-        setToast({
-          title: t['Something went wrong'],
-          description: t['Error saving tag vocabulary.'],
-          type: 'error',
-        });
-
-        setState('failed');
-      });
   };
 
   const saveProjectSettings = () => {
@@ -254,31 +215,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     }
   };
 
-  const clearVocabulary = () => {
-    setState('saving');
-
-    const prev = vocabulary;
-
-    setVocabulary([]);
-
-    clearProjectTagVocabulary(supabase, props.project.id)
-      .then(() => {
-        setState('success');
-      })
-      .catch(() => {
-        setToast({
-          title: t['Something went wrong'],
-          description: t['Error saving tag vocabulary.'],
-          type: 'error',
-        });
-
-        setState('failed');
-
-        // Roll back
-        setVocabulary(prev);
-      });
-  };
-
   const saveDisabled =
     project &&
     project.name === name &&
@@ -325,7 +261,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             currentTab={tab}
           />
           {tab === 'settings' && (
-            <div className='tagging-vocabulary'>
+            <div className='tab-container'>
               <div className='project-settings-root'>
                 <Label.Root
                   className='project-settings-label-detail text-body-large-bold'
@@ -548,30 +484,10 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             </div>
           )}
           {tab === 'tagging' && (
-            <div className='tagging-vocabulary'>
-              <h2>{t['Tagging Vocabulary']}</h2>
-
-              <p>{t['You can pre-define a tagging vocabulary']}</p>
-
-              <p>{t['The terms will appear as autocomplete options']}</p>
-
-              <textarea value={vocabulary.join('\n')} onChange={onChange} />
-
-              <div className='buttons'>
-                <Button onClick={clearVocabulary}>
-                  <span>{t['Clear']}</span>
-                </Button>
-                <Button
-                  busy={state === 'saving'}
-                  className='primary'
-                  onClick={saveVocabulary}
-                >
-                  <span>{t['Save']}</span>
-                </Button>
-
-                <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
-              </div>
-            </div>
+            <TagSettings 
+              i18n={props.i18n} 
+              project={props.project}
+              onError={onError} />
           )}
           {tab === 'plugins' && (
             <div className='project-plugins'>

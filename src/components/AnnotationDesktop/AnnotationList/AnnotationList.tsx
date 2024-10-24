@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
@@ -44,7 +44,7 @@ interface AnnotationListProps<T extends Anno> {
 
   sorting?: ((a: T, b: T) => number);
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   beforeSelect(a: SupabaseAnnotation | undefined): void;
 

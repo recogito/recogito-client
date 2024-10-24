@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import { Autosuggest } from '@components/Autosuggest';
-import type { Translations } from 'src/Types';
+import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagEditor.css';
 
@@ -9,9 +9,9 @@ interface TagEditorProps {
 
   i18n: Translations;
 
-  vocabulary?: string[];
+  vocabulary?: VocabularyTerm[];
 
-  onCreateTag(tag: string): void;
+  onCreateTag(tag: VocabularyTerm): void;
 
 }
 
@@ -21,23 +21,24 @@ export const TagEditor = (props: TagEditorProps) => {
 
   const [editing, setEditing] = useState(false);
 
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState<VocabularyTerm | undefined>();
 
-  const onSubmit = (value: string) => {
+  const onSubmit = (value: VocabularyTerm) => {
     props.onCreateTag(value);
-    setValue('');
+    setValue(undefined);
     setEditing(false);
   }
 
   const onSave = () => {
-    props.onCreateTag(value);
+    if (value)
+      props.onCreateTag(value);
 
-    setValue('');
+    setValue(undefined);
     setEditing(false);
   }
 
   const onCancel = () => {
-    setValue('');
+    setValue(undefined);
     setEditing(false);
   }
 
@@ -46,6 +47,7 @@ export const TagEditor = (props: TagEditorProps) => {
       <Autosuggest
         autoFocus
         autoSize
+        openOnFocus
         value={value}
         onChange={setValue} 
         onSubmit={onSubmit}

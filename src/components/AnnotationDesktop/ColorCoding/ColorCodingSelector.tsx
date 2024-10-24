@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import * as Select from '@radix-ui/react-select';
 import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
-import type { DocumentLayer, Translations } from 'src/Types';
+import type { DocumentLayer, Translations, VocabularyTerm } from 'src/Types';
 import { useColorCodingState } from './ColorState';
 import { 
   useColorByCreator,
@@ -23,6 +23,8 @@ interface ColorCodingSelectorProps {
 
   present: PresentUser[];
 
+  tagVocabulary?: VocabularyTerm[];
+
 }
 
 type Coding = 'creator' | 'layer' | 'tag' | 'privacy';
@@ -41,7 +43,7 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
   // be computed if the legend is not open.
   const byCreator = useColorByCreator(props.present);
   
-  const byFirstTag = useColorByFirstTag();
+  const byFirstTag = useColorByFirstTag(props.tagVocabulary);
 
   const byLayer = userColorByLayer(props.layers, props.layerNames);
 

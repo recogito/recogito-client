@@ -3,7 +3,7 @@ import { type AnnotationBody, useAnnotationStore, useAnnotator } from '@annotori
 import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { AnnotationCard } from '@components/Annotation';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationPopup.css';
 
@@ -25,7 +25,7 @@ interface AnnotationPopupProps {
 
   policies?: Policies;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
 }
 

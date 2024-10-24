@@ -6,7 +6,7 @@ import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
-import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface ToolbarProps {
@@ -32,6 +32,8 @@ interface ToolbarProps {
   rightDrawerOpen: boolean;
 
   showConnectionError: boolean;
+
+  tagVocabulary: VocabularyTerm[];
 
   onChangePrivacy(mode: PrivacyMode): void;
 
@@ -146,7 +148,8 @@ export const Toolbar = (props: ToolbarProps) => {
           i18n={props.i18n} 
           present={props.present} 
           layers={props.layers}
-          layerNames={props.layerNames} />
+          layerNames={props.layerNames} 
+          tagVocabulary={props.tagVocabulary} />
 
         <ColorLegend 
           i18n={props.i18n} />

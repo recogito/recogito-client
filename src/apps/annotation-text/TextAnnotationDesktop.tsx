@@ -228,6 +228,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
+            tagVocabulary={tagVocabulary}
             onChangePrivacy={setPrivacy}
             onChangeStyle={onChangeStyle}
             onToggleBranding={() => setShowBranding(!showBranding)}

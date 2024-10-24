@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Chats, Note } from '@phosphor-icons/react';
+import { Chats } from '@phosphor-icons/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './RightDrawer.css';
 
@@ -27,7 +27,7 @@ interface RightDrawerProps {
 
   style?: DrawingStyleExpression<ImageAnnotation>;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   beforeSelectAnnotation(a?: ImageAnnotation): void;
 

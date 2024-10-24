@@ -8,7 +8,7 @@ import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
 import { ReplyField } from './ReplyField';
-import type { Policies, Translations } from 'src/Types';
+import type { Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
 
@@ -38,7 +38,7 @@ export interface AnnotationCardProps {
 
   showReplyField?: boolean;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   onDeleteAnnotation(): void;
 

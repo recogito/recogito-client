@@ -27,6 +27,7 @@ button, a[href].button {
   padding: 10px 24px;
   position: relative;
   transition: 
+    border-color .25s ease-in-out, 
     background-color .25s ease-in-out, 
     box-shadow .25s ease-in-out;
 }

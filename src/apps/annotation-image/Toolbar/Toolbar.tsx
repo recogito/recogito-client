@@ -3,7 +3,7 @@ import type { Color, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
-import type { DocumentLayer, DocumentWithContext, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { ColorCodingSelector, ColorLegend, DeleteSelected, ErrorBadge, useColorCoding } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
@@ -40,6 +40,8 @@ interface ToolbarProps {
   rightDrawerOpen: boolean;
 
   showConnectionError: boolean;
+
+  tagVocabulary?: VocabularyTerm[];
   
   tool?: string;
 
@@ -80,7 +82,7 @@ export const Toolbar = (props: ToolbarProps) => {
       props.onChangeStyle(colorCoding.style);
     else
       props.onChangeStyle();
-  }, [colorCoding])
+  }, [colorCoding]);
 
   return (
     <div className="anno-toolbar ia-toolbar not-annotatable">
@@ -184,7 +186,8 @@ export const Toolbar = (props: ToolbarProps) => {
           i18n={props.i18n} 
           present={props.present} 
           layers={props.layers}
-          layerNames={props.layerNames} />
+          layerNames={props.layerNames} 
+          tagVocabulary={props.tagVocabulary} />
 
         <ColorLegend 
           i18n={props.i18n} />

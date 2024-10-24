@@ -339,6 +339,14 @@ export interface Tag {
   tag_definition?: TagDefinition;
 }
 
+export interface VocabularyTerm {
+
+  label: string;
+
+  color?: string;
+
+}
+
 export interface InstalledPlugin {
   id: string;
 
