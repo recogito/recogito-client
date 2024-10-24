@@ -9,10 +9,12 @@ const getVocabSuggestions = (query: string, vocabulary?: string[]) =>
     item.toLowerCase().startsWith(query.toLowerCase()));
 
 interface AutosuggestProps {
-
+  
   autoFocus?: boolean;
 
   autoSize?: boolean;
+
+  openOnFocus?: boolean;
 
   placeholder?: string;
 
@@ -32,7 +34,9 @@ export const Autosuggest = (props: AutosuggestProps) => {
 
   const element = useRef<HTMLDivElement>(null);
 
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>(
+    props.openOnFocus ? (props.vocabulary || []) : []
+  );
 
   const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>();
 

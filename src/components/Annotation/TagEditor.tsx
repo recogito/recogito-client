@@ -46,6 +46,7 @@ export const TagEditor = (props: TagEditorProps) => {
       <Autosuggest
         autoFocus
         autoSize
+        openOnFocus
         value={value}
         onChange={setValue} 
         onSubmit={onSubmit}
