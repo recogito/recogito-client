@@ -26,7 +26,6 @@ export const POST: APIRoute = async ({ request, url, redirect }) => {
   const key = Buffer.from(INVITE_CRYPTO_KEY, 'base64');
   const token = data.token;
 
-  console.log(token);
   if (!token) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
@@ -37,7 +36,6 @@ export const POST: APIRoute = async ({ request, url, redirect }) => {
   const values = decrypt(token, key);
   const check = values.split('|');
 
-  console.log('Values: ', check);
   // Get the user
   const supa = await createClient(
     supabaseServerUrl,
