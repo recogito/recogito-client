@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { getProjectGroupMembers } from '@backend/crud';
-import type { ExtendedProjectData } from 'src/Types';
+import type { DocumentViewRight, ExtendedProjectData } from 'src/Types';
 import type { Response } from '@backend/Types';
 
 export const listMyProjectsExtended = (
@@ -154,6 +154,7 @@ export const getProjectExtended = (
       is_open_join,
       is_open_edit,
       is_locked,
+      document_view_right,
       groups:project_groups(
         id,
         name,
@@ -345,7 +346,8 @@ export const updateProject = (
   description: string,
   is_open_join: boolean,
   is_open_edit: boolean,
-  is_locked: boolean
+  is_locked: boolean,
+  document_view_right: DocumentViewRight
 ) =>
   supabase
     .from('projects')
@@ -355,6 +357,7 @@ export const updateProject = (
       name: name,
       description: description,
       is_locked: is_locked,
+      document_view_right: document_view_right
     })
     .eq('id', id)
     .then(({ error }) => {

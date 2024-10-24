@@ -357,3 +357,9 @@
   align-items: center;
   justify-content: space-around;
 }
+
+.project-settings-documents-view {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+}
