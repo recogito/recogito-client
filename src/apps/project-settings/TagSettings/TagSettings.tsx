@@ -141,7 +141,7 @@ export const TagSettings = (props: TagSettingsProps) => {
               </thead>
               <tbody>
                 {vocabulary.map(term => (
-                  <tr>
+                  <tr key={term.label}>
                     <td>{term.label}</td>
 
                     <td>

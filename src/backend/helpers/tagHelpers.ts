@@ -81,7 +81,8 @@ export const getProjectTagVocabulary = (
       name,
       target_type,
       scope,  
-      scope_id
+      scope_id,
+      metadata
     `)
     .match({ scope: 'project', scope_id: projectId })
     .then(({ error, data }) => { 
@@ -91,7 +92,8 @@ export const getProjectTagVocabulary = (
         return  { 
           error, 
           data: data.map(def => ({ 
-            label: def.name
+            label: def.name,
+            color: def.metadata?.color
           } as VocabularyTerm))
         };
       }
@@ -126,7 +128,10 @@ export const setProjectTagVocabulary = (
         .insert(terms.map(term => ({
           scope: 'project',
           scope_id: projectId,
-          name: term.label
+          name: term.label,
+          metadata: term.color ? {
+            color: term.color
+          } : undefined
         })))
         .then(({ error }) => {
           if (error)
