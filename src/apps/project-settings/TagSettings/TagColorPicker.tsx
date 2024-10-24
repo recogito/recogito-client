@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { ArrowClockwise } from '@phosphor-icons/react';
 import { getBrightness, getRandomColor } from './colorUtils';
 
+import './TagColorPicker.css';
+
 interface TagColorPickerProps {
 
 }
@@ -13,8 +15,9 @@ export const TagColorPicker = (props: TagColorPickerProps) => {
   const brightness = getBrightness(color);
 
   return (
-    <div>
+    <div className="tag-color-picker">
       <button
+        className="color-preview"
         style={{ 
           backgroundColor: color
         }}
@@ -23,8 +26,7 @@ export const TagColorPicker = (props: TagColorPickerProps) => {
       </button>
 
       <input 
-        id="color"
-        className="col-span-3 bg-white" 
+        className="color-hex" 
         value={color} 
         onChange={evt => setColor(evt.target.value)} />
     </div>
