@@ -131,7 +131,7 @@ export const setProjectTagVocabulary = (
           name: term.label,
           metadata: term.color ? {
             color: term.color
-          } : undefined
+          } : {}
         })))
         .then(({ error }) => {
           if (error)
