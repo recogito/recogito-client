@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { useMemo, useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
@@ -20,6 +22,8 @@ interface DocumentCardProps {
   onUpdate?(document: Document): void;
 
   onError?(error: string): void;
+
+  style?: any;
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
@@ -28,6 +32,25 @@ export const DocumentCard = (props: DocumentCardProps) => {
   const { lang } = props.i18n;
 
   const [editable, setEditable] = useState(false);
+
+  const sortableProps = useMemo(() => ({
+    id: document.id,
+    disabled: !props.isAdmin
+  }), [document, props.isAdmin]);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable(sortableProps);
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    ...(props.style || {})
+  };
 
   const onOpen = (tab: boolean) => {
     if (tab)
@@ -60,7 +83,13 @@ export const DocumentCard = (props: DocumentCardProps) => {
       : `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`;
   
   return (
-    <article className='document-card-container'>
+    <article
+      className='document-card-container'
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+    >
       <div className='document-card' onClick={onClick}>
 
         <DocumentCardThumbnail document={props.document} />
