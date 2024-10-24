@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { ArrowClockwise } from '@phosphor-icons/react';
 import { getBrightness, getRandomColor } from './colorUtils';
 
@@ -11,11 +12,32 @@ interface TagColorPickerProps {
 
 }
 
+const isValidColor = (color: string): boolean => /^#([A-Fa-f0-9]{3}){1,2}$/.test(color);
+
 export const TagColorPicker = (props: TagColorPickerProps) => {
 
   const { color } = props;
 
+  const [inputValue, setInputValue] = useState(color || '');
+
   const brightness = color ? getBrightness(color) : 1;
+
+  useEffect(() => setInputValue(color || ''), [color]);
+
+  const onChange = (value: string) => {
+    setInputValue(value);
+
+    if (!value) {
+      // Empty string clears the color
+      props.onChange(undefined);
+      return;
+    }
+
+    const normalized = value.startsWith('#') ? value : `#${value}`;
+
+    if (isValidColor(normalized))
+      props.onChange(normalized);
+  };
 
   return (
     <div className="tag-color-picker">
@@ -31,8 +53,8 @@ export const TagColorPicker = (props: TagColorPickerProps) => {
 
       <input 
         className="color-hex" 
-        value={color} 
-        onChange={evt => props.onChange(evt.target.value)} />
+        value={inputValue} 
+        onChange={evt => onChange(evt.target.value)} />
     </div>
   )
 
