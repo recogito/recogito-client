@@ -212,7 +212,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
               layerNames={layerNames}
               policies={policies}
               present={present}
-              tagVocabulary={tagVocabulary?.map(t => t.label)} />)} />
+              tagVocabulary={tagVocabulary} />)} />
       )}
     </OpenSeadragonAnnotator>
   )

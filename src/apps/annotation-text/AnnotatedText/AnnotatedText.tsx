@@ -154,7 +154,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                 layerNames={layerNames}
                 present={present}
                 policies={policies}
-                tagVocabulary={tagVocabulary?.map(t => t.label)} />
+                tagVocabulary={tagVocabulary} />
               )}
             />
           )}

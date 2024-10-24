@@ -120,7 +120,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                   policies={props.policies}
                   present={props.present} 
                   sorting={props.sorting}
-                  tagVocabulary={props.tagVocabulary?.map(t => t.label)}
+                  tagVocabulary={props.tagVocabulary}
                   beforeSelect={props.beforeSelectAnnotation} />
                 ) : (
                   <DocumentNotesList 
@@ -130,7 +130,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
                     layerNames={props.layerNames}
                     present={props.present}
                     policies={props.policies} 
-                    tagVocabulary={props.tagVocabulary?.map(t => t.label)} />
+                    tagVocabulary={props.tagVocabulary} />
                 )}
             </div>
           </aside>

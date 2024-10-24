@@ -17,7 +17,7 @@ export const useTagVocabulary = (projectId: string) => {
         if (error)
           console.error(error)
         else
-          setVocabulary(data.map(t => ({ label: t.name })));
+          setVocabulary(data);
       });
   }, []);
 
