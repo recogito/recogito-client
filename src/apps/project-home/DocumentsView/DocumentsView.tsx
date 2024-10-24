@@ -1,3 +1,19 @@
+import {
+  DndContext,
+  closestCenter,
+  MouseSensor,
+  TouchSensor,
+  DragOverlay,
+  useSensor,
+  useSensors,
+  // DragStartEvent,
+  // DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
 import { DownloadSimple, Plus } from '@phosphor-icons/react';
 import { DocumentCard } from '@components/DocumentCard';
 import {
@@ -14,14 +30,17 @@ import type {
   Translations,
   MyProfile,
 } from 'src/Types';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import type { FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveDocument, setDocumentPrivacy } from '@backend/crud';
 import { useDocumentList } from '@apps/project-home/useDocumentList';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 import type { ToastContent } from '@components/Toast';
-import { removeDocumentsFromProject } from '@backend/helpers';
+import {
+  removeDocumentsFromProject,
+  updateDocumentsSort,
+} from '@backend/helpers';
 
 import '../ProjectHome.css';
 
@@ -46,6 +65,49 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   const [addOpen, setAddOpen] = useState(false);
   const [showUploads, setShowUploads] = useState(false);
   const [documentUpdated, setDocumentUpdated] = useState(false);
+  const [activeId, setActiveId] = useState(null);
+
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  const onDragStart = useCallback((event) => setActiveId(event.active.id), []);
+
+  const onDragEnd = useCallback(
+    (event) => {
+      const { active, over } = event;
+
+      if (active.id !== over?.id) {
+        const oldIndex = props.documents.findIndex(
+          (document) => document.id === active.id
+        );
+        const newIndex = props.documents.findIndex(
+          (document) => document.id === over!.id
+        );
+
+        const newDocuments = arrayMove(props.documents, oldIndex, newIndex);
+        props.setDocuments(newDocuments);
+
+        const newDocumentIds = newDocuments.map((document) => document.id);
+
+        updateDocumentsSort(supabase, props.project.id, newDocumentIds).then(
+          ({ error }) => {
+            if (error) {
+              console.log(error);
+            }
+          }
+        );
+      }
+
+      setActiveId(null);
+    },
+    [props.documents, props.project]
+  );
+
+  const onDragCancel = useCallback(() => setActiveId(null), []);
+
+  const activeDocument = useMemo(
+    () => props.documents?.find((document) => document.id === activeId),
+    [activeId]
+  );
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
     (documents) =>
@@ -253,23 +315,52 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         )}
       </header>
 
-      <div className='project-home-grid-wrapper'>
-        <div className='project-home-grid'>
-          {props.documents.map((document) => (
-            <DocumentCard
-              key={document.id}
-              isAdmin={props.isAdmin}
-              i18n={props.i18n}
-              document={document}
-              context={defaultContext!}
-              onDelete={() => onDeleteDocument(document)}
-              onUpdate={onUpdateDocument}
-              onError={onError}
-              rtab={props.project.document_view_right}
-            />
-          ))}
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragStart={onDragStart}
+        onDragEnd={onDragEnd}
+        onDragCancel={onDragCancel}
+      >
+        <div className='project-home-grid-wrapper'>
+          <div className='project-home-grid'>
+            <SortableContext
+              items={props.documents}
+              strategy={rectSortingStrategy}
+            >
+              {props.documents.map((document) => (
+                <DocumentCard
+                  key={document.id}
+                  isAdmin={props.isAdmin}
+                  i18n={props.i18n}
+                  document={document}
+                  context={defaultContext!}
+                  onDelete={() => onDeleteDocument(document)}
+                  onUpdate={onUpdateDocument}
+                  onError={onError}
+                  style={
+                    document.id === activeId ? { opacity: '0.5' } : undefined
+                  }
+                />
+              ))}
+            </SortableContext>
+            <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
+              {activeDocument && (
+                <DocumentCard
+                  key={activeDocument.id}
+                  isAdmin={props.isAdmin}
+                  i18n={props.i18n}
+                  document={activeDocument}
+                  context={defaultContext!}
+                  onDelete={() => {}}
+                  onUpdate={() => {}}
+                  onError={() => {}}
+                />
+              )}
+            </DragOverlay>
+          </div>
         </div>
-      </div>
+      </DndContext>
       <div>
         <DocumentLibrary
           open={addOpen}

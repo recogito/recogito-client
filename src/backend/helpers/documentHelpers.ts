@@ -221,6 +221,7 @@ export const listDocumentsInProject = (
       `
     )
     .eq('project_id', projectId)
+    .order('sort')
     .then(({ error, data }) => {
       if (error) {
         return { error, data: [] };
@@ -355,6 +356,20 @@ export const listAllDocuments = (
     .select(
       'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data'
     )
+    .then(({ error, data }) => {
+      return { error, data };
+    });
+
+export const updateDocumentsSort = (
+  supabase: SupabaseClient,
+  projectId: string,
+  documentIds: string[]
+): Response<boolean> =>
+  supabase
+    .rpc('update_project_documents_sort_rpc', {
+      _project_id: projectId,
+      _document_ids: documentIds
+    })
     .then(({ error, data }) => {
       return { error, data };
     });
