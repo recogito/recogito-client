@@ -440,3 +440,9 @@ export type ApiPostInviteUserToProject = {
   projectName: string;
   invitedBy: string;
 };
+
+export type ApiAcceptOrgInvite = {
+  email: string;
+  password: string;
+  token: string;
+};

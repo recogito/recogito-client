@@ -1,0 +1,26 @@
+.reset-password h1 {
+  margin-top: 0;
+}
+
+.reset-password .input-wrapper + .input-wrapper {
+  margin-left: 0;
+  margin-top: 1em;
+}
+
+.reset-password :is(button, a.button) {
+  margin-top: 2em;
+}
+
+.reset-password .error {
+  font-size: var(--font-tiny);
+  color: var(--red-500);
+}
+
+.reset-password .success {
+  text-align: center;
+}
+
+.reset-password .success p {
+  font-size: var(--font-small);
+}
+
