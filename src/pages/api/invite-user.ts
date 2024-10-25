@@ -171,7 +171,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
           },
         },
         props: {
-          text: t['_join_recogito_message_'].replace(
+          text: t['_join_recogito_message_'].replaceAll(
             '${instance_name}',
             url.host
           ),
