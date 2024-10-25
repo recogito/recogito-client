@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
-import { Chats } from '@phosphor-icons/react';
-import { animated, easings, useSpring, useTransition } from '@react-spring/web';
-import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import { useRef } from 'react';
 import type { Annotation, PresentUser } from '@annotorious/react';
-import { isMe } from '@recogito/annotorious-supabase';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
-import type { Layer, Policies, Translations } from 'src/Types';
+import { Chats } from '@phosphor-icons/react';
+import { animated, easings, useSpring, useTransition } from '@react-spring/web';
+import { isMe } from '@recogito/annotorious-supabase';
+import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './RightDrawer.css';
 
@@ -31,12 +31,13 @@ interface RightDrawerProps {
 
   style?: HighlightStyleExpression;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   beforeSelectAnnotation(a?: Annotation): void;
 
-  onTabChanged?(tab: 'ANNOTATIONS' | 'NOTES'): void;
+  onTabChanged(tab: 'ANNOTATIONS' | 'NOTES'): void;
 
+  tab: 'ANNOTATIONS' | 'NOTES';
 }
 
 export const RightDrawer = (props: RightDrawerProps) => {
@@ -70,13 +71,6 @@ export const RightDrawer = (props: RightDrawerProps) => {
     }
   });
 
-  const [tab, setTab] = useState<'ANNOTATIONS' | 'NOTES'>('ANNOTATIONS');
-
-  useEffect(() => {
-    if (props.onTabChanged)
-      props.onTabChanged(tab);
-  }, [tab])
-
   return ( 
     <>
       <animated.div 
@@ -92,23 +86,23 @@ export const RightDrawer = (props: RightDrawerProps) => {
             <div className="tablist">
               <ul>
                 <li 
-                  className={tab === 'ANNOTATIONS' ? 'active' : undefined}>
-                  <button onClick={() => setTab('ANNOTATIONS')}>
+                  className={props.tab === 'ANNOTATIONS' ? 'active' : undefined}>
+                  <button onClick={() => props.onTabChanged('ANNOTATIONS')}>
                     <Chats size={18} /> {t['Annotations']}
                   </button>
                 </li>
 
                 <li 
-                  className={tab === 'NOTES' ? 'active' : undefined}>
+                  className={props.tab === 'NOTES' ? 'active' : undefined}>
                   <DocumentNotesTabButton
                     i18n={props.i18n}
-                    onClick={() => setTab('NOTES')} />
+                    onClick={() => props.onTabChanged('NOTES')} />
                 </li>
               </ul>
             </div>
 
             <div className="tabcontent">
-              {tab === 'ANNOTATIONS' ? (
+              {props.tab === 'ANNOTATIONS' ? (
                 <AnnotationList 
                   currentStyle={props.style}
                   filter={filter}

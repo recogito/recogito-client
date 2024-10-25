@@ -4,7 +4,7 @@ import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@compo
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyleExpression,
@@ -52,7 +52,7 @@ interface AnnotatedImageProps {
 
   style?: DrawingStyleExpression<ImageAnnotation>;
 
-  tagVocabulary: string[];
+  tagVocabulary: VocabularyTerm[];
 
   tool?: string;
 

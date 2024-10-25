@@ -1,12 +1,14 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useMemo, useState } from 'react';
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import type { Context, Document, Translations } from 'src/Types';
+import { DocumentViewRight } from 'src/Types';
+
+import './DocumentCard.css';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
-
-import './DocumentCard.css';
 
 interface DocumentCardProps {
   i18n: Translations;
@@ -22,6 +24,8 @@ interface DocumentCardProps {
   onUpdate?(document: Document): void;
 
   onError?(error: string): void;
+
+  rtab?: DocumentViewRight;
 
   style?: any;
 }
@@ -53,10 +57,18 @@ export const DocumentCard = (props: DocumentCardProps) => {
   };
 
   const onOpen = (tab: boolean) => {
-    if (tab)
-      window.open(`/${lang}/annotate/${context.id}/${document.id}`, '_blank');
-    else
-      window.location.href = `/${lang}/annotate/${context.id}/${document.id}`;
+    const search = getSearchParameters();
+
+    const hash = getHashParameters();
+    hash.set('rtab', props.rtab || DocumentViewRight.closed);
+
+    const url = buildURL(`/${lang}/annotate/${context.id}/${document.id}`, search, hash);
+
+    if (tab) {
+      window.open(url, '_blank');
+    } else {
+      window.location.href = url;
+    }
   };
 
   const onClick = (evt: React.MouseEvent) => {

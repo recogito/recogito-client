@@ -6,7 +6,7 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { clearSelectionURLHash, DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -87,7 +87,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const {
+    rightPanelOpen,
+    rightPanelTab,
+    setRightPanelOpen,
+    setRightPanelTab,
+    usePopup
+  } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -104,7 +110,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
-      const hse: DrawingStyleExpression<ImageAnnotation> = (
+      const dse: DrawingStyleExpression<ImageAnnotation> = (
         a: SupabaseAnnotation,
         state?: AnnotationState
       ) => {
@@ -119,13 +125,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         };
       };
 
-      setActiveLayerStyle(() => hse);
+      setActiveLayerStyle(() => dse);
     } else {
       setActiveLayerStyle(() => DEFAULT_STYLE);
     }
   };
 
-  // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set(
       (layers || []).filter((l) => !l.is_active).map((l) => l.id)
@@ -139,17 +144,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       strokeWidth: state?.selected ? 2.5 : 2,
     });
 
-    return (annotation: ImageAnnotation, state?: AnnotationState) => {
+    return ((annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
       return a.layer_id && readOnly.has(a.layer_id)
         ? readOnlyStyle(state)
         : typeof activeLayerStyle === 'function'
         ? activeLayerStyle(a as ImageAnnotation, state)
         : activeLayerStyle;
-    };
+    }) as DrawingStyleExpression;
   }, [activeLayerStyle, layers]);
-
-  const [usePopup, setUsePopup] = useState(true);
 
   useEffect(() => {
     if (policies) {
@@ -194,15 +197,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onZoom = (factor: number) => 
     viewer.current?.viewport.zoomBy(factor);
 
-  useEffect(() => {
-    // Need to rethink - we also want popups
-    // when the panel shows Notes. But the design
-    // may still change...
-    setUsePopup(!rightPanelOpen);
-  }, [rightPanelOpen]);
-
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
-    setUsePopup(tab === 'NOTES');
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
@@ -261,6 +256,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
+            tagVocabulary={tagVocabulary}
             tool={tool}
             onChangePrivacy={setPrivacy}
             onChangeStyle={onChangeStyle}
@@ -325,6 +321,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
             onTabChanged={onRightTabChanged}
+            tab={rightPanelTab}
           />
         </main>
       </div>

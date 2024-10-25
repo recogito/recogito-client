@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Delta } from 'quill/core';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { type Sorter, Sorting, SortSelector } from '../SortSelector';
 import { EmptyNote, NewNoteButton } from '../NewNote';
@@ -25,7 +25,7 @@ interface DocumentNotesListProps {
 
   policies?: Policies;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
 }
 
@@ -123,6 +123,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               showReplyField={selected === note.id && !(isReadOnly(note))}
               policies={props.policies}
               present={props.present} 
+              tagVocabulary={props.tagVocabulary}
               onCreateBody={createBody}
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}

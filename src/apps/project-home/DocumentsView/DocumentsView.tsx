@@ -313,6 +313,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   onDelete={() => onDeleteDocument(document)}
                   onUpdate={onUpdateDocument}
                   onError={onError}
+                  rtab={props.project.document_view_right}
                   style={document.id === activeId ? ({ opacity: '0.5'}) : undefined}
                 />
               ))}
