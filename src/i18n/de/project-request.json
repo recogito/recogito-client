@@ -3,6 +3,7 @@
   "Request": "Anfrage abschicken",
   "Cancel": "Abbrechen",
   "OK": "OK",
+  "Do you wish to request membership for project": "Mitgliedsanfrage",
   "Request for Membership Sent!": "Beitrittsanfrage wurde abgesendet.",
   "Request for Membership Failed!": "Beitrittsanfrage konnte nicht gesendet werden.",
   "The admin of the project has been sent your request. Once approved you will be added to the project": "Deine Beitrittsanfrage wurde zur Genehmigung an die ProjektadministratorInnen gesendet.",
