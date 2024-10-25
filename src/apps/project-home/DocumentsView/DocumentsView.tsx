@@ -260,6 +260,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
               onDelete={() => onDeleteDocument(document)}
               onUpdate={onUpdateDocument}
               onError={onError}
+              rtab={props.project.document_view_right}
             />
           ))}
         </div>

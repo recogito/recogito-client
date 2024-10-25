@@ -10,5 +10,6 @@ export * from './FatalError';
 export * from './FilterPanel';
 export * from './SelectionURLState';
 export * from './UndoStack';
+export * from './useAnnotationsViewUIState';
 export * from './useLayerNames';
 export * from './utils';

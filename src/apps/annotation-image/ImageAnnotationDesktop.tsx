@@ -6,7 +6,7 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { clearSelectionURLHash, DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -87,7 +87,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const {
+    rightPanelOpen,
+    rightPanelTab,
+    setRightPanelOpen,
+    setRightPanelTab,
+    usePopup
+  } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -148,8 +154,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }) as DrawingStyleExpression;
   }, [activeLayerStyle, layers]);
 
-  const [usePopup, setUsePopup] = useState(true);
-
   useEffect(() => {
     if (policies) {
       const isDefault = props.document.context.is_project_default;
@@ -193,15 +197,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onZoom = (factor: number) => 
     viewer.current?.viewport.zoomBy(factor);
 
-  useEffect(() => {
-    // Need to rethink - we also want popups
-    // when the panel shows Notes. But the design
-    // may still change...
-    setUsePopup(!rightPanelOpen);
-  }, [rightPanelOpen]);
-
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
-    setUsePopup(tab === 'NOTES');
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
@@ -325,6 +321,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
             onTabChanged={onRightTabChanged}
+            tab={rightPanelTab}
           />
         </main>
       </div>

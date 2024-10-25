@@ -6,7 +6,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
@@ -68,7 +68,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const {
+    rightPanelOpen,
+    rightPanelTab,
+    setRightPanelOpen,
+    setRightPanelTab,
+    usePopup
+  } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -115,8 +121,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         : activeLayerStyle;
   }, [activeLayerStyle, documentLayers]);
 
-  const [usePopup, setUsePopup] = useState(true);
-
   useEffect(() => {
     if (policies) {
       const isDefault = props.document.context.is_project_default;
@@ -157,15 +161,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  useEffect(() => {
-    // Need to rethink - we also want popups
-    // when the panel shows Notes. But the design
-    // may still change...
-    setUsePopup(!rightPanelOpen);
-  }, [rightPanelOpen]);
-
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
-    setUsePopup(tab === 'NOTES');
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
@@ -281,7 +277,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             style={style}
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
-            onTabChanged={onRightTabChanged} />
+            onTabChanged={onRightTabChanged}
+            tab={rightPanelTab} />
         </main>
       </div>
     </DocumentNotes>
