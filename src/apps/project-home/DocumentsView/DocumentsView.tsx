@@ -1,13 +1,11 @@
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragOverlay,
   MouseSensor,
   TouchSensor,
-  DragOverlay,
   useSensor,
-  useSensors,
-  // DragStartEvent,
-  // DragEndEvent,
+  useSensors
 } from '@dnd-kit/core';
 import {
   arrayMove,
