@@ -6,15 +6,15 @@ export const createPalette = (palette: Color[]) => {
 
   let nextIndex = 0;
 
-  const getColor = (tag: string) => {
-    const assigned = assignedColors.get(tag);
+  const getColor = (key: string) => {
+    const assigned = assignedColors.get(key);
     if (assigned)
       return assigned;
 
     // Assign next free color
     const nextColor = palette[nextIndex];
 
-    assignedColors.set(tag, nextColor);
+    assignedColors.set(key, nextColor);
 
     nextIndex = (nextIndex + 1) % palette.length;
 

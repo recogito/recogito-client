@@ -10,7 +10,7 @@ import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
 import { AnnotatedPDF } from './AnnotatedPDF';
-import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -42,7 +42,7 @@ interface AnnotatedTextProps {
 
   styleSheet?: string;
 
-  tagVocabulary: string[];
+  tagVocabulary: VocabularyTerm[];
 
   usePopup: boolean;
 

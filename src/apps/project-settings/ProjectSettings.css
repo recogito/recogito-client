@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.project-settings .tab-container {
+  max-width: 65ch;
+  padding: 20px 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
 .project-settings-inputs {
   display: flex;
   flex-direction: column;
@@ -22,38 +29,6 @@
   font-size: smaller;
   margin-left: 20px;
   width: 600px;
-}
-
-.project-settings .tagging-vocabulary {
-  max-width: 65ch;
-  padding: 20px 0;
-  z-index: 100;
-  overflow-y: auto;
-}
-
-.project-settings .tagging-vocabulary h2 {
-  margin-top: 0.2em;
-}
-
-.project-settings .tagging-vocabulary p {
-  font-size: var(--font-small);
-  line-height: 160%;
-}
-
-.project-settings .tagging-vocabulary textarea {
-  height: 12em;
-  line-height: 150%;
-  margin: 0.5em 0;
-  max-width: 65ch;
-  min-width: 30ch;
-  resize: none;
-  width: 45ch;
-}
-
-.project-settings .tagging-vocabulary .buttons {
-  display: flex;
-  gap: 0.2em;
-  align-items: center;
 }
 
 .project-settings-switch-root {

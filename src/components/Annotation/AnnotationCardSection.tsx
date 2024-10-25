@@ -11,7 +11,7 @@ import { LayerIcon } from './LayerIcon';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
 import { PublicAnnotationActions } from './PublicAnnotationActions';
 import { TagList } from './TagList';
-import type { Policies, Translations } from 'src/Types';
+import type { Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCardSection.css';
 
@@ -45,7 +45,7 @@ export interface AnnotationCardSectionProps {
 
   tags?: AnnotationBody[];
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
   
   onDeleteAnnotation(): void;
 
@@ -178,7 +178,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     props.onSubmit();
   }
 
-  const onCreateTag = (value: string) => {
+  const onCreateTag = (value: VocabularyTerm) => {
     const tag: AnnotationBody = {
       id: uuidv4(),
       annotation: props.annotation.id,
@@ -189,7 +189,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       },
       created: new Date(),
       purpose: 'tagging',
-      value
+      value: value.label
     };
 
     props.onCreateBody(tag);

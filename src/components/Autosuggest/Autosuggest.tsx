@@ -1,28 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { AutosizeInput } from '../AutosizeInput';
+import type { VocabularyTerm } from 'src/Types';
 
 import './Autosuggest.css';
 
-const getVocabSuggestions = (query: string, vocabulary?: string[]) =>
-  (vocabulary || []).filter(item =>
-    item.toLowerCase().startsWith(query.toLowerCase()));
+const getVocabSuggestions = (query: string, vocabulary?: VocabularyTerm[]) =>
+  (vocabulary || []).filter(term =>
+    term.label.toLowerCase().startsWith(query.toLowerCase()));
 
 interface AutosuggestProps {
-
+  
   autoFocus?: boolean;
 
   autoSize?: boolean;
 
+  openOnFocus?: boolean;
+
   placeholder?: string;
 
-  value: string;
+  value?: VocabularyTerm;
 
-  vocabulary?: string[];
+  vocabulary?: VocabularyTerm[];
 
-  onChange(value: string): void;
+  onChange(value: VocabularyTerm): void;
 
-  onSubmit(value: string): void;
+  onSubmit(value: VocabularyTerm): void;
 
   onCancel?(): void;
 
@@ -32,7 +35,9 @@ export const Autosuggest = (props: AutosuggestProps) => {
 
   const element = useRef<HTMLDivElement>(null);
 
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<VocabularyTerm[]>(
+    props.openOnFocus ? (props.vocabulary || []) : []
+  );
 
   const [highlightedIndex, setHighlightedIndex] = useState<number | undefined>();
 
@@ -51,19 +56,19 @@ export const Autosuggest = (props: AutosuggestProps) => {
       props.onSubmit(suggestions[highlightedIndex]);
     } else {
       // Submit input value
-      const trimmed = props.value.trim();
+      const trimmed = props.value?.label.trim();
 
       if (trimmed) {
-        // If there is a vocabulary with the same label, use that
+        // If there is a vocabulary term with the same label, use that
         const matchingTerm = Array.isArray(props.vocabulary) ?
           props.vocabulary.find(term =>
-            term.toLowerCase() === trimmed.toLowerCase()) : null;
+            term.label.toLowerCase() === trimmed.toLowerCase()) : null;
 
         if (matchingTerm) {
           props.onSubmit(matchingTerm);
         } else {
           // Otherwise, just use as a freetext tag
-          props.onSubmit(trimmed);
+          props.onSubmit({ label: trimmed });
         }
       }
     }
@@ -109,7 +114,7 @@ export const Autosuggest = (props: AutosuggestProps) => {
 
   const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target;
-    props.onChange(value);
+    props.onChange({ label: value });
 
     // Typing on the input resets the highlight
     setHighlightedIndex(undefined);
@@ -121,7 +126,8 @@ export const Autosuggest = (props: AutosuggestProps) => {
   }
 
   return (
-    <Popover.Root open={suggestions.length > 0}>
+    <Popover.Root 
+      open={suggestions.length > 0}>
       <div
         ref={element}  
         className="autosuggest">  
@@ -130,29 +136,40 @@ export const Autosuggest = (props: AutosuggestProps) => {
           {props.autoSize ? (
             <AutosizeInput
               autoFocus={props.autoFocus}
-              value={props.value || ''}
+              value={props.value?.label || ''}
               placeholder={props.placeholder}
               onChange={onChange} 
               onKeyDown={onKeyDown} />
           ) : (
             <input
               autoFocus={props.autoFocus}
-              value={props.value}
+              value={props.value?.label || ''}
               placeholder={props.placeholder}
               onChange={onChange}
               onKeyDown={onKeyDown} />
           )}
         </Popover.Anchor>
 
-        <Popover.Content onOpenAutoFocus={evt => evt.preventDefault()}>
+        <Popover.Content 
+          onOpenAutoFocus={evt => evt.preventDefault()}
+          sideOffset={8}
+          align="start">
           <ul>
-            {suggestions.map((item, index) => (
+            {suggestions.map((term, index) => (
               <li 
-                key={`${item}-${index}`}
+                key={`${term.label}-${index}`}
                 onClick={onSubmit}
                 onMouseEnter={() => setHighlightedIndex(index)}
                 className={highlightedIndex === index ? 'selected' : undefined}>
-                {item}
+                <span>{term.label}</span>
+
+                {term.color && (
+                  <span 
+                    className="term-color"
+                    style={{
+                      backgroundColor: term.color
+                    }}/>
+                )}
               </li>
             ))}
           </ul>

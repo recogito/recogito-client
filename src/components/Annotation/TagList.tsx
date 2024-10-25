@@ -1,7 +1,7 @@
 import { X } from '@phosphor-icons/react';
 import type { AnnotationBody } from '@annotorious/react';
 import { TagEditor } from './TagEditor';
-import type { Translations } from 'src/Types';
+import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagList.css';
 
@@ -13,9 +13,9 @@ interface TagListProps {
 
   isEditable?: boolean;
 
-  vocabulary?: string[];
+  vocabulary?: VocabularyTerm[];
 
-  onCreateTag(value: string): void;
+  onCreateTag(value: VocabularyTerm): void;
 
   onDeleteTag(body: AnnotationBody): void;
 
@@ -23,9 +23,9 @@ interface TagListProps {
 
 export const TagList = (props: TagListProps) => {
 
-  const onCreateTag = (value: string) => {
+  const onCreateTag = (value: VocabularyTerm) => {
     // Don't create a tag that already exists
-    const existing = props.tags.find(b => b.value === value);
+    const existing = props.tags.find(b => b.value === value.label);
     if (!existing)
       props.onCreateTag(value);
   }

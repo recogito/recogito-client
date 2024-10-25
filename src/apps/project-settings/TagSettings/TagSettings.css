@@ -1,0 +1,49 @@
+.project-settings .tag-settings h2 {
+  margin-top: 0.2em;
+}
+
+.project-settings .tag-settings .no-vocabulary {
+  background-color: var(--gray-100);
+  border-radius: var(--border-radius);
+  color: var(--font-light);
+  display: flex;
+  font-size: var(--font-small);
+  justify-content: center;
+  margin: 2rem 0;
+  padding: 2rem 1rem;
+}
+
+.project-settings .tag-settings p {
+  font-size: var(--font-small);
+  line-height: 160%;
+  padding: 1rem 0 0.5rem 0;
+}
+
+.project-settings .tag-settings th:first-child,
+.project-settings .tag-settings td:first-child {
+  width: 90%;
+}
+
+.project-settings .tag-settings th:last-child {
+  padding-left: 1rem;
+}
+
+.project-settings .tag-settings td {
+  color: var(--text-dark);
+  padding: 0.25rem 0.325rem 0.25rem 0.8rem;
+}
+
+.project-settings .tag-settings .button-container {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.project-settings .tag-settings textarea {
+  height: 12em;
+  line-height: 150%;
+  margin-top: 0.5em;
+  resize: none;
+  width: 100%;
+}

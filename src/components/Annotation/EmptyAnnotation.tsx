@@ -9,7 +9,7 @@ import { Extension, usePlugins } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { TagList } from './TagList';
-import type { Translations } from 'src/Types';
+import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './EmptyAnnotation.css';
 
@@ -29,7 +29,7 @@ interface EmptyAnnotationProps {
 
   present: PresentUser[];
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
@@ -90,7 +90,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
     props.onSubmit();
   }
 
-  const onCreateTag = (value: string) => {
+  const onCreateTag = (value: VocabularyTerm) => {
     const tag: AnnotationBody = {
       id: uuidv4(),
       annotation: props.annotation.id,
@@ -101,7 +101,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
       },
       created: new Date(),
       purpose: 'tagging',
-      value
+      value: value.label
     };
 
     props.onCreateBody && props.onCreateBody(tag);

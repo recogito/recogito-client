@@ -110,7 +110,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
-      const hse: DrawingStyleExpression<ImageAnnotation> = (
+      const dse: DrawingStyleExpression<ImageAnnotation> = (
         a: SupabaseAnnotation,
         state?: AnnotationState
       ) => {
@@ -125,13 +125,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         };
       };
 
-      setActiveLayerStyle(() => hse);
+      setActiveLayerStyle(() => dse);
     } else {
       setActiveLayerStyle(() => DEFAULT_STYLE);
     }
   };
 
-  // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set(
       (layers || []).filter((l) => !l.is_active).map((l) => l.id)
@@ -145,14 +144,14 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       strokeWidth: state?.selected ? 2.5 : 2,
     });
 
-    return (annotation: ImageAnnotation, state?: AnnotationState) => {
+    return ((annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
       return a.layer_id && readOnly.has(a.layer_id)
         ? readOnlyStyle(state)
         : typeof activeLayerStyle === 'function'
         ? activeLayerStyle(a as ImageAnnotation, state)
         : activeLayerStyle;
-    };
+    }) as DrawingStyleExpression;
   }, [activeLayerStyle, layers]);
 
   useEffect(() => {
@@ -257,6 +256,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
+            tagVocabulary={tagVocabulary}
             tool={tool}
             onChangePrivacy={setPrivacy}
             onChangeStyle={onChangeStyle}

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
@@ -6,8 +7,7 @@ import { animated, easings, useSpring, useTransition } from '@react-spring/web';
 import { isMe } from '@recogito/annotorious-supabase';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import { useEffect, useRef, useState } from 'react';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './RightDrawer.css';
 
@@ -31,7 +31,7 @@ interface RightDrawerProps {
 
   style?: HighlightStyleExpression;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
   beforeSelectAnnotation(a?: Annotation): void;
 
