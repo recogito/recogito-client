@@ -2,7 +2,6 @@ import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import { decrypt } from '@backend/crypto';
 import type { ApiAcceptOrgInvite } from '../../Types';
-import { error } from 'node_modules/astro/dist/core/logger/core';
 
 const INVITE_CRYPTO_KEY =
   process.env.INVITE_CRYPTO_KEY || import.meta.env.INVITE_CRYPTO_KEY;

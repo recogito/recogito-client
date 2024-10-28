@@ -63,7 +63,7 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
   };
 
   return (
-    <div className='reset-password'>
+    <div className='accept-org-invite'>
       {success ? (
         <main>
           <div className='success'>

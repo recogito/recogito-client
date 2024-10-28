@@ -1,26 +1,25 @@
-.reset-password h1 {
+.accept-org-invite h1 {
   margin-top: 0;
 }
 
-.reset-password .input-wrapper + .input-wrapper {
+.accept-org-invite .input-wrapper + .input-wrapper {
   margin-left: 0;
   margin-top: 1em;
 }
 
-.reset-password :is(button, a.button) {
+.accept-org-invite :is(button, a.button) {
   margin-top: 2em;
 }
 
-.reset-password .error {
+.accept-org-invite .error {
   font-size: var(--font-tiny);
   color: var(--red-500);
 }
 
-.reset-password .success {
+.accept-org-invite .success {
   text-align: center;
 }
 
-.reset-password .success p {
+.accept-org-invite .success p {
   font-size: var(--font-small);
 }
-
