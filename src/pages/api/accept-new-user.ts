@@ -78,7 +78,7 @@ export const POST: APIRoute = async ({ request, url, redirect }) => {
   );
 
   if (updateUserResp.error) {
-    console.log(error);
+    console.log(updateUserResp.error);
     return new Response(JSON.stringify({ error: 'Failed to update user' }), {
       status: 500,
     });
