@@ -1,5 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { DotsSix } from '@phosphor-icons/react';
+import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import type { Context, Document, Translations } from 'src/Types';
@@ -11,6 +13,8 @@ import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
 
 interface DocumentCardProps {
+  className?: string;
+
   i18n: Translations;
 
   isAdmin?: boolean;
@@ -26,8 +30,6 @@ interface DocumentCardProps {
   onError?(error: string): void;
 
   rtab?: DocumentViewRight;
-
-  style?: any;
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
@@ -50,11 +52,10 @@ export const DocumentCard = (props: DocumentCardProps) => {
     transition,
   } = useSortable(sortableProps);
 
-  const style = {
+  const style = useMemo(() => ({
     transform: CSS.Transform.toString(transform),
-    transition,
-    ...(props.style || {})
-  };
+    transition
+  }), [transform, transition]);
 
   const onOpen = (tab: boolean) => {
     const search = getSearchParameters();
@@ -96,13 +97,21 @@ export const DocumentCard = (props: DocumentCardProps) => {
   
   return (
     <article
-      className='document-card-container'
+      className={classNames('document-card-container', props.className)}
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
     >
       <div className='document-card' onClick={onClick}>
+
+        { props.isAdmin && (
+          <div
+            className='document-drag-handle'
+            {...attributes}
+            {...listeners}
+          >
+            <DotsSix />
+          </div>
+        )}
 
         <DocumentCardThumbnail document={props.document} />
 

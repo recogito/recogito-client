@@ -17,6 +17,7 @@ import {
   useUpload,
 } from '@apps/project-home/upload';
 import { DocumentLibrary } from '@components/DocumentLibrary';
+import classNames from 'classnames';
 import type {
   Document,
   Protocol,
@@ -37,6 +38,7 @@ import '../ProjectHome.css';
 
 interface DocumentsViewProps {
   isAdmin: boolean;
+
   i18n: Translations;
 
   documents: Document[];
@@ -305,6 +307,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             >
               {props.documents.map((document) => (
                 <DocumentCard
+                  className={classNames({ active: document.id === activeId })}
                   key={document.id}
                   isAdmin={props.isAdmin}
                   i18n={props.i18n}
@@ -314,7 +317,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   onUpdate={onUpdateDocument}
                   onError={onError}
                   rtab={props.project.document_view_right}
-                  style={document.id === activeId ? ({ opacity: '0.5'}) : undefined}
                 />
               ))}
             </SortableContext>
@@ -324,6 +326,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             >
               { activeDocument && (
                 <DocumentCard
+                  className='dragging'
                   key={activeDocument.id}
                   isAdmin={props.isAdmin}
                   i18n={props.i18n}
