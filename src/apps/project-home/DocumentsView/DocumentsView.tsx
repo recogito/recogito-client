@@ -5,7 +5,7 @@ import {
   MouseSensor,
   TouchSensor,
   useSensor,
-  useSensors
+  useSensors,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -21,6 +21,7 @@ import {
   useUpload,
 } from '@apps/project-home/upload';
 import { DocumentLibrary } from '@components/DocumentLibrary';
+import classNames from 'classnames';
 import type {
   Document,
   Protocol,
@@ -44,6 +45,7 @@ import '../ProjectHome.css';
 
 interface DocumentsViewProps {
   isAdmin: boolean;
+
   i18n: Translations;
 
   documents: Document[];
@@ -328,6 +330,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             >
               {props.documents.map((document) => (
                 <DocumentCard
+                  className={classNames({ active: document.id === activeId })}
                   key={document.id}
                   isAdmin={props.isAdmin}
                   i18n={props.i18n}
@@ -336,15 +339,14 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   onDelete={() => onDeleteDocument(document)}
                   onUpdate={onUpdateDocument}
                   onError={onError}
-                  style={
-                    document.id === activeId ? { opacity: '0.5' } : undefined
-                  }
+                  rtab={props.project.document_view_right}
                 />
               ))}
             </SortableContext>
             <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
               {activeDocument && (
                 <DocumentCard
+                  className='dragging'
                   key={activeDocument.id}
                   isAdmin={props.isAdmin}
                   i18n={props.i18n}
