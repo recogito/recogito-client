@@ -66,7 +66,6 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
           onError={() => {}}
           me={props.user}
           invitations={[]}
-          projects={[]}
         />
         <div className='project-request-root'>
           {!props.isAlreadyMember ? (
@@ -120,7 +119,6 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
           onError={() => {}}
           me={props.user}
           invitations={[]}
-          projects={[]}
         />
         <div className='project-request-spinner-container'>
           <Spinner />
@@ -135,7 +133,6 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
           onError={() => {}}
           me={props.user}
           invitations={[]}
-          projects={[]}
         />
         <RequestResultMessage
           i18n={props.i18n}
