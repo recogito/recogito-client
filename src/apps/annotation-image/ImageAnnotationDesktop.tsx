@@ -71,17 +71,25 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const { activeUsers, onPageActivity } = useMultiPagePresence(present);
 
-  const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
+  const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
 
   const layerNames = useLayerNames(props.document);
 
-  const activeLayer = useMemo(
-    () =>
-      layers && layers.length > 0
-        ? layers.find((l) => l.is_active) || layers[0]
-        : undefined,
-    [layers]
-  );
+  const activeLayer = useMemo(() => {
+    // Waiting for layers to load
+    if (!documentLayers) return;
+
+    // Crash hard if there is no layer (the error boundary will handle the UI message!)
+    if (documentLayers.length === 0)
+      throw 'Fatal: document has no layers.';
+
+    // Crash hard if there is no active layer
+    const activeLayer = documentLayers.find(l => l.is_active);
+    if (!activeLayer)
+      throw 'Fatal: missing active layer.';
+
+    return activeLayer;
+  }, [documentLayers]);
 
   const [tool, setTool] = useState<string | undefined>();
 
@@ -133,7 +141,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set(
-      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
+      (documentLayers || []).filter((l) => !l.is_active).map((l) => l.id)
     );
 
     const readOnlyStyle = (state?: AnnotationState) => ({
@@ -152,7 +160,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         ? activeLayerStyle(a as ImageAnnotation, state)
         : activeLayerStyle;
     }) as DrawingStyleExpression;
-  }, [activeLayerStyle, layers]);
+  }, [activeLayerStyle, documentLayers]);
 
   useEffect(() => {
     if (policies) {
@@ -181,7 +189,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               project_id: props.document.context.project_id
             }));
 
-          setLayers([...props.document.layers, ...toAdd]);
+          setDocumentLayers([...props.document.layers, ...toAdd]);
         });
       } else {
         const distinct = deduplicateLayers(props.document.layers);
@@ -189,7 +197,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         if (props.document.layers.length !== distinct.length)
           console.warn('Layers contain duplicates', props.document.layers);
 
-        setLayers(distinct);
+        setDocumentLayers(distinct);
       }
     }
   }, [policies]);
@@ -229,7 +237,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layers={layers}
+      layers={documentLayers}
       present={present}
       onError={() => setConnectionError(true)}>
 
@@ -250,7 +258,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             document={props.document}
             present={present}
             privacy={privacy}
-            layers={layers}
+            layers={documentLayers}
             layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
             policies={policies}
@@ -274,7 +282,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             currentImage={currentImage}
             i18n={props.i18n}
             iiifCanvases={canvases}
-            layers={layers}
+            layers={documentLayers}
             layerNames={layerNames}
             open={leftPanelOpen}
             present={present}
@@ -291,7 +299,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 imageManifestURL={currentImage}
                 isLocked={isLocked}
                 isPresentationManifest={isPresentationManifest}
-                layers={layers}
+                layers={documentLayers}
                 layerNames={layerNames}
                 policies={policies}
                 present={present}
@@ -312,7 +320,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           <RightDrawer
             i18n={props.i18n}
             isLocked={isLocked}
-            layers={layers}
+            layers={documentLayers}
             layerNames={layerNames}
             open={rightPanelOpen}
             policies={policies}

@@ -58,13 +58,21 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const layerNames = useLayerNames(props.document, embeddedLayers);
 
-  const activeLayer = useMemo(
-    () =>
-      documentLayers && documentLayers.length > 0
-        ? documentLayers.find((l) => l.is_active) || documentLayers[0]
-        : undefined,
-    [documentLayers]
-  );
+  const activeLayer = useMemo(() => {
+    // Waiting for layers to load
+    if (!documentLayers) return;
+
+    // Crash hard if there is no layer (the error boundary will handle the UI message!)
+    if (documentLayers.length === 0)
+      throw 'Fatal: document has no layers.';
+
+    // Crash hard if there is no active layer
+    const activeLayer = documentLayers.find(l => l.is_active);
+    if (!activeLayer)
+      throw 'Fatal: missing active layer.';
+
+    return activeLayer;
+  }, [documentLayers]);
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
