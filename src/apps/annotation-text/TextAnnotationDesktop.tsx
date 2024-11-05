@@ -67,11 +67,17 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       throw 'Fatal: document has no layers.';
 
     // Crash hard if there is no active layer
-    const activeLayer = documentLayers.find(l => l.is_active);
-    if (!activeLayer)
-      throw 'Fatal: missing active layer.';
+    const activeLayers = documentLayers.filter(l => l.is_active);
+    if (activeLayers.length === 0)
+      throw 'Fatal: active layer missing.';
 
-    return activeLayer;
+    // Crash hard if there is more than one active layer
+    if (activeLayers.length > 1) {
+      console.error(activeLayers);
+      throw `Fatal: more than one active layer (found ${activeLayers.length})`;
+    }
+
+    return activeLayers[0];
   }, [documentLayers]);
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
