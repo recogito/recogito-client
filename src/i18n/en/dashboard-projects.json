@@ -79,9 +79,9 @@
   "Accept invitation to": "Accept invitation to",
   "You have been invited to this project by": "You have been invited to this project by",
   "Locked": "Locked",
-  "all": "All",
-  "active": "Active",
-  "locked": "Locked",
+  "all": "All Projects",
+  "active": "Active Projects",
+  "locked": "Locked Projects",
   "View": "View",
   "Unlock Project": "Unlock Project",
   "Groups": "Groups"
