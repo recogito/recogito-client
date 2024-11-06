@@ -3,10 +3,11 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
 import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
-import { Header, type SortFunction } from './Header';
+import { Header, type Filters, type SortFunction } from './Header';
 import { ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 import { ProjectsList } from './List';
+import { Sidebar } from './Sidebar';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
 import { TopBar } from '@components/TopBar';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
@@ -19,7 +20,6 @@ import type {
 } from 'src/Types';
 
 import './ProjectsHome.css';
-import type { Filters } from '@components/Filter';
 
 export interface ProjectsHomeProps {
   i18n: Translations;
@@ -198,6 +198,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
+
         <TopBar
           invitations={invitations}
           i18n={props.i18n}
@@ -208,77 +209,95 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onInvitationDeclined={onInvitationDeclined}
           isCreator={!isReader}
         />
-        <Header
-          i18n={props.i18n}
-          me={me}
-          policies={policies}
-          projects={
-            isReader
-              ? [sharedProjects, [], openJoinProjects]
-              : [myProjects, sharedProjects, openJoinProjects]
-          }
-          invitations={invitations}
-          filter={filter}
-          onChangeFilter={setFilter}
-          onChangeDisplay={setInclude}
-          onChangeSearch={setSearch}
-          onChangeSort={(fn: any, name: string): void => {
-            setSort(() => fn);
-            setSortType(name);
-          }}
-          onProjectCreated={onProjectCreated}
-          onInvitationAccepted={onInvitationAccepted}
-          onInvitationDeclined={onInvitationDeclined}
-          onError={onError}
-          onSetProjects={(projects) => setProjects(projects)}
-          display={display}
-          onSetDisplay={setDisplay}
-        />
-
-        {filteredProjects.length === 0 ? (
-          policies && (
-            <ProjectsEmpty
+        <div
+          className='dashboard-projects-container'
+        >
+          <Sidebar
+            filter={filter}
+            i18n={props.i18n}
+            onChangeFilter={setFilter}
+            policies={policies}
+            projects={
+              isReader
+                ? [sharedProjects, [], openJoinProjects]
+                : [myProjects, sharedProjects, openJoinProjects]
+            }
+          />
+          <div
+            className='dashboard-projects-content'
+          >
+            <Header
+              filter={filter}
               i18n={props.i18n}
-              canCreateProjects={policies.get('projects').has('INSERT')}
-              invitations={invitations.length}
+              me={me}
+              policies={policies}
+              projects={
+                isReader
+                  ? [sharedProjects, [], openJoinProjects]
+                  : [myProjects, sharedProjects, openJoinProjects]
+              }
+              invitations={invitations}
+              onChangeDisplay={setInclude}
+              onChangeSearch={setSearch}
+              onChangeSort={(fn: any, name: string): void => {
+                setSort(() => fn);
+                setSortType(name);
+              }}
               onProjectCreated={onProjectCreated}
+              onInvitationAccepted={onInvitationAccepted}
+              onInvitationDeclined={onInvitationDeclined}
               onError={onError}
+              onSetProjects={(projects) => setProjects(projects)}
+              display={display}
+              onSetDisplay={setDisplay}
             />
-          )
-        ) : display === 'cards' ? (
-          <ProjectsGrid
-            i18n={props.i18n}
-            me={me}
-            projects={filteredProjects}
-            search={search}
-            sort={sort}
-            onProjectDeleted={onProjectDeleted}
-            onLeaveProject={onLeaveProject}
-            onDetailsChanged={onDetailsChanged}
-            onError={onError}
-            orgPolicies={policies}
-          />
-        ) : (
-          <ProjectsList
-            i18n={props.i18n}
-            me={me}
-            projects={filteredProjects}
-            search={search}
-            sort={sort}
-            sortType={sortType}
-            onProjectDeleted={onProjectDeleted}
-            onLeaveProject={onLeaveProject}
-            onDetailsChanged={onDetailsChanged}
-            onError={onError}
-            orgPolicies={policies}
-          />
-        )}
 
-        <ProfileNagDialog
-          open={showProfileNag}
-          i18n={props.i18n}
-          onClose={() => setShowProfileNag(false)}
-        />
+            {filteredProjects.length === 0 ? (
+              policies && (
+                <ProjectsEmpty
+                  i18n={props.i18n}
+                  canCreateProjects={policies.get('projects').has('INSERT')}
+                  invitations={invitations.length}
+                  onProjectCreated={onProjectCreated}
+                  onError={onError}
+                />
+              )
+            ) : display === 'cards' ? (
+              <ProjectsGrid
+                i18n={props.i18n}
+                me={me}
+                projects={filteredProjects}
+                search={search}
+                sort={sort}
+                onProjectDeleted={onProjectDeleted}
+                onLeaveProject={onLeaveProject}
+                onDetailsChanged={onDetailsChanged}
+                onError={onError}
+                orgPolicies={policies}
+              />
+            ) : (
+              <ProjectsList
+                i18n={props.i18n}
+                me={me}
+                projects={filteredProjects}
+                search={search}
+                sort={sort}
+                sortType={sortType}
+                onProjectDeleted={onProjectDeleted}
+                onLeaveProject={onLeaveProject}
+                onDetailsChanged={onDetailsChanged}
+                onError={onError}
+                orgPolicies={policies}
+              />
+            )}
+
+            <ProfileNagDialog
+              open={showProfileNag}
+              i18n={props.i18n}
+              onClose={() => setShowProfileNag(false)}
+            />
+          </div>
+        </div>
       </div>
 
       <Toast content={error} onOpenChange={(open) => !open && setError(null)} />

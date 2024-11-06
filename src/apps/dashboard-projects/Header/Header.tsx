@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Plus } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
@@ -23,6 +23,8 @@ import type {
 import './Header.css';
 
 interface HeaderProps {
+  filter: ProjectFilter;
+
   i18n: Translations;
 
   me: MyProfile;
@@ -32,10 +34,6 @@ interface HeaderProps {
   projects: ExtendedProjectData[][];
 
   invitations: Invitation[];
-
-  filter: ProjectFilter;
-
-  onChangeFilter(f: ProjectFilter): void;
 
   onChangeDisplay(f: Filters): void;
 
@@ -64,17 +62,9 @@ interface HeaderProps {
 export const Header = (props: HeaderProps) => {
   const { t } = props.i18n;
 
-  const { filter, onChangeFilter } = props;
-
-  const [mine, shared, openJoin] = props.projects;
-
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
-
-  const isReader = props.policies
-    ? !props.policies.get('projects').has('INSERT')
-    : true;
 
   const onCreateProject = () => {
     if (creating) return;
@@ -109,95 +99,61 @@ export const Header = (props: HeaderProps) => {
       });
   };
 
+  const filterLabels = useMemo(() => ({
+    [ProjectFilter.MINE]: t['My Projects'],
+    [ProjectFilter.SHARED]: t['Shared with me'],
+    [ProjectFilter.PUBLIC]: t['Public Projects']
+  }), [t]);
+
   return (
     <header className='dashboard-header'>
-      <section className='dashboard-header-top'>
-        <h1>
-          <span>{t['Projects']}</span>
-        </h1>
+      <section className='dashboard-header-container'>
+        <h2>
+          { filterLabels[props.filter] }
+        </h2>
 
-        <div className='dashboard-header-top-actions'>
-          {props.policies?.get('projects').has('INSERT') && (
-            <Button
-              busy={creating}
-              className='new-project primary sm flat'
-              onClick={onCreateProject}
-            >
-              <Plus size={16} weight='bold' />
-              <span>{t['New Project']}</span>
-            </Button>
-          )}
-        </div>
-      </section>
-
-      <section className='dashboard-header-bottom'>
-        <ul className='dashboard-header-tabs'>
-          <li
-            className={filter === ProjectFilter.MINE ? 'active' : undefined}
-            onClick={() => onChangeFilter(ProjectFilter.MINE)}
-          >
-            <button>{t['My Projects']}</button>
-
-            <span className={mine.length === 0 ? 'badge disabled' : 'badge'}>
-              {mine.length}
-            </span>
-          </li>
-
-          {!isReader && (
-            <li
-              className={filter === ProjectFilter.SHARED ? 'active' : undefined}
-              onClick={() => onChangeFilter(ProjectFilter.SHARED)}
-            >
-              <button>{t['Shared with me']}</button>
-
-              <span
-                className={shared.length === 0 ? 'badge disabled' : 'badge'}
-              >
-                {shared.length}
-              </span>
+        <div className='dashboard-header-actions'>
+          <ul className='dashboard-header-list-actions'>
+            <li>
+              <HeaderSearchAction
+                i18n={props.i18n}
+                onChangeSearch={props.onChangeSearch}
+              />
             </li>
-          )}
+            <li>
+              <HeaderFilterAction
+                i18n={props.i18n}
+                onChangeFilter={props.onChangeDisplay}
+              />
+            </li>
+            <li>
+              <HeaderSortAction
+                i18n={props.i18n}
+                onChangeSort={props.onChangeSort}
+              />
+            </li>
+            <li>
+              <ToggleDisplay
+                display={props.display}
+                onChangeDisplay={props.onSetDisplay}
+              />
+            </li>
+          </ul>
 
-          <li
-            className={filter === ProjectFilter.PUBLIC ? 'active' : undefined}
-            onClick={() => onChangeFilter(ProjectFilter.PUBLIC)}
-          >
-            <button>{t['Public Projects']}</button>
+          <div className='dashboard-header-button-actions'>
+            {props.policies?.get('projects').has('INSERT') && (
+              <Button
+                busy={creating}
+                className='new-project primary sm flat'
+                onClick={onCreateProject}
+              >
+                <Plus size={16} weight='bold' />
+                <span>{t['New Project']}</span>
+              </Button>
+            )}
+          </div>
+        </div>
 
-            <span
-              className={openJoin.length === 0 ? 'badge disabled' : 'badge'}
-            >
-              {openJoin.length}
-            </span>
-          </li>
-        </ul>
-
-        <ul className='dashboard-header-bottom-actions'>
-          <li>
-            <HeaderSearchAction
-              i18n={props.i18n}
-              onChangeSearch={props.onChangeSearch}
-            />
-          </li>
-          <li>
-            <HeaderFilterAction
-              i18n={props.i18n}
-              onChangeFilter={props.onChangeDisplay}
-            />
-          </li>
-          <li>
-            <HeaderSortAction
-              i18n={props.i18n}
-              onChangeSort={props.onChangeSort}
-            />
-          </li>
-          <li>
-            <ToggleDisplay
-              display={props.display}
-              onChangeDisplay={props.onSetDisplay}
-            />
-          </li>
-        </ul>
         <CreateProjectDialog
           open={createProjectOpen}
           onClose={() => {

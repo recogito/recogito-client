@@ -117,3 +117,8 @@ button.icon-only {
 button.icon-only svg {
   display: block;
 }
+
+button.compact {
+  min-width: unset;
+  padding: 10px 10px;
+}
