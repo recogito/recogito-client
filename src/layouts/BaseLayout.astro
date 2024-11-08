@@ -15,6 +15,16 @@ const textColor = config.branding.contrast_color;
 const backgroundColor = config.branding.background_color;
 
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
+
+function truncateString(str: string, maxLength: number) {
+  if (str.length > maxLength) {
+    return str.substring(0, maxLength) + '...';
+  } else {
+    return str;
+  }
+}
+
+const tabTitle = truncateString(title, 20);
 ---
 
 <!doctype html>
@@ -28,7 +38,7 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     />
     <meta name='generator' content={Astro.generator} />
     <link rel='icon' type='image/x-icon' href={favicon} />
-    <title>{title}</title>
+    <title>{tabTitle}</title>
     <slot name='head' />
   </head>
   <body>
