@@ -86,11 +86,14 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
     reader.onerror = () => console.log('file reading failed');
     reader.onload = () => {
       // Parse CSV file
-      const result: ParseResult<string[]> = papa.parse(reader.result as string);
+      const result: ParseResult<string[]> = papa.parse(
+        reader.result?.toString() as string,
+        { delimiter: ',', skipEmptyLines: true }
+      );
       if (result.errors.length === 0) {
         setCsv(parseUsers(result.data) || undefined);
       } else {
-        const errors = result.errors.map(e => e.message).join('\n');
+        const errors = result.errors.map((e) => e.message).join('\n');
         props.onError(errors);
       }
     };
