@@ -17,8 +17,6 @@ export const ResetPassword = (props: ResetPasswordProps) => {
 
   const [password, setPassword] = useState('');
 
-  const [email, setEmail] = useState('');
-
   const [verification, setVerification] = useState('');
 
   const [busy, setBusy] = useState(false);
@@ -34,22 +32,13 @@ export const ResetPassword = (props: ResetPasswordProps) => {
       setError(t["Passwords don't match"]);
     } else {
       setBusy(true);
-
-      supabase.auth.resetPasswordForEmail(email).then(({ error }) => {
+      supabase.auth.updateUser({ password }).then(({ error }) => {
         if (error) {
           console.error(error);
           setError(t[error.message] || t['Could not reset password']);
         } else {
-          supabase.auth.updateUser({ password }).then(({ error }) => {
-            if (error) {
-              console.error(error);
-              setError(t[error.message] || t['Could not reset password']);
-            } else {
-              setSuccess(true);
-            }
-          });
+          setSuccess(true);
         }
-
         setBusy(false);
       });
     }
@@ -73,15 +62,6 @@ export const ResetPassword = (props: ResetPasswordProps) => {
         <main>
           <h1>{t['Set Password']}</h1>
           <form className='login'>
-            <TextInput
-              type='text'
-              autoComplete={false}
-              id='email'
-              name='email'
-              label={t['Your email address']}
-              className='lg w-full'
-              onChange={setEmail}
-            />
             <TextInput
               type='password'
               autoComplete={false}
