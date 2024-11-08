@@ -26,6 +26,7 @@ const supabaseServerUrl =
 
 const invitesAllowed = import.meta.env.PUBLIC_ENABLE_USER_INVITE;
 
+console.log('Key: ', INVITE_CRYPTO_KEY);
 export const POST: APIRoute = async ({ request, cookies, url }) => {
   // Should this be callable at all?
   if (!invitesAllowed) {
