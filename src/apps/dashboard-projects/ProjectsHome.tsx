@@ -19,7 +19,7 @@ import type {
 } from 'src/Types';
 
 import './ProjectsHome.css';
-import type { Filters } from '@components/Filter';
+import type { Filters } from './Header/Filter';
 
 export interface ProjectsHomeProps {
   i18n: Translations;
@@ -113,12 +113,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         users.find((user) => user.user.id === me.id && me.id !== created_by?.id)
       )
     : me.isOrgAdmin
-    ? projects.filter(
-        (p) =>
-          p.created_by?.id !== me.id &&
-          p.users.filter((u) => u.user.id === me.id).length === 0 &&
-          !p.is_open_join
-      )
+    ? projects.filter((p) => p.created_by?.id !== me.id && !p.is_open_join)
     : projects.filter(
         (p) =>
           p.created_by?.id !== me.id &&
