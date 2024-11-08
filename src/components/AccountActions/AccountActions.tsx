@@ -93,11 +93,6 @@ export const AccountActions = (props: AccountProps) => {
               <a href={`/${lang}/account/me`}>{t['Profile Settings']}</a>
             </Item>
 
-            <Item className='dropdown-item' onSelect={goto(`/${lang}/help`)}>
-              <Question size={16} />
-              <a href={`/${lang}/help`}>{t['Help']}</a>
-            </Item>
-
             <Item
               className='dropdown-item'
               onSelect={goto(`/${lang}/sign-out`)}
@@ -110,9 +105,7 @@ export const AccountActions = (props: AccountProps) => {
               <>
                 <div className='dropdown-divider' />
 
-                <div className='dropdown-label'>
-                  {t['Site Administration']}
-                </div>
+                <div className='dropdown-label'>{t['Site Administration']}</div>
 
                 <Item
                   className='dropdown-item'
