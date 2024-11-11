@@ -8,6 +8,8 @@ import './AccountActions.css';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
+const helpRedirect = import.meta.env.PUBLIC_HELP_REDIRECT;
+
 interface AccountProps {
   align?: 'center' | 'end' | 'start';
 
@@ -92,6 +94,15 @@ export const AccountActions = (props: AccountProps) => {
               <Sliders size={16} />
               <a href={`/${lang}/account/me`}>{t['Profile Settings']}</a>
             </Item>
+
+            {helpRedirect && (
+              <Item className='dropdown-item'>
+                <Question size={16} />
+                <a href={helpRedirect} target='_blank'>
+                  {t['Help']}
+                </a>
+              </Item>
+            )}
 
             <Item
               className='dropdown-item'
