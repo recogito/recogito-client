@@ -88,11 +88,11 @@ export const InviteListOfUsers = (props: InviteListOfUsersProps) => {
       // Parse CSV file
       const result: ParseResult<string[]> = papa.parse(
         reader.result?.toString() as string,
-        { delimiter: ',', skipEmptyLines: true }
+        { skipEmptyLines: true }
       );
-      if (result.errors.length === 0) {
+      if ((result.data || []).length > 0) {
         setCsv(parseUsers(result.data) || undefined);
-      } else {
+      } else if (result.errors.length > 0) {
         const errors = result.errors.map((e) => e.message).join('\n');
         props.onError(errors);
       }
