@@ -33,7 +33,8 @@ export const MoreTools = (props: MoreToolsProps) => {
 
       <Popover.Content 
         className="popover-content anno-more-tools ta-more-tools"
-        sideOffset={4}>
+        collisionPadding={10}
+        sideOffset={14}>
         <PDFControls i18n={props.i18n} />
 
         <div className="anno-toolbar-divider" />
