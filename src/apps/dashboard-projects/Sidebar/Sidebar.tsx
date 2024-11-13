@@ -1,5 +1,7 @@
 import { ProjectFilter } from '@apps/dashboard-projects';
+import { CreateTagDefinitionDialog } from '@components/CreateTagDefinitionDialog';
 import { Button } from '@components/Button';
+import { Toast, type ToastContent } from '@components/Toast';
 import {
   CaretLeft,
   CaretRight,
@@ -9,16 +11,24 @@ import {
   Users,
   UsersThree
 } from '@phosphor-icons/react';
-import { useState } from 'react';
-import type { ExtendedProjectData, Policies, Translations } from 'src/Types.ts';
+import { TagContext } from '@util/context';
+import { useCallback, useContext, useState } from 'react';
+import type {
+  ExtendedProjectData,
+  MyProfile,
+  Policies,
+  Translations
+} from 'src/Types.ts';
 import './Sidebar.css';
 
 interface Props {
-  filter: ProjectFilter;
+  filter: ProjectFilter | string;
 
   i18n: Translations;
 
-  onChangeFilter:(filter: ProjectFilter) => void;
+  me: MyProfile;
+
+  onChangeFilter:(filter: ProjectFilter | string) => void;
 
   policies?: Policies;
 
@@ -26,11 +36,24 @@ interface Props {
 }
 
 export const Sidebar = (props: Props) => {
+  const [addTagDefinition, setAddTagDefinition] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(true);
 
   const { filter, onChangeFilter } = props;
   const { t } = props.i18n;
   const [mine, shared, openJoin] = props.projects;
+
+  const { tagDefinitions, onSaveTagDefinition, setToast } = useContext(TagContext);
+
+  const onSaved = useCallback((name) => (
+    onSaveTagDefinition(name)
+      .then(() => setAddTagDefinition(false))
+      .then(() => setToast({
+        title: t['Success'],
+        description: t['Project group successfully added'].replace('${name}', name),
+        type: 'success'
+      }))
+  ), []);
 
   const isReader = props.policies
     ? !props.policies.get('projects').has('INSERT')
@@ -44,7 +67,7 @@ export const Sidebar = (props: Props) => {
             className='primary flat compact'
             onClick={() => setOpen(true)}
           >
-            <CaretRight />
+            <CaretRight size={16} weight='bold' />
           </Button>
         </section>
       </aside>
@@ -62,7 +85,7 @@ export const Sidebar = (props: Props) => {
           className='primary flat compact'
           onClick={() => setOpen(false)}
         >
-          <CaretLeft />
+          <CaretLeft size={16} weight='bold' />
         </button>
       </section>
 
@@ -132,29 +155,38 @@ export const Sidebar = (props: Props) => {
           </h2>
           <button
             className='primary flat compact'
+            onClick={() => setAddTagDefinition(true)}
           >
-            <Plus />
+            <Plus size={16} weight='bold' />
           </button>
         </div>
 
-        <ul className='dashboard-sidebar-groups-list'>
-          <li>
-            <TagSimple
-              className='icon'
-              size={20}
-            />
+        { tagDefinitions && tagDefinitions.length > 0 && (
+          <ul className='dashboard-sidebar-groups-list'>
+            { tagDefinitions.map((tagDefinition) => (
+              <li
+                className={filter === tagDefinition.id ? 'active' : undefined}
+                key={tagDefinition.id}
+                onClick={() => onChangeFilter(tagDefinition.id)}
+              >
+                <TagSimple
+                  className='icon'
+                  size={20}
+                />
 
-            Group 1
-          </li>
-          <li>
-            <TagSimple
-              className='icon'
-              size={20}
-            />
+                { tagDefinition.name }
+              </li>
+            ))}
+          </ul>
+        )}
 
-            Group 2
-          </li>
-        </ul>
+        <CreateTagDefinitionDialog
+          i18n={props.i18n}
+          onCancel={() => setAddTagDefinition(false)}
+          onSaved={onSaved}
+          open={addTagDefinition}
+          title={t['Create Project Group']}
+        />
       </section>
     </aside>
   );

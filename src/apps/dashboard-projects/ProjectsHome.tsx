@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { TagContext, TagContextProvider } from '@util/context/TagContext.tsx';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
@@ -16,7 +17,7 @@ import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
-  Translations,
+  Translations
 } from 'src/Types';
 
 import './ProjectsHome.css';
@@ -54,7 +55,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [filter, setFilter] = useState(ProjectFilter.MINE);
+  const [filter, setFilter] = useState<ProjectFilter | string>(ProjectFilter.MINE);
 
   const [search, setSearch] = useState('');
 
@@ -72,6 +73,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const [include, setInclude] = useState<Filters>('active');
 
   const isReader = policies ? !policies.get('projects').has('INSERT') : true;
+
+  const { tagDefinitions, toast, setToast } = useContext(TagContext);
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
@@ -125,30 +128,49 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
 
-  let filteredProjects = isReader
-    ? filter === ProjectFilter.MINE
-      ? sharedProjects
-      : // Am I one of the users in the groups?
-      filter === ProjectFilter.PUBLIC
-      ? openJoinProjects
-      : []
-    : // All projects
-    filter === ProjectFilter.PUBLIC
-    ? openJoinProjects
-    : // Am I the creator?
-    filter === ProjectFilter.MINE
-    ? myProjects
-    : // Am I one of the users in the groups?
-    filter === ProjectFilter.SHARED
-    ? sharedProjects
-    : [];
+  const filteredProjects = useMemo(() => {
+    let value;
 
-  filteredProjects =
-    include === 'all'
-      ? filteredProjects
-      : include === 'active'
-      ? filteredProjects.filter((p) => !p.is_locked)
-      : filteredProjects.filter((p) => p.is_locked);
+    if (filter === ProjectFilter.MINE) {
+      value = isReader ? sharedProjects : myProjects;
+    } else if (filter === ProjectFilter.SHARED) {
+      value = sharedProjects;
+    } else if (filter === ProjectFilter.PUBLIC) {
+      value = openJoinProjects;
+    } else if (filter) {
+      const tagDefinition = tagDefinitions.find((tagDefinition) => tagDefinition.id === filter);
+
+      if (tagDefinition) {
+        const projectIds = tagDefinition.tags?.map((tag) => tag.target_id);
+        value = projects.filter((project) => projectIds?.includes(project.id));
+      }
+    }
+
+    if (include === 'active') {
+      value = value.filter((p) => !p.is_locked);
+    } else if (include === 'locked') {
+      value = value.filter((p) => p.is_locked)
+    }
+
+    return value;
+  }, [filter, include, isReader, projects, tagDefinitions]);
+
+  const filterLabel = useMemo(() => {
+    let value;
+
+    if (filter === ProjectFilter.MINE) {
+      value = t['My Projects']
+    } else if (filter === ProjectFilter.SHARED) {
+      value = t['Shared with me'];
+    } else if (filter === ProjectFilter.PUBLIC) {
+      value = t['Public Projects'];
+    } else if (filter) {
+      const tagDefinition = tagDefinitions.find((tagDefinition) => tagDefinition.id === filter);
+      value = tagDefinition?.name;
+    }
+
+    return value;
+  }, [filter, t, tagDefinitions]);
 
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
@@ -194,7 +216,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       invitations.filter((i) => i.id !== invitation.id)
     );
 
-  filteredProjects;
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
@@ -227,7 +248,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             className='dashboard-projects-content'
           >
             <Header
-              filter={filter}
+              filter={filterLabel}
               i18n={props.i18n}
               me={me}
               policies={policies}
@@ -301,6 +322,22 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       </div>
 
       <Toast content={error} onOpenChange={(open) => !open && setError(null)} />
+      <Toast content={toast} onOpenChange={(open) => !open && setToast(null)} />
     </ToastProvider>
   );
 };
+
+export const ProjectsHomeWrapper = (props) => (
+  <TagContextProvider
+    scope='user'
+    scopeId={props.me.id}
+    targetType='project'
+  >
+    <ProjectsHome
+      i18n={props.i18n}
+      me={props.me}
+      projects={props.projects}
+      invitations={props.invitations}
+    />
+  </TagContextProvider>
+);

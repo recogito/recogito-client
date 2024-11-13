@@ -1,0 +1,53 @@
+.select-tag-definitions {
+  max-width: 600px;
+}
+
+.select-tag-definitions > .dialog-title > h1 {
+  font-size: 20px;
+  margin-bottom: 0px;
+}
+
+.select-tag-definitions > .buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.select-tag-definitions > .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0px;
+}
+
+.select-tag-definitions > .header > h2 {
+  font-size: 16px;
+}
+
+.select-tag-definitions > .header > .search-container {
+  position: relative;
+  flex-grow: 0.5;
+}
+
+.select-tag-definitions > .header > .search-container > .search-input {
+  background-color: var(--gray-100);
+  width: 100%;
+  text-indent: 16px;
+}
+
+.select-tag-definitions > .header > .search-container > svg.search-icon {
+  color: var(--gray-500);
+  left: 6px;
+  position: absolute;
+  top: 11px;
+}
+
+.select-tag-definitions > .header > .search-container > button.search-clear {
+  color: var(--gray-500);
+  right: 6px;
+  position: absolute;
+  top: 11px;
+}
+
+.select-tag-definitions > .table-container {
+  margin: 20px 0px;
+}

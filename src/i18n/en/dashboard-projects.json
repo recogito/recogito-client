@@ -84,5 +84,16 @@
   "locked": "Locked Projects",
   "View": "View",
   "Unlock Project": "Unlock Project",
-  "Groups": "Groups"
+  "Groups": "Groups",
+  "Create Project Group": "Create Project Group",
+  "Group name...": "Group name...",
+  "Add to group": "Add to group",
+  "Add to Selected": "Add to Selected",
+  "Add project to group": "Add \"${name}\" to group",
+  "Select group(s) to add project to": "Select group(s) to add project to",
+  "All Groups": "All Groups",
+  "Number of Projects": "Number of Projects",
+  "Success": "Success",
+  "Project group successfully added": "${name} successfully added",
+  "Successfully updated groups for project": "Successfully updated groups for ${name}"
 }

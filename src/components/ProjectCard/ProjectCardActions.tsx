@@ -1,19 +1,29 @@
-import { useState } from 'react';
+import { SelectTagDefinitionsDialog } from '@components/SelectTagDefinitionsDialog';
+import { TagContext } from '@util/context';
+import {
+  useCallback,
+  useContext,
+  useMemo,
+  useState
+} from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
+  ArrowRight,
   DotsThreeVertical,
   PencilSimple,
   SignOut,
-  Trash,
+  Trash
 } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveProject, leaveProject } from '@backend/crud';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import type {
   ExtendedProjectData,
+  Member,
   MyProfile,
   Policies,
-  Translations,
+  Tag,
+  Translations
 } from 'src/Types';
 import { ProjectDetailsForm } from './ProjectDetailsForm';
 
@@ -46,8 +56,12 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
 
   const [busy, setBusy] = useState(false);
 
+  const [addToGroup, setAddToGroup] = useState(false);
+
   const isMine = props.me.id === props.project.created_by?.id;
   const isOrgAdmin = props.me.isOrgAdmin;
+
+  const { tagDefinitions, onSaveTags, setToast } = useContext(TagContext);
 
   const onDetailsSaved = (updated: ExtendedProjectData) => {
     setEditing(false);
@@ -83,6 +97,31 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
     });
   };
 
+  const allowAddToGroup = useMemo(() => {
+    return !(props.project.is_open_join && !props.project.users.find(({ user }: Member) => user.id === props.me.id))
+  }, [props.project, props.me]);
+
+  const onTagsSaved = useCallback((tagDefinitionIds: string[]) => (
+    onSaveTags(tagDefinitionIds, props.project.id)
+      .then(() => setAddToGroup(false))
+      .then(() => setToast({
+        title: t['Success'],
+        description: t['Successfully updated groups for project'].replace('${name}', props.project.name),
+        type: 'success'
+      }))
+  ), [props.project]);
+
+  const selectedTagDefinitions = useMemo(() => {
+    const tagDefinitionIds = tagDefinitions
+      .map((tagDefinition) => tagDefinition.tags)
+      .flat(Infinity)
+      .filter(Boolean)
+      .filter((tag: Tag) => tag.target_id === props.project.id)
+      .map((tag: Tag) => tag.tag_definition_id);
+
+    return tagDefinitionIds;
+  }, [props.project, tagDefinitions]);
+
   return (
     <ConfirmedAction.Root open={confirming} onOpenChange={setConfirming}>
       <Root>
@@ -101,16 +140,25 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
             sideOffset={5}
             align='start'
           >
-            {isMine ||
-              (isOrgAdmin && (
-                <Item
-                  className='dropdown-item'
-                  onSelect={() => setEditing(true)}
-                >
-                  <PencilSimple size={16} />{' '}
-                  <span>{t['Edit project details']}</span>
-                </Item>
-              ))}
+            {(isMine || isOrgAdmin) && (
+              <Item
+                className='dropdown-item'
+                onSelect={() => setEditing(true)}
+              >
+                <PencilSimple size={16} />{' '}
+                <span>{t['Edit project details']}</span>
+              </Item>
+            )}
+
+            { allowAddToGroup && tagDefinitions && tagDefinitions.length > 0 && (
+              <Item
+                className='dropdown-item'
+                onSelect={() => setAddToGroup(true)}
+              >
+                <ArrowRight size={16} className='dark' />{' '}
+                <span>{t['Add to group']}</span>
+              </Item>
+            )}
 
             <ConfirmedAction.Trigger>
               <Item className='dropdown-item'>
@@ -160,6 +208,23 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         onCancel={() => setEditing(false)}
         onError={onDetailsError}
       />
+
+      <SelectTagDefinitionsDialog
+        i18n={props.i18n}
+        labels={{
+          columnCount: t['Number of Projects'],
+          columnName: t['Name'],
+          header: t['All Groups'],
+          subtitle: t['Select group(s) to add project to'],
+          title: t['Add project to group'].replace('${name}', props.project.name)
+        }}
+        onCancel={() => setAddToGroup(false)}
+        onSave={onTagsSaved}
+        open={addToGroup}
+        tagDefinitions={tagDefinitions}
+        selected={selectedTagDefinitions}
+      />
+
     </ConfirmedAction.Root>
   );
 };

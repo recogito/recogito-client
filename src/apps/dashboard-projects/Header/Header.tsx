@@ -22,7 +22,7 @@ import type {
 import './Header.css';
 
 interface HeaderProps {
-  filter: ProjectFilter;
+  filter: string;
 
   i18n: Translations;
 
@@ -98,17 +98,11 @@ export const Header = (props: HeaderProps) => {
       });
   };
 
-  const filterLabels = useMemo(() => ({
-    [ProjectFilter.MINE]: t['My Projects'],
-    [ProjectFilter.SHARED]: t['Shared with me'],
-    [ProjectFilter.PUBLIC]: t['Public Projects']
-  }), [t]);
-
   return (
     <header className='dashboard-header'>
       <section className='dashboard-header-container'>
         <h2>
-          { filterLabels[props.filter] }
+          { props.filter }
         </h2>
 
         <div className='dashboard-header-actions'>

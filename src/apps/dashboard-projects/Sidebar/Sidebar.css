@@ -70,11 +70,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 30px;
+  padding: 0px 30px 20px 30px;
 }
 
 .dashboard-sidebar > section.dashboard-sidebar-groups > .dashboard-sidebar-groups-header button {
   border-radius: 50%;
+  font-weight: 500;
 }
 
 .dashboard-sidebar > section.dashboard-sidebar-groups > ul.dashboard-sidebar-groups-list > li > .icon {
