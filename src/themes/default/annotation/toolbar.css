@@ -92,8 +92,6 @@
   display: flex;
   color: var(--font-dark);
   font-weight: 500;
-  max-width: 14vw;
-  min-width: 140px;
   overflow: hidden;
 }
 
@@ -110,7 +108,7 @@
 
 .anno-toolbar .anno-toolbar-title h1 a > div {
   max-width: 14vw;
-  min-width: 140px;
+  min-width: 60px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
