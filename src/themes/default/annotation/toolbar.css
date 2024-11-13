@@ -4,6 +4,7 @@
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: space-between;
+  overflow-x: hidden;
   padding: 0.375rem 0.75rem;
   position: relative;
   z-index: 10;
@@ -15,6 +16,11 @@
   flex-shrink: 0;
   gap: 0.25rem;
   overflow: hidden;
+}
+
+.anno-toolbar-slot-center.collapsed {
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
 .anno-toolbar button {
@@ -162,3 +168,10 @@
   right: 0;
 }
 
+.popover-content.anno-more-tools {
+  align-items: center;
+  display: flex;
+  padding: 0.375rem 0.75rem;
+  width: fit-content;
+  white-space: nowrap;
+}

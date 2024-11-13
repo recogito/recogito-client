@@ -68,8 +68,6 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const { ref, collapsed } = useCollapsibleToolbar();
 
-  // const { ref, collapseLevel } = useProgressiveCollapse(0);
-
   useEffect(() => {
     if (colorCoding?.style)
       props.onChangeStyle(colorCoding.style);
@@ -126,8 +124,8 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
       </div>
 
-      <div className="anno-toolbar-slot anno-toolbar-slot-center">        
-        {(!props.isLocked && !collapsed) && (
+      <div className={`anno-toolbar-slot anno-toolbar-slot-center${collapsed? ' collapsed': ''}`}>     
+        {!props.isLocked && (
           <PrivacySelector
             mode={props.privacy}
             i18n={props.i18n}
@@ -181,21 +179,14 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
 
         {collapsed ? (
-          <>
-            <PrivacySelector
-              mode={props.privacy}
-              i18n={props.i18n}
-              onChangeMode={props.onChangePrivacy} />
-              
-            <MoreTools
-              document={props.document}
-              i18n={props.i18n}
-              isPDF={isPDF} 
-              layers={props.layers}
-              layerNames={props.layerNames}
-              present={props.present}
-              tagVocabulary={props.tagVocabulary} />
-          </>
+          <MoreTools
+            document={props.document}
+            i18n={props.i18n}
+            isPDF={isPDF} 
+            layers={props.layers}
+            layerNames={props.layerNames}
+            present={props.present}
+            tagVocabulary={props.tagVocabulary} />
         ) : (
           <div className="anno-toolbar-divider" />
         )}
