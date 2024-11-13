@@ -126,18 +126,7 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
       </div>
 
-      <div className="anno-toolbar-slot anno-toolbar-slot-center">
-        {(collapsed && (
-          <MoreTools
-            document={props.document}
-            i18n={props.i18n}
-            isPDF={isPDF} 
-            layers={props.layers}
-            layerNames={props.layerNames}
-            present={props.present}
-            tagVocabulary={props.tagVocabulary} />
-        ))}
-        
+      <div className="anno-toolbar-slot anno-toolbar-slot-center">        
         {!props.isLocked && (
           <PrivacySelector
             mode={props.privacy}
@@ -191,7 +180,18 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        <div className="anno-toolbar-divider" />
+        {collapsed ? (
+          <MoreTools
+            document={props.document}
+            i18n={props.i18n}
+            isPDF={isPDF} 
+            layers={props.layers}
+            layerNames={props.layerNames}
+            present={props.present}
+            tagVocabulary={props.tagVocabulary} />
+        ) : (
+          <div className="anno-toolbar-divider" />
+        )}
 
         {plugins.map(plugin => (
           <Extension 

@@ -12,13 +12,16 @@
 .anno-toolbar-slot {
   align-items: center;
   display: flex;
+  flex-shrink: 0;
   gap: 0.25rem;
+  overflow: hidden;
 }
 
 .anno-toolbar button {
   border-radius: 50%;
   color: var(--font-dark);
   flex: 0 0 auto;
+  flex-shrink: 0;
   height: 36px;
   vertical-align: bottom;
   width: 36px;
@@ -59,6 +62,7 @@
 .anno-toolbar-group {
   align-items: center;
   display: flex;
+  flex-shrink: 0;
 }
 
 .anno-toolbar .anno-toolbar-title {
@@ -152,6 +156,7 @@
   border-color: rgba(0, 0, 0, 0.08);
   border-width: 0 2px 0 0;
   display: inline-block;
+  flex-shrink: 0;
   height: 16px;
   margin: 0 4px;
   right: 0;
