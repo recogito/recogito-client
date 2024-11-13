@@ -13,4 +13,5 @@ export * from './UndoStack';
 export * from './useAnnotationsViewUIState';
 export * from './useCollapsibleToolbar';
 export * from './useLayerNames';
+export * from './useProgressiveCollapse';
 export * from './utils';

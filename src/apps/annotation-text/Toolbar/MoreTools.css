@@ -1,0 +1,7 @@
+.popover-content.anno-more-tools {
+  align-items: center;
+  display: flex;
+  padding: 0.375rem 0.75rem;
+  width: fit-content;
+  white-space: nowrap;
+}

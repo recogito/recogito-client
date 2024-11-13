@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { Color, PresentUser } from '@annotorious/react';
-import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter, useCollapsibleToolbar } from '@components/AnnotationDesktop';
+import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter, useCollapsibleToolbar, useProgressiveCollapse } from '@components/AnnotationDesktop';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { MoreTools } from './MoreTools';
 
 interface ToolbarProps {
 
@@ -65,7 +66,9 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const colorCoding = useColorCoding();
 
-  const { ref, collapsed } = useCollapsibleToolbar(20);
+  const { ref, collapsed } = useCollapsibleToolbar();
+
+  // const { ref, collapseLevel } = useProgressiveCollapse(0);
 
   useEffect(() => {
     if (colorCoding?.style)
@@ -124,21 +127,31 @@ export const Toolbar = (props: ToolbarProps) => {
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-center">
+        {(collapsed && (
+          <MoreTools
+            document={props.document}
+            i18n={props.i18n}
+            isPDF={isPDF} 
+            layers={props.layers}
+            layerNames={props.layerNames}
+            present={props.present}
+            tagVocabulary={props.tagVocabulary} />
+        ))}
+        
         {!props.isLocked && (
-          <>
-            <PrivacySelector
-              mode={props.privacy}
-              i18n={props.i18n}
-              onChangeMode={props.onChangePrivacy} />
-
-            <div className="anno-toolbar-divider" />
-          </>
+          <PrivacySelector
+            mode={props.privacy}
+            i18n={props.i18n}
+            onChangeMode={props.onChangePrivacy} />
         )}
 
-        {isPDF && (
+        {!collapsed && (
+          <div className="anno-toolbar-divider" />
+        )}
+
+        {(isPDF && !collapsed) && (
           <div className="anno-toolbar-group">
             <PDFControls i18n={props.i18n} />
-            <div className="anno-toolbar-divider" />
           </div>
         )}
 
@@ -149,16 +162,22 @@ export const Toolbar = (props: ToolbarProps) => {
             policies={props.policies} />
         )}
 
-        <ColorCodingSelector 
-          document={props.document}
-          i18n={props.i18n} 
-          present={props.present} 
-          layers={props.layers}
-          layerNames={props.layerNames} 
-          tagVocabulary={props.tagVocabulary} />
+        {!collapsed && (
+          <>
+            <div className="anno-toolbar-divider" />
 
-        <ColorLegend 
-          i18n={props.i18n} />
+            <ColorCodingSelector 
+              document={props.document}
+              i18n={props.i18n} 
+              present={props.present} 
+              layers={props.layers}
+              layerNames={props.layerNames} 
+              tagVocabulary={props.tagVocabulary} />
+
+            <ColorLegend 
+              i18n={props.i18n} />
+          </>
+        )}
       </div>
 
       <div className="anno-toolbar-slot anno-toolbar-slot-right">  

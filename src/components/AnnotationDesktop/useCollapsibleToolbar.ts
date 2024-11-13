@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const useCollapsibleToolbar = (buffer = 0) => {
+export const useCollapsibleToolbar = () => {
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -21,15 +21,17 @@ export const useCollapsibleToolbar = (buffer = 0) => {
   }, []);
 
   useEffect(() => {
-    const shouldCollapse = ref.current ? (ref.current.scrollWidth + buffer) > ref.current.clientWidth : false;
-
+    if (!ref.current) return;
+    
+    const shouldCollapse = ref.current ? ref.current.scrollWidth > ref.current.clientWidth : false;
+    
     if (shouldCollapse && !collapsed) {
       setBreakpoint(windowWidth);
       setCollapsed(true);
     } else if (!shouldCollapse && windowWidth > breakpoint) {
       setCollapsed(false);
     }
-  }, [windowWidth, buffer]);
+  }, [windowWidth]);
 
   return { ref, collapsed };
 
