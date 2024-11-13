@@ -51,3 +51,9 @@
 .select-tag-definitions > .table-container {
   margin: 20px 0px;
 }
+
+.select-tag-definitions > .no-results {
+  display: flex;
+  justify-content: center;
+  padding: 10px 0px 50px 0px;
+}

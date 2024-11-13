@@ -107,45 +107,51 @@ export const SelectTagDefinitionsDialog = (props: Props) => {
             </div>
           </div>
 
-          <div className='table-container'>
-            <table>
-              <thead>
-              <tr>
-                <th></th>
-                <th>{props.labels.columnName}</th>
-                <th>{props.labels.columnCount}</th>
-              </tr>
-              </thead>
+          { !!(filteredTagDefinitions && filteredTagDefinitions.length) && (
+            <div className='table-container'>
+              <table>
+                <thead>
+                <tr>
+                  <th></th>
+                  <th>{props.labels.columnName}</th>
+                  <th>{props.labels.columnCount}</th>
+                </tr>
+                </thead>
 
-              <tbody>
-              { filteredTagDefinitions && filteredTagDefinitions.map((tagDefinition) => (
-                <tr
-                  key={tagDefinition.id}
-                >
-                  <td>
-                    <Checkbox.Root
-                      className='checkbox-root'
-                      checked={isSelected(tagDefinition.id)}
-                      onCheckedChange={() => toggleSelected(tagDefinition.id)}
-                    >
-                      <Checkbox.Indicator>
-                        <CheckSquare size={20} weight='fill' />
-                      </Checkbox.Indicator>
+                <tbody>
+                { filteredTagDefinitions && filteredTagDefinitions.map((tagDefinition) => (
+                  <tr
+                    key={tagDefinition.id}
+                  >
+                    <td>
+                      <Checkbox.Root
+                        className='checkbox-root'
+                        checked={isSelected(tagDefinition.id)}
+                        onCheckedChange={() => toggleSelected(tagDefinition.id)}
+                      >
+                        <Checkbox.Indicator>
+                          <CheckSquare size={20} weight='fill' />
+                        </Checkbox.Indicator>
 
-                      { !isSelected(tagDefinition.id) && (
-                        <span>
+                        { !isSelected(tagDefinition.id) && (
+                          <span>
                           <Square size={20} />
                         </span>
-                      )}
-                    </Checkbox.Root>
-                  </td>
-                  <td>{tagDefinition.name}</td>
-                  <td>{tagDefinition.tags?.length || 0}</td>
-                </tr>
-              ))}
-              </tbody>
-            </table>
-          </div>
+                        )}
+                      </Checkbox.Root>
+                    </td>
+                    <td>{tagDefinition.name}</td>
+                    <td>{tagDefinition.tags?.length || 0}</td>
+                  </tr>
+                ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          { !(filteredTagDefinitions && filteredTagDefinitions.length) && (
+            <div className='no-results text-body-small'>{t['No matching records']}</div>
+          )}
 
           <div className='buttons'>
             <button onClick={props.onCancel}>

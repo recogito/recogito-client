@@ -95,5 +95,6 @@
   "Number of Projects": "Number of Projects",
   "Success": "Success",
   "Project group successfully added": "${name} successfully added",
-  "Successfully updated groups for project": "Successfully updated groups for ${name}"
+  "Successfully updated groups for project": "Successfully updated groups for ${name}",
+  "No matching records": "No matching records"
 }
