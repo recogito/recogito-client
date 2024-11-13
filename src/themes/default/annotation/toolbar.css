@@ -15,33 +15,6 @@
   gap: 0.25rem;
 }
 
-.anno-toolbar h1 {
-  align-items: center;
-  display: flex;
-  font-size: var(--font-tiny);
-  font-family: Inter;
-  gap: 0.5rem;
-  margin: 0;
-  padding-left: 0.75rem;
-  white-space: nowrap;
-}
-
-.anno-toolbar h1 a[href] {
-  align-items: center;
-  color: var(--font-dark);
-  display: inline-flex;
-  gap: 0.5rem;
-}
-
-.anno-toolbar h1 span {
-  color: var(--font-light);
-  font-weight: 400;
-}
-
-.anno-toolbar .assignment-icon {
-  color: var(--font-dark);
-}
-
 .anno-toolbar button {
   border-radius: 50%;
   color: var(--font-dark);
@@ -86,6 +59,60 @@
 .anno-toolbar-group {
   align-items: center;
   display: flex;
+}
+
+.anno-toolbar .anno-toolbar-title {
+  align-items: center;
+  color: var(--font-dark);
+  display: flex;
+  gap: 0.25rem;
+  padding-left: 0.75rem;
+  white-space: nowrap;
+}
+
+.anno-toolbar .anno-toolbar-title h1 {
+  align-items: center;
+  display: flex;
+  font-family: Inter;
+  font-size: var(--font-tiny);
+  font-weight: 400;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.anno-toolbar .anno-toolbar-title h1 .document-title.in-assignment {
+  color: var(--font-light);
+  max-width: 25vw;
+  min-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.anno-toolbar .anno-toolbar-title h1 a {
+  display: flex;
+  color: var(--font-dark);
+  font-weight: 500;
+  max-width: 14vw;
+  min-width: 140px;
+  overflow: hidden;
+}
+
+.anno-toolbar .anno-toolbar-title h1 a > * {
+  flex-shrink: 0;
+}
+
+.anno-toolbar .anno-toolbar-title h1 div {
+  max-width: 25vw;
+  min-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.anno-toolbar .anno-toolbar-title h1 a > div {
+  max-width: 14vw;
+  min-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .anno-toolbar .anno-toolbar-right button:hover {
