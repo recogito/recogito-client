@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { Color, PresentUser } from '@annotorious/react';
-import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter } from '@components/AnnotationDesktop';
+import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter, useCollapsibleToolbar } from '@components/AnnotationDesktop';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
@@ -65,6 +65,8 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const colorCoding = useColorCoding();
 
+  const { ref, collapsed } = useCollapsibleToolbar(20);
+
   useEffect(() => {
     if (colorCoding?.style)
       props.onChangeStyle(colorCoding.style);
@@ -73,7 +75,9 @@ export const Toolbar = (props: ToolbarProps) => {
   }, [colorCoding]);
 
   return (
-    <div className="anno-toolbar ta-toolbar">
+    <div
+      ref={ref}
+      className="anno-toolbar ta-toolbar">
       <div className="anno-toolbar-slot anno-toolbar-slot-left">
         <div className="anno-toolbar-group">
           <div 

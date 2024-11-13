@@ -16,6 +16,7 @@ import {
   MagnifyingGlassMinus, 
   MagnifyingGlassPlus
 } from '@phosphor-icons/react';
+import { useCollapsibleToolbar } from '@components/AnnotationDesktop/useCollapsibleToolbar';
 
 interface ToolbarProps {
 
@@ -85,7 +86,8 @@ export const Toolbar = (props: ToolbarProps) => {
   }, [colorCoding]);
 
   return (
-    <div className="anno-toolbar ia-toolbar not-annotatable">
+    <div
+      className="anno-toolbar ia-toolbar not-annotatable">
       <div className="anno-toolbar-slot anno-toolbar-slot-left">
         <div className="anno-toolbar-group">
           <div 
