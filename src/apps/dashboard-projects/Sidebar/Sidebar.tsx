@@ -1,7 +1,6 @@
 import { ProjectFilter } from '@apps/dashboard-projects';
 import { CreateTagDefinitionDialog } from '@components/CreateTagDefinitionDialog';
 import { Button } from '@components/Button';
-import { Toast, type ToastContent } from '@components/Toast';
 import {
   CaretLeft,
   CaretRight,
