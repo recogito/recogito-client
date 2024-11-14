@@ -35,3 +35,89 @@ export const createTag = (supabase: SupabaseClient, tag_definition_id: string, t
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Tag }));
+
+export const createTagDefinition = (
+  supabase: SupabaseClient,
+  tagDefinition: {
+    name: string,
+    scope: string,
+    scope_id: string,
+    target_type: string
+  }
+): Promise<TagDefinition> => {
+  return new Promise((resolve, reject) => {
+    supabase
+      .from('tag_definitions')
+      .insert(tagDefinition)
+      .select(`
+        id,
+        name,
+        target_type,
+        scope,  
+        scope_id,
+        metadata,
+        tags (
+          id,
+          tag_definition_id,
+          target_id
+        )
+    `)
+      .single()
+      .then(({ error, data }) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      })
+  });
+};
+
+export const deleteTagDefinition = (
+  supabase: SupabaseClient,
+  tagDefinitionId: string
+) => new Promise((resolve, reject) => (
+  supabase
+    .from('tag_definitions')
+    .delete()
+    .eq('id', tagDefinitionId)
+    .then(({ error }) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    })
+));
+
+export const updateTagDefinition = (
+  supabase: SupabaseClient,
+  tagDefinitionId: string,
+  name: string
+) => new Promise((resolve, reject) => (
+  supabase
+    .from('tag_definitions')
+    .update({ name })
+    .eq('id', tagDefinitionId)
+    .select(`
+      id,
+      name,
+      target_type,
+      scope,  
+      scope_id,
+      metadata,
+      tags (
+        id,
+        tag_definition_id,
+        target_id
+      )
+    `)
+    .single()
+    .then(({ error, data }) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(data);
+      }
+    })
+));

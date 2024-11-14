@@ -1,4 +1,5 @@
-import { createTagDefinition, createTagsForTagDefinitions, getTagDefinitions } from '@backend/helpers';
+import { createTagDefinition, deleteTagDefinition, updateTagDefinition } from '@backend/crud';
+import { createTagsForTagDefinitions, getTagDefinitions } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { ToastContent } from '@components/Toast';
 import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
@@ -7,19 +8,18 @@ import type { TagDefinition } from 'src/Types';
 interface TagContextType {
   loading: boolean;
 
-  onSaveTagDefinition(name: string): Promise<void>;
+  onCreateTagDefinition(name: string): Promise<TagDefinition>;
+
+  onDeleteTagDefinition(id: string): Promise<void>;
 
   onSaveTags(tagDefinitionIds: string[], targetId: string): Promise<void>;
+
+  onUpdateTagDefinition(id: string, name: string): Promise<TagDefinition>;
 
   tagDefinitions: TagDefinition[];
 }
 
-export const TagContext = createContext<TagContextType>({
-  loading: false,
-  onSaveTagDefinition: (name: string) => Promise.resolve(),
-  onSaveTags: (tagDefinitionIds: string[], targetId: string) => Promise.resolve(),
-  tagDefinitions: []
-});
+export const TagContext = createContext<TagContextType>({} as TagContextType);
 
 interface Props {
   children: ReactNode,
@@ -51,7 +51,14 @@ export const TagContextProvider = (props: Props) => {
     ).then(loadTagDefinitions)
   ), []);
 
-  const onSaveTagDefinition = useCallback((name) => (
+  const onDeleteTagDefinition = useCallback((id) => (
+    deleteTagDefinition(supabase, id)
+      .then(() => setTagDefinitions((prevTagDefinitions) => (
+        prevTagDefinitions.filter((tagDefinition) => tagDefinition.id !== id)
+      )))
+  ), []);
+
+  const onCreateTagDefinition = useCallback((name) => (
     createTagDefinition(supabase, {
       name,
       scope: scope,
@@ -63,6 +70,15 @@ export const TagContextProvider = (props: Props) => {
     )
   ), []);
 
+  const onUpdateTagDefinition = useCallback((id, name) => (
+    updateTagDefinition(supabase, id, name)
+      .then((tagDefinition: TagDefinition) => (
+        setTagDefinitions((prevTagDefinitions) => (
+          prevTagDefinitions.map((t) => t.id === tagDefinition.id ? tagDefinition : t))
+        )
+      ))
+  ), []);
+
   useEffect(() => {
     setLoading(true);
 
@@ -72,12 +88,23 @@ export const TagContextProvider = (props: Props) => {
 
   const value = useMemo(() => ({
     loading,
-    onSaveTagDefinition,
+    onCreateTagDefinition,
+    onDeleteTagDefinition,
     onSaveTags,
+    onUpdateTagDefinition,
     setToast,
     tagDefinitions,
     toast
-  }), [loading, onSaveTagDefinition, onSaveTags, setToast, tagDefinitions, toast]);
+  }), [
+    loading,
+    onCreateTagDefinition,
+    onDeleteTagDefinition,
+    onSaveTags,
+    onUpdateTagDefinition,
+    setToast,
+    tagDefinitions,
+    toast
+  ]);
 
   return (
     <TagContext.Provider

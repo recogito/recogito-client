@@ -141,31 +141,6 @@ export const setProjectTagVocabulary = (
         })
     }));
 
-export const createTagDefinition = (
-  supabase: SupabaseClient,
-  tagDefinition: {
-    name: string,
-    scope: string,
-    scope_id: string,
-    target_type: string
-  }
-): Promise<TagDefinition> => {
-  return new Promise((resolve, reject) => {
-    supabase
-      .from('tag_definitions')
-      .insert(tagDefinition)
-      .select()
-      .single()
-      .then(({ error, data }) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(data);
-        }
-      })
-  });
-};
-
 export const getTagDefinitions = (
   supabase: SupabaseClient,
   scope: string,

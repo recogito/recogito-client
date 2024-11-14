@@ -1,7 +1,7 @@
 import { TagContext, TagContextProvider } from '@util/context/TagContext.tsx';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { getMyProfile } from '@backend/crud';
+import { deleteTagDefinition, getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
 import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
 import { Header, type Filters, type SortFunction } from './Header';
@@ -128,6 +128,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
 
+  const tagDefinition = useMemo(() => (
+    tagDefinitions.find((tagDefinition) => tagDefinition.id === filter)
+  ), [filter, tagDefinitions]);
+
   const filteredProjects = useMemo(() => {
     let value;
 
@@ -137,13 +141,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       value = sharedProjects;
     } else if (filter === ProjectFilter.PUBLIC) {
       value = openJoinProjects;
-    } else if (filter) {
-      const tagDefinition = tagDefinitions.find((tagDefinition) => tagDefinition.id === filter);
-
-      if (tagDefinition) {
-        const projectIds = tagDefinition.tags?.map((tag) => tag.target_id);
-        value = projects.filter((project) => projectIds?.includes(project.id));
-      }
+    } else if (tagDefinition) {
+      const projectIds = tagDefinition.tags?.map((tag) => tag.target_id);
+      value = projects.filter((project) => projectIds?.includes(project.id));
     }
 
     if (include === 'active') {
@@ -153,7 +153,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     }
 
     return value;
-  }, [filter, include, isReader, projects, tagDefinitions]);
+  }, [filter, include, isReader, projects, tagDefinition]);
 
   const filterLabel = useMemo(() => {
     let value;
@@ -164,13 +164,12 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       value = t['Shared with me'];
     } else if (filter === ProjectFilter.PUBLIC) {
       value = t['Public Projects'];
-    } else if (filter) {
-      const tagDefinition = tagDefinitions.find((tagDefinition) => tagDefinition.id === filter);
-      value = tagDefinition?.name;
+    } else if (tagDefinition) {
+      value = tagDefinition.name;
     }
 
     return value;
-  }, [filter, t, tagDefinitions]);
+  }, [filter, t, tagDefinition]);
 
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
@@ -264,6 +263,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
                 setSort(() => fn);
                 setSortType(name);
               }}
+              onDeleteTagDefinition={() => setFilter(ProjectFilter.MINE)}
               onProjectCreated={onProjectCreated}
               onInvitationAccepted={onInvitationAccepted}
               onInvitationDeclined={onInvitationDeclined}
@@ -271,6 +271,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               onSetProjects={(projects) => setProjects(projects)}
               display={display}
               onSetDisplay={setDisplay}
+              tagDefinition={tagDefinition}
             />
 
             {filteredProjects.length === 0 ? (

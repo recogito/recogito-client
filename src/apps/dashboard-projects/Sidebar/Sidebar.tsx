@@ -1,5 +1,5 @@
 import { ProjectFilter } from '@apps/dashboard-projects';
-import { CreateTagDefinitionDialog } from '@components/CreateTagDefinitionDialog';
+import { TagDefinitionDialog } from '@components/TagDefinitionDialog';
 import { Button } from '@components/Button';
 import {
   CaretLeft,
@@ -42,10 +42,10 @@ export const Sidebar = (props: Props) => {
   const { t } = props.i18n;
   const [mine, shared, openJoin] = props.projects;
 
-  const { tagDefinitions, onSaveTagDefinition, setToast } = useContext(TagContext);
+  const { tagDefinitions, onCreateTagDefinition, setToast } = useContext(TagContext);
 
   const onSaved = useCallback((name) => (
-    onSaveTagDefinition(name)
+    onCreateTagDefinition(name)
       .then(() => setAddTagDefinition(false))
       .then(() => setToast({
         title: t['Success'],
@@ -179,7 +179,7 @@ export const Sidebar = (props: Props) => {
           </ul>
         )}
 
-        <CreateTagDefinitionDialog
+        <TagDefinitionDialog
           i18n={props.i18n}
           onCancel={() => setAddTagDefinition(false)}
           onSaved={onSaved}

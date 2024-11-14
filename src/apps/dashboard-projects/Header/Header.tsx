@@ -1,22 +1,28 @@
-import { useMemo, useState } from 'react';
-import { Plus } from '@phosphor-icons/react';
+import { ConfirmedAction } from '@components/ConfirmedAction';
+import { TagDefinitionDialog } from '@components/TagDefinitionDialog';
+import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { TagContext } from '@util/context';
+import { useCallback, useContext, useState } from 'react';
+import {
+  CaretDown,
+  PencilSimple,
+  Plus,
+  Trash
+} from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
 import { HeaderSortAction, type SortFunction } from './Sort';
 import { HeaderFilterAction, type Filters } from './Filter';
-import {
-  ToggleDisplay,
-  type ToggleDisplayValue,
-} from '@components/ToggleDisplay';
-import { ProjectFilter } from '../ProjectsHome';
+import { ToggleDisplay, type ToggleDisplayValue } from '@components/ToggleDisplay';
 import type {
   Invitation,
   MyProfile,
   ExtendedProjectData,
   Translations,
   Policies,
+  TagDefinition
 } from 'src/Types';
 
 import './Header.css';
@@ -40,6 +46,8 @@ interface HeaderProps {
 
   onChangeSearch(value: string): void;
 
+  onDeleteTagDefinition?(): void;
+
   onProjectCreated(project: ExtendedProjectData): void;
 
   onInvitationAccepted(
@@ -56,6 +64,8 @@ interface HeaderProps {
   display: ToggleDisplayValue;
 
   onSetDisplay(display: ToggleDisplayValue): void;
+
+  tagDefinition?: TagDefinition;
 }
 
 export const Header = (props: HeaderProps) => {
@@ -64,6 +74,10 @@ export const Header = (props: HeaderProps) => {
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
+  const [tagDefinitionOpen, setTagDefinitionOpen] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+
+  const { onDeleteTagDefinition, onUpdateTagDefinition, setToast } = useContext(TagContext);
 
   const onCreateProject = () => {
     if (creating) return;
@@ -98,11 +112,95 @@ export const Header = (props: HeaderProps) => {
       });
   };
 
+  const onDeleteGroup = useCallback(() => {
+    if (!props.tagDefinition) {
+      return;
+    }
+
+    const { id, name } = props.tagDefinition;
+
+    onDeleteTagDefinition(id)
+      .then(() => {
+        setConfirming(false);
+
+        if (props.onDeleteTagDefinition) {
+          props.onDeleteTagDefinition();
+        }
+
+        setToast({
+          title: t['Success'],
+          description: t['Successfully deleted group'].replace('${name}', name),
+          type: 'success'
+        });
+      })
+  }, [props.tagDefinition]);
+
+  const onRenameGroup = useCallback((name) => {
+    if (!props.tagDefinition) {
+      return;
+    }
+
+    onUpdateTagDefinition(props.tagDefinition.id, name)
+      .then(() => {
+        setTagDefinitionOpen(false);
+
+        setToast({
+          title: t['Success'],
+          description: t['Successfully renamed group'],
+          type: 'success'
+        });
+      })
+  }, [props.tagDefinition])
+
   return (
     <header className='dashboard-header'>
       <section className='dashboard-header-container'>
         <h2>
+
           { props.filter }
+
+          { props.tagDefinition && (
+            <ConfirmedAction.Root
+              onOpenChange={setConfirming}
+              open={confirming}
+            >
+              <Dropdown.Root>
+                <Dropdown.Trigger asChild>
+                  <button className='icon-only unstyled'>
+                    <CaretDown size={16} />
+                  </button>
+                </Dropdown.Trigger>
+
+                <Dropdown.Portal>
+                  <Dropdown.Content className='dropdown-content'>
+                    <Dropdown.Item
+                      className='dropdown-item'
+                      onSelect={() => setTagDefinitionOpen(true)}
+                    >
+                      <PencilSimple size={16} />
+                      {t['Rename group']}
+                    </Dropdown.Item>
+                    <ConfirmedAction.Trigger>
+                      <Dropdown.Item className='dropdown-item'>
+                        <Trash className='destructive' size={16} />
+                        {t['Delete group']}
+                      </Dropdown.Item>
+                    </ConfirmedAction.Trigger>
+                  </Dropdown.Content>
+                </Dropdown.Portal>
+              </Dropdown.Root>
+
+              <ConfirmedAction.Dialog
+                i18n={props.i18n}
+                title={t['Are you sure?']}
+                description={t['Are you sure you want to delete this group?']}
+                cancelLabel={t['Cancel']}
+                confirmLabel={<><Trash size={16} /> <span>{t['Delete group']}</span></>}
+                onConfirm={onDeleteGroup}
+              />
+            </ConfirmedAction.Root>
+          )}
+
         </h2>
 
         <div className='dashboard-header-actions'>
@@ -155,6 +253,15 @@ export const Header = (props: HeaderProps) => {
           }}
           onSaveProject={handleSaveProject}
           i18n={props.i18n}
+        />
+
+        <TagDefinitionDialog
+          i18n={props.i18n}
+          onCancel={() => setTagDefinitionOpen(false)}
+          onSaved={onRenameGroup}
+          open={tagDefinitionOpen}
+          tagDefinition={props.tagDefinition}
+          title={t['Rename Project Group']}
         />
       </section>
     </header>

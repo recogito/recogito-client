@@ -3,8 +3,8 @@ import { X } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Label from '@radix-ui/react-label';
 import { useEffect, useState } from 'react';
-import type { Translations } from '../../Types.ts';
-import './CreateTagDefinitionDialog.css';
+import type { TagDefinition, Translations } from 'src/Types.ts';
+import './TagDefinitionDialog.css';
 
 interface Props {
   busy?: boolean;
@@ -17,17 +17,23 @@ interface Props {
 
   open: boolean;
 
+  tagDefinition?: TagDefinition,
+
   title: string;
 }
 
-export const CreateTagDefinitionDialog = (props: Props) => {
+export const TagDefinitionDialog = (props: Props) => {
   const [name, setName] = useState('');
 
   const { t } = props.i18n;
 
   useEffect(() => {
-    setName('');
-  }, [props.open]);
+    if (props.tagDefinition) {
+      setName(props.tagDefinition.name);
+    } else {
+      setName('');
+    }
+  }, [props.open, props.tagDefinition]);
 
   return (
     <Dialog.Root open={props.open}>

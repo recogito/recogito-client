@@ -19,6 +19,8 @@
   font-size: 1em;
   margin: 0;
   padding: 0;
+  align-items: center;
+  gap: 15px
 }
 
 .dashboard-header h1 svg {
