@@ -1,0 +1,15 @@
+.dashboard-project-group-empty {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  padding: 100px 0px 30px 0px;
+  text-align: center;
+}
+
+.dashboard-project-group-empty h1 {
+  font-family: Inter;
+  font-size: var(--font-small);
+  font-weight: 400;
+  margin: 0;
+  padding: 0 0 1.2em 0;
+}

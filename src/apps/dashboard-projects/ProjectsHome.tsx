@@ -5,7 +5,7 @@ import { deleteTagDefinition, getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
 import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
 import { Header, type Filters, type SortFunction } from './Header';
-import { ProjectsEmpty } from './Empty';
+import { ProjectGroupEmpty, ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 import { ProjectsList } from './List';
 import { Sidebar } from './Sidebar';
@@ -275,7 +275,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             />
 
             {filteredProjects.length === 0 ? (
-              policies && (
+              policies && !tagDefinition ? (
                 <ProjectsEmpty
                   i18n={props.i18n}
                   canCreateProjects={policies.get('projects').has('INSERT')}
@@ -283,6 +283,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
                   onProjectCreated={onProjectCreated}
                   onError={onError}
                 />
+              )
+              : (
+                <ProjectGroupEmpty i18n={props.i18n} />
               )
             ) : display === 'cards' ? (
               <ProjectsGrid
