@@ -1,4 +1,4 @@
-import { SelectTagDefinitionsDialog } from '@components/SelectTagDefinitionsDialog';
+import { SelectRecordsDialog } from '@components/SelectRecordsDialog';
 import { TagContext } from '@util/context';
 import {
   useCallback,
@@ -23,6 +23,7 @@ import type {
   MyProfile,
   Policies,
   Tag,
+  TagDefinition,
   Translations
 } from 'src/Types';
 import { ProjectDetailsForm } from './ProjectDetailsForm';
@@ -61,7 +62,12 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   const isMine = props.me.id === props.project.created_by?.id;
   const isOrgAdmin = props.me.isOrgAdmin;
 
-  const { tagDefinitions, onSaveTags, setToast } = useContext(TagContext);
+  const {
+    loadTagDefinitions,
+    onSaveTagsForTagDefinitions,
+    setToast,
+    tagDefinitions
+  } = useContext(TagContext);
 
   const onDetailsSaved = (updated: ExtendedProjectData) => {
     setEditing(false);
@@ -81,6 +87,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         props.onDeleted();
         setBusy(false);
       })
+      .then(loadTagDefinitions)
       .catch((error) => {
         console.error(error);
         props.onError('Could not delete the project.');
@@ -102,7 +109,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   }, [props.project, props.me]);
 
   const onTagsSaved = useCallback((tagDefinitionIds: string[]) => (
-    onSaveTags(tagDefinitionIds, props.project.id)
+    onSaveTagsForTagDefinitions(tagDefinitionIds, props.project.id)
       .then(() => setAddToGroup(false))
       .then(() => setToast({
         title: t['Success'],
@@ -209,20 +216,26 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         onError={onDetailsError}
       />
 
-      <SelectTagDefinitionsDialog
+      <SelectRecordsDialog
+        columns={[{
+          name: 'name',
+          label: t['Name'],
+          resolve: ({ name }: TagDefinition) => name
+        }, {
+          name: 'count',
+          label: t['Number of Projects'],
+          resolve: ({ tags }: TagDefinition) => tags?.length || 0
+        }]}
+        filterBy={['name']}
+        header={t['All Groups']}
         i18n={props.i18n}
-        labels={{
-          columnCount: t['Number of Projects'],
-          columnName: t['Name'],
-          header: t['All Groups'],
-          subtitle: t['Select group(s) to add project to'],
-          title: t['Add project to group'].replace('${name}', props.project.name)
-        }}
         onCancel={() => setAddToGroup(false)}
         onSave={onTagsSaved}
         open={addToGroup}
-        tagDefinitions={tagDefinitions}
+        records={tagDefinitions}
         selected={selectedTagDefinitions}
+        subtite={t['Select group(s) to add project to']}
+        title={t['Add project to group'].replace('${name}', props.project.name)}
       />
 
     </ConfirmedAction.Root>

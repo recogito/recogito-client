@@ -103,5 +103,11 @@
   "Are you sure you want to delete this group?": "Are you sure you want to delete this group?",
   "Rename Project Group": "Rename Project Group",
   "Successfully renamed group": "Successfully renamed group",
-  "This group doesn't have any project files.": "This group doesn't have any project files."
+  "This group doesn't have any project files.": "This group doesn't have any project files.",
+  "Add Project": "Add Project",
+  "Existing Project": "Existing Project",
+  "All Projects": "All Projects",
+  "Select project(s) to add to group": "Select project(s) to add to group",
+  "Add projects to group": "Add projects to ${name}",
+  "Successfully updated projects in group": "Successfully updated projects in ${name}"
 }

@@ -251,12 +251,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               i18n={props.i18n}
               me={me}
               policies={policies}
-              projects={
-                isReader
-                  ? [sharedProjects, [], openJoinProjects]
-                  : [myProjects, sharedProjects, openJoinProjects]
-              }
-              invitations={invitations}
+              projects={[
+                ...myProjects,
+                ...sharedProjects
+              ]}
               onChangeDisplay={setInclude}
               onChangeSearch={setSearch}
               onChangeSort={(fn: any, name: string): void => {
@@ -265,10 +263,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               }}
               onDeleteTagDefinition={() => setFilter(ProjectFilter.MINE)}
               onProjectCreated={onProjectCreated}
-              onInvitationAccepted={onInvitationAccepted}
-              onInvitationDeclined={onInvitationDeclined}
               onError={onError}
-              onSetProjects={(projects) => setProjects(projects)}
               display={display}
               onSetDisplay={setDisplay}
               tagDefinition={tagDefinition}

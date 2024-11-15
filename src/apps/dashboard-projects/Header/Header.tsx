@@ -1,4 +1,6 @@
+import { Button } from '@components/Button';
 import { ConfirmedAction } from '@components/ConfirmedAction';
+import { SelectRecordsDialog } from '@components/SelectRecordsDialog';
 import { TagDefinitionDialog } from '@components/TagDefinitionDialog';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { TagContext } from '@util/context';
@@ -10,19 +12,19 @@ import {
   Trash
 } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { Button } from '@components/Button';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
 import { HeaderSortAction, type SortFunction } from './Sort';
 import { HeaderFilterAction, type Filters } from './Filter';
 import { ToggleDisplay, type ToggleDisplayValue } from '@components/ToggleDisplay';
 import type {
-  Invitation,
   MyProfile,
   ExtendedProjectData,
   Translations,
   Policies,
-  TagDefinition
+  Project,
+  TagDefinition,
+  Tag
 } from 'src/Types';
 
 import './Header.css';
@@ -36,9 +38,7 @@ interface HeaderProps {
 
   policies?: Policies;
 
-  projects: ExtendedProjectData[][];
-
-  invitations: Invitation[];
+  projects: ExtendedProjectData[];
 
   onChangeDisplay(f: Filters): void;
 
@@ -50,16 +50,7 @@ interface HeaderProps {
 
   onProjectCreated(project: ExtendedProjectData): void;
 
-  onInvitationAccepted(
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ): void;
-
-  onInvitationDeclined(invitation: Invitation): void;
-
   onError(error: string): void;
-
-  onSetProjects(projects: ExtendedProjectData[]): void;
 
   display: ToggleDisplayValue;
 
@@ -74,10 +65,11 @@ export const Header = (props: HeaderProps) => {
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
   const [createProjectOpen, setCreateProjectOpen] = useState(false);
+  const [selectProjectsOpen, setSelectProjectsOpen] = useState(false);
   const [tagDefinitionOpen, setTagDefinitionOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
-  const { onDeleteTagDefinition, onUpdateTagDefinition, setToast } = useContext(TagContext);
+  const { onDeleteTagDefinition, onSaveTagsForTargets, onUpdateTagDefinition, setToast } = useContext(TagContext);
 
   const onCreateProject = () => {
     if (creating) return;
@@ -107,7 +99,18 @@ export const Header = (props: HeaderProps) => {
         } else {
           setCreating(false);
           props.onProjectCreated(data);
-          window.location.href = `/${props.i18n.lang}/projects/${data[0].id}`;
+
+          const projectId = data[0]?.id;
+          const projectUrl = `/${props.i18n.lang}/projects/${projectId}`;
+
+          if (props.tagDefinition) {
+            onSaveTagsForTargets(props.tagDefinition.id, [projectId])
+              .then(() => {
+                window.location.href = projectUrl;
+              });
+          } else {
+            window.location.href = projectUrl
+          }
         }
       });
   };
@@ -132,7 +135,7 @@ export const Header = (props: HeaderProps) => {
           description: t['Successfully deleted group'].replace('${name}', name),
           type: 'success'
         });
-      })
+      });
   }, [props.tagDefinition]);
 
   const onRenameGroup = useCallback((name) => {
@@ -149,17 +152,36 @@ export const Header = (props: HeaderProps) => {
           description: t['Successfully renamed group'],
           type: 'success'
         });
-      })
-  }, [props.tagDefinition])
+      });
+  }, [props.tagDefinition]);
+
+  const onTagsSaved = useCallback((projectIds) => {
+    if (!props.tagDefinition) {
+      return;
+    }
+
+    const { id, name } = props.tagDefinition;
+
+    onSaveTagsForTargets(id, projectIds)
+      .then(() => {
+        setSelectProjectsOpen(false);
+
+        setToast({
+          title: t['Success'],
+          description: t['Successfully updated projects in group'].replace('${name}', name),
+          type: 'success'
+        });
+      });
+  }, [props.tagDefinition]);
 
   return (
     <header className='dashboard-header'>
       <section className='dashboard-header-container'>
         <h2>
 
-          { props.filter }
+          {props.filter}
 
-          { props.tagDefinition && (
+          {props.tagDefinition && (
             <ConfirmedAction.Root
               onOpenChange={setConfirming}
               open={confirming}
@@ -232,7 +254,47 @@ export const Header = (props: HeaderProps) => {
           </ul>
 
           <div className='dashboard-header-button-actions'>
-            {props.policies?.get('projects').has('INSERT') && (
+
+            {props.tagDefinition && (
+              <Dropdown.Root>
+                <Dropdown.Trigger asChild>
+                  <button
+                    className='new-project primary sm flat'
+                  >
+                    <Plus size={16} weight='bold' />
+                    <span>{t['Add Project']}</span>
+                    <CaretDown size={16} />
+                  </button>
+                </Dropdown.Trigger>
+
+                <Dropdown.Portal>
+                  <Dropdown.Content
+                    className='dropdown-content'
+                    sideOffset={10}
+                  >
+
+                    {props.policies?.get('projects').has('INSERT') && (
+                      <Dropdown.Item
+                        className='dropdown-item'
+                        onSelect={onCreateProject}
+                      >
+                        {t['New Project']}
+                      </Dropdown.Item>
+                    )}
+
+                    <Dropdown.Item
+                      className='dropdown-item'
+                      onSelect={() => setSelectProjectsOpen(true)}
+                    >
+                      {t['Existing Project']}
+                    </Dropdown.Item>
+
+                  </Dropdown.Content>
+                </Dropdown.Portal>
+              </Dropdown.Root>
+            )}
+
+            {!props.tagDefinition && props.policies?.get('projects').has('INSERT') && (
               <Button
                 busy={creating}
                 className='new-project primary sm flat'
@@ -263,6 +325,31 @@ export const Header = (props: HeaderProps) => {
           tagDefinition={props.tagDefinition}
           title={t['Rename Project Group']}
         />
+
+        {props.tagDefinition && (
+          <SelectRecordsDialog
+            columns={[{
+              name: 'name',
+              label: t['Name'],
+              resolve: ({ name }: Project) => name
+            }, {
+              name: 'count',
+              label: t['Description'],
+              resolve: ({ description }: Project) => description
+            }]}
+            filterBy={['name', 'description']}
+            header={t['All Projects']}
+            i18n={props.i18n}
+            onCancel={() => setSelectProjectsOpen(false)}
+            onSave={onTagsSaved}
+            open={selectProjectsOpen}
+            records={props.projects}
+            selected={props.tagDefinition.tags?.map((tag: Tag) => tag.target_id)}
+            subtite={t['Select project(s) to add to group']}
+            title={t['Add projects to group'].replace('${name}', props.tagDefinition.name)}
+          />
+        )}
+
       </section>
     </header>
   );

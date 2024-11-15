@@ -205,3 +205,23 @@ export const createTagsForTagDefinitions = (
         }
       })
   ));
+
+export const createTagsForTargets = (
+  supabase: SupabaseClient,
+  tagDefinitionId: string,
+  targetIds: string[]
+) =>
+  new Promise((resolve, reject) => (
+    supabase
+      .rpc('create_tags_for_targets_rpc', {
+        _tag_definition_id: tagDefinitionId,
+        _target_ids: targetIds
+      })
+      .then(({ error, data }) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      })
+  ));
