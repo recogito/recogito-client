@@ -73,23 +73,6 @@ export const createTagDefinition = (
   });
 };
 
-export const deleteTagDefinition = (
-  supabase: SupabaseClient,
-  tagDefinitionId: string
-) => new Promise((resolve, reject) => (
-  supabase
-    .from('tag_definitions')
-    .delete()
-    .eq('id', tagDefinitionId)
-    .then(({ error }) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve();
-      }
-    })
-));
-
 export const updateTagDefinition = (
   supabase: SupabaseClient,
   tagDefinitionId: string,

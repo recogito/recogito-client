@@ -225,3 +225,21 @@ export const createTagsForTargets = (
         }
       })
   ));
+
+export const archiveTagDefinition = (
+  supabase: SupabaseClient,
+  tagDefinitionId: string
+) =>
+  new Promise((resolve, reject) => (
+    supabase
+      .rpc('archive_tag_definition_rpc', {
+        _tag_definition_id: tagDefinitionId
+      })
+      .then(({ error, data }) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(data);
+        }
+      })
+  ));

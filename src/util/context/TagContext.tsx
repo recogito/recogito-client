@@ -1,8 +1,20 @@
-import { createTagDefinition, deleteTagDefinition, updateTagDefinition } from '@backend/crud';
-import { createTagsForTagDefinitions, createTagsForTargets, getTagDefinitions } from '@backend/helpers';
+import { createTagDefinition, updateTagDefinition } from '@backend/crud';
+import {
+  archiveTagDefinition,
+  createTagsForTagDefinitions,
+  createTagsForTargets,
+  getTagDefinitions
+} from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { ToastContent } from '@components/Toast';
-import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from 'react';
 import type { TagDefinition } from 'src/Types';
 
 interface TagContextType {
@@ -61,7 +73,7 @@ export const TagContextProvider = (props: Props) => {
   ), []);
 
   const onDeleteTagDefinition = useCallback((id) => (
-    deleteTagDefinition(supabase, id)
+    archiveTagDefinition(supabase, id)
       .then(() => setTagDefinitions((prevTagDefinitions) => (
         prevTagDefinitions.filter((tagDefinition) => tagDefinition.id !== id)
       )))

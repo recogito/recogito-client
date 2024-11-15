@@ -1,7 +1,7 @@
 import { TagContext, TagContextProvider } from '@util/context/TagContext.tsx';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { deleteTagDefinition, getMyProfile } from '@backend/crud';
+import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
 import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
 import { Header, type Filters, type SortFunction } from './Header';
