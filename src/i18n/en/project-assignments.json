@@ -61,5 +61,6 @@
   "Optional": "Optional",
   "Select All": "Select All",
   "Base Assignment": "Base Assignment",
-  "You have not added any team members.": "You have not yet added any team members; you can do that later by editing this assignment. For now, only Project Administrators have access to this assignment."
+  "You have not added any team members.": "You have not yet added any team members; you can do that later by editing this assignment. For now, only Project Administrators have access to this assignment.",
+  "Assignments Wizard": "Assignments Wizard"
 }
