@@ -1,5 +1,5 @@
 {
-  "New Assignment": "Neuer Arbeitsauftrag",
+  "Add Assignment": "Add Assignment",
   "Unnamed Assignment": "Unbenannter Arbeitsauftrag",
   "Create a new Assignment": "Neuen Arbeitsauftrag erstellen",
   "1. General": "1. Allgemein",
@@ -61,5 +61,6 @@
   "Optional": "Optional",
   "Select All": "Alles auswählen",
   "Base Assignment": "Basis-Arbeitsauftrag",
-  "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern."
+  "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern.",
+  "Export annotations as CSV": "Export annotations as CSV"
 }

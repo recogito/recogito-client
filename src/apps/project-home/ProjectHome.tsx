@@ -58,9 +58,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     AvailableLayers[] | undefined
   >();
 
-  const [tab, setTab] = useLocalStorageBackedState<'documents' | 'assignments' | undefined>(
-    `tab-${props.project.id}`, undefined
-  );
+  const [tab, setTab] = useLocalStorageBackedState<
+    'documents' | 'assignments' | undefined
+  >(`tab-${props.project.id}`, undefined);
 
   const { assignments, setAssignments } = useAssignments(project);
 
@@ -193,6 +193,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <ProjectHeader
         i18n={props.i18n}
         isAdmin={isAdmin || false}
+        isLocked={props.project.is_locked}
         name={props.project.name}
         description={props.project.description || ''}
         requests={props.requests}

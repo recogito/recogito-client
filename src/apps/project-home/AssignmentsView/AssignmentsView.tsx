@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { GraduationCap } from '@phosphor-icons/react';
+import { Plus } from '@phosphor-icons/react';
 import { archiveAssignment, getAssignment } from '@backend/helpers';
 import type { AvailableLayers } from '@backend/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -144,7 +144,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
               className='primary'
               onClick={() => setEditing(NEW_ASSIGNMENT)}
             >
-              <GraduationCap size={20} /> <span>{t['New Assignment']}</span>
+              <Plus size={20} /> <span>{t['Add Assignment']}</span>
             </Button>
 
             {editing && (

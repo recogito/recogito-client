@@ -15,7 +15,7 @@
   "Export PDF file": "Export PDF file",
   "Public annotations only": "Export public annotations only",
   "Include my private annotations": "Include my private annotations",
-  "Export annotations as CSV": "Export annotations as CSV",
+  "Export Annotations": "Export Annotations",
   "Edit document metadata": "Edit document metadata",
   "Delete document": "Remove document",
   "Deleted": "Removed",
@@ -72,5 +72,6 @@
   "Latest Revision": "Latest Revision",
   "Show More": "Show More",
   "Show Less": "Show Less",
-  "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.": "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed."
+  "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.": "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.",
+  "Locked": "Locked"
 }
