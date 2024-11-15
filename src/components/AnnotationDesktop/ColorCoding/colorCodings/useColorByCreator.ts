@@ -1,7 +1,7 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useAnnotations } from '@annotorious/react';
 import type { Color, PresentUser } from '@annotorious/react';
-import { enumerateCreators, getDisplayName, useAuthorColors } from '@components/AnnotationDesktop';
+import { enumerateCreators, getDisplayName, useAuthorColors, useColorCoding } from '@components/AnnotationDesktop';
 import type { ColorCoding } from '../ColorCoding';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
@@ -17,7 +17,7 @@ export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
 
   const authorColors = useAuthorColors();
 
-  const style = (annotation: SupabaseAnnotation): Color => {
+  const style = useCallback((annotation: SupabaseAnnotation): Color => {
     const creator = getCreator(annotation);
 
     if (creator) {
@@ -30,7 +30,7 @@ export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
     } else {
       return UNKNOWN_CREATOR;
     }
-  }
+  }, [authorColors]);
 
   const legend = useMemo(() => {
     const creators = enumerateCreators(present, annotations);
@@ -38,6 +38,6 @@ export const useColorByCreator = (present: PresentUser[]): ColorCoding => {
       ({ color: authorColors.getColor(user) as Color, label: getDisplayName(user) }));
   }, [present, annotations]);
 
-  return { name: 'creator', style, legend };
+  return useMemo(() => ({ name: 'creator', style, legend }), [style, legend]);
 
 }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
@@ -85,6 +85,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   const onInitialSelect = (annotationId: string) => anno.scrollIntoView(annotationId);
 
+  const onPDFRendered = useCallback(() => setPDFLoading(false), [setPDFLoading]);
+
   return (
     <div className={isLocked 
       ? 'ta-annotated-text-container is-locked'
@@ -106,7 +108,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               filter={filter}
               isLocked={isLocked}
               style={props.style}
-              onRendered={() => setPDFLoading(false)} />
+              onRendered={onPDFRendered} />
           ) : text && (
             <TextAnnotator
               filter={filter}
