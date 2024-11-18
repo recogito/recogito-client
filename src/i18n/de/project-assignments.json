@@ -61,5 +61,6 @@
   "Optional": "Optional",
   "Select All": "Alles auswählen",
   "Base Assignment": "Basis-Arbeitsauftrag",
-  "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern."
+  "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern.",
+  "Assignments Wizard": "Arbeitsauftrag Erstellen"
 }
