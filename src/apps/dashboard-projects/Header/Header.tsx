@@ -337,6 +337,7 @@ export const Header = (props: HeaderProps) => {
               label: t['Description'],
               resolve: ({ description }: Project) => description
             }]}
+            description={t['Select Projects']}
             filterBy={['name', 'description']}
             header={t['All Projects']}
             i18n={props.i18n}

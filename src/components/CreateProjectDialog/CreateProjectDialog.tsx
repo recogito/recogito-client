@@ -1,4 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import type { Translations } from 'src/Types';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
@@ -45,6 +46,9 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
           <Dialog.Title className='dialog-title'>
             {t['Create Project']}
           </Dialog.Title>
+          <VisuallyHidden.Root asChild>
+            <Dialog.Description>{t['Create Project']}</Dialog.Description>
+          </VisuallyHidden.Root>
           <div className='create-project-root'>
             <Label.Root
               className='create-project-label-detail text-body-large-bold'

@@ -2,12 +2,15 @@ import { Button } from '@components/Button';
 import { X } from '@phosphor-icons/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Label from '@radix-ui/react-label';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useEffect, useState } from 'react';
 import type { TagDefinition, Translations } from 'src/Types.ts';
 import './TagDefinitionDialog.css';
 
 interface Props {
   busy?: boolean;
+
+  description: string;
 
   i18n: Translations;
 
@@ -52,6 +55,11 @@ export const TagDefinitionDialog = (props: Props) => {
               </button>
             </Dialog.Close>
           </Dialog.Title>
+
+          <VisuallyHidden.Root asChild>
+            <Dialog.Description>{props.description}</Dialog.Description>
+          </VisuallyHidden.Root>
+
           <div className='project-group-root'>
             <div className='form'>
               <Label.Root className='text-body-small-bold'>

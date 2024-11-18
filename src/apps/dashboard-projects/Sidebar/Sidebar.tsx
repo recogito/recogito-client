@@ -180,6 +180,7 @@ export const Sidebar = (props: Props) => {
         )}
 
         <TagDefinitionDialog
+          description={t['Create Project Group']}
           i18n={props.i18n}
           onCancel={() => setAddTagDefinition(false)}
           onSaved={onSaved}

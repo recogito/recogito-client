@@ -7,6 +7,7 @@ import {
 } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   ReactNode,
   useCallback,
@@ -31,6 +32,8 @@ interface Record {
 
 interface Props {
   columns: Column[];
+
+  description: string;
 
   filterBy?: string[];
 
@@ -98,12 +101,16 @@ export const SelectRecordsDialog = (props: Props) => {
         <Dialog.Overlay className='dialog-overlay' />
 
         <Dialog.Content className='dialog-content select-tag-definitions'>
-          <Dialog.Title className='dialog-title'>
+          <Dialog.Title asChild className='dialog-title'>
             <h1>{props.title}</h1>
           </Dialog.Title>
           {props.subtitle && (
             <span>{props.subtitle}</span>
           )}
+
+          <VisuallyHidden.Root asChild>
+            <Dialog.Description>{props.description}</Dialog.Description>
+          </VisuallyHidden.Root>
 
           {(props.header || props.filterBy) && (
             <div

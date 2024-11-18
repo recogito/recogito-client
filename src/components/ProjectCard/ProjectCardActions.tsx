@@ -226,6 +226,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
           label: t['Number of Projects'],
           resolve: ({ tags }: TagDefinition) => tags?.length || 0
         }]}
+        description={t['Select Groups']}
         filterBy={['name']}
         header={t['All Groups']}
         i18n={props.i18n}
