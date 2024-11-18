@@ -10,7 +10,7 @@ import {
   Users,
   UsersThree
 } from '@phosphor-icons/react';
-import { TagContext } from '@util/context';
+import { TagContext } from '@components/TagContext';
 import { useCallback, useContext, useState } from 'react';
 import type {
   ExtendedProjectData,

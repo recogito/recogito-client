@@ -3,7 +3,7 @@ import { ConfirmedAction } from '@components/ConfirmedAction';
 import { SelectRecordsDialog } from '@components/SelectRecordsDialog';
 import { TagDefinitionDialog } from '@components/TagDefinitionDialog';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { TagContext } from '@util/context';
+import { TagContext } from '@components/TagContext';
 import { useCallback, useContext, useState } from 'react';
 import {
   CaretDown,

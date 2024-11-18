@@ -1,4 +1,4 @@
-import { TagContext, TagContextProvider } from '@util/context/TagContext.tsx';
+import { TagContext, TagContextProvider } from '@components/TagContext';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
