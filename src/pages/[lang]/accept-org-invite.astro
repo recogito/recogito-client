@@ -1,0 +1,39 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { AcceptOrgInviteComponent } from '@apps/accept-org-invite';
+import { getTranslations } from '@i18n';
+import '@themes/login/index.css';
+
+const token = Astro.url.searchParams.get('token');
+---
+
+<BaseLayout title='Recogito | Reset Password'>
+  <div class='container'>
+    <div class='column'>
+      <AcceptOrgInviteComponent
+        token={token as string}
+        client:only='react'
+        i18n={getTranslations(Astro.request, 'auth-reset-password')}
+      />
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .container {
+    align-items: center;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+  }
+
+  .column {
+    max-width: 360px;
+    padding: 0 20px;
+    position: relative;
+    width: 100%;
+  }
+</style>

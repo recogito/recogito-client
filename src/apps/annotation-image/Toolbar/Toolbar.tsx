@@ -183,6 +183,7 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
 
         <ColorCodingSelector 
+          document={props.document}
           i18n={props.i18n} 
           present={props.present} 
           layers={props.layers}

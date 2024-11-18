@@ -43,7 +43,7 @@ export default {
   'project-assignments': projectAssignments,
   'project-collaboration': { ...projectCollaboration, ...accountMenu },
   'project-home': {
-    ...{ ...projectHome, ...accountMenu, ...projectSidedbar },
+    ...projectHome,
     ...accountMenu,
     ...projectSidedbar,
     ...projectAssignments,
