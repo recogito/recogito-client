@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { PDFAnnotator } from '@recogito/react-pdf-annotator';
 import type { DocumentWithContext } from 'src/Types';
 import { getDownloadURL } from '@backend/storage';
@@ -24,7 +24,7 @@ interface AnnotatedPDFProps {
 
 }
 
-export const AnnotatedPDF = (props: AnnotatedPDFProps) => {
+export const AnnotatedPDF = memo((props: AnnotatedPDFProps) => {
 
   const [downloadURL, setDownloadURL] = useState<string | undefined>();
 
@@ -39,9 +39,15 @@ export const AnnotatedPDF = (props: AnnotatedPDFProps) => {
       pdfUrl={downloadURL} 
       annotatingEnabled={!props.isLocked}
       filter={props.filter}
-      // @ts-ignore - this is fixed in the next pdf-annotator release!
       style={props.style}
       onRendered={props.onRendered} />
   )
   
-}
+}, (prev, next) => { 
+  return prev.document === next.document
+    && prev.isLocked === next.isLocked
+    && prev.filter === next.filter 
+    && prev.style === next.style
+    && prev.onError === next.onError
+    && prev.onRendered === next.onRendered;
+});

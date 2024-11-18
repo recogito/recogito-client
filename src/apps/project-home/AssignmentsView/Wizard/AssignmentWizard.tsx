@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { AvailableLayers } from '@backend/Types';
 import * as Tabs from '@radix-ui/react-tabs';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { X } from '@phosphor-icons/react';
 import type { AssignmentSpec } from './AssignmentSpec';
 import { Documents } from './Documents';
@@ -151,11 +152,16 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
     <Dialog.Root open={true} onOpenChange={props.onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
-
+        <VisuallyHidden.Root>
+          <Dialog.Title>{t['Assignments Wizard']}</Dialog.Title>
+        </VisuallyHidden.Root>
         <Dialog.Content
           className='dialog-content assignment-wizard'
           onPointerDownOutside={onPointerDownOutside}
         >
+          <VisuallyHidden.Root>
+            <Dialog.Description>{t['Assignments Wizard']}</Dialog.Description>
+          </VisuallyHidden.Root>
           {saving ? (
             isUpdate ? (
               <ProgressUpdating
