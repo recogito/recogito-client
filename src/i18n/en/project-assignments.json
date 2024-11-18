@@ -1,5 +1,5 @@
 {
-  "New Assignment": "New Assignment",
+  "Add Assignment": "Add Assignment",
   "Unnamed Assignment": "Unnamed Assignment",
   "Create a new Assignment": "Create a new Assignment",
   "1. General": "1. General",
@@ -62,5 +62,6 @@
   "Select All": "Select All",
   "Base Assignment": "Base Assignment",
   "You have not added any team members.": "You have not yet added any team members; you can do that later by editing this assignment. For now, only Project Administrators have access to this assignment.",
+  "Export annotations as CSV": "Export annotations as CSV"
   "Assignments Wizard": "Assignments Wizard"
 }

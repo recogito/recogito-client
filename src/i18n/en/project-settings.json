@@ -4,10 +4,10 @@
   "Tag": "Tag",
   "Color": "Color",
   "You can pre-define a tagging vocabulary": "Terms from the tagging vocabulary are automatically suggested to users when they create new tags. However, users can still create their own custom tags. Optionally, fixed colors can be assigned to the vocabulary tags.",
-  "No tagging vocabulary": "No tagging vocabulary defined",  
+  "No tagging vocabulary": "No tagging vocabulary defined",
   "Add vocabulary terms below": "Add terms to the vocabulary by pasting into the text field (one term per line).",
   "Clear All": "Clear All",
-  "Save": "Save",
+  "Save Changes": "Save Changes",
   "Add to Vocabulary": "Add to Vocabulary",
   "Error loading tag vocabulary.": "Error loading tag vocabulary.",
   "Error saving tag vocabulary.": "Error saving tag vocabulary.",
@@ -36,5 +36,6 @@
   "Notes": "Notes",
   "Right panel will be closed by default when opening a document": "Right panel will be closed by default when opening a document",
   "Right panel will display annotations when opening a document": "Right panel will display annotations when opening a document",
-  "Right panel will display notes when opening a document": "Right panel will display notes when opening a document"
+  "Right panel will display notes when opening a document": "Right panel will display notes when opening a document",
+  "Are you sure you want to lock this project?": "Are you sure you want to lock this project?"
 }
