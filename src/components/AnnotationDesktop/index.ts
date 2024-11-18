@@ -11,5 +11,6 @@ export * from './FilterPanel';
 export * from './SelectionURLState';
 export * from './UndoStack';
 export * from './useAnnotationsViewUIState';
+export * from './useCollapsibleToolbar';
 export * from './useLayerNames';
 export * from './utils';

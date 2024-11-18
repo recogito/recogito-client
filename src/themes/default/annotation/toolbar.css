@@ -4,6 +4,7 @@
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.18), 0 0 1px rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: space-between;
+  overflow-x: hidden;
   padding: 0.375rem 0.75rem;
   position: relative;
   z-index: 10;
@@ -12,40 +13,21 @@
 .anno-toolbar-slot {
   align-items: center;
   display: flex;
+  flex-shrink: 0;
   gap: 0.25rem;
+  overflow: hidden;
 }
 
-.anno-toolbar h1 {
-  align-items: center;
-  display: flex;
-  font-size: var(--font-tiny);
-  font-family: Inter;
-  gap: 0.5rem;
-  margin: 0;
-  padding-left: 0.75rem;
-  white-space: nowrap;
-}
-
-.anno-toolbar h1 a[href] {
-  align-items: center;
-  color: var(--font-dark);
-  display: inline-flex;
-  gap: 0.5rem;
-}
-
-.anno-toolbar h1 span {
-  color: var(--font-light);
-  font-weight: 400;
-}
-
-.anno-toolbar .assignment-icon {
-  color: var(--font-dark);
+.anno-toolbar-slot-center.collapsed {
+  flex-grow: 1;
+  justify-content: flex-end;
 }
 
 .anno-toolbar button {
   border-radius: 50%;
   color: var(--font-dark);
   flex: 0 0 auto;
+  flex-shrink: 0;
   height: 36px;
   vertical-align: bottom;
   width: 36px;
@@ -86,6 +68,59 @@
 .anno-toolbar-group {
   align-items: center;
   display: flex;
+  flex-shrink: 0;
+}
+
+.anno-toolbar .anno-toolbar-title {
+  align-items: center;
+  color: var(--font-dark);
+  display: flex;
+  gap: 0.25rem;
+  padding-left: 0.75rem;
+  white-space: nowrap;
+}
+
+.anno-toolbar .anno-toolbar-title h1 {
+  align-items: center;
+  display: flex;
+  font-family: Inter;
+  font-size: var(--font-tiny);
+  font-weight: 400;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.anno-toolbar .anno-toolbar-title h1 .document-title.in-assignment {
+  color: var(--font-light);
+  max-width: 25vw;
+  min-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.anno-toolbar .anno-toolbar-title h1 a {
+  display: flex;
+  color: var(--font-dark);
+  font-weight: 500;
+  overflow: hidden;
+}
+
+.anno-toolbar .anno-toolbar-title h1 a > * {
+  flex-shrink: 0;
+}
+
+.anno-toolbar .anno-toolbar-title h1 div {
+  max-width: 25vw;
+  min-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.anno-toolbar .anno-toolbar-title h1 a > div {
+  max-width: 14vw;
+  min-width: 60px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .anno-toolbar .anno-toolbar-right button:hover {
@@ -127,8 +162,16 @@
   border-color: rgba(0, 0, 0, 0.08);
   border-width: 0 2px 0 0;
   display: inline-block;
+  flex-shrink: 0;
   height: 16px;
   margin: 0 4px;
   right: 0;
 }
 
+.popover-content.anno-more-tools {
+  align-items: center;
+  display: flex;
+  padding: 0.375rem 0.75rem;
+  width: fit-content;
+  white-space: nowrap;
+}

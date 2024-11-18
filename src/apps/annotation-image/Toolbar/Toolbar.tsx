@@ -4,10 +4,11 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Extension, usePlugins } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
-import { ColorCodingSelector, ColorLegend, DeleteSelected, ErrorBadge, useColorCoding } from '@components/AnnotationDesktop';
+import { ColorCodingSelector, ColorLegend, DeleteSelected, ErrorBadge, useCollapsibleToolbar, useColorCoding } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { Polygon, Rectangle } from './Icons';
+import { MoreTools } from './MoreTools';
 import { 
   Chats, 
   Cursor, 
@@ -77,6 +78,8 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const colorCoding = useColorCoding();
 
+  const { ref, collapsed } = useCollapsibleToolbar();
+
   useEffect(() => {
     if (colorCoding?.style)
       props.onChangeStyle(colorCoding.style);
@@ -85,7 +88,9 @@ export const Toolbar = (props: ToolbarProps) => {
   }, [colorCoding]);
 
   return (
-    <div className="anno-toolbar ia-toolbar not-annotatable">
+    <div
+      ref={ref}
+      className="anno-toolbar ia-toolbar not-annotatable">
       <div className="anno-toolbar-slot anno-toolbar-slot-left">
         <div className="anno-toolbar-group">
           <div 
@@ -104,23 +109,24 @@ export const Toolbar = (props: ToolbarProps) => {
           </div>
         </div>
 
-        <div className="anno-toolbar-group">
+        <div className="anno-toolbar-group anno-toolbar-title">
           {contextName ? (
-            <h1>
-              <a 
-                href={back} 
-                className="assignment-icon"
-                title={t['Back to assignment overview']}>
-                <GraduationCap size={20} />
-                {contextName}
-              </a>
+            <>
+              <GraduationCap size={18} />
 
-              <span>/</span>
-              <span>{props.document.name}</span>
-            </h1>
+              <h1>
+                <a 
+                  href={back} 
+                  title={t['Back to assignment overview']}>
+                  <div>{contextName}</div>
+                </a>
+                <span>/</span>
+                <div className="document-title in-assignment">{props.document.name}</div>
+              </h1>
+            </>
           ) : (
             <h1>
-              <span>{props.document.name}</span>
+              <div className="document-title">{props.document.name}</div>
             </h1>
           )}
         </div>
@@ -130,15 +136,19 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
       </div>
 
-      <div className="anno-toolbar-slot anno-toolbar-slot-center">
+      <div className={`anno-toolbar-slot anno-toolbar-slot-center${collapsed? ' collapsed': ''}`}>
         {!props.isLocked && (
           <>
-            <PrivacySelector
-              mode={props.privacy}
-              i18n={props.i18n}
-              onChangeMode={props.onChangePrivacy} />
+           {!collapsed && (
+              <>
+                <PrivacySelector
+                  mode={props.privacy}
+                  i18n={props.i18n}
+                  onChangeMode={props.onChangePrivacy} />
 
-            <div className="anno-toolbar-divider" />
+                <div className="anno-toolbar-divider" />
+              </>
+            )}
 
             <button
               className={props.tool === undefined ? 'active' : undefined}
@@ -173,8 +183,6 @@ export const Toolbar = (props: ToolbarProps) => {
           <MagnifyingGlassMinus size={18} />
         </button>
 
-        <div className="anno-toolbar-divider" />
-
         {!props.isLocked && (
           <DeleteSelected
             activeLayer={props.layers?.find(l => l.is_active)}
@@ -182,16 +190,34 @@ export const Toolbar = (props: ToolbarProps) => {
             policies={props.policies} />
         )}
 
-        <ColorCodingSelector 
-          document={props.document}
-          i18n={props.i18n} 
-          present={props.present} 
-          layers={props.layers}
-          layerNames={props.layerNames} 
-          tagVocabulary={props.tagVocabulary} />
+        {collapsed && (
+          <MoreTools
+            document={props.document}
+            i18n={props.i18n} 
+            layers={props.layers}
+            layerNames={props.layerNames}
+            present={props.present}
+            privacy={props.privacy}
+            tagVocabulary={props.tagVocabulary}
+            onChangePrivacy={props.onChangePrivacy} />
+        )}
 
-        <ColorLegend 
-          i18n={props.i18n} />
+        <div className="anno-toolbar-divider" />
+
+        {!collapsed && (
+          <>
+            <ColorCodingSelector 
+              document={props.document}
+              i18n={props.i18n} 
+              present={props.present} 
+              layers={props.layers}
+              layerNames={props.layerNames} 
+              tagVocabulary={props.tagVocabulary} />
+
+            <ColorLegend 
+              i18n={props.i18n} />
+          </>
+        )}
       </div>
 
       <div className="anno-toolbar-slot anno-toobar-slot-right ia-toolbar-right">
