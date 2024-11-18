@@ -133,7 +133,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     }
                   </div>
                 </RadioGroup.Root>
-                <div className='create-project-switches'>
+                <div className='create-project-switches lower'>
                   <Label.Root
                     className='create-project-label-detail text-body-large-bold'
                     htmlFor='firstName'
@@ -141,7 +141,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     {t['Project Type']}
                   </Label.Root>
                   <RadioGroup.Root
-                    className='create-project-radio-group-root'
+                    className='create-project-radio-group-root lower'
                     defaultValue='assignments'
                     value={type}
                     aria-label='View density'
@@ -194,7 +194,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                   </RadioGroup.Root>
                 </div>
               </div>
-              <div className='create-project-buttons'>
+              <div className='create-project-buttons dialog-action'>
                 <Button type='button' className='sm' onClick={props.onClose}>
                   {t['Cancel']}
                 </Button>
