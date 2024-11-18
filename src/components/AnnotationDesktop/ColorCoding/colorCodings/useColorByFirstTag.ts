@@ -26,7 +26,7 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
     }
 
     return getColor;
-  }, [vocabulary, tags.join('-')]);
+  }, [JSON.stringify(vocabulary), tags.join('-')]);
 
   const style = useMemo(() => {
     return (annotation: SupabaseAnnotation): Color => {
@@ -42,8 +42,8 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
 
   const legend = useMemo(() => {
     return tags.map(tag => ({ color: getColor(tag) as Color, label: tag }));
-  }, [tags]);
+  }, [tags.join('-')]);
 
-  return { name: 'tag', style, legend }; 
+  return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]); 
 
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
@@ -96,7 +96,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     HighlightStyleExpression | undefined
   >(undefined);
 
-  const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+  const onChangeStyle = useCallback((style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
       const hse: HighlightStyleExpression = (
         a: SupabaseAnnotation,
@@ -110,7 +110,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     } else {
       setActiveLayerStyle(undefined);
     }
-  };
+  }, [setActiveLayerStyle]);
 
   const style: HighlightStyleExpression = useMemo(() => {
     // In practice, there should only ever be one active layer
