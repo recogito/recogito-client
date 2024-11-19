@@ -3,22 +3,33 @@ import {
   deleteInstalledPlugin,
   lockProject,
   updatePluginSettings,
-  updateProject
+  updateProject,
 } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { BackButtonBar } from '@components/BackButtonBar';
 import { Button } from '@components/Button';
-import type { PluginInstallationConfig, PluginMetadata } from '@components/Plugins';
+import type {
+  PluginInstallationConfig,
+  PluginMetadata,
+} from '@components/Plugins';
 import { Extension } from '@components/Plugins';
 import { TagSettings } from './TagSettings';
-import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import {
+  type SaveState,
+  TinySaveIndicator,
+} from '@components/TinySaveIndicator';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
 import { Lock, Trash } from '@phosphor-icons/react';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useEffect, useState } from 'react';
-import type { ExtendedProjectData, Invitation, MyProfile, Translations } from 'src/Types';
+import type {
+  ExtendedProjectData,
+  Invitation,
+  MyProfile,
+  Translations,
+} from 'src/Types';
 import { DocumentViewRight } from 'src/Types';
 import { SettingsHeader } from './SettingsHeader';
 import { LockWarningMessage } from './LockWarningMessage';
@@ -26,7 +37,6 @@ import { LockWarningMessage } from './LockWarningMessage';
 import './ProjectSettings.css';
 
 interface ProjectSettingsProps {
-
   invitations: Invitation[];
 
   me: MyProfile;
@@ -38,11 +48,9 @@ interface ProjectSettingsProps {
   availablePlugins: PluginMetadata[];
 
   installedPlugins: PluginInstallationConfig[];
-
 }
 
 export const ProjectSettings = (props: ProjectSettingsProps) => {
-  
   const { t } = props.i18n;
 
   const [toast, setToast] = useState<ToastContent | null>(null);
@@ -62,7 +70,9 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     'settings' | 'plugins' | 'tagging' | undefined
   >('settings');
   const [lockOpen, setLockOpen] = useState(false);
-  const [documentViewRight, setDocumentViewRight] = useState<DocumentViewRight>(DocumentViewRight.closed);
+  const [documentViewRight, setDocumentViewRight] = useState<DocumentViewRight>(
+    DocumentViewRight.closed
+  );
 
   useEffect(() => {
     if (props.project) {
@@ -151,7 +161,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           description: description,
           is_open_join: openJoin,
           is_open_edit: openEdit,
-          document_view_right: documentViewRight
+          document_view_right: documentViewRight,
         });
         setState('success');
       } else {
@@ -409,9 +419,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                     </div>
                   </div>
                   <div className='project-settings-documents-view'>
-                    <Label.Root
-                      className='project-settings-label-detail text-body-large-bold'
-                    >
+                    <Label.Root className='project-settings-label-detail text-body-large-bold'>
                       {t['Document View (Right Panel)']}
                     </Label.Root>
                     <RadioGroup.Root
@@ -419,7 +427,9 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       defaultValue='closed'
                       value={documentViewRight}
                       aria-label='Document view right'
-                      onValueChange={(value: DocumentViewRight) => setDocumentViewRight(value)}
+                      onValueChange={(value: DocumentViewRight) =>
+                        setDocumentViewRight(value)
+                      }
                     >
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <RadioGroup.Item
@@ -437,7 +447,11 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
-                        {t['Right panel will be closed by default when opening a document']}
+                        {
+                          t[
+                            'Right panel will be closed by default when opening a document'
+                          ]
+                        }
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <RadioGroup.Item
@@ -455,7 +469,11 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
-                        {t['Right panel will display annotations when opening a document']}
+                        {
+                          t[
+                            'Right panel will display annotations when opening a document'
+                          ]
+                        }
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
                         <RadioGroup.Item
@@ -473,7 +491,11 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
-                        {t['Right panel will display notes when opening a document']}
+                        {
+                          t[
+                            'Right panel will display notes when opening a document'
+                          ]
+                        }
                       </div>
                     </RadioGroup.Root>
                   </div>
@@ -484,7 +506,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       onClick={saveProjectSettings}
                       disabled={saveDisabled}
                     >
-                      <span>{t['Save']}</span>
+                      <span>{t['Save Changes']}</span>
                     </Button>
 
                     <TinySaveIndicator
@@ -536,7 +558,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       : handleRequestLockProject
                   }
                 >
-                  <Lock size={32} />
+                  <Lock size={16} />
                   <span>
                     {project?.is_locked
                       ? t['Unlock Project']
@@ -548,10 +570,11 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             </div>
           )}
           {tab === 'tagging' && (
-            <TagSettings 
-              i18n={props.i18n} 
+            <TagSettings
+              i18n={props.i18n}
               project={props.project}
-              onError={onError} />
+              onError={onError}
+            />
           )}
           {tab === 'plugins' && (
             <div className='project-plugins'>

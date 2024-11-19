@@ -7,7 +7,7 @@
   "No tagging vocabulary": "Kein Tag-Vokabular festgelegt",
   "Add vocabulary terms below": "Füge Begriffe zum Vokabular hinzu, indem du sie in das Textfeld einfügst (ein Begriff pro Zeile).",
   "Clear All": "Alle Löschen",
-  "Save": "Speichern",
+  "Save Changes": "Änderungen Speichern",
   "Add to Vocabulary": "Zum Vokabular Hinzufügen",
   "Error loading tag vocabulary.": "Fehler beim Laden des Tag-Vokabulars.",
   "Error saving tag vocabulary.": "Fehler beim Speichern des Tag-Vokabulars.",
@@ -30,5 +30,6 @@
   "Notes": "Notizen",
   "Right panel will be closed by default when opening a document": "Die rechte Seitenleiste ist beim Öffnen des Dokuments geschlossen",
   "Right panel will display annotations when opening a document": "Die rechte Seitenlesite zeigt beim Öffnen des Dokuments die Annotationsliste",
-  "Right panel will display notes when opening a document": "Die rechte Seitenleiste zeigt beim Öffnen des Dokuments die Notizen-Liste"
+  "Right panel will display notes when opening a document": "Die rechte Seitenleiste zeigt beim Öffnen des Dokuments die Notizen-Liste",
+  "Are you sure you want to lock this project?": "Bist Du sicher dass Du dieses Projekt sperren willst?"
 }

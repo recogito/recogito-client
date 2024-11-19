@@ -32,6 +32,15 @@ button.unstyled.icon-only {
   width: 34px;
 }
 
+button.unstyled.icon-only-large {
+  border: 2px solid transparent;
+  border-radius: 50%;
+  height: 38px;
+  outline: none;
+  padding: 0;
+  width: 38px;
+}
+
 button.unstyled.icon-only svg {
   height: 100%;
   margin: 1px 0 0 0;

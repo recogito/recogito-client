@@ -33,6 +33,23 @@
   z-index: 9999;
 }
 
+.dialog-content-alt {
+  animation: dialogEnter 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
 .dialog-content form .field {
   align-items: center;
   font-size: var(--font-tiny);
@@ -47,10 +64,25 @@
   margin: 0;
 }
 
+.dialog-title-alt {
+  font-size: 1.2em;
+  margin: 0;
+  padding: 25px 25px 0px 25px;
+}
+
 .dialog-description {
   line-height: 160%;
   margin: 2.5em 0;
   font-size: var(--font-tiny);
+}
+
+.dialog-description-alt {
+  line-height: 160%;
+  margin: 8px 0;
+  font-size: var(--font-tiny);
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-bottom: 10px;
 }
 
 .dialog-close {
@@ -62,4 +94,9 @@
 .dialog-footer {
   display: flex;
   margin-top: 2.5em;
+}
+
+.dialog-action {
+  background-color: var(--gray-100);
+  padding: 10px 25px 10px 25px;
 }
