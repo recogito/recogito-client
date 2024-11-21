@@ -37,7 +37,10 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
     if (isValidEmail(email)) {
       setBusy(true);
 
-      const { host } = window.location;
+      const host =
+        window.location.port !== ''
+          ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
+          : `${window.location.protocol}//${window.location.hostname}`;
       const redirectTo = `${host}/reset-password`;
 
       supabase.auth
