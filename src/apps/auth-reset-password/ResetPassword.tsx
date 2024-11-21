@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { WarningOctagon } from '@phosphor-icons/react';
 import { TextInput } from '@components/TextInput';
 import type { Translations } from 'src/Types';
@@ -24,33 +24,6 @@ export const ResetPassword = (props: ResetPasswordProps) => {
   const [error, setError] = useState('');
 
   const [success, setSuccess] = useState(false);
-
-  useEffect(() => {
-    async function init() {
-      const { data } = await supabase.auth.getUser();
-
-      if (!data.user) {
-        const code = new URLSearchParams(window.location.search).get(
-          'token_hash'
-        );
-        if (!code) {
-          console.error('Missing code');
-          return;
-        }
-
-        const { data: newSession, error: newSessionError } =
-          await supabase.auth.exchangeCodeForSession(code);
-
-        console.log('NEW SESSION DATA:', newSession.session);
-
-        if (newSessionError) {
-          console.log(newSessionError);
-        }
-      }
-    }
-
-    init();
-  }, []);
 
   const onResetPassword = (evt: React.MouseEvent) => {
     evt.preventDefault();
