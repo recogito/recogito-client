@@ -8,6 +8,7 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
   const type = requestUrl.searchParams.get('type') as EmailOtpType | null;
   const next = requestUrl.searchParams.get('next') || '/';
 
+  console.log('Got token and type: ', !!(token_hash && type));
   if (token_hash && type) {
     const supabase = createServerClient(
       import.meta.env.PUBLIC_SUPABASE,
@@ -26,10 +27,14 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
       }
     );
 
+    console.log('Client Created!');
+
     const { error } = await supabase.auth.verifyOtp({
       type,
       token_hash,
     });
+
+    console.log('Error on verifyOtp: ', error);
 
     if (!error) return redirect(next);
   }
