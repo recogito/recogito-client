@@ -3,10 +3,14 @@ import { WarningOctagon } from '@phosphor-icons/react';
 import { TextInput } from '@components/TextInput';
 import type { Translations } from 'src/Types';
 import { Button } from '@components/Button';
-import { supabase } from '@backend/supabaseBrowserClient';
+import {
+  createClientWithToken,
+  supabase,
+} from '@backend/supabaseBrowserClient';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 
 import './ResetPassword.css';
+import type { Session } from '@supabase/supabase-js';
 
 interface ResetPasswordProps {
   i18n: Translations;
@@ -32,14 +36,18 @@ export const ResetPassword = (props: ResetPasswordProps) => {
       setError(t["Passwords don't match"]);
     } else {
       setBusy(true);
-      supabase.auth.updateUser({ password }).then(({ error }) => {
-        if (error) {
-          console.error(error);
-          setError(t[error.message] || t['Could not reset password']);
-        } else {
-          setSuccess(true);
-        }
-        setBusy(false);
+      supabase.auth.getSession().then(({ error, data }) => {
+        createClientWithToken(data.session?.access_token as string)
+          .auth.updateUser({ password })
+          .then(({ error }) => {
+            if (error) {
+              console.error(error);
+              setError(t[error.message] || t['Could not reset password']);
+            } else {
+              setSuccess(true);
+            }
+            setBusy(false);
+          });
       });
     }
   };
