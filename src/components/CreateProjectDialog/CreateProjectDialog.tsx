@@ -72,7 +72,10 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                 placeholder={t['Describe your project']}
                 onChange={(evt) => setDescription(evt.target.value)}
               />
-              <div className='create-project-subgroup'>
+              <div
+                className='create-project-subgroup'
+                style={{ marginTop: 30 }}
+              >
                 <Label.Root
                   className='create-project-label-detail text-body-large-bold'
                   htmlFor='firstName'
