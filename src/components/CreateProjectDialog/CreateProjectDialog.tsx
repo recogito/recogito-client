@@ -99,19 +99,21 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
-                      <label
-                        className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r1'
-                      >
-                        {t['Private']}
-                      </label>
-                    </div>
-                    <div className='create-project-radio-group-helper text-body-small'>
-                      {
-                        t[
-                          'Project admins choose the users that can join this project'
-                        ]
-                      }
+                      <div className='create-project-label-container'>
+                        <label
+                          className='create-project-radio-group-label text-body-small-bold'
+                          htmlFor='r1'
+                        >
+                          {t['Private']}
+                        </label>
+                        <div className='create-project-radio-group-helper text-body-small'>
+                          {
+                            t[
+                              'Project admins choose the users that can join this project'
+                            ]
+                          }
+                        </div>
+                      </div>
                     </div>
                     <div className='create-project-radio-group-item'>
                       <RadioGroup.Item
@@ -121,19 +123,21 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
-                      <label
-                        className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r2'
-                      >
-                        {t['Public']}
-                      </label>
-                    </div>
-                    <div className='create-project-radio-group-helper text-body-small'>
-                      {
-                        t[
-                          'Any registered user can join this project without an invitation'
-                        ]
-                      }
+                      <div className='create-project-label-container'>
+                        <label
+                          className='create-project-radio-group-label text-body-small-bold'
+                          htmlFor='r2'
+                        >
+                          {t['Public']}
+                        </label>
+                        <div className='create-project-radio-group-helper text-body-small'>
+                          {
+                            t[
+                              'Any registered user can join this project without an invitation'
+                            ]
+                          }
+                        </div>
+                      </div>
                     </div>
                   </RadioGroup.Root>
                 </div>

@@ -80,7 +80,6 @@
 .create-project-switches {
   display: flex;
   flex-direction: column;
-  padding-top: 10px;
 }
 
 .create-project-subgroup {
@@ -152,6 +151,7 @@
   padding: 32px;
 }
 
-.create-project-container {
-  padding: 32px;
+.create-project-label-container {
+  display: flex;
+  flex-direction: column;
 }
