@@ -80,14 +80,11 @@
 .create-project-switches {
   display: flex;
   flex-direction: column;
+  padding-top: 10px;
 }
 
-.create-project-switches.lower {
+.create-project-subgroup {
   margin-top: 15px;
-}
-
-.create-project-visibility {
-  margin-top: 30px;
 }
 
 .create-project-radio-group-root {
@@ -105,11 +102,6 @@
   display: flex;
   flex-direction: row;
   gap: 0.25rem;
-}
-
-.create-project-label-container {
-  display: flex;
-  flex-direction: column;
 }
 
 .create-project-radio-group-button {
@@ -154,4 +146,12 @@
 .create-project-radio-group-helper {
   margin-top: 5px;
   margin-left: 5px;
+}
+
+.create-project-container {
+  padding: 32px;
+}
+
+.create-project-container {
+  padding: 32px;
 }
