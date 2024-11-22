@@ -102,9 +102,14 @@
 }
 
 .create-project-radio-group-item {
-  align-items: center;
   display: flex;
+  flex-direction: row;
   gap: 0.25rem;
+}
+
+.create-project-label-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .create-project-radio-group-button {
@@ -147,5 +152,6 @@
 }
 
 .create-project-radio-group-helper {
-  margin-left: 25px;
+  margin-top: 5px;
+  margin-left: 5px;
 }

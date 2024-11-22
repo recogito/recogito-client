@@ -96,19 +96,21 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     >
                       <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                     </RadioGroup.Item>
-                    <label
-                      className='create-project-radio-group-label text-body-small-bold'
-                      htmlFor='r1'
-                    >
-                      {t['Private']}
-                    </label>
-                  </div>
-                  <div className='create-project-radio-group-helper text-body-small'>
-                    {
-                      t[
-                        'Project admins choose the users that can join this project'
-                      ]
-                    }
+                    <div className='create-project-label-container'>
+                      <label
+                        className='create-project-radio-group-label text-body-small-bold'
+                        htmlFor='r1'
+                      >
+                        {t['Private']}
+                      </label>
+                      <div className='create-project-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Project admins choose the users that can join this project'
+                          ]
+                        }
+                      </div>
+                    </div>
                   </div>
                   <div className='create-project-radio-group-item'>
                     <RadioGroup.Item
@@ -118,19 +120,21 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     >
                       <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                     </RadioGroup.Item>
-                    <label
-                      className='create-project-radio-group-label text-body-small-bold'
-                      htmlFor='r2'
-                    >
-                      {t['Public']}
-                    </label>
-                  </div>
-                  <div className='create-project-radio-group-helper text-body-small'>
-                    {
-                      t[
-                        'Any registered user can join this project without an invitation'
-                      ]
-                    }
+                    <div className='create-project-label-container'>
+                      <label
+                        className='create-project-radio-group-label text-body-small-bold'
+                        htmlFor='r2'
+                      >
+                        {t['Public']}
+                      </label>
+                      <div className='create-project-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Any registered user can join this project without an invitation'
+                          ]
+                        }
+                      </div>
+                    </div>
                   </div>
                 </RadioGroup.Root>
                 <div className='create-project-switches lower'>
@@ -159,19 +163,21 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
-                      <label
-                        className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r3'
-                      >
-                        {t['Assignments']}
-                      </label>
-                    </div>
-                    <div className='create-project-radio-group-helper text-body-small'>
-                      {
-                        t[
-                          'Project admins create assignments with specific documents and team members'
-                        ]
-                      }
+                      <div className='create-project-label-container'>
+                        <label
+                          className='create-project-radio-group-label text-body-small-bold'
+                          htmlFor='r3'
+                        >
+                          {t['Assignments']}
+                        </label>
+                        <div className='create-project-radio-group-helper text-body-small'>
+                          {
+                            t[
+                              'Project admins create assignments with specific documents and team members'
+                            ]
+                          }
+                        </div>
+                      </div>
                     </div>
                     <div className='create-project-radio-group-item'>
                       <RadioGroup.Item
@@ -181,15 +187,17 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       >
                         <RadioGroup.Indicator className='create-project-radio-group-indicator' />
                       </RadioGroup.Item>
-                      <label
-                        className='create-project-radio-group-label text-body-small-bold'
-                        htmlFor='r4'
-                      >
-                        {t['Single Team']}
-                      </label>
-                    </div>
-                    <div className='create-project-radio-group-helper text-body-small'>
-                      {t['Project members can annotate any document']}
+                      <div className='create-project-label-container'>
+                        <label
+                          className='create-project-radio-group-label text-body-small-bold'
+                          htmlFor='r4'
+                        >
+                          {t['Single Team']}
+                        </label>
+                        <div className='create-project-radio-group-helper text-body-small'>
+                          {t['Project members can annotate any document']}
+                        </div>
+                      </div>
                     </div>
                   </RadioGroup.Root>
                 </div>
