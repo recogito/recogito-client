@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useAnnotator, type PresentUser } from '@annotorious/react';
-import { TextAnnotator, TextAnnotatorPopup } from '@recogito/react-text-annotator';
+import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
 import { SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -146,7 +146,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           )}
 
           {props.usePopup && (
-            <TextAnnotatorPopup
+            <TextAnnotationPopup
               popup={(props) => (
               <AnnotationPopup
                 {...props}
