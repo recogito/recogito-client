@@ -240,34 +240,35 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           {editable ? (
             <QuillEditorToolbar
               i18n={props.i18n} />
-          ) : canEdit ? (
+          ) : isPrivate ? (
             <div className="annotation-header-right">
-              {isPrivate ? (
-                <PrivateAnnotationActions
-                  i18n={props.i18n} 
-                  isFirst={props.index === 0}
-                  onCopyLink={onCopyLink}
-                  onDeleteAnnotation={props.onDeleteAnnotation}
-                  onDeleteSection={onDeleteSection}
-                  onEditSection={() => setEditable(true)}
-                  onMakePublic={props.onMakePublic}/>
-              ) : (
-                <PublicAnnotationActions 
-                  i18n={props.i18n} 
-                  isFirst={props.index === 0} 
-                  isMine={isMine}
-                  onCopyLink={onCopyLink}
-                  onDeleteAnnotation={props.onDeleteAnnotation}
-                  onDeleteSection={onDeleteSection}
-                  onEditSection={() => setEditable(true)} />
-              )}    
+              <PrivateAnnotationActions
+                i18n={props.i18n} 
+                isFirst={props.index === 0}
+                onCopyLink={onCopyLink}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onDeleteSection={onDeleteSection}
+                onEditSection={() => setEditable(true)}
+                onMakePublic={props.onMakePublic}/>
             </div>
-          ) : (props.index === 0 && isReadOnly) && (
+          ) : (props.index === 0 && isReadOnly) ? (
             <div className="annotation-header-right">
               <LayerIcon 
                 i18n={props.i18n}
                 layerId={props.annotation.layer_id}
                 layerNames={props.layerNames} />
+            </div>
+          ) : (canEdit || props.index === 0) && (
+            <div className="annotation-header-right">
+              <PublicAnnotationActions 
+                canEdit={canEdit}
+                i18n={props.i18n} 
+                isFirst={props.index === 0} 
+                isMine={isMine}
+                onCopyLink={onCopyLink}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onDeleteSection={onDeleteSection}
+                onEditSection={() => setEditable(true)} />
             </div>
           )}
         </div>

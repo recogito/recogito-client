@@ -54,6 +54,11 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
           font: '500 12px Inter, Arial, Helvetica, sans-serif',
         }}>
         <CETEIcean 
+          // @ts-ignore - will start working with the next release!
+          initArgs={{ 
+            // Disables CETEIcean's default behavior of messing with the URL hash
+            ignoreFragmentId: true
+          }}
           tei={props.text} 
           behaviors={behaviors} />
       </TEIAnnotator>
