@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
+import { ToggleDisplay } from '@components/ToggleDisplay';
+import type { ToggleDisplayValue } from '@components/ToggleDisplay';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
@@ -23,7 +26,7 @@ import { MetadataModal } from '@components/DocumentCard/MetadataModal';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import { CheckCircle } from '@phosphor-icons/react';
+import { CheckCircle, Files, Folder, MagnifyingGlass, User, X } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 
 export type LibraryDocument = Pick<
@@ -69,6 +72,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const { UploadActions } = props;
 
   const [view, setView] = useState<'mine' | 'all' | 'collection'>('mine');
+  const [documentsView, setDocumentsView] = useState<ToggleDisplayValue>('rows');
   const [activeCollection, setActiveCollection] = useState(0);
 
   const [documents, setDocuments] = useState<LibraryDocument[] | null>(null);
@@ -87,6 +91,21 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   >();
   const [publicWarningOpen, setPublicWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const filterLabel = useMemo(() => {
+    let value = '';
+
+    if (view === 'all') {
+      value = t['All Documents'];
+    } else if (view === 'mine') {
+      value = t['My Documents'];
+    } else if (view === 'collection' && activeCollection > 0) {
+      const { collection } = collections[activeCollection - 1];
+      value = collection.name;
+    }
+
+    return value;
+  }, [activeCollection, collections, view]);
 
   const handleTogglePrivate = (document: Document) => {
     if (document.is_private) {
@@ -147,7 +166,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       `,
       Row: `
         font-size: 13px;
-      `,
+      `
     },
   ]);
 
@@ -162,7 +181,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       `,
       Row: `
         font-size: 13px;
-      `,
+      `
     },
   ]);
 
@@ -619,131 +638,165 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <Dialog.Portal>
           <Dialog.Overlay className='dialog-overlay' />
           <Dialog.Content className='dialog-content-doc-lib'>
-            <Dialog.Title className='dialog-title'>
-              {t['Document Library']}
-            </Dialog.Title>
-            <div className='doc-lib-buttons'>
-              {t['Select a document or upload a new one.']}
-              <label htmlFor='search'>
-                {t['Search']}
-                <input
-                  id='search'
-                  type='text'
-                  className='doc-lib-search'
-                  value={search}
-                  onChange={handleSearch}
-                />
-              </label>
-            </div>
-            <header className='doc-lib-header'>
-              <section className='doc-lib-header-bottom'>
-                <ul className='doc-lib-header-tabs'>
-                  <li
-                    className={view === 'all' ? 'active' : undefined}
-                    onClick={() => {
-                      setView('all');
-                      setActiveCollection(0);
-                    }}
-                  >
-                    <button>{t['All Documents']}</button>
+            <section className='doc-lib-title'>
 
-                    <span
-                      className={
-                        allDocuments.length === 0 ? 'badge disabled' : 'badge'
-                      }
-                    >
-                      {allDocuments.length}
-                    </span>
-                  </li>
-                  <li
-                    className={view === 'mine' ? 'active' : undefined}
-                    onClick={() => {
-                      setView('mine');
-                      setActiveCollection(0);
-                    }}
-                  >
-                    <button>{t['My Documents']}</button>
+              <Dialog.Title className='dialog-title'>
+                {t['Add Document']}
+              </Dialog.Title>
 
-                    <span
-                      className={
-                        myDocuments.length === 0 ? 'badge disabled' : 'badge'
-                      }
+              <Dialog.Description
+                className='text-body-small'
+              >
+                {t['Select a document or upload a new one.']}
+              </Dialog.Description>
+
+            </section>
+            <div
+              className='doc-lib-content'
+            >
+              <header className='doc-lib-header'>
+
+                <section className='doc-lib-header-bottom'>
+                  <ul className='doc-lib-header-tabs'>
+                    <li
+                      className={view === 'all' ? 'active' : undefined}
+                      onClick={() => {
+                        setView('all');
+                        setActiveCollection(0);
+                      }}
                     >
-                      {myDocuments.length}
-                    </span>
-                  </li>
-                  {collections &&
-                    collections.map((c, idx) => (
-                      <li
+                      <Files />
+                      {t['All Documents']}
+                      <span
                         className={
-                          view === 'collection' && activeCollection === idx + 1
-                            ? 'active'
-                            : undefined
+                          allDocuments.length === 0 ? 'badge disabled' : 'badge'
                         }
-                        onClick={() => {
-                          setView('collection');
-                          setActiveCollection(idx + 1);
-                        }}
-                        key={idx}
                       >
-                        <button>{c.collection.name}</button>
+                        {allDocuments.length}
+                      </span>
+                    </li>
+                    <li
+                      className={view === 'mine' ? 'active' : undefined}
+                      onClick={() => {
+                        setView('mine');
+                        setActiveCollection(0);
+                      }}
+                    >
+                      <User />
+                      {t['My Documents']}
+                      <span
+                        className={
+                          myDocuments.length === 0 ? 'badge disabled' : 'badge'
+                        }
+                      >
+                        {myDocuments.length}
+                      </span>
+                    </li>
 
-                        <span
+                  </ul>
+                </section>
+
+                { collections && (
+                  <section className='doc-lib-header-bottom collections'>
+                    <h3>{t['Collections']}</h3>
+
+                    <ul className='doc-lib-header-tabs'>
+                      {collections.map((c, idx) => (
+                        <li
                           className={
-                            c.documents.length === 0
-                              ? 'badge disabled'
-                              : 'badge'
+                            view === 'collection' && activeCollection === idx + 1
+                              ? 'active'
+                              : undefined
                           }
+                          onClick={() => {
+                            setView('collection');
+                            setActiveCollection(idx + 1);
+                          }}
+                          key={idx}
                         >
-                          {c.documents.length}
-                        </span>
-                      </li>
-                    ))}
-                </ul>
-              </section>
-            </header>
-            <section className='doc-lib-section-content'>
-              {view === 'mine' ? (
-                myDocuments.length > 0 ? (
-                  <div style={{ height: 300 }}>
-                    {/* A little hack to stop the shift key from being captured */}
-                    {!currentDocument && (
+                          <Folder />
+                          {c.collection.name}
+                          <span
+                            className={
+                              c.documents.length === 0
+                                ? 'badge disabled'
+                                : 'badge'
+                            }
+                          >
+                            {c.documents.length}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+              </header>
+
+              <section className='doc-lib-section-content'>
+
+                <div className='doc-lib-section-content-header'>
+                  <h3>{filterLabel}</h3>
+
+                  <div className='doc-lib-buttons'>
+
+                    <SearchInput
+                      className='doc-lib-search'
+                      onChange={({ target: { value }}) => setSearch(value)}
+                      onClear={() => setSearch('')}
+                      placeholder={t['Search']}
+                      search={search}
+                    />
+
+                    <ToggleDisplay
+                      display={documentsView}
+                      onChangeDisplay={(value) => setDocumentsView(value)}
+                    />
+
+                    {UploadActions}
+                  </div>
+                </div>
+
+                {view === 'mine' ? (
+                  myDocuments.length > 0 ? (
+                    <div style={{ height: 300 }}>
+                      {/* A little hack to stop the shift key from being captured */}
+                      {!currentDocument && (
+                        <DocumentTable
+                          data={{ nodes: myDocuments }}
+                          disabledIds={props.disabledIds}
+                          i18n={props.i18n}
+                          select={selectMine}
+                          theme={themeMine}
+                          columns={columnsMine}
+                          sort={sortMine}
+                        />
+                        // <CompactTable
+                        //   layout={{ isDiv: true, fixedHeader: true }}
+                        //   columns={columnsMine}
+                        //   data={{ nodes: myDocuments }}
+                        //   virtualizedOptions={VIRTUALIZED_OPTIONS}
+                        //   select={selectMine}
+                        //   theme={themeMine}
+                        //   sort={sortMine}
+                        // />
+                      )}
+                    </div>
+                  ) : (
+                    <div style={{ height: 300 }}>{t['No Documents']}</div>
+                  )
+                ) : view === 'all' ? (
+                  allDocuments.length > 0 ? (
+                    <div style={{ height: 300 }}>
                       <DocumentTable
-                        data={{ nodes: myDocuments }}
+                        data={{ nodes: allDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectMine}
-                        theme={themeMine}
-                        columns={columnsMine}
-                        sort={sortMine}
+                        select={selectAll}
+                        theme={themeAll}
+                        columns={columnsAll}
+                        sort={sortAll}
                       />
-                      // <CompactTable
-                      //   layout={{ isDiv: true, fixedHeader: true }}
-                      //   columns={columnsMine}
-                      //   data={{ nodes: myDocuments }}
-                      //   virtualizedOptions={VIRTUALIZED_OPTIONS}
-                      //   select={selectMine}
-                      //   theme={themeMine}
-                      //   sort={sortMine}
-                      // />
-                    )}
-                  </div>
-                ) : (
-                  <div style={{ height: 300 }}>{t['No Documents']}</div>
-                )
-              ) : view === 'all' ? (
-                allDocuments.length > 0 ? (
-                  <div style={{ height: 300 }}>
-                    <DocumentTable
-                      data={{ nodes: allDocuments }}
-                      disabledIds={props.disabledIds}
-                      i18n={props.i18n}
-                      select={selectAll}
-                      theme={themeAll}
-                      columns={columnsAll}
-                      sort={sortAll}
-                    />
-                    {/* <CompactTable
+                      {/* <CompactTable
                     layout={{ isDiv: true, fixedHeader: true }}
                     columns={columnsAll}
                     data={{ nodes: allDocuments }}
@@ -752,32 +805,33 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                     theme={themeAll}
                     sort={sortAll}
                   /> */}
+                    </div>
+                  ) : (
+                    <div style={{ height: 300 }}>{t['No Documents']}</div>
+                  )
+                ) : collections[activeCollection - 1].documents.length > 0 ? (
+                  <div style={{ height: 300 }}>
+                    <DocumentTable
+                      data={{
+                        nodes: collectionDocuments,
+                      }}
+                      disabledIds={props.disabledIds}
+                      i18n={props.i18n}
+                      select={selectCollection}
+                      theme={themeCollection}
+                      columns={columnsCollection}
+                      sort={sortCollection}
+                      selectedIds={selectedIds}
+                      hasRevisions={true}
+                    />
                   </div>
                 ) : (
                   <div style={{ height: 300 }}>{t['No Documents']}</div>
-                )
-              ) : collections[activeCollection - 1].documents.length > 0 ? (
-                <div style={{ height: 300 }}>
-                  <DocumentTable
-                    data={{
-                      nodes: collectionDocuments,
-                    }}
-                    disabledIds={props.disabledIds}
-                    i18n={props.i18n}
-                    select={selectCollection}
-                    theme={themeCollection}
-                    columns={columnsCollection}
-                    sort={sortCollection}
-                    selectedIds={selectedIds}
-                    hasRevisions={true}
-                  />
-                </div>
-              ) : (
-                <div style={{ height: 300 }}>{t['No Documents']}</div>
-              )}
-            </section>
-            <div className='doc-lib-buttons'>
-              {UploadActions}
+                )}
+              </section>
+            </div>
+
+            <div className='doc-lib-footer'>
               <div>
                 <Button type='button' onClick={handleCancel}>
                   {t['Done']}
@@ -788,7 +842,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   disabled={selectedIds.length === 0}
                   onClick={() => props.onDocumentsSelected(selectedIds)}
                 >
-                  {t['Add Selected Documents']}
+                  {t['Add Selected']}
                 </Button>
               </div>
             </div>
