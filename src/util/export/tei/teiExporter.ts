@@ -158,7 +158,7 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
 
   // Existing teiHeader and/or standOff elements
   const teiHeader = teiElement.querySelector('teiHeader');
-  const existingStandOffEls = teiElement.querySelector('standOff');
+  const existingStandOffEls = teiElement.querySelectorAll('standOff');
 
   if (existingStandOffEls?.length > 0) {
     // Insert after the last existing standOff element
