@@ -45,7 +45,7 @@ export const TagDefinitionDialog = (props: Props) => {
 
         <Dialog.Content className='dialog-content'>
           <Dialog.Title className='dialog-title project-group-dialog-title'>
-            <h1>{props.title}</h1>
+            <span>{props.title}</span>
             <Dialog.Close asChild>
               <button
                 className='unstyled icon-only'
