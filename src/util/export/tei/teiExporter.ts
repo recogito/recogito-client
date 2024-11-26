@@ -81,7 +81,6 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     return respStmtEl;
   }
 
-  // TODO this will only serialize the annotations, not the notes!
   annotations.forEach(a => {
     // See https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-annotation.html
     const annotationEl = document.createElement('annotation');
