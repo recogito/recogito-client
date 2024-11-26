@@ -52,7 +52,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [embeddedLayers, setEmbeddedLayers] = useState<EmbeddedLayer[] | undefined>();
 
-  // const [embeddedNotes, setEmbeddedNotes] = useState<DocumentNote[] | undefined>();
+  const [embeddedNotes, setEmbeddedNotes] = useState<DocumentNote[] | undefined>();
 
   const layers = useMemo(() => (
     [...(documentLayers || []), ...(embeddedLayers || [])]
@@ -213,13 +213,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const onLoadEmbeddedLayers = useCallback((layers: EmbeddedLayer[], notes: DocumentNote[]) => {
     setEmbeddedLayers(layers);
-    // setEmbeddedNotes(notes);
+    setEmbeddedNotes(notes);
   }, []);
 
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layers={documentLayers}
+      embeddedNotes={embeddedNotes}
+      layers={layers}
       present={present}
       onError={() => setConnectionError(true)}>
       <div className="anno-desktop ta-desktop">
