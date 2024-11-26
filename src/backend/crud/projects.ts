@@ -8,7 +8,7 @@ import type {
 import type { Response } from '@backend/Types';
 import { getUser } from '@backend/auth';
 import type { ApiPostInviteUserToProject } from 'src/Types';
-import type { InviteListEntry } from '@apps/project-collaboration/InviteListOfUsersDialog/InviteListOfUsers';
+import type { InviteListEntry } from '@apps/project-collaboration/InviteListOfUsersDialog/InviteListOfUsersDialog';
 
 export const createProject = (
   supabase: SupabaseClient,
