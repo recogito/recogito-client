@@ -1,7 +1,7 @@
 ---
 import { getLangFromUrl } from '@i18n';
 import config from '../config.json';
-
+import { truncateString } from '@util/general';
 import '@themes/default/index.css';
 
 export interface Props {
@@ -15,14 +15,6 @@ const textColor = config.branding.contrast_color;
 const backgroundColor = config.branding.background_color;
 
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
-
-function truncateString(str: string, maxLength: number) {
-  if (str.length > maxLength) {
-    return str.substring(0, maxLength) + '...';
-  } else {
-    return str;
-  }
-}
 
 const tabTitle = truncateString(title, 61);
 ---
