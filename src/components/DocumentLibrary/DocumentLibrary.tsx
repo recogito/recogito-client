@@ -444,7 +444,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       pinLeft: true,
       sort: { sortKey: 'AUTHOR' },
     },
-
     {
       label: t['Document Type'],
       renderCell: (item) => item.content_type,
@@ -626,26 +625,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     }
   );
 
-  const handleSearch = (event: any) => {
-    setSearch(event.target.value);
-  };
-
   const handleCancel = () => {
     setSelectedIds([]);
     props.onCancel();
   };
-
-  // const currentDocuments = useMemo(() => {
-  //   if (view === 'all') {
-  //     return allDocuments;
-  //   } else if (view === 'mine') {
-  //     return myDocuments;
-  //   } else if (view === 'collection') {
-  //     return collectionDocuments;
-  //   } else {
-  //     return [];
-  //   }
-  // }, [allDocuments, collectionDocuments, myDocuments, view]);
 
   return (
     <>
@@ -787,6 +770,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   )}
                   { view === 'mine' && !currentDocument && myDocuments.length > 0 && documentsView === 'cards' && (
                     <DocumentGrid
+                      disabledIds={props.disabledIds}
                       documents={myDocuments}
                       i18n={props.i18n}
                       select={selectMine}
@@ -808,6 +792,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   )}
                   {view === 'all' && !currentDocument && allDocuments.length > 0 && documentsView === 'cards' && (
                     <DocumentGrid
+                      disabledIds={props.disabledIds}
                       documents={allDocuments}
                       i18n={props.i18n}
                       select={selectAll}
@@ -829,6 +814,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   )}
                   {view === 'collection' && !currentDocument && collectionDocuments.length > 0 && documentsView === 'cards' && (
                     <DocumentGrid
+                      disabledIds={props.disabledIds}
                       documents={collectionDocuments}
                       i18n={props.i18n}
                       select={selectCollection}
@@ -843,7 +829,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             <div className='doc-lib-footer'>
               <div>
                 <Button type='button' onClick={handleCancel}>
-                  {t['Done']}
+                  {t['Cancel']}
                 </Button>
                 <Button
                   type='submit'

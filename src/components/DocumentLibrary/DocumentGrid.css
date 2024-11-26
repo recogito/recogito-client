@@ -8,10 +8,15 @@
   gap: 1rem;
   grid-auto-rows: 1fr;
   grid-template-columns: repeat(auto-fill, 200px);
-  padding: 2em 5px 40px 5px;
+  padding: 0px 5px 40px 5px;
 }
 
 .document-grid > .grid-container .document-card-container.selected .document-card {
   box-shadow: 0 0 0 2px rgb(from var(--bright-blue) r g b / 48%),
               0 2px 8px -2px rgb(from var(--bright-blue) r g b / 58%);
+}
+
+.document-grid > .grid-container .document-card-container.disabled .document-card {
+  cursor: default;
+  opacity: 0.5;
 }
