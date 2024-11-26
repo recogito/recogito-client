@@ -1,15 +1,19 @@
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { DotsSix } from '@phosphor-icons/react';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
-import type { Context, Document, Translations } from 'src/Types';
-import { DocumentViewRight } from 'src/Types';
-
-import './DocumentCard.css';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
+import {
+  DocumentViewRight,
+  type Context,
+  type Document,
+  type Translations
+} from 'src/Types';
+import './DocumentCard.css';
 
 interface DocumentCardProps {
   className?: string;

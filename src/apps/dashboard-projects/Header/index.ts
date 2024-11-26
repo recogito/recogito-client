@@ -1,2 +1,3 @@
 export * from './Header';
-export type { SortFunction } from '@components/Sort/SortFunction';
+export * from './Filter';
+export * from './Sort';

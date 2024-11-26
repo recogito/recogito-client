@@ -333,6 +333,8 @@ export interface TagDefinition {
   scope: 'organization' | 'project' | 'system';
 
   scope_id?: string;
+
+  tags?: Tag[];
 }
 
 export interface Tag {
@@ -345,6 +347,8 @@ export interface Tag {
   target_id: string;
 
   tag_definition?: TagDefinition;
+
+  tag_definition_id: string;
 }
 
 export interface VocabularyTerm {
