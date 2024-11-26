@@ -6,10 +6,8 @@ import type {
   Document,
   Group,
 } from 'src/Types';
-import { DownloadSimple, Pencil, Trash } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
-import { ConfirmDelete } from './ConfirmDelete';
 
 import './AssignmentDetail.css';
 import { AssignmentsActions } from './AssignmentActions';
