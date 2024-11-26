@@ -44,20 +44,41 @@
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: 20px;
+  gap: 20px
 }
 
-.dashboard-header > section.dashboard-header-container > .dashboard-header-actions > ul.dashboard-header-list-actions {
+.dashboard-header .dashboard-header-top-actions button {
+  border: 1px solid var(--gray-400);
+  height: 30px;
+  width: 30px;
+}
+
+.dashboard-header .dashboard-header-top-actions button.new-project {
+  border: none;
+  font-size: 13px;
+  font-weight: 500;
+  height: auto;
+  padding: 8px 12px 8px 8px;
+  width: auto;
+}
+
+.dashboard-header
+  section.dashboard-header-bottom
+  .dashboard-header-bottom-actions {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+}
+
+.dashboard-header section.dashboard-header-bottom {
+  padding: 6px 30px 0 30px;
+}
+
+.dashboard-header-bottom ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-
-/*.dashboard-header > section.dashboard-header-container > .dashboard-header-actions > ul.dashboard-header-list-actions button {*/
-/*  border: 1px solid var(--gray-400);*/
-/*  height: 30px;*/
-/*  width: 30px;*/
-/*}*/
 
 .dashboard-header > section.dashboard-header-container > .dashboard-header-actions > ul.dashboard-header-list-actions li {
   display: inline-block;

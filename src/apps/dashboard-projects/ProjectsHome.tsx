@@ -116,12 +116,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         users.find((user) => user.user.id === me.id && me.id !== created_by?.id)
       )
     : me.isOrgAdmin
-    ? projects.filter(
-        (p) =>
-          p.created_by?.id !== me.id &&
-          p.users.filter((u) => u.user.id === me.id).length === 0 &&
-          !p.is_open_join
-      )
+    ? projects.filter((p) => p.created_by?.id !== me.id && !p.is_open_join)
     : projects.filter(
         (p) =>
           p.created_by?.id !== me.id &&

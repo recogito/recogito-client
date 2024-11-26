@@ -36,6 +36,7 @@
 }
 
 .document-card-actions button.unstyled.icon-only {
+  padding-top: 10px;
   height: 38px;
   width: 38px;
 }
@@ -64,4 +65,20 @@
   overflow-wrap: anywhere;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+
+.document-card-container.active {
+  opacity: 0.5;
+}
+
+.document-card-container > .document-card > .document-drag-handle {
+  background-color: var(--gray-100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+}
+
+.document-card-container.dragging > .document-card > .document-drag-handle {
+  cursor: grabbing;
 }

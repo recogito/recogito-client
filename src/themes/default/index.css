@@ -241,6 +241,13 @@ p {
   line-height: 18.2px;
 }
 
+.text-button {
+  font-family: Inter;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 18.2px;
+}
+
 .text-body-bold {
   font-family: Inter;
   font-weight: 600;

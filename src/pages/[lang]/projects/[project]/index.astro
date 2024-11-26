@@ -70,7 +70,7 @@ const availableLayers = await getAvailableLayers(supabase, projectId as string);
 const requests = await listPendingRequests(supabase, projectId as string);
 ---
 
-<BaseLayout title='Projects Home'>
+<BaseLayout title={project.data.name}>
   <ProjectHome
     client:only='react'
     i18n={i18n}

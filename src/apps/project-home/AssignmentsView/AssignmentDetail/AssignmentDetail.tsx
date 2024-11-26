@@ -12,6 +12,7 @@ import { DocumentCard } from '@components/DocumentCard';
 import { ConfirmDelete } from './ConfirmDelete';
 
 import './AssignmentDetail.css';
+import { AssignmentsActions } from './AssignmentActions';
 
 interface AssignmentDetailProps {
   assignment: Context;
@@ -59,33 +60,17 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
 
           <div className='assignment-detail-buttons'>
-            <a
-              href={`/${lang}/projects/${props.assignment.project_id}/export/csv?context=${props.assignment.id}`}
-              className='button flat'
-            >
-              <DownloadSimple size={20} />
-              <span>{t['Export annotations as CSV']}</span>
-            </a>
-
             {props.isAdmin && !props.assignment.is_project_default && (
-              <>
-                <button
-                  className='project-header-button'
-                  onClick={() => props.onEditAssignment(props.assignment)}
-                >
-                  <Pencil color='black' size={20} />
-                  <div className='project-header-button-text'>{t['Edit']}</div>
-                </button>
-                <button
-                  className='project-header-button'
-                  onClick={handleDelete}
-                >
-                  <Trash color='black' size={20} />
-                  <div className='project-header-button-text'>
-                    {t['Delete']}
-                  </div>
-                </button>
-              </>
+              <AssignmentsActions
+                i18n={props.i18n}
+                context={props.assignment}
+                isAdmin={props.isAdmin}
+                onEdit={() => props.onEditAssignment(props.assignment)}
+                onDelete={handleDelete}
+                onExportCSV={() => {
+                  window.location.href = `/${lang}/projects/${props.assignment.project_id}/export/csv?context=${props.assignment.id}`;
+                }}
+              />
             )}
           </div>
         </div>
@@ -135,16 +120,6 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
         </div>
       </div>
-
-      <ConfirmDelete
-        i18n={props.i18n}
-        open={confirmOpen}
-        onCancel={() => setConfirmOpen(false)}
-        onConfirm={() => {
-          setConfirmOpen(false);
-          props.onDeleteAssignment(props.assignment);
-        }}
-      />
     </div>
   );
 };
