@@ -6,7 +6,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
+import { type DocumentNote, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
@@ -51,6 +51,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
 
   const [embeddedLayers, setEmbeddedLayers] = useState<EmbeddedLayer[] | undefined>();
+
+  // const [embeddedNotes, setEmbeddedNotes] = useState<DocumentNote[] | undefined>();
 
   const layers = useMemo(() => (
     [...(documentLayers || []), ...(embeddedLayers || [])]
@@ -209,6 +211,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     .filter(Boolean)
     .join(' ');
 
+  const onLoadEmbeddedLayers = useCallback((layers: EmbeddedLayer[], notes: DocumentNote[]) => {
+    setEmbeddedLayers(layers);
+    // setEmbeddedNotes(notes);
+  }, []);
+
   return (
     <DocumentNotes
       channelId={props.channelId}
@@ -274,7 +281,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               onConnectionError={() => setConnectionError(true)}
               onSaveError={() => setConnectionError(true)}
               onLoad={() => setLoading(false)}
-              onLoadEmbeddedLayers={setEmbeddedLayers}
+              onLoadEmbeddedLayers={onLoadEmbeddedLayers}
               styleSheet={props.styleSheet}
             />
           )}

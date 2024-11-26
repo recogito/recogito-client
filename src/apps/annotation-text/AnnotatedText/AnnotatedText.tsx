@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
-import { SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
+import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
@@ -54,7 +54,7 @@ interface AnnotatedTextProps {
 
   onLoad(): void;
 
-  onLoadEmbeddedLayers(layers: EmbeddedLayer[]): void;
+  onLoadEmbeddedLayers(layers: EmbeddedLayer[], notes: DocumentNote[]): void;
 
 }
 

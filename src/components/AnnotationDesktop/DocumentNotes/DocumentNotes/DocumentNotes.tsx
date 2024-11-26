@@ -5,7 +5,7 @@ import type { ChangeEvent } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { fetchNotes, handleBroadcastEvent, handleCDCEvent } from './postgres';
 import type { DocumentNote } from '../Types';
-import type { DocumentLayer } from 'src/Types';
+import type { Layer } from 'src/Types';
 
 interface DocumentNotesContextValue {
 
@@ -36,7 +36,9 @@ interface DocumentNotesProps {
 
   channelId: string;
 
-  layers?: DocumentLayer[];
+  embeddedNotes?: DocumentNote[];
+
+  layers?: Layer[];
 
   present: PresentUser[];
 
@@ -52,7 +54,7 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
 
   const activeLayerId = useMemo(() => layers?.find(l => l.is_active)?.id, [layers]);
 
-  const [notes, setNotes] = useState<DocumentNote[]>([]);
+  const [notes, setNotes] = useState<DocumentNote[]>( []);
 
   const [channel, setChannel] = useState<RealtimeChannel | undefined>();
 
