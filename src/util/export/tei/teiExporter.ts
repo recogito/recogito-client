@@ -53,6 +53,7 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
 
   // https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html
   const standOffEl = document.createElement('standOff');
+  standOffEl.setAttribute('type', 'recogito_studio_annotations');
 
   const listAnnotationEl = document.createElement('listAnnotation');
   standOffEl.appendChild(listAnnotationEl);
