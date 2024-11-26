@@ -45,7 +45,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
     const doc = parser.parseFromString(xml, 'text/xml');
 
-    const standoffElements = doc.querySelectorAll('TEI > teiHeader > standOff');
+    const standoffElements = doc.querySelectorAll('TEI > standOff');
 
     const annotationLists = Array.from(standoffElements).reduce<AnnotationList[]>((lists, standoffEl, idx) => {
       const layerId =  standoffElements.length > 1 ? `tei_standoff_${idx + 1}` : 'tei_standoff';
@@ -56,6 +56,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
       };
 
       const annotationElements = standoffEl.querySelectorAll('listAnnotation > annotation');
+
       const annotations = Array.from(annotationElements).map(el => {
         const id = el.getAttribute('xml:id');
 
