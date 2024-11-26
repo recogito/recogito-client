@@ -1,0 +1,17 @@
+.document-grid {
+  height: 100%;
+  overflow: auto;
+}
+
+.document-grid > .grid-container {
+  display: grid;
+  gap: 1rem;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, 200px);
+  padding: 2em 5px 40px 5px;
+}
+
+.document-grid > .grid-container .document-card-container.selected .document-card {
+  box-shadow: 0 0 0 2px rgb(from var(--bright-blue) r g b / 48%),
+              0 2px 8px -2px rgb(from var(--bright-blue) r g b / 58%);
+}

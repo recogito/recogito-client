@@ -1,3 +1,4 @@
+import { DocumentGrid } from '@components/DocumentLibrary/DocumentGrid.tsx';
 import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
 import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
@@ -6,10 +7,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type {
-  Column,
-  //CompactTable,
-} from '@table-library/react-table-library/compact';
+import type { Column } from '@table-library/react-table-library/compact';
 import {
   useRowSelect,
   SelectTypes,
@@ -26,7 +24,7 @@ import { MetadataModal } from '@components/DocumentCard/MetadataModal';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import { CheckCircle, Files, Folder, MagnifyingGlass, User, X } from '@phosphor-icons/react';
+import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 
 export type LibraryDocument = Pick<
@@ -557,7 +555,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     } else if (action.type === 'SET') {
       setSelectedIds(action.payload.ids);
     } else if (action.type === 'REMOVE_BY_IDS') {
-      const ids = [...selectedIds.filter((i) => i !== action.payload.ids[0])];
+      const ids = selectedIds.filter((i) => i !== action.payload.ids[0]);
+      setSelectedIds(ids);
+    } else if (action.type === 'ADD_BY_ID') {
+      const ids = [...selectedIds, action.payload.id];
+      setSelectedIds(ids);
+    } else if (action.type === 'REMOVE_BY_ID') {
+      const ids = selectedIds.filter((i) => i !== action.payload.id);
       setSelectedIds(ids);
     }
   }
@@ -630,6 +634,18 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     setSelectedIds([]);
     props.onCancel();
   };
+
+  // const currentDocuments = useMemo(() => {
+  //   if (view === 'all') {
+  //     return allDocuments;
+  //   } else if (view === 'mine') {
+  //     return myDocuments;
+  //   } else if (view === 'collection') {
+  //     return collectionDocuments;
+  //   } else {
+  //     return [];
+  //   }
+  // }, [allDocuments, collectionDocuments, myDocuments, view]);
 
   return (
     <>
@@ -756,78 +772,71 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   </div>
                 </div>
 
-                {view === 'mine' ? (
-                  myDocuments.length > 0 ? (
-                    <div style={{ height: 300 }}>
-                      {/* A little hack to stop the shift key from being captured */}
-                      {!currentDocument && (
-                        <DocumentTable
-                          data={{ nodes: myDocuments }}
-                          disabledIds={props.disabledIds}
-                          i18n={props.i18n}
-                          select={selectMine}
-                          theme={themeMine}
-                          columns={columnsMine}
-                          sort={sortMine}
-                        />
-                        // <CompactTable
-                        //   layout={{ isDiv: true, fixedHeader: true }}
-                        //   columns={columnsMine}
-                        //   data={{ nodes: myDocuments }}
-                        //   virtualizedOptions={VIRTUALIZED_OPTIONS}
-                        //   select={selectMine}
-                        //   theme={themeMine}
-                        //   sort={sortMine}
-                        // />
-                      )}
-                    </div>
-                  ) : (
-                    <div style={{ height: 300 }}>{t['No Documents']}</div>
-                  )
-                ) : view === 'all' ? (
-                  allDocuments.length > 0 ? (
-                    <div style={{ height: 300 }}>
-                      <DocumentTable
-                        data={{ nodes: allDocuments }}
-                        disabledIds={props.disabledIds}
-                        i18n={props.i18n}
-                        select={selectAll}
-                        theme={themeAll}
-                        columns={columnsAll}
-                        sort={sortAll}
-                      />
-                      {/* <CompactTable
-                    layout={{ isDiv: true, fixedHeader: true }}
-                    columns={columnsAll}
-                    data={{ nodes: allDocuments }}
-                    virtualizedOptions={VIRTUALIZED_OPTIONS}
-                    select={selectAll}
-                    theme={themeAll}
-                    sort={sortAll}
-                  /> */}
-                    </div>
-                  ) : (
-                    <div style={{ height: 300 }}>{t['No Documents']}</div>
-                  )
-                ) : collections[activeCollection - 1].documents.length > 0 ? (
-                  <div style={{ height: 300 }}>
+                <div style={{ height: 450 }}>
+                  {/* My Documents */}
+                  {view === 'mine' && !currentDocument && myDocuments.length > 0 && documentsView === 'rows' && (
                     <DocumentTable
-                      data={{
-                        nodes: collectionDocuments,
-                      }}
+                      data={{ nodes: myDocuments }}
+                      disabledIds={props.disabledIds}
+                      i18n={props.i18n}
+                      select={selectMine}
+                      theme={themeMine}
+                      columns={columnsMine}
+                      sort={sortMine}
+                    />
+                  )}
+                  { view === 'mine' && !currentDocument && myDocuments.length > 0 && documentsView === 'cards' && (
+                    <DocumentGrid
+                      documents={myDocuments}
+                      i18n={props.i18n}
+                      select={selectMine}
+                    />
+                  )}
+                  {view === 'mine' && myDocuments.length === 0 && t['No Documents']}
+
+                  {/* All Documents */}
+                  {view === 'all' && !currentDocument && allDocuments.length > 0 && documentsView === 'rows' && (
+                    <DocumentTable
+                      data={{ nodes: allDocuments }}
+                      disabledIds={props.disabledIds}
+                      i18n={props.i18n}
+                      select={selectAll}
+                      theme={themeAll}
+                      columns={columnsAll}
+                      sort={sortAll}
+                    />
+                  )}
+                  {view === 'all' && !currentDocument && allDocuments.length > 0 && documentsView === 'cards' && (
+                    <DocumentGrid
+                      documents={allDocuments}
+                      i18n={props.i18n}
+                      select={selectAll}
+                    />
+                  )}
+                  {view === 'all' && allDocuments.length === 0 && t['No Documents']}
+
+                  {/* Collection Documents */}
+                  {view === 'collection' && !currentDocument && collectionDocuments.length > 0 && documentsView === 'rows' && (
+                    <DocumentTable
+                      data={{ nodes: collectionDocuments }}
                       disabledIds={props.disabledIds}
                       i18n={props.i18n}
                       select={selectCollection}
                       theme={themeCollection}
                       columns={columnsCollection}
                       sort={sortCollection}
-                      selectedIds={selectedIds}
-                      hasRevisions={true}
                     />
-                  </div>
-                ) : (
-                  <div style={{ height: 300 }}>{t['No Documents']}</div>
-                )}
+                  )}
+                  {view === 'collection' && !currentDocument && collectionDocuments.length > 0 && documentsView === 'cards' && (
+                    <DocumentGrid
+                      documents={collectionDocuments}
+                      i18n={props.i18n}
+                      select={selectCollection}
+                    />
+                  )}
+                  {view === 'collection' && collectionDocuments.length === 0 && t['No Documents']}
+                </div>
+
               </section>
             </div>
 

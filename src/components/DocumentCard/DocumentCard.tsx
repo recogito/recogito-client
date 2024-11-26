@@ -1,15 +1,15 @@
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { DotsSix } from '@phosphor-icons/react';
 import classNames from 'classnames';
 import { useMemo, useState } from 'react';
-import type { Context, Document, Translations } from 'src/Types';
-import { DocumentViewRight } from 'src/Types';
-
-import './DocumentCard.css';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
+import type { Context, Document, Translations } from 'src/Types';
+import { DocumentViewRight } from 'src/Types';
+import './DocumentCard.css';
 
 interface DocumentCardProps {
   className?: string;
@@ -22,6 +22,8 @@ interface DocumentCardProps {
 
   document: Document;
 
+  onClick?(): void;
+
   onDelete?(): void;
 
   onUpdate?(document: Document): void;
@@ -29,6 +31,8 @@ interface DocumentCardProps {
   onError?(error: string): void;
 
   rtab?: DocumentViewRight;
+
+  readOnly?: boolean;
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
@@ -77,6 +81,14 @@ export const DocumentCard = (props: DocumentCardProps) => {
   };
 
   const onClick = (evt: React.MouseEvent) => {
+    if (props.onClick) {
+      return props.onClick();
+    }
+
+    if (props.readOnly) {
+      return;
+    }
+
     const isClickOnMenu =
       (evt.target as Element).closest('.dropdown-content') ||
       (evt.target as Element).closest('.dropdown-subcontent');
@@ -116,20 +128,22 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
         <div className='document-card-footer'>
           <div className='document-card-name'>{document.name}</div>
-          <div className='document-card-actions'>
-            <DocumentCardActions
-              i18n={props.i18n}
-              isAdmin={props.isAdmin}
-              context={context}
-              document={document}
-              onOpen={onOpen}
-              onDelete={props.onDelete}
-              onExportTEI={onExportTEI}
-              onExportPDF={onExportPDF}
-              onExportCSV={onExportCSV}
-              onEditMetadata={() => setEditable(true)}
-            />
-          </div>
+          {!props.readOnly && (
+            <div className='document-card-actions'>
+              <DocumentCardActions
+                i18n={props.i18n}
+                isAdmin={props.isAdmin}
+                context={context}
+                document={document}
+                onOpen={onOpen}
+                onDelete={props.onDelete}
+                onExportTEI={onExportTEI}
+                onExportPDF={onExportPDF}
+                onExportCSV={onExportCSV}
+                onEditMetadata={() => setEditable(true)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
