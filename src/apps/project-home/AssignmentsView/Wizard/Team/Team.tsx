@@ -19,6 +19,8 @@ import type {
 } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
+import { RadioCards } from '@components/RadioCards';
+import { Theme } from '@radix-ui/themes';
 
 import './Team.css';
 
@@ -31,7 +33,7 @@ interface TeamProps {
 
   project: ExtendedProjectData;
 
-  onChange(members: UserProfile[]): void;
+  onChange(members: UserProfile[], assignAll: boolean): void;
 
   onCancel(): void;
 
@@ -93,6 +95,7 @@ export const Team = (props: TeamProps) => {
     field: 'name',
     ascending: false,
   });
+  const [activeMode, setActiveMode] = useState('all');
 
   const members = getMembers(props.project.groups, sorting);
 
@@ -113,8 +116,14 @@ export const Team = (props: TeamProps) => {
       [] as UserProfile[]
     );
 
-    props.onChange(members);
+    props.onChange(members, activeMode === 'all');
   }, [selected, props.project.groups]);
+
+  useEffect(() => {
+    if (props.assignment) {
+      setActiveMode(props.assignment.assign_all_members ? 'all' : 'select');
+    }
+  }, [props.assignment]);
 
   const sortBy = (field: Field) => () =>
     setSorting((sorting) => {
@@ -142,114 +151,143 @@ export const Team = (props: TeamProps) => {
 
   return (
     <>
-      <div className='row tab-team'>
-        <section className='column'>
-          <h1>{t['Step']} 4</h1>
-          <p>{t['Add people to the assignment.']}</p>
-        </section>
+      <Theme className='tab-team-theme'>
+        <div className='row tab-team'>
+          <section className='column'>
+            <h1>{t['Step']} 4</h1>
+            <p>{t['Add people to the assignment.']}</p>
+          </section>
 
-        <section className='column'>
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  <Checkbox.Root
-                    className='checkbox-root'
-                    checked={isAllSelected}
-                    onCheckedChange={toggleAll}
+          <section className='column'>
+            <div className='tab-team-mode'>
+              <div className='text-body-bold tab-team-mode-header'>
+                {t['Who has access to this assignment?']}
+              </div>
+              <RadioCards
+                entries={[
+                  { id: 'all', label: t['All team members'] },
+                  { id: 'select', label: t['Select team members'] },
+                ]}
+                onSelect={(id) => setActiveMode(id)}
+                activeEntry={activeMode}
+              />
+            </div>
+            {activeMode === 'select' && (
+              <>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>
+                        <Checkbox.Root
+                          className='checkbox-root'
+                          checked={isAllSelected}
+                          onCheckedChange={toggleAll}
+                        >
+                          <Checkbox.Indicator>
+                            <CheckSquare size={20} weight='fill' />
+                          </Checkbox.Indicator>
+
+                          {!isAllSelected && (
+                            <span>
+                              <Square size={20} />
+                            </span>
+                          )}
+                        </Checkbox.Root>
+                      </th>
+
+                      <th>
+                        <button onClick={sortBy('name')}>
+                          {t['Name']} {sortIcon('name')}
+                        </button>
+                      </th>
+
+                      <th>
+                        <button onClick={sortBy('since')}>
+                          {t['Member since']} {sortIcon('since')}
+                        </button>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {members.map((member) => (
+                      <tr key={member.user.id}>
+                        <td>
+                          <Checkbox.Root
+                            className='checkbox-root'
+                            checked={
+                              member.isAdmin || selected.includes(member.id)
+                            }
+                            disabled={member.isAdmin}
+                            onCheckedChange={(checked) =>
+                              toggleSelected(member, checked)
+                            }
+                          >
+                            <Checkbox.Indicator>
+                              <CheckSquare size={20} weight='fill' />
+                            </Checkbox.Indicator>
+
+                            {!selected.includes(member.id) &&
+                              !member.isAdmin && (
+                                <span>
+                                  <Square size={20} />
+                                </span>
+                              )}
+                          </Checkbox.Root>
+                        </td>
+
+                        <td>
+                          {formatName(member.user) || (
+                            <span className='anonymous-member'>
+                              {t['Anonymous team member']}{' '}
+                              <AnonymousTooltip i18n={props.i18n} />
+                            </span>
+                          )}
+                          {isMe(member) && (
+                            <span className='badge'>{t['You']}</span>
+                          )}
+                        </td>
+
+                        <td>
+                          <TimeAgo
+                            datetime={member.since}
+                            locale={props.i18n.lang}
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                {selected.length === 1 ? (
+                  <p className='hint ok'>
+                    <Check size={16} /> {t['Selected 1 team member']}
+                  </p>
+                ) : (
+                  <p
+                    className={selected.length === 0 ? 'hint check' : 'hint ok'}
                   >
-                    <Checkbox.Indicator>
-                      <CheckSquare size={20} weight='fill' />
-                    </Checkbox.Indicator>
-
-                    {!isAllSelected && (
-                      <span>
-                        <Square size={20} />
-                      </span>
+                    <Check size={16} />{' '}
+                    {t['Selected ${n} team members'].replace(
+                      '${n}',
+                      selected.length.toString()
                     )}
-                  </Checkbox.Root>
-                </th>
+                  </p>
+                )}
+              </>
+            )}
+          </section>
+        </div>
 
-                <th>
-                  <button onClick={sortBy('name')}>
-                    {t['Name']} {sortIcon('name')}
-                  </button>
-                </th>
+        <section className='wizard-nav'>
+          <button onClick={props.onCancel}>{t['Cancel']}</button>
 
-                <th>
-                  <button onClick={sortBy('since')}>
-                    {t['Member since']} {sortIcon('since')}
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {members.map((member) => (
-                <tr key={member.user.id}>
-                  <td>
-                    <Checkbox.Root
-                      className='checkbox-root'
-                      checked={member.isAdmin || selected.includes(member.id)}
-                      disabled={member.isAdmin}
-                      onCheckedChange={(checked) =>
-                        toggleSelected(member, checked)
-                      }
-                    >
-                      <Checkbox.Indicator>
-                        <CheckSquare size={20} weight='fill' />
-                      </Checkbox.Indicator>
+          <button onClick={props.onBack}>{t['Back']}</button>
 
-                      {!selected.includes(member.id) && !member.isAdmin && (
-                        <span>
-                          <Square size={20} />
-                        </span>
-                      )}
-                    </Checkbox.Root>
-                  </td>
-
-                  <td>
-                    {formatName(member.user) || (
-                      <span className='anonymous-member'>
-                        {t['Anonymous team member']}{' '}
-                        <AnonymousTooltip i18n={props.i18n} />
-                      </span>
-                    )}
-                    {isMe(member) && <span className='badge'>{t['You']}</span>}
-                  </td>
-
-                  <td>
-                    <TimeAgo datetime={member.since} locale={props.i18n.lang} />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {selected.length === 1 ? (
-            <p className='hint ok'>
-              <Check size={16} /> {t['Selected 1 team member']}
-            </p>
-          ) : (
-            <p className={selected.length === 0 ? 'hint check' : 'hint ok'}>
-              <Check size={16} />{' '}
-              {t['Selected ${n} team members'].replace(
-                '${n}',
-                selected.length.toString()
-              )}
-            </p>
-          )}
+          <button className='primary' onClick={props.onNext}>
+            {t['Next']}
+          </button>
         </section>
-      </div>
-
-      <section className='wizard-nav'>
-        <button onClick={props.onCancel}>{t['Cancel']}</button>
-
-        <button onClick={props.onBack}>{t['Back']}</button>
-
-        <button className='primary' onClick={props.onNext}>
-          {t['Next']}
-        </button>
-      </section>
+      </Theme>
     </>
   );
 };

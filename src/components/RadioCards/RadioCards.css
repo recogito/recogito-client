@@ -1,0 +1,16 @@
+.radio-cards-radio {
+  margin-bottom: 0 !important;
+}
+
+.radio-cards-text-active {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.rt-RadioCardsItem:where([data-state='checked'])::after {
+  outline-color: var(--primary) !important;
+}
+
+.radio-cards-text {
+  color: var(--black);
+}

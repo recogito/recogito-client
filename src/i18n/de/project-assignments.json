@@ -63,5 +63,8 @@
   "Base Assignment": "Basis-Arbeitsauftrag",
   "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern.",
   "Export annotations as CSV": "Annotationen als CSV exportieren",
-  "Assignments Wizard": "Arbeitsauftrag Erstellen"
+  "Assignments Wizard": "Arbeitsauftrag Erstellen",
+  "All team members": "All team members",
+  "Select team members": "Select team members",
+  "Who has access to this assignment?": "Who has access to this assignment?"
 }

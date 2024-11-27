@@ -62,7 +62,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const validityScore = [
     assignment.name,
     assignment.documents.length > 0,
-    assignment.team.length > 0,
+    assignment.assign_all_members || assignment.team.length > 0,
     assignment.description,
   ].filter(Boolean).length;
 
@@ -77,7 +77,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
     setAssignment((assignment) => ({ ...assignment, documents }));
   };
 
-  const onChangeTeam = (team: UserProfile[]) =>
+  const onChangeTeam = (team: UserProfile[], assignAll: boolean) =>
     setAssignment((assignment) => ({ ...assignment, team }));
 
   const onChangeLayers = (
