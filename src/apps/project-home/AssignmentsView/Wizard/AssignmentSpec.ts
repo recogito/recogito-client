@@ -18,6 +18,8 @@ export interface AssignmentSpec {
   team: UserProfile[];
 
   description?: string;
+
+  assign_all_members: boolean;
 }
 
 // Utility crosswalk between ExtendedAssignmentData and AssignmentSpec
@@ -71,6 +73,7 @@ export const contextToAssignmentSpec = (
     created_at: data.created_at,
     documents: documents,
     team: data.team.map((t) => t.user),
+    assign_all_members: data.assign_all_members,
   };
 };
 

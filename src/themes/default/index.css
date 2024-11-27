@@ -1,3 +1,4 @@
+@import '@radix-ui/themes/styles.css';
 @import './annotation/index.css';
 @import './avatar/index.css';
 @import './badge/index.css';
