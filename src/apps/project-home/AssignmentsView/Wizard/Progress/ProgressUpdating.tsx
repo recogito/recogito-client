@@ -7,6 +7,7 @@ import {
   removeUsersFromContext,
   addReadOnlyLayersToContext,
   removeReadOnlyLayersFromContext,
+  setAssignAllMembers,
 } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
@@ -70,6 +71,7 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
     description,
     project_id: props.project.id,
     is_project_default: true,
+    assign_all_members: props.assignment.assign_all_members,
   };
 
   useEffect(() => {
@@ -185,49 +187,59 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
       }
 
       // Step 4. Update users if necessary
-      const memberChanges = diff(previous.team, team);
 
-      // - Members were added
-      if (memberChanges.added.length > 0) {
-        const arr: UserRole[] = [];
-        memberChanges.added.forEach((member) => {
-          arr.push({ user_id: member.id, role: 'default' });
-        });
-
-        const resultAddUsers = await addUsersToContext(
-          supabase,
-          context.id,
-          arr
-        );
-
-        if (resultAddUsers) {
-          setState('success');
-          props.onSaved(props.assignment);
-        } else {
-          setState('failed');
-          props.onError('Failed to add users to context');
+      if (context.assign_all_members) {
+        if (!previous.assign_all_members) {
+          await setAssignAllMembers(supabase, context.id, true);
         }
-      }
+      } else {
+        if (previous.assign_all_members) {
+          await setAssignAllMembers(supabase, context.is, false);
+        }
+        const memberChanges = diff(previous.team, team);
 
-      // Members were removed (and some documents existed previously)
-      if (memberChanges.removed.length > 0) {
-        const arr: string[] = [];
-        team.forEach((member) => {
-          arr.push(member.id);
-        });
+        // - Members were added
+        if (memberChanges.added.length > 0) {
+          const arr: UserRole[] = [];
+          memberChanges.added.forEach((member) => {
+            arr.push({ user_id: member.id, role: 'default' });
+          });
 
-        const resultRemoveUsers = await removeUsersFromContext(
-          supabase,
-          context.id,
-          arr
-        );
+          const resultAddUsers = await addUsersToContext(
+            supabase,
+            context.id,
+            arr
+          );
 
-        if (resultRemoveUsers) {
-          setState('success');
-          props.onSaved(props.assignment);
-        } else {
-          setState('failed');
-          props.onError('Failed to remove users from context');
+          if (resultAddUsers) {
+            setState('success');
+            props.onSaved(props.assignment);
+          } else {
+            setState('failed');
+            props.onError('Failed to add users to context');
+          }
+        }
+
+        // Members were removed (and some documents existed previously)
+        if (memberChanges.removed.length > 0) {
+          const arr: string[] = [];
+          team.forEach((member) => {
+            arr.push(member.id);
+          });
+
+          const resultRemoveUsers = await removeUsersFromContext(
+            supabase,
+            context.id,
+            arr
+          );
+
+          if (resultRemoveUsers) {
+            setState('success');
+            props.onSaved(props.assignment);
+          } else {
+            setState('failed');
+            props.onError('Failed to remove users from context');
+          }
         }
       }
 
