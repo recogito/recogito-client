@@ -246,6 +246,7 @@ export const getProjectExtended = (
                         };
               */
               const ids: string[] = project.groups.map((g: any) => g.id);
+              console.log(project);
               const projectExtended = {
                 ...project,
                 groups: project.groups.map((g) => ({

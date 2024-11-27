@@ -52,7 +52,11 @@ export const ProgressCreating = (props: ProgressProps) => {
               });
 
               (assign_all_members
-                ? setAssignAllMembers(supabase, context.id, true)
+                ? setAssignAllMembers(
+                    supabase,
+                    context.id,
+                    context.assign_all_members
+                  )
                 : addUsersToContext(supabase, context.id, arr)
               ).then((result) => {
                 if (!result) {

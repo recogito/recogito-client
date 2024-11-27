@@ -33,7 +33,7 @@ interface TeamProps {
 
   project: ExtendedProjectData;
 
-  onChangeTeam(members: UserProfile[]): void;
+  onChange(members: UserProfile[], assignAll: boolean): void;
 
   onChangeTeamMode(assignAll: boolean): void;
   onCancel(): void;
