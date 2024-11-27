@@ -22,11 +22,6 @@ html, body {
   max-width: 100%;
 }
 
-.ta-desktop main .r6o-annotatable canvas {
-  height: 100%;
-  height: 100dvh;
-}
-
 .ta-desktop main .r6o-annotatable .r6o-span-highlight-layer {
   mix-blend-mode: multiply;
   z-index: 5;
@@ -41,6 +36,10 @@ html, body {
   display: flex;
   flex-grow: 1;
   justify-content: flex-end;
+}
+
+.ta-desktop main .ta-annotated-text-container.is-locked *::selection {
+  background-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .ta-desktop main .ta-annotated-text-container .page-wrapper {

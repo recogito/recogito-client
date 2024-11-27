@@ -20,6 +20,10 @@
   font-size: 18px;
   font-weight: 600;
   line-height: 27px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
 }
 
 .assignment-detail-description-row {
@@ -42,7 +46,7 @@
   font-size: 14px;
   font-weight: 600;
   margin-left: 10px;
-  width: 200px;
+  width: 25%;
 }
 
 .assignment-detail-team-list {

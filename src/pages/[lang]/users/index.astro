@@ -9,7 +9,7 @@ import { getOrgGroups } from '../../../backend/crud/groups';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const { error, data } = await getMyProfile(supabase);
 if (error) {

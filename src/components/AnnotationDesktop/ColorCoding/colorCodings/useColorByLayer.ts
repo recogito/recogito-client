@@ -36,6 +36,6 @@ export const userColorByLayer = (
       : []
   ), [layers, layerNames, getColor]);
 
-  return { name: 'layers', style, legend };
+  return useMemo(() => ({ name: 'layers', style, legend }), [style, legend]);
 
 }

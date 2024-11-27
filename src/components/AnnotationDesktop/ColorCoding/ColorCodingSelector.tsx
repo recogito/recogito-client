@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import * as Select from '@radix-ui/react-select';
 import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
-import type { DocumentLayer, Translations } from 'src/Types';
+import { useLocalStorageBackedState } from '@util/hooks';
+import type { DocumentLayer, DocumentWithContext, Translations, VocabularyTerm } from 'src/Types';
 import { useColorCodingState } from './ColorState';
 import { 
   useColorByCreator,
@@ -15,6 +16,8 @@ import './ColorCodingSelector.css';
 
 interface ColorCodingSelectorProps {
 
+  document: DocumentWithContext;
+
   i18n: Translations;
 
   layers?: DocumentLayer[];
@@ -22,6 +25,8 @@ interface ColorCodingSelectorProps {
   layerNames: Map<string, string>;
 
   present: PresentUser[];
+
+  tagVocabulary?: VocabularyTerm[];
 
 }
 
@@ -31,7 +36,11 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   const { t } = props.i18n;
 
-  const [current, setCurrent] = useState<Coding | undefined>();
+  const persistenceKey = useMemo(() => 
+    `colorcoding-${props.document.context.id}-${props.document.id}`, 
+  [props.document])
+
+  const [current, setCurrent] = useLocalStorageBackedState<Coding | undefined>(persistenceKey, undefined);
 
   // TODO: this is actually super in-efficient! Doesn't make much
   // difference for now, but should be improved. Instead of hooks 
@@ -41,7 +50,7 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
   // be computed if the legend is not open.
   const byCreator = useColorByCreator(props.present);
   
-  const byFirstTag = useColorByFirstTag();
+  const byFirstTag = useColorByFirstTag(props.tagVocabulary);
 
   const byLayer = userColorByLayer(props.layers, props.layerNames);
 
@@ -67,8 +76,8 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
   return (
     <Select.Root 
-      onValueChange={value => setCurrent(value as Coding)}
-      defaultValue="none">
+      value={current || 'none'}
+      onValueChange={value => setCurrent(value as Coding)}>
       <Select.Trigger 
         className="select-trigger color-coding-selector-trigger" 
         aria-label="Annotation color by">

@@ -1,11 +1,13 @@
 import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Policies, Translations } from 'src/Types';
+import type { Policies, Translations, VocabularyTerm } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { AnnotationCard } from '@components/Annotation';
 
 interface DocumentNotesListItemProps {
 
   i18n: Translations;
+
+  isProjectLocked: boolean;
 
   isSelected?: boolean;
 
@@ -20,6 +22,8 @@ interface DocumentNotesListItemProps {
   present: PresentUser[];
 
   showReplyField?: boolean;
+
+  tagVocabulary?: VocabularyTerm[];
 
   onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
@@ -47,6 +51,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
     <AnnotationCard
       autoFocus
       isNote 
+      isProjectLocked={props.isProjectLocked}
       isSelected={props.isSelected}
       annotation={props.note as unknown as Annotation}
       i18n={i18n}   
@@ -55,6 +60,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
       policies={props.policies}    
       present={props.present}
       showReplyField={props.showReplyField}
+      tagVocabulary={props.tagVocabulary}
       onBulkDeleteBodies={props.onBulkDeleteBodies}
       onCreateBody={props.onCreateBody}
       onDeleteBody={props.onDeleteBody}

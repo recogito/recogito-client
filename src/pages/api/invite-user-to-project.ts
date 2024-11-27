@@ -3,7 +3,10 @@ import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
 import { getDefaultTranslations } from '@i18n';
-import { type TReaderDocument, renderToStaticMarkup } from '@usewaypoint/email-builder';
+import {
+  type TReaderDocument,
+  renderToStaticMarkup,
+} from '@usewaypoint/email-builder';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
@@ -17,7 +20,7 @@ const MAIL_FROM_ADDRESS =
 
 export const POST: APIRoute = async ({ request, cookies, url }) => {
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const me = await getMyProfile(supabase);
 

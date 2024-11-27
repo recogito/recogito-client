@@ -1,7 +1,7 @@
 ---
 import { getLangFromUrl } from '@i18n';
 import config from '../config.json';
-
+import { truncateString } from '@util/general';
 import '@themes/default/index.css';
 
 export interface Props {
@@ -15,17 +15,22 @@ const textColor = config.branding.contrast_color;
 const backgroundColor = config.branding.background_color;
 
 const favicon = `/${config.branding.favicon}` || '/favicon.svg';
+
+const tabTitle = truncateString(title, 61);
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={getLangFromUrl(Astro.url)}>
   <head>
     <!-- HEAD-DYNAMIC-SCRIPT -->
     <meta charset='UTF-8' />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, interactive-widget=resizes-content" />
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1, minimum-scale=1, interactive-widget=resizes-content'
+    />
     <meta name='generator' content={Astro.generator} />
     <link rel='icon' type='image/x-icon' href={favicon} />
-    <title>{title}</title>
+    <title>{tabTitle}</title>
     <slot name='head' />
   </head>
   <body>
@@ -50,4 +55,3 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
 </html>
 
 <style define:vars={{ siteColor, backgroundColor, textColor }}></style>
-

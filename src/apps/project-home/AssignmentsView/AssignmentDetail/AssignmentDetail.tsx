@@ -6,12 +6,11 @@ import type {
   Document,
   Group,
 } from 'src/Types';
-import { DownloadSimple, Pencil, Trash } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
-import { ConfirmDelete } from './ConfirmDelete';
 
 import './AssignmentDetail.css';
+import { AssignmentsActions } from './AssignmentActions';
 
 interface AssignmentDetailProps {
   assignment: Context;
@@ -30,15 +29,13 @@ interface AssignmentDetailProps {
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
   const { lang, t } = props.i18n;
 
-  const [confirmOpen, setConfirmOpen] = useState(false);
-
   const members = props.assignment.members.reduce(
     (members, context_user) => [...members, context_user.user as UserProfile],
     [] as UserProfile[]
   );
 
   const handleDelete = () => {
-    setConfirmOpen(true);
+    props.onDeleteAssignment(props.assignment);
   };
 
   const admins = props.groups
@@ -59,33 +56,17 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
 
           <div className='assignment-detail-buttons'>
-            <a
-              href={`/${lang}/projects/${props.assignment.project_id}/export/csv?context=${props.assignment.id}`}
-              className='button flat'
-            >
-              <DownloadSimple size={20} />
-              <span>{t['Export annotations as CSV']}</span>
-            </a>
-
             {props.isAdmin && !props.assignment.is_project_default && (
-              <>
-                <button
-                  className='project-header-button'
-                  onClick={() => props.onEditAssignment(props.assignment)}
-                >
-                  <Pencil color='black' size={20} />
-                  <div className='project-header-button-text'>{t['Edit']}</div>
-                </button>
-                <button
-                  className='project-header-button'
-                  onClick={handleDelete}
-                >
-                  <Trash color='black' size={20} />
-                  <div className='project-header-button-text'>
-                    {t['Delete']}
-                  </div>
-                </button>
-              </>
+              <AssignmentsActions
+                i18n={props.i18n}
+                context={props.assignment}
+                isAdmin={props.isAdmin}
+                onEdit={() => props.onEditAssignment(props.assignment)}
+                onDelete={handleDelete}
+                onExportCSV={() => {
+                  window.location.href = `/${lang}/projects/${props.assignment.project_id}/export/csv?context=${props.assignment.id}`;
+                }}
+              />
             )}
           </div>
         </div>
@@ -135,16 +116,6 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
         </div>
       </div>
-
-      <ConfirmDelete
-        i18n={props.i18n}
-        open={confirmOpen}
-        onCancel={() => setConfirmOpen(false)}
-        onConfirm={() => {
-          setConfirmOpen(false);
-          props.onDeleteAssignment(props.assignment);
-        }}
-      />
     </div>
   );
 };

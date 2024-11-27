@@ -1,0 +1,25 @@
+button.cancel,
+a[href].button.cancel {
+  background-color: transparent;
+  border: none !important;
+  height: 38px;
+  padding: 10px 12px 10px 12px !important;
+  color: black;
+  box-shadow: none !important;
+}
+
+button.cancel:not(:disabled):hover,
+a[href].button.cancel:hover {
+  background-color: rgba(0, 0, 0, 0.22) !important;
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.18),
+    0 0 3px 1px rgba(0, 0, 0, 0.12), 0 4px 12px -6px rgba(0, 0, 0, 0.25);
+}
+
+button.cancel:not(:disabled).flat:hover,
+a[href].button.cancel.flat:hover {
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.18);
+}
+
+button.cancel svg {
+  color: black;
+}

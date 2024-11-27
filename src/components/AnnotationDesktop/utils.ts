@@ -6,6 +6,18 @@ export const getCreator = (annotation: SupabaseAnnotation) =>
   annotation.target?.creator || 
     (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
 
+export const getContributors = (annotation: SupabaseAnnotation) => {
+  const contributors: User[] = [
+    annotation.target.creator!,
+    ...annotation.bodies.map(b => b.creator!)
+  ].filter(Boolean); // Remove undefined
+
+  // De-duplicate
+  return contributors.reduce<User[]>((unique, user) => (
+    unique.some(u => u.id === user.id) ? unique : [...unique, user]
+  ), []);
+}
+
 /** Returns an appropriate display name for the given (Present)User **/
 export const getDisplayName = (user?: PresentUser | User) => {
   if (user) {
@@ -25,7 +37,7 @@ export const enumerateCreators = (present: PresentUser[], annotations: SupabaseA
     if (layerIds && a.layer_id && !layerIds.has(a.layer_id)) return enumerated;
     
     const presentCreator = present.find(p => p.id === a.target.creator?.id);
-    if (presentCreator) {
+    if (presentCreator) {
       const exists = enumerated.find(u => u.id === presentCreator.id);
       return exists ? enumerated : [...enumerated, presentCreator];
     } else {
@@ -38,6 +50,34 @@ export const enumerateCreators = (present: PresentUser[], annotations: SupabaseA
       }
     }
   }, []);
+}
+
+export const enumerateContributors = (present: PresentUser[], annotations: SupabaseAnnotation[], visibleLayers?: string[]) => {
+  const layerIds = visibleLayers ? new Set(visibleLayers) : undefined;
+
+  const users = annotations.reduce<User[]>((enumerated, a) => {
+    // If there is a layer filter, ignore annotations outside of visible layers
+    if (layerIds && a.layer_id && !layerIds.has(a.layer_id)) return enumerated;
+
+    const contributors: User[] = [
+      a.target.creator!,
+      ...a.bodies.map(b => b.creator!)
+    ].filter(Boolean); // Remove undefined
+    
+    const next = [
+      ...enumerated,
+      ...contributors
+    ].reduce<User[]>((unique, user) => ( // De-duplicate
+      unique.some(u => u.id === user.id) ? unique : [...unique, user]
+    ), []);
+
+    return next;
+  }, []);
+
+  return users.map(u => {
+    const presentUser = present.find(p => p.id === u.id);
+    return presentUser ? presentUser : u
+  });
 }
 
 /** Determines the list of unique tags in the given annotation list **/

@@ -1,31 +1,38 @@
-import { useEffect, useState } from 'react';
-import { Trash } from '@phosphor-icons/react';
+import { GetPlugins } from '@apps/project-plugins/GetPlugins';
+import {
+  deleteInstalledPlugin,
+  lockProject,
+  updatePluginSettings,
+  updateProject,
+} from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { BackButtonBar } from '@components/BackButtonBar';
+import { Button } from '@components/Button';
+import type {
+  PluginInstallationConfig,
+  PluginMetadata,
+} from '@components/Plugins';
+import { Extension } from '@components/Plugins';
+import { TagSettings } from './TagSettings';
+import {
+  type SaveState,
+  TinySaveIndicator,
+} from '@components/TinySaveIndicator';
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
+import { TopBar } from '@components/TopBar';
+import { Lock, Trash } from '@phosphor-icons/react';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import {
-  clearProjectTagVocabulary,
-  getProjectTagVocabulary,
-  setProjectTagVocabulary,
-  updateProject,
-  deleteInstalledPlugin,
-  updatePluginSettings,
-} from '@backend/helpers';
-import { GetPlugins } from '@apps/project-plugins/GetPlugins';
-import { supabase } from '@backend/supabaseBrowserClient';
-import { Button } from '@components/Button';
-import { TopBar } from '@components/TopBar';
-import { BackButtonBar } from '@components/BackButtonBar';
-import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
-import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
-import { SettingsHeader } from './SettingsHeader';
-import type { PluginMetadata, PluginInstallationConfig } from '@components/Plugins';
-import { Extension } from '@components/Plugins';
+import { useEffect, useState } from 'react';
 import type {
   ExtendedProjectData,
   Invitation,
-  Translations,
   MyProfile,
+  Translations,
 } from 'src/Types';
+import { DocumentViewRight } from 'src/Types';
+import { SettingsHeader } from './SettingsHeader';
+import { LockWarningMessage } from './LockWarningMessage';
 
 import './ProjectSettings.css';
 
@@ -33,7 +40,7 @@ interface ProjectSettingsProps {
   invitations: Invitation[];
 
   me: MyProfile;
-  
+
   i18n: Translations;
 
   project: ExtendedProjectData;
@@ -48,35 +55,24 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const [vocabulary, setVocabulary] = useState<string[]>([]);
   const [installedPlugins, setInstalledPlugins] = useState(
     props.installedPlugins
   );
+
   const [state, setState] = useState<SaveState>('idle');
+
   const [openEdit, setOpenEdit] = useState(false);
   const [openJoin, setOpenJoin] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [project, setProject] = useState<ExtendedProjectData | undefined>();
-  const [tab, setTab] = useState<'settings' | 'plugins' | undefined>(
-    'settings'
+  const [tab, setTab] = useState<
+    'settings' | 'plugins' | 'tagging' | undefined
+  >('settings');
+  const [lockOpen, setLockOpen] = useState(false);
+  const [documentViewRight, setDocumentViewRight] = useState<DocumentViewRight>(
+    DocumentViewRight.closed
   );
-
-  useEffect(() => {
-    getProjectTagVocabulary(supabase, props.project.id).then(
-      ({ error, data }) => {
-        if (error) {
-          setToast({
-            title: t['Something went wrong'],
-            description: t['Error loading tag vocabulary.'],
-            type: 'error',
-          });
-        } else {
-          setVocabulary(data.map((t) => t.name));
-        }
-      }
-    );
-  }, []);
 
   useEffect(() => {
     if (props.project) {
@@ -85,6 +81,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
       setName(props.project.name);
       setDescription(props.project.description || '');
       setProject(props.project);
+      setDocumentViewRight(props.project.document_view_right);
     }
   }, [props.project]);
 
@@ -144,31 +141,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     );
   };
 
-  const onChange = (evt: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = evt.target;
-    setVocabulary(value.split('\n'));
-  };
-
-  const saveVocabulary = () => {
-    setState('saving');
-
-    setProjectTagVocabulary(supabase, props.project.id, vocabulary)
-      .then(() => {
-        setState('success');
-      })
-      .catch((error) => {
-        console.error(error);
-
-        setToast({
-          title: t['Something went wrong'],
-          description: t['Error saving tag vocabulary.'],
-          type: 'error',
-        });
-
-        setState('failed');
-      });
-  };
-
   const saveProjectSettings = () => {
     setState('saving');
 
@@ -178,7 +150,9 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
       name,
       description,
       openJoin,
-      openEdit
+      openEdit,
+      props.project.is_locked || false,
+      documentViewRight
     ).then((result) => {
       if (result) {
         setProject({
@@ -187,6 +161,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           description: description,
           is_open_join: openJoin,
           is_open_edit: openEdit,
+          document_view_right: documentViewRight,
         });
         setState('success');
       } else {
@@ -195,29 +170,53 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     });
   };
 
-  const clearVocabulary = () => {
+  const handleRequestLockProject = () => {
+    setLockOpen(true);
+  };
+
+  const handleRequestUnlockProject = () => {
+    setLockOpen(true);
+  };
+
+  const handleLockProject = () => {
     setState('saving');
+    setLockOpen(false);
 
-    const prev = vocabulary;
-
-    setVocabulary([]);
-
-    clearProjectTagVocabulary(supabase, props.project.id)
-      .then(() => {
-        setState('success');
-      })
-      .catch(() => {
-        setToast({
-          title: t['Something went wrong'],
-          description: t['Error saving tag vocabulary.'],
-          type: 'error',
-        });
-
-        setState('failed');
-
-        // Roll back
-        setVocabulary(prev);
+    if (project?.is_locked) {
+      updateProject(
+        supabase,
+        props.project.id,
+        name,
+        description,
+        openJoin,
+        openEdit,
+        !project?.is_locked,
+        documentViewRight
+      ).then((result) => {
+        if (result) {
+          setProject({
+            ...props.project,
+            name: name,
+            description: description,
+            is_open_join: openJoin,
+            is_open_edit: openEdit,
+            is_locked: !project?.is_locked,
+          });
+          setState('success');
+        } else {
+          setState('failed');
+        }
       });
+    } else {
+      lockProject(supabase, props.project.id).then((result) => {
+        if (result) {
+          setState('success');
+          window.location.href = `/${props.i18n.lang}/projects`;
+        } else {
+          setState('failed');
+        }
+      });
+    }
   };
 
   const saveDisabled =
@@ -225,7 +224,8 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     project.name === name &&
     project.description === description &&
     project.is_open_join === openJoin &&
-    project.is_open_edit === openEdit;
+    project.is_open_edit === openEdit &&
+    project.document_view_right === documentViewRight;
 
   const onError = (error: string) => {
     setToast({
@@ -266,208 +266,315 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
             currentTab={tab}
           />
           {tab === 'settings' && (
-            <>
-              <div className='tagging-vocabulary'>
-                <div className='project-settings-root'>
+            <div className='tab-container'>
+              <div className='project-settings-root'>
+                <Label.Root
+                  className='project-settings-label-detail text-body-large-bold'
+                  htmlFor='firstName'
+                >
+                  {t['Project Details']}
+                </Label.Root>
+                <Label.Root className='project-settings-label text-body-small-bold'>
+                  {t['Name']}
+                </Label.Root>
+                <input
+                  className='project-settings-input'
+                  type='text'
+                  value={name}
+                  placeholder={t['Name your project']}
+                  onChange={(evt) => setName(evt.target.value)}
+                />
+                <Label.Root className='project-settings-label text-body-small-bold'>
+                  {t['Description']}
+                </Label.Root>
+                <input
+                  type='text'
+                  value={description}
+                  placeholder={t['Describe your project']}
+                  onChange={(evt) => setDescription(evt.target.value)}
+                />
+                <div className='project-settings-visibility'>
                   <Label.Root
                     className='project-settings-label-detail text-body-large-bold'
                     htmlFor='firstName'
                   >
-                    {t['Project Details']}
+                    {t['Project Visibility']}
                   </Label.Root>
-                  <Label.Root className='project-settings-label text-body-small-bold'>
-                    {t['Name']}
-                  </Label.Root>
-                  <input
-                    className='project-settings-input'
-                    type='text'
-                    value={name}
-                    placeholder={t['Name your project']}
-                    onChange={(evt) => setName(evt.target.value)}
-                  />
-                  <Label.Root className='project-settings-label text-body-small-bold'>
-                    {t['Description']}
-                  </Label.Root>
-                  <input
-                    type='text'
-                    value={description}
-                    placeholder={t['Describe your project']}
-                    onChange={(evt) => setDescription(evt.target.value)}
-                  />
-                  <div className='project-settings-visibility'>
-                    <Label.Root
-                      className='project-settings-label-detail text-body-large-bold'
-                      htmlFor='firstName'
+                  <div className='project-settings-switches'>
+                    <RadioGroup.Root
+                      className='project-settings-radio-group-root'
+                      defaultValue='private'
+                      value={visibility}
+                      aria-label='View density'
+                      onValueChange={(value) =>
+                        value === 'public'
+                          ? setOpenJoin(true)
+                          : setOpenJoin(false)
+                      }
                     >
-                      {t['Project Visibility']}
-                    </Label.Root>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='private'
+                          id='visibility-private'
+                        >
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='visibility-private'
+                        >
+                          {t['Private']}
+                        </label>
+                      </div>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Project admins choose the users that can join this project'
+                          ]
+                        }
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='public'
+                          id='visibility-public'
+                        >
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='visibility-public'
+                        >
+                          {t['Public']}
+                        </label>
+                      </div>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Any registered user can join this project without an invitation'
+                          ]
+                        }
+                      </div>
+                    </RadioGroup.Root>
                     <div className='project-settings-switches'>
+                      <Label.Root
+                        className='project-settings-label-detail text-body-large-bold'
+                        htmlFor='firstName'
+                      >
+                        {t['Project Type']}
+                      </Label.Root>
                       <RadioGroup.Root
                         className='project-settings-radio-group-root'
-                        defaultValue='private'
-                        value={visibility}
+                        defaultValue='assignments'
+                        value={type}
                         aria-label='View density'
                         onValueChange={(value) =>
-                          value === 'public'
-                            ? setOpenJoin(true)
-                            : setOpenJoin(false)
+                          value === 'assignments'
+                            ? setOpenEdit(false)
+                            : setOpenEdit(true)
                         }
                       >
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <RadioGroup.Item
                             className='project-settings-radio-group-item'
-                            value='private'
-                            id='r1'
+                            value='assignments'
+                            id='type-assignments'
                           >
                             <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
                           </RadioGroup.Item>
                           <label
                             className='project-settings-radio-group-label text-body-small-bold'
-                            htmlFor='r1'
+                            htmlFor='type-assignments'
                           >
-                            {t['Private']}
+                            {t['Assignments']}
                           </label>
                         </div>
                         <div className='project-settings-radio-group-helper text-body-small'>
                           {
                             t[
-                              'Project admins choose the users that can join this project'
+                              'Project admins create assignments with specific documents and team members'
                             ]
                           }
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                           <RadioGroup.Item
                             className='project-settings-radio-group-item'
-                            value='public'
-                            id='r2'
+                            value='single_team'
+                            id='type-single-team'
                           >
                             <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
                           </RadioGroup.Item>
                           <label
                             className='project-settings-radio-group-label text-body-small-bold'
-                            htmlFor='r2'
+                            htmlFor='type-single-team'
                           >
-                            {t['Public']}
+                            {t['Single Team']}
                           </label>
                         </div>
                         <div className='project-settings-radio-group-helper text-body-small'>
-                          {
-                            t[
-                              'Any registered user can join this project without an invitation'
-                            ]
-                          }
+                          {t['Project members can annotate any document']}
                         </div>
                       </RadioGroup.Root>
-                      <div className='project-settings-switches'>
-                        <Label.Root
-                          className='project-settings-label-detail text-body-large-bold'
-                          htmlFor='firstName'
+                    </div>
+                  </div>
+                  <div className='project-settings-documents-view'>
+                    <Label.Root className='project-settings-label-detail text-body-large-bold'>
+                      {t['Document View (Right Panel)']}
+                    </Label.Root>
+                    <RadioGroup.Root
+                      className='project-settings-radio-group-root'
+                      defaultValue='closed'
+                      value={documentViewRight}
+                      aria-label='Document view right'
+                      onValueChange={(value: DocumentViewRight) =>
+                        setDocumentViewRight(value)
+                      }
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='closed'
+                          id='documents-view-closed'
                         >
-                          {t['Project Type']}
-                        </Label.Root>
-                        <RadioGroup.Root
-                          className='project-settings-radio-group-root'
-                          defaultValue='assignments'
-                          value={type}
-                          aria-label='View density'
-                          onValueChange={(value) =>
-                            value === 'assignments'
-                              ? setOpenEdit(false)
-                              : setOpenEdit(true)
-                          }
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='documents-view-closed'
                         >
-                          <div
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            <RadioGroup.Item
-                              className='project-settings-radio-group-item'
-                              value='assignments'
-                              id='r1'
-                            >
-                              <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
-                            </RadioGroup.Item>
-                            <label
-                              className='project-settings-radio-group-label text-body-small-bold'
-                              htmlFor='r1'
-                            >
-                              {t['Assignments']}
-                            </label>
-                          </div>
-                          <div className='project-settings-radio-group-helper text-body-small'>
-                            {
-                              t[
-                                'Project admins create assignments with specific documents and team members'
-                              ]
-                            }
-                          </div>
-                          <div
-                            style={{ display: 'flex', alignItems: 'center' }}
-                          >
-                            <RadioGroup.Item
-                              className='project-settings-radio-group-item'
-                              value='single_team'
-                              id='r2'
-                            >
-                              <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
-                            </RadioGroup.Item>
-                            <label
-                              className='project-settings-radio-group-label text-body-small-bold'
-                              htmlFor='r2'
-                            >
-                              {t['Single Team']}
-                            </label>
-                          </div>
-                          <div className='project-settings-radio-group-helper text-body-small'>
-                            {t['Project members can annotate any document']}
-                          </div>
-                        </RadioGroup.Root>
+                          {t['Closed']}
+                        </label>
                       </div>
-                    </div>
-                    <div className='buttons project-settings-buttons'>
-                      <Button
-                        busy={state === 'saving'}
-                        className='primary'
-                        onClick={saveProjectSettings}
-                        disabled={saveDisabled}
-                      >
-                        <span>{t['Save']}</span>
-                      </Button>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Right panel will be closed by default when opening a document'
+                          ]
+                        }
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='annotations'
+                          id='documents-view-annotations'
+                        >
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='documents-view-annotations'
+                        >
+                          {t['Annotations']}
+                        </label>
+                      </div>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Right panel will display annotations when opening a document'
+                          ]
+                        }
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <RadioGroup.Item
+                          className='project-settings-radio-group-item'
+                          value='notes'
+                          id='documents-view-notes'
+                        >
+                          <RadioGroup.Indicator className='project-settings-radio-group-indicator' />
+                        </RadioGroup.Item>
+                        <label
+                          className='project-settings-radio-group-label text-body-small-bold'
+                          htmlFor='documents-view-notes'
+                        >
+                          {t['Notes']}
+                        </label>
+                      </div>
+                      <div className='project-settings-radio-group-helper text-body-small'>
+                        {
+                          t[
+                            'Right panel will display notes when opening a document'
+                          ]
+                        }
+                      </div>
+                    </RadioGroup.Root>
+                  </div>
+                  <div className='buttons project-settings-buttons'>
+                    <Button
+                      busy={state === 'saving'}
+                      className='primary'
+                      onClick={saveProjectSettings}
+                      disabled={saveDisabled}
+                    >
+                      <span>{t['Save Changes']}</span>
+                    </Button>
 
-                      <TinySaveIndicator
-                        resultOnly
-                        state={state}
-                        fadeOut={2500}
-                      />
-                    </div>
+                    <TinySaveIndicator
+                      resultOnly
+                      state={state}
+                      fadeOut={2500}
+                    />
                   </div>
                 </div>
               </div>
-
-              <div className='tagging-vocabulary'>
-                <h2>{t['Tagging Vocabulary']}</h2>
-
-                <p>{t['You can pre-define a tagging vocabulary']}</p>
-
-                <p>{t['The terms will appear as autocomplete options']}</p>
-
-                <textarea value={vocabulary.join('\n')} onChange={onChange} />
-
-                <div className='buttons'>
-                  <Button onClick={clearVocabulary}>
-                    <span>{t['Clear']}</span>
-                  </Button>
-                  <Button
-                    busy={state === 'saving'}
-                    className='primary'
-                    onClick={saveVocabulary}
-                  >
-                    <span>{t['Save']}</span>
-                  </Button>
-
-                  <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
+              <div className='project-settings-divider' />
+              <Label.Root
+                className='project-settings-label-detail text-body-large-bold'
+                htmlFor='projectStatus'
+              >
+                {t['Project Status']}
+              </Label.Root>
+              <div className='project-settings-status-helper text-body-small'>
+                {t['status_message']}
+              </div>
+              <div className='project-settings-status-row'>
+                <div className='text-body-small-bold'>
+                  {`${t['Current Status']}:`}
+                </div>
+                <div
+                  className={
+                    project?.is_locked
+                      ? 'project-status-locked'
+                      : 'project-status-active'
+                  }
+                >
+                  {project?.is_locked ? (
+                    <>
+                      <Lock size={16} />
+                      <div className='text-body-small'>{t['Locked']}</div>
+                    </>
+                  ) : (
+                    <div className='text-body-small'>{t['Active']}</div>
+                  )}
                 </div>
               </div>
-            </>
+              <div className='buttons project-settings-buttons'>
+                <Button
+                  busy={state === 'saving'}
+                  className='primary'
+                  onClick={
+                    project?.is_locked
+                      ? handleRequestUnlockProject
+                      : handleRequestLockProject
+                  }
+                >
+                  <Lock size={16} />
+                  <span>
+                    {project?.is_locked
+                      ? t['Unlock Project']
+                      : t['Lock Project']}
+                  </span>
+                </Button>
+                <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
+              </div>
+            </div>
+          )}
+          {tab === 'tagging' && (
+            <TagSettings
+              i18n={props.i18n}
+              project={props.project}
+              onError={onError}
+            />
           )}
           {tab === 'plugins' && (
             <div className='project-plugins'>
@@ -549,6 +656,13 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           <Toast
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}
+          />
+          <LockWarningMessage
+            open={lockOpen}
+            i18n={props.i18n}
+            isLocked={!!project?.is_locked}
+            onCancel={() => setLockOpen(false)}
+            onConfirm={handleLockProject}
           />
         </ToastProvider>
       </div>

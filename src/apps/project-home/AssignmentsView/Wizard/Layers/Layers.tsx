@@ -202,7 +202,7 @@ export const Layers = (props: LayersProps) => {
             </div>
             {val.layers.map((l) => {
               return (
-                <div className='layers-checkbox-layer' key={l.document_id}>
+                <div className='layers-checkbox-layer' key={l.layer_id}>
                   <Checkbox.Root
                     className='checkbox-root'
                     checked={l.selected}

@@ -1,5 +1,5 @@
 import type { JoinRequest, Translations } from 'src/Types';
-import { Users, Gear } from '@phosphor-icons/react';
+import { Users, Gear, Lock } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 
 import './ProjectHeader.css';
@@ -11,6 +11,7 @@ interface ProjectHeaderProps {
   i18n: Translations;
   showTabs: boolean;
   isOpenJoin: boolean;
+  isLocked?: boolean;
 
   requests: JoinRequest[];
 
@@ -42,7 +43,15 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
   return (
     <header className='project-header-root'>
       <div className='project-header-name-bar'>
-        <h1>{props.name}</h1>
+        <div className='project-header-title'>
+          <h1>{props.name}</h1>
+          {props.isLocked && (
+            <div className='project-header-locked'>
+              <Lock size={16} />
+              <div className='text-body-small'>{t['Locked']}</div>
+            </div>
+          )}
+        </div>
         {props.isAdmin && (
           <div className='project-header-button-bar'>
             <button
@@ -50,7 +59,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               onClick={props.onGotoUsers}
             >
               <Users color='black' size={20} />
-              <div className='project-header-button-text'>{t['Team']}</div>
+              <div className='project-header-button-text'>{t['Users']}</div>
               {Boolean(requestCount > 0) && !props.isOpenJoin && (
                 <div className='project-header-pip'>{requestCount}</div>
               )}

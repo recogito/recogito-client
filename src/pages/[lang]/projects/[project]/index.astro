@@ -13,7 +13,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 
 const lang = getLangFromUrl(Astro.url);
 
-const supabase = await createSupabaseServerClient(Astro.cookies);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
@@ -70,7 +70,7 @@ const availableLayers = await getAvailableLayers(supabase, projectId as string);
 const requests = await listPendingRequests(supabase, projectId as string);
 ---
 
-<BaseLayout title='Projects Home'>
+<BaseLayout title={project.data.name}>
   <ProjectHome
     client:only='react'
     i18n={i18n}

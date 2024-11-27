@@ -1,5 +1,5 @@
 {
-  "New Assignment": "Neuer Arbeitsauftrag",
+  "Add Assignment": "Neuer Arbeitsauftrag",
   "Unnamed Assignment": "Unbenannter Arbeitsauftrag",
   "Create a new Assignment": "Neuen Arbeitsauftrag erstellen",
   "1. General": "1. Allgemein",
@@ -47,6 +47,9 @@
   "Edit assignment": "Arbeitsauftrag ändern",
   "Delete assignment": "Arbeitsauftrag löschen",
   "Deleted": "Gelöscht",
+  "Delete": "Löschen",
+  "Are you sure you want to delete this assignment?": "Arbeitsauftrag Löschen",
+  "Deleting this assignment will remove it from all users and will no longer be visible here.": "Der Arbeitsauftrag wird für alle Team-Mitglieder gelöscht.",
   "Assignment deleted successfully.": "Der Arbeitsauftrag wurde gelöscht.",
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not delete the assignment.": "Der Arbeitsauftrag konnte nicht gelöscht werden.",
@@ -58,5 +61,7 @@
   "Optional": "Optional",
   "Select All": "Alles auswählen",
   "Base Assignment": "Basis-Arbeitsauftrag",
-  "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern."
+  "You have not added any team members.": "Keine Teammitglieder ausgewählt. Aktuell haben nur Projektadministratoren Zugriff. Du kannst den Arbeitsauftrag später jederzeit ändern.",
+  "Export annotations as CSV": "Annotationen als CSV exportieren",
+  "Assignments Wizard": "Arbeitsauftrag Erstellen"
 }

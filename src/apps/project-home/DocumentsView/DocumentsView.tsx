@@ -48,7 +48,14 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   const [documentUpdated, setDocumentUpdated] = useState(false);
 
   const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
-    (documents) => props.setDocuments([...props.documents, ...documents])
+    (documents) =>
+      props.setDocuments(
+        [...props.documents, ...documents].reduce<Document[]>(
+          (all, document) =>
+            all.some((d) => d.id === document.id) ? all : [...all, document],
+          []
+        )
+      )
   );
 
   const documentIds = useMemo(
@@ -229,19 +236,19 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         <h2>{t['Documents']}</h2>
         {props.isAdmin && (
           <div className='admin-actions'>
+            <a
+              href={`/${lang}/projects/${props.project.id}/export/csv`}
+              className='button'
+            >
+              <DownloadSimple size={20} />
+              <span>{t['Export Annotations']}</span>
+            </a>
             <button
               className='button primary project-home-add-document'
               onClick={onAddDocument}
             >
               <Plus size={20} /> <span>{t['Add Document']}</span>
             </button>
-            <a
-              href={`/${lang}/projects/${props.project.id}/export/csv`}
-              className='button'
-            >
-              <DownloadSimple size={20} />
-              <span>{t['Export annotations as CSV']}</span>
-            </a>
           </div>
         )}
       </header>
@@ -258,6 +265,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
               onDelete={() => onDeleteDocument(document)}
               onUpdate={onUpdateDocument}
               onError={onError}
+              rtab={props.project.document_view_right}
             />
           ))}
         </div>

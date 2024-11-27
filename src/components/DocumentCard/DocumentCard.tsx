@@ -1,10 +1,12 @@
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useState } from 'react';
 import type { Context, Document, Translations } from 'src/Types';
+import { DocumentViewRight } from 'src/Types';
+
+import './DocumentCard.css';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
-
-import './DocumentCard.css';
 
 interface DocumentCardProps {
   i18n: Translations;
@@ -20,6 +22,8 @@ interface DocumentCardProps {
   onUpdate?(document: Document): void;
 
   onError?(error: string): void;
+
+  rtab?: DocumentViewRight;
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
@@ -30,10 +34,18 @@ export const DocumentCard = (props: DocumentCardProps) => {
   const [editable, setEditable] = useState(false);
 
   const onOpen = (tab: boolean) => {
-    if (tab)
-      window.open(`/${lang}/annotate/${context.id}/${document.id}`, '_blank');
-    else
-      window.location.href = `/${lang}/annotate/${context.id}/${document.id}`;
+    const search = getSearchParameters();
+
+    const hash = getHashParameters();
+    hash.set('rtab', props.rtab || DocumentViewRight.closed);
+
+    const url = buildURL(`/${lang}/annotate/${context.id}/${document.id}`, search, hash);
+
+    if (tab) {
+      window.open(url, '_blank');
+    } else {
+      window.location.href = url;
+    }
   };
 
   const onClick = (evt: React.MouseEvent) => {
@@ -49,6 +61,11 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`;
 
+  const onExportPDF = (includePrivate: boolean) =>
+    window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&context=${context.id}&private=${includePrivate}`;
+    
   const onExportCSV = (includePrivate: boolean) =>
     window.location.href = props.context.is_project_default
       ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
@@ -73,6 +90,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
               onOpen={onOpen}
               onDelete={props.onDelete}
               onExportTEI={onExportTEI}
+              onExportPDF={onExportPDF}
               onExportCSV={onExportCSV}
               onEditMetadata={() => setEditable(true)}
             />

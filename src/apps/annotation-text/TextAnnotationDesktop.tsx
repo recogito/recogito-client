@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
@@ -6,7 +6,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { type DocumentNote, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
@@ -29,6 +29,9 @@ import '@recogito/react-text-annotator/react-text-annotator.css';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
+  // @ts-ignore
+  const isLocked = props.document.project_is_locked;
+
   const contentType = props.document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
@@ -49,23 +52,45 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [embeddedLayers, setEmbeddedLayers] = useState<EmbeddedLayer[] | undefined>();
 
+  const [embeddedNotes, setEmbeddedNotes] = useState<DocumentNote[] | undefined>();
+
   const layers = useMemo(() => (
     [...(documentLayers || []), ...(embeddedLayers || [])]
   ), [documentLayers, embeddedLayers]);
 
   const layerNames = useLayerNames(props.document, embeddedLayers);
 
-  const activeLayer = useMemo(
-    () =>
-      documentLayers && documentLayers.length > 0
-        ? documentLayers.find((l) => l.is_active) || documentLayers[0]
-        : undefined,
-    [documentLayers]
-  );
+  const activeLayer = useMemo(() => {
+    // Waiting for layers to load
+    if (!documentLayers) return;
+
+    // Crash hard if there is no layer (the error boundary will handle the UI message!)
+    if (documentLayers.length === 0)
+      throw 'Fatal: document has no layers.';
+
+    // Crash hard if there is no active layer
+    const activeLayers = documentLayers.filter(l => l.is_active);
+    if (activeLayers.length === 0)
+      throw 'Fatal: active layer missing.';
+
+    // Crash hard if there is more than one active layer
+    if (activeLayers.length > 1) {
+      console.error(activeLayers);
+      throw `Fatal: more than one active layer (found ${activeLayers.length})`;
+    }
+
+    return activeLayers[0];
+  }, [documentLayers]);
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const {
+    rightPanelOpen,
+    rightPanelTab,
+    setRightPanelOpen,
+    setRightPanelTab,
+    usePopup
+  } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -73,7 +98,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     HighlightStyleExpression | undefined
   >(undefined);
 
-  const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
+  const onChangeStyle = useCallback((style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
       const hse: HighlightStyleExpression = (
         a: SupabaseAnnotation,
@@ -87,7 +112,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     } else {
       setActiveLayerStyle(undefined);
     }
-  };
+  }, [setActiveLayerStyle]);
 
   const style: HighlightStyleExpression = useMemo(() => {
     // In practice, there should only ever be one active layer
@@ -111,8 +136,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         ? activeLayerStyle(a, state, z)
         : activeLayerStyle;
   }, [activeLayerStyle, documentLayers]);
-
-  const [usePopup, setUsePopup] = useState(true);
 
   useEffect(() => {
     if (policies) {
@@ -154,15 +177,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  useEffect(() => {
-    // Need to rethink - we also want popups
-    // when the panel shows Notes. But the design
-    // may still change...
-    setUsePopup(!rightPanelOpen);
-  }, [rightPanelOpen]);
-
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
-    setUsePopup(tab === 'NOTES');
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
@@ -196,10 +211,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     .filter(Boolean)
     .join(' ');
 
+  const onLoadEmbeddedLayers = useCallback((layers: EmbeddedLayer[], notes: DocumentNote[]) => {
+    setEmbeddedLayers(layers);
+    setEmbeddedNotes(notes);
+  }, []);
+
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layers={documentLayers}
+      embeddedNotes={embeddedNotes}
+      layers={layers}
       present={present}
       onError={() => setConnectionError(true)}>
       <div className="anno-desktop ta-desktop">
@@ -215,6 +236,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
           <Toolbar
             i18n={props.i18n}
+            isLocked={isLocked}
             document={props.document}
             present={present}
             privacy={privacy}
@@ -224,6 +246,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
+            tagVocabulary={tagVocabulary}
             onChangePrivacy={setPrivacy}
             onChangeStyle={onChangeStyle}
             onToggleBranding={() => setShowBranding(!showBranding)}
@@ -246,6 +269,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               channelId={props.channelId}
               document={props.document}
               i18n={props.i18n}
+              isLocked={isLocked}
               layers={documentLayers}
               layerNames={layerNames}
               policies={policies}
@@ -258,13 +282,14 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               onConnectionError={() => setConnectionError(true)}
               onSaveError={() => setConnectionError(true)}
               onLoad={() => setLoading(false)}
-              onLoadEmbeddedLayers={setEmbeddedLayers}
+              onLoadEmbeddedLayers={onLoadEmbeddedLayers}
               styleSheet={props.styleSheet}
             />
           )}
 
           <RightDrawer
             i18n={props.i18n}
+            isProjectLocked={isLocked}
             layers={layers}
             layerNames={layerNames}
             open={rightPanelOpen}
@@ -274,7 +299,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             style={style}
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
-            onTabChanged={onRightTabChanged} />
+            onTabChanged={onRightTabChanged}
+            tab={rightPanelTab} />
         </main>
       </div>
     </DocumentNotes>

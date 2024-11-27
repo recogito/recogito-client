@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.project-settings .tab-container {
+  max-width: 65ch;
+  padding: 20px 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
 .project-settings-inputs {
   display: flex;
   flex-direction: column;
@@ -22,37 +29,6 @@
   font-size: smaller;
   margin-left: 20px;
   width: 600px;
-}
-
-.project-settings .tagging-vocabulary {
-  max-width: 65ch;
-  padding: 20px 0;
-  z-index: 100;
-}
-
-.project-settings .tagging-vocabulary h2 {
-  margin-top: 0.2em;
-}
-
-.project-settings .tagging-vocabulary p {
-  font-size: var(--font-small);
-  line-height: 160%;
-}
-
-.project-settings .tagging-vocabulary textarea {
-  height: 12em;
-  line-height: 150%;
-  margin: 0.5em 0;
-  max-width: 65ch;
-  min-width: 30ch;
-  resize: none;
-  width: 45ch;
-}
-
-.project-settings .tagging-vocabulary .buttons {
-  display: flex;
-  gap: 0.2em;
-  align-items: center;
 }
 
 .project-settings-switch-root {
@@ -310,4 +286,58 @@
 
 .project-plugins .plugin-admin-tile .plugin-admin {
   padding: 20px;
+}
+
+.project-settings-divider {
+  height: 2px;
+  border-top: 1px solid var(--gray-200);
+  width: 100%;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.project-settings-status-helper {
+  margin-top: 12px;
+  margin-bottom: 32px;
+}
+
+.project-settings-status-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+}
+
+.project-status-locked {
+  background-color: var(--gray-200);
+  display: flex;
+  flex-direction: row;
+  border-radius: 14px;
+  padding: 0 16px 0 16px;
+  width: 100px;
+  height: 28px;
+  align-items: center;
+  justify-content: space-around;
+  gap: 6px;
+  box-sizing: border-box;
+}
+
+.project-status-active {
+  display: flex;
+  flex-direction: row;
+  border-radius: 14px;
+  background-color: #0da01247;
+  padding: 0 16px 0 16px;
+  width: 70px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-sizing: border-box;
+}
+
+.project-settings-documents-view {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
 }

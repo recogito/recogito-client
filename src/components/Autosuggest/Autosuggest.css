@@ -36,16 +36,22 @@
 }
 
 .autosuggest li {
+  align-items: center;
   box-sizing: border-box;
   cursor: pointer;
-  display: block;
+  display: flex;
   font-size: 12px;
+  justify-content: space-between;
   padding: 3px 8px;
   width: 100%;
 }
 
-.autosuggest li {
+.autosuggest li .term-color {
+  border-radius: 50%;
   display: block;
+  height: 7px;
+  margin-right: 0.25rem;
+  width: 7px;
 }
 
 .autosuggest li.selected {

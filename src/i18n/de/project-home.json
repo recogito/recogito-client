@@ -12,9 +12,10 @@
   "Open document": "Dokument öffnen",
   "Open document in new tab": "In neuem Tab öffnen",
   "Export TEI file": "TEI/XML exportieren",
+  "Export PDF file": "PDF exportieren",
   "Public annotations only": "Nur öffentliche Annotationen",
   "Include my private annotations": "Inkl. meiner privaten Annotationen",
-  "Export annotations as CSV": "Annotationen als CSV exportieren",
+  "Export Annotations": "Annotationen exportieren",
   "Edit document metadata": "Metadaten bearbeiten",
   "Delete document": "Dokument aus Projekt entfernen",
   "Deleted": "Entfernt",
@@ -48,7 +49,7 @@
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the document.": "Das Dokument konnte nicht erstellt werden.",
   "Could not rename the document.": "Das Dokument konnte nicht umbenannt werden.",
-  "Could not delete the document.": "Das Dokument konnte nicht gelöscht werden.",
+  "Could not delete the document.": "Konnte nicht gelöscht werden. Möglicherweise wird das Dokument noch in einem Projekt verwendet.",
   "Document Library": "Dokumentenbibliothek",
   "Select a document or upload a new one.": "Wähle ein Dokument aus der Bibliothek, oder lade ein neues hoch. Achte darauf, die urheberrechtlichen Bestimmungen deines Landes einzuhalten!",
   "Add Document": "Dokumente Importieren",
@@ -72,5 +73,6 @@
   "Latest Revision": "Neueste Version",
   "Show More": "Mehr...",
   "Show Less": "Weniger...",
-  "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.": "Bist Du sicher dass Du dieses Dokument entfernen möchtest? Dokumente können nur entfernt werden, wenn sie in in keinem aktiven Projekt verwendet werden."
+  "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.": "Bist Du sicher dass Du dieses Dokument entfernen möchtest? Dokumente können nur entfernt werden, wenn sie in in keinem aktiven Projekt verwendet werden.",
+  "Locked": "Gesperrt"
 }

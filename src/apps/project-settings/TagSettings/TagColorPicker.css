@@ -1,0 +1,18 @@
+.project-settings .tag-settings .tag-color-picker {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25rem;
+}
+
+.project-settings .tag-settings button.color-preview {
+  height: 36px;
+  min-width: 36px;
+  padding: 0;
+  width: 36px;
+}
+
+.project-settings .tag-settings input.color-hex {
+  background-color: var(--gray-50);
+  height: 36px;
+  width: 17ch;
+}

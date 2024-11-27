@@ -13,6 +13,10 @@
   z-index: 9999;
 }
 
+.r6o-popup-sr-only, .r6o-popup-sr-only:active, .r6o-popup-sr-only:focus {
+  clip: rect(0 0 0 0) !important;
+}
+
 @keyframes popupFadeIn  {
   0% {
     opacity:0

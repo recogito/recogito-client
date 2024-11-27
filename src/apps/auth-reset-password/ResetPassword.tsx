@@ -9,13 +9,10 @@ import { AnimatedCheck } from '@components/AnimatedIcons';
 import './ResetPassword.css';
 
 interface ResetPasswordProps {
-
   i18n: Translations;
-
 }
 
 export const ResetPassword = (props: ResetPasswordProps) => {
-
   const { t } = props.i18n;
 
   const [password, setPassword] = useState('');
@@ -32,10 +29,9 @@ export const ResetPassword = (props: ResetPasswordProps) => {
     evt.preventDefault();
 
     if (password !== verification) {
-      setError(t['Passwords don\'t match']);
+      setError(t["Passwords don't match"]);
     } else {
       setBusy(true);
-
       supabase.auth.updateUser({ password }).then(({ error }) => {
         if (error) {
           console.error(error);
@@ -43,65 +39,71 @@ export const ResetPassword = (props: ResetPasswordProps) => {
         } else {
           setSuccess(true);
         }
-
         setBusy(false);
       });
     }
-  }
+  };
 
   return (
-    <div className="reset-password">
+    <div className='reset-password'>
       {success ? (
         <main>
-          <div className="success">
+          <div className='success'>
             <AnimatedCheck size={38} />
             <p>
-              {t['Password reset.']} <a href={`/${props.i18n.lang}/projects`}>{t['Go to dashboard.']}</a>
+              {t['Password reset.']}{' '}
+              <a href={`/${props.i18n.lang}/projects`}>
+                {t['Go to dashboard.']}
+              </a>
             </p>
           </div>
         </main>
       ) : (
         <main>
-          <h1>{t['Reset Password']}</h1>
-
+          <h1>{t['Set Password']}</h1>
           <form className='login'>
             <TextInput
-              type="password"
+              type='password'
               autoComplete={false}
-              id="password"
-              name="password" 
+              id='password'
+              name='password'
               label={t['Enter new password']}
-              className="lg w-full" 
-              onChange={setPassword} />
-            
+              className='lg w-full'
+              onChange={setPassword}
+            />
+
             <TextInput
-              type="password"
+              type='password'
               autoComplete={false}
-              id="verification"
-              name="verification" 
+              id='verification'
+              name='verification'
               label={t['Confirm password']}
-              className="lg w-full" 
+              className='lg w-full'
               error={Boolean(error)}
-              onChange={setVerification} />
+              onChange={setVerification}
+            />
 
             {error && (
-              <p className="error">
-                <WarningOctagon 
-                  className="icon text-bottom" 
-                  size={18} weight="fill" /> {error}
+              <p className='error'>
+                <WarningOctagon
+                  className='icon text-bottom'
+                  size={18}
+                  weight='fill'
+                />{' '}
+                {error}
               </p>
             )}
 
-            <Button   
+            <Button
               busy={busy}
-              className="primary lg w-full"
-              onClick={onResetPassword}>
-              <span>{t['Reset Password']}</span>
+              className='primary lg w-full'
+              onClick={onResetPassword}
+            >
+              <span>{t['Set Password']}</span>
             </Button>
           </form>
         </main>
       )}
     </div>
   );
-
-}
+};

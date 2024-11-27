@@ -55,6 +55,14 @@ export interface Project {
   is_open_join?: boolean;
 
   is_open_edit?: boolean;
+
+  is_locked?: boolean;
+}
+
+export enum DocumentViewRight {
+  closed = 'closed',
+  annotations = 'annotations',
+  notes = 'notes'
 }
 
 export interface ExtendedProjectData {
@@ -76,6 +84,8 @@ export interface ExtendedProjectData {
 
   is_open_edit?: boolean;
 
+  is_locked?: boolean;
+
   contexts: Context[];
 
   groups: Group[];
@@ -83,6 +93,8 @@ export interface ExtendedProjectData {
   documents: Document[];
 
   users: Member[];
+
+  document_view_right: DocumentViewRight;
 }
 
 export interface ProjectDocument {
@@ -171,6 +183,8 @@ export interface DocumentContext {
   project_id: string;
 
   is_project_default?: boolean;
+
+  project_is_locked?: boolean;
 
   layer_contexts?: any;
 }
@@ -333,6 +347,14 @@ export interface Tag {
   tag_definition?: TagDefinition;
 }
 
+export interface VocabularyTerm {
+
+  label: string;
+
+  color?: string;
+
+}
+
 export interface InstalledPlugin {
   id: string;
 
@@ -433,4 +455,10 @@ export type ApiPostInviteUserToProject = {
   projectId: string;
   projectName: string;
   invitedBy: string;
+};
+
+export type ApiAcceptOrgInvite = {
+  email: string;
+  password: string;
+  token: string;
 };

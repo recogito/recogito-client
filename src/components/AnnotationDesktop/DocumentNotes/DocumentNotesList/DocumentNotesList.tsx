@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Delta } from 'quill/core';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Layer, Policies, Translations } from 'src/Types';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { type Sorter, Sorting, SortSelector } from '../SortSelector';
 import { EmptyNote, NewNoteButton } from '../NewNote';
@@ -15,6 +15,8 @@ interface DocumentNotesListProps {
 
   i18n: Translations;
 
+  isProjectLocked: boolean;
+
   layers?: Layer[];
 
   layerNames: Map<string, string>;
@@ -23,7 +25,7 @@ interface DocumentNotesListProps {
 
   policies?: Policies;
 
-  tagVocabulary?: string[];
+  tagVocabulary?: VocabularyTerm[];
 
 }
 
@@ -79,17 +81,21 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
   return (
     <div className={className}>
       <div className="document-notes-list-header">
-        <NewNoteButton 
-          i18n={props.i18n} 
-          onCreatePublic={() => setNewNote('public')} 
-          onCreatePrivate={() => setNewNote('private')} />
+        {props.isProjectLocked ? (
+          <div className="spacer" />
+        ) : (
+          <NewNoteButton 
+            i18n={props.i18n} 
+            onCreatePublic={() => setNewNote('public')} 
+            onCreatePrivate={() => setNewNote('private')} />
+        )}
 
         <SortSelector 
           i18n={props.i18n}
           onChange={sorter => setSorter(() => sorter)} />
       </div>
 
-      {newNote && (
+      {(!props.isProjectLocked && newNote) && (
         <EmptyNote
           i18n={props.i18n}
           isPrivate={newNote === 'private'} 
@@ -109,6 +115,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               
             <DocumentNotesListItem 
               i18n={props.i18n}
+              isProjectLocked={props.isProjectLocked}
               isReadOnly={isReadOnly(note)}
               isSelected={selected === note.id}
               layerNames={props.layerNames}
@@ -116,6 +123,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               showReplyField={selected === note.id && !(isReadOnly(note))}
               policies={props.policies}
               present={props.present} 
+              tagVocabulary={props.tagVocabulary}
               onCreateBody={createBody}
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}

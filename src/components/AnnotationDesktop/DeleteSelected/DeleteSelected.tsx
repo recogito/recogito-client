@@ -65,8 +65,6 @@ export const DeleteSelected = (props: DeleteSelectedProps) => {
         onClick={isMine ? onDeleteSelection : () => setPromptOverride(true)}>
         <Trash size={18} />
       </button>
-
-      <div className="anno-toolbar-divider" />
     </>
   )
 

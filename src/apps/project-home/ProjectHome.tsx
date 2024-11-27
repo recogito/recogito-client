@@ -58,9 +58,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     AvailableLayers[] | undefined
   >();
 
-  const [tab, setTab] = useLocalStorageBackedState<'documents' | 'assignments' | undefined>(
-    `tab-${props.project.id}`, undefined
-  );
+  const [tab, setTab] = useLocalStorageBackedState<
+    'documents' | 'assignments' | undefined
+  >(`tab-${props.project.id}`, undefined);
 
   const { assignments, setAssignments } = useAssignments(project);
 
@@ -140,17 +140,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     return project.contexts;
   };
 
-  const onSetDocuments = (documents: Document[]) => {
-    setDocuments(documents);
-    const proj = {
-      ...project,
-      documents: documents,
-      contexts: updateDefaultContext(project, documents),
-    };
-    setProject(proj);
-    setAssignments(proj.contexts);
-  };
-
   const removeDocumentFromAssignments = (document: Document) => {
     const copy: ExtendedProjectData = JSON.parse(JSON.stringify(props.project));
     copy.contexts.forEach((context: Context) => {
@@ -179,6 +168,17 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     });
   };
 
+  const onSetDocuments = (documents: Document[]) => {
+    setDocuments(documents);
+    const proj = {
+      ...project,
+      documents: documents,
+      contexts: updateDefaultContext(project, documents),
+    };
+    setProject(proj);
+    handleSetAssignments(proj.contexts);
+  };
+
   return (
     <>
       <TopBar
@@ -193,6 +193,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       <ProjectHeader
         i18n={props.i18n}
         isAdmin={isAdmin || false}
+        isLocked={props.project.is_locked}
         name={props.project.name}
         description={props.project.description || ''}
         requests={props.requests}

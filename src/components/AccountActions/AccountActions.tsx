@@ -8,6 +8,8 @@ import './AccountActions.css';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
+const helpRedirect = import.meta.env.PUBLIC_HELP_REDIRECT;
+
 interface AccountProps {
   align?: 'center' | 'end' | 'start';
 
@@ -93,10 +95,14 @@ export const AccountActions = (props: AccountProps) => {
               <a href={`/${lang}/account/me`}>{t['Profile Settings']}</a>
             </Item>
 
-            <Item className='dropdown-item' onSelect={goto(`/${lang}/help`)}>
-              <Question size={16} />
-              <a href={`/${lang}/help`}>{t['Help']}</a>
-            </Item>
+            {helpRedirect && (
+              <Item className='dropdown-item'>
+                <Question size={16} />
+                <a href={helpRedirect} target='_blank'>
+                  {t['Help']}
+                </a>
+              </Item>
+            )}
 
             <Item
               className='dropdown-item'
@@ -110,9 +116,7 @@ export const AccountActions = (props: AccountProps) => {
               <>
                 <div className='dropdown-divider' />
 
-                <div className='dropdown-label'>
-                  {t['Site Administration']}
-                </div>
+                <div className='dropdown-label'>{t['Site Administration']}</div>
 
                 <Item
                   className='dropdown-item'

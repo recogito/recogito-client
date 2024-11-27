@@ -36,6 +36,7 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  padding-top: 28px;
 }
 
 .project-collaboration-ignored-switch {
@@ -69,4 +70,12 @@
   height: 36px;
   margin-left: 10px;
   white-space: nowrap;
+}
+
+.project-collaboration-title-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 760px;
 }

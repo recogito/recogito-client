@@ -5,18 +5,28 @@ import { AdobeCategorical12 } from '../ColorPalettes';
 import type { ColorCoding } from '../ColorCoding';
 import { createPalette } from './utils';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { VocabularyTerm } from 'src/Types';
 
 const PALETTE = AdobeCategorical12;
 
 const NO_TAG: Color = '#727272';
 
-export const useColorByFirstTag = (): ColorCoding => {
+export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCoding => {
 
   const annotations = useAnnotations(500);
 
   const tags = useMemo(() => enumerateTags(annotations), [annotations]);
 
-  const { getColor } = useMemo(() => createPalette(PALETTE), [tags.join('-')]);
+  const getColor = useMemo(() => {
+    const palette = createPalette(PALETTE);
+
+    const getColor = (tag: string)  => {
+      const preset = vocabulary.find(t => t.label === tag)?.color as Color;
+      return preset || palette.getColor(tag);
+    }
+
+    return getColor;
+  }, [JSON.stringify(vocabulary), tags.join('-')]);
 
   const style = useMemo(() => {
     return (annotation: SupabaseAnnotation): Color => {
@@ -32,8 +42,8 @@ export const useColorByFirstTag = (): ColorCoding => {
 
   const legend = useMemo(() => {
     return tags.map(tag => ({ color: getColor(tag) as Color, label: tag }));
-  }, [tags]);
+  }, [tags.join('-')]);
 
-  return { name: 'tag', style, legend }; 
+  return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]); 
 
 }

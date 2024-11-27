@@ -6,7 +6,7 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { DocumentNotes, useLayerNames } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -14,7 +14,7 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
-import { useIIIF, ManifestErrorDialog } from './IIIF';
+import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { DocumentLayer } from 'src/Types';
 import type {
@@ -41,6 +41,9 @@ const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
+  // @ts-ignore
+  const isLocked = props.document.project_is_locked;
+
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const [loading, setLoading] = useState(true);
@@ -66,23 +69,45 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     setCurrentImage
   } = useIIIF(props.document);
 
-  const [layers, setLayers] = useState<DocumentLayer[] | undefined>();
+  const { activeUsers, onPageActivity } = useMultiPagePresence(present);
+
+  const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
 
   const layerNames = useLayerNames(props.document);
 
-  const activeLayer = useMemo(
-    () =>
-      layers && layers.length > 0
-        ? layers.find((l) => l.is_active) || layers[0]
-        : undefined,
-    [layers]
-  );
+  const activeLayer = useMemo(() => {
+    // Waiting for layers to load
+    if (!documentLayers) return;
+
+    // Crash hard if there is no layer (the error boundary will handle the UI message!)
+    if (documentLayers.length === 0)
+      throw 'Fatal: document has no layers.';
+
+    // Crash hard if there is no active layer
+    const activeLayers = documentLayers.filter(l => l.is_active);
+    if (activeLayers.length === 0)
+      throw 'Fatal: active layer missing.';
+
+    // Crash hard if there is more than one active layer
+    if (activeLayers.length > 1) {
+      console.error(activeLayers);
+      throw `Fatal: more than one active layer (found ${activeLayers.length})`;
+    }
+
+    return activeLayers[0];
+  }, [documentLayers]);
 
   const [tool, setTool] = useState<string | undefined>();
 
   const [leftPanelOpen, setLeftPanelOpen] = useState(false);
 
-  const [rightPanelOpen, setRightPanelOpen] = useState(false);
+  const {
+    rightPanelOpen,
+    rightPanelTab,
+    setRightPanelOpen,
+    setRightPanelTab,
+    usePopup
+  } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -99,7 +124,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
     if (style) {
-      const hse: DrawingStyleExpression<ImageAnnotation> = (
+      const dse: DrawingStyleExpression<ImageAnnotation> = (
         a: SupabaseAnnotation,
         state?: AnnotationState
       ) => {
@@ -114,16 +139,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         };
       };
 
-      setActiveLayerStyle(() => hse);
+      setActiveLayerStyle(() => dse);
     } else {
       setActiveLayerStyle(() => DEFAULT_STYLE);
     }
   };
 
-  // @ts-ignore - note: minor type issue, will be fixed with next Annotorious release
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
     const readOnly = new Set(
-      (layers || []).filter((l) => !l.is_active).map((l) => l.id)
+      (documentLayers || []).filter((l) => !l.is_active).map((l) => l.id)
     );
 
     const readOnlyStyle = (state?: AnnotationState) => ({
@@ -134,17 +158,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       strokeWidth: state?.selected ? 2.5 : 2,
     });
 
-    return (annotation: ImageAnnotation, state?: AnnotationState) => {
+    return ((annotation: ImageAnnotation, state?: AnnotationState) => {
       const a = annotation as SupabaseAnnotation;
       return a.layer_id && readOnly.has(a.layer_id)
         ? readOnlyStyle(state)
         : typeof activeLayerStyle === 'function'
         ? activeLayerStyle(a as ImageAnnotation, state)
         : activeLayerStyle;
-    };
-  }, [activeLayerStyle, layers]);
-
-  const [usePopup, setUsePopup] = useState(true);
+    }) as DrawingStyleExpression;
+  }, [activeLayerStyle, documentLayers]);
 
   useEffect(() => {
     if (policies) {
@@ -173,7 +195,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               project_id: props.document.context.project_id
             }));
 
-          setLayers([...props.document.layers, ...toAdd]);
+          setDocumentLayers([...props.document.layers, ...toAdd]);
         });
       } else {
         const distinct = deduplicateLayers(props.document.layers);
@@ -181,7 +203,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         if (props.document.layers.length !== distinct.length)
           console.warn('Layers contain duplicates', props.document.layers);
 
-        setLayers(distinct);
+        setDocumentLayers(distinct);
       }
     }
   }, [policies]);
@@ -189,15 +211,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onZoom = (factor: number) => 
     viewer.current?.viewport.zoomBy(factor);
 
-  useEffect(() => {
-    // Need to rethink - we also want popups
-    // when the panel shows Notes. But the design
-    // may still change...
-    setUsePopup(!rightPanelOpen);
-  }, [rightPanelOpen]);
-
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
-    setUsePopup(tab === 'NOTES');
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
@@ -219,10 +233,17 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   };
 
+  const onGoToImage = (source: string) => {
+    // When navigating via the thumbnail strip, clear the selection from the
+    // hash, otherwise we'll get looped right back.
+    clearSelectionURLHash(); 
+    setCurrentImage(source);
+  }
+
   return (
     <DocumentNotes
       channelId={props.channelId}
-      layers={layers}
+      layers={documentLayers}
       present={present}
       onError={() => setConnectionError(true)}>
 
@@ -239,15 +260,17 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         <div className="header">
           <Toolbar
             i18n={props.i18n}
+            isLocked={isLocked}
             document={props.document}
             present={present}
             privacy={privacy}
-            layers={layers}
+            layers={documentLayers}
             layerNames={layerNames}
             leftDrawerOpen={leftPanelOpen}
             policies={policies}
             rightDrawerOpen={rightPanelOpen}
             showConnectionError={connectionError}
+            tagVocabulary={tagVocabulary}
             tool={tool}
             onChangePrivacy={setPrivacy}
             onChangeStyle={onChangeStyle}
@@ -261,14 +284,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
         <main>
           <LeftDrawer
+            activeUsers={activeUsers}
             currentImage={currentImage}
             i18n={props.i18n}
             iiifCanvases={canvases}
-            layers={layers}
+            layers={documentLayers}
             layerNames={layerNames}
             open={leftPanelOpen}
             present={present}
-            onChangeImage={setCurrentImage} />
+            onChangeImage={onGoToImage} />
 
           <div className="ia-annotated-image-container">
             {policies && currentImage && activeLayer && (
@@ -279,8 +303,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 channelId={props.channelId}
                 i18n={props.i18n}
                 imageManifestURL={currentImage}
+                isLocked={isLocked}
                 isPresentationManifest={isPresentationManifest}
-                layers={layers}
+                layers={documentLayers}
                 layerNames={layerNames}
                 policies={policies}
                 present={present}
@@ -289,8 +314,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                 tagVocabulary={tagVocabulary}
                 tool={tool}
                 usePopup={usePopup}
+                onChangeImage={setCurrentImage}
                 onChangePresent={setPresent}
                 onConnectionError={() => setConnectionError(true)}
+                onPageActivity={canvases.length > 1 ? onPageActivity : undefined}
                 onSaveError={() => setConnectionError(true)}
                 onLoad={() => setLoading(false)} />
             )}
@@ -298,7 +325,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
           <RightDrawer
             i18n={props.i18n}
-            layers={layers}
+            isLocked={isLocked}
+            layers={documentLayers}
             layerNames={layerNames}
             open={rightPanelOpen}
             policies={policies}
@@ -307,6 +335,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             tagVocabulary={tagVocabulary}
             beforeSelectAnnotation={beforeSelectAnnotation}
             onTabChanged={onRightTabChanged}
+            tab={rightPanelTab}
           />
         </main>
       </div>
