@@ -71,6 +71,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
     project_id: project.id,
     documents: [],
     team: [],
+    assign_all_members: false,
   };
 
   const onAssignmentSaved = (spec: AssignmentSpec) => {
