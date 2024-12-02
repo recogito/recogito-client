@@ -33,8 +33,9 @@ interface TeamProps {
 
   project: ExtendedProjectData;
 
-  onChange(members: UserProfile[], assignAll: boolean): void;
+  onChangeTeam(members: UserProfile[]): void;
 
+  onChangeTeamMode(assignAll: boolean): void;
   onCancel(): void;
 
   onBack(): void;
@@ -116,14 +117,12 @@ export const Team = (props: TeamProps) => {
       [] as UserProfile[]
     );
 
-    props.onChange(members, activeMode === 'all');
+    props.onChangeTeam(members);
   }, [selected, props.project.groups]);
 
-  useEffect(() => {
-    if (props.assignment) {
-      setActiveMode(props.assignment.assign_all_members ? 'all' : 'select');
-    }
-  }, [props.assignment]);
+  const onChangeTeamMode = (assignAll: boolean) => {
+    props.onChangeTeamMode(assignAll);
+  };
 
   const sortBy = (field: Field) => () =>
     setSorting((sorting) => {
@@ -168,11 +167,13 @@ export const Team = (props: TeamProps) => {
                   { id: 'all', label: t['All team members'] },
                   { id: 'select', label: t['Select team members'] },
                 ]}
-                onSelect={(id) => setActiveMode(id)}
-                activeEntry={activeMode}
+                onSelect={(id) => onChangeTeamMode(id === 'all')}
+                activeEntry={
+                  props.assignment.assign_all_members ? 'all' : 'select'
+                }
               />
             </div>
-            {activeMode === 'select' && (
+            {!props.assignment.assign_all_members && (
               <>
                 <table>
                   <thead>

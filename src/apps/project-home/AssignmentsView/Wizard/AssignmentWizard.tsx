@@ -77,8 +77,17 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
     setAssignment((assignment) => ({ ...assignment, documents }));
   };
 
-  const onChangeTeam = (team: UserProfile[], assignAll: boolean) =>
-    setAssignment((assignment) => ({ ...assignment, team }));
+  const onChangeTeam = (team: UserProfile[]) =>
+    setAssignment((assignment) => ({
+      ...assignment,
+      team,
+    }));
+
+  const onChangeTeamMode = (assignAll: boolean) =>
+    setAssignment((assignment) => ({
+      ...assignment,
+      assign_all_members: assignAll,
+    }));
 
   const onChangeLayers = (
     op: 'add' | 'remove',
@@ -270,7 +279,8 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                     me={props.me}
                     assignment={assignment}
                     project={props.project}
-                    onChange={onChangeTeam}
+                    onChangeTeam={onChangeTeam}
+                    onChangeTeamMode={onChangeTeamMode}
                     onCancel={props.onClose}
                     onBack={onBack}
                     onNext={onNext}
