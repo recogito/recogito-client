@@ -62,13 +62,11 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
   const [channel, setChannel] = useState<RealtimeChannel | undefined>();
 
   useEffect(() => {
-    if (embeddedNotes) setNotes(current => ([...current, ...embeddedNotes]));
-  }, [embeddedNotes]);
-
-  useEffect(() => {
     if (documentLayerIds) {
       fetchNotes(documentLayerIds)
-        .then(notes => setNotes(current => ([...current, ...notes])))
+        .then(notes => {
+          setNotes([...notes, ...(embeddedNotes || [])])
+        })
         .catch(onError);
 
       // Set up realtime channel
@@ -109,7 +107,7 @@ export const DocumentNotes = (props: DocumentNotesProps) => {
         setChannel(undefined);
       }
     }
-  }, [documentLayerIds, props.present]);
+  }, [embeddedNotes, documentLayerIds, props.present]);
 
   return (
     <DocumentNotesContext.Provider value={{ 
