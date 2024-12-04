@@ -125,7 +125,11 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     }    
   }, [annotation, comment, index, present, tags]);
 
-  const isMine = creator?.id === me.id;
+  // Note that 'me' being undefined caused problems in the past, so we're 
+  // just being a little defensive here. Context: me is usually derived from 
+  // the (initialized) Annotorious user, which means it will be undefined 
+  // until annotations are loaded.
+  const isMine = creator?.id === me?.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
   const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT')) && !isProjectLocked;
