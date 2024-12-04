@@ -7,8 +7,12 @@ import { useMemo, useState } from 'react';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { MetadataModal } from './MetadataModal';
-import type { Context, Document, Translations } from 'src/Types';
-import { DocumentViewRight } from 'src/Types';
+import {
+  DocumentViewRight,
+  type Context,
+  type Document,
+  type Translations
+} from 'src/Types';
 import './DocumentCard.css';
 
 interface DocumentCardProps {

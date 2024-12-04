@@ -1,0 +1,35 @@
+.project-group-root > .form {
+  padding: 10px 0px;
+}
+
+.project-group-root > .form > label {
+  display: block;
+  margin: 10px 0px;
+}
+
+.project-group-root > .form > input {
+  background-color: var(--gray-50);
+  width: 100%;
+}
+
+.project-group-root > .buttons {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding: 50px 0px 10px 0px;
+}
+
+.project-group-dialog-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-group-dialog-title > h1 {
+  font-size: 20px;
+}
+
+.project-group-dialog-title > button.unstyled.icon-only {
+  height: unset;
+  width: unset;
+}

@@ -64,6 +64,10 @@
   color: var(--red-500);
 }
 
+.dropdown-item svg.dark {
+  color: var(--gray-900);
+}
+
 .dropdown-item[data-highlighted],
 .dropdown-checkbox-item[data-highlighted],
 .dropdown-radio-item[data-highlighted],
