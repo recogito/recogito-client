@@ -12,6 +12,7 @@ const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
+  console.log('Me: ', me);
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
