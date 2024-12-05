@@ -100,12 +100,16 @@ export const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
+    const host =
+      window.location.port !== ''
+        ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
+        : `${window.location.protocol}//${window.location.hostname}`;
     supabase.auth
       .signInWithOAuth({
         provider: 'keycloak',
         options: {
           scopes: 'openid',
-          redirectTo: '/auth/callback',
+          redirectTo: `${host}/auth/callback`,
         },
       })
       .then(({ data, error }) => {
