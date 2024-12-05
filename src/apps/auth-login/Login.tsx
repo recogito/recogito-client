@@ -105,9 +105,7 @@ export const Login = (props: {
         provider: 'keycloak',
         options: {
           scopes: 'openid',
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${props.i18n.lang}/projects`,
+          redirectTo: '/auth/callback',
         },
       })
       .then(({ data, error }) => {
