@@ -34,7 +34,7 @@ export const Login = (props: {
   const [isChecking, setIsChecking] = useState(true);
 
   const [primary, ...loginMethods] = props.methods;
-  const { t } = props.i18n;
+  const { t, lang } = props.i18n;
 
   const host =
     window.location.port !== ''
@@ -93,9 +93,9 @@ export const Login = (props: {
         },
       })
       .then(({ data, error }) => {
-        if (data?.url) {
+        if (!error) {
           localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
+          window.location.href = redirectUrl || `/${lang}/projects`;
         } else {
           console.error(error);
         }
