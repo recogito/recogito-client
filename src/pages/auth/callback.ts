@@ -6,6 +6,8 @@ export const GET: APIRoute = async ({ request, cookies, redirect, url }) => {
   const code = requestUrl.searchParams.get('code');
   const next = requestUrl.searchParams.get('next') || '/';
 
+  console.log('In callback');
+
   if (code) {
     const supabase = createServerClient(
       import.meta.env.PUBLIC_SUPABASE,
@@ -16,6 +18,7 @@ export const GET: APIRoute = async ({ request, cookies, redirect, url }) => {
             return parseCookieHeader(request.headers.get('Cookie') ?? '');
           },
           setAll(cookiesToSet) {
+            console.log('Cookies to set: ', cookiesToSet);
             cookiesToSet.forEach(({ name, value, options }) =>
               cookies.set(name, value, options)
             );
