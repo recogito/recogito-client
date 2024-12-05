@@ -18,7 +18,6 @@ export const GET: APIRoute = async ({ request, cookies, redirect, url }) => {
             return parseCookieHeader(request.headers.get('Cookie') ?? '');
           },
           setAll(cookiesToSet) {
-            console.log('Cookies to set: ', cookiesToSet);
             cookiesToSet.forEach(({ name, value, options }) =>
               cookies.set(name, value, options)
             );
