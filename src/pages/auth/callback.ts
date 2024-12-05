@@ -6,7 +6,7 @@ export const GET: APIRoute = async ({ request, cookies, redirect, url }) => {
   const code = requestUrl.searchParams.get('code');
   const next = requestUrl.searchParams.get('next') || '/';
 
-  console.log('In callback');
+  console.log('In callback, url = ', url, ', next = ', next);
 
   if (code) {
     const supabase = createServerClient(
