@@ -95,7 +95,7 @@ export const Login = (props: {
       .then(({ data, error }) => {
         if (data?.url) {
           localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
+          window.location.href = `${data.url}?next=${redirectUrl || '/'}`;
         } else {
           console.error(error);
         }
@@ -114,7 +114,7 @@ export const Login = (props: {
       .then(({ data, error }) => {
         if (data?.url) {
           localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
+          window.location.href = `${data.url}?next=${redirectUrl || '/'}`;
         } else {
           console.error(error);
         }
