@@ -36,6 +36,11 @@ export const Login = (props: {
   const [primary, ...loginMethods] = props.methods;
   const { t } = props.i18n;
 
+  const host =
+    window.location.port !== ''
+      ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
+      : `${window.location.protocol}//${window.location.hostname}`;
+
   const url = new URLSearchParams(window.location.search);
   let redirectUrl = url.get('redirect-to');
   if (redirectUrl) {
@@ -84,15 +89,13 @@ export const Login = (props: {
       .signInWithSSO({
         domain: domain,
         options: {
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${props.i18n.lang}/projects`,
+          redirectTo: `${host}/auth/callback`,
         },
       })
       .then(({ data, error }) => {
         if (data?.url) {
           localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
+          window.location.href = `${data.url}?next=${redirectUrl || '/'}`;
         } else {
           console.error(error);
         }
@@ -105,15 +108,13 @@ export const Login = (props: {
         provider: 'keycloak',
         options: {
           scopes: 'openid',
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${props.i18n.lang}/projects`,
+          redirectTo: `${host}/auth/callback`,
         },
       })
       .then(({ data, error }) => {
         if (data?.url) {
           localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
+          window.location.href = `${data.url}?next=${redirectUrl || '/'}`;
         } else {
           console.error(error);
         }
