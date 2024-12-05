@@ -3,6 +3,7 @@ import type { EmailOtpType } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
+  console.log('In comfirm!');
   const requestUrl = new URL(request.url);
   const token_hash = requestUrl.searchParams.get('token_hash');
   const type = requestUrl.searchParams.get('type') as EmailOtpType | null;
