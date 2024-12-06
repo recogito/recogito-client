@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
-import { MetadataModal } from './MetadataModal';
+import { EditMetadataModal } from './EditMetadataModal';
+import { ViewMetadataModal } from './ViewMetadataModal';
 import {
   DocumentViewRight,
   type Context,
@@ -21,6 +22,8 @@ interface DocumentCardProps {
   i18n: Translations;
 
   isAdmin?: boolean;
+
+  isOwner?: boolean;
 
   context: Context;
 
@@ -44,7 +47,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const { lang } = props.i18n;
 
-  const [editable, setEditable] = useState(false);
+  const [openMetadata, setOpenMetadata] = useState(false);
 
   const sortableProps = useMemo(
     () => ({
@@ -135,8 +138,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
           {!props.readOnly && (
             <div className='document-card-actions'>
               <DocumentCardActions
+                allowDeleteDocument={props.isAdmin}
+                allowEditMetadata={props.isOwner}
                 i18n={props.i18n}
-                isAdmin={props.isAdmin}
                 context={context}
                 document={document}
                 onOpen={onOpen}
@@ -144,21 +148,32 @@ export const DocumentCard = (props: DocumentCardProps) => {
                 onExportTEI={onExportTEI}
                 onExportPDF={onExportPDF}
                 onExportCSV={onExportCSV}
-                onEditMetadata={() => setEditable(true)}
+                onOpenMetadata={() => setOpenMetadata(true)}
               />
             </div>
           )}
         </div>
       </div>
 
-      <MetadataModal
-        open={editable}
-        i18n={props.i18n}
-        document={document}
-        onClose={() => setEditable(false)}
-        onUpdated={props.onUpdate!}
-        onError={props.onError!}
-      />
+      {props.isOwner && (
+        <EditMetadataModal
+          open={openMetadata}
+          i18n={props.i18n}
+          document={document}
+          onClose={() => setOpenMetadata(false)}
+          onUpdated={props.onUpdate!}
+          onError={props.onError!}
+        />
+      )}
+
+      {!props.isOwner && (
+        <ViewMetadataModal
+          document={document}
+          i18n={props.i18n}
+          onClose={() => setOpenMetadata(false)}
+          open={openMetadata}
+        />
+      )}
     </article>
   );
 };

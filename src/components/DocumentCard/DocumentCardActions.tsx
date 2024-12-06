@@ -20,9 +20,11 @@ const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dr
 
 interface DocumentCardActionsProps {
 
-  i18n: Translations;
+  allowDeleteDocument?: boolean;
 
-  isAdmin?: boolean;
+  allowEditMetadata?: boolean;
+
+  i18n: Translations;
 
   context: Context;
 
@@ -32,18 +34,16 @@ interface DocumentCardActionsProps {
 
   onDelete?(): void;
 
-  onEditMetadata?(): void;
-
   onExportCSV?(includePrivate?: boolean): void;
 
   onExportTEI?(includePrivate?: boolean): void;
 
   onExportPDF?(includePrivate?: boolean): void;
 
+  onOpenMetadata?(): void;
 }
 
 export const DocumentCardActions = (props: DocumentCardActionsProps) => {
-
   const { t } = props.i18n;
 
   const [confirming, setConfirming] = useState(false);
@@ -164,18 +164,19 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Portal>
             </Sub>
 
-            {props.isAdmin && (
-              <>
-                <Item className="dropdown-item" onSelect={props.onEditMetadata}>
-                  <PencilSimple size={16} /> <span>{t['Edit document metadata']}</span>
-                </Item>
+            {props.onOpenMetadata && (
+              <Item className="dropdown-item" onSelect={props.onOpenMetadata}>
+                <PencilSimple size={16} />
+                <span>{ props.allowEditMetadata ? t['Edit document metadata'] : t['View document metadata']}</span>
+              </Item>
+            )}
 
-                <ConfirmedAction.Trigger>
-                  <Item className="dropdown-item">
-                    <Trash size={16} className="destructive" /> <span>{t['Delete document']}</span>
-                  </Item>
-                </ConfirmedAction.Trigger>
-              </>
+            {props.allowDeleteDocument && (
+              <ConfirmedAction.Trigger>
+                <Item className="dropdown-item">
+                  <Trash size={16} className="destructive" /> <span>{t['Delete document']}</span>
+                </Item>
+              </ConfirmedAction.Trigger>
             )}
           </Content>
         </Portal>

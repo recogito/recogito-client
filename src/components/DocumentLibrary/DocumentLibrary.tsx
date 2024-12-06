@@ -1,8 +1,14 @@
+import { ViewMetadataModal } from '@components/DocumentCard/ViewMetadataModal';
 import { DocumentGrid } from '@components/DocumentLibrary/DocumentGrid.tsx';
 import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
 import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback
+} from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
@@ -20,7 +26,7 @@ import { getTheme } from '@table-library/react-table-library/baseline';
 import type { Action } from '@table-library/react-table-library/types/common';
 import { useSort } from '@table-library/react-table-library/sort';
 import { DocumentActions } from './DocumentActions';
-import { MetadataModal } from '@components/DocumentCard/MetadataModal';
+import { EditMetadataModal } from '@components/DocumentCard/EditMetadataModal';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
@@ -83,7 +89,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     Document | undefined
   >();
   const [metaOpen, setMetaOpen] = useState(false);
-  const [metaReadOnly, setMetaReadOnly] = useState(false);
   const [publicToggleDoc, setPublicToggleDoc] = useState<
     Document | undefined
   >();
@@ -104,6 +109,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
     return value;
   }, [activeCollection, collections, view]);
+
+  const allowEditMetadata = useCallback((item) => item.created_by === props.user.id, [props.user]);
 
   const handleTogglePrivate = (document: Document) => {
     if (document.is_private) {
@@ -356,6 +363,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => (
         <>
           <DocumentActions
+            allowEditMetadata={allowEditMetadata(item)}
             i18n={props.i18n}
             onDelete={() =>
               props.onDeleteFromLibrary
@@ -364,18 +372,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             }
             showPrivate={true}
             isPrivate={item.is_private}
+            onOpenMetadata={() => {
+              setCurrentDocument(item as Document);
+              setMetaOpen(true);
+            }}
             onTogglePrivate={() => handleTogglePrivate(item as Document)}
-            isAdmin={item.created_by === props.user.id}
-            onEditMetadata={() => {
-              setCurrentDocument(item as Document);
-              setMetaOpen(true);
-              setMetaReadOnly(false);
-            }}
-            onViewMetadata={() => {
-              setCurrentDocument(item as Document);
-              setMetaOpen(true);
-              setMetaReadOnly(true);
-            }}
           />
         </>
       ),
@@ -405,22 +406,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => (
         <>
           <DocumentActions
+            allowEditMetadata={allowEditMetadata(item)}
             i18n={props.i18n}
             onDelete={() =>
               currentDocument && props.onDeleteFromLibrary
                 ? props.onDeleteFromLibrary(currentDocument)
                 : {}
             }
-            isAdmin={item.created_by === props.user.id}
-            onEditMetadata={() => {
+            onOpenMetadata={() => {
               setCurrentDocument(item as Document);
               setMetaOpen(true);
-              setMetaReadOnly(false);
-            }}
-            onViewMetadata={() => {
-              setCurrentDocument(item as Document);
-              setMetaOpen(true);
-              setMetaReadOnly(true);
             }}
           />
         </>
@@ -479,6 +474,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             i18n={props.i18n}
             disabledIds={props.disabledIds}
             selectedIds={selectedIds}
+            onOpenMetadata={() => {
+              setCurrentDocument(item as Document);
+              setMetaOpen(true);
+            }}
             onSelectVersion={onSelectChange}
             revisions={item.revisions}
           />
@@ -757,7 +756,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
                 <div style={{ height: 450 }}>
                   {/* My Documents */}
-                  {view === 'mine' && !currentDocument && myDocuments.length > 0 && documentsView === 'rows' && (
+                  {view === 'mine' && myDocuments.length > 0 && documentsView === 'rows' && (
                     <DocumentTable
                       data={{ nodes: myDocuments }}
                       disabledIds={props.disabledIds}
@@ -768,7 +767,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       sort={sortMine}
                     />
                   )}
-                  { view === 'mine' && !currentDocument && myDocuments.length > 0 && documentsView === 'cards' && (
+                  { view === 'mine' && myDocuments.length > 0 && documentsView === 'cards' && (
                     <DocumentGrid
                       disabledIds={props.disabledIds}
                       documents={myDocuments}
@@ -779,7 +778,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   {view === 'mine' && myDocuments.length === 0 && t['No Documents']}
 
                   {/* All Documents */}
-                  {view === 'all' && !currentDocument && allDocuments.length > 0 && documentsView === 'rows' && (
+                  {view === 'all' && allDocuments.length > 0 && documentsView === 'rows' && (
                     <DocumentTable
                       data={{ nodes: allDocuments }}
                       disabledIds={props.disabledIds}
@@ -790,7 +789,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       sort={sortAll}
                     />
                   )}
-                  {view === 'all' && !currentDocument && allDocuments.length > 0 && documentsView === 'cards' && (
+                  {view === 'all' && allDocuments.length > 0 && documentsView === 'cards' && (
                     <DocumentGrid
                       disabledIds={props.disabledIds}
                       documents={allDocuments}
@@ -801,7 +800,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   {view === 'all' && allDocuments.length === 0 && t['No Documents']}
 
                   {/* Collection Documents */}
-                  {view === 'collection' && !currentDocument && collectionDocuments.length > 0 && documentsView === 'rows' && (
+                  {view === 'collection' && collectionDocuments.length > 0 && documentsView === 'rows' && (
                     <DocumentTable
                       data={{ nodes: collectionDocuments }}
                       disabledIds={props.disabledIds}
@@ -812,7 +811,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       sort={sortCollection}
                     />
                   )}
-                  {view === 'collection' && !currentDocument && collectionDocuments.length > 0 && documentsView === 'cards' && (
+                  {view === 'collection' && collectionDocuments.length > 0 && documentsView === 'cards' && (
                     <DocumentGrid
                       disabledIds={props.disabledIds}
                       documents={collectionDocuments}
@@ -844,8 +843,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {currentDocument && (
-        <MetadataModal
+      {currentDocument && allowEditMetadata(currentDocument) && (
+        <EditMetadataModal
           open={metaOpen}
           i18n={props.i18n}
           document={currentDocument as Document}
@@ -855,7 +854,17 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           }}
           onUpdated={props.onUpdated!}
           onError={props.onError!}
-          readOnly={metaReadOnly}
+        />
+      )}
+      {currentDocument && !allowEditMetadata(currentDocument) && (
+        <ViewMetadataModal
+          document={currentDocument}
+          i18n={props.i18n}
+          onClose={() => {
+            setMetaOpen(false);
+            setCurrentDocument(undefined);
+          }}
+          open={metaOpen}
         />
       )}
       <PublicWarningMessage

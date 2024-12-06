@@ -292,6 +292,8 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     setAddOpen(false);
   };
 
+  const isOwner = useCallback((document) => document.created_by === props.user.id, [props.user]);
+
   return (
     <>
       <header className='project-home-document-header-bar'>
@@ -333,6 +335,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   className={classNames({ active: document.id === activeId })}
                   key={document.id}
                   isAdmin={props.isAdmin}
+                  isOwner={isOwner(document)}
                   i18n={props.i18n}
                   document={document}
                   context={defaultContext!}
