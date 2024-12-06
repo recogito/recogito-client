@@ -12,8 +12,6 @@ const clearCookies = () => {
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 };
 
-localStorage.removeItem('redirect-to');
-
 export const Logout = (props: { i18n: Translations }) => {
   localStorage.removeItem('redirect-to');
   const arr = []; // Array to hold the keys
@@ -33,7 +31,6 @@ export const Logout = (props: { i18n: Translations }) => {
   useEffect(() => {
     supabase.auth.signOut().then(() => {
       clearCookies();
-      localStorage.removeItem('redirect-to');
       window.location.href = `/${props.i18n.lang}/sign-in`;
     });
   }, []);
