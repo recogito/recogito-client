@@ -13,7 +13,6 @@ const clearCookies = () => {
 };
 
 export const Logout = (props: { i18n: Translations }) => {
-  console.log('Removing redirect-to');
   localStorage.removeItem('redirect-to');
   const arr = []; // Array to hold the keys
   // Iterate over localStorage and find 'sb_
