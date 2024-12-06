@@ -14,8 +14,9 @@ const clearCookies = () => {
 };
 
 export const Logout = (props: { i18n: Translations }) => {
+  console.log('Removing redirect-to');
   localStorage.removeItem('redirect-to');
-
+  console.log('After: ', localStorage.getItem('redirect-to'));
   useEffect(() => {
     supabase.auth.signOut().then(() => {
       clearCookies();

@@ -43,6 +43,7 @@ export const Login = (props: {
 
   const url = new URLSearchParams(window.location.search);
   let redirectUrl = url.get('redirect-to');
+  console.log('Redirect: ', redirectUrl);
   if (redirectUrl) {
     localStorage.setItem('redirect-to', redirectUrl);
   } else {
