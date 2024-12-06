@@ -28,7 +28,6 @@ const clearCookies = () => {
 
 export const Login = (props: {
   i18n: Translations;
-  logo: boolean;
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
@@ -56,7 +55,9 @@ export const Login = (props: {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         clearCookies();
+        redirectUrl = null;
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        console.log('Event: ', event);
         setCookies(session);
         if (redirectUrl) {
           localStorage.removeItem('redirect-to');
