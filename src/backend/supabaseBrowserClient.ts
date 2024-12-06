@@ -1,4 +1,4 @@
-import { type SupabaseClient } from '@supabase/supabase-js';
+import { type SupabaseClient, createClient } from '@supabase/supabase-js';
 import { createBrowserClient } from '@supabase/ssr';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
@@ -13,7 +13,4 @@ export const supabase: SupabaseClient =
 
 // @ts-ignore
 export const supabaseImplicit: SupabaseClient =
-  typeof window !== 'undefined' &&
-  createBrowserClient(SUPABASE, SUPABASE_API_KEY, {
-    auth: { flowType: 'implicit' },
-  });
+  typeof window !== 'undefined' && createClient(SUPABASE, SUPABASE_API_KEY);
