@@ -13,6 +13,8 @@ const clearCookies = () => {
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 };
 
+localStorage.removeItem('redirect-to');
+
 export const Logout = (props: { i18n: Translations }) => {
   useEffect(() => {
     supabase.auth.signOut().then(() => {
