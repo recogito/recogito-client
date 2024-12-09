@@ -4,7 +4,7 @@ import { Button } from '@components/Button';
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { supabase } from '@backend/supabaseBrowserClient';
+import { supabase, supabaseImplicit } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
 import type { LoginMethod, Translations } from 'src/Types';
 import { StateChecking, StateLoginForm } from './states';
@@ -104,7 +104,7 @@ export const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
-    supabase.auth
+    supabaseImplicit.auth
       .signInWithOAuth({
         provider: 'keycloak',
         options: {
