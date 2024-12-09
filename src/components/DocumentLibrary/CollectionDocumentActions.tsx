@@ -7,6 +7,7 @@ import {
   CheckSquare,
   Square,
   CheckCircle,
+  PencilSimple
 } from '@phosphor-icons/react';
 import type { LibraryDocument } from './DocumentLibrary';
 import type { Action } from '@table-library/react-table-library/types/common';
@@ -19,6 +20,7 @@ interface CollectionDocumentActionsProps {
   disabledIds: string[];
   selectedIds: string[];
   revisions: LibraryDocument[];
+  onOpenMetadata(): void;
   onSelectVersion(action: Action, _state: any): void;
 }
 
@@ -56,44 +58,48 @@ export const CollectionDocumentActions = (
             sideOffset={5}
             align='start'
           >
-            {props.revisions.map((r: LibraryDocument, idx: number) => {
-              if (props.disabledIds.includes(r.id)) {
-                return (
+            {props.revisions.map((r: LibraryDocument, idx: number) => (
+              <>
+                {props.disabledIds.includes(r.id) && (
                   <Item className='dropdown-item' key={idx}>
                     <CheckCircle size={24} />{' '}
                     <span>{`${t['Revision']}: ${r.collection_metadata?.revision_number}, ${t['Published Date']}: ${r.published_date}`}</span>
                   </Item>
-                );
-              }
-              return (
-                <Item
-                  className='dropdown-item'
-                  onSelect={() => {
-                    const type = props.selectedIds?.includes(r.id)
-                      ? 'REMOVE_BY_IDS'
-                      : 'ADD_BY_IDS';
+                )}
+                {!props.disabledIds.includes(r.id) && (
+                  <Item
+                    className='dropdown-item'
+                    onSelect={() => {
+                      const type = props.selectedIds?.includes(r.id)
+                        ? 'REMOVE_BY_IDS'
+                        : 'ADD_BY_IDS';
 
-                    props.onSelectVersion(
-                      {
-                        type: type,
-                        payload: {
-                          ids: [r.id],
+                      props.onSelectVersion(
+                        {
+                          type: type,
+                          payload: {
+                            ids: [r.id],
+                          },
                         },
-                      },
-                      {}
-                    );
-                  }}
-                  key={idx}
-                >
-                  {props.selectedIds?.includes(r.id) ? (
-                    <CheckSquare color='blue' size={24} weight='fill' />
-                  ) : (
-                    <Square size={24} />
-                  )}{' '}
-                  <span>{`${t['Revision']}: ${r.collection_metadata?.revision_number}, ${t['Published Date']}: ${r.published_date}`}</span>
+                        {}
+                      );
+                    }}
+                    key={idx}
+                  >
+                    {props.selectedIds?.includes(r.id) ? (
+                      <CheckSquare color='blue' size={24} weight='fill' />
+                    ) : (
+                      <Square size={24} />
+                    )}{' '}
+                    <span>{`${t['Revision']}: ${r.collection_metadata?.revision_number}, ${t['Published Date']}: ${r.published_date}`}</span>
+                  </Item>
+                )}
+                <Item className='dropdown-item' onSelect={props.onOpenMetadata}>
+                  <PencilSimple size={16} />{' '}
+                  <span>{t['View document metadata']}</span>
                 </Item>
-              );
-            })}
+              </>
+            ))}
           </Content>
         </Portal>
       </Root>

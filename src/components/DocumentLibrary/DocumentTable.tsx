@@ -51,56 +51,54 @@ export const DocumentTable = (props: DocumentTableProps) => {
   };
 
   return (
-    <div style={{ height: 300 }}>
-      <Table
-        data={props.data}
-        theme={theme}
-        select={props.select}
-        sort={props.sort}
-        layout={{ isDiv: true, fixedHeader: true }}
-      >
-        {(tableList: LibraryDocument[]) => (
-          <Virtualized
-            tableList={tableList}
-            rowHeight={40}
-            header={() => (
-              <HeaderRow>
-                <HeaderCell />
-                {props.columns.map((c, idx) => {
-                  if (c.sort) {
-                    return (
-                      <HeaderCellSort
-                        sortKey={c.sort ? c.sort?.sortKey : ''}
-                        key={idx}
-                      >
-                        {c.label}
-                      </HeaderCellSort>
-                    );
-                  } else {
-                    return <HeaderCell key={idx}>{c.label}</HeaderCell>;
-                  }
-                })}
-              </HeaderRow>
-            )}
-            body={(item: LibraryDocument) => (
-              <Fragment key={item.id}>
-                <Row item={item}>
-                  {disabled(item) ? (
-                    <Cell>
-                      <CheckCircle size={24} />
-                    </Cell>
-                  ) : (
-                    <CellSelect item={item} />
-                  )}
-                  {props.columns.map((c, idx) => (
-                    <Cell key={idx}>{c.renderCell(item)}</Cell>
-                  ))}
-                </Row>
-              </Fragment>
-            )}
-          />
-        )}
-      </Table>
-    </div>
+    <Table
+      data={props.data}
+      theme={theme}
+      select={props.select}
+      sort={props.sort}
+      layout={{ isDiv: true, fixedHeader: true }}
+    >
+      {(tableList: LibraryDocument[]) => (
+        <Virtualized
+          tableList={tableList}
+          rowHeight={40}
+          header={() => (
+            <HeaderRow>
+              <HeaderCell />
+              {props.columns.map((c, idx) => {
+                if (c.sort) {
+                  return (
+                    <HeaderCellSort
+                      sortKey={c.sort ? c.sort?.sortKey : ''}
+                      key={idx}
+                    >
+                      {c.label}
+                    </HeaderCellSort>
+                  );
+                } else {
+                  return <HeaderCell key={idx}>{c.label}</HeaderCell>;
+                }
+              })}
+            </HeaderRow>
+          )}
+          body={(item: LibraryDocument) => (
+            <Fragment key={item.id}>
+              <Row item={item}>
+                {disabled(item) ? (
+                  <Cell>
+                    <CheckCircle size={24} />
+                  </Cell>
+                ) : (
+                  <CellSelect item={item} />
+                )}
+                {props.columns.map((c, idx) => (
+                  <Cell key={idx}>{c.renderCell(item)}</Cell>
+                ))}
+              </Row>
+            </Fragment>
+          )}
+        />
+      )}
+    </Table>
   );
 };

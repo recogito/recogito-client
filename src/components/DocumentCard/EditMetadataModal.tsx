@@ -7,7 +7,7 @@ import { updateDocumentMetadata } from '@backend/crud';
 import { Button } from '@components/Button';
 import type { Document, Translations } from 'src/Types';
 
-import './MetadataModal.css';
+import './EditMetadataModal.css';
 
 interface MetadataModalProps {
   i18n: Translations;
@@ -21,11 +21,9 @@ interface MetadataModalProps {
   onUpdated(document: Document): void;
 
   onError(error: string): void;
-
-  readOnly?: boolean;
 }
 
-export const MetadataModal = (props: MetadataModalProps) => {
+export const EditMetadataModal = (props: MetadataModalProps) => {
   const { t } = props.i18n;
 
   const { id, name, meta_data } = props.document;
@@ -83,7 +81,6 @@ export const MetadataModal = (props: MetadataModalProps) => {
         onChange={formik.handleChange}
         value={formik.values[id]}
         required={required}
-        readOnly={props.readOnly}
       />
     </div>
   );
@@ -117,7 +114,6 @@ export const MetadataModal = (props: MetadataModalProps) => {
                   rows={5}
                   onChange={formik.handleChange}
                   value={formik.values.notes}
-                  readOnly={props.readOnly}
                 />
               </div>
             </fieldset>
@@ -125,16 +121,13 @@ export const MetadataModal = (props: MetadataModalProps) => {
             <div className='actions'>
               <Button onClick={props.onClose}>{t['Cancel']}</Button>
 
-              {!props.readOnly && (
-                <Button
-                  className='primary'
-                  busy={busy}
-                  type='submit'
-                  disabled={props.readOnly}
-                >
-                  <span>{t['Save']}</span>
-                </Button>
-              )}
+              <Button
+                className='primary'
+                busy={busy}
+                type='submit'
+              >
+                <span>{t['Save']}</span>
+              </Button>
             </div>
           </form>
 

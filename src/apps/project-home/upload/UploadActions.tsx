@@ -43,7 +43,7 @@ export const UploadActions = (props: UploadActionsProps) => {
       <Root>
         <Trigger asChild>
           <button className='primary'>
-            <Plus size={20} /> <span>{t['Import Document']}</span>
+            <Plus size={20} /> <span>{t['Import']}</span>
           </button>
         </Trigger>
 
