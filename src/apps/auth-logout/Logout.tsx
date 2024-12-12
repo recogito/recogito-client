@@ -29,7 +29,7 @@ export const Logout = (props: { i18n: Translations }) => {
     }
   }
   useEffect(() => {
-    supabase.auth.signOut().then(() => {
+    supabaseImplicit.auth.signOut().then(() => {
       clearCookies();
       window.location.href = `/${props.i18n.lang}/sign-in`;
     });
