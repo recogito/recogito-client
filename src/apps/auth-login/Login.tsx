@@ -104,24 +104,7 @@ export const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
-    supabase.auth
-      .signInWithOAuth({
-        provider: 'keycloak',
-        options: {
-          scopes: 'openid',
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${props.i18n.lang}/projects`,
-        },
-      })
-      .then(({ data, error }) => {
-        if (data?.url) {
-          localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
-        } else {
-          console.error(error);
-        }
-      });
+    window.location.href = `/${props.i18n.lang}/keycloak`;
   };
 
   const renderLoginButton = useCallback(
