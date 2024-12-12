@@ -17,7 +17,7 @@ export const Logout = (props: { i18n: Translations }) => {
   const arr = []; // Array to hold the keys
   // Iterate over localStorage and find 'sb_
   for (let i = 0; i < localStorage.length; i++) {
-    if (localStorage.key(i)?.substring(0, 3) == 'sb_') {
+    if (localStorage.key(i)?.substring(0, 3) == 'sb-') {
       arr.push(localStorage.key(i));
     }
   }
