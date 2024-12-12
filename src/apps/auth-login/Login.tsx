@@ -57,7 +57,6 @@ export const Login = (props: {
         clearCookies();
         redirectUrl = null;
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        console.log('Event: ', event);
         setCookies(session);
         if (redirectUrl) {
           localStorage.removeItem('redirect-to');
