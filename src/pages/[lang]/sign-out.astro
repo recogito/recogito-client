@@ -5,7 +5,7 @@ import { getTranslations } from '@i18n';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
-//await supabase.auth.signOut();
+await supabase.auth.signOut();
 ---
 
 <BaseLayout title='Recogito | Logout'>
