@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { supabaseImplicit } from '@backend/supabaseBrowserClient';
+import { supabase } from '@backend/supabaseBrowserClient';
 import type { Translations } from 'src/Types';
 import { Spinner } from '@components/Spinner';
 
@@ -29,7 +29,7 @@ export const Logout = (props: { i18n: Translations }) => {
     }
   }
   useEffect(() => {
-    supabaseImplicit.auth.signOut().then(() => {
+    supabase.auth.signOut().then(() => {
       clearCookies();
       window.location.href = `/${props.i18n.lang}/sign-in`;
     });
