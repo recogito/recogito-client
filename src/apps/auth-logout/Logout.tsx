@@ -14,6 +14,20 @@ const clearCookies = () => {
 
 export const Logout = (props: { i18n: Translations }) => {
   localStorage.removeItem('redirect-to');
+  const arr = []; // Array to hold the keys
+  // Iterate over localStorage and find 'sb_
+  for (let i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i)?.substring(0, 3) == 'sb_') {
+      arr.push(localStorage.key(i));
+    }
+  }
+
+  // Iterate over arr and remove the items by key
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i]) {
+      localStorage.removeItem(arr[i] as string);
+    }
+  }
   useEffect(() => {
     supabaseImplicit.auth.signOut().then(() => {
       clearCookies();
