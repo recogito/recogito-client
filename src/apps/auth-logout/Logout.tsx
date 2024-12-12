@@ -1,6 +1,5 @@
-import { useEffect, useState } from 'react';
-import { SmileySad } from '@phosphor-icons/react';
-import { supabase } from '@backend/supabaseBrowserClient';
+import { useEffect } from 'react';
+import { supabaseImplicit } from '@backend/supabaseBrowserClient';
 import type { Translations } from 'src/Types';
 import { Spinner } from '@components/Spinner';
 
@@ -16,7 +15,7 @@ const clearCookies = () => {
 export const Logout = (props: { i18n: Translations }) => {
   localStorage.removeItem('redirect-to');
   useEffect(() => {
-    supabase.auth.signOut().then(() => {
+    supabaseImplicit.auth.signOut().then(() => {
       clearCookies();
       window.location.href = `/${props.i18n.lang}/sign-in`;
     });
