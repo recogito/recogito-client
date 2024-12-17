@@ -6,7 +6,8 @@ import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
-import { MetadataModal } from './MetadataModal';
+import { EditMetadataModal } from './EditMetadataModal';
+import { ViewMetadataModal } from './ViewMetadataModal';
 import {
   DocumentViewRight,
   type Context,
@@ -22,9 +23,13 @@ interface DocumentCardProps {
 
   isAdmin?: boolean;
 
+  isOwner?: boolean;
+
   context: Context;
 
   document: Document;
+
+  onClick?(): void;
 
   onDelete?(): void;
 
@@ -33,6 +38,8 @@ interface DocumentCardProps {
   onError?(error: string): void;
 
   rtab?: DocumentViewRight;
+
+  readOnly?: boolean;
 }
 
 export const DocumentCard = (props: DocumentCardProps) => {
@@ -40,7 +47,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const { lang } = props.i18n;
 
-  const [editable, setEditable] = useState(false);
+  const [openMetadata, setOpenMetadata] = useState(false);
 
   const sortableProps = useMemo(
     () => ({
@@ -81,6 +88,14 @@ export const DocumentCard = (props: DocumentCardProps) => {
   };
 
   const onClick = (evt: React.MouseEvent) => {
+    if (props.onClick) {
+      return props.onClick();
+    }
+
+    if (props.readOnly) {
+      return;
+    }
+
     const isClickOnMenu =
       (evt.target as Element).closest('.dropdown-content') ||
       (evt.target as Element).closest('.dropdown-subcontent');
@@ -120,31 +135,45 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
         <div className='document-card-footer'>
           <div className='document-card-name'>{document.name}</div>
-          <div className='document-card-actions'>
-            <DocumentCardActions
-              i18n={props.i18n}
-              isAdmin={props.isAdmin}
-              context={context}
-              document={document}
-              onOpen={onOpen}
-              onDelete={props.onDelete}
-              onExportTEI={onExportTEI}
-              onExportPDF={onExportPDF}
-              onExportCSV={onExportCSV}
-              onEditMetadata={() => setEditable(true)}
-            />
-          </div>
+          {!props.readOnly && (
+            <div className='document-card-actions'>
+              <DocumentCardActions
+                allowDeleteDocument={props.isAdmin}
+                allowEditMetadata={props.isOwner}
+                i18n={props.i18n}
+                context={context}
+                document={document}
+                onOpen={onOpen}
+                onDelete={props.onDelete}
+                onExportTEI={onExportTEI}
+                onExportPDF={onExportPDF}
+                onExportCSV={onExportCSV}
+                onOpenMetadata={() => setOpenMetadata(true)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      <MetadataModal
-        open={editable}
-        i18n={props.i18n}
-        document={document}
-        onClose={() => setEditable(false)}
-        onUpdated={props.onUpdate!}
-        onError={props.onError!}
-      />
+      {props.isOwner && (
+        <EditMetadataModal
+          open={openMetadata}
+          i18n={props.i18n}
+          document={document}
+          onClose={() => setOpenMetadata(false)}
+          onUpdated={props.onUpdate!}
+          onError={props.onError!}
+        />
+      )}
+
+      {!props.isOwner && (
+        <ViewMetadataModal
+          document={document}
+          i18n={props.i18n}
+          onClose={() => setOpenMetadata(false)}
+          open={openMetadata}
+        />
+      )}
     </article>
   );
 };
