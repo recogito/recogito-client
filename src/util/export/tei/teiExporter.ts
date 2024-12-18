@@ -214,9 +214,7 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     // If there are any tags, create one rs element and add them as the ana attribute
     const tags = a.bodies.filter(b => b.purpose === 'tagging' && b.value);
     if (tags.length > 0) {
-      const rsEl = document.createElement('rs');
-      rsEl.setAttribute('ana', tags.map(b => `#${taxonomy[b.value!]}`).join(' '))
-      annotationEl.appendChild(rsEl);
+      annotationEl.setAttribute('ana',tags.map(b => `#${taxonomy[b.value!]}`).join(' '));
     }
 
     // Append respStmt elements for each contributing user
