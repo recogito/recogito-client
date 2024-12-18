@@ -1,7 +1,15 @@
 import { DOMParser } from 'linkedom';
+import { customAlphabet } from 'nanoid';
+import slugify from 'slugify';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { User } from '@annotorious/react';
 import { quillToPlainText } from '../serializeQuillComment';
+
+// Helper
+const generateRandomRoomId = () => {
+  const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvw', 14);
+  return nanoid();
+}
 
 /** Returns the target or body that was changed most recently **/
 const getLastChangedAt = (annotation: SupabaseAnnotation) => {
@@ -47,9 +55,58 @@ const getContributors = (annotation: SupabaseAnnotation) => {
   }, [] as User[]);
 }
 
-export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[]): string => {
+const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
+  const teiHeader = document.querySelector('teiHeader');
+  const existingTaxonomies = teiHeader ? teiHeader.querySelectorAll('taxonomy') : [];
 
+  // TODO verify if the generated ID already exists in the header
+  const taxonomyId = generateRandomRoomId();
+
+  const distinctTags = new Set(annotations.reduce<string[]>((all, annotation) => {
+    const tagBodies = (annotation.bodies || []).filter(b => b.purpose === 'tagging' && b.value);
+    return [...all, ...tagBodies.map(b => b.value!)];
+  }, []));
+
+  // Note: we'll later want to use URIs for tag IDs. Slugifying
+  // the label is going to be a fallback option
+  const idFromLabel = (label: string) => slugify(label, {
+    replacement: '_', 
+    remove: /[*+~.()'"!:@]/g, 
+    lower: false,
+    strict: true, 
+    locale: 'en'
+  });
+
+  const tagsAndIds = [...distinctTags].map(label => ({
+    label,
+    id: `${taxonomyId}.${idFromLabel(label)}`
+  }));
+
+  const taxonomyEl = document.createElement('taxonomy');
+  taxonomyEl.setAttribute('xml:id', taxonomyId);
+
+  tagsAndIds.forEach(({ label, id}) => {
+    const categoryEl = document.createElement('category');
+    categoryEl.setAttribute('xml:id', id);
+
+    const catDescEl = document.createElement('catDesc');
+    catDescEl.innerHTML = label;
+    categoryEl.appendChild(catDescEl);
+
+    taxonomyEl.appendChild(categoryEl);
+  });
+
+  // TODO we'll need to change this once tag URIs are supported
+  return { taxonomyEl, taxonomy: Object.fromEntries(tagsAndIds.map(({ label, id }) => ([label, id]))) };
+}
+
+export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[]): string => {
   const document = (new DOMParser).parseFromString(xml, 'text/xml');
+
+  const teiElement = document.querySelector('TEI');
+  if (!teiElement)
+    // Should never happen
+    throw new Error('No TEI root element found in the XML');
 
   // https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html
   const standOffEl = document.createElement('standOff');
@@ -57,6 +114,8 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
 
   const listAnnotationEl = document.createElement('listAnnotation');
   standOffEl.appendChild(listAnnotationEl);
+
+  const { taxonomyEl, taxonomy } = createTaxonomy(annotations, document)
 
   // Helpers
   const createChangeEl = (change: string, timestamp: Date, by?: string) => {
@@ -140,10 +199,10 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     });
 
     // If there are any tags, create one rs element and add them as the ana attribute
-    const tags = a.bodies.filter(b => b.purpose === 'tagging');
+    const tags = a.bodies.filter(b => b.purpose === 'tagging' && b.value);
     if (tags.length > 0) {
       const rsEl = document.createElement('rs');
-      rsEl.setAttribute('ana', tags.map(b => b.value).join(' '))
+      rsEl.setAttribute('ana', tags.map(b => `#${taxonomy[b.value!]}`).join(' '))
       annotationEl.appendChild(rsEl);
     }
 
@@ -155,13 +214,20 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
     listAnnotationEl.appendChild(annotationEl);
   });
 
-  const teiElement = document.querySelector('TEI');
-  if (!teiElement)
-    // Should never happen
-    throw new Error('No TEI root element found in the XML');
-
   // Existing teiHeader and/or standOff elements
-  const teiHeader = teiElement.querySelector('teiHeader');
+  let teiHeader = teiElement.querySelector('teiHeader');
+
+  if (Object.keys(taxonomy).length > 0) {
+    // Append taxonomy to teiHeader, create header if needed
+    if (!teiHeader) {
+      teiHeader = document.createElement('teiHeader');
+      document.querySelector('TEI').prepend(teiHeader);
+    }
+
+    // Append taxonomy element
+    teiHeader.appendChild(taxonomyEl);
+  }
+
   const existingStandOffEls = teiElement.querySelectorAll('standOff');
 
   if (existingStandOffEls?.length > 0) {
