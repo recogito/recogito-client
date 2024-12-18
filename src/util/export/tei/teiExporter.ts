@@ -6,7 +6,7 @@ import type { User } from '@annotorious/react';
 import { quillToPlainText } from '../serializeQuillComment';
 
 // Helper
-const generateRandomRoomId = (alreadyInUse: Set<string>) => {
+const generateRandomId = (alreadyInUse: Set<string>) => {
   const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvw', 14);
 
   let tries = 0;
@@ -75,7 +75,7 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
   const existingTaxonomyIds = new Set([...existingTaxonomies].map(el => el.getAttribute('xml:id')));
 
   // TODO verify if the generated ID already exists in the header
-  const taxonomyId = generateRandomRoomId(existingTaxonomyIds);
+  const taxonomyId = generateRandomId(existingTaxonomyIds);
 
   const distinctTags = new Set(annotations.reduce<string[]>((all, annotation) => {
     const tagBodies = (annotation.bodies || []).filter(b => b.purpose === 'tagging' && b.value);
