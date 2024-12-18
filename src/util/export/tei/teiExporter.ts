@@ -139,6 +139,11 @@ export const mergeAnnotations = (
     // Should never happen
     throw new Error('No TEI root element found in the XML');
 
+  const teiElement = document.querySelector('TEI');
+  if (!teiElement)
+    // Should never happen
+    throw new Error('No TEI root element found in the XML');
+
   // https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html
   const standOffEl = document.createElement('standOff');
   standOffEl.setAttribute('type', 'recogito_studio_annotations');
