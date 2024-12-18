@@ -278,14 +278,29 @@ export const mergeAnnotations = (
   let teiHeader = teiElement.querySelector('teiHeader');
 
   if (Object.keys(taxonomy).length > 0) {
-    // Append taxonomy to teiHeader, create header if needed
+    const getOrCreateChild = (parent: any, childName: string) => {
+      const existing = parent.querySelector(childName);
+      if (!existing) {
+        const child = document.createElement(childName);
+        parent.appendChild(child);
+        return child;
+      } else {
+        return existing;
+      }
+    };
+
+    // Append taxonomy to teiHeader > encodingDesc > classDecl - create if necessary
     if (!teiHeader) {
       teiHeader = document.createElement('teiHeader');
       document.querySelector('TEI').prepend(teiHeader);
     }
 
-    // Append taxonomy element
-    teiHeader.appendChild(taxonomyEl);
+    const encodingDesc = getOrCreateChild(teiHeader, 'encodingDesc');
+    const classDecl = getOrCreateChild(encodingDesc, 'classDecl');
+
+    classDecl.appendChild(taxonomyEl);
+    encodingDesc.appendChild(classDecl);
+    teiHeader.appendChild(encodingDesc);
   }
 
   const existingStandOffEls = teiElement.querySelectorAll('standOff');
