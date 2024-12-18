@@ -23,7 +23,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
 
   const transition = useTransition([props.open], {
     from: { flexBasis: 0, opacity: 0 },
-    enter: { flexBasis: 240, opacity: 1 },
+    enter: { flexBasis: 280, opacity: 1 },
     leave: { flexBasis: 0, opacity: 0 },
     config: {
       duration: 350,
