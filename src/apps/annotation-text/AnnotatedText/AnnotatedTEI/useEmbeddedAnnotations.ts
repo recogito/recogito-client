@@ -80,9 +80,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
     const standoffElements = doc.querySelectorAll('TEI > standOff');
 
-    console.log('parsing taxonomies');
     const taxonomyLookup = parseTaxonomies(doc.querySelectorAll('taxonomy'));
-    console.log(taxonomyLookup);
 
     // Helper
     const resolveTag = (id: string) => taxonomyLookup[id.startsWith('#') ? id.substring(1) : id] || id;
