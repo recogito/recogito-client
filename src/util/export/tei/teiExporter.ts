@@ -72,13 +72,17 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
   const teiHeader = document.querySelector('teiHeader');
   const existingTaxonomies = teiHeader ? teiHeader.querySelectorAll('taxonomy') : [];
 
-  const existingTaxonomyIds = new Set([...existingTaxonomies].map(el => el.getAttribute('xml:id')));
-  const taxonomyId = generateRandomId(existingTaxonomyIds);
-
   const distinctTags = new Set(annotations.reduce<string[]>((all, annotation) => {
     const tagBodies = (annotation.bodies || []).filter(b => b.purpose === 'tagging' && b.value);
     return [...all, ...tagBodies.map(b => b.value!)];
   }, []));
+
+  // Don't insert taxonomy element unnecessarily
+  if (distinctTags.size === 0)
+    return { taxonomyEl: undefined, taxonomy: {} };
+
+  const existingTaxonomyIds = new Set([...existingTaxonomies].map(el => el.getAttribute('xml:id')));
+  const taxonomyId = generateRandomId(existingTaxonomyIds);
 
   // Note: we'll later want to use URIs for tag IDs. Slugifying
   // the label is going to be a fallback option
@@ -229,14 +233,29 @@ export const mergeAnnotations = (xml: string, annotations: SupabaseAnnotation[])
   let teiHeader = teiElement.querySelector('teiHeader');
 
   if (Object.keys(taxonomy).length > 0) {
-    // Append taxonomy to teiHeader, create header if needed
+    const getOrCreateChild = (parent: any, childName: string) => {
+      const existing = parent.querySelector(childName);
+      if (!existing) {
+        const child = document.createElement(childName);
+        parent.appendChild(child);
+        return child;
+      } else {
+        return existing;
+      }
+    }
+
+    // Append taxonomy to teiHeader > encodingDesc > classDecl - create if necessary
     if (!teiHeader) {
       teiHeader = document.createElement('teiHeader');
       document.querySelector('TEI').prepend(teiHeader);
     }
 
-    // Append taxonomy element
-    teiHeader.appendChild(taxonomyEl);
+    const encodingDesc = getOrCreateChild(teiHeader, 'encodingDesc');
+    const classDecl = getOrCreateChild(encodingDesc, 'classDecl');
+
+    classDecl.appendChild(taxonomyEl);
+    encodingDesc.appendChild(classDecl);
+    teiHeader.appendChild(encodingDesc);
   }
 
   const existingStandOffEls = teiElement.querySelectorAll('standOff');
