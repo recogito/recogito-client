@@ -6,9 +6,22 @@ import type { User } from '@annotorious/react';
 import { quillToPlainText } from '../serializeQuillComment';
 
 // Helper
-const generateRandomRoomId = () => {
+const generateRandomRoomId = (alreadyInUse: Set<string>) => {
   const nanoid = customAlphabet('1234567890abcdefghijklmnopqrstuvw', 14);
-  return nanoid();
+
+  let tries = 0;
+  let id: string;
+
+  do {
+    id = nanoid();
+    tries += 1;
+  } while (tries < 100 && alreadyInUse.has(id));
+
+  // Should be a purely hypothetical case...
+  if (tries === 100)
+    throw 'Error generating taxonomy ID';
+
+  return id;
 }
 
 /** Returns the target or body that was changed most recently **/
@@ -59,8 +72,10 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
   const teiHeader = document.querySelector('teiHeader');
   const existingTaxonomies = teiHeader ? teiHeader.querySelectorAll('taxonomy') : [];
 
+  const existingTaxonomyIds = new Set([...existingTaxonomies].map(el => el.getAttribute('xml:id')));
+
   // TODO verify if the generated ID already exists in the header
-  const taxonomyId = generateRandomRoomId();
+  const taxonomyId = generateRandomRoomId(existingTaxonomyIds);
 
   const distinctTags = new Set(annotations.reduce<string[]>((all, annotation) => {
     const tagBodies = (annotation.bodies || []).filter(b => b.purpose === 'tagging' && b.value);
