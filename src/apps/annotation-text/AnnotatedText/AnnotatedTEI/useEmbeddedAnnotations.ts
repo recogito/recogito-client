@@ -114,10 +114,10 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
           responsible: users.find(u => u.id === normalizeId(noteEl.getAttribute('resp')))
         }) as Note);
 
-        const tags: string[] = Array.from(el.querySelectorAll('rs[ana]'))
-          .reduce<string[]>((all, el) => [...all, ...el.getAttribute('ana')!.split(' ')], [])
-          .map(resolveTag);
-
+        const tags: string[] = el.hasAttribute('ana') 
+          ? el.getAttribute('ana')!.split(' ').map(resolveTag)
+          : [];
+          
         const created = changes.find(c => c.status === 'created');
         const updated = changes.find(c => c.status === 'modified');
 
