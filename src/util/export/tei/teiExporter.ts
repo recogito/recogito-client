@@ -73,8 +73,6 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
   const existingTaxonomies = teiHeader ? teiHeader.querySelectorAll('taxonomy') : [];
 
   const existingTaxonomyIds = new Set([...existingTaxonomies].map(el => el.getAttribute('xml:id')));
-
-  // TODO verify if the generated ID already exists in the header
   const taxonomyId = generateRandomId(existingTaxonomyIds);
 
   const distinctTags = new Set(annotations.reduce<string[]>((all, annotation) => {
