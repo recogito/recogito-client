@@ -170,9 +170,9 @@ const exportForAssignment = async (
   );
 }
 
-export const GET: APIRoute = async ({ params, cookies, url }) => {
+export const GET: APIRoute = async ({ request, params, cookies, url }) => {
   // Verify if the user is logged in
-  const supabase = await createSupabaseServerClient(cookies);
+  const supabase = await createSupabaseServerClient(request, cookies);
 
   const projectId = params.project!;
 

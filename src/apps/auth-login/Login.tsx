@@ -28,13 +28,17 @@ const clearCookies = () => {
 
 export const Login = (props: {
   i18n: Translations;
-  logo: boolean;
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
 
   const [primary, ...loginMethods] = props.methods;
   const { t } = props.i18n;
+
+  const host =
+    window.location.port !== ''
+      ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
+      : `${window.location.protocol}//${window.location.hostname}`;
 
   const url = new URLSearchParams(window.location.search);
   let redirectUrl = url.get('redirect-to');
@@ -51,6 +55,7 @@ export const Login = (props: {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         clearCookies();
+        redirectUrl = null;
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
         if (redirectUrl) {
@@ -84,14 +89,11 @@ export const Login = (props: {
       .signInWithSSO({
         domain: domain,
         options: {
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${props.i18n.lang}/projects`,
+          redirectTo: `${host}/auth/callback`,
         },
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          localStorage.removeItem('redirect-to');
           window.location.href = data.url;
         } else {
           console.error(error);
@@ -100,24 +102,7 @@ export const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
-    supabase.auth
-      .signInWithOAuth({
-        provider: 'keycloak',
-        options: {
-          scopes: 'openid',
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${props.i18n.lang}/projects`,
-        },
-      })
-      .then(({ data, error }) => {
-        if (data?.url) {
-          localStorage.removeItem('redirect-to');
-          window.location.href = data.url;
-        } else {
-          console.error(error);
-        }
-      });
+    window.location.href = `/${props.i18n.lang}/keycloak`;
   };
 
   const renderLoginButton = useCallback(

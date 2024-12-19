@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { SmileySad } from '@phosphor-icons/react';
+import { useEffect } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Translations } from 'src/Types';
 import { Spinner } from '@components/Spinner';
@@ -14,6 +13,21 @@ const clearCookies = () => {
 };
 
 export const Logout = (props: { i18n: Translations }) => {
+  localStorage.removeItem('redirect-to');
+  const arr = []; // Array to hold the keys
+  // Iterate over localStorage and find 'sb_
+  for (let i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i)?.substring(0, 3) == 'sb-') {
+      arr.push(localStorage.key(i));
+    }
+  }
+
+  // Iterate over arr and remove the items by key
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i]) {
+      localStorage.removeItem(arr[i] as string);
+    }
+  }
   useEffect(() => {
     supabase.auth.signOut().then(() => {
       clearCookies();

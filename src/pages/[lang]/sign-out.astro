@@ -7,10 +7,14 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 await supabase.auth.signOut();
 ---
-<BaseLayout title="Recogito | Logout">
-  <div class="container">
-    <div class="column">
-      <Logout i18n={getTranslations(Astro.request, 'error')} client:load />
+
+<BaseLayout title='Recogito | Logout'>
+  <div class='container'>
+    <div class='column'>
+      <Logout
+        i18n={getTranslations(Astro.request, 'error')}
+        client:only='react'
+      />
     </div>
   </div>
 </BaseLayout>

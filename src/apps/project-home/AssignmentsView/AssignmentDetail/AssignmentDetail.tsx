@@ -6,10 +6,8 @@ import type {
   Document,
   Group,
 } from 'src/Types';
-import { DownloadSimple, Pencil, Trash } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
-import { ConfirmDelete } from './ConfirmDelete';
 
 import './AssignmentDetail.css';
 import { AssignmentsActions } from './AssignmentActions';
@@ -31,15 +29,13 @@ interface AssignmentDetailProps {
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
   const { lang, t } = props.i18n;
 
-  const [confirmOpen, setConfirmOpen] = useState(false);
-
   const members = props.assignment.members.reduce(
     (members, context_user) => [...members, context_user.user as UserProfile],
     [] as UserProfile[]
   );
 
   const handleDelete = () => {
-    setConfirmOpen(true);
+    props.onDeleteAssignment(props.assignment);
   };
 
   const admins = props.groups

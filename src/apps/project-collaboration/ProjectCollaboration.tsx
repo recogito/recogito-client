@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Toast, ToastProvider } from '@components/Toast';
 import type { ToastContent } from '@components/Toast';
-import { InviteUser } from './InviteUser';
+import { InviteUserDialog } from './InviteUserDialog';
 import { MembersTable } from './MembersTable';
 import { JoinRequestsTable } from './JoinRequestsTable';
 import type {
@@ -23,9 +23,11 @@ import { Button } from '@components/Button';
 import { InfoTooltip } from '@components/InfoTooltip';
 import { inviteUsersToProject } from '@backend/crud';
 import {
-  InviteListOfUsers,
+  InviteListOfUsersDialog,
   type InviteListEntry,
-} from './InviteListOfUsers';
+} from './InviteListOfUsersDialog';
+import { DropdownButton } from '@components/DropdownButton';
+import { UserPlus, User, UsersFour } from '@phosphor-icons/react';
 
 import './ProjectCollaboration.css';
 
@@ -57,6 +59,10 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const [showIgnored, setShowIgnored] = useState(false);
+
+  const [addUserOpen, setAddUserOpen] = useState(false);
+
+  const [addUsersOpen, setAddUsersOpen] = useState(false);
 
   const onChangeGroup = (member: Member, from: Group, to: Group) => {
     // Update member
@@ -305,23 +311,39 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       />
       <div className='project-collaboration'>
         <ToastProvider>
-          <h1>{t['Project Team']}</h1>
+          <div className='project-collaboration-title-bar'>
+            <h1>{t['Project Team']}</h1>
 
-          <InviteUser
-            i18n={props.i18n}
-            me={props.me}
-            project={project}
-            invitations={invitations}
-            onInvitiationSent={onInvitationSent}
-            onInvitiationError={onInvitationError}
-          />
-          <InviteListOfUsers
-            i18n={props.i18n}
-            me={props.me}
-            project={project}
-            onError={onError}
-            onSend={handleSendInvitations}
-          />
+            <DropdownButton
+              label={t['Add a user']}
+              icon={<UserPlus />}
+              options={[
+                {
+                  node: (
+                    <div
+                      className='invite-user-item'
+                      onClick={() => setAddUserOpen(true)}
+                    >
+                      <User size={20} />
+                      <span>{t['Add single user']}</span>
+                    </div>
+                  ),
+                },
+                {
+                  node: (
+                    <div
+                      className='invite-user-item'
+                      onClick={() => setAddUsersOpen(true)}
+                    >
+                      <UsersFour size={20} />
+                      <span>{t['Add list of users']}</span>
+                    </div>
+                  ),
+                },
+              ]}
+            />
+          </div>
+
           <MembersTable
             i18n={props.i18n}
             project={project}
@@ -387,6 +409,25 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           <Toast
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}
+          />
+          <InviteUserDialog
+            i18n={props.i18n}
+            me={props.me}
+            project={project}
+            open={addUserOpen}
+            invitations={invitations}
+            onInvitiationSent={onInvitationSent}
+            onInvitiationError={onInvitationError}
+            onClose={() => setAddUserOpen(false)}
+          />
+          <InviteListOfUsersDialog
+            i18n={props.i18n}
+            me={props.me}
+            project={project}
+            onError={onError}
+            onSend={handleSendInvitations}
+            open={addUsersOpen}
+            onClose={() => setAddUsersOpen(false)}
           />
         </ToastProvider>
       </div>

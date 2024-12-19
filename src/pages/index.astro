@@ -6,15 +6,16 @@ import parser from 'accept-language-parser';
 
 const accepts = Astro.request.headers.get('accept-language');
 
-const lang = accepts ? parser.pick(Object.keys(languages), accepts) : defaultLang;
+const lang = accepts
+  ? parser.pick(Object.keys(languages), accepts)
+  : defaultLang;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+  return Astro.redirect(`/${lang}/sign-in`);
 } else {
   return Astro.redirect(`/${lang}/projects/`);
 }
 ---
-

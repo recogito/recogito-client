@@ -21,9 +21,9 @@ export const UndoStack = (props: UndoStackProps) => {
   const { selected } = useSelection();
 
   const deleteIfEmpty = (annotation: Annotation) => {
-    const currentState = store.getAnnotation(annotation.id);
+    const currentState = store!.getAnnotation(annotation.id);
     if (currentState?.bodies.length === 0) {
-      store.deleteAnnotation(currentState);
+      store!.deleteAnnotation(currentState);
       if (created.current === annotation)
         created.current = undefined;
     }

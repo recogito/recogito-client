@@ -125,7 +125,11 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     }    
   }, [annotation, comment, index, present, tags]);
 
-  const isMine = creator?.id === me.id;
+  // Note that 'me' being undefined caused problems in the past, so we're 
+  // just being a little defensive here. Context: me is usually derived from 
+  // the (initialized) Annotorious user, which means it will be undefined 
+  // until annotations are loaded.
+  const isMine = creator?.id === me?.id;
 
   // Comments are editable if they are mine, or I'm a layer admin
   const canEdit = !isReadOnly && (isMine || props.policies?.get('layers').has('INSERT')) && !isProjectLocked;
@@ -240,34 +244,35 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           {editable ? (
             <QuillEditorToolbar
               i18n={props.i18n} />
-          ) : canEdit ? (
+          ) : isPrivate ? (
             <div className="annotation-header-right">
-              {isPrivate ? (
-                <PrivateAnnotationActions
-                  i18n={props.i18n} 
-                  isFirst={props.index === 0}
-                  onCopyLink={onCopyLink}
-                  onDeleteAnnotation={props.onDeleteAnnotation}
-                  onDeleteSection={onDeleteSection}
-                  onEditSection={() => setEditable(true)}
-                  onMakePublic={props.onMakePublic}/>
-              ) : (
-                <PublicAnnotationActions 
-                  i18n={props.i18n} 
-                  isFirst={props.index === 0} 
-                  isMine={isMine}
-                  onCopyLink={onCopyLink}
-                  onDeleteAnnotation={props.onDeleteAnnotation}
-                  onDeleteSection={onDeleteSection}
-                  onEditSection={() => setEditable(true)} />
-              )}    
+              <PrivateAnnotationActions
+                i18n={props.i18n} 
+                isFirst={props.index === 0}
+                onCopyLink={onCopyLink}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onDeleteSection={onDeleteSection}
+                onEditSection={() => setEditable(true)}
+                onMakePublic={props.onMakePublic}/>
             </div>
-          ) : (props.index === 0 && isReadOnly) && (
+          ) : (props.index === 0 && isReadOnly) ? (
             <div className="annotation-header-right">
               <LayerIcon 
                 i18n={props.i18n}
                 layerId={props.annotation.layer_id}
                 layerNames={props.layerNames} />
+            </div>
+          ) : (canEdit || props.index === 0) && (
+            <div className="annotation-header-right">
+              <PublicAnnotationActions 
+                canEdit={canEdit}
+                i18n={props.i18n} 
+                isFirst={props.index === 0} 
+                isMine={isMine}
+                onCopyLink={onCopyLink}
+                onDeleteAnnotation={props.onDeleteAnnotation}
+                onDeleteSection={onDeleteSection}
+                onEditSection={() => setEditable(true)} />
             </div>
           )}
         </div>

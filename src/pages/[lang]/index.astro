@@ -9,7 +9,7 @@ const lang = getLangFromUrl(Astro.url);
 
 const me = await getMyProfile(supabase);
 if (me.error || !me.data) {
-  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+  return Astro.redirect(`/${lang}/sign-in`);
 } else {
   return Astro.redirect(`/${lang}/projects/`);
 }

@@ -20,6 +20,10 @@
   font-size: 18px;
   font-weight: 600;
   line-height: 27px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  display: -webkit-box;
 }
 
 .assignment-detail-description-row {
