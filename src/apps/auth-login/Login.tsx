@@ -28,7 +28,6 @@ const clearCookies = () => {
 
 export const Login = (props: {
   i18n: Translations;
-  logo: boolean;
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
@@ -56,6 +55,7 @@ export const Login = (props: {
     supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT') {
         clearCookies();
+        redirectUrl = null;
       } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         setCookies(session);
         if (redirectUrl) {
@@ -94,8 +94,7 @@ export const Login = (props: {
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          localStorage.removeItem('redirect-to');
-          window.location.href = `${data.url}?next=${redirectUrl || '/'}`;
+          window.location.href = data.url;
         } else {
           console.error(error);
         }
@@ -103,22 +102,7 @@ export const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
-    supabase.auth
-      .signInWithOAuth({
-        provider: 'keycloak',
-        options: {
-          scopes: 'openid',
-          redirectTo: `${host}/auth/callback`,
-        },
-      })
-      .then(({ data, error }) => {
-        if (data?.url) {
-          localStorage.removeItem('redirect-to');
-          window.location.href = `${data.url}?next=${redirectUrl || '/'}`;
-        } else {
-          console.error(error);
-        }
-      });
+    window.location.href = `/${props.i18n.lang}/keycloak`;
   };
 
   const renderLoginButton = useCallback(
