@@ -2,6 +2,7 @@ import { useAnnotator, type Filter } from '@annotorious/react';
 import { DynamicStyle } from '@components/DynamicStyle';
 import { CETEIcean, TEIAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
+import type { DocumentNote } from '@components/AnnotationDesktop';
 import { behaviors } from './behaviors';
 import { useEmbeddedTEIAnnotations } from './useEmbeddedAnnotations';
 import { useEffect } from 'react';
@@ -21,7 +22,7 @@ interface AnnotatedTEIProps {
 
   text?: string;
 
-  onLoadEmbeddedLayers(layers: EmbeddedLayer[]): void;
+  onLoadEmbeddedLayers(layers: EmbeddedLayer[], notes: DocumentNote[]): void;
 
 }
 
@@ -29,7 +30,7 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
 
   const anno = useAnnotator();
 
-  const { layers, annotations } = useEmbeddedTEIAnnotations(props.text);
+  const { layers, annotations, notes } = useEmbeddedTEIAnnotations(props.text);
 
   useEffect(() => {
     if (anno && annotations.length > 0 && props.initialLoadComplete) {
@@ -39,8 +40,8 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
 
   useEffect(() => {
     if (layers.length > 0)
-      props.onLoadEmbeddedLayers(layers);
-  }, [layers]);
+      props.onLoadEmbeddedLayers(layers, notes);
+  }, [layers, notes]);
 
   return (
     <>
@@ -54,6 +55,11 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
           font: '500 12px Inter, Arial, Helvetica, sans-serif',
         }}>
         <CETEIcean 
+          // @ts-ignore - will start working with the next release!
+          initArgs={{ 
+            // Disables CETEIcean's default behavior of messing with the URL hash
+            ignoreFragmentId: true
+          }}
           tei={props.text} 
           behaviors={behaviors} />
       </TEIAnnotator>

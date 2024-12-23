@@ -8,6 +8,13 @@ type ManifestType = 'PRESENTATION' | 'IMAGE';
 const CANTALOUPE_PATH: string | undefined = import.meta.env
   .PUBLIC_IIIF_CANTALOUPE_PATH;
 
+// IIIF mandates that URIs are without 'info.json', but doesn't 
+// say anything about with our without trailing slash AFAIK. 
+// Needless to say: people will still sometimes append the '/info.json'
+// in the real world... this helper should cover all flavours.
+const getImageURL = (uri: string) =>
+  uri.endsWith('info.json') ? uri : `${uri.endsWith('/') ? uri : `${uri}/`}info.json`;
+
 export const useIIIF = (document: DocumentWithContext) => {
 
   const [canvases, setCanvases] = useState<Canvas[]>([]);
@@ -58,7 +65,7 @@ export const useIIIF = (document: DocumentWithContext) => {
         const parsed = IIIF.parse(data);
         if (parsed.type === 'manifest') {
           setCanvases(parsed.canvases);
-          setCurrentImage(`${parsed.canvases[0]?.image.uri}/info.json`);
+          setCurrentImage(getImageURL(parsed.canvases[0]?.image.uri));
           setManifestType('PRESENTATION');
         } else {
           console.log('Failed to parse IIIF manifest', parsed);
@@ -76,10 +83,10 @@ export const useIIIF = (document: DocumentWithContext) => {
   const next = () => {
     if (!currentImage || canvases.length === 0) return;
 
-    const idx = canvases.findIndex(c => `${c.image.uri}/info.json` === currentImage);
+    const idx = canvases.findIndex(c => getImageURL(c.image.uri) === currentImage);
     const nextIdx = Math.min(idx + 1, canvases.length - 1);
 
-    setCurrentImage(`${canvases[nextIdx].image.uri}/info.json`);
+    setCurrentImage(getImageURL(canvases[nextIdx].image.uri));
   };
 
   const previous = () => {

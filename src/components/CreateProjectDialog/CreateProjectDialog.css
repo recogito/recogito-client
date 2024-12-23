@@ -80,10 +80,9 @@
 .create-project-switches {
   display: flex;
   flex-direction: column;
-  margin-top: 20px;
 }
 
-.create-project-visibility {
+.create-project-subgroup {
   margin-top: 15px;
 }
 
@@ -91,13 +90,18 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 15px;
+}
+
+.create-project-radio-group-root.lower {
+  margin-top: 10px;
 }
 
 .create-project-radio-group-item {
-  align-items: center;
   display: flex;
+  flex-direction: row;
   gap: 0.25rem;
-} 
+}
 
 .create-project-radio-group-button {
   background-color: white;
@@ -139,5 +143,15 @@
 }
 
 .create-project-radio-group-helper {
-  margin-left: 25px;
+  margin-top: 5px;
+  margin-left: 5px;
+}
+
+.create-project-container {
+  padding: 32px;
+}
+
+.create-project-label-container {
+  display: flex;
+  flex-direction: column;
 }

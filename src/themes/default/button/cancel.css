@@ -5,6 +5,7 @@ a[href].button.cancel {
   height: 38px;
   padding: 10px 12px 10px 12px !important;
   color: black;
+  box-shadow: none !important;
 }
 
 button.cancel:not(:disabled):hover,

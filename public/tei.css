@@ -2,6 +2,10 @@ tei-standoff {
   display: none;
 }
 
+tei-taxonomy {
+  display: none;
+}
+
 tei-div[subtype="chapter"]::before {
   content: "Chapter " attr(n);
 }

@@ -7,9 +7,12 @@ export const sanitizeFilename = (unsafe: string) => {
     replacement: '_', 
     remove: /[*+~.()'"!:@]/g, 
     lower: false,
-    strict: false, 
+    strict: true, 
     locale: 'en'
   });
 
-  return sanitize(slugified);
+  // Additional safety net to remove or replace non-ASCII characters
+  const asciiOnly = slugified.replace(/[^\x00-\x7F]/g, '_');
+
+  return sanitize(asciiOnly);
 }
