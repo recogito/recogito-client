@@ -1,0 +1,25 @@
+.search-input {
+  position: relative;
+  flex-grow: 0.5;
+}
+
+.search-input > input.input {
+  background-color: var(--gray-50);
+  width: 100%;
+  text-indent: 16px;
+}
+
+.search-input > svg.search-icon {
+  color: var(--gray-500);
+  left: 6px;
+  position: absolute;
+  top: 11px;
+}
+
+.search-input > button.search-clear {
+  color: var(--gray-500);
+  height: unset;
+  right: 6px;
+  position: absolute;
+  top: 11px;
+}

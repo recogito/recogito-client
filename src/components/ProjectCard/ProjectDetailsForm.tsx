@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import TextareaAutosize from 'react-textarea-autosize';
 import { useFormik } from 'formik';
 import { updateProject } from '@backend/crud';
@@ -80,6 +81,10 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
           <Dialog.Title className="dialog-title">
             {t['Project Details']}
           </Dialog.Title>
+
+          <VisuallyHidden.Root asChild>
+            <Dialog.Description>{t['Project Details']}</Dialog.Description>
+          </VisuallyHidden.Root>
 
           <form onSubmit={formik.handleSubmit}>
             <fieldset>
