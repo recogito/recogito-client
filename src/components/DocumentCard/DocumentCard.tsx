@@ -1,3 +1,4 @@
+import { MetadataModal } from '@components/MetadataModal';
 import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -6,8 +7,6 @@ import classNames from 'classnames';
 import { useMemo, useState } from 'react';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
-import { EditMetadataModal } from './EditMetadataModal';
-import { ViewMetadataModal } from './ViewMetadataModal';
 import {
   DocumentViewRight,
   type Context,
@@ -154,26 +153,15 @@ export const DocumentCard = (props: DocumentCardProps) => {
           )}
         </div>
       </div>
-
-      {props.isOwner && (
-        <EditMetadataModal
-          open={openMetadata}
-          i18n={props.i18n}
-          document={document}
-          onClose={() => setOpenMetadata(false)}
-          onUpdated={props.onUpdate!}
-          onError={props.onError!}
-        />
-      )}
-
-      {!props.isOwner && (
-        <ViewMetadataModal
-          document={document}
-          i18n={props.i18n}
-          onClose={() => setOpenMetadata(false)}
-          open={openMetadata}
-        />
-      )}
+      <MetadataModal
+        open={openMetadata}
+        i18n={props.i18n}
+        document={document}
+        onClose={() => setOpenMetadata(false)}
+        onUpdated={props.onUpdate!}
+        onError={props.onError!}
+        readOnly={!props.isOwner}
+      />
     </article>
   );
 };

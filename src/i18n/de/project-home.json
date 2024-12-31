@@ -77,20 +77,6 @@
   "Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.": "Bist Du sicher dass Du dieses Dokument entfernen möchtest? Dokumente können nur entfernt werden, wenn sie in in keinem aktiven Projekt verwendet werden.",
   "Locked": "Gesperrt",
   "Collections": "Sammlungen",
-  "date": "Datum",
-  "artist": "Künstler",
-  "medium": "Medium",
-  "copyright": "Copyright",
-  "dimensions": "Dimensionen",
-  "credit_line": "Bildnachweis",
-  "institution": "Institution",
-  "accession_number": "Zugangsnummer",
-  "notes":  "Notizen",
-  "author": "Autor",
-  "source": "Quelle",
-  "license": "Lizenz",
-  "version": "Version",
-  "language": "Sprache",
-  "publication_date": "Publikationsdatum",
-  "No document metadata available.": "Keine Metadaten vorhanden."
+  "No document metadata available.": "Keine Metadaten vorhanden.",
+  "Add Metadata": "Add Metadata"
 }

@@ -155,9 +155,10 @@ export interface Document {
 
     url: string;
 
-    meta?: {
-      author?: string;
-    };
+    meta?: [{
+      label: string,
+      value: string
+    }];
   };
 
   collection_metadata?: {
