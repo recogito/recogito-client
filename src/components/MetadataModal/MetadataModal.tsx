@@ -103,7 +103,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='dialog-content document-metadata'>
+        <Dialog.Content className='dialog-content metadata-modal'>
           <Dialog.Title className='dialog-title'>
             <DocumentTitle
               onChange={(value) => setTitle(value)}
@@ -126,7 +126,9 @@ export const MetadataModal = (props: MetadataModalProps) => {
             <table>
               <tbody>
               {(items && items.length > 0) && items.map((item, index) => (
-                <tr>
+                <tr
+                  key={index}
+                >
                   <td>
                     <MetadataAttribute
                       autoFocus

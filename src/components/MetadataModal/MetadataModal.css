@@ -1,26 +1,26 @@
-.dialog-content.document-metadata {
+.dialog-content.metadata-modal {
   max-width: 600px;
 }
 
-.dialog-content.document-metadata > .dialog-title {
+.dialog-content.metadata-modal > .dialog-title {
   margin: 1em 0;
 }
 
-.dialog-content.document-metadata > .actions {
+.dialog-content.metadata-modal > .actions {
   display: flex;
   justify-content: flex-end;
   margin: 1em 0;
 }
 
-.dialog-content.document-metadata .meta > button.add-button {
+.dialog-content.metadata-modal .meta > button.add-button {
   margin: 1em 0;
 }
 
-.dialog-content.document-metadata .meta > table > tbody > tr > td {
+.dialog-content.metadata-modal .meta > table > tbody > tr > td {
   padding: 0.5em 1em;
 }
 
-.dialog-content.document-metadata .meta > table > tbody > tr > td.empty {
+.dialog-content.metadata-modal .meta > table > tbody > tr > td.empty {
   align-items: center;
   border-left: 1px solid var(--gray-200);
   display: flex;
