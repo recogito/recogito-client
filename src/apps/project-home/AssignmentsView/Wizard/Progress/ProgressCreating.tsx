@@ -4,6 +4,7 @@ import {
   createAssignmentContext,
   addDocumentsToContext,
   addReadOnlyLayersToContext,
+  setAssignAllMembers,
 } from '@backend/helpers';
 import type { UserRole } from '@backend/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -16,7 +17,8 @@ import './Progress.css';
 export const ProgressCreating = (props: ProgressProps) => {
   const { t } = props.i18n;
 
-  const { name, description, documents, team } = props.assignment;
+  const { name, description, documents, team, assign_all_members } =
+    props.assignment;
 
   const [state, setState] = useState<ProgressState>('idle');
 
@@ -49,7 +51,14 @@ export const ProgressCreating = (props: ProgressProps) => {
                 arr.push({ user_id: member.id, role: 'default' });
               });
 
-              addUsersToContext(supabase, context.id, arr).then((result) => {
+              (assign_all_members
+                ? setAssignAllMembers(
+                    supabase,
+                    context.id,
+                    context.assign_all_members
+                  )
+                : addUsersToContext(supabase, context.id, arr)
+              ).then((result) => {
                 if (!result) {
                   console.error('Failed to add users to context');
                   setState('failed');
