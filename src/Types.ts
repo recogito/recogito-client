@@ -249,11 +249,6 @@ export interface Context {
 
   sort: number;
 
-<<<<<<< HEAD
-  sort: number;
-
-=======
->>>>>>> 411758fc (Lwj/add all members to assignment (#346))
   members: {
     id: string;
 
