@@ -70,6 +70,7 @@ export const getAssignment = (
       name,
       description,
       project_id,
+      assign_all_members,
       team:context_users (
         user_id,
         profile:user_id(
@@ -126,6 +127,7 @@ export const getAssignment = (
           name: data.name,
           description: data.description,
           project_id: data.project_id,
+          assign_all_members: data.assign_all_members,
           team: data.team.map((t) => {
             return {
               user: { ...t.profile, id: t.user_id },

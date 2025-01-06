@@ -62,7 +62,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   const validityScore = [
     assignment.name,
     assignment.documents.length > 0,
-    assignment.team.length > 0,
+    assignment.assign_all_members || assignment.team.length > 0,
     assignment.description,
   ].filter(Boolean).length;
 
@@ -78,7 +78,16 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
   };
 
   const onChangeTeam = (team: UserProfile[]) =>
-    setAssignment((assignment) => ({ ...assignment, team }));
+    setAssignment((assignment) => ({
+      ...assignment,
+      team,
+    }));
+
+  const onChangeTeamMode = (assignAll: boolean) =>
+    setAssignment((assignment) => ({
+      ...assignment,
+      assign_all_members: assignAll,
+    }));
 
   const onChangeLayers = (
     op: 'add' | 'remove',
@@ -270,7 +279,8 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
                     me={props.me}
                     assignment={assignment}
                     project={props.project}
-                    onChange={onChangeTeam}
+                    onChangeTeam={onChangeTeam}
+                    onChangeTeamMode={onChangeTeamMode}
                     onCancel={props.onClose}
                     onBack={onBack}
                     onNext={onNext}

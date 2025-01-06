@@ -177,6 +177,7 @@ export const getProjectExtended = (
         description,
         is_project_default,
         created_at,
+        assign_all_members,
         members:context_users(
           id,
           role_id,
@@ -357,7 +358,7 @@ export const updateProject = (
       name: name,
       description: description,
       is_locked: is_locked,
-      document_view_right: document_view_right
+      document_view_right: document_view_right,
     })
     .eq('id', id)
     .then(({ error }) => {
