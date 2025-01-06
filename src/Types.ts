@@ -62,7 +62,7 @@ export interface Project {
 export enum DocumentViewRight {
   closed = 'closed',
   annotations = 'annotations',
-  notes = 'notes'
+  notes = 'notes',
 }
 
 export interface ExtendedProjectData {
@@ -245,6 +245,8 @@ export interface Context {
 
   created_at: string;
 
+  assign_all_members: boolean;
+
   members: {
     id: string;
 
@@ -355,11 +357,9 @@ export interface Tag {
 }
 
 export interface VocabularyTerm {
-
   label: string;
 
   color?: string;
-
 }
 
 export interface InstalledPlugin {

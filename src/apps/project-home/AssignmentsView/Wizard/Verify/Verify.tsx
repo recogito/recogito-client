@@ -61,8 +61,14 @@ export const Verify = (props: VerifyProps) => {
               </li>
             )}
 
-            <li className={team.length ? 'valid' : 'warning'}>
-              {team.length === 0 ? (
+            <li
+              className={
+                team.length || props.assignment.assign_all_members
+                  ? 'valid'
+                  : 'warning'
+              }
+            >
+              {team.length === 0 && !props.assignment.assign_all_members ? (
                 <>
                   <Warning size={16} weight='bold' />
                   {t['You have not added any team members.']}
@@ -70,10 +76,14 @@ export const Verify = (props: VerifyProps) => {
               ) : (
                 <>
                   <Check size={16} weight='bold' />{' '}
-                  {t['${n} team members'].replace(
-                    '${n}',
-                    team.length.toString()
-                  )}
+                  {props.assignment.assign_all_members
+                    ? t[
+                        'All current and future team members will be added to the assignment.'
+                      ]
+                    : t['${n} team members'].replace(
+                        '${n}',
+                        team.length.toString()
+                      )}
                 </>
               )}
             </li>

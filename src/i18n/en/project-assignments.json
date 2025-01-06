@@ -63,5 +63,9 @@
   "Base Assignment": "Base Assignment",
   "You have not added any team members.": "You have not yet added any team members; you can do that later by editing this assignment. For now, only Project Administrators have access to this assignment.",
   "Export annotations as CSV": "Export annotations as CSV",
-  "Assignments Wizard": "Assignments Wizard"
+  "Assignments Wizard": "Assignments Wizard",
+  "All team members": "All team members",
+  "Select team members": "Select team members",
+  "Who has access to this assignment?": "Who has access to this assignment?",
+  "All current and future team members will be added to the assignment.": "All current and future team members will be added to the assignment."
 }
