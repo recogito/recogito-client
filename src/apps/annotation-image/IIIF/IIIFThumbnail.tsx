@@ -19,7 +19,9 @@ export const IIIFThumbnail = (props: IIIFThumnailProps) => {
   // For now, just slice at 10
   const activeUsers = (props.activeUsers || []).slice(0, 10);
 
-  const src = `${props.canvas.image.uri}/full/120,/0/default.jpg`;
+  const { uri } = props.canvas.image;
+
+  const src = `${uri.endsWith('/') ? uri : `${uri}/`}full/240,/0/default.jpg`;
 
   return (
     <div className="thumbnail-wrapper">
