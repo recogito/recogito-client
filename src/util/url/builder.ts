@@ -49,3 +49,19 @@ export const getSearchParameter = (name: string) => {
  */
 export const getSearchParameters = () => new URLSearchParams(window.location.search.substring(1));
 
+/**
+ * Returns true if the passed string is a valid URL.
+ *
+ * @param str
+ */
+export const isValidURL = (str) => {
+  let isValid;
+
+  try {
+    isValid = Boolean(new URL(str));
+  } catch {
+    isValid = false;
+  }
+
+  return isValid;
+};

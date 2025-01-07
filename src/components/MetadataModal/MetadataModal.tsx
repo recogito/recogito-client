@@ -145,32 +145,34 @@ export const MetadataModal = (props: MetadataModalProps) => {
                     />
                   </td>
                   {!props.readOnly && (
-                    <td className='actions'>
-                      {isEditable(index) && (
+                    <td>
+                      <div className='metadata-actions'>
+                        {isEditable(index) && (
+                          <button
+                            className='unstyled icon-only'
+                            onClick={() => setEditIndex(null)}
+                            type='button'
+                          >
+                            <Check />
+                          </button>
+                        )}
+                        {!isEditable(index) && (
+                          <button
+                            className='unstyled icon-only'
+                            onClick={() => setEditIndex(index)}
+                            type='button'
+                          >
+                            <PencilSimple />
+                          </button>
+                        )}
                         <button
                           className='unstyled icon-only'
-                          onClick={() => setEditIndex(null)}
+                          onClick={() => onRemoveItem(index)}
                           type='button'
                         >
-                          <Check />
+                          <X />
                         </button>
-                      )}
-                      {!isEditable(index) && (
-                        <button
-                          className='unstyled icon-only'
-                          onClick={() => setEditIndex(index)}
-                          type='button'
-                        >
-                          <PencilSimple />
-                        </button>
-                      )}
-                      <button
-                        className='unstyled icon-only'
-                        onClick={() => onRemoveItem(index)}
-                        type='button'
-                      >
-                        <X />
-                      </button>
+                      </div>
                     </td>
                   )}
                 </tr>
