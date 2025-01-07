@@ -78,9 +78,9 @@
   "YouTube Video": "YouTube Video",
   "Zoom in": "Zoom +",
   "Zoom out": "Zoom -",
-  "Metadata": "Metadata",
-  "No document metadata available.": "No document metadata available.",
-  "Internal": "Internal",
-  "External": "External",
-  "Add Metadata": "Add Metadata"
+  "Metadata": "Metadaten",
+  "No document metadata available.": "Keine Metadata vorhanden.",
+  "Internal": "Intern",
+  "External": "Extern",
+  "Add Metadata": "Neues Metadatenfeld"
 }
