@@ -167,7 +167,7 @@ export const TagSettings = (props: TagSettingsProps) => {
                 className="sm primary"
                 busy={saveState === 'saving'}
                 onClick={onSave}>
-                <span>{t['Save']}</span>
+                <span>{t['Save Changes']}</span>
               </Button>
             </div>
           </div>
