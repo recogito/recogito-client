@@ -91,10 +91,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
     if (bodiesForThisSection.length > 0) {
       // Normal case - section has a comment or tag(s)
-      const creatorIds = new Set(bodiesForThisSection.map(b => b.creator?.id));
-      if (creatorIds.size > 1)
-        console.warn('Integrity problem: content in this section has multiple creators', annotation);
-
       const createdAt = bodiesForThisSection[0].created || 
         // Unusual, but may be the case for embedded annotations - if
         // the body doesn't have a timestamp, then fall back to the target creation
