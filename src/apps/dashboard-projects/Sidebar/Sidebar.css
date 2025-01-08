@@ -4,6 +4,7 @@
 
 .dashboard-sidebar.open {
   border-right: 1px solid var(--gray-100);
+  min-width: 350px;
   width: 350px;
 }
 
