@@ -1,0 +1,13 @@
+.document-metadata {
+  padding: 0.5em;
+}
+
+.document-metadata > .document-metadata-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.document-metadata > .document-metadata-header > h2 {
+  margin: 1em 0;
+}

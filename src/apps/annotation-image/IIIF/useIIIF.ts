@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Canvas, IIIF } from '@allmaps/iiif-parser';
+import { Canvas, IIIF, type Metadata } from '@allmaps/iiif-parser';
 import type { DocumentWithContext } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
 
@@ -22,6 +22,8 @@ export const useIIIF = (document: DocumentWithContext) => {
   const [currentImage, setCurrentImage] = useState<string | undefined>();
 
   const [manifestError, setManifestError] = useState<string | undefined>();
+
+  const [metadata, setMetadata] = useState<Metadata | undefined>();
 
   const [authToken, setAuthToken] = useState<string | undefined>();
 
@@ -67,6 +69,7 @@ export const useIIIF = (document: DocumentWithContext) => {
           setCanvases(parsed.canvases);
           setCurrentImage(getImageURL(parsed.canvases[0]?.image.uri));
           setManifestType('PRESENTATION');
+          setMetadata(parsed.metadata);
         } else {
           console.log('Failed to parse IIIF manifest', parsed);
           setManifestError(`Failed to parse IIIF manifest: ${url}`);
@@ -105,6 +108,7 @@ export const useIIIF = (document: DocumentWithContext) => {
     isPresentationManifest,
     isImageManifest,
     manifestError,
+    metadata,
     next,
     previous,
     setCurrentImage,
