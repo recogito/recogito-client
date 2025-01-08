@@ -247,6 +247,8 @@ export interface Context {
 
   assign_all_members: boolean;
 
+  sort: number;
+
 <<<<<<< HEAD
   sort: number;
 
