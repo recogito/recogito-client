@@ -1,5 +1,5 @@
-import { ViewMetadataModal } from '@components/DocumentCard/ViewMetadataModal';
 import { DocumentGrid } from '@components/DocumentLibrary/DocumentGrid.tsx';
+import { MetadataModal } from '@components/MetadataModal';
 import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
 import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
@@ -26,7 +26,6 @@ import { getTheme } from '@table-library/react-table-library/baseline';
 import type { Action } from '@table-library/react-table-library/types/common';
 import { useSort } from '@table-library/react-table-library/sort';
 import { DocumentActions } from './DocumentActions';
-import { EditMetadataModal } from '@components/DocumentCard/EditMetadataModal';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
@@ -843,30 +842,22 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           </Dialog.Content>
         </Dialog.Portal>
       </Dialog.Root>
-      {currentDocument && allowEditMetadata(currentDocument) && (
-        <EditMetadataModal
-          open={metaOpen}
+
+      {currentDocument && (
+        <MetadataModal
           i18n={props.i18n}
-          document={currentDocument as Document}
+          document={currentDocument}
+          open={metaOpen}
           onClose={() => {
             setMetaOpen(false);
             setCurrentDocument(undefined);
           }}
           onUpdated={props.onUpdated!}
           onError={props.onError!}
+          readOnly={!allowEditMetadata(currentDocument)}
         />
       )}
-      {currentDocument && !allowEditMetadata(currentDocument) && (
-        <ViewMetadataModal
-          document={currentDocument}
-          i18n={props.i18n}
-          onClose={() => {
-            setMetaOpen(false);
-            setCurrentDocument(undefined);
-          }}
-          open={metaOpen}
-        />
-      )}
+
       <PublicWarningMessage
         open={publicWarningOpen}
         message={t['Public Document Warning Message']}
