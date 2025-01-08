@@ -11,7 +11,7 @@ import {
   clearSelectionURLHash,
   DocumentNotes,
   useAnnotationsViewUIState,
-  useLayerNames
+  useLayerNames,
 } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
@@ -42,7 +42,7 @@ const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (
   fillOpacity: state?.hovered ? 0.28 : 0.2,
   stroke: '#0080ff',
   strokeOpacity: state?.selected ? 0.9 : 0.5,
-  strokeWidth: state?.selected ? 2 : 1
+  strokeWidth: state?.selected ? 2 : 1,
 });
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
@@ -76,12 +76,14 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     manifestError,
     metadata,
     currentImage,
-    setCurrentImage
+    setCurrentImage,
   } = useIIIF(document);
 
   const { activeUsers, onPageActivity } = useMultiPagePresence(present);
 
-  const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
+  const [documentLayers, setDocumentLayers] = useState<
+    DocumentLayer[] | undefined
+  >();
 
   const layerNames = useLayerNames(document);
 
@@ -92,13 +94,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     if (!documentLayers) return;
 
     // Crash hard if there is no layer (the error boundary will handle the UI message!)
-    if (documentLayers.length === 0)
-      throw 'Fatal: document has no layers.';
+    if (documentLayers.length === 0) throw 'Fatal: document has no layers.';
 
     // Crash hard if there is no active layer
-    const activeLayers = documentLayers.filter(l => l.is_active);
-    if (activeLayers.length === 0)
-      throw 'Fatal: active layer missing.';
+    const activeLayers = documentLayers.filter((l) => l.is_active);
+    if (activeLayers.length === 0) throw 'Fatal: active layer missing.';
 
     // Crash hard if there is more than one active layer
     if (activeLayers.length > 1) {
@@ -118,7 +118,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     rightPanelTab,
     setRightPanelOpen,
     setRightPanelTab,
-    usePopup
+    usePopup,
   } = useAnnotationsViewUIState();
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
@@ -130,8 +130,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   useEffect(() => {
     // The 'pages' sidebar should be open by default
     // in case of multi-page IIIF images
-    if (canvases.length > 1)
-      setLeftPanelOpen(true);
+    if (canvases.length > 1) setLeftPanelOpen(true);
   }, [canvases]);
 
   const onChangeStyle = (style?: (a: SupabaseAnnotation) => Color) => {
@@ -147,7 +146,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           fillOpacity: state?.hovered ? 0.28 : 0.2,
           stroke: color,
           strokeOpacity: state?.selected ? 0.9 : 0.5,
-          strokeWidth: state?.selected ? 2 : 1
+          strokeWidth: state?.selected ? 2 : 1,
         };
       };
 
@@ -204,7 +203,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               id: l.id,
               is_active: false,
               document_id: l.document_id,
-              project_id: document.context.project_id
+              project_id: document.context.project_id,
             }));
 
           setDocumentLayers([...document.layers, ...toAdd]);
@@ -220,10 +219,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   }, [policies]);
 
-  const onZoom = (factor: number) => 
-    viewer.current?.viewport.zoomBy(factor);
+  const onZoom = (factor: number) => viewer.current?.viewport.zoomBy(factor);
 
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
+    setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
@@ -248,22 +247,23 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onGoToImage = (source: string) => {
     // When navigating via the thumbnail strip, clear the selection from the
     // hash, otherwise we'll get looped right back.
-    clearSelectionURLHash(); 
+    clearSelectionURLHash();
     setCurrentImage(source);
-  }
+  };
 
-  const onError = (error: string) => setToast({
-    title: t['Something went wrong'],
-    description: error,
-    type: 'error',
-  });
+  const onError = (error: string) =>
+    setToast({
+      title: t['Something went wrong'],
+      description: error,
+      type: 'error',
+    });
 
   const onUpdated = (doc: Document) => {
-    setDocument(((prevDocument) => ({
+    setDocument((prevDocument) => ({
       ...prevDocument,
       name: doc.name,
-      meta_data: doc.meta_data
-    })))
+      meta_data: doc.meta_data,
+    }));
   };
 
   return (
@@ -272,19 +272,20 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         channelId={props.channelId}
         layers={documentLayers}
         present={present}
-        onError={() => setConnectionError(true)}>
-
-        <div className="anno-desktop ia-desktop">
+        onError={() => setConnectionError(true)}
+      >
+        <div className='anno-desktop ia-desktop'>
           <TopBar
             i18n={props.i18n}
             invitations={[]}
             me={props.me}
             showNotifications={false}
-            onError={() => setConnectionError(true)} />
+            onError={() => setConnectionError(true)}
+          />
 
           {loading && <LoadingOverlay />}
 
-          <div className="header">
+          <div className='header'>
             <Toolbar
               i18n={props.i18n}
               isLocked={isLocked}
@@ -303,8 +304,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               onChangeStyle={onChangeStyle}
               onChangeTool={setTool}
               onToggleBranding={() => setShowBranding(!showBranding)}
-              onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-              onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
+              onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
+              onToggleRightDrawer={() => setRightPanelOpen((open) => !open)}
               onZoom={onZoom}
             />
           </div>
@@ -324,9 +325,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               present={present}
               onChangeImage={onGoToImage}
               onError={onError}
-              onUpdated={onUpdated} />
+              onUpdated={onUpdated}
+            />
 
-            <div className="ia-annotated-image-container">
+            <div className='ia-annotated-image-container'>
               {policies && currentImage && activeLayer && (
                 <AnnotatedImage
                   ref={viewer}
@@ -349,9 +351,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   onChangeImage={setCurrentImage}
                   onChangePresent={setPresent}
                   onConnectionError={() => setConnectionError(true)}
-                  onPageActivity={canvases.length > 1 ? onPageActivity : undefined}
+                  onPageActivity={
+                    canvases.length > 1 ? onPageActivity : undefined
+                  }
                   onSaveError={() => setConnectionError(true)}
-                  onLoad={() => setLoading(false)} />
+                  onLoad={() => setLoading(false)}
+                />
               )}
             </div>
 
@@ -381,11 +386,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         )}
       </DocumentNotes>
 
-      <Toast
-        content={toast}
-        onOpenChange={(open) => !open && setToast(null)}
-      />
+      <Toast content={toast} onOpenChange={(open) => !open && setToast(null)} />
     </ToastProvider>
-  )
-
-}
+  );
+};

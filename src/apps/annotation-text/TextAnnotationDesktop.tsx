@@ -11,7 +11,7 @@ import {
   type DocumentNote,
   DocumentNotes,
   useAnnotationsViewUIState,
-  useLayerNames
+  useLayerNames,
 } from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
@@ -56,17 +56,24 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const tagVocabulary = useTagVocabulary(document.context.project_id);
 
-  const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
+  const [documentLayers, setDocumentLayers] = useState<
+    DocumentLayer[] | undefined
+  >();
 
-  const [embeddedLayers, setEmbeddedLayers] = useState<EmbeddedLayer[] | undefined>();
+  const [embeddedLayers, setEmbeddedLayers] = useState<
+    EmbeddedLayer[] | undefined
+  >();
 
-  const [embeddedNotes, setEmbeddedNotes] = useState<DocumentNote[] | undefined>();
+  const [embeddedNotes, setEmbeddedNotes] = useState<
+    DocumentNote[] | undefined
+  >();
 
   const [toast, setToast] = useState<ToastContent | undefined>();
 
-  const layers = useMemo(() => (
-    [...(documentLayers || []), ...(embeddedLayers || [])]
-  ), [documentLayers, embeddedLayers]);
+  const layers = useMemo(
+    () => [...(documentLayers || []), ...(embeddedLayers || [])],
+    [documentLayers, embeddedLayers]
+  );
 
   const layerNames = useLayerNames(document, embeddedLayers);
 
@@ -75,13 +82,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     if (!documentLayers) return;
 
     // Crash hard if there is no layer (the error boundary will handle the UI message!)
-    if (documentLayers.length === 0)
-      throw 'Fatal: document has no layers.';
+    if (documentLayers.length === 0) throw 'Fatal: document has no layers.';
 
     // Crash hard if there is no active layer
-    const activeLayers = documentLayers.filter(l => l.is_active);
-    if (activeLayers.length === 0)
-      throw 'Fatal: active layer missing.';
+    const activeLayers = documentLayers.filter((l) => l.is_active);
+    if (activeLayers.length === 0) throw 'Fatal: active layer missing.';
 
     // Crash hard if there is more than one active layer
     if (activeLayers.length > 1) {
@@ -99,7 +104,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     rightPanelTab,
     setRightPanelOpen,
     setRightPanelTab,
-    usePopup
+    usePopup,
   } = useAnnotationsViewUIState();
 
   const { t } = props.i18n;
@@ -110,26 +115,30 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     HighlightStyleExpression | undefined
   >(undefined);
 
-  const onChangeStyle = useCallback((style?: (a: SupabaseAnnotation) => Color) => {
-    if (style) {
-      const hse: HighlightStyleExpression = (
-        a: SupabaseAnnotation,
-        state?: AnnotationState
-      ) => ({
-        fill: style(a),
-        fillOpacity: state?.selected ? 0.5 : 0.24,
-      });
+  const onChangeStyle = useCallback(
+    (style?: (a: SupabaseAnnotation) => Color) => {
+      if (style) {
+        const hse: HighlightStyleExpression = (
+          a: SupabaseAnnotation,
+          state?: AnnotationState
+        ) => ({
+          fill: style(a),
+          fillOpacity: state?.selected ? 0.5 : 0.24,
+        });
 
-      setActiveLayerStyle(() => hse);
-    } else {
-      setActiveLayerStyle(undefined);
-    }
-  }, [setActiveLayerStyle]);
+        setActiveLayerStyle(() => hse);
+      } else {
+        setActiveLayerStyle(undefined);
+      }
+    },
+    [setActiveLayerStyle]
+  );
 
   const style: HighlightStyleExpression = useMemo(() => {
     // In practice, there should only ever be one active layer
-    const activeLayers = 
-      new Set((documentLayers || []).filter(l => l.is_active).map(l => l.id))
+    const activeLayers = new Set(
+      (documentLayers || []).filter((l) => l.is_active).map((l) => l.id)
+    );
 
     const readOnlyStyle = (state?: AnnotationState, z?: number) =>
       ({
@@ -173,7 +182,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               id: l.id,
               is_active: false,
               document_id: l.document_id,
-              project_id: document.context.project_id
+              project_id: document.context.project_id,
             }));
 
           setDocumentLayers([...document.layers, ...toAdd]);
@@ -189,7 +198,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     }
   }, [policies]);
 
-  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') => setRightPanelTab(tab);
+  const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
+    setRightPanelTab(tab);
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
@@ -223,22 +233,27 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     .filter(Boolean)
     .join(' ');
 
-  const onLoadEmbeddedLayers = useCallback((layers: EmbeddedLayer[], notes: DocumentNote[]) => {
-    setEmbeddedLayers(layers);
-    setEmbeddedNotes(notes);
-  }, []);
+  const onLoadEmbeddedLayers = useCallback(
+    (layers: EmbeddedLayer[], notes: DocumentNote[]) => {
+      setEmbeddedLayers(layers);
+      setEmbeddedNotes(notes);
+    },
+    []
+  );
 
-  const onError = (error: string) => setToast({
-    title: t['Something went wrong'],
-    description: error,
-    type: 'error',
-  });
+  const onError = (error: string) =>
+    setToast({
+      title: t['Something went wrong'],
+      description: error,
+      type: 'error',
+    });
 
-  const onUpdated = (doc: Document) => setDocument(((prevDocument) => ({
-    ...prevDocument,
-    name: doc.name,
-    meta_data: doc.meta_data
-  })));
+  const onUpdated = (doc: Document) =>
+    setDocument((prevDocument) => ({
+      ...prevDocument,
+      name: doc.name,
+      meta_data: doc.meta_data,
+    }));
 
   return (
     <ToastProvider>
@@ -247,17 +262,19 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
         embeddedNotes={embeddedNotes}
         layers={layers}
         present={present}
-        onError={() => setConnectionError(true)}>
-        <div className="anno-desktop ta-desktop">
+        onError={() => setConnectionError(true)}
+      >
+        <div className='anno-desktop ta-desktop'>
           {loading && <LoadingOverlay />}
 
-          <div className="header">
+          <div className='header'>
             <TopBar
               i18n={props.i18n}
               invitations={[]}
               me={props.me}
               showNotifications={false}
-              onError={() => {}} />
+              onError={() => {}}
+            />
 
             <Toolbar
               i18n={props.i18n}
@@ -276,7 +293,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               onChangeStyle={onChangeStyle}
               onToggleBranding={() => setShowBranding(!showBranding)}
               onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
-              onToggleRightDrawer={() => setRightPanelOpen((open) => !open)} />
+              onToggleRightDrawer={() => setRightPanelOpen((open) => !open)}
+            />
           </div>
 
           <main className={className}>
@@ -329,7 +347,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               tagVocabulary={tagVocabulary}
               beforeSelectAnnotation={beforeSelectAnnotation}
               onTabChanged={onRightTabChanged}
-              tab={rightPanelTab} />
+              tab={rightPanelTab}
+            />
           </main>
         </div>
       </DocumentNotes>
