@@ -155,9 +155,7 @@ export interface Document {
 
     url: string;
 
-    meta?: {
-      author?: string;
-    };
+    meta?: DocumentMetadata[]
   };
 
   collection_metadata?: {
@@ -165,6 +163,11 @@ export interface Document {
 
     document_id: string;
   };
+}
+
+export interface DocumentMetadata {
+  label: string;
+  value: string;
 }
 
 export interface DocumentWithContext extends Document {
@@ -465,4 +468,13 @@ export type ApiAcceptOrgInvite = {
   email: string;
   password: string;
   token: string;
+};
+
+export type IIIFMetadata = {
+  label: {
+    [key: string]: string[]
+  },
+  value: {
+    [key: string]: string[]
+  }
 };

@@ -1,0 +1,17 @@
+ul.metadata-list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul.metadata-list > li {
+  background-color: #FFFFFF;
+  padding: 0.8em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+ul.metadata-list > li > div:first-child {
+  color: var(--font-light)
+}

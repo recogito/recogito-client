@@ -1,0 +1,13 @@
+.document-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.document-title > input {
+  flex-grow: 1;
+}
+
+.document-title > button {
+  margin-left: 1em;
+}

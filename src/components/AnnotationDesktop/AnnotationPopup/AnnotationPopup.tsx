@@ -78,6 +78,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
         isProjectLocked={props.isProjectLocked}
         isReadOnly={isReadOnly}
         layerNames={props.layerNames}
+        policies={props.policies}
         present={props.present}
         showReplyField={!isReadOnly}
         tagVocabulary={props.tagVocabulary} 
