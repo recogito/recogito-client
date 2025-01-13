@@ -25,7 +25,7 @@ interface DocumentActionsProps {
 
   onOpenMetadata(): void;
 
-  onTogglePrivate(): void;
+  onTogglePrivate?(): void;
 }
 
 export const DocumentActions = (props: DocumentActionsProps) => {
@@ -66,7 +66,9 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                 {props.showPrivate && (
                   <Item
                     className='dropdown-item'
-                    onSelect={props.onTogglePrivate}
+                    onSelect={
+                      props.onTogglePrivate ? props.onTogglePrivate : () => {}
+                    }
                   >
                     {props.isPrivate ? (
                       <Eye size={16} />
