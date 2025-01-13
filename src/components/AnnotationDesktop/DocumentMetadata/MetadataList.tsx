@@ -8,14 +8,16 @@ interface Props {
 }
 
 export const MetadataList = (props: Props) => {
-  const renderValue = useCallback((item) => {
+  const renderValue = useCallback((item: any) => {
     if (isValidURL(item.value)) {
       return (
-        <a href={item.value} target='_blank'>{item.value}</a>
+        <a href={item.value} target='_blank'>
+          {item.value}
+        </a>
       );
     }
 
-    return item.value;
+    return <div dangerouslySetInnerHTML={{ __html: item.value }} />;
   }, []);
 
   return (
