@@ -106,7 +106,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   }, [activeCollection, collections, view]);
 
   const allowEditMetadata = useCallback(
-    (item) => item.created_by === props.user.id,
+    (item: any) => item.created_by === props.user.id,
     [props.user]
   );
 
@@ -132,12 +132,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   };
 
   const matchesSearch = (document: Document) => {
-    const author = document.meta_data?.meta ? document.meta_data.meta.find(m => m.label === 'author');
+    const author = document.meta_data?.meta
+      ? document.meta_data.meta.find((m) => m.label === 'author')
+      : null;
     return (
       document.name.toLowerCase().includes(search.toLowerCase()) ||
-      (author && author.label
-          .toLowerCase()
-          .includes(search.toLowerCase()))
+      (author && author.label.toLowerCase().includes(search.toLowerCase()))
     );
   };
 
