@@ -1,10 +1,7 @@
 import { isValidURL } from '@util/url';
 import { useCallback } from 'react';
 import type { DocumentMetadata } from 'src/Types';
-<<<<<<< HEAD
 import { cleanHTML } from '@util/general';
-=======
->>>>>>> f9d479a3 (#139 - Document metadata (#347))
 import './MetadataList.css';
 
 interface Props {
