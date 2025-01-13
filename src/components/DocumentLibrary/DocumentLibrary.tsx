@@ -3,12 +3,7 @@ import { MetadataModal } from '@components/MetadataModal';
 import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
 import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback
-} from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
@@ -75,7 +70,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const { UploadActions } = props;
 
   const [view, setView] = useState<'mine' | 'all' | 'collection'>('mine');
-  const [documentsView, setDocumentsView] = useState<ToggleDisplayValue>('rows');
+  const [documentsView, setDocumentsView] =
+    useState<ToggleDisplayValue>('rows');
   const [activeCollection, setActiveCollection] = useState(0);
 
   const [documents, setDocuments] = useState<LibraryDocument[] | null>(null);
@@ -109,7 +105,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     return value;
   }, [activeCollection, collections, view]);
 
-  const allowEditMetadata = useCallback((item) => item.created_by === props.user.id, [props.user]);
+  const allowEditMetadata = useCallback(
+    (item) => item.created_by === props.user.id,
+    [props.user]
+  );
 
   const handleTogglePrivate = (document: Document) => {
     if (document.is_private) {
@@ -170,7 +169,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       `,
       Row: `
         font-size: 13px;
-      `
+      `,
     },
   ]);
 
@@ -185,7 +184,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       `,
       Row: `
         font-size: 13px;
-      `
+      `,
     },
   ]);
 
@@ -432,8 +431,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     },
     {
       label: t['Author'],
-      renderCell: (item) =>
-        item.meta_data.meta?.author ? item.meta_data.meta?.author : '',
+      renderCell: (item) => {
+        const author = item.meta_data.meta
+          ? item.meta_data.meta.find((m: any) => (m.label = 'author'))
+          : null;
+        return author ? author.value : '';
+      },
+
       select: true,
       pinLeft: true,
       sort: { sortKey: 'AUTHOR' },
@@ -636,23 +640,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           <Dialog.Overlay className='dialog-overlay' />
           <Dialog.Content className='dialog-content-doc-lib'>
             <section className='doc-lib-title'>
-
               <Dialog.Title className='dialog-title'>
                 {t['Add Document']}
               </Dialog.Title>
 
-              <Dialog.Description
-                className='text-body-small'
-              >
+              <Dialog.Description className='text-body-small'>
                 {t['Select a document or upload a new one.']}
               </Dialog.Description>
-
             </section>
-            <div
-              className='doc-lib-content'
-            >
+            <div className='doc-lib-content'>
               <header className='doc-lib-header'>
-
                 <section className='doc-lib-header-bottom'>
                   <ul className='doc-lib-header-tabs'>
                     <li
@@ -689,11 +686,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         {myDocuments.length}
                       </span>
                     </li>
-
                   </ul>
                 </section>
 
-                { collections && (
+                {collections && (
                   <section className='doc-lib-header-bottom collections'>
                     <h3>{t['Collections']}</h3>
 
@@ -701,7 +697,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       {collections.map((c, idx) => (
                         <li
                           className={
-                            view === 'collection' && activeCollection === idx + 1
+                            view === 'collection' &&
+                            activeCollection === idx + 1
                               ? 'active'
                               : undefined
                           }
@@ -730,15 +727,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
               </header>
 
               <section className='doc-lib-section-content'>
-
                 <div className='doc-lib-section-content-header'>
                   <h3>{filterLabel}</h3>
 
                   <div className='doc-lib-buttons'>
-
                     <SearchInput
                       className='doc-lib-search'
-                      onChange={({ target: { value }}) => setSearch(value)}
+                      onChange={({ target: { value } }) => setSearch(value)}
                       onClear={() => setSearch('')}
                       placeholder={t['Search']}
                       search={search}
@@ -755,72 +750,89 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
                 <div style={{ height: 450 }}>
                   {/* My Documents */}
-                  {view === 'mine' && myDocuments.length > 0 && documentsView === 'rows' && (
-                    <DocumentTable
-                      data={{ nodes: myDocuments }}
-                      disabledIds={props.disabledIds}
-                      i18n={props.i18n}
-                      select={selectMine}
-                      theme={themeMine}
-                      columns={columnsMine}
-                      sort={sortMine}
-                    />
-                  )}
-                  { view === 'mine' && myDocuments.length > 0 && documentsView === 'cards' && (
-                    <DocumentGrid
-                      disabledIds={props.disabledIds}
-                      documents={myDocuments}
-                      i18n={props.i18n}
-                      select={selectMine}
-                    />
-                  )}
-                  {view === 'mine' && myDocuments.length === 0 && t['No Documents']}
+                  {view === 'mine' &&
+                    myDocuments.length > 0 &&
+                    documentsView === 'rows' && (
+                      <DocumentTable
+                        data={{ nodes: myDocuments }}
+                        disabledIds={props.disabledIds}
+                        i18n={props.i18n}
+                        select={selectMine}
+                        theme={themeMine}
+                        columns={columnsMine}
+                        sort={sortMine}
+                      />
+                    )}
+                  {view === 'mine' &&
+                    myDocuments.length > 0 &&
+                    documentsView === 'cards' && (
+                      <DocumentGrid
+                        disabledIds={props.disabledIds}
+                        documents={myDocuments}
+                        i18n={props.i18n}
+                        select={selectMine}
+                      />
+                    )}
+                  {view === 'mine' &&
+                    myDocuments.length === 0 &&
+                    t['No Documents']}
 
                   {/* All Documents */}
-                  {view === 'all' && allDocuments.length > 0 && documentsView === 'rows' && (
-                    <DocumentTable
-                      data={{ nodes: allDocuments }}
-                      disabledIds={props.disabledIds}
-                      i18n={props.i18n}
-                      select={selectAll}
-                      theme={themeAll}
-                      columns={columnsAll}
-                      sort={sortAll}
-                    />
-                  )}
-                  {view === 'all' && allDocuments.length > 0 && documentsView === 'cards' && (
-                    <DocumentGrid
-                      disabledIds={props.disabledIds}
-                      documents={allDocuments}
-                      i18n={props.i18n}
-                      select={selectAll}
-                    />
-                  )}
-                  {view === 'all' && allDocuments.length === 0 && t['No Documents']}
+                  {view === 'all' &&
+                    allDocuments.length > 0 &&
+                    documentsView === 'rows' && (
+                      <DocumentTable
+                        data={{ nodes: allDocuments }}
+                        disabledIds={props.disabledIds}
+                        i18n={props.i18n}
+                        select={selectAll}
+                        theme={themeAll}
+                        columns={columnsAll}
+                        sort={sortAll}
+                      />
+                    )}
+                  {view === 'all' &&
+                    allDocuments.length > 0 &&
+                    documentsView === 'cards' && (
+                      <DocumentGrid
+                        disabledIds={props.disabledIds}
+                        documents={allDocuments}
+                        i18n={props.i18n}
+                        select={selectAll}
+                      />
+                    )}
+                  {view === 'all' &&
+                    allDocuments.length === 0 &&
+                    t['No Documents']}
 
                   {/* Collection Documents */}
-                  {view === 'collection' && collectionDocuments.length > 0 && documentsView === 'rows' && (
-                    <DocumentTable
-                      data={{ nodes: collectionDocuments }}
-                      disabledIds={props.disabledIds}
-                      i18n={props.i18n}
-                      select={selectCollection}
-                      theme={themeCollection}
-                      columns={columnsCollection}
-                      sort={sortCollection}
-                    />
-                  )}
-                  {view === 'collection' && collectionDocuments.length > 0 && documentsView === 'cards' && (
-                    <DocumentGrid
-                      disabledIds={props.disabledIds}
-                      documents={collectionDocuments}
-                      i18n={props.i18n}
-                      select={selectCollection}
-                    />
-                  )}
-                  {view === 'collection' && collectionDocuments.length === 0 && t['No Documents']}
+                  {view === 'collection' &&
+                    collectionDocuments.length > 0 &&
+                    documentsView === 'rows' && (
+                      <DocumentTable
+                        data={{ nodes: collectionDocuments }}
+                        disabledIds={props.disabledIds}
+                        i18n={props.i18n}
+                        select={selectCollection}
+                        theme={themeCollection}
+                        columns={columnsCollection}
+                        sort={sortCollection}
+                      />
+                    )}
+                  {view === 'collection' &&
+                    collectionDocuments.length > 0 &&
+                    documentsView === 'cards' && (
+                      <DocumentGrid
+                        disabledIds={props.disabledIds}
+                        documents={collectionDocuments}
+                        i18n={props.i18n}
+                        select={selectCollection}
+                      />
+                    )}
+                  {view === 'collection' &&
+                    collectionDocuments.length === 0 &&
+                    t['No Documents']}
                 </div>
-
               </section>
             </div>
 
