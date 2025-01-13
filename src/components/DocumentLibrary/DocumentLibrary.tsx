@@ -433,7 +433,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => {
         const author =
           item.meta_data.meta && Array.isArray(item.meta_data.meta)
-            ? item.meta_data.meta.find((m: any) => (m.label = 'author'))
+            ? item.meta_data.meta.find((m: any) => m.label === 'author')
             : null;
         return author ? author.value : '';
       },
