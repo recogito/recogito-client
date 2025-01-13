@@ -1,6 +1,7 @@
 import { isValidURL } from '@util/url';
 import { useCallback } from 'react';
 import type { DocumentMetadata } from 'src/Types';
+import { cleanHTML } from '@util/general';
 import './MetadataList.css';
 
 interface Props {
@@ -17,7 +18,7 @@ export const MetadataList = (props: Props) => {
       );
     }
 
-    return <div dangerouslySetInnerHTML={{ __html: item.value }} />;
+    return <div dangerouslySetInnerHTML={{ __html: cleanHTML(item.value) }} />;
   }, []);
 
   return (
