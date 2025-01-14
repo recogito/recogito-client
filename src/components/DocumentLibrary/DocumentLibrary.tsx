@@ -133,7 +133,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const matchesSearch = (document: Document) => {
     const author = document.meta_data?.meta
-      ? document.meta_data.meta.find((m) => m.label === 'author')
+      ? document.meta_data.meta.find(
+          (m) => m.label === 'author' || m.label === 'artist'
+        )
       : null;
     return (
       document.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -429,11 +431,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       sort: { sortKey: 'TITLE' },
     },
     {
-      label: t['Author'],
+      label: t['Author/Artist'],
       renderCell: (item) => {
         const author =
           item.meta_data.meta && Array.isArray(item.meta_data.meta)
-            ? item.meta_data.meta.find((m: any) => m.label === 'Author')
+            ? item.meta_data.meta.find(
+                (m: any) => m.label === 'Author' || m.label === 'Artist'
+              )
             : null;
         return author ? author.value : '';
       },
@@ -617,12 +621,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           array.sort((a, b) => {
             const aAuthorFind =
               a.meta_data.meta && Array.isArray(a.meta_data.meta)
-                ? a.meta_data.meta.find((m: any) => m.label === 'Author')
+                ? a.meta_data.meta.find(
+                    (m: any) => m.label === 'Author' || m.label === 'Artist'
+                  )
                 : null;
             const aAuthor = aAuthorFind ? aAuthorFind.value : '';
             const bAuthorFind =
               b.meta_data.meta && Array.isArray(b.meta_data.meta)
-                ? b.meta_data.meta.find((m: any) => m.label === 'Author')
+                ? b.meta_data.meta.find(
+                    (m: any) => m.label === 'Author' || m.label === 'Artist'
+                  )
                 : null;
             const bAuthor = bAuthorFind ? bAuthorFind.value : '';
 
