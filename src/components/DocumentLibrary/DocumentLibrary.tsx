@@ -132,11 +132,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   };
 
   const matchesSearch = (document: Document) => {
-    const author = document.meta_data?.meta
-      ? document.meta_data.meta.find(
-          (m) => m.label === 'author' || m.label === 'artist'
-        )
-      : null;
+    const author =
+      document.meta_data?.meta && Array.isArray(document.meta_data.meta)
+        ? document.meta_data.meta.find(
+            (m) => m.label === 'author' || m.label === 'artist'
+          )
+        : null;
     return (
       document.name.toLowerCase().includes(search.toLowerCase()) ||
       (author && author.label.toLowerCase().includes(search.toLowerCase()))
