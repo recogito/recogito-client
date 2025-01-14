@@ -21,7 +21,7 @@ export const useNotes = () => {
 
   const user = useAnnotatorUser();
 
-  const me: PresentUser | User = useMemo(() => present.find(p => p.id === user.id) || user, [user]);
+  const me: PresentUser | User = useMemo(() => present.find(p => p.id === user?.id) || user, [user]);
 
   const markAllAsRead = () => 
     setNotes(notes => notes.map(n => ({...n, unread: undefined })));

@@ -33,7 +33,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const user = useAnnotatorUser();
 
-  const me: PresentUser | User = useMemo(() => props.present.find(p => p.id === user.id) || user, [user]);
+  const me: PresentUser | User = useMemo(() => props.present.find(p => p.id === user?.id) || user, [user]);
 
   const [selected, setSelected] = useState<string | undefined>();
 

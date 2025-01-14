@@ -252,9 +252,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     setCurrentImage(source);
   }
 
-  const onError = (error) => setToast({
+  const onError = (error: string) => setToast({
     title: t['Something went wrong'],
-    description: error.message,
+    description: error,
     type: 'error',
   });
 
