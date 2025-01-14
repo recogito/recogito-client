@@ -135,7 +135,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     const author =
       document.meta_data?.meta && Array.isArray(document.meta_data.meta)
         ? document.meta_data.meta.find(
-            (m) => m.label === 'author' || m.label === 'artist'
+            (m) => m.label === 'Author' || m.label === 'Artist'
           )
         : null;
     return (
