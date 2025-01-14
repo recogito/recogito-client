@@ -228,9 +228,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     setEmbeddedNotes(notes);
   }, []);
 
-  const onError = (error) => setToast({
+  const onError = (error: string) => setToast({
     title: t['Something went wrong'],
-    description: error.message,
+    description: error,
     type: 'error',
   });
 
@@ -336,7 +336,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
       <Toast
         content={toast}
-        onOpenChange={(open) => !open && setToast(null)}
+        onOpenChange={(open) => !open && setToast(undefined)}
       />
     </ToastProvider>
   );
