@@ -433,7 +433,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => {
         const author =
           item.meta_data.meta && Array.isArray(item.meta_data.meta)
-            ? item.meta_data.meta.find((m: any) => m.label === 'author')
+            ? item.meta_data.meta.find((m: any) => m.label === 'Author')
             : null;
         return author ? author.value : '';
       },
@@ -614,9 +614,20 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       sortFns: {
         TITLE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
         AUTHOR: (array) =>
-          array.sort((a, b) =>
-            a.meta_data.meta?.author.localeCompare(b.meta_data.meta?.author)
-          ),
+          array.sort((a, b) => {
+            const aAuthorFind =
+              a.meta_data.meta && Array.isArray(a.meta_data.meta)
+                ? a.meta_data.meta.find((m: any) => m.label === 'Author')
+                : null;
+            const aAuthor = aAuthorFind ? aAuthorFind.value : '';
+            const bAuthorFind =
+              b.meta_data.meta && Array.isArray(b.meta_data.meta)
+                ? b.meta_data.meta.find((m: any) => m.label === 'Author')
+                : null;
+            const bAuthor = bAuthorFind ? bAuthorFind.value : '';
+
+            return aAuthor.localeCompare(bAuthor);
+          }),
         TYPE: (array) =>
           array.sort((a, b) =>
             (a.content_type || '').localeCompare(b.content_type || '')
