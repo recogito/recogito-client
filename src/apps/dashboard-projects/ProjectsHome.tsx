@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react';
+import { TagContext, TagContextProvider } from '@components/TagContext';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getMyProfile } from '@backend/crud';
 import { useOrganizationPolicies } from '@backend/hooks';
 import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
-import { Header, type SortFunction } from './Header';
-import { ProjectsEmpty } from './Empty';
+import { Header, type Filters, type SortFunction } from './Header';
+import { ProjectGroupEmpty, ProjectsEmpty } from './Empty';
 import { ProjectsGrid } from './Grid';
 import { ProjectsList } from './List';
+import { Sidebar } from './Sidebar';
 import { ProfileNagDialog } from '@components/ProfileNagDialog';
 import { TopBar } from '@components/TopBar';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
@@ -15,11 +17,10 @@ import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
-  Translations,
+  Translations
 } from 'src/Types';
 
 import './ProjectsHome.css';
-import type { Filters } from './Header/Filter';
 
 export interface ProjectsHomeProps {
   i18n: Translations;
@@ -54,7 +55,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [filter, setFilter] = useState(ProjectFilter.MINE);
+  const [filter, setFilter] = useState<ProjectFilter | string>(ProjectFilter.MINE);
 
   const [search, setSearch] = useState('');
 
@@ -72,6 +73,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   const [include, setInclude] = useState<Filters>('active');
 
   const isReader = policies ? !policies.get('projects').has('INSERT') : true;
+
+  const { tagDefinitions, toast, setToast } = useContext(TagContext);
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
@@ -120,30 +123,48 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
 
-  let filteredProjects = isReader
-    ? filter === ProjectFilter.MINE
-      ? sharedProjects
-      : // Am I one of the users in the groups?
-      filter === ProjectFilter.PUBLIC
-      ? openJoinProjects
-      : []
-    : // All projects
-    filter === ProjectFilter.PUBLIC
-    ? openJoinProjects
-    : // Am I the creator?
-    filter === ProjectFilter.MINE
-    ? myProjects
-    : // Am I one of the users in the groups?
-    filter === ProjectFilter.SHARED
-    ? sharedProjects
-    : [];
+  const tagDefinition = useMemo(() => (
+    tagDefinitions.find((tagDefinition) => tagDefinition.id === filter)
+  ), [filter, tagDefinitions]);
 
-  filteredProjects =
-    include === 'all'
-      ? filteredProjects
-      : include === 'active'
-      ? filteredProjects.filter((p) => !p.is_locked)
-      : filteredProjects.filter((p) => p.is_locked);
+  const filteredProjects = useMemo(() => {
+    let value;
+
+    if (filter === ProjectFilter.MINE) {
+      value = isReader ? sharedProjects : myProjects;
+    } else if (filter === ProjectFilter.SHARED) {
+      value = sharedProjects;
+    } else if (filter === ProjectFilter.PUBLIC) {
+      value = openJoinProjects;
+    } else if (tagDefinition) {
+      const projectIds = tagDefinition.tags?.map((tag) => tag.target_id);
+      value = projects.filter((project) => projectIds?.includes(project.id));
+    }
+
+    if (include === 'active') {
+      value = value.filter((p) => !p.is_locked);
+    } else if (include === 'locked') {
+      value = value.filter((p) => p.is_locked)
+    }
+
+    return value;
+  }, [filter, include, isReader, projects, tagDefinition]);
+
+  const filterLabel = useMemo(() => {
+    let value;
+
+    if (filter === ProjectFilter.MINE) {
+      value = t['My Projects']
+    } else if (filter === ProjectFilter.SHARED) {
+      value = t['Shared with me'];
+    } else if (filter === ProjectFilter.PUBLIC) {
+      value = t['Public Projects'];
+    } else if (tagDefinition) {
+      value = tagDefinition.name;
+    }
+
+    return value;
+  }, [filter, t, tagDefinition]);
 
   const onProjectCreated = (project: ExtendedProjectData) =>
     setProjects([...projects, project]);
@@ -189,10 +210,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       invitations.filter((i) => i.id !== invitation.id)
     );
 
-  filteredProjects;
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
+
         <TopBar
           invitations={invitations}
           i18n={props.i18n}
@@ -203,80 +224,114 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onInvitationDeclined={onInvitationDeclined}
           isCreator={!isReader}
         />
-        <Header
-          i18n={props.i18n}
-          me={me}
-          policies={policies}
-          projects={
-            isReader
-              ? [sharedProjects, [], openJoinProjects]
-              : [myProjects, sharedProjects, openJoinProjects]
-          }
-          invitations={invitations}
-          filter={filter}
-          onChangeFilter={setFilter}
-          onChangeDisplay={setInclude}
-          onChangeSearch={setSearch}
-          onChangeSort={(fn: any, name: string): void => {
-            setSort(() => fn);
-            setSortType(name);
-          }}
-          onProjectCreated={onProjectCreated}
-          onInvitationAccepted={onInvitationAccepted}
-          onInvitationDeclined={onInvitationDeclined}
-          onError={onError}
-          onSetProjects={(projects) => setProjects(projects)}
-          display={display}
-          onSetDisplay={setDisplay}
-        />
-
-        {filteredProjects.length === 0 ? (
-          policies && (
-            <ProjectsEmpty
+        <div
+          className='dashboard-projects-container'
+        >
+          <Sidebar
+            filter={filter}
+            i18n={props.i18n}
+            onChangeFilter={setFilter}
+            policies={policies}
+            projects={
+              isReader
+                ? [sharedProjects, [], openJoinProjects]
+                : [myProjects, sharedProjects, openJoinProjects]
+            }
+          />
+          <div
+            className='dashboard-projects-content'
+          >
+            <Header
+              filter={filterLabel}
               i18n={props.i18n}
-              canCreateProjects={policies.get('projects').has('INSERT')}
-              invitations={invitations.length}
+              me={me}
+              policies={policies}
+              projects={[
+                ...myProjects,
+                ...sharedProjects
+              ]}
+              onChangeDisplay={setInclude}
+              onChangeSearch={setSearch}
+              onChangeSort={(fn: any, name: string): void => {
+                setSort(() => fn);
+                setSortType(name);
+              }}
+              onDeleteTagDefinition={() => setFilter(ProjectFilter.MINE)}
               onProjectCreated={onProjectCreated}
               onError={onError}
+              display={display}
+              onSetDisplay={setDisplay}
+              tagDefinition={tagDefinition}
             />
-          )
-        ) : display === 'cards' ? (
-          <ProjectsGrid
-            i18n={props.i18n}
-            me={me}
-            projects={filteredProjects}
-            search={search}
-            sort={sort}
-            onProjectDeleted={onProjectDeleted}
-            onLeaveProject={onLeaveProject}
-            onDetailsChanged={onDetailsChanged}
-            onError={onError}
-            orgPolicies={policies}
-          />
-        ) : (
-          <ProjectsList
-            i18n={props.i18n}
-            me={me}
-            projects={filteredProjects}
-            search={search}
-            sort={sort}
-            sortType={sortType}
-            onProjectDeleted={onProjectDeleted}
-            onLeaveProject={onLeaveProject}
-            onDetailsChanged={onDetailsChanged}
-            onError={onError}
-            orgPolicies={policies}
-          />
-        )}
 
-        <ProfileNagDialog
-          open={showProfileNag}
-          i18n={props.i18n}
-          onClose={() => setShowProfileNag(false)}
-        />
+            {filteredProjects.length === 0 ? (
+              policies && !tagDefinition ? (
+                <ProjectsEmpty
+                  i18n={props.i18n}
+                  canCreateProjects={policies.get('projects').has('INSERT')}
+                  invitations={invitations.length}
+                  onProjectCreated={onProjectCreated}
+                  onError={onError}
+                />
+              )
+              : (
+                <ProjectGroupEmpty i18n={props.i18n} />
+              )
+            ) : display === 'cards' ? (
+              <ProjectsGrid
+                i18n={props.i18n}
+                me={me}
+                projects={filteredProjects}
+                search={search}
+                sort={sort}
+                onProjectDeleted={onProjectDeleted}
+                onLeaveProject={onLeaveProject}
+                onDetailsChanged={onDetailsChanged}
+                onError={onError}
+                orgPolicies={policies}
+              />
+            ) : (
+              <ProjectsList
+                i18n={props.i18n}
+                me={me}
+                projects={filteredProjects}
+                search={search}
+                sort={sort}
+                sortType={sortType}
+                onProjectDeleted={onProjectDeleted}
+                onLeaveProject={onLeaveProject}
+                onDetailsChanged={onDetailsChanged}
+                onError={onError}
+                orgPolicies={policies}
+              />
+            )}
+
+            <ProfileNagDialog
+              open={showProfileNag}
+              i18n={props.i18n}
+              onClose={() => setShowProfileNag(false)}
+            />
+          </div>
+        </div>
       </div>
 
       <Toast content={error} onOpenChange={(open) => !open && setError(null)} />
+      <Toast content={toast} onOpenChange={(open) => !open && setToast(null)} />
     </ToastProvider>
   );
 };
+
+export const ProjectsHomeWrapper = (props) => (
+  <TagContextProvider
+    scope='user'
+    scopeId={props.me.id}
+    targetType='project'
+  >
+    <ProjectsHome
+      i18n={props.i18n}
+      me={props.me}
+      projects={props.projects}
+      invitations={props.invitations}
+    />
+  </TagContextProvider>
+);

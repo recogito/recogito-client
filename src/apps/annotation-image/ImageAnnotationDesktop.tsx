@@ -1,3 +1,4 @@
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { useAnnotator } from '@annotorious/react';
@@ -6,7 +7,12 @@ import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import { clearSelectionURLHash, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
+import {
+  clearSelectionURLHash,
+  DocumentNotes,
+  useAnnotationsViewUIState,
+  useLayerNames
+} from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -16,7 +22,7 @@ import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
 import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
-import type { DocumentLayer } from 'src/Types';
+import type { Document, DocumentLayer } from 'src/Types';
 import type {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
@@ -40,9 +46,10 @@ const DEFAULT_STYLE: DrawingStyleExpression<ImageAnnotation> = (
 });
 
 export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
+  const [document, setDocument] = useState(props.document);
 
   // @ts-ignore
-  const isLocked = props.document.project_is_locked;
+  const isLocked = document.project_is_locked;
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -50,13 +57,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const [showBranding, setShowBranding] = useState(true);
 
-  const policies = useLayerPolicies(props.document.layers[0].id);
+  const policies = useLayerPolicies(document.layers[0].id);
 
   const [connectionError, setConnectionError] = useState(false);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const tagVocabulary = useTagVocabulary(props.document.context.project_id);
+  const [toast, setToast] = useState<ToastContent | null>(null);
+
+  const tagVocabulary = useTagVocabulary(document.context.project_id);
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
@@ -65,15 +74,18 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     canvases,
     isPresentationManifest,
     manifestError,
+    metadata,
     currentImage,
     setCurrentImage
-  } = useIIIF(props.document);
+  } = useIIIF(document);
 
   const { activeUsers, onPageActivity } = useMultiPagePresence(present);
 
   const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
 
-  const layerNames = useLayerNames(props.document);
+  const layerNames = useLayerNames(document);
+
+  const { t } = props.i18n;
 
   const activeLayer = useMemo(() => {
     // Waiting for layers to load
@@ -170,7 +182,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   useEffect(() => {
     if (policies) {
-      const isDefault = props.document.context.is_project_default;
+      const isDefault = document.context.is_project_default;
 
       const isAdmin = policies?.get('layers').has('INSERT');
 
@@ -179,12 +191,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       if (isDefault && isAdmin) {
         getAllDocumentLayersInProject(
           supabase,
-          props.document.id,
-          props.document.context.project_id
+          document.id,
+          document.context.project_id
         ).then(({ data, error }) => {
           if (error) console.error(error);
 
-          const current = new Set(props.document.layers.map((l) => l.id));
+          const current = new Set(document.layers.map((l) => l.id));
 
           const toAdd: DocumentLayer[] = data
             .filter((l) => !current.has(l.id))
@@ -192,16 +204,16 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               id: l.id,
               is_active: false,
               document_id: l.document_id,
-              project_id: props.document.context.project_id
+              project_id: document.context.project_id
             }));
 
-          setDocumentLayers([...props.document.layers, ...toAdd]);
+          setDocumentLayers([...document.layers, ...toAdd]);
         });
       } else {
-        const distinct = deduplicateLayers(props.document.layers);
+        const distinct = deduplicateLayers(document.layers);
 
-        if (props.document.layers.length !== distinct.length)
-          console.warn('Layers contain duplicates', props.document.layers);
+        if (document.layers.length !== distinct.length)
+          console.warn('Layers contain duplicates', document.layers);
 
         setDocumentLayers(distinct);
       }
@@ -219,11 +231,11 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       if (anno.state.selection.isSelected(a)) return;
 
       const vw = Math.max(
-        document.documentElement.clientWidth || 0,
+        window.document.documentElement.clientWidth || 0,
         window.innerWidth || 0
       );
       const vh = Math.max(
-        document.documentElement.clientHeight || 0,
+        window.document.documentElement.clientHeight || 0,
         window.innerHeight || 0
       );
 
@@ -240,114 +252,140 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     setCurrentImage(source);
   }
 
+  const onError = (error: string) => setToast({
+    title: t['Something went wrong'],
+    description: error,
+    type: 'error',
+  });
+
+  const onUpdated = (doc: Document) => {
+    setDocument(((prevDocument) => ({
+      ...prevDocument,
+      name: doc.name,
+      meta_data: doc.meta_data
+    })))
+  };
+
   return (
-    <DocumentNotes
-      channelId={props.channelId}
-      layers={documentLayers}
-      present={present}
-      onError={() => setConnectionError(true)}>
+    <ToastProvider>
+      <DocumentNotes
+        channelId={props.channelId}
+        layers={documentLayers}
+        present={present}
+        onError={() => setConnectionError(true)}>
 
-      <div className="anno-desktop ia-desktop">
-        <TopBar
-          i18n={props.i18n}
-          invitations={[]}
-          me={props.me}
-          showNotifications={false}
-          onError={() => setConnectionError(true)} />
-
-        {loading && <LoadingOverlay />}
-
-        <div className="header">
-          <Toolbar
+        <div className="anno-desktop ia-desktop">
+          <TopBar
             i18n={props.i18n}
-            isLocked={isLocked}
-            document={props.document}
-            present={present}
-            privacy={privacy}
-            layers={documentLayers}
-            layerNames={layerNames}
-            leftDrawerOpen={leftPanelOpen}
-            policies={policies}
-            rightDrawerOpen={rightPanelOpen}
-            showConnectionError={connectionError}
-            tagVocabulary={tagVocabulary}
-            tool={tool}
-            onChangePrivacy={setPrivacy}
-            onChangeStyle={onChangeStyle}
-            onChangeTool={setTool}
-            onToggleBranding={() => setShowBranding(!showBranding)}
-            onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
-            onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
-            onZoom={onZoom}
-          />
-        </div>
+            invitations={[]}
+            me={props.me}
+            showNotifications={false}
+            onError={() => setConnectionError(true)} />
 
-        <main>
-          <LeftDrawer
-            activeUsers={activeUsers}
-            currentImage={currentImage}
-            i18n={props.i18n}
-            iiifCanvases={canvases}
-            layers={documentLayers}
-            layerNames={layerNames}
-            open={leftPanelOpen}
-            present={present}
-            onChangeImage={onGoToImage} />
+          {loading && <LoadingOverlay />}
 
-          <div className="ia-annotated-image-container">
-            {policies && currentImage && activeLayer && (
-              <AnnotatedImage
-                ref={viewer}
-                activeLayer={activeLayer}
-                authToken={authToken}
-                channelId={props.channelId}
-                i18n={props.i18n}
-                imageManifestURL={currentImage}
-                isLocked={isLocked}
-                isPresentationManifest={isPresentationManifest}
-                layers={documentLayers}
-                layerNames={layerNames}
-                policies={policies}
-                present={present}
-                privacy={privacy}
-                style={style}
-                tagVocabulary={tagVocabulary}
-                tool={tool}
-                usePopup={usePopup}
-                onChangeImage={setCurrentImage}
-                onChangePresent={setPresent}
-                onConnectionError={() => setConnectionError(true)}
-                onPageActivity={canvases.length > 1 ? onPageActivity : undefined}
-                onSaveError={() => setConnectionError(true)}
-                onLoad={() => setLoading(false)} />
-            )}
+          <div className="header">
+            <Toolbar
+              i18n={props.i18n}
+              isLocked={isLocked}
+              document={document}
+              present={present}
+              privacy={privacy}
+              layers={documentLayers}
+              layerNames={layerNames}
+              leftDrawerOpen={leftPanelOpen}
+              policies={policies}
+              rightDrawerOpen={rightPanelOpen}
+              showConnectionError={connectionError}
+              tagVocabulary={tagVocabulary}
+              tool={tool}
+              onChangePrivacy={setPrivacy}
+              onChangeStyle={onChangeStyle}
+              onChangeTool={setTool}
+              onToggleBranding={() => setShowBranding(!showBranding)}
+              onToggleLeftDrawer={() => setLeftPanelOpen(open => !open)}
+              onToggleRightDrawer={() => setRightPanelOpen(open => !open)}
+              onZoom={onZoom}
+            />
           </div>
 
-          <RightDrawer
-            i18n={props.i18n}
-            isLocked={isLocked}
-            layers={documentLayers}
-            layerNames={layerNames}
-            open={rightPanelOpen}
-            policies={policies}
-            present={present}
-            style={style}
-            tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation}
-            onTabChanged={onRightTabChanged}
-            tab={rightPanelTab}
-          />
-        </main>
-      </div>
+          <main>
+            <LeftDrawer
+              activeUsers={activeUsers}
+              currentImage={currentImage}
+              document={document}
+              i18n={props.i18n}
+              iiifCanvases={canvases}
+              layers={documentLayers}
+              layerNames={layerNames}
+              me={props.me}
+              metadata={metadata}
+              open={leftPanelOpen}
+              present={present}
+              onChangeImage={onGoToImage}
+              onError={onError}
+              onUpdated={onUpdated} />
 
-      {manifestError && (
-        <ManifestErrorDialog
-          document={props.document}
-          i18n={props.i18n}
-          message={manifestError}
-        />
-      )}
-    </DocumentNotes>
+            <div className="ia-annotated-image-container">
+              {policies && currentImage && activeLayer && (
+                <AnnotatedImage
+                  ref={viewer}
+                  activeLayer={activeLayer}
+                  authToken={authToken}
+                  channelId={props.channelId}
+                  i18n={props.i18n}
+                  imageManifestURL={currentImage}
+                  isLocked={isLocked}
+                  isPresentationManifest={isPresentationManifest}
+                  layers={documentLayers}
+                  layerNames={layerNames}
+                  policies={policies}
+                  present={present}
+                  privacy={privacy}
+                  style={style}
+                  tagVocabulary={tagVocabulary}
+                  tool={tool}
+                  usePopup={usePopup}
+                  onChangeImage={setCurrentImage}
+                  onChangePresent={setPresent}
+                  onConnectionError={() => setConnectionError(true)}
+                  onPageActivity={canvases.length > 1 ? onPageActivity : undefined}
+                  onSaveError={() => setConnectionError(true)}
+                  onLoad={() => setLoading(false)} />
+              )}
+            </div>
+
+            <RightDrawer
+              i18n={props.i18n}
+              isLocked={isLocked}
+              layers={documentLayers}
+              layerNames={layerNames}
+              open={rightPanelOpen}
+              policies={policies}
+              present={present}
+              style={style}
+              tagVocabulary={tagVocabulary}
+              beforeSelectAnnotation={beforeSelectAnnotation}
+              onTabChanged={onRightTabChanged}
+              tab={rightPanelTab}
+            />
+          </main>
+        </div>
+
+        {manifestError && (
+          <ManifestErrorDialog
+            document={document}
+            i18n={props.i18n}
+            message={manifestError}
+          />
+        )}
+      </DocumentNotes>
+
+      <Toast
+        content={toast}
+        onOpenChange={(open) => !open && setToast(null)}
+      />
+    </ToastProvider>
   )
 
 }

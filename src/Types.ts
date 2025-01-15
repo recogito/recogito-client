@@ -62,7 +62,7 @@ export interface Project {
 export enum DocumentViewRight {
   closed = 'closed',
   annotations = 'annotations',
-  notes = 'notes'
+  notes = 'notes',
 }
 
 export interface ExtendedProjectData {
@@ -155,9 +155,7 @@ export interface Document {
 
     url: string;
 
-    meta?: {
-      author?: string;
-    };
+    meta?: DocumentMetadata[]
   };
 
   collection_metadata?: {
@@ -165,6 +163,11 @@ export interface Document {
 
     document_id: string;
   };
+}
+
+export interface DocumentMetadata {
+  label: string;
+  value: string;
 }
 
 export interface DocumentWithContext extends Document {
@@ -241,6 +244,8 @@ export interface Context {
   is_project_default?: boolean;
 
   created_at: string;
+
+  assign_all_members: boolean;
 
   members: {
     id: string;
@@ -333,6 +338,8 @@ export interface TagDefinition {
   scope: 'organization' | 'project' | 'system';
 
   scope_id?: string;
+
+  tags?: Tag[];
 }
 
 export interface Tag {
@@ -345,14 +352,14 @@ export interface Tag {
   target_id: string;
 
   tag_definition?: TagDefinition;
+
+  tag_definition_id: string;
 }
 
 export interface VocabularyTerm {
-
   label: string;
 
   color?: string;
-
 }
 
 export interface InstalledPlugin {
@@ -461,4 +468,13 @@ export type ApiAcceptOrgInvite = {
   email: string;
   password: string;
   token: string;
+};
+
+export type IIIFMetadata = {
+  label: {
+    [key: string]: string[]
+  },
+  value: {
+    [key: string]: string[]
+  }
 };

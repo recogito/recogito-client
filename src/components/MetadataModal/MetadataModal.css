@@ -1,0 +1,36 @@
+.dialog-content.metadata-modal {
+  max-width: 600px;
+}
+
+.dialog-content.metadata-modal > .dialog-title {
+  margin: 1em 0;
+}
+
+.dialog-content.metadata-modal > .actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1em 0;
+}
+
+.dialog-content.metadata-modal .meta > button.add-button {
+  margin: 1em 0;
+}
+
+.dialog-content.metadata-modal .meta > table > tbody > tr > td {
+  padding: 0.5em 1em;
+  max-width: 200px;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.dialog-content.metadata-modal .meta > table > tbody > tr > td > .metadata-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dialog-content.metadata-modal .meta > table > tbody > tr > td.empty {
+  align-items: center;
+  border-left: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: center;
+}

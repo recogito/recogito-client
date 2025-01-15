@@ -32,10 +32,40 @@ interface Change {
 
 }
 
-// Shorthands
+// Helpers
 const normalizeId = (id?: string | null) => id?.startsWith('#') ? id.substring(1) : id;
 
 const parseDate = (date?: string | null) => date ? new Date(date) : undefined;
+
+const parseTaxonomies = (elements: NodeListOf<Element>) => {
+  const lookupTable: Record<string, string> = {};
+
+  // We don't export nested taxonomies yet, but may in the future!
+  const walkCategories = (categoryEl: Element) => {
+    const childCategories = Array.from(categoryEl.children)
+      .filter(child => child.tagName.toLowerCase() === 'category');
+
+    if (childCategories.length === 0) {
+      // Leaf node -> this is a tag
+      const id = categoryEl.getAttribute('xml:id');
+      const label = categoryEl.querySelector('catDesc');
+        
+      if (id && label)
+            lookupTable[id] = label.textContent?.trim() || id;
+      
+      return;
+    }
+
+    childCategories.forEach(walkCategories);
+  }
+
+  // Start traversal from the root taxonomy element
+  Array.from(elements).forEach(element => {
+    walkCategories(element);
+  });
+
+  return lookupTable;
+}
 
 export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
@@ -49,6 +79,11 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
     const doc = parser.parseFromString(xml, 'text/xml');
 
     const standoffElements = doc.querySelectorAll('TEI > standOff');
+
+    const taxonomyLookup = parseTaxonomies(doc.querySelectorAll('taxonomy'));
+
+    // Helper
+    const resolveTag = (id: string) => taxonomyLookup[id.startsWith('#') ? id.substring(1) : id] || id;
 
     const annotationLists = Array.from(standoffElements).reduce<AnnotationList[]>((lists, standoffEl, idx) => {
       const layerId =  standoffElements.length > 1 ? `tei_standoff_${idx + 1}` : 'tei_standoff';
@@ -79,9 +114,10 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
           responsible: users.find(u => u.id === normalizeId(noteEl.getAttribute('resp')))
         }) as Note);
 
-        const tags: string[] = Array.from(el.querySelectorAll('rs[ana]'))
-          .reduce<string[]>((all, el) => [...all, ...el.getAttribute('ana')!.split(' ')],[]);
-
+        const tags: string[] = el.hasAttribute('ana') 
+          ? el.getAttribute('ana')!.split(' ').map(resolveTag)
+          : [];
+          
         const created = changes.find(c => c.status === 'created');
         const updated = changes.find(c => c.status === 'modified');
 

@@ -62,32 +62,11 @@ const getCreator = (annotation: SupabaseAnnotation) =>
 
 /**
  * Per convention, we only support tags created along with the first comment.
- * This means:
- * - only the creator of the annotation can be the creator of tags,
- * - but they could be anywhere in the ordered list of bodies, because the
- *   creator might have added them later, while editing the initial comment.
- * 
- * Apply some basic sanity checking here! 
+ * But they could be anywhere in the ordered list of bodies, because the
+ * creator (or an admin user) might have added them later, when editing the initial comment.
  */
-const getTags = (annotation: SupabaseAnnotation) => {
-  const allTags = annotation
-    .bodies.filter(b => b.purpose === 'tagging');
-  
-  const creator = getCreator(annotation);
-  if (creator) {
-    const byCreator = allTags
-      .filter(b => b.creator?.id === creator?.id);
-
-    if (allTags.length !== byCreator.length)
-      console.warn('Integrity warning: annotation has tags not created by annotation creator', annotation);
-
-    return byCreator;
-  } else {
-    // Edge case: embedded Annotations (TEI!) could be without
-    // creator. In this case, just add all tags.
-    return allTags;
-  }
-}
+const getTags = (annotation: SupabaseAnnotation) =>
+  annotation.bodies.filter(b => b.purpose === 'tagging');
 
 export const AnnotationCard = (props: AnnotationCardProps) => {
 

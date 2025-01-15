@@ -69,3 +69,17 @@ export const removeUsersFromContext = (
         return data as boolean;
       }
     });
+
+export const setAssignAllMembers = (
+  supabase: SupabaseClient,
+  contextId: string,
+  assignAll: boolean
+) =>
+  supabase
+    .rpc('set_context_to_all_members', {
+      _context_id: contextId,
+      _is_all_members: assignAll,
+    })
+    .then(({ data }) => {
+      return data;
+    });

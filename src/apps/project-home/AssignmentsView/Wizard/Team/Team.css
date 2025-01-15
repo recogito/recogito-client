@@ -25,3 +25,16 @@
 .tab-team td .anonymous-member button:hover svg {
   color: var(--font-dark);
 }
+
+.tab-team-mode {
+  padding-bottom: 20px;
+}
+
+.tab-team-mode-header {
+  margin-bottom: 10px;
+}
+
+.tab-team-theme {
+  height: fit-content !important;
+  min-height: auto !important;
+}

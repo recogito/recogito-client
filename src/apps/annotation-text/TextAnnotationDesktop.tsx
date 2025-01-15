@@ -1,3 +1,4 @@
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { PresentUser, AnnotationState, Color } from '@annotorious/react';
@@ -6,10 +7,16 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
 import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
-import { type DocumentNote, DocumentNotes, useAnnotationsViewUIState, useLayerNames } from '@components/AnnotationDesktop';
+import {
+  type DocumentNote,
+  DocumentNotes,
+  useAnnotationsViewUIState,
+  useLayerNames
+} from '@components/AnnotationDesktop';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
+import { type Document, type DocumentWithContext } from 'src/Types';
 import type { TextAnnotationProps } from './TextAnnotation';
 import { Toolbar } from './Toolbar';
 import { AnnotatedText } from './AnnotatedText';
@@ -28,11 +35,12 @@ import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
+  const [document, setDocument] = useState<DocumentWithContext>(props.document);
 
   // @ts-ignore
-  const isLocked = props.document.project_is_locked;
+  const isLocked = document.project_is_locked;
 
-  const contentType = props.document.content_type;
+  const contentType = document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
 
@@ -40,13 +48,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [showBranding, setShowBranding] = useState(true);
 
-  const policies = useLayerPolicies(props.document.layers[0].id);
+  const policies = useLayerPolicies(document.layers[0].id);
 
   const [connectionError, setConnectionError] = useState(false);
 
   const [present, setPresent] = useState<PresentUser[]>([]);
 
-  const tagVocabulary = useTagVocabulary(props.document.context.project_id);
+  const tagVocabulary = useTagVocabulary(document.context.project_id);
 
   const [documentLayers, setDocumentLayers] = useState<DocumentLayer[] | undefined>();
 
@@ -54,11 +62,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const [embeddedNotes, setEmbeddedNotes] = useState<DocumentNote[] | undefined>();
 
+  const [toast, setToast] = useState<ToastContent | undefined>();
+
   const layers = useMemo(() => (
     [...(documentLayers || []), ...(embeddedLayers || [])]
   ), [documentLayers, embeddedLayers]);
 
-  const layerNames = useLayerNames(props.document, embeddedLayers);
+  const layerNames = useLayerNames(document, embeddedLayers);
 
   const activeLayer = useMemo(() => {
     // Waiting for layers to load
@@ -91,6 +101,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     setRightPanelTab,
     usePopup
   } = useAnnotationsViewUIState();
+
+  const { t } = props.i18n;
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -139,7 +151,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   useEffect(() => {
     if (policies) {
-      const isDefault = props.document.context.is_project_default;
+      const isDefault = document.context.is_project_default;
 
       const isAdmin = policies?.get('layers').has('INSERT');
 
@@ -148,12 +160,12 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       if (isDefault && isAdmin) {
         getAllDocumentLayersInProject(
           supabase,
-          props.document.id,
-          props.document.context.project_id
+          document.id,
+          document.context.project_id
         ).then(({ data, error }) => {
           if (error) console.error(error);
 
-          const current = new Set(props.document.layers.map((l) => l.id));
+          const current = new Set(document.layers.map((l) => l.id));
 
           const toAdd: DocumentLayer[] = data
             .filter((l) => !current.has(l.id))
@@ -161,16 +173,16 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               id: l.id,
               is_active: false,
               document_id: l.document_id,
-              project_id: props.document.context.project_id
+              project_id: document.context.project_id
             }));
 
-          setDocumentLayers([...props.document.layers, ...toAdd]);
+          setDocumentLayers([...document.layers, ...toAdd]);
         });
       } else {
-        const distinct = deduplicateLayers(props.document.layers);
+        const distinct = deduplicateLayers(document.layers);
 
-        if (props.document.layers.length !== distinct.length)
-          console.warn('Layers contain duplicates', props.document.layers);
+        if (document.layers.length !== distinct.length)
+          console.warn('Layers contain duplicates', document.layers);
 
         setDocumentLayers(distinct);
       }
@@ -188,7 +200,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   };
 
   const sorting =
-    props.document.content_type === 'application/pdf'
+    document.content_type === 'application/pdf'
       ? (a: PDFAnnotation, b: PDFAnnotation) => {
           const pages =
             a.target.selector[0]?.pageNumber - b.target.selector[0]?.pageNumber;
@@ -216,94 +228,116 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     setEmbeddedNotes(notes);
   }, []);
 
+  const onError = (error: string) => setToast({
+    title: t['Something went wrong'],
+    description: error,
+    type: 'error',
+  });
+
+  const onUpdated = (doc: Document) => setDocument(((prevDocument) => ({
+    ...prevDocument,
+    name: doc.name,
+    meta_data: doc.meta_data
+  })));
+
   return (
-    <DocumentNotes
-      channelId={props.channelId}
-      embeddedNotes={embeddedNotes}
-      layers={layers}
-      present={present}
-      onError={() => setConnectionError(true)}>
-      <div className="anno-desktop ta-desktop">
-        {loading && <LoadingOverlay />}
+    <ToastProvider>
+      <DocumentNotes
+        channelId={props.channelId}
+        embeddedNotes={embeddedNotes}
+        layers={layers}
+        present={present}
+        onError={() => setConnectionError(true)}>
+        <div className="anno-desktop ta-desktop">
+          {loading && <LoadingOverlay />}
 
-        <div className="header">
-          <TopBar
-            i18n={props.i18n}
-            invitations={[]}
-            me={props.me}
-            showNotifications={false}
-            onError={() => {}} />
+          <div className="header">
+            <TopBar
+              i18n={props.i18n}
+              invitations={[]}
+              me={props.me}
+              showNotifications={false}
+              onError={() => {}} />
 
-          <Toolbar
-            i18n={props.i18n}
-            isLocked={isLocked}
-            document={props.document}
-            present={present}
-            privacy={privacy}
-            layers={documentLayers}
-            layerNames={layerNames}
-            leftDrawerOpen={leftPanelOpen}
-            policies={policies}
-            rightDrawerOpen={rightPanelOpen}
-            showConnectionError={connectionError}
-            tagVocabulary={tagVocabulary}
-            onChangePrivacy={setPrivacy}
-            onChangeStyle={onChangeStyle}
-            onToggleBranding={() => setShowBranding(!showBranding)}
-            onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
-            onToggleRightDrawer={() => setRightPanelOpen((open) => !open)} />
-        </div>
-
-        <main className={className}>
-          <LeftDrawer
-            i18n={props.i18n}
-            layers={layers}
-            layerNames={layerNames}
-            open={leftPanelOpen}
-            present={present}
-          />
-
-          {policies && (
-            <AnnotatedText
-              activeLayer={activeLayer}
-              channelId={props.channelId}
-              document={props.document}
+            <Toolbar
               i18n={props.i18n}
               isLocked={isLocked}
-              layers={documentLayers}
-              layerNames={layerNames}
-              policies={policies}
+              document={document}
               present={present}
               privacy={privacy}
+              layers={documentLayers}
+              layerNames={layerNames}
+              leftDrawerOpen={leftPanelOpen}
+              policies={policies}
+              rightDrawerOpen={rightPanelOpen}
+              showConnectionError={connectionError}
+              tagVocabulary={tagVocabulary}
+              onChangePrivacy={setPrivacy}
+              onChangeStyle={onChangeStyle}
+              onToggleBranding={() => setShowBranding(!showBranding)}
+              onToggleLeftDrawer={() => setLeftPanelOpen((open) => !open)}
+              onToggleRightDrawer={() => setRightPanelOpen((open) => !open)} />
+          </div>
+
+          <main className={className}>
+            <LeftDrawer
+              document={document}
+              i18n={props.i18n}
+              layers={layers}
+              layerNames={layerNames}
+              me={props.me}
+              onError={onError}
+              onUpdated={onUpdated}
+              open={leftPanelOpen}
+              present={present}
+            />
+
+            {policies && (
+              <AnnotatedText
+                activeLayer={activeLayer}
+                channelId={props.channelId}
+                document={document}
+                i18n={props.i18n}
+                isLocked={isLocked}
+                layers={documentLayers}
+                layerNames={layerNames}
+                policies={policies}
+                present={present}
+                privacy={privacy}
+                style={style}
+                tagVocabulary={tagVocabulary}
+                usePopup={usePopup}
+                onChangePresent={setPresent}
+                onConnectionError={() => setConnectionError(true)}
+                onSaveError={() => setConnectionError(true)}
+                onLoad={() => setLoading(false)}
+                onLoadEmbeddedLayers={onLoadEmbeddedLayers}
+                styleSheet={props.styleSheet}
+              />
+            )}
+
+            <RightDrawer
+              i18n={props.i18n}
+              isProjectLocked={isLocked}
+              layers={layers}
+              layerNames={layerNames}
+              open={rightPanelOpen}
+              policies={policies}
+              present={present}
+              sorting={sorting}
               style={style}
               tagVocabulary={tagVocabulary}
-              usePopup={usePopup}
-              onChangePresent={setPresent}
-              onConnectionError={() => setConnectionError(true)}
-              onSaveError={() => setConnectionError(true)}
-              onLoad={() => setLoading(false)}
-              onLoadEmbeddedLayers={onLoadEmbeddedLayers}
-              styleSheet={props.styleSheet}
-            />
-          )}
+              beforeSelectAnnotation={beforeSelectAnnotation}
+              onTabChanged={onRightTabChanged}
+              tab={rightPanelTab} />
+          </main>
+        </div>
+      </DocumentNotes>
 
-          <RightDrawer
-            i18n={props.i18n}
-            isProjectLocked={isLocked}
-            layers={layers}
-            layerNames={layerNames}
-            open={rightPanelOpen}
-            policies={policies}
-            present={present}
-            sorting={sorting}
-            style={style}
-            tagVocabulary={tagVocabulary}
-            beforeSelectAnnotation={beforeSelectAnnotation}
-            onTabChanged={onRightTabChanged}
-            tab={rightPanelTab} />
-        </main>
-      </div>
-    </DocumentNotes>
-  )
-
-}
+      <Toast
+        content={toast}
+        onOpenChange={(open) => !open && setToast(undefined)}
+      />
+    </ToastProvider>
+  );
+};

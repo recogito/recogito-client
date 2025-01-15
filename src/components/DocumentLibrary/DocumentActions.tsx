@@ -1,7 +1,4 @@
 import { useState } from 'react';
-import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { ConfirmDeleteDialog } from './ConfirmDeleteDialog';
-import type { Translations } from 'src/Types';
 import {
   DotsThreeVertical,
   PencilSimple,
@@ -9,13 +6,16 @@ import {
   Eye,
   EyeSlash,
 } from '@phosphor-icons/react';
+import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { ConfirmDeleteDialog } from './ConfirmDeleteDialog';
+import type { Translations } from 'src/Types';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface DocumentActionsProps {
-  i18n: Translations;
+  allowEditMetadata?: boolean;
 
-  isAdmin?: boolean;
+  i18n: Translations;
 
   showPrivate?: boolean;
 
@@ -23,9 +23,7 @@ interface DocumentActionsProps {
 
   onDelete?(): void;
 
-  onEditMetadata?(): void;
-
-  onViewMetadata?(): void;
+  onOpenMetadata(): void;
 
   onTogglePrivate?(): void;
 }
@@ -59,16 +57,18 @@ export const DocumentActions = (props: DocumentActionsProps) => {
             sideOffset={5}
             align='start'
           >
-            {props.isAdmin ? (
+            {props.allowEditMetadata ? (
               <>
-                <Item className='dropdown-item' onSelect={props.onEditMetadata}>
+                <Item className='dropdown-item' onSelect={props.onOpenMetadata}>
                   <PencilSimple size={16} />{' '}
                   <span>{t['Edit document metadata']}</span>
                 </Item>
                 {props.showPrivate && (
                   <Item
                     className='dropdown-item'
-                    onSelect={props.onTogglePrivate}
+                    onSelect={
+                      props.onTogglePrivate ? props.onTogglePrivate : () => {}
+                    }
                   >
                     {props.isPrivate ? (
                       <Eye size={16} />
@@ -89,9 +89,9 @@ export const DocumentActions = (props: DocumentActionsProps) => {
               </>
             ) : (
               <>
-                <Item className='dropdown-item' onSelect={props.onViewMetadata}>
+                <Item className='dropdown-item' onSelect={props.onOpenMetadata}>
                   <PencilSimple size={16} />{' '}
-                  <span>{t['View Document Metadata']}</span>
+                  <span>{t['View document metadata']}</span>
                 </Item>
                 {props.showPrivate && (
                   <Item
