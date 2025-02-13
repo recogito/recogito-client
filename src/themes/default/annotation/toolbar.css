@@ -23,6 +23,11 @@
   justify-content: flex-end;
 }
 
+.anno-toolbar-presence {
+  max-width: 12vw;
+  overflow: hidden;
+}
+
 .anno-toolbar button {
   border-radius: 50%;
   color: var(--font-dark);
@@ -42,7 +47,9 @@
   color: var(--font-dark);
 }
 
-.anno-toolbar :is(button, a.button, .with-notification) + :is(button, a.button, .with-notification) {
+.anno-toolbar
+  :is(button, a.button, .with-notification)
+  + :is(button, a.button, .with-notification) {
   margin-left: 2px;
 }
 
