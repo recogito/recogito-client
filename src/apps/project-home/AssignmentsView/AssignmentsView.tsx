@@ -168,15 +168,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
         currentAssignment && (
           <div className='project-assignments-presentation-pane'>
             <AssignmentsList
-              assignments={props.assignments.sort((a, b) => {
-                if (a.sort < b.sort) {
-                  return -1;
-                } else if (a.sort > b.sort) {
-                  return 1;
-                }
-
-                return 0;
-              })}
+              assignments={props.assignments}
               i18n={props.i18n}
               projectId={project.id}
               currentAssignment={currentAssignment.id as string}
