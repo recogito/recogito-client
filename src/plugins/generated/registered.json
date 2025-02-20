@@ -1,0 +1,8 @@
+[
+  {
+    "name": "reconciliation-autosuggest",
+    "module_name": "@recogito/plugin-reconciliation-service",
+    "component_name": "ReconciliationAutosuggest",
+    "extension_point": "*"
+  }
+]
