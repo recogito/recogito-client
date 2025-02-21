@@ -231,10 +231,11 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        {extensions.map(extension => (
+        {extensions.map(({ extension, config }) => (
           <ExtensionMount
             key={extension.name}
             extension={extension}
+            pluginConfig={config}
             document={props.document}
             extensionPoint="annotation.image.toolbar" />
         ))}

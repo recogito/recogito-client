@@ -160,11 +160,11 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         </div>
       </QuillEditorRoot>
 
-      {extensions.map(extension => (
+      {extensions.map(({ extension, config }) => (
         <ExtensionMount
           key={extension.name}
           extension={extension}
-          extensionPoint="annotation.*.annotation-editor"
+          pluginConfig={config}
           me={props.me}
           annotation={props.annotation} 
           onUpdateAnnotation={props.onUpdateAnnotation} />

@@ -54,10 +54,12 @@ export const usePlugins = (pattern: string) => {
 
 export const useExtensions = (pattern: string) => {
   const installed = usePlugins(pattern);
-  return installed.reduce<Extension[]>((all, installed) => {
+  return installed.reduce<{ extension: Extension, config: PluginInstallationConfig }[]>((all, config) => {
     return [
       ...all, 
-      ...installed.plugin.extensions.filter(e => matchesExtensionPoint(pattern, e.extension_point))
+      ...config.plugin.extensions
+        .filter(e => matchesExtensionPoint(pattern, e.extension_point))
+        .map(extension => ({ extension, config }))
     ];
   }, []);
 }

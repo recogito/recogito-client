@@ -191,10 +191,11 @@ export const Toolbar = (props: ToolbarProps) => {
           <div className="anno-toolbar-divider" />
         )}
 
-        {extensions.map(extension => (
+        {extensions.map(({ extension, config }) => (
           <ExtensionMount
             key={extension.name}
             extension={extension} 
+            pluginConfig={config}
             document={props.document}
             extensionPoint="annotation.text.toolbar" />
         ))}

@@ -24,7 +24,7 @@ export const TagEditor = (props: TagEditorProps) => {
 
   const [value, setValue] = useState<VocabularyTerm | undefined>();
 
-  const extension = useExtensions('annotation:*:tag-autosuggest')[0];
+  const extensionConfig = useExtensions('annotation:*:tag-autosuggest')[0];
 
   const onSubmit = (value: VocabularyTerm) => {
     props.onCreateTag(value);
@@ -47,9 +47,10 @@ export const TagEditor = (props: TagEditorProps) => {
 
   return editing ? (
     <div className="tag-editor">
-      {Boolean(extension) ? (
+      {Boolean(extensionConfig) ? (
         <ExtensionMount 
-          extension={extension}
+          extension={extensionConfig.extension}
+          pluginConfig={extensionConfig.config}
           autoFocus 
           autoSize
           value={value}

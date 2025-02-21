@@ -312,10 +312,11 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         </div>
       )}
 
-      {props.index === 0 ? extensions.map(extension => (
+      {props.index === 0 ? extensions.map(({ extension, config }) => (
         <ExtensionMount
           key={extension.name}
           extension={extension}
+          pluginConfig={config}
           annotation={props.annotation} 
           extensionPoint="annotation.*.annotation-editor"
           isEditable={editable}
