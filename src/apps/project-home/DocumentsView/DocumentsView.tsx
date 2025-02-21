@@ -384,6 +384,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           UploadActions={
             <UploadActions
               i18n={props.i18n}
+              me={props.user}
               onUpload={open}
               onImport={onImportRemote}
             />

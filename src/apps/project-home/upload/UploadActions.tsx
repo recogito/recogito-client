@@ -2,26 +2,28 @@ import { type ReactNode, useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { File, LinkSimple, Plus } from '@phosphor-icons/react';
 import { IIIFDialog, type IIIFManifest } from './dialogs';
-import type { Protocol, Translations } from 'src/Types';
+import type { MyProfile, Protocol, Translations } from 'src/Types';
 
 import './UploadActions.css';
+import { EULAModal } from '@components/EULAModal/EULAModal';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface UploadActionsProps {
+  me: MyProfile;
 
   i18n: Translations;
 
   onUpload(): void;
 
   onImport(format: Protocol, url: string, label?: string): void;
-
 }
 
 export const UploadActions = (props: UploadActionsProps) => {
   const { t } = props.i18n;
 
   const [dialog, setDialog] = useState<ReactNode | undefined>();
+  const [eulaOpen, setEulaOpen] = useState(false);
 
   const onImportIIIF = () => {
     const onSubmit = (manifest: IIIFManifest) => {
@@ -36,6 +38,19 @@ export const UploadActions = (props: UploadActionsProps) => {
         onSubmit={onSubmit}
       />
     );
+  };
+
+  const handleUpload = () => {
+    if (!props.me.accepted_eula && import.meta.env.PUBLIC_EULA_URL) {
+      setEulaOpen(true);
+    } else {
+      props.onUpload();
+    }
+  };
+
+  const handleConfirmUpload = () => {
+    setEulaOpen(false);
+    props.onUpload();
   };
 
   return (
@@ -53,7 +68,7 @@ export const UploadActions = (props: UploadActionsProps) => {
             sideOffset={5}
             align='start'
           >
-            <Item className='dropdown-item' onSelect={props.onUpload}>
+            <Item className='dropdown-item' onSelect={handleUpload}>
               <File size={16} />
               <div>
                 <span>{t['File upload']}</span>
@@ -73,6 +88,12 @@ export const UploadActions = (props: UploadActionsProps) => {
       </Root>
 
       {dialog}
+      <EULAModal
+        open={eulaOpen}
+        onCancel={() => setEulaOpen(false)}
+        onConfirm={handleConfirmUpload}
+        i18n={props.i18n}
+      />
     </>
   );
 };

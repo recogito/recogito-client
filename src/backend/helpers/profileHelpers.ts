@@ -12,3 +12,18 @@ export const getProfilesExtended = (
       return { error, data: data };
     }
   });
+
+export const setProfileEULAAccepted = (
+  supabase: SupabaseClient,
+  userId: string
+): Promise<void> =>
+  new Promise((resolve, reject) =>
+    supabase
+      .from('profiles')
+      .update({ accepted_eula: true })
+      .eq('id', userId)
+      .then(({ error }) => {
+        if (error) reject(error);
+        else resolve();
+      })
+  );
