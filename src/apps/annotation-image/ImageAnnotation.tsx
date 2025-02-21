@@ -28,7 +28,7 @@ export const ImageAnnotation = (props: ImageAnnotationProps) => {
       fallbackRender={props => (
         <FatalError {...props} i18n={i18n} />
       )}>
-      <PluginProvider plugins={props.plugins}>
+      <PluginProvider installed={props.plugins}>
         <AuthorColorProvider>
           <FilterState>
             <ColorState>

@@ -1,11 +1,12 @@
 import { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
+import type { Extension } from '@recogito/studio-sdk';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
 import { matchesExtensionPoint } from './utils';
 
 interface PluginProviderContextValue {
 
-  plugins: PluginInstallationConfig[];
+  installed: PluginInstallationConfig[];
 
   pluginStates: { [plugin: string]: any };
 
@@ -20,7 +21,7 @@ const PluginProviderContext = createContext<PluginProviderContextValue>(undefine
 
 interface PluginProviderProps {
 
-  plugins: PluginInstallationConfig[];
+  installed: PluginInstallationConfig[];
 
   children: ReactNode;
 
@@ -31,13 +32,13 @@ interface PluginProviderProps {
  */
 export const PluginProvider = (props: PluginProviderProps) => {
 
-  const { plugins } = props;
+  const { installed } = props;
 
   // Each plugin gets a global state for general use, managed by the PluginProvider
   const [pluginStates, setPluginStates] = useState<{ [plugin: string]: any }>({});
 
   return (
-    <PluginProviderContext.Provider value={{ plugins, pluginStates, setPluginStates }}>
+    <PluginProviderContext.Provider value={{ installed, pluginStates, setPluginStates }}>
       {props.children}
     </PluginProviderContext.Provider>
   )
@@ -45,9 +46,20 @@ export const PluginProvider = (props: PluginProviderProps) => {
 }
 
 export const usePlugins = (pattern: string) => {
-  const { plugins } = useContext(PluginProviderContext);
-  return plugins.filter(plugin => 
-      Object.keys(plugin.meta.extension_points).find(e => matchesExtensionPoint(pattern, e)));
+  const { installed } = useContext(PluginProviderContext);
+  return installed.filter(installed => 
+      installed.plugin.extensions.map(e => 
+        e.extension_point).some(e => matchesExtensionPoint(pattern, e)));
+}
+
+export const useExtensions = (pattern: string) => {
+  const installed = usePlugins(pattern);
+  return installed.reduce<Extension[]>((all, installed) => {
+    return [
+      ...all, 
+      ...installed.plugin.extensions.filter(e => matchesExtensionPoint(pattern, e.extension_point))
+    ];
+  }, []);
 }
 
 export const useSharedPluginState = <T extends any = any>(pluginId: string) => {

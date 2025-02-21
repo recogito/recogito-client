@@ -1,4 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { v4 as uuidv4 } from 'uuid';
 import type { Response } from '@backend/Types';
 import type { InstalledPlugin } from 'src/Types';
 
@@ -15,15 +16,14 @@ export const getInstalledPlugins = (
 export const insertInstalledPlugin = (
   supabase: SupabaseClient,
   project_id: string,
-  plugin_id: string,
   plugin_name: string
 ): Response<InstalledPlugin> =>
   supabase  
     .from('installed_plugins')
     .insert({
       project_id,
-      plugin_id,
-      plugin_name
+      plugin_name,
+      plugin_id: uuidv4() // Just a hack...
     })
     .select()
     .single()

@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
+import { CheckCircle } from '@phosphor-icons/react';
+import type { Plugin } from '@recogito/studio-sdk';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteInstalledPlugin, insertInstalledPlugin } from '@backend/helpers';
 import { Button } from '@components/Button';
-import type { PluginInstallationConfig, PluginMetadata } from '@components/Plugins';
-import { CheckCircle } from '@phosphor-icons/react';
+import type { PluginInstallationConfig } from '@components/Plugins';
 import type { Project } from 'src/Types';
 
 interface PluginGalleryItemProps {
 
   project: Project
 
-  plugin: PluginMetadata;
+  plugin: Plugin;
 
   installed?: PluginInstallationConfig;
 
@@ -31,8 +32,8 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    import(`../../../../plugins/${plugin.directory}/thumbnail.jpg`)
-      .then(data => setImage(data.default));
+    // import(`../../../../plugins/${plugin.directory}/thumbnail.jpg`)
+    //  .then(data => setImage(data.default));
   }, []);
 
   const onInstall = () => {
@@ -41,12 +42,11 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
     insertInstalledPlugin(
       supabase, 
       props.project.id,
-      plugin.id,
       plugin.name
     ).then(({ error, data }) => {
       setBusy(false);
       if (data)
-        props.onInstalled({ meta: props.plugin, settings: data });
+        props.onInstalled({ plugin: props.plugin, settings: data });
       else 
         props.onError(error);
     });
@@ -58,7 +58,7 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
     deleteInstalledPlugin(
       supabase, 
       props.project.id,
-      plugin.id
+      plugin.name
     ).then(({ error }) => {
       setBusy(false);
       

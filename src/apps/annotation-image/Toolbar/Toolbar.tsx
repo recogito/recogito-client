@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import type { Color, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { Extension, usePlugins } from '@components/Plugins';
+import { ExtensionMount, useExtensions } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { ColorCodingSelector, ColorLegend, DeleteSelected, ErrorBadge, useCollapsibleToolbar, useColorCoding } from '@components/AnnotationDesktop';
@@ -74,7 +74,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const back = `/${props.i18n.lang}/projects/${project_id}`;
 
-  const plugins = usePlugins('annotation.image.toolbar');
+  const extensions = useExtensions('annotation.image.toolbar');
 
   const colorCoding = useColorCoding();
 
@@ -231,15 +231,15 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        {plugins.map(plugin => (
-          <Extension 
-            key={plugin.meta.id}
-            plugin={plugin} 
+        {extensions.map(extension => (
+          <ExtensionMount
+            key={extension.name}
+            extension={extension}
             document={props.document}
             extensionPoint="annotation.image.toolbar" />
         ))}
 
-        {plugins.length > 0 && (
+        {extensions.length > 0 && (
           <div className="anno-toolbar-divider" />
         )}
 

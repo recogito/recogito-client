@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import { Autosuggest } from '@components/Autosuggest';
-import { ExtensionRegistry } from '@components/Plugins';
-import { ExtensionMount } from '@components/Plugins/ExtensionMount';
+import { ExtensionMount, useExtensions } from '@components/Plugins';
 import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagEditor.css';
@@ -25,7 +24,7 @@ export const TagEditor = (props: TagEditorProps) => {
 
   const [value, setValue] = useState<VocabularyTerm | undefined>();
 
-  const extension = ExtensionRegistry.getComponentsForExtensionPoint('annotation:*:tag-autosuggest')[0];
+  const extension = useExtensions('annotation:*:tag-autosuggest')[0];
 
   const onSubmit = (value: VocabularyTerm) => {
     props.onCreateTag(value);

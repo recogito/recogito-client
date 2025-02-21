@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { Color, PresentUser } from '@annotorious/react';
 import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter, useCollapsibleToolbar } from '@components/AnnotationDesktop';
-import { Extension, usePlugins } from '@components/Plugins';
+import { ExtensionMount, useExtensions } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
@@ -62,7 +62,7 @@ export const Toolbar = (props: ToolbarProps) => {
   
   const back = `/${props.i18n.lang}/projects/${project_id}`;
 
-  const plugins = usePlugins('annotation.text.toolbar');
+  const extensions = useExtensions('annotation.text.toolbar');
 
   const colorCoding = useColorCoding();
 
@@ -191,15 +191,15 @@ export const Toolbar = (props: ToolbarProps) => {
           <div className="anno-toolbar-divider" />
         )}
 
-        {plugins.map(plugin => (
-          <Extension 
-            key={plugin.meta.id}
-            plugin={plugin} 
+        {extensions.map(extension => (
+          <ExtensionMount
+            key={extension.name}
+            extension={extension} 
             document={props.document}
             extensionPoint="annotation.text.toolbar" />
         ))}
 
-        {plugins.length > 0 && (
+        {extensions.length > 0 && (
           <div className="anno-toolbar-divider" />
         )}
 

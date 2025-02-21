@@ -381,8 +381,6 @@ export interface InstalledPlugin {
 
   plugin_name: string;
 
-  plugin_id: string;
-
   plugin_settings?: any;
 }
 

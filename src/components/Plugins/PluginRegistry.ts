@@ -1,39 +1,45 @@
-import type { InstalledPlugin } from 'src/Types';
-import type { PluginMetadata } from './PluginMetadata';
+import type { Plugin } from '@recogito/studio-sdk';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
 import { matchesExtensionPoint } from './utils';
+import type { InstalledPlugin } from 'src/Types';
 
-import { plugins } from './deployedPlugins';
+let registry: Plugin[] = [];
 
-/** 
- * Important: that the plugin registry works ON THE SERVER ONLY, 
- * not on the client!
- */
+try {
+  const mod = await import('../../plugins/generated/registered.json', { assert: { type: 'json' } });
+  registry = mod.default;
+} catch {
+  // File doesn't exist yet, use empty registry
+  registry = [];
+}
+
 const createPluginRegistry = () => {
 
-  const listAvailablePlugins = (pattern?: string): PluginMetadata[] => {
-    // Return all
-    if (!pattern) 
-      return [...plugins];
+  // List all plugins, optionally only those with extensions
+  // for a specific extension point.
+  const listAvailablePlugins = (pattern?: string): Plugin[] => {
+    if (!pattern) return [...registry];
 
-    // Match the pattern against 
-    const matches = plugins.filter(p => {
-      const extensionPoints = Object.keys(p.extension_points);
+    // Match the pattern against plugins' extensions
+    const matches = registry.filter(plugin => {
+      const extensionPoints = plugin.extensions.map(e => e.extension_point);
       return extensionPoints.some(e => matchesExtensionPoint(pattern, e));
     });
 
     return matches;
   }
 
+  // Given a list of installed plugin instances on a project, 
+  // resolve the full plugin configuration (plugin metadata + install configuration)
   const resolvePlugins = (installed: InstalledPlugin[], pattern?: string): PluginInstallationConfig[] => {
     const available = listAvailablePlugins(pattern);
 
     return installed.reduce<PluginInstallationConfig[]>((all, installed) => {
-      const meta = available.find(p => p.id === installed.plugin_id);
-      return meta ? [...all, { meta, settings: installed  }] : all;
+      const plugin = available.find(p => p.name === installed.plugin_name);
+      return plugin ? [...all, { plugin, settings: installed  }] : all;
     }, []);
   }
-  
+
   return {
     listAvailablePlugins,
     resolvePlugins

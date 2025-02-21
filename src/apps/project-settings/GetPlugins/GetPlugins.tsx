@@ -1,14 +1,15 @@
 import { useState } from 'react';
-import { PluginGallery } from './PluginGallery';
+import type { Plugin } from '@recogito/studio-sdk';
 import { PuzzlePiece } from '@phosphor-icons/react';
-import type { PluginInstallationConfig, PluginMetadata } from '@components/Plugins';
+import type { PluginInstallationConfig } from '@components/Plugins';
+import { PluginGallery } from './PluginGallery';
 import type { Project } from 'src/Types';
 
 interface GetPluginsProps {
 
   project: Project;
 
-  availablePlugins: PluginMetadata[];
+  availablePlugins: Plugin[];
 
   installedPlugins: PluginInstallationConfig[];
 

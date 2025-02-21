@@ -1,9 +1,9 @@
-import type { PluginMetadata } from './PluginMetadata';
+import type { Plugin } from '@recogito/studio-sdk';
 import type { InstalledPlugin } from 'src/Types';
 
 export interface PluginInstallationConfig {
 
-  meta: PluginMetadata;
+  plugin: Plugin;
 
   settings: InstalledPlugin;
 
