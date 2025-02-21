@@ -49,7 +49,7 @@
     "@recogito/plugin-reconciliation-service": "github:recogito/plugin-reconciliation-service",
     "@recogito/react-pdf-annotator": "1.0.0-rc.41",
     "@recogito/react-text-annotator": "3.0.0-rc.54",
-    "@recogito/studio-sdk": "^0.1.3",
+    "@recogito/studio-sdk": "^0.1.4",
     "@supabase/ssr": "0.5.2",
     "@supabase/supabase-js": "2.46.1",
     "@table-library/react-table-library": "^4.1.7",
