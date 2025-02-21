@@ -1,16 +1,15 @@
-import { useState } from 'react';
+import { Avatar } from '@components/Avatar';
+import { DocumentCard } from '@components/DocumentCard';
+import { AssignmentsActions } from './AssignmentActions';
 import type {
   Context,
   Translations,
   UserProfile,
   Document,
-  Group,
+  Group
 } from 'src/Types';
-import { Avatar } from '@components/Avatar';
-import { DocumentCard } from '@components/DocumentCard';
 
 import './AssignmentDetail.css';
-import { AssignmentsActions } from './AssignmentActions';
 
 interface AssignmentDetailProps {
   assignment: Context;

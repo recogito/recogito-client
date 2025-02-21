@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
+import { ExtensionMount, useExtensions } from '@components/Plugins';
 import type { Context, Document, Translations } from 'src/Types';
 import { 
   Browser, 
@@ -15,6 +16,7 @@ import {
   Trash,
   UsersThree
 } from '@phosphor-icons/react';
+
 
 const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
@@ -55,6 +57,8 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
     props.onOpen(tab);
   }
 
+  const extensions = useExtensions('project:document-actions');
+
   const onExportTEI = (includePrivate: boolean) => () =>
     props.onExportTEI && props.onExportTEI(includePrivate);
 
@@ -87,6 +91,13 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Item className="dropdown-item" onSelect={onOpen(true)}>
               <Browsers size={16} /> <span>{t['Open document in new tab']}</span>
             </Item>
+
+            {props.onOpenMetadata && (
+              <Item className="dropdown-item" onSelect={props.onOpenMetadata}>
+                <PencilSimple size={16} />
+                <span>{ props.allowEditMetadata ? t['Edit document metadata'] : t['View document metadata']}</span>
+              </Item>
+            )}
 
             {props.document.content_type === 'text/xml' && (
               <Sub>
@@ -164,12 +175,15 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Portal>
             </Sub>
 
-            {props.onOpenMetadata && (
-              <Item className="dropdown-item" onSelect={props.onOpenMetadata}>
-                <PencilSimple size={16} />
-                <span>{ props.allowEditMetadata ? t['Edit document metadata'] : t['View document metadata']}</span>
-              </Item>
-            )}
+            {extensions.map(({ extension, config }) => (
+              <ExtensionMount 
+                key={extension.name} 
+                extension={extension}
+                pluginConfig={config} 
+                documentId={props.document.id} 
+                projectId={props.context.project_id}
+                />
+            ))}
 
             {props.allowDeleteDocument && (
               <ConfirmedAction.Trigger>
