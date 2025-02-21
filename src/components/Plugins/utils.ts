@@ -3,9 +3,9 @@
  * extensions point name.
  */
 export const matchesExtensionPoint = (pattern: string, extensionPoint: string) => {
-  const patternSegments = pattern.split('.');
+  const patternSegments = pattern.split(/[\.,:]+/);
 
-  const epSegments = extensionPoint.split('.');
+  const epSegments = extensionPoint.split(/[\.,:]+/);
 
   if (patternSegments.length > epSegments.length)
     return false; // the pattern is more specific than the extension point
