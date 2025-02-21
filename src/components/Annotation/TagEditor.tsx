@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import { Autosuggest } from '@components/Autosuggest';
 import { ExtensionRegistry } from '@components/Plugins';
+import { ExtensionMount } from '@components/Plugins/ExtensionMount';
 import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagEditor.css';
-import { ExtensionMount } from '@components/Plugins/ExtensionMount';
 
 interface TagEditorProps {
 

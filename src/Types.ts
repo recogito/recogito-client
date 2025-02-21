@@ -361,6 +361,8 @@ export interface Tag {
 export interface VocabularyTerm {
   label: string;
 
+  id?: string;
+
   color?: string;
 }
 

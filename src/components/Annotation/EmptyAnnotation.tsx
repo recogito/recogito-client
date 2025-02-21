@@ -101,7 +101,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
       },
       created: new Date(),
       purpose: 'tagging',
-      value: value.label
+      value: value.id ? JSON.stringify(value) : value.label
     };
 
     props.onCreateBody && props.onCreateBody(tag);
