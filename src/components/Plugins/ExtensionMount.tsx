@@ -1,6 +1,7 @@
 import { Component, lazy, Suspense, useMemo } from 'react';
 import type { Extension } from '@recogito/studio-sdk';
 import type { PluginInstallationConfig } from './PluginInstallationConfig';
+import plugin from '@recogito/plugin-reconciliation-service';
 
 interface ExtensionMountProps {
 
@@ -40,20 +41,24 @@ class ExtensionErrorBoundary extends Component<
 
 export const ExtensionMount = <T extends ExtensionMountProps = ExtensionMountProps>(props: T) => {
 
-  const { fallback, ...rest } = props;
+  const { extension, pluginConfig, fallback, ...rest } = props;
 
   const Component = useMemo(() => {
     // Note: although 'lazy' supports variables in the import path, variables
     // CANNOT CONTAIN A '/' CHARACTER! Runtime loading will fail as soon as the 
     // variable points to a sub-path!
     // Cf: https://stackoverflow.com/questions/59051144/dynamic-imports-using-complicated-path-in-react-js
-    return lazy(() => import(`../../plugins/generated/${props.extension.component_name}.ts`));
-  }, [props.extension]);
+    return lazy(() => import(`../../plugins/generated/${extension.component_name}.ts`));
+  }, [extension]);
   
   return (
     <ExtensionErrorBoundary>
       <Suspense fallback={fallback}>
-        <Component {...rest} />
+        <Component 
+          {...rest} 
+          extension={extension} 
+          plugin={pluginConfig.plugin} 
+          settings={pluginConfig.settings.plugin_settings} />
       </Suspense>
     </ExtensionErrorBoundary>
   );
