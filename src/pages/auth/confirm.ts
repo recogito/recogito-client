@@ -3,7 +3,6 @@ import type { EmailOtpType } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
-  console.log('In comfirm!');
   const requestUrl = new URL(request.url);
   const token_hash = requestUrl.searchParams.get('token_hash');
   const type = requestUrl.searchParams.get('type') as EmailOtpType | null;
@@ -11,7 +10,8 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
 
   if (token_hash && type) {
     const supabase = createServerClient(
-      import.meta.env.PUBLIC_SUPABASE,
+      import.meta.env.SUPABASE_SERVERCLIENT_URL ||
+        import.meta.env.PUBLIC_SUPABASE,
       import.meta.env.PUBLIC_SUPABASE_API_KEY,
       {
         cookies: {
