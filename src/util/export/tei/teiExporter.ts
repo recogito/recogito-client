@@ -1,8 +1,6 @@
 import { DOMParser } from 'linkedom';
 import { customAlphabet } from 'nanoid';
 import slugify from 'slugify';
-import { customAlphabet } from 'nanoid';
-import slugify from 'slugify';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { User } from '@annotorious/react';
 import { quillToPlainText } from '../serializeQuillComment';
@@ -141,24 +139,12 @@ export const mergeAnnotations = (
     // Should never happen
     throw new Error('No TEI root element found in the XML');
 
-  const teiElement = document.querySelector('TEI');
-  if (!teiElement)
-    // Should never happen
-    throw new Error('No TEI root element found in the XML');
-
-  const teiElement = document.querySelector('TEI');
-  if (!teiElement)
-    // Should never happen
-    throw new Error('No TEI root element found in the XML');
-
   // https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html
   const standOffEl = document.createElement('standOff');
   standOffEl.setAttribute('type', 'recogito_studio_annotations');
 
   const listAnnotationEl = document.createElement('listAnnotation');
   standOffEl.appendChild(listAnnotationEl);
-
-  const { taxonomyEl, taxonomy } = createTaxonomy(annotations, document);
 
   const { taxonomyEl, taxonomy } = createTaxonomy(annotations, document);
 
@@ -259,7 +245,6 @@ export const mergeAnnotations = (
     });
 
     // If there are any tags, create one rs element and add them as the ana attribute
-    const tags = a.bodies.filter((b) => b.purpose === 'tagging' && b.value);
     const tags = a.bodies.filter((b) => b.purpose === 'tagging' && b.value);
     if (tags.length > 0) {
       const rsEl = document.createElement('rs');
