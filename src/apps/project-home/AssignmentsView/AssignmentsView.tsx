@@ -170,8 +170,11 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
             <AssignmentsList
               assignments={props.assignments}
               i18n={props.i18n}
+              projectId={project.id}
               currentAssignment={currentAssignment.id as string}
               onAssignmentSelect={handleAssignmentSelected}
+              setAssignments={props.setAssignments}
+              isAdmin={props.isAdmin}
             />
             <AssignmentDetail
               assignment={currentAssignment}

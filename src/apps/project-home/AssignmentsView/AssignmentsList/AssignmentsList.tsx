@@ -1,4 +1,21 @@
 import type { Context, Translations } from 'src/Types';
+import {
+  closestCenter,
+  DndContext,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragOverlay,
+} from '@dnd-kit/core';
+import { useState, useCallback } from 'react';
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { updateContextSort } from '@backend/helpers';
 
 interface AssignmentsListProps {
   assignments: Context[];
@@ -7,36 +24,106 @@ interface AssignmentsListProps {
 
   i18n: Translations;
 
+  projectId: string;
+
+  isAdmin: boolean;
+
   onAssignmentSelect(assignment: Context): void;
+
+  setAssignments(assignments: Context[]): void;
 }
 
 import './AssignmentsList.css';
+import { AssignmentListItem } from './AssignmentListItem';
 
 export const AssignmentsList = (props: AssignmentsListProps) => {
   const { t } = props.i18n;
 
-  return (
-    <div className='assignment-list-list'>
-      {props.assignments.map((assignment) => (
-        <div
-          className={
-            assignment.id === props.currentAssignment
-              ? 'assignments-list-item active'
-              : 'assignments-list-item'
+  const [activeId, setActiveId] = useState(null);
+
+  const [activeAssignment, setActiveAssignment] = useState<
+    Context | undefined
+  >();
+
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  const onDragEnd = useCallback(
+    (event: any) => {
+      const { active, over } = event;
+
+      if (active.id !== over?.id) {
+        const oldIndex = props.assignments.findIndex(
+          (assignment) => assignment.id === active.id
+        );
+        const newIndex = props.assignments.findIndex(
+          (assignment) => assignment.id === over!.id
+        );
+
+        const newAssignments = arrayMove(props.assignments, oldIndex, newIndex);
+        props.setAssignments(newAssignments);
+
+        const newContextIds = newAssignments.map((assignment) => assignment.id);
+
+        updateContextSort(supabase, props.projectId, newContextIds).then(
+          ({ error }) => {
+            if (error) {
+              console.log(error);
+            }
           }
-          key={assignment.id}
-          onClick={() => props.onAssignmentSelect(assignment)}
+        );
+      }
+
+      setActiveId(null);
+    },
+    [props.assignments, props.projectId]
+  );
+
+  const onDragCancel = useCallback(() => setActiveAssignment(undefined), []);
+
+  const onDragStart = useCallback(
+    (event: any) =>
+      setActiveAssignment(
+        props.assignments.find((a) => a.id === event.active.id)
+      ),
+    []
+  );
+
+  return (
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      onDragCancel={onDragCancel}
+    >
+      <div className='assignment-list-list'>
+        <SortableContext
+          items={props.assignments}
+          strategy={rectSortingStrategy}
         >
-          <div className='assignments-list-item-date'>
-            {new Date(assignment.created_at).toLocaleDateString()}
-          </div>
-          <div className='assignments-list-item-title'>
-            {assignment.is_project_default
-              ? t['Project Baselayer']
-              : assignment.name}
-          </div>
-        </div>
-      ))}
-    </div>
+          {props.assignments.map((assignment) => (
+            <AssignmentListItem
+              assignment={assignment}
+              i18n={props.i18n}
+              active={assignment.id === props.currentAssignment}
+              onClick={() => props.onAssignmentSelect(assignment)}
+              isAdmin={props.isAdmin}
+              key={assignment.id}
+            />
+          ))}
+        </SortableContext>
+        <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
+          {activeAssignment && (
+            <AssignmentListItem
+              assignment={activeAssignment}
+              i18n={props.i18n}
+              active={activeAssignment.id === activeId}
+              onClick={() => props.onAssignmentSelect(activeAssignment)}
+              isAdmin={props.isAdmin}
+            />
+          )}
+        </DragOverlay>
+      </div>
+    </DndContext>
   );
 };

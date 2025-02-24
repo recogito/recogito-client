@@ -69,10 +69,13 @@ export const DocumentsView = (props: DocumentsViewProps) => {
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
 
-  const onDragStart = useCallback((event) => setActiveId(event.active.id), []);
+  const onDragStart = useCallback(
+    (event: any) => setActiveId(event.active.id),
+    []
+  );
 
   const onDragEnd = useCallback(
-    (event) => {
+    (event: any) => {
       const { active, over } = event;
 
       if (active.id !== over?.id) {
@@ -292,7 +295,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     setAddOpen(false);
   };
 
-  const isOwner = useCallback((document) => document.created_by === props.user.id, [props.user]);
+  const isOwner = useCallback(
+    (document: Document) => document.created_by === props.user.id,
+    [props.user]
+  );
 
   return (
     <>
