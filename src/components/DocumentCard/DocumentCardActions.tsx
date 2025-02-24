@@ -180,8 +180,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 key={extension.name} 
                 extension={extension}
                 pluginConfig={config} 
-                documentId={props.document.id} 
                 projectId={props.context.project_id}
+                contextId={props.context.id}
+                documentId={props.document.id}
                 />
             ))}
 
