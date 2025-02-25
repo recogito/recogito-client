@@ -63,36 +63,6 @@ const parseTaxonomies = (elements: NodeListOf<Element>) => {
   return lookupTable;
 };
 
-const parseTaxonomies = (elements: NodeListOf<Element>) => {
-  const lookupTable: Record<string, string> = {};
-
-  // We don't export nested taxonomies yet, but may in the future!
-  const walkCategories = (categoryEl: Element) => {
-    const childCategories = Array.from(categoryEl.children).filter(
-      (child) => child.tagName.toLowerCase() === 'category'
-    );
-
-    if (childCategories.length === 0) {
-      // Leaf node -> this is a tag
-      const id = categoryEl.getAttribute('xml:id');
-      const label = categoryEl.querySelector('catDesc');
-
-      if (id && label) lookupTable[id] = label.textContent?.trim() || id;
-
-      return;
-    }
-
-    childCategories.forEach(walkCategories);
-  };
-
-  // Start traversal from the root taxonomy element
-  Array.from(elements).forEach((element) => {
-    walkCategories(element);
-  });
-
-  return lookupTable;
-};
-
 export const useEmbeddedTEIAnnotations = (xml?: string) => {
   const [annotationLists, setAnnotationLists] = useState<AnnotationList[]>([]);
 
