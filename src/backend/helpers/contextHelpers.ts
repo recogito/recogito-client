@@ -1,4 +1,4 @@
-import type { UserRole } from '@backend/Types';
+import type { UserRole, Response } from '@backend/Types';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const isOpenJoinEditFromContext = (
@@ -82,4 +82,18 @@ export const setAssignAllMembers = (
     })
     .then(({ data }) => {
       return data;
+    });
+
+export const updateContextSort = (
+  supabase: SupabaseClient,
+  projectId: string,
+  contextIds: string[]
+): Response<boolean> =>
+  supabase
+    .rpc('update_context_sort_rpc', {
+      _project_id: projectId,
+      _context_ids: contextIds,
+    })
+    .then(({ error, data }) => {
+      return { error, data };
     });

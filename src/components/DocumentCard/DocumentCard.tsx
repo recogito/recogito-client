@@ -11,7 +11,7 @@ import {
   DocumentViewRight,
   type Context,
   type Document,
-  type Translations
+  type Translations,
 } from 'src/Types';
 import './DocumentCard.css';
 

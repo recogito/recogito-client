@@ -4,11 +4,15 @@
 
 .assignments-list-item {
   box-sizing: border-box;
-  width: 390px;
+  width: 350px;
   height: 100px;
   border-top: 1px solid var(--gray-200);
   padding: 20px;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: white;
 }
 
 .assignments-list-item:first-child {
@@ -19,14 +23,18 @@
   border-bottom: 1px solid var(--gray-200);
 }
 
-.assignments-list-item.active + .assignments-list-item {
+.assignments-list-item.selected + .assignments-list-item {
   border-top: none;
 }
 
-.assignments-list-item.active {
+.assignments-list-item.selected {
   border: 1px solid var(--gray-300);
   border-radius: var(--border-radius);
   background-color: var(--gray-100);
+}
+
+.assignments-list-item-meta {
+  width: 300px;
 }
 
 .assignments-list-item-date {
@@ -41,5 +49,23 @@
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   display: -webkit-box;
+}
+
+.assignments-list-item.active {
+  opacity: 0.5;
+}
+
+.assignments-list-item > .assignment-drag-handle {
+  background-color: var(--gray-100);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  width: 90px;
+}
+
+.assignments-list-item.dragging > .assignment-drag-handle {
+  cursor: grabbing;
 }

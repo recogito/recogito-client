@@ -44,6 +44,8 @@ export const listMyProjectsExtended = (
         project_id,
         name,
         is_project_default,
+        assign_all_members,
+        sort,
         created_at,
         members:context_users(
           role_id,
@@ -178,6 +180,7 @@ export const getProjectExtended = (
         is_project_default,
         created_at,
         assign_all_members,
+        sort,
         members:context_users(
           id,
           role_id,
@@ -248,6 +251,15 @@ export const getProjectExtended = (
               const ids: string[] = project.groups.map((g: any) => g.id);
               const projectExtended = {
                 ...project,
+                contexts: project.contexts.sort((a, b) => {
+                  if (a.sort < b.sort) {
+                    return -1;
+                  } else if (a.sort > b.sort) {
+                    return 1;
+                  }
+
+                  return 0;
+                }),
                 groups: project.groups.map((g) => ({
                   ...g,
                   members: data

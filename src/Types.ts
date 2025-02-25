@@ -155,7 +155,7 @@ export interface Document {
 
     url: string;
 
-    meta?: DocumentMetadata[]
+    meta?: DocumentMetadata[];
   };
 
   collection_metadata?: {
@@ -246,6 +246,8 @@ export interface Context {
   created_at: string;
 
   assign_all_members: boolean;
+
+  sort: number;
 
   members: {
     id: string;
@@ -472,9 +474,9 @@ export type ApiAcceptOrgInvite = {
 
 export type IIIFMetadata = {
   label: {
-    [key: string]: string[]
-  },
+    [key: string]: string[];
+  };
   value: {
-    [key: string]: string[]
-  }
+    [key: string]: string[];
+  };
 };

@@ -11,7 +11,8 @@ export const GET: APIRoute = async ({ cookies, redirect, request, url }) => {
 
   if (token_hash && type) {
     const supabase = createServerClient(
-      import.meta.env.PUBLIC_SUPABASE,
+      import.meta.env.SUPABASE_SERVERCLIENT_URL ||
+        import.meta.env.PUBLIC_SUPABASE,
       import.meta.env.PUBLIC_SUPABASE_API_KEY,
       {
         cookies: {
