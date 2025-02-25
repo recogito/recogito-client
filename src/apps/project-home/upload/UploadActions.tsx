@@ -3,9 +3,10 @@ import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { File, LinkSimple, Plus } from '@phosphor-icons/react';
 import { IIIFDialog, type IIIFManifest } from './dialogs';
 import type { MyProfile, Protocol, Translations } from 'src/Types';
-
-import './UploadActions.css';
 import { EULAModal } from '@components/EULAModal/EULAModal';
+import { setProfileEULAAccepted } from '@backend/helpers/profileHelpers';
+import './UploadActions.css';
+import { supabase } from '@backend/supabaseBrowserClient';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
@@ -50,6 +51,7 @@ export const UploadActions = (props: UploadActionsProps) => {
 
   const handleConfirmUpload = () => {
     setEulaOpen(false);
+    setProfileEULAAccepted(supabase, props.me.id);
     props.onUpload();
   };
 
