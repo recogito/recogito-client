@@ -18,6 +18,8 @@ interface UploadActionsProps {
   onUpload(): void;
 
   onImport(format: Protocol, url: string, label?: string): void;
+
+  onSetUser(user: MyProfile): void;
 }
 
 export const UploadActions = (props: UploadActionsProps) => {
@@ -49,10 +51,15 @@ export const UploadActions = (props: UploadActionsProps) => {
     }
   };
 
-  const handleConfirmUpload = () => {
+  const handleConfirmUpload = async () => {
     setEulaOpen(false);
-    setProfileEULAAccepted(supabase, props.me.id);
-    props.onUpload();
+    const { data, error } = await setProfileEULAAccepted(supabase, props.me.id);
+    if (error) {
+      console.log(error);
+    } else {
+      props.onSetUser(data);
+      props.onUpload();
+    }
   };
 
   return (

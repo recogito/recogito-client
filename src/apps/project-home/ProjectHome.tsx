@@ -18,6 +18,7 @@ import type {
   JoinRequest,
   MyProfile,
   Translations,
+  UserProfile,
 } from 'src/Types';
 
 import './ProjectHome.css';
@@ -51,6 +52,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
+  const [me, setMe] = useState(props.user);
+
   const [documents, setDocuments] = useState<Document[]>(props.documents);
 
   const [project, setProject] = useState(props.project);
@@ -79,6 +82,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       setAvailableLayers(props.availableLayers);
     }
   }, [props.availableLayers]);
+
+  useEffect(() => {
+    if (props.user) {
+      setMe(props.user);
+    }
+  }, [props.user]);
 
   const handleSwitchTab = (tab: 'documents' | 'assignments') => {
     setTab(tab);
@@ -185,7 +194,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         invitations={props.invitations}
         i18n={props.i18n}
         onError={onError}
-        me={props.user}
+        me={me}
       />
 
       <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
@@ -214,15 +223,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               i18n={props.i18n}
               project={props.project}
               setToast={setToast}
-              user={props.user}
+              user={me}
               setDocuments={onSetDocuments}
               onRemoveDocument={removeDocumentFromAssignments}
+              onSetUser={(user: MyProfile) => setMe(user)}
             />
           ) : tab === 'assignments' ? (
             <AssignmentsView
               i18n={props.i18n}
               project={project}
-              me={props.user}
+              me={me}
               documents={documents}
               assignments={assignments}
               setToast={setToast}
