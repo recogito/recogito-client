@@ -59,6 +59,8 @@ interface DocumentsViewProps {
   setDocuments(documents: Document[]): void;
 
   onRemoveDocument(document: Document): void;
+
+  onSetUser(user: MyProfile): void;
 }
 
 export const DocumentsView = (props: DocumentsViewProps) => {
@@ -384,8 +386,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           UploadActions={
             <UploadActions
               i18n={props.i18n}
+              me={props.user}
               onUpload={open}
               onImport={onImportRemote}
+              onSetUser={props.onSetUser}
             />
           }
           onDocumentsSelected={onDocumentsSelected}
