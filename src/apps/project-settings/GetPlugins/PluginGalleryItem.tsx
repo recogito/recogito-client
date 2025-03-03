@@ -32,6 +32,7 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
+    // TODO
     // import(`../../../../plugins/${plugin.directory}/thumbnail.jpg`)
     //  .then(data => setImage(data.default));
   }, []);

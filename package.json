@@ -8,7 +8,6 @@
     "build": "NODE_OPTIONS=--max_old_space_size=4096 && astro build",
     "build-node": "NODE_OPTIONS=--max_old_space_size=4096 && astro build --config astro.config.node.mjs",
     "preview-node": "node --max-old-space-size=4096 ./dist/server/entry.mjs",
-    "install-plugin": "node ./plugins/install-plugin.js",
     "astro": "astro",
     "preinstall": "node ./plugins/build-registry",
     "postinstall": "node copy-pdf-worker.js && find plugins -maxdepth 1 -mindepth 1 -type d -exec npm install --prefix {} \\;"
@@ -46,8 +45,6 @@
     "@react-spring/web": "^9.7.5",
     "@recogito/annotorious-supabase": "^1.1.0",
     "@recogito/pdf-annotator": "1.0.0-rc.41",
-    "@recogito/plugin-duke-unreal-export": "github:recogito/plugin-duke-unreal-export",
-    "@recogito/plugin-reconciliation-service": "github:recogito/plugin-reconciliation-service",
     "@recogito/react-pdf-annotator": "1.0.0-rc.41",
     "@recogito/react-text-annotator": "3.0.0-rc.54",
     "@recogito/studio-sdk": "^0.2.0",
