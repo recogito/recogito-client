@@ -22,7 +22,7 @@ const createPluginRegistry = () => {
 
     // Match the pattern against plugins' extensions
     const matches = registry.filter(plugin => {
-      const extensionPoints = plugin.extensions.map(e => e.extension_point);
+      const extensionPoints = (plugin.extensions || []).map(e => e.extension_point);
       return extensionPoints.some(e => matchesExtensionPoint(pattern, e));
     });
 
