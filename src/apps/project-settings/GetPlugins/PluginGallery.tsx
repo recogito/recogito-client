@@ -1,6 +1,5 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import type { Plugin } from '@recogito/studio-sdk';
-import type { PluginInstallationConfig } from '@components/Plugins';
+import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { PluginGalleryItem } from './PluginGalleryItem';
 import type { Project } from 'src/Types';
 

@@ -1,6 +1,5 @@
 import { Component, lazy, Suspense, useMemo } from 'react';
-import type { Extension } from '@recogito/studio-sdk';
-import type { PluginInstallationConfig } from './PluginInstallationConfig';
+import type { Extension, PluginInstallationConfig } from '@recogito/studio-sdk';
 
 interface ExtensionMountProps {
 

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import { CheckCircle } from '@phosphor-icons/react';
-import type { Plugin } from '@recogito/studio-sdk';
+import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteInstalledPlugin, insertInstalledPlugin } from '@backend/helpers';
 import { Button } from '@components/Button';
-import type { PluginInstallationConfig } from '@components/Plugins';
 import type { Project } from 'src/Types';
 
 interface PluginGalleryItemProps {

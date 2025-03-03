@@ -1,7 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { v4 as uuidv4 } from 'uuid';
 import type { Response } from '@backend/Types';
-import type { InstalledPlugin } from 'src/Types';
+import type { InstalledPlugin } from '@recogito/studio-sdk';
 
 export const getInstalledPlugins = (
   supabase: SupabaseClient, 
