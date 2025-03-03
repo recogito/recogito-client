@@ -9,8 +9,7 @@
     "build-node": "NODE_OPTIONS=--max_old_space_size=4096 && astro build --config astro.config.node.mjs",
     "preview-node": "node --max-old-space-size=4096 ./dist/server/entry.mjs",
     "astro": "astro",
-    "preinstall": "node ./plugins/build-registry",
-    "postinstall": "node copy-pdf-worker.js && find plugins -maxdepth 1 -mindepth 1 -type d -exec npm install --prefix {} \\;"
+    "postinstall": "node copy-pdf-worker.js"
   },
   "dependencies": {
     "@allmaps/iiif-parser": "1.0.0-beta.40",
