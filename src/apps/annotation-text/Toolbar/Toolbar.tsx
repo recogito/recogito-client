@@ -197,8 +197,7 @@ export const Toolbar = (props: ToolbarProps) => {
             key={extension.name}
             extension={extension} 
             pluginConfig={config}
-            document={props.document}
-            extensionPoint="annotation.text.toolbar" />
+            document={props.document} />
         ))}
 
         {extensions.length > 0 && (

@@ -238,8 +238,7 @@ export const Toolbar = (props: ToolbarProps) => {
             extension={extension}
             pluginConfig={config}
             settings={config.settings.plugin_settings}
-            document={props.document}
-            extensionPoint="annotation.image.toolbar" />
+            document={props.document} />
         ))}
 
         {extensions.length > 0 && (

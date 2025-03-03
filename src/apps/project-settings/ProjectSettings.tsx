@@ -9,6 +9,7 @@ import { BackButtonBar } from '@components/BackButtonBar';
 import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
 import { Button } from '@components/Button';
 import { TopBar } from '@components/TopBar';
+import { ExtensionMount } from '@components/Plugins';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TagSettings } from './TagSettings';
 import { DocumentViewRight } from 'src/Types';
@@ -230,6 +231,21 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
 
   const visibility = openJoin ? 'public' : 'private';
   const type = openEdit ? 'single_team' : 'assignments';
+
+  const renderAdminExtension = (config: PluginInstallationConfig) => {
+    const e = (config.plugin.extensions || []).find(e => e.extension_point === 'admin');
+
+    
+    return e ? (
+      <div className='plugin-admin'>
+        <ExtensionMount
+          extension={e}
+          pluginConfig={config}
+          onChangeUserSettings={onChangeUserSettings(config)}
+        />
+      </div>
+    ) : null;
+  }
 
   return (
     <>
@@ -633,15 +649,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       )}
                     </div>
 
-                    {/*
-                    <div className='plugin-admin'>
-                      <ExtensionMount
-                        plugin={p}
-                        extensionPoint='admin'
-                        onChangeUserSettings={onChangeUserSettings(p)}
-                      />
-                    </div>
-                    */}
+                    {renderAdminExtension(i)}
                   </section>
                 ))}
               </div>

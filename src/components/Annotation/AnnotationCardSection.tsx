@@ -318,8 +318,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           key={extension.name}
           extension={extension}
           pluginConfig={config}
-          annotation={props.annotation} 
-          extensionPoint="annotation.*.annotation-editor"
+          annotation={props.annotation}
           isEditable={editable}
           isSelected={props.isSelected}
           me={me}
