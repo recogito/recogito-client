@@ -3,7 +3,6 @@ dist/
 .netlify/
 .vscode/
 .idea/
-src/plugins/generated
 node_modules/
 npm-debug.log*
 yarn-debug.log*
