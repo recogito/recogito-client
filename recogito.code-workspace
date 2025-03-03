@@ -1,0 +1,37 @@
+{
+  "folders": [
+    {
+      "name": "recogito-client",
+      "path": "."
+    },
+    {
+      "name": "recogito-server",
+      "path": "../recogito-server"
+    },
+    {
+      "name": "recogito-config",
+      "path": "../recogito-config"
+    },
+    {
+      "name": "recogito-cloud",
+      "path": "../recogito-cloud"
+    },
+    {
+      "name": "recogito-studio",
+      "path": "../recogito-studio"
+    },
+    {
+      "name": "recogito-studio-sdk",
+      "path": "../recogito-studio-sdk"
+    },
+    {
+      "name": "plugin-reconciliation-service",
+      "path": "../plugin-reconciliation-service"
+    },
+    {
+      "name": "plugin-duke-unreal-export",
+      "path": "../plugin-duke-unreal-export"
+    }
+  ],
+  "settings": {}
+}
