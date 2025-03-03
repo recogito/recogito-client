@@ -1,5 +1,5 @@
-import type { PluginInstallationConfig, PluginMetadata } from '@components/Plugins';
 import * as Dialog from '@radix-ui/react-dialog';
+import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { PluginGalleryItem } from './PluginGalleryItem';
 import type { Project } from 'src/Types';
 
@@ -9,7 +9,7 @@ interface PluginGalleryProps {
 
   project: Project;
 
-  availablePlugins: PluginMetadata[];
+  availablePlugins: Plugin[];
 
   installedPlugins: PluginInstallationConfig[];
 
@@ -25,8 +25,8 @@ interface PluginGalleryProps {
 
 export const PluginGallery = (props: PluginGalleryProps) => {
 
-  const getInstalled = (meta: PluginMetadata) => 
-    props.installedPlugins.find(p => p.meta.id === meta.id);
+  const getInstalled = (plugin: Plugin) => 
+    props.installedPlugins.find(i => i.plugin.name === plugin.name);
 
   return (
     <Dialog.Root open={true} onOpenChange={props.onClose}>

@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
-import { Extension, usePlugins } from '@components/Plugins';
+import { ExtensionMount } from '@components/Plugins';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
@@ -77,7 +78,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { t } = props.i18n;
 
-  const plugins = usePlugins('annotation.*.annotation-editor');
+  const extensions = useExtensions('annotation.*.annotation-editor');
 
   const [editable, setEditable] = useState(false);
 
@@ -189,7 +190,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       },
       created: new Date(),
       purpose: 'tagging',
-      value: value.label
+      value: value.id ? JSON.stringify(value) : value.label
     };
 
     props.onCreateBody(tag);
@@ -312,15 +313,15 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         </div>
       )}
 
-      {props.index === 0 ? plugins.map(plugin => (
-        <Extension 
-          key={plugin.meta.id}
-          annotation={props.annotation} 
-          extensionPoint="annotation.*.annotation-editor"
+      {props.index === 0 ? extensions.map(({ extension, config }) => (
+        <ExtensionMount
+          key={extension.name}
+          extension={extension}
+          pluginConfig={config}
+          annotation={props.annotation}
           isEditable={editable}
           isSelected={props.isSelected}
           me={me}
-          plugin={plugin}
           onUpdateAnnotation={props.onUpdateAnnotation} />
       )) : null}
     </div>

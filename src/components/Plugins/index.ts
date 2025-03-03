@@ -1,6 +1,2 @@
-export * from './Extension';
+export * from './ExtensionMount';
 export * from './ExtensionProps';
-export * from './PluginInstallationConfig';
-export * from './PluginMetadata';
-export * from './PluginProvider';
-export * from './utils';

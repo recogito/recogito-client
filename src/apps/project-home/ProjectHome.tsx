@@ -10,6 +10,9 @@ import type { AvailableLayers } from '@backend/Types';
 import { DocumentsView } from './DocumentsView';
 import { AssignmentsView } from './AssignmentsView';
 import { useLocalStorageBackedState } from 'src/util/hooks';
+import { getAvailableLayers } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { PluginProvider, type PluginInstallationConfig } from '@recogito/studio-sdk';
 import type {
   Context,
   Document,
@@ -21,8 +24,6 @@ import type {
 } from 'src/Types';
 
 import './ProjectHome.css';
-import { getAvailableLayers } from '@backend/helpers';
-import { supabase } from '@backend/supabaseBrowserClient';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -40,6 +41,8 @@ export interface ProjectHomeProps {
   availableLayers: AvailableLayers[];
 
   user: MyProfile;
+
+  plugins: PluginInstallationConfig[];
 }
 
 export const ProjectHome = (props: ProjectHomeProps) => {
@@ -180,7 +183,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   };
 
   return (
-    <>
+    <PluginProvider installed={props.plugins}>
       <TopBar
         invitations={props.invitations}
         i18n={props.i18n}
@@ -239,6 +242,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           />
         </ToastProvider>
       </div>
-    </>
+    </PluginProvider>
   );
 };

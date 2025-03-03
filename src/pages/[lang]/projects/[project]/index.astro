@@ -5,11 +5,12 @@ import {
   listMyInvites,
   listPendingRequests,
 } from '@backend/crud';
-import { getAvailableLayers, listMyProjectsExtended } from '@backend/helpers';
+import { getAvailableLayers, getInstalledPlugins, listMyProjectsExtended } from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import PluginRegistry from '@components/Plugins/PluginRegistry';
 
 const lang = getLangFromUrl(Astro.url);
 
@@ -68,8 +69,17 @@ const projects = await listMyProjectsExtended(supabase);
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
 
 const requests = await listPendingRequests(supabase, projectId as string);
----
 
+const installedPlugins = await getInstalledPlugins(
+  supabase,
+  projectId as string
+);
+
+if (installedPlugins.error || !installedPlugins.data) {
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+---
 <BaseLayout title={project.data.name}>
   <ProjectHome
     client:only='react'
@@ -81,5 +91,6 @@ const requests = await listPendingRequests(supabase, projectId as string);
     user={profile.data}
     invitations={invitations.data}
     availableLayers={availableLayers.data}
+    plugins={PluginRegistry.resolvePlugins(installedPlugins.data)}
   />
 </BaseLayout>
