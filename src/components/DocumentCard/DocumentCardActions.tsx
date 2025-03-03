@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { useExtensions } from '@recogito/studio-sdk';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import { ExtensionMount, useExtensions } from '@components/Plugins';
+import { ExtensionMount } from '@components/Plugins';
 import type { Context, Document, Translations } from 'src/Types';
 import { 
   Browser, 
@@ -16,7 +17,6 @@ import {
   Trash,
   UsersThree
 } from '@phosphor-icons/react';
-
 
 const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 

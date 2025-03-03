@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { Color, PresentUser } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
 import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter, useCollapsibleToolbar } from '@components/AnnotationDesktop';
-import { ExtensionMount, useExtensions } from '@components/Plugins';
+import { ExtensionMount } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';

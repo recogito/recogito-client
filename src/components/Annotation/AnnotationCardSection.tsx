@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
-import { ExtensionMount, useExtensions } from '@components/Plugins';
+import { ExtensionMount } from '@components/Plugins';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar, isEmpty } from '@components/QuillEditor';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';

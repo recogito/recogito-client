@@ -12,7 +12,7 @@ import { AssignmentsView } from './AssignmentsView';
 import { useLocalStorageBackedState } from 'src/util/hooks';
 import { getAvailableLayers } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { PluginProvider, type PluginInstallationConfig } from '@components/Plugins';
+import { PluginProvider, type PluginInstallationConfig } from '@recogito/studio-sdk';
 import type {
   Context,
   Document,

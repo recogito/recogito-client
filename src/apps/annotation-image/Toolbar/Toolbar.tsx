@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import type { Color, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { ExtensionMount, useExtensions } from '@components/Plugins';
+import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { ColorCodingSelector, ColorLegend, DeleteSelected, ErrorBadge, useCollapsibleToolbar, useColorCoding } from '@components/AnnotationDesktop';

@@ -1,6 +1,6 @@
 import { ErrorBoundary } from 'react-error-boundary';
 import { Annotorious } from '@annotorious/react';
-import { type PluginInstallationConfig, PluginProvider } from '@components/Plugins';
+import { type PluginInstallationConfig, PluginProvider } from '@recogito/studio-sdk';
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
 import type { DocumentWithContext, MyProfile, Translations } from 'src/Types';
 import { AuthorColorProvider, ColorState, FatalError, FilterState } from '@components/AnnotationDesktop';

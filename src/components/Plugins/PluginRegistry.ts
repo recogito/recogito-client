@@ -1,7 +1,5 @@
-import type { Plugin } from '@recogito/studio-sdk';
-import type { PluginInstallationConfig } from './PluginInstallationConfig';
-import { matchesExtensionPoint } from './utils';
-import type { InstalledPlugin } from 'src/Types';
+import { matchesExtensionPoint } from '@recogito/studio-sdk';
+import type { InstalledPlugin, Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 
 let registry: Plugin[] = [];
 
