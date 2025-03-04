@@ -18,7 +18,6 @@ import type {
   JoinRequest,
   MyProfile,
   Translations,
-  UserProfile,
 } from 'src/Types';
 
 import './ProjectHome.css';
@@ -82,12 +81,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
       setAvailableLayers(props.availableLayers);
     }
   }, [props.availableLayers]);
-
-  useEffect(() => {
-    if (props.user) {
-      setMe(props.user);
-    }
-  }, [props.user]);
 
   const handleSwitchTab = (tab: 'documents' | 'assignments') => {
     setTab(tab);
