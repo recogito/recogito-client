@@ -16,6 +16,7 @@ export const getMyProfile = (supabase: SupabaseClient): Response<MyProfile> =>
           first_name,   
           last_name,
           avatar_url,
+          accepted_eula,
           group_users!group_users_user_id_fkey(
             group_type,
             type_id
