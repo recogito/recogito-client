@@ -1,7 +1,7 @@
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PresentUser, User } from '@annotorious/react';
-import type { PluginInstallationConfig } from './PluginInstallationConfig';
 import type { DocumentWithContext } from 'src/Types';
+import type { PluginInstallationConfig } from '@recogito/studio-sdk';
 
 /**
  * Typings for different kinds of plugins

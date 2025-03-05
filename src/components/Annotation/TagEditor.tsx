@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
+import { useExtensions } from '@recogito/studio-sdk';
 import { Autosuggest } from '@components/Autosuggest';
+import { ExtensionMount } from '@components/Plugins';
 import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagEditor.css';
@@ -23,6 +25,8 @@ export const TagEditor = (props: TagEditorProps) => {
 
   const [value, setValue] = useState<VocabularyTerm | undefined>();
 
+  const extensionConfig = useExtensions('annotation:*:tag-autosuggest')[0];
+
   const onSubmit = (value: VocabularyTerm) => {
     props.onCreateTag(value);
     setValue(undefined);
@@ -44,14 +48,25 @@ export const TagEditor = (props: TagEditorProps) => {
 
   return editing ? (
     <div className="tag-editor">
-      <Autosuggest
-        autoFocus
-        autoSize
-        openOnFocus
-        value={value}
-        onChange={setValue} 
-        onSubmit={onSubmit}
-        vocabulary={props.vocabulary} />
+      {Boolean(extensionConfig) ? (
+        <ExtensionMount 
+          extension={extensionConfig.extension}
+          pluginConfig={extensionConfig.config}
+          autoFocus 
+          autoSize
+          value={value}
+          onChange={setValue}
+          onSubmit={onSubmit} />
+      ) : (
+        <Autosuggest
+          autoFocus
+          autoSize
+          openOnFocus
+          value={value}
+          onChange={setValue} 
+          onSubmit={onSubmit}
+          vocabulary={props.vocabulary} />
+      )}
 
       <div className="tag-editor-actions">
         <button

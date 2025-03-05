@@ -1,38 +1,32 @@
-import { GetPlugins } from '@apps/project-plugins/GetPlugins';
+import { useEffect, useState } from 'react';
+import { Lock, Trash } from '@phosphor-icons/react';
+import * as Label from '@radix-ui/react-label';
+import * as RadioGroup from '@radix-ui/react-radio-group';
+import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
+import { GetPlugins } from '@apps/project-settings/GetPlugins';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { BackButtonBar } from '@components/BackButtonBar';
+import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import { Button } from '@components/Button';
+import { TopBar } from '@components/TopBar';
+import { ExtensionMount } from '@components/Plugins';
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
+import { TagSettings } from './TagSettings';
+import { DocumentViewRight } from 'src/Types';
+import { SettingsHeader } from './SettingsHeader';
+import { LockWarningMessage } from './LockWarningMessage';
 import {
   deleteInstalledPlugin,
   lockProject,
   updatePluginSettings,
   updateProject,
 } from '@backend/helpers';
-import { supabase } from '@backend/supabaseBrowserClient';
-import { BackButtonBar } from '@components/BackButtonBar';
-import { Button } from '@components/Button';
-import type {
-  PluginInstallationConfig,
-  PluginMetadata,
-} from '@components/Plugins';
-import { Extension } from '@components/Plugins';
-import { TagSettings } from './TagSettings';
-import {
-  type SaveState,
-  TinySaveIndicator,
-} from '@components/TinySaveIndicator';
-import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
-import { TopBar } from '@components/TopBar';
-import { Lock, Trash } from '@phosphor-icons/react';
-import * as Label from '@radix-ui/react-label';
-import * as RadioGroup from '@radix-ui/react-radio-group';
-import { useEffect, useState } from 'react';
 import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
   Translations,
 } from 'src/Types';
-import { DocumentViewRight } from 'src/Types';
-import { SettingsHeader } from './SettingsHeader';
-import { LockWarningMessage } from './LockWarningMessage';
 
 import './ProjectSettings.css';
 
@@ -45,7 +39,7 @@ interface ProjectSettingsProps {
 
   project: ExtendedProjectData;
 
-  availablePlugins: PluginMetadata[];
+  availablePlugins: Plugin[];
 
   installedPlugins: PluginInstallationConfig[];
 }
@@ -92,26 +86,26 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     setInstalledPlugins((all) => all.filter((i) => i !== removed));
 
   const onChangeUserSettings =
-    (plugin: PluginInstallationConfig) => (settings: any) => {
+    (installed: PluginInstallationConfig) => (settings: any) => {
       const before = [...installedPlugins];
 
       // Optimistic update
       const next: PluginInstallationConfig = {
-        ...plugin,
+        ...installed,
         settings: {
-          ...plugin.settings,
+          ...installed.settings,
           plugin_settings: settings,
         },
       };
 
-      setInstalledPlugins((all) =>
-        all.map((p) => (p.meta.id === plugin.meta.id ? next : p))
+      setInstalledPlugins(all =>
+        all.map(i => (i.plugin.name === installed.plugin.name ? next : i))
       );
 
       updatePluginSettings(
         supabase,
         props.project.id,
-        plugin.meta.id,
+        installed.plugin.name,
         settings
       ).then(({ error }) => {
         if (error) {
@@ -129,7 +123,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     // Optimistic update
     onPluginRemoved(installed);
 
-    deleteInstalledPlugin(supabase, props.project.id, installed.meta.id).then(
+    deleteInstalledPlugin(supabase, props.project.id, installed.plugin.name).then(
       ({ error }) => {
         if (error) {
           onError(error.message);
@@ -237,6 +231,21 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
 
   const visibility = openJoin ? 'public' : 'private';
   const type = openEdit ? 'single_team' : 'assignments';
+
+  const renderAdminExtension = (config: PluginInstallationConfig) => {
+    const e = (config.plugin.extensions || []).find(e => e.extension_point === 'admin');
+
+    
+    return e ? (
+      <div className='plugin-admin'>
+        <ExtensionMount
+          extension={e}
+          pluginConfig={config}
+          onChangeUserSettings={onChangeUserSettings(config)}
+        />
+      </div>
+    ) : null;
+  }
 
   return (
     <>
@@ -598,55 +607,49 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
               <div>
                 <h2>Installed Plugins ({installedPlugins.length})</h2>
 
-                {installedPlugins.map((p) => (
-                  <section key={p.meta.id} className='plugin-admin-tile'>
+                {installedPlugins.map(i => (
+                  <section key={i.plugin.name} className='plugin-admin-tile'>
                     <div className='plugin-meta'>
-                      <h3>{p.meta.name}</h3>
+                      <h3>{i.plugin.name}</h3>
 
-                      <p className='description'>{p.meta.description}</p>
+                      <p className='description'>{i.plugin.description}</p>
 
                       <div className='uninstall'>
                         <button
                           className='sm flat danger'
-                          onClick={onRemovePlugin(p)}
+                          onClick={onRemovePlugin(i)}
                         >
                           <Trash size={16} /> <span>Uninstall</span>
                         </button>
                       </div>
 
-                      {(p.meta.author || p.meta.homepage) && (
+                      {(i.plugin.author || i.plugin.homepage) && (
                         <p className='author'>
                           Author:{' '}
-                          {p.meta.author && p.meta.homepage ? (
+                          {i.plugin.author && i.plugin.homepage ? (
                             <a
-                              href={p.meta.homepage}
+                              href={i.plugin.homepage}
                               target='_blank'
                               rel='noreferrer'
                             >
-                              {p.meta.author}
+                              {i.plugin.author}
                             </a>
-                          ) : p.meta.homepage ? (
+                          ) : i.plugin.homepage ? (
                             <a
-                              href={p.meta.homepage}
+                              href={i.plugin.homepage}
                               target='_blank'
                               rel='noreferrer'
                             >
-                              {p.meta.homepage}
+                              {i.plugin.homepage}
                             </a>
                           ) : (
-                            <span>{p.meta.author}</span>
+                            <span>{i.plugin.author}</span>
                           )}
                         </p>
                       )}
                     </div>
 
-                    <div className='plugin-admin'>
-                      <Extension
-                        plugin={p}
-                        extensionPoint='admin'
-                        onChangeUserSettings={onChangeUserSettings(p)}
-                      />
-                    </div>
+                    {renderAdminExtension(i)}
                   </section>
                 ))}
               </div>

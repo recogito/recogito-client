@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { useExtensions } from '@recogito/studio-sdk';
 import { ConfirmedAction } from '@components/ConfirmedAction';
+import { ExtensionMount } from '@components/Plugins';
 import type { Context, Document, Translations } from 'src/Types';
 import { 
   Browser, 
@@ -55,6 +57,8 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
     props.onOpen(tab);
   }
 
+  const extensions = useExtensions('project:document-actions');
+
   const onExportTEI = (includePrivate: boolean) => () =>
     props.onExportTEI && props.onExportTEI(includePrivate);
 
@@ -87,6 +91,13 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Item className="dropdown-item" onSelect={onOpen(true)}>
               <Browsers size={16} /> <span>{t['Open document in new tab']}</span>
             </Item>
+
+            {props.onOpenMetadata && (
+              <Item className="dropdown-item" onSelect={props.onOpenMetadata}>
+                <PencilSimple size={16} />
+                <span>{ props.allowEditMetadata ? t['Edit document metadata'] : t['View document metadata']}</span>
+              </Item>
+            )}
 
             {props.document.content_type === 'text/xml' && (
               <Sub>
@@ -164,6 +175,17 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Portal>
             </Sub>
 
+            {extensions.map(({ extension, config }) => (
+              <ExtensionMount 
+                key={extension.name} 
+                extension={extension}
+                pluginConfig={config} 
+                projectId={props.context.project_id}
+                contextId={props.context.id}
+                documentId={props.document.id}
+                />
+            ))}
+            
             {props.onOpenMetadata && (
               <Item className="dropdown-item" onSelect={props.onOpenMetadata}>
                 <PencilSimple size={16} />

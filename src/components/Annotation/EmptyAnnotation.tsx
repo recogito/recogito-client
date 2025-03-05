@@ -3,9 +3,10 @@ import { ArrowRight } from '@phosphor-icons/react';
 import { v4 as uuidv4 } from 'uuid';
 import type { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
 import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
-import { Extension, usePlugins } from '@components/Plugins';
+import { ExtensionMount } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { TagList } from './TagList';
@@ -55,7 +56,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
   const { target } = props.annotation;
 
-  const plugins = usePlugins('annotation.*.annotation-editor');
+  const extensions = useExtensions('annotation.*.annotation-editor');
 
   const creator: PresentUser | User | undefined = 
     props.present.find(p => p.id === target?.creator?.id) || target?.creator;
@@ -101,7 +102,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
       },
       created: new Date(),
       purpose: 'tagging',
-      value: value.label
+      value: value.id ? JSON.stringify(value) : value.label
     };
 
     props.onCreateBody && props.onCreateBody(tag);
@@ -160,11 +161,11 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         </div>
       </QuillEditorRoot>
 
-      {plugins.map(plugin => (
-        <Extension 
-          key={plugin.meta.id}
-          plugin={plugin}
-          extensionPoint="annotation.*.annotation-editor"
+      {extensions.map(({ extension, config }) => (
+        <ExtensionMount
+          key={extension.name}
+          extension={extension}
+          pluginConfig={config}
           me={props.me}
           annotation={props.annotation} 
           onUpdateAnnotation={props.onUpdateAnnotation} />

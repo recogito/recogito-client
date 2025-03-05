@@ -26,8 +26,9 @@ export const TagList = (props: TagListProps) => {
   const onCreateTag = (value: VocabularyTerm) => {
     // Don't create a tag that already exists
     const existing = props.tags.find(b => b.value === value.label);
-    if (!existing)
+    if (!existing) {
       props.onCreateTag(value);
+    }
   }
 
   return (
@@ -64,9 +65,12 @@ interface TagProps {
 
 export const Tag = (props: TagProps) => {
 
+  // Bit of a hack
+  const tag = props.tag.value?.startsWith('{') ? JSON.parse(props.tag.value) : { label: props.tag.value };
+
   return (
     <span className={props.isEditable ? 'tag editable' : 'tag'}>
-      <span>{props.tag.value}</span>
+      <span>{tag.label}</span>
       
       {props.isEditable && (
         <button onClick={props.onDelete}>
