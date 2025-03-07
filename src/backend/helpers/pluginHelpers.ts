@@ -42,7 +42,7 @@ export const deleteInstalledPlugin = (
 export const updatePluginSettings = (
   supabase: SupabaseClient,
   project_id: string,
-  plugin_id: string,
+  plugin_name: string,
   plugin_settings: any
 ) =>
   supabase
@@ -52,5 +52,5 @@ export const updatePluginSettings = (
     })
     .match({
       project_id,
-      plugin_id
+      plugin_name
     });
