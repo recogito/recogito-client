@@ -33,7 +33,9 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
       const firstTag = annotation.bodies.find(b => b.purpose === 'tagging')?.value;
 
       if (firstTag) {
-        return getColor(firstTag);
+        // For backwards-compatibility: support object and string tags
+        const label = firstTag.startsWith('{') ? JSON.parse(firstTag).label : firstTag;
+        return getColor(label);
       } else {
         return NO_TAG;
       }
@@ -41,7 +43,7 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
   }, [getColor]);
 
   const legend = useMemo(() => {
-    return tags.map(tag => ({ color: getColor(tag) as Color, label: tag }));
+    return tags.map(tag => ({ color: getColor(tag.label) as Color, label: tag.label }));
   }, [tags.join('-')]);
 
   return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]); 

@@ -26,8 +26,11 @@ export const Tags = (props: TagsProps) => {
       ? selected.filter(s => s !== tag) : [...selected, tag]);
   
     if (next.size > 0) {
+      // For backwards-compatibility: support object and string tags
+      const getKey = (value: string) =>value.startsWith('{') ? JSON.parse(value).label : value;
+    
       const filter = (a: Annotation) =>
-        a.bodies.some(b => b.purpose === 'tagging' && b.value && next.has(b.value));
+        a.bodies.some(b => b.purpose === 'tagging' && b.value && next.has(getKey(b.value)));
 
       setTagSettings({ state: [...next], filter });
     } else {
@@ -42,13 +45,13 @@ export const Tags = (props: TagsProps) => {
       </h2>
 
       <ul>
-        {tags.map(tag => (
-          <li key={tag}>
+        {tags.map((tag, idx) => (
+          <li key={`${tag.id || tag.label}-${idx}`}>
             <Toggle.Root 
               className="toggle"
-              pressed={selected.includes(tag)}
-              onPressedChange={() => onToggle(tag)}>
-              {tag}
+              pressed={selected.includes(tag.label)}
+              onPressedChange={() => onToggle(tag.label)}>
+              {tag.label}
             </Toggle.Root>
           </li>
         ))}

@@ -56,10 +56,6 @@ export interface AnnotationCardProps {
 
 }
 
-const getCreator = (annotation: SupabaseAnnotation) =>
-  annotation.target?.creator || 
-    (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
-
 /**
  * Per convention, we only support tags created along with the first comment.
  * But they could be anywhere in the ordered list of bodies, because the
