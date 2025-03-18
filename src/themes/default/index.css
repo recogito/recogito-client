@@ -19,6 +19,7 @@
 @import './tooltip/index.css';
 @import './scroll-area/index.css';
 @import './accordian/index.css';
+@import './alert-dialog/index.css';
 
 @font-face {
   font-family: Inter;

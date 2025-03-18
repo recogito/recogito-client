@@ -26,6 +26,8 @@ export type MyProfile = UserProfile & {
 
   email: string;
 
+  accepted_eula: boolean;
+
   isOrgAdmin: boolean;
 };
 
