@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAnnotationStore } from '@annotorious/react';
-import type { Annotation, StoreChangeEvent } from '@annotorious/react';
+import type { Annotation, AnnotationBody, StoreChangeEvent } from '@annotorious/react';
 import { getProjectTagVocabulary } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { VocabularyTerm } from 'src/Types';
@@ -21,10 +21,14 @@ export const useTagVocabulary = (projectId: string) => {
       });
   }, []);
 
+  const getValue = (b: AnnotationBody) => b.value!.startsWith('{') 
+    ? JSON.parse(b.value!).label 
+    : b.value;
+
   const getUniqueTags = (annotations: Annotation[]): string[] => {
     const tagBodies = annotations.reduce((tags, annotation) => {
-      const t = annotation.bodies.filter(b => b.purpose === 'tagging');
-      return [...tags, ...t.map(b => b.value!)];
+      const t = annotation.bodies.filter(b => b.purpose === 'tagging' && b.value);
+      return [...tags, ...t.map(getValue)];
     }, [] as string[]);
 
     return Array.from(new Set(tagBodies));

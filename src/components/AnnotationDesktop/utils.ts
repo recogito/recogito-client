@@ -1,5 +1,6 @@
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import type { VocabularyTerm } from 'src/Types';
 
 /** Determines the creator of the annotation by the target, or the first body **/
 export const getCreator = (annotation: SupabaseAnnotation) =>
@@ -81,7 +82,7 @@ export const enumerateContributors = (present: PresentUser[], annotations: Supab
 }
 
 /** Determines the list of unique tags in the given annotation list **/
-export const enumerateTags = (annotations: SupabaseAnnotation[], visibleLayers?: string[]) => {
+export const enumerateTags = (annotations: SupabaseAnnotation[], visibleLayers?: string[]): VocabularyTerm[] => {
   const layerIds = visibleLayers ? new Set(visibleLayers) : undefined;
 
   return annotations.reduce<AnnotationBody[]>((enumerated, annotation) => {
@@ -92,11 +93,17 @@ export const enumerateTags = (annotations: SupabaseAnnotation[], visibleLayers?:
     return [...enumerated, ...tags];
   }, [])
   .sort((a, b) => a.created! > b.created! ? 1 : -1)
-  .reduce((firstOccurrences, body) => {
-    if (body.value) {
-      return firstOccurrences.indexOf(body.value) < 0 ? [...firstOccurrences, body.value] : firstOccurrences;
+  .reduce<VocabularyTerm[]>((firstOccurrences, body) => {
+    if (body.value) {      
+      // For backwards-compatibility: support object and string tags
+      const tag: VocabularyTerm = body.value?.startsWith('{') ? JSON.parse(body.value) : { label: body.value };
+
+      const key = tag.id || tag.label;
+      const exists = firstOccurrences.some(t => (t.id || t.label) === key);
+
+      return exists ? firstOccurrences : [...firstOccurrences, tag];
     } else {
       return firstOccurrences;
     }
-  }, [] as string[]);
+  }, []);
 }
