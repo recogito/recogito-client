@@ -31,6 +31,15 @@
     {
       "name": "plugin-duke-unreal-export",
       "path": "../plugin-duke-unreal-export"
+    },
+    {
+      "path": "../plugin-template"
+    },
+    {
+      "path": "../test-template-1"
+    },
+    {
+      "path": "../plugin-hello-world"
     }
   ],
   "settings": {}
