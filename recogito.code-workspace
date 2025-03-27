@@ -34,12 +34,6 @@
     },
     {
       "path": "../plugin-template"
-    },
-    {
-      "path": "../test-template-1"
-    },
-    {
-      "path": "../plugin-hello-world"
     }
   ],
   "settings": {}
