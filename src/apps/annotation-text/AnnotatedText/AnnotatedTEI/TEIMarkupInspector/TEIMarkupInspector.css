@@ -1,0 +1,22 @@
+.r6o-tei-inspector-hi {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px #F00 !important;
+  box-decoration-break: clone !important;
+  -webkit-box-decoration-break: clone !important; 
+}
+
+.r6o-tei-inspector-popover {
+  animation: popupFadeIn 200ms ease-in;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow:
+    1px 2px 4px rgba(0, 0, 0, 0.02),
+    6px 2px 9px rgba(0, 0, 0, 0.03),
+    7px 12px 22px rgba(0, 0, 0, 0.06),
+    12px 24px 73px rgba(0, 0, 0, 0.07);
+  font-family: Inter;
+  padding: 0.5rem;
+  width: 340px;
+  z-index: 9999;
+}

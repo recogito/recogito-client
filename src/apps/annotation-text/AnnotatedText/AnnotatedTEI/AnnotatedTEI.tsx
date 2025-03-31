@@ -7,6 +7,7 @@ import { behaviors } from './behaviors';
 import { useEmbeddedTEIAnnotations } from './useEmbeddedAnnotations';
 import { useEffect } from 'react';
 import type { EmbeddedLayer } from 'src/Types';
+import { TEIMarkupInspector } from './TEIMarkupInspector/TEIMarkupInspector';
 
 interface AnnotatedTEIProps {
   
@@ -62,6 +63,8 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
           }}
           tei={props.text} 
           behaviors={behaviors} />
+
+        <TEIMarkupInspector enabled />
       </TEIAnnotator>
     </>
   )
