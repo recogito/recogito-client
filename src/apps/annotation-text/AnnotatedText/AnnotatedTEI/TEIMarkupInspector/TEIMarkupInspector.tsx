@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@components/Button';
 import {
   useFloating,
@@ -24,6 +24,18 @@ export const TEIMarkupInspector = (props: TEIMarkupInspectorProps) => {
   const hover = useRef<Element | null>(null);
 
   const [inspect, setInspect] = useState<Element | null>(null);
+
+  const preview = useMemo(() => {
+    if (!inspect) return;
+
+    /*
+    const range = document.createRange();
+    range.selectNode(inspect);
+    */
+
+    // TODO 
+    return inspect.outerHTML;
+  }, [inspect]);
 
   const { refs, floatingStyles } = useFloating({
     open: Boolean(inspect),
@@ -90,8 +102,9 @@ export const TEIMarkupInspector = (props: TEIMarkupInspectorProps) => {
       className="r6o-tei-inspector-popover"
       ref={refs.setFloating}
       style={floatingStyles}>
-      
-
+      <div className="markup">
+        {preview}
+      </div>
       <Button>Add Annotation</Button>
     </div>
   ) : null;

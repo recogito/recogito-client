@@ -20,3 +20,15 @@
   width: 340px;
   z-index: 9999;
 }
+
+.r6o-tei-inspector-popover .markup {
+  background-color: var(--gray-200);
+  border: 1px solid var(--gray-400);
+  border-radius: 0.125rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: var(--font-small);
+  font-weight: 500;
+  line-height: 150%;
+  padding: 0.25rem 0.5rem;
+  white-space: pre-line;
+}
