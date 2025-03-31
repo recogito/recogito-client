@@ -45,7 +45,11 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
             }
           </Dialog.Description>
           <fieldset className='invite-user-fieldset'>
-            <label className='invite-user-label' htmlFor='email'>
+            <label
+              className='invite-user-label'
+              htmlFor='email'
+              aria-label={t['enter user email']}
+            >
               {t['email']}
             </label>
             <input
@@ -73,7 +77,7 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>
-            <button className='invite-user-icon-button' aria-label='Close'>
+            <button className='invite-user-icon-button' aria-label={t['close']}>
               <X size={18} />
             </button>
           </Dialog.Close>

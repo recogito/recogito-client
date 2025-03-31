@@ -6,7 +6,10 @@ import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { GetPlugins } from '@apps/project-settings/GetPlugins';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { BackButtonBar } from '@components/BackButtonBar';
-import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
+import {
+  type SaveState,
+  TinySaveIndicator,
+} from '@components/TinySaveIndicator';
 import { Button } from '@components/Button';
 import { TopBar } from '@components/TopBar';
 import { ExtensionMount } from '@components/Plugins';
@@ -98,8 +101,8 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         },
       };
 
-      setInstalledPlugins(all =>
-        all.map(i => (i.plugin.name === installed.plugin.name ? next : i))
+      setInstalledPlugins((all) =>
+        all.map((i) => (i.plugin.name === installed.plugin.name ? next : i))
       );
 
       updatePluginSettings(
@@ -123,16 +126,18 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     // Optimistic update
     onPluginRemoved(installed);
 
-    deleteInstalledPlugin(supabase, props.project.id, installed.plugin.name).then(
-      ({ error }) => {
-        if (error) {
-          onError(error.message);
+    deleteInstalledPlugin(
+      supabase,
+      props.project.id,
+      installed.plugin.name
+    ).then(({ error }) => {
+      if (error) {
+        onError(error.message);
 
-          // Rollback
-          setInstalledPlugins(before);
-        }
+        // Rollback
+        setInstalledPlugins(before);
       }
-    );
+    });
   };
 
   const saveProjectSettings = () => {
@@ -233,9 +238,10 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
   const type = openEdit ? 'single_team' : 'assignments';
 
   const renderAdminExtension = (config: PluginInstallationConfig) => {
-    const e = (config.plugin.extensions || []).find(e => e.extension_point === 'admin');
+    const e = (config.plugin.extensions || []).find(
+      (e) => e.extension_point === 'admin'
+    );
 
-    
     return e ? (
       <div className='plugin-admin'>
         <ExtensionMount
@@ -245,7 +251,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
         />
       </div>
     ) : null;
-  }
+  };
 
   return (
     <>
@@ -314,7 +320,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       className='project-settings-radio-group-root'
                       defaultValue='private'
                       value={visibility}
-                      aria-label='View density'
+                      aria-label={t['set project visibility']}
                       onValueChange={(value) =>
                         value === 'public'
                           ? setOpenJoin(true)
@@ -377,7 +383,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                         className='project-settings-radio-group-root'
                         defaultValue='assignments'
                         value={type}
-                        aria-label='View density'
+                        aria-label={t['set project type']}
                         onValueChange={(value) =>
                           value === 'assignments'
                             ? setOpenEdit(false)
@@ -435,7 +441,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       className='project-settings-radio-group-root'
                       defaultValue='closed'
                       value={documentViewRight}
-                      aria-label='Document view right'
+                      aria-label={t['document view right']}
                       onValueChange={(value: DocumentViewRight) =>
                         setDocumentViewRight(value)
                       }
@@ -607,7 +613,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
               <div>
                 <h2>Installed Plugins ({installedPlugins.length})</h2>
 
-                {installedPlugins.map(i => (
+                {installedPlugins.map((i) => (
                   <section key={i.plugin.name} className='plugin-admin-tile'>
                     <div className='plugin-meta'>
                       <h3>{i.plugin.name}</h3>
