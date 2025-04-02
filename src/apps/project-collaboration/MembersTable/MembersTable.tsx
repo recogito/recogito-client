@@ -80,7 +80,7 @@ export const MembersTable = (props: MembersTableProps) => {
               {!isAllSelected && (
                 <Label
                   htmlFor='all-users'
-                  aria-label='select all users for this action'
+                  aria-label={t['select all users for this action']}
                 >
                   <span>
                     <Square size={20} id='all-users' />
