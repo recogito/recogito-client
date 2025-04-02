@@ -146,7 +146,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                       onSelect={onExportTEI(true)}
                       aria-label={
                         t[
-                          'download this document`s public and your privates annotations as a t e i file'
+                          'download this document`s public and your private annotations as a t e i file'
                         ]
                       }
                     >
@@ -186,7 +186,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                       onSelect={onExportPDF(true)}
                       aria-label={
                         t[
-                          'download this document`s public and your privates annotations as a p d f file'
+                          'download this document`s public and your private annotations as a p d f file'
                         ]
                       }
                     >
@@ -226,7 +226,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     onSelect={onExportCSV(true)}
                     aria-label={
                       t[
-                        'download this document`s public and your privates annotations as a c s v file'
+                        'download this document`s public and your private annotations as a c s v file'
                       ]
                     }
                   >
