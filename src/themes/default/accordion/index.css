@@ -25,7 +25,7 @@
 
 .accordion-item:focus-within {
   background-color: #fff; 
-	display: flex;
+
 	position: relative;
 	z-index: 2;
 }
