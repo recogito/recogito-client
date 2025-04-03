@@ -1,4 +1,7 @@
 @import '@radix-ui/themes/styles.css';
+
+@import './accordion/index.css';
+@import './alert-dialog/index.css';
 @import './annotation/index.css';
 @import './avatar/index.css';
 @import './badge/index.css';
@@ -18,8 +21,6 @@
 @import './toast/index.css';
 @import './tooltip/index.css';
 @import './scroll-area/index.css';
-@import './accordian/index.css';
-@import './alert-dialog/index.css';
 
 @font-face {
   font-family: Inter;
@@ -269,6 +270,18 @@ p {
   font-weight: 600;
   font-size: 16px;
   line-height: 19.36px;
+}
+
+.sr-only {
+  /** https://gist.github.com/ffoodd/000b59f431e3e64e4ce1a24d5bb36034 **/
+  border: 0 !important;
+	clip-path: inset(50%) !important;
+	height: 1px !important;
+	margin: -1px !important;
+	overflow: hidden !important;
+	padding: 0 !important;
+	width: 1px !important;
+	white-space: nowrap !important;
 }
 
 input,
