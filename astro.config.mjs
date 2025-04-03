@@ -2,12 +2,9 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
 
-import GeoTaggingPlugin from '@recogito/plugin-geotagging';
-
 export default defineConfig({
   integrations: [
-    react(),
-    GeoTaggingPlugin()
+    react()
   ],
   output: 'server',
   adapter: netlify(),
