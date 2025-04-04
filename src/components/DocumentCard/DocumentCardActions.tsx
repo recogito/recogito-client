@@ -18,7 +18,7 @@ import {
   UsersThree
 } from '@phosphor-icons/react';
 
-const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
+const { Content, Item, Portal, Root, Separator, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
 interface DocumentCardActionsProps {
 
@@ -38,14 +38,17 @@ interface DocumentCardActionsProps {
 
   onExportCSV?(includePrivate?: boolean): void;
 
+  onExportPDF?(includePrivate?: boolean): void;
+
   onExportTEI?(includePrivate?: boolean): void;
 
-  onExportPDF?(includePrivate?: boolean): void;
+  onExportW3C?(includePrivate?: boolean): void;
 
   onOpenMetadata?(): void;
 }
 
 export const DocumentCardActions = (props: DocumentCardActionsProps) => {
+
   const { t } = props.i18n;
 
   const [confirming, setConfirming] = useState(false);
@@ -53,20 +56,13 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
   const onOpen = (tab: boolean) => (evt: Event) => {
     evt.preventDefault();
     evt.stopPropagation();
-
     props.onOpen(tab);
   }
 
   const extensions = useExtensions('project:document-actions');
 
-  const onExportTEI = (includePrivate: boolean) => () =>
-    props.onExportTEI && props.onExportTEI(includePrivate);
-
-  const onExportPDF = (includePrivate: boolean) => () =>
-    props.onExportPDF && props.onExportPDF(includePrivate);
-
-  const onExportCSV = (includePrivate: boolean) => () =>
-    props.onExportCSV && props.onExportCSV(includePrivate);
+  const onExport = (fn: ((includePrivate?: boolean) => void) | undefined, includePrivate: boolean) => () =>
+    fn && fn(includePrivate);
 
   return (
     <ConfirmedAction.Root
@@ -99,6 +95,8 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Item>
             )}
 
+            <Separator className="dropdown-separator" />
+
             {props.document.content_type === 'text/xml' && (
               <Sub>
                 <SubTrigger className="dropdown-subtrigger">
@@ -113,11 +111,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     className="dropdown-subcontent"
                     alignOffset={-5}>
 
-                    <Item className="dropdown-item" onSelect={onExportTEI(false)}>
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportTEI, false)}>
                       <UsersThree size={16} /> {t['Public annotations only']}
                     </Item>
 
-                    <Item className="dropdown-item" onSelect={onExportTEI(true)}>
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportTEI, true)}>
                       <Detective size={16} /> {t['Include my private annotations']}
                     </Item>
                   </SubContent>
@@ -139,11 +137,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     className="dropdown-subcontent"
                     alignOffset={-5}>
 
-                    <Item className="dropdown-item" onSelect={onExportPDF(false)}>
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportPDF, false)}>
                       <UsersThree size={16} /> {t['Public annotations only']}
                     </Item>
 
-                    <Item className="dropdown-item" onSelect={onExportPDF(true)}>
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportPDF, true)}>
                       <Detective size={16} /> {t['Include my private annotations']}
                     </Item>
                   </SubContent>
@@ -164,16 +162,42 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                   className="dropdown-subcontent"
                   alignOffset={-5}>
 
-                  <Item className="dropdown-item" onSelect={onExportCSV(false)}>
+                  <Item className="dropdown-item" onSelect={onExport(props.onExportCSV, false)}>
                     <UsersThree size={16} /> {t['Public annotations only']}
                   </Item>
 
-                  <Item className="dropdown-item" onSelect={onExportCSV(true)}>
+                  <Item className="dropdown-item" onSelect={onExport(props.onExportCSV, true)}>
                     <Detective size={16} /> {t['Include my private annotations']}
                   </Item>
                 </SubContent>
               </Portal>
             </Sub>
+
+            <Sub>
+              <SubTrigger className="dropdown-subtrigger">
+                <DownloadSimple size={16} /> <span>{t['Export Annotations as W3C/JSONLD']}</span>
+                <div className="right-slot">
+                  <CaretRight size={14} />
+                </div>
+              </SubTrigger>
+
+              <Portal>
+                <SubContent
+                  className="dropdown-subcontent"
+                  alignOffset={-5}>
+
+                  <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, false)}>
+                    <UsersThree size={16} /> {t['Public annotations only']}
+                  </Item>
+
+                  <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, true)}>
+                    <Detective size={16} /> {t['Include my private annotations']}
+                  </Item>
+                </SubContent>
+              </Portal>
+            </Sub>
+
+            <Separator className="dropdown-separator" />
 
             {extensions.map(({ extension, config }) => (
               <ExtensionMount 
@@ -185,6 +209,10 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 documentId={props.document.id}
                 />
             ))}
+
+            {extensions.length > 0 && (
+              <Separator className="dropdown-separator" />
+            )}
 
             {props.allowDeleteDocument && (
               <ConfirmedAction.Trigger>

@@ -6,7 +6,6 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 
 const crosswalkTarget = (target: any) => {
-
   const value = JSON.parse(target.value);
 
   if (value.type === 'RECTANGLE') {
