@@ -1,5 +1,6 @@
 
 
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getMyProfile } from '@backend/crud';
@@ -8,6 +9,35 @@ import type { APIRoute } from 'astro';
 import { serializeW3CImageAnnotation } from '@annotorious/annotorious';
 import type { AnnotationBody, ImageAnnotation, W3CAnnotationBody } from '@annotorious/annotorious';
 import { quillToHTML } from '@util/export';
+
+const isNote = (a: SupabaseAnnotation) => !a.target.selector;
+
+const isPlainTextAnnotation = (a: SupabaseAnnotation) => {
+  if (!Array.isArray(a.target.selector)) return false;
+
+  return a.target.selector.every(s => 
+    typeof s.start === 'number' && typeof s.end === 'number');
+}
+
+const isTEIAnnotation = (a: SupabaseAnnotation) => {
+  if (!isPlainTextAnnotation(a)) return false;
+
+  return (a.target.selector as any[]).every(s => 
+    s.startSelector?.type === 'XPathSelector' && s.endSelector?.type === 'XPathSelector');
+}
+
+const isPDFAnnotation = (a: SupabaseAnnotation) => {
+  if (!Array.isArray(a.target.selector)) return false;
+  return a.target.selector.every(s => 
+    typeof s.start === 'number' && typeof s.end === 'number' && typeof s.pageNumber === 'number');
+}
+
+const isTextAnnotation = (a: SupabaseAnnotation) => 
+  isPlainTextAnnotation(a) || isTEIAnnotation(a) || isPDFAnnotation(a);
+
+const isImageAnnotation = (a: SupabaseAnnotation) =>
+  (a.target.selector as any)?.type === 'RECTANGLE' ||
+  (a.target.selector as any)?.type === 'POLYGON';
 
 const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
   const crosswalkOne= (body: AnnotationBody) => {
@@ -18,7 +48,7 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
     const value = isQuillBody ? quillToHTML(body.value!) : body.value;
 
     const crosswalked: any = {
-      created: created?.toISOString() || undefined,
+      created,
       creator: creator?.name ? { id: creator.id, name: creator.name } : undefined,
       purpose,
       type: body.type || 'TextualBody',
@@ -74,19 +104,20 @@ export const GET: APIRoute = async ({ cookies, params, request }) => {
       { status: 500 }); 
   }
 
-  console.log('yay');
-
-  const imageAnnotations = annotations.data.filter(a => 
-    (a.target.selector as any)?.type === 'RECTANGLE' ||
-    (a.target.selector as any)?.type === 'POLYGON'
-  );
-
-  // 
-  const mapped = imageAnnotations.map(annotation => {
-    const w3c = serializeW3CImageAnnotation(annotation as ImageAnnotation, projectId);
+  const mapped = annotations.data.map(annotation => {
+    if (isNote(annotation)) {
+      // Notes - just crosswalk the bodies
+      return annotation;
+    } else if (isImageAnnotation(annotation)) {
+      return serializeW3CImageAnnotation(annotation as ImageAnnotation, projectId);
+    } else {
+      return annotation;
+    }
+  }).map(annotation => {
+    const { bodies, body, ...rest } = annotation as any;
     return {
-      ...w3c,
-      body: crosswalkAnnotationBodies(annotation.bodies)
+      ...rest,
+      body: crosswalkAnnotationBodies([...(bodies || []), ...(body || [])])
     }
   });
 
