@@ -1,13 +1,14 @@
-
-
+import type { APIRoute } from 'astro';
+import { serializeW3CImageAnnotation } from '@annotorious/annotorious';
+import type { AnnotationBody, ImageAnnotation, W3CAnnotationBody } from '@annotorious/annotorious';
+import { serializeW3CTextAnnotation } from '@recogito/text-annotator';
+import { serializeW3CTEIAnnotation } from '@recogito/text-annotator-tei';
+import type { TEIAnnotation, TextAnnotation } from '@recogito/react-text-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import type { APIRoute } from 'astro';
-import { serializeW3CImageAnnotation } from '@annotorious/annotorious';
-import type { AnnotationBody, ImageAnnotation, W3CAnnotationBody } from '@annotorious/annotorious';
 import { quillToHTML } from '@util/export';
 
 const isNote = (a: SupabaseAnnotation) => !a.target.selector;
@@ -31,9 +32,6 @@ const isPDFAnnotation = (a: SupabaseAnnotation) => {
   return a.target.selector.every(s => 
     typeof s.start === 'number' && typeof s.end === 'number' && typeof s.pageNumber === 'number');
 }
-
-const isTextAnnotation = (a: SupabaseAnnotation) => 
-  isPlainTextAnnotation(a) || isTEIAnnotation(a) || isPDFAnnotation(a);
 
 const isImageAnnotation = (a: SupabaseAnnotation) =>
   (a.target.selector as any)?.type === 'RECTANGLE' ||
@@ -110,7 +108,15 @@ export const GET: APIRoute = async ({ cookies, params, request }) => {
       return annotation;
     } else if (isImageAnnotation(annotation)) {
       return serializeW3CImageAnnotation(annotation as ImageAnnotation, projectId);
+    } else if (isTEIAnnotation(annotation)) {
+      return serializeW3CTEIAnnotation(annotation as TEIAnnotation, projectId);
+    } else if (isPDFAnnotation(annotation)) {
+      // TODO
+      return annotation;
+    } else if (isPlainTextAnnotation(annotation)) {
+      return serializeW3CTextAnnotation(annotation as TextAnnotation, projectId);
     } else {
+      // Should never happen
       return annotation;
     }
   }).map(annotation => {
