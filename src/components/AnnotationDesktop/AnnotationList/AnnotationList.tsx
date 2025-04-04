@@ -74,7 +74,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
   const annotations = props.filter ? 
     applyFilter().filter(props.filter) : applyFilter();
 
-  const { selected, pointerEvent } = useSelection();
+  const { selected, event: pointerEvent } = useSelection();
 
   const sorted = useMemo(() => {
     // @ts-ignore
