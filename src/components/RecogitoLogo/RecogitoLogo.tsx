@@ -17,6 +17,8 @@ export const RecogitoLogo = (props: Props) => (
     viewBox='0 0 644 121'
     fill='none'
     xmlns='http://www.w3.org/2000/svg'
+    role='img'
+    aria-label="Recogito Studio Logo"
   >
     <path
       fillRule='evenodd'
@@ -87,4 +89,4 @@ export const RecogitoLogo = (props: Props) => (
       fill={props.contrastColor}
     />
   </svg>
-)
+);

@@ -4,8 +4,16 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
 import { useExtensions } from '@recogito/studio-sdk';
-import { Visibility, type SupabaseAnnotation, type SupabaseAnnotationBody } from '@recogito/annotorious-supabase';
-import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
+import {
+  Visibility,
+  type SupabaseAnnotation,
+  type SupabaseAnnotationBody,
+} from '@recogito/annotorious-supabase';
+import {
+  QuillEditor,
+  QuillEditorRoot,
+  QuillEditorToolbar,
+} from '@components/QuillEditor';
 import { ExtensionMount } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
@@ -15,9 +23,8 @@ import type { Translations, VocabularyTerm } from 'src/Types';
 import './EmptyAnnotation.css';
 
 interface EmptyAnnotationProps {
-
   annotation: SupabaseAnnotation;
-  
+
   autoFocus?: boolean;
 
   i18n: Translations;
@@ -47,25 +54,23 @@ interface EmptyAnnotationProps {
   onUpdateAnnotation(updated: SupabaseAnnotation): void;
 
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
-
 }
 
 export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
-
   const { t } = props.i18n;
 
   const { target } = props.annotation;
 
   const extensions = useExtensions('annotation.*.annotation-editor');
 
-  const creator: PresentUser | User | undefined = 
-    props.present.find(p => p.id === target?.creator?.id) || target?.creator;
+  const creator: PresentUser | User | undefined =
+    props.present.find((p) => p.id === target?.creator?.id) || target?.creator;
 
   const isMine = creator?.id === props.me.id;
 
   const [value, setValue] = useState<Delta | undefined>();
 
-  const tags = props.annotation.bodies.filter(b => b.purpose === 'tagging');
+  const tags = props.annotation.bodies.filter((b) => b.purpose === 'tagging');
 
   const onSave = () => {
     if (value) {
@@ -80,7 +85,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         created: new Date(),
         purpose: 'commenting',
         format: 'Quill',
-        value: JSON.stringify(value)
+        value: JSON.stringify(value),
       };
 
       setValue(undefined);
@@ -89,24 +94,24 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
     }
 
     props.onSubmit();
-  }
+  };
 
   const onCreateTag = (value: VocabularyTerm) => {
     const tag: AnnotationBody = {
       id: uuidv4(),
       annotation: props.annotation.id,
-      creator: {  
+      creator: {
         id: props.me.id,
         name: props.me.name,
-        avatar: props.me.avatar
+        avatar: props.me.avatar,
       },
       created: new Date(),
       purpose: 'tagging',
-      value: value.id ? JSON.stringify(value) : value.label
+      value: value.id ? JSON.stringify(value) : value.label,
     };
 
     props.onCreateBody && props.onCreateBody(tag);
-  }
+  };
 
   const isPrivate = props.annotation.visibility === Visibility.PRIVATE;
 
@@ -114,48 +119,51 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
     'annotation empty',
     props.isSelected ? 'selected' : undefined,
     props.isNote ? 'note' : undefined,
-    isPrivate ? 'private' : undefined
-  ].filter(Boolean).join(' ');
+    isPrivate ? 'private' : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return isMine ? (
     <div className={className}>
       <QuillEditorRoot>
-        <div className="annotation-header">
-          <div className="annotation-header-left">
-            <AuthorAvatar
-              author={props.me}
-              isPrivate={isPrivate} />
+        <div className='annotation-header'>
+          <div className='annotation-header-left'>
+            <AuthorAvatar author={props.me} isPrivate={isPrivate} />
           </div>
 
-          <div className="annotation-toolbar-wrapper">
-            <QuillEditorToolbar
-              i18n={props.i18n} />
+          <div className='annotation-toolbar-wrapper'>
+            <QuillEditorToolbar i18n={props.i18n} />
           </div>
         </div>
-        
-        <div className="annotation-comment-wrapper">
-          <QuillEditor 
+
+        <div className='annotation-comment-wrapper'>
+          <QuillEditor
             autoFocus={props.autoFocus}
             i18n={props.i18n}
             value={value}
             onChange={setValue}
-            placeholder={t['Add a comment']} />
+            placeholder={t['Add a comment']}
+          />
         </div>
 
-        <div className="annotation-footer">
-          <div className="annotation-footer-left">
-            <TagList 
+        <div className='annotation-footer'>
+          <div className='annotation-footer-left'>
+            <TagList
               isEditable
               i18n={props.i18n}
               tags={tags}
               vocabulary={props.tagVocabulary}
-              onCreateTag={onCreateTag}  
-              onDeleteTag={props.onDeleteBody} />
+              onCreateTag={onCreateTag}
+              onDeleteTag={props.onDeleteBody}
+            />
           </div>
 
-          <button 
-            className="save save-arrow annotation-footer-right"
-            onClick={onSave}>
+          <button
+            className='save save-arrow annotation-footer-right'
+            onClick={onSave}
+            aria-label={t['save annotation']}
+          >
             <ArrowRight size={20} />
           </button>
         </div>
@@ -167,31 +175,30 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           extension={extension}
           pluginConfig={config}
           me={props.me}
-          annotation={props.annotation} 
-          onUpdateAnnotation={props.onUpdateAnnotation} />
+          annotation={props.annotation}
+          onUpdateAnnotation={props.onUpdateAnnotation}
+        />
       ))}
     </div>
   ) : (
     <div className={`${className} typing`}>
-      <div className="annotation-header">
-        <div className="annotation-header-left">
-          <AuthorAvatar 
-            author={creator}
-            isPrivate={isPrivate} />
+      <div className='annotation-header'>
+        <div className='annotation-header-left'>
+          <AuthorAvatar author={creator} isPrivate={isPrivate} />
 
           <div>
-            <AuthorDetails 
+            <AuthorDetails
               i18n={props.i18n}
-              isPrivate={isPrivate} 
-              creator={creator} />
+              isPrivate={isPrivate}
+              creator={creator}
+            />
 
-            <div className="typing-animation">
+            <div className='typing-animation'>
               <div />
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-
-}
+  );
+};

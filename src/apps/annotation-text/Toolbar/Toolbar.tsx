@@ -2,17 +2,30 @@ import { useEffect } from 'react';
 import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
 import type { Color, PresentUser } from '@annotorious/react';
 import { useExtensions } from '@recogito/studio-sdk';
-import { ColorCodingSelector, DeleteSelected, ColorLegend, ErrorBadge, useColorCoding, useFilter, useCollapsibleToolbar } from '@components/AnnotationDesktop';
+import {
+  ColorCodingSelector,
+  DeleteSelected,
+  ColorLegend,
+  ErrorBadge,
+  useColorCoding,
+  useFilter,
+  useCollapsibleToolbar,
+} from '@components/AnnotationDesktop';
 import { ExtensionMount } from '@components/Plugins';
 import { PresenceStack } from '@components/Presence';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
 import { PDFControls } from './PDFControls';
-import type { DocumentLayer, DocumentWithContext, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type {
+  DocumentLayer,
+  DocumentWithContext,
+  Policies,
+  Translations,
+  VocabularyTerm,
+} from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { MoreTools } from './MoreTools';
 
 interface ToolbarProps {
-
   document: DocumentWithContext;
 
   i18n: Translations;
@@ -46,11 +59,9 @@ interface ToolbarProps {
   onToggleLeftDrawer(): void;
 
   onToggleRightDrawer(): void;
-
 }
 
 export const Toolbar = (props: ToolbarProps) => {
-
   const { t } = props.i18n;
 
   const contextName = props.document.context.name;
@@ -60,7 +71,7 @@ export const Toolbar = (props: ToolbarProps) => {
   const isPDF = props.document.content_type === 'application/pdf';
 
   const { numConditions } = useFilter();
-  
+
   const back = `/${props.i18n.lang}/projects/${project_id}`;
 
   const extensions = useExtensions('annotation.text.toolbar');
@@ -70,112 +81,111 @@ export const Toolbar = (props: ToolbarProps) => {
   const { ref, collapsed } = useCollapsibleToolbar();
 
   useEffect(() => {
-    if (colorCoding?.style)
-      props.onChangeStyle(colorCoding.style);
-    else
-      props.onChangeStyle();
+    if (colorCoding?.style) props.onChangeStyle(colorCoding.style);
+    else props.onChangeStyle();
   }, [colorCoding]);
 
   return (
-    <div
-      ref={ref}
-      className="anno-toolbar ta-toolbar">
-      <div className="anno-toolbar-slot anno-toolbar-slot-left">
-        <div className="anno-toolbar-group">
-          <div 
-            className="with-notification">
-            <button 
-              className={props.leftDrawerOpen ? 'active' :  undefined}
-              onClick={props.onToggleLeftDrawer}>
+    <div ref={ref} className='anno-toolbar ta-toolbar'>
+      <div className='anno-toolbar-slot anno-toolbar-slot-left'>
+        <div className='anno-toolbar-group'>
+          <div className='with-notification'>
+            <button
+              className={props.leftDrawerOpen ? 'active' : undefined}
+              onClick={props.onToggleLeftDrawer}
+              aria-label={t['open or close the filters tab']}
+            >
               <FunnelSimple size={18} />
             </button>
 
             {numConditions > 0 && (
-              <span className="notification-bubble">
+              <span className='notification-bubble'>
                 <span>{numConditions}</span>
               </span>
             )}
           </div>
         </div>
 
-        <div className="anno-toolbar-group anno-toolbar-title">
+        <div className='anno-toolbar-group anno-toolbar-title'>
           {contextName ? (
             <>
               <GraduationCap size={18} />
 
               <h1>
-                <a 
-                  href={back} 
-                  title={t['Back to assignment overview']}>
+                <a href={back} title={t['Back to assignment overview']}>
                   <div>{contextName}</div>
                 </a>
                 <span>/</span>
-                <div className="document-title in-assignment">{props.document.name}</div>
+                <div className='document-title in-assignment'>
+                  {props.document.name}
+                </div>
               </h1>
             </>
           ) : (
             <h1>
-              <div className="document-title">{props.document.name}</div>
+              <div className='document-title'>{props.document.name}</div>
             </h1>
           )}
         </div>
 
-        {props.showConnectionError && (
-          <ErrorBadge i18n={props.i18n} />
-        )}
+        {props.showConnectionError && <ErrorBadge i18n={props.i18n} />}
       </div>
 
-      <div className={`anno-toolbar-slot anno-toolbar-slot-center${collapsed? ' collapsed': ''}`}>     
+      <div
+        className={`anno-toolbar-slot anno-toolbar-slot-center${
+          collapsed ? ' collapsed' : ''
+        }`}
+      >
         {!props.isLocked && (
           <PrivacySelector
             mode={props.privacy}
             i18n={props.i18n}
-            onChangeMode={props.onChangePrivacy} />
+            onChangeMode={props.onChangePrivacy}
+          />
         )}
 
-        {!collapsed && (
-          <div className="anno-toolbar-divider" />
-        )}
+        {!collapsed && <div className='anno-toolbar-divider' />}
 
-        {(isPDF && !collapsed) && (
-          <div className="anno-toolbar-group">
+        {isPDF && !collapsed && (
+          <div className='anno-toolbar-group'>
             <PDFControls i18n={props.i18n} />
           </div>
         )}
 
         {!props.isLocked && (
           <DeleteSelected
-            activeLayer={props.layers?.find(l => l.is_active)}
+            activeLayer={props.layers?.find((l) => l.is_active)}
             i18n={props.i18n}
-            policies={props.policies} />
+            policies={props.policies}
+          />
         )}
 
         {!collapsed && (
           <>
-            <div className="anno-toolbar-divider" />
+            <div className='anno-toolbar-divider' />
 
-            <ColorCodingSelector 
+            <ColorCodingSelector
               document={props.document}
-              i18n={props.i18n} 
-              present={props.present} 
+              i18n={props.i18n}
+              present={props.present}
               layers={props.layers}
-              layerNames={props.layerNames} 
-              tagVocabulary={props.tagVocabulary} />
+              layerNames={props.layerNames}
+              tagVocabulary={props.tagVocabulary}
+            />
 
-            <ColorLegend 
-              i18n={props.i18n} />
+            <ColorLegend i18n={props.i18n} />
           </>
         )}
       </div>
 
-      <div className="anno-toolbar-slot anno-toolbar-slot-right">  
+      <div className='anno-toolbar-slot anno-toolbar-slot-right'>
         {props.present.length > 1 && (
           <>
-            <div className="anno-toolbar-section anno-toolbar-presence">
+            <div className='anno-toolbar-section anno-toolbar-presence'>
               <PresenceStack present={props.present} />
             </div>
 
-            <div className="anno-desktop-overlay-divider" />
+            <div className='anno-desktop-overlay-divider' />
           </>
         )}
 
@@ -183,35 +193,35 @@ export const Toolbar = (props: ToolbarProps) => {
           <MoreTools
             document={props.document}
             i18n={props.i18n}
-            isPDF={isPDF} 
+            isPDF={isPDF}
             layers={props.layers}
             layerNames={props.layerNames}
             present={props.present}
-            tagVocabulary={props.tagVocabulary} />
+            tagVocabulary={props.tagVocabulary}
+          />
         ) : (
-          <div className="anno-toolbar-divider" />
+          <div className='anno-toolbar-divider' />
         )}
 
         {extensions.map(({ extension, config }) => (
           <ExtensionMount
             key={extension.name}
-            extension={extension} 
+            extension={extension}
             pluginConfig={config}
-            document={props.document} />
+            document={props.document}
+          />
         ))}
 
-        {extensions.length > 0 && (
-          <div className="anno-toolbar-divider" />
-        )}
+        {extensions.length > 0 && <div className='anno-toolbar-divider' />}
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}
           aria-label={t['Show annotation list']}
-          onClick={props.onToggleRightDrawer}>
+          onClick={props.onToggleRightDrawer}
+        >
           <Chats size={17} />
         </button>
       </div>
     </div>
-  )
-
-}
+  );
+};

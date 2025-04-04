@@ -88,7 +88,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       className='create-project-radio-group-root'
                       defaultValue='private'
                       value={visibility}
-                      aria-label='View density'
+                      aria-label={t['set project visibility']}
                       onValueChange={(value) =>
                         value === 'public'
                           ? setOpenJoin(true)
@@ -158,7 +158,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                       className='create-project-radio-group-root lower'
                       defaultValue='assignments'
                       value={type}
-                      aria-label='View density'
+                      aria-label={t['set project type']}
                       onValueChange={(value) =>
                         value === 'assignments'
                           ? setOpenEdit(false)

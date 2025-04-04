@@ -29,7 +29,10 @@ const useFooter = config.branding.bottom_logos_enabled;
         {
           loginLogo && loginLogo.length > 0 && (
             <div class='top-logo'>
-              <img src={`/img/branding/login/${loginLogo}`} />
+              <img
+                src={`/img/branding/login/${loginLogo}`}
+                alt='Branding Logo'
+              />
             </div>
           )
         }
@@ -53,7 +56,7 @@ const useFooter = config.branding.bottom_logos_enabled;
       </div>
     </main>
     <div class='img-container'>
-      <img class='banner-img' src={splashURL} />
+      <img class='banner-img' src={splashURL} alt='Splash page image' />
     </div>
   </div>
 </HeaderLayout>

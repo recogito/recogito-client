@@ -44,7 +44,7 @@ interface DocumentCardProps {
 export const DocumentCard = (props: DocumentCardProps) => {
   const { context, document } = props;
 
-  const { lang } = props.i18n;
+  const { t, lang } = props.i18n;
 
   const [openMetadata, setOpenMetadata] = useState(false);
 
@@ -125,7 +125,12 @@ export const DocumentCard = (props: DocumentCardProps) => {
     >
       <div className='document-card' onClick={onClick}>
         {props.isAdmin && (
-          <div className='document-drag-handle' {...attributes} {...listeners}>
+          <div
+            className='document-drag-handle'
+            {...attributes}
+            {...listeners}
+            aria-label={t['rearrange this document by dragging']}
+          >
             <DotsSix />
           </div>
         )}

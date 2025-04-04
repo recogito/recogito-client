@@ -762,6 +762,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                     <ToggleDisplay
                       display={documentsView}
                       onChangeDisplay={(value) => setDocumentsView(value)}
+                      i18n={props.i18n}
                     />
 
                     {UploadActions}

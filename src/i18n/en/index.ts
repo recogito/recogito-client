@@ -19,42 +19,52 @@ import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
 import projectRequest from './project-request.json';
 import email from './email.json';
+import a11y from './a11y.json';
 
 export default {
-  'annotation-common': annotationCommon,
+  'annotation-common': { ...annotationCommon, ...a11y },
   'annotation-image': {
     ...annotationCommon,
     ...annotationImage,
     ...accountMenu,
+    ...a11y,
   },
-  'annotation-text': { ...annotationCommon, ...annotationText, ...accountMenu },
-  'auth-forgot-password': authForgotPassword,
-  'auth-login': authLogin,
-  'auth-reset-password': authResetPassword,
-  'branding': branding,
-  'dashboard-account': { ...dashboardAccount, ...accountMenu },
+  'annotation-text': {
+    ...annotationCommon,
+    ...annotationText,
+    ...accountMenu,
+    ...a11y,
+  },
+  'auth-forgot-password': { ...authForgotPassword, ...a11y },
+  'auth-login': { ...authLogin, ...a11y },
+  'auth-reset-password': { ...authResetPassword, ...a11y },
+  branding: { ...branding, a11y },
+  'dashboard-account': { ...dashboardAccount, ...accountMenu, ...a11y },
   'dashboard-projects': {
     ...dashboardProjects,
     ...notifications,
     ...accountMenu,
+    ...a11y,
   },
-  error: error,
-  'project-assignment-details': projectAssignmentDetails,
-  'project-assignments': projectAssignments,
-  'project-collaboration': { ...projectCollaboration, ...accountMenu },
+  error: { ...error, ...a11y },
+  'project-assignment-details': { ...projectAssignmentDetails, ...a11y },
+  'project-assignments': { ...projectAssignments, ...a11y },
+  'project-collaboration': { ...projectCollaboration, ...accountMenu, ...a11y },
   'project-home': {
     ...projectHome,
     ...accountMenu,
     ...projectSidedbar,
     ...projectAssignments,
+    ...a11y,
   },
   'project-settings': {
     ...projectSettings,
     ...dashboardProjects,
     ...accountMenu,
+    ...a11y,
   },
-  'project-sidebar': { ...projectSidedbar, ...accountMenu },
-  'user-management': { ...userManagement, ...accountMenu },
-  'project-request': { ...projectRequest, ...accountMenu },
-  email: email,
+  'project-sidebar': { ...projectSidedbar, ...accountMenu, ...a11y },
+  'user-management': { ...userManagement, ...accountMenu, ...a11y },
+  'project-request': { ...projectRequest, ...accountMenu, ...a11y },
+  email: { ...email, ...a11y },
 };
