@@ -185,13 +185,6 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 documentId={props.document.id}
                 />
             ))}
-            
-            {props.onOpenMetadata && (
-              <Item className="dropdown-item" onSelect={props.onOpenMetadata}>
-                <PencilSimple size={16} />
-                <span>{ props.allowEditMetadata ? t['Edit document metadata'] : t['View document metadata']}</span>
-              </Item>
-            )}
 
             {props.allowDeleteDocument && (
               <ConfirmedAction.Trigger>
