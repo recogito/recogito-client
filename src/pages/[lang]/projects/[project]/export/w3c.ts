@@ -1,37 +1,37 @@
 
+
 import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
+import { serializeW3CImageAnnotation } from '@annotorious/annotorious';
+import type { AnnotationBody, ImageAnnotation, W3CAnnotationBody } from '@annotorious/annotorious';
+import { quillToHTML } from '@util/export';
 
-const crosswalkTarget = (target: any) => {
-  const value = JSON.parse(target.value);
+const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
+  const crosswalkOne= (body: AnnotationBody) => {
+    const { created, creator, purpose } = body;
 
-  if (value.type === 'RECTANGLE') {
-    const { x, y, w, h } = value.geometry;
+    const isQuillBody = (!purpose || purpose === 'commenting' || purpose === 'replying') && body.value?.startsWith('{');
   
-    return {
-      type: 'FragmentSelector',
-      conformsTo: 'http://www.w3.org/TR/media-frags/',
-      value: `xywh=pixel:${x},${y},${w},${h}`
-    };
-  } else if (value.type === 'POLYGON') {
-    const { points } = value.geometry;
+    const value = isQuillBody ? quillToHTML(body.value!) : body.value;
 
-    return  {
-      type: 'SvgSelector',
-      // @ts-ignore
-      value: `<polygon points="${points.map(xy => xy.join(',')).join(' ')}" />`
-    };
-  } else if (value.startSelector?.type === 'XPathSelector') {
-    return {
-      startSelector: value.startSelector,
-      endSelector: value.endSelector
+    const crosswalked: any = {
+      created: created?.toISOString() || undefined,
+      creator: creator?.name ? { id: creator.id, name: creator.name } : undefined,
+      purpose,
+      type: body.type || 'TextualBody',
+      value
     }
-  } else {
-    return value;
+
+    if (isQuillBody)
+      crosswalked.format = 'text/html';
+
+    return crosswalked as W3CAnnotationBody;
   }
+
+  return bodies.map(crosswalkOne);
 }
 
 export const GET: APIRoute = async ({ cookies, params, request }) => {
@@ -74,22 +74,24 @@ export const GET: APIRoute = async ({ cookies, params, request }) => {
       { status: 500 }); 
   }
 
-  const w3c = annotations.data.map(a => ({
-    '@context': 'http://www.w3.org/ns/anno.jsonld',
-    id: a.id,
-    type: 'Annotation',
-    body: a.bodies.map(b => ({
-      purpose: b.purpose,
-      value: b.value,
-      // @ts-ignore
-      creator: b.created_by.id,
-      // created: b.created_at
-    })),
-    target: crosswalkTarget(a.target)
-  }));
+  console.log('yay');
+
+  const imageAnnotations = annotations.data.filter(a => 
+    (a.target.selector as any)?.type === 'RECTANGLE' ||
+    (a.target.selector as any)?.type === 'POLYGON'
+  );
+
+  // 
+  const mapped = imageAnnotations.map(annotation => {
+    const w3c = serializeW3CImageAnnotation(annotation as ImageAnnotation, projectId);
+    return {
+      ...w3c,
+      body: crosswalkAnnotationBodies(annotation.bodies)
+    }
+  });
 
   return new Response(    
-    JSON.stringify(w3c, null, 2),
+    JSON.stringify(mapped, null, 2),
     { status: 200 }
   );
 
