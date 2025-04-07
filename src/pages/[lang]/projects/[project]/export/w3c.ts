@@ -1,17 +1,16 @@
 import type { APIRoute } from 'astro';
 import { serializeW3CImageAnnotation } from '@annotorious/annotorious';
 import type { AnnotationBody, ImageAnnotation, W3CAnnotationBody } from '@annotorious/annotorious';
-import { serializeW3CTextAnnotation } from '@recogito/text-annotator';
-import { serializeW3CTEIAnnotation } from '@recogito/text-annotator-tei';
-import type { TEIAnnotation, TextAnnotation } from '@recogito/react-text-annotator';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { type TextAnnotation, serializeW3CTextAnnotation } from '@recogito/text-annotator';
+import { type TEIAnnotation, serializeW3CTEIAnnotation } from '@recogito/text-annotator-tei';
+import type { PDFAnnotation } from '@recogito/pdf-annotator';
+import { serializeW3CPDFAnnotation } from '@recogito/pdf-annotator/w3c';
 import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { quillToHTML } from '@util/export';
-
-const isNote = (a: SupabaseAnnotation) => !a.target.selector;
 
 const isPlainTextAnnotation = (a: SupabaseAnnotation) => {
   if (!Array.isArray(a.target.selector)) return false;
@@ -103,20 +102,17 @@ export const GET: APIRoute = async ({ cookies, params, request }) => {
   }
 
   const mapped = annotations.data.map(annotation => {
-    if (isNote(annotation)) {
-      // Notes - just crosswalk the bodies
-      return annotation;
-    } else if (isImageAnnotation(annotation)) {
+    if (isImageAnnotation(annotation)) {
       return serializeW3CImageAnnotation(annotation as ImageAnnotation, projectId);
+    } else if (isPDFAnnotation(annotation)) {
+      return serializeW3CPDFAnnotation(annotation as PDFAnnotation, projectId);
     } else if (isTEIAnnotation(annotation)) {
       return serializeW3CTEIAnnotation(annotation as TEIAnnotation, projectId);
-    } else if (isPDFAnnotation(annotation)) {
-      // TODO
-      return annotation;
     } else if (isPlainTextAnnotation(annotation)) {
       return serializeW3CTextAnnotation(annotation as TextAnnotation, projectId);
     } else {
-      // Should never happen
+      // Should only ever happen for Notes - bodies will be
+      // crosswalked in the next mapping step
       return annotation;
     }
   }).map(annotation => {

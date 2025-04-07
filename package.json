@@ -44,8 +44,8 @@
     "@radix-ui/themes": "^3.2.1",
     "@react-spring/web": "^9.7.5",
     "@recogito/annotorious-supabase": "^1.2.0",
-    "@recogito/pdf-annotator": "^1.0.0",
-    "@recogito/react-pdf-annotator": "^1.0.0",
+    "@recogito/pdf-annotator": "^1.0.1",
+    "@recogito/react-pdf-annotator": "^1.0.1",
     "@recogito/react-text-annotator": "^3.0.1",
     "@recogito/studio-sdk": "^0.4.1",
     "@recogito/text-annotator": "^3.0.1",
@@ -100,7 +100,7 @@
     "@typescript-eslint/parser": "^8.14.0",
     "eslint": "^9.15.0",
     "eslint-plugin-react": "^7.37.2",
-    "typescript": "5.8.2"
+    "typescript": "5.8.3"
   },
   "optionalDependencies": {
     "@esbuild/linux-x64": "0.25.2",
