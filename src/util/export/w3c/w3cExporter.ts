@@ -37,15 +37,36 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
 
     const isQuillBody = (!purpose || purpose === 'commenting' || purpose === 'replying') && body.value?.startsWith('{');
   
-    const value = isQuillBody ? quillToHTML(body.value!) : body.value;
+    const isJSON = (() => {
+      if (typeof body.value !== 'string') return false;
+      try {
+        JSON.parse(body.value);
+      } catch (e) {
+        return false;
+      }
+      return true;
+    })();
+
+    const value = isQuillBody 
+      ? quillToHTML(body.value!) 
+      : isJSON ? JSON.parse(body.value!) : body.value;
 
     const crosswalked: any = {
       created,
       creator: creator?.name ? { id: creator.id, name: creator.name } : undefined,
       purpose,
-      type: body.type || 'TextualBody',
       value
     }
+
+    if (body.type) {
+      crosswalked.type = body.type;
+    } else if (!isJSON) {
+      if (purpose === 'commenting' || purpose === 'replying' || !purpose)
+        crosswalked.type = 'TextualBody';
+    }
+
+    if (isJSON)
+      crosswalked.format = 'application/json';
 
     if (isQuillBody)
       crosswalked.format = 'text/html';
