@@ -1,24 +1,28 @@
 import type { APIRoute } from 'astro';
-import { getAllDocumentLayersInContext, getAllDocumentLayersInProject, getAllLayersInProject, getAnnotations, getAssignment, getAvailableLayers, getProjectPolicies } from '@backend/helpers';
-import { getMyProfile, getProject } from '@backend/crud';
+import { getDocument, getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Project } from 'src/Types';
+import type { Document, Project } from 'src/Types';
 import { annotationsToW3C } from '@util/export/w3c/w3cExporter';
 import { Visibility } from '@recogito/annotorious-supabase';
-import { sanitizeFilename } from '@util/export';
+import { 
+  getAllDocumentLayersInContext, 
+  getAllDocumentLayersInProject, 
+  getAnnotations, 
+  getProjectPolicies 
+} from '@backend/helpers';
 
 const exportManifest = async (
   supabase: SupabaseClient, 
   url: URL, 
-  documentId: string,
+  document: Document,
   project: Project,
   contextId: string | null
 ) => {
   // Retrieve all layers, or just for the selected document
   const layers = contextId 
-    ? await getAllDocumentLayersInContext(supabase, documentId, contextId) 
-    : await getAllDocumentLayersInProject(supabase, documentId, project.id);
+    ? await getAllDocumentLayersInContext(supabase, document.id, contextId) 
+    : await getAllDocumentLayersInProject(supabase, document.id, project.id);
 
   if (layers.error || !layers.data)
     return new Response(
@@ -47,11 +51,11 @@ const exportManifest = async (
     filtered, 
     project.id
   );
-
-  // TODO manifest!
+  
+  const manifest = await fetch(document.meta_data!.url).then(res => res.json());
 
   return new Response(    
-    JSON.stringify(w3c, null, 2),
+    JSON.stringify(manifest, null, 2),
     {
       status: 200 
     }
@@ -91,7 +95,13 @@ export const GET: APIRoute = async ({ cookies, params, request, url }) => {
   const contextId = url.searchParams.get('context');
 
   if (documentId) {
-    return exportManifest(supabase, url, documentId, project.data, contextId);
+    const document = await getDocument(supabase, documentId);
+    if (document.error || !document.data.meta_data?.url)
+      return new Response(
+        JSON.stringify({ error: 'Not Found'}),
+        { status: 404 });
+
+    return exportManifest(supabase, url, document.data, project.data, contextId);
   } else {
     // TODO in theory, we could export a Collection manifest here, which links to the 
     // individual document Presentation manifests. But not sure if it really makes sense,
