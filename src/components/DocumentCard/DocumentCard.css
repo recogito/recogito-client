@@ -35,6 +35,10 @@
   position: relative;
 }
 
+.document-card-actions {
+  display: flex;
+}
+
 .document-card-actions button.unstyled.icon-only {
   height: 38px;
   width: 38px;
