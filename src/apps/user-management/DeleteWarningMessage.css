@@ -65,11 +65,11 @@
   line-height: 1;
   font-weight: 500;
   height: 35px;
-  background-color: var(--red-200);
-  color: var(--red-11);
+  background-color: var(--red-500);
+  color: white;
 }
 .delete-warning-button-red:hover {
-  background-color: var(--red-200);
+  background-color: var(--red-500);
 }
 .delete-warning-button-red:focus {
   box-shadow: 0 0 0 2px var(--red-500);

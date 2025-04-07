@@ -112,7 +112,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
                 props.onSwitchTab && props.onSwitchTab('documents');
               }}
             >
-              <button>{t['Documents']}</button>
+              <button aria-label={t['documents view']}>{t['Documents']}</button>
             </li>
             <li
               className={
@@ -122,7 +122,9 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
                 props.onSwitchTab && props.onSwitchTab('assignments');
               }}
             >
-              <button>{t['Assignments']}</button>
+              <button aria-label={t['assignments view']}>
+                {t['Assignments']}
+              </button>
             </li>
           </ul>
         ) : (

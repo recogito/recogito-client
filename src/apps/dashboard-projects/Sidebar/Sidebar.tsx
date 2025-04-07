@@ -8,7 +8,7 @@ import {
   Plus,
   TagSimple,
   Users,
-  UsersThree
+  UsersThree,
 } from '@phosphor-icons/react';
 import { TagContext } from '@components/TagContext';
 import { useCallback, useContext, useState } from 'react';
@@ -16,7 +16,7 @@ import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
-  Translations
+  Translations,
 } from 'src/Types.ts';
 import './Sidebar.css';
 
@@ -27,7 +27,7 @@ interface Props {
 
   me: MyProfile;
 
-  onChangeFilter:(filter: ProjectFilter | string) => void;
+  onChangeFilter: (filter: ProjectFilter | string) => void;
 
   policies?: Policies;
 
@@ -42,17 +42,25 @@ export const Sidebar = (props: Props) => {
   const { t } = props.i18n;
   const [mine, shared, openJoin] = props.projects;
 
-  const { tagDefinitions, onCreateTagDefinition, setToast } = useContext(TagContext);
+  const { tagDefinitions, onCreateTagDefinition, setToast } =
+    useContext(TagContext);
 
-  const onSaved = useCallback((name) => (
-    onCreateTagDefinition(name)
-      .then(() => setAddTagDefinition(false))
-      .then(() => setToast({
-        title: t['Success'],
-        description: t['Project group successfully added'].replace('${name}', name),
-        type: 'success'
-      }))
-  ), []);
+  const onSaved = useCallback(
+    (name: string) =>
+      onCreateTagDefinition(name)
+        .then(() => setAddTagDefinition(false))
+        .then(() =>
+          setToast({
+            title: t['Success'],
+            description: t['Project group successfully added'].replace(
+              '${name}',
+              name
+            ),
+            type: 'success',
+          })
+        ),
+    []
+  );
 
   const isReader = props.policies
     ? !props.policies.get('projects').has('INSERT')
@@ -65,6 +73,7 @@ export const Sidebar = (props: Props) => {
           <Button
             className='primary flat compact'
             onClick={() => setOpen(true)}
+            aria-label={t['open sidebar navigation']}
           >
             <CaretRight size={16} weight='bold' />
           </Button>
@@ -75,7 +84,6 @@ export const Sidebar = (props: Props) => {
 
   return (
     <aside className='dashboard-sidebar open'>
-
       <section className='dashboard-sidebar-header'>
         <h1>
           <span>{t['Projects']}</span>
@@ -83,22 +91,19 @@ export const Sidebar = (props: Props) => {
         <button
           className='primary flat compact'
           onClick={() => setOpen(false)}
+          aria-label={t['close sidebar']}
         >
           <CaretLeft size={16} weight='bold' />
         </button>
       </section>
 
       <section className='dashboard-sidebar-filters'>
-
         <ul className='dashboard-sidebar-tabs'>
           <li
             className={filter === ProjectFilter.MINE ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.MINE)}
           >
-            <File
-              className='icon'
-              size={20}
-            />
+            <File className='icon' size={20} />
 
             {t['My Projects']}
 
@@ -112,10 +117,7 @@ export const Sidebar = (props: Props) => {
               className={filter === ProjectFilter.SHARED ? 'active' : undefined}
               onClick={() => onChangeFilter(ProjectFilter.SHARED)}
             >
-              <Users
-                className='icon'
-                size={20}
-              />
+              <Users className='icon' size={20} />
               {t['Shared with me']}
 
               <span
@@ -130,10 +132,7 @@ export const Sidebar = (props: Props) => {
             className={filter === ProjectFilter.PUBLIC ? 'active' : undefined}
             onClick={() => onChangeFilter(ProjectFilter.PUBLIC)}
           >
-            <UsersThree
-              className='icon'
-              size={20}
-            />
+            <UsersThree className='icon' size={20} />
 
             {t['Public Projects']}
 
@@ -147,7 +146,6 @@ export const Sidebar = (props: Props) => {
       </section>
 
       <section className='dashboard-sidebar-groups'>
-
         <div className='dashboard-sidebar-groups-header'>
           <h2>
             <span>{t['Groups']}</span>
@@ -155,25 +153,23 @@ export const Sidebar = (props: Props) => {
           <button
             className='primary flat compact'
             onClick={() => setAddTagDefinition(true)}
+            aria-label={t['add project group']}
           >
             <Plus size={16} weight='bold' />
           </button>
         </div>
 
-        { tagDefinitions && tagDefinitions.length > 0 && (
+        {tagDefinitions && tagDefinitions.length > 0 && (
           <ul className='dashboard-sidebar-groups-list'>
-            { tagDefinitions.map((tagDefinition) => (
+            {tagDefinitions.map((tagDefinition) => (
               <li
                 className={filter === tagDefinition.id ? 'active' : undefined}
                 key={tagDefinition.id}
                 onClick={() => onChangeFilter(tagDefinition.id)}
               >
-                <TagSimple
-                  className='icon'
-                  size={20}
-                />
+                <TagSimple className='icon' size={20} />
 
-                { tagDefinition.name }
+                {tagDefinition.name}
               </li>
             ))}
           </ul>

@@ -39,6 +39,7 @@ export const General = (props: GeneralProps) => {
             type='email'
             onChange={(evt) => props.onChangeName(evt.target.value)}
             value={props.assignment.name || ''}
+            aria-label={t['name your assignment']}
             required
           />
           <label className='text-body-small-bold'>{t['Instructions']}</label>
@@ -46,6 +47,7 @@ export const General = (props: GeneralProps) => {
             rows={10}
             value={props.assignment.description || ''}
             onChange={(evt) => props.onChangeDescription(evt.target.value)}
+            aria-label={t['enter instructions for this assignment']}
           />
           <div className='wizard-name-check'>
             {(!props.assignment.name || props.assignment.name.length === 0) && (
