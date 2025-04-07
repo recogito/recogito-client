@@ -43,6 +43,8 @@ interface DocumentCardActionsProps {
 
   onExportW3C?(includePrivate?: boolean): void;
 
+  onExportManifest?(includePrivate?: boolean): void;
+
   onOpenMetadata?(): void;
 }
 
@@ -257,6 +259,32 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 </SubContent>
               </Portal>
             </Sub>
+
+            {props.document.meta_data?.protocol === 'IIIF_PRESENTATION' && (
+              <Sub>
+                <SubTrigger className="dropdown-subtrigger">
+                  <DownloadSimple size={16} /> <span>{t['Export IIIF Manifest']}</span>
+                  <div className="right-slot">
+                    <CaretRight size={14} />
+                  </div>
+                </SubTrigger>
+
+                <Portal>
+                  <SubContent
+                    className="dropdown-subcontent"
+                    alignOffset={-5}>
+                    
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportManifest, false)}>
+                      <UsersThree size={16} /> {t['Public annotations only']}
+                    </Item>
+
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportManifest, true)}>
+                      <Detective size={16} /> {t['Include my private annotations']}
+                    </Item>
+                  </SubContent>
+                </Portal>
+              </Sub>
+            )}
 
             <Separator className="dropdown-separator" />
 

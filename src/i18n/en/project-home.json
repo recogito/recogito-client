@@ -14,6 +14,7 @@
   "Export TEI file": "Export TEI file",
   "Export PDF file": "Export PDF file",
   "Export Annotations as W3C/JSONLD": "Export Annotations as W3C/JSONLD",
+  "Export IIIF Manifest": "Export IIIF Manifest",
   "Public annotations only": "Export public annotations only",
   "Include my private annotations": "Include my private annotations",
   "Export Annotations": "Export Annotations",

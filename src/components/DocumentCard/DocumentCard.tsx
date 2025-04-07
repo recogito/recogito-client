@@ -122,6 +122,11 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ? `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
+  const onExportManifest = (includePrivate: boolean) =>
+    (window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+    
   return (
     <article
       className={classNames('document-card-container', props.className)}
@@ -158,6 +163,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
                 onExportPDF={onExportPDF}
                 onExportCSV={onExportCSV}
                 onExportW3C={onExportW3C}
+                onExportManifest={onExportManifest}
                 onOpenMetadata={() => setOpenMetadata(true)}
               />
             </div>
