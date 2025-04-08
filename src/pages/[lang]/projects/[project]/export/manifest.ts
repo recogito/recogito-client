@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { Cozy } from 'cozy-iiif';
+import { Cozy, type CozyManifest } from 'cozy-iiif';
 import { getDocument, getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -61,11 +61,11 @@ const exportManifest = async (
       JSON.stringify({ message: 'Error retrieving manifest' }), 
       { status: 424 }); // HTTP Failed Dependency
   
-  const manifest = parsed.resource;
+  const manifest = parsed.resource as CozyManifest;
+  const merged = Cozy.Helpers.importAnnotations(manifest, w3cAnnotations, 'recogito');
 
   return new Response(    
-    JSON.stringify(manifest.source, null, 2),
-    // JSON.stringify(w3cAnnotations, null, 2),
+    JSON.stringify(merged.source, null, 2),
     {
       headers: { 
         'Content-Type': 'application/json'

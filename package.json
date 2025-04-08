@@ -61,7 +61,7 @@
     "astro": "^5.6.1",
     "classnames": "^2.5.1",
     "confetti-explosion-react": "^0.1.2",
-    "cozy-iiif": "file:../../rsimon/cozy-iiif",
+    "cozy-iiif": "^0.1.6",
     "crypto-js": "4.2.0",
     "date-fns": "^4.1.0",
     "formik": "2.4.6",
