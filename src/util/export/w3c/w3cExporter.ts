@@ -80,7 +80,8 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
 export const annotationsToW3C = (annotations: SupabaseAnnotation[], projectId: string) => {
   return annotations.map(annotation => {
     if (isImageAnnotation(annotation)) {
-      return serializeW3CImageAnnotation(annotation as ImageAnnotation, projectId);
+      const source = (annotation.target.selector as any)?.source;
+      return serializeW3CImageAnnotation(annotation as ImageAnnotation, source);
     } else if (isPDFAnnotation(annotation)) {
       return serializeW3CPDFAnnotation(annotation as PDFAnnotation, projectId);
     } else if (isTEIAnnotation(annotation)) {

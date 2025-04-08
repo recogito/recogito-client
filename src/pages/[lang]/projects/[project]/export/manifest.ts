@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { Cozy } from 'cozy-iiif';
 import { getDocument, getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -47,16 +48,28 @@ const exportManifest = async (
       ? annotations.data
       : annotations.data.filter(a => a.visibility !== Visibility.PRIVATE);
 
-  const w3c = annotationsToW3C(
+  const w3cAnnotations = annotationsToW3C(
     filtered, 
     project.id
   );
   
-  const manifest = await fetch(document.meta_data!.url).then(res => res.json());
+  const json = await fetch(document.meta_data!.url).then(res => res.json());
+  const parsed = Cozy.parse(json);
+
+  if (parsed.type !== 'manifest')
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving manifest' }), 
+      { status: 424 }); // HTTP Failed Dependency
+  
+  const manifest = parsed.resource;
 
   return new Response(    
-    JSON.stringify(manifest, null, 2),
+    JSON.stringify(manifest.source, null, 2),
+    // JSON.stringify(w3cAnnotations, null, 2),
     {
+      headers: { 
+        'Content-Type': 'application/json'
+      },
       status: 200 
     }
   );
