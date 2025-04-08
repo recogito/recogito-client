@@ -53,8 +53,7 @@ const exportManifest = async (
     project.id
   );
   
-  const json = await fetch(document.meta_data!.url).then(res => res.json());
-  const parsed = Cozy.parse(json);
+  const parsed = await Cozy.parseURL(document.meta_data!.url);
 
   if (parsed.type !== 'manifest')
     return new Response(
