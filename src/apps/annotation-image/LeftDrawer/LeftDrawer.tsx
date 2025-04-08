@@ -5,7 +5,7 @@ import type { Canvas } from '@allmaps/iiif-parser';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';
 import { FilterPanel } from '@components/AnnotationDesktop';
-import { IIIFThumbnailStrip } from '../IIIF';
+import { IIIFThumbnailStrip, type IIIFImage } from '../IIIF';
 import type { ActiveUsers } from '../IIIF/useMultiPagePresence';
 import type {
   DocumentLayer,
@@ -20,7 +20,7 @@ import './LeftDrawer.css';
 interface LeftDrawerProps {
   activeUsers: ActiveUsers;
 
-  currentImage?: string;
+  currentImage?: IIIFImage;
 
   document: DocumentWithContext;
 
