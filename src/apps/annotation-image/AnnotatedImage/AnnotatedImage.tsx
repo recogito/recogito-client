@@ -195,7 +195,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           defaultLayer={props.activeLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={props.privacy === 'PRIVATE'} 
-          source={props.isPresentationManifest ? source : undefined} 
+          source={props.isPresentationManifest ? props.currentImage : undefined} 
           onInitialLoad={onInitialLoad}
           onOffPageActivity={props.onPageActivity}
           onPresence={props.onChangePresent}
