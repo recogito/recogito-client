@@ -31,6 +31,21 @@ const isImageAnnotation = (a: SupabaseAnnotation) =>
   (a.target.selector as any)?.type === 'RECTANGLE' ||
   (a.target.selector as any)?.type === 'POLYGON';
 
+/**
+ * Applies a few clenup tweaks on the annotation:
+ * - Removes the layer_id, which is an internal Recogito Studio property
+ * - Adds 'motivation: commenting', because some IIIF viewers refuse to display annotations
+ *   without a motivation. 
+ */
+const normalize = (annotation: SupabaseAnnotation) => {
+  const { layer_id, ...rest } = annotation;
+
+  return {
+    ...rest,
+    motivation: 'commenting'
+  };
+}
+
 const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
   const crosswalkOne= (body: AnnotationBody) => {
     const { created, creator, purpose } = body;
@@ -79,19 +94,21 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
 
 export const annotationsToW3C = (annotations: SupabaseAnnotation[], projectId: string) => {
   return annotations.map(annotation => {
-    if (isImageAnnotation(annotation)) {
-      const source = (annotation.target.selector as any)?.source;
-      return serializeW3CImageAnnotation(annotation as ImageAnnotation, source);
-    } else if (isPDFAnnotation(annotation)) {
-      return serializeW3CPDFAnnotation(annotation as PDFAnnotation, projectId);
-    } else if (isTEIAnnotation(annotation)) {
-      return serializeW3CTEIAnnotation(annotation as TEIAnnotation, projectId);
-    } else if (isPlainTextAnnotation(annotation)) {
-      return serializeW3CTextAnnotation(annotation as TextAnnotation, projectId);
+    const normalized = normalize(annotation) as SupabaseAnnotation;
+
+    if (isImageAnnotation(normalized)) {
+      const source = (normalized.target.selector as any)?.source;
+      return serializeW3CImageAnnotation(normalized as ImageAnnotation, source);
+    } else if (isPDFAnnotation(normalized)) {
+      return serializeW3CPDFAnnotation(normalized as PDFAnnotation, projectId);
+    } else if (isTEIAnnotation(normalized)) {
+      return serializeW3CTEIAnnotation(normalized as TEIAnnotation, projectId);
+    } else if (isPlainTextAnnotation(normalized)) {
+      return serializeW3CTextAnnotation(normalized as TextAnnotation, projectId);
     } else {
       // Should only ever happen for Notes - bodies will be
       // crosswalked in the next mapping step
-      return annotation;
+      return normalized;
     }
   }).map(annotation => {
     const { bodies, body, ...rest } = annotation as any;
