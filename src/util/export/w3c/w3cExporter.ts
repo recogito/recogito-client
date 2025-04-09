@@ -60,7 +60,7 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
 
     if (body.type) {
       crosswalked.type = body.type;
-    } else if (!isJSON) {
+    } else {
       if (purpose === 'commenting' || purpose === 'replying' || !purpose)
         crosswalked.type = 'TextualBody';
     }
