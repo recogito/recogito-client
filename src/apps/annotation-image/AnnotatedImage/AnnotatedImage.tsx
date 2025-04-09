@@ -118,6 +118,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       clickToZoom: false,
       dblClickToZoom: false
     },
+    // Ommitting this leads to poor performance in Chrome
+    crossOriginPolicy: 'Anonymous',
     ajaxHeaders: authToken ? {
       Authorization: `Bearer ${authToken}`
     } : undefined,
