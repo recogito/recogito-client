@@ -113,8 +113,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     setInitialAnnotations(annotations);
 
     // Add annotations embedded in the manifest, if any
-    if (props.embeddedAnnotations && props.embeddedAnnotations.length > 0)
+    if (props.embeddedAnnotations && props.embeddedAnnotations.length > 0) {
       anno.setAnnotations(props.embeddedAnnotations, false);
+    }
 
     props.onLoad();
   }

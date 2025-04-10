@@ -29,7 +29,7 @@ export const parseManifestAnnotations = (manifest: Manifest) => {
       // TODO crosswalk items to SupabaseAnnotations
       const crosswalked = items.map(item => {
         return {
-          // layer_id: 'manifest',
+          layer_id: 'manifest',
           ...parseW3CImageAnnotation(item).parsed
         }
       });
