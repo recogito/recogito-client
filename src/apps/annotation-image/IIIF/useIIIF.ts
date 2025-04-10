@@ -7,7 +7,7 @@ import { parseManifestAnnotations } from '@util/iiif';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
-interface EmbeddedAnnotations {
+interface EmbeddedAnnotationData {
 
   layer: EmbeddedLayer;
 
@@ -47,24 +47,13 @@ export const useIIIF = (document: DocumentWithContext) => {
 
   const [metadata, setMetadata] = useState<Metadata | undefined>();
   
-  const [embeddedAnnotations, setEmbeddedAnnotations] = useState<EmbeddedAnnotations | undefined>();
+  const [embeddedAnnotationData, setEmbeddedAnnotationData] = useState<EmbeddedAnnotationData | undefined>();
 
   const [authToken, setAuthToken] = useState<string | undefined>();
 
   const [manifestType, setManifestType] = useState<ManifestType | undefined>();
 
   const [currentImage, setCurrentImage] = useState<IIIFImage | undefined>();
-
-  const currentEmbeddedAnnotations = useMemo(() => {
-    if (!embeddedAnnotations) return;
-
-    const id = typeof currentImage === 'string' ? currentImage : currentImage?.uri;
-    if (id) return embeddedAnnotations.annotations[id];
-  }, [embeddedAnnotations, currentImage]);
-
-  const embeddedLayer = useMemo(() => {
-    return embeddedAnnotations?.layer;
-  }, [embeddedAnnotations])
 
   useEffect(() => {
     const isUploadedFile = document.content_type?.startsWith('image/');
@@ -110,7 +99,7 @@ export const useIIIF = (document: DocumentWithContext) => {
 
           const embeddedAnnotations = parseManifestAnnotations(parsed);
           if (embeddedAnnotations)
-            setEmbeddedAnnotations(embeddedAnnotations);
+            setEmbeddedAnnotationData(embeddedAnnotations);
         } else {
           console.log('Failed to parse IIIF manifest', parsed);
           setManifestError(`Failed to parse IIIF manifest: ${url}`);
@@ -142,6 +131,20 @@ export const useIIIF = (document: DocumentWithContext) => {
     setCurrentImage(canvases[nextIdx]);
   };
 
+  const embeddedAnnotations = useMemo(() => {
+    if (!embeddedAnnotationData) return;
+  
+    console.log('yay');
+
+    const id = typeof currentImage === 'string' ? currentImage : currentImage?.uri;
+    if (!id) return;
+
+    const annotations = embeddedAnnotationData.annotations[id];
+    const layer = embeddedAnnotationData.layer;
+
+    return { annotations, layer };
+  }, [embeddedAnnotationData, currentImage]);
+
   return {
     authToken,
     canvases,
@@ -150,8 +153,7 @@ export const useIIIF = (document: DocumentWithContext) => {
     isImageManifest,
     manifestError,
     metadata,
-    embeddedAnnotations: embeddedAnnotations 
-      ? { annotations: currentEmbeddedAnnotations || [], layer: embeddedLayer! } : undefined,
+    embeddedAnnotations,
     next,
     previous,
     setCurrentImage,
