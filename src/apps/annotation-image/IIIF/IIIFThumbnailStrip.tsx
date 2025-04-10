@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { IIIFThumbnail } from './IIIFThumbnail';
 import type { IIIFImage } from './useIIIF';
 import type { ActiveUsers } from './useMultiPagePresence';
-import { getCanvasLabel } from 'src/util';
+import { getResourceLabel } from 'src/util';
 import type { Translations } from 'src/Types';
 
 import './IIIFThumbnailStrip.css';
@@ -40,7 +40,7 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
 
   const Row = ({ index, style }: { index: number, style: React.CSSProperties}) => {   
     const canvas = props.canvases[index];
-    const label = getCanvasLabel(canvas.label, props.i18n.lang);
+    const label = getResourceLabel(canvas.label, props.i18n.lang);
     
     return (
       <div 

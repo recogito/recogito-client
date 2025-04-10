@@ -1,6 +1,6 @@
 import type { LanguageString } from '@allmaps/iiif-parser';
 
-export const getCanvasLabel = (dict: LanguageString | undefined, lang?: string) => {
+export const getResourceLabel = (dict: LanguageString | undefined, lang?: string) => {
   if (!dict) return;
 
   const localized = lang ? dict[lang] : undefined;

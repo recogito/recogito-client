@@ -133,8 +133,6 @@ export const useIIIF = (document: DocumentWithContext) => {
 
   const embeddedAnnotations = useMemo(() => {
     if (!embeddedAnnotationData) return;
-  
-    console.log('yay');
 
     const id = typeof currentImage === 'string' ? currentImage : currentImage?.uri;
     if (!id) return;

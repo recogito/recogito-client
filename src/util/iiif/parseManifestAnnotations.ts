@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Manifest } from '@allmaps/iiif-parser';
 import { parseW3CImageAnnotation, type AnnotationBody, type ImageAnnotation } from '@annotorious/annotorious';
-import type { SupabaseAnnotation } from '@recogito/studio-sdk';
 import type { EmbeddedLayer } from 'src/Types';
-import { getCanvasLabel } from './getCanvasLabel';
+import { getResourceLabel } from './getResourceLabel';
 
 const crosswalkBodies = (bodies: AnnotationBody[]): AnnotationBody[] => {
   const keepPurposes = new Set(['commenting', 'replying', 'describing']);
@@ -24,7 +23,7 @@ export const parseManifestAnnotations = (manifest: Manifest) => {
 
   const layer: EmbeddedLayer = {
     id: manifest.uri,
-    name: getCanvasLabel(manifest.label),
+    name: getResourceLabel(manifest.label),
     is_active: false // Read-only
   }
 
