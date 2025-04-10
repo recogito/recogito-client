@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import Quill from 'quill';
 import type { Manifest } from '@allmaps/iiif-parser';
 import { parseW3CImageAnnotation, type AnnotationBody, type ImageAnnotation } from '@annotorious/annotorious';
 import type { EmbeddedLayer } from 'src/Types';
@@ -10,17 +11,21 @@ const crosswalkBodies = (bodies: AnnotationBody[]): AnnotationBody[] => {
   const crosswalkPurpose = (purpose?: string) =>
     (!purpose || purpose === 'describing') ? 'commenting' : purpose;
 
+  const htmlToQuill = (html: string) => {
+    const quill = new Quill(document.createElement('div'));
+    return quill.clipboard.convert({ html });
+  }
+
   const toKeep = bodies.filter(b => typeof b.value === 'string' && (!b.purpose || keepPurposes.has(b.purpose)));
   return toKeep.map(b => ({
     id: b.id || uuidv4(),
     purpose: crosswalkPurpose(b.purpose), 
     created: b.created,
-    value: b.value
+    value: (b.value && (b as any).format === 'text/html') ? JSON.stringify(htmlToQuill(b.value)) : b.value
   } as AnnotationBody));
 }
 
 export const parseManifestAnnotations = (manifest: Manifest) => {
-
   const layer: EmbeddedLayer = {
     id: manifest.uri,
     name: getResourceLabel(manifest.label),
