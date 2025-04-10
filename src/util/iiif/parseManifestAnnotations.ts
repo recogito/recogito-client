@@ -34,7 +34,7 @@ export const parseManifestAnnotations = (manifest: Manifest) => {
       const items = ('items' in page ? page.items as any[] : []) || [];
 
       const crosswalked = items.map(item => ({
-          layer_id: 'manifest',
+          layer_id: manifest.uri,
           ...parseW3CImageAnnotation(item).parsed
       })).map(a => ({
         ...a,

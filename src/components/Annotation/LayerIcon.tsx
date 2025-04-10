@@ -19,6 +19,8 @@ export const LayerIcon = (props: LayerIconProps) => {
 
   const { t } = props.i18n;
 
+  console.log('popup', props.layerId, props.layerNames);
+
   const label = useMemo(() => 
     props.layerId ? props.layerNames.get(props.layerId) || t['Baselayer'] : t['Baselayer'], []);
 
