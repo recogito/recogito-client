@@ -154,8 +154,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state, z)
         : typeof activeLayerStyle === 'function'
-        ? activeLayerStyle(a, state, z)
-        : activeLayerStyle;
+          ? activeLayerStyle(a, state, z)
+          : activeLayerStyle;
   }, [activeLayerStyle, documentLayers]);
 
   useEffect(() => {
