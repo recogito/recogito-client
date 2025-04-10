@@ -19,8 +19,6 @@ export const LayerIcon = (props: LayerIconProps) => {
 
   const { t } = props.i18n;
 
-  console.log('popup', props.layerId, props.layerNames);
-
   const label = useMemo(() => 
     props.layerId ? props.layerNames.get(props.layerId) || t['Baselayer'] : t['Baselayer'], []);
 
@@ -33,11 +31,13 @@ export const LayerIcon = (props: LayerIconProps) => {
           </div>
         </Tooltip.Trigger>
 
-        <Tooltip.Content 
-          className="tooltip-content"
-          side="top">
-          {label}
-        </Tooltip.Content>
+        <Tooltip.Portal>
+          <Tooltip.Content 
+            className="tooltip-content"
+            side="top">
+            {label}
+          </Tooltip.Content>
+        </Tooltip.Portal>
       </Tooltip.Root>
     </Tooltip.Provider>
   )
