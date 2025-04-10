@@ -12,7 +12,7 @@
     "postinstall": "node copy-pdf-worker.js"
   },
   "dependencies": {
-    "@allmaps/iiif-parser": "1.0.0-beta.40",
+    "@allmaps/iiif-parser": "1.0.0-beta.42",
     "@annotorious/annotorious": "3.3.3",
     "@annotorious/react": "3.3.3",
     "@astrojs/netlify": "^6.2.5",

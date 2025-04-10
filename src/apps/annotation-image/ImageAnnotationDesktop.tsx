@@ -75,6 +75,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     isPresentationManifest,
     manifestError,
     metadata,
+    embeddedAnnotations,
     currentImage,
     setCurrentImage,
   } = useIIIF(document);
@@ -335,6 +336,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   activeLayer={activeLayer}
                   authToken={authToken}
                   channelId={props.channelId}
+                  embeddedAnnotations={embeddedAnnotations}
                   i18n={props.i18n}
                   currentImage={currentImage}
                   isLocked={isLocked}

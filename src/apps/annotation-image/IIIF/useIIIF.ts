@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Canvas, IIIF, type Metadata } from '@allmaps/iiif-parser';
 import type { DocumentWithContext } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { parseManifestAnnotations } from '@util/iiif';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
@@ -33,15 +34,22 @@ export const useIIIF = (document: DocumentWithContext) => {
 
   const [canvases, setCanvases] = useState<Canvas[]>([]);
 
-  const [currentImage, setCurrentImage] = useState<IIIFImage | undefined>();
-
   const [manifestError, setManifestError] = useState<string | undefined>();
 
   const [metadata, setMetadata] = useState<Metadata | undefined>();
+  
+  const [embeddedAnnotations, setEmbeddedAnnotations] = useState<Record<string, any[]>>({});
 
   const [authToken, setAuthToken] = useState<string | undefined>();
 
   const [manifestType, setManifestType] = useState<ManifestType | undefined>();
+
+  const [currentImage, setCurrentImage] = useState<IIIFImage | undefined>();
+
+  const currentEmbeddedAnnotations = useMemo(() => {
+    const id = typeof currentImage === 'string' ? currentImage : currentImage?.uri;
+    if (id) return embeddedAnnotations[id];
+  }, [embeddedAnnotations, currentImage]);
 
   useEffect(() => {
     const isUploadedFile = document.content_type?.startsWith('image/');
@@ -84,6 +92,7 @@ export const useIIIF = (document: DocumentWithContext) => {
           setCurrentImage(parsed.canvases[0]);
           setManifestType('PRESENTATION');
           setMetadata(parsed.metadata);
+          setEmbeddedAnnotations(parseManifestAnnotations(parsed));
         } else {
           console.log('Failed to parse IIIF manifest', parsed);
           setManifestError(`Failed to parse IIIF manifest: ${url}`);
@@ -123,6 +132,7 @@ export const useIIIF = (document: DocumentWithContext) => {
     isImageManifest,
     manifestError,
     metadata,
+    embeddedAnnotations: currentEmbeddedAnnotations,
     next,
     previous,
     setCurrentImage,
