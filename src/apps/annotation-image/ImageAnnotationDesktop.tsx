@@ -327,7 +327,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               document={document}
               i18n={props.i18n}
               iiifCanvases={canvases}
-              layers={documentLayers}
+              layers={layers}
               layerNames={layerNames}
               me={props.me}
               metadata={metadata}
