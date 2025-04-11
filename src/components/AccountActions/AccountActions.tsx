@@ -117,7 +117,7 @@ export const AccountActions = (props: AccountProps) => {
 
             {props.profile.isOrgAdmin && (
               <>
-                <div className='dropdown-divider' />
+                <div className='dropdown-separator' />
 
                 <div className='dropdown-label'>{t['Site Administration']}</div>
 
