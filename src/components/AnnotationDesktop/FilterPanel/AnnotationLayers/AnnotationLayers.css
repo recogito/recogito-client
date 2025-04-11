@@ -37,6 +37,12 @@
   gap: 0.5rem;
 }
 
+.filters-annotationlayers li label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .filters-annotationlayers .checkbox-root {
   align-items: center;
   background-color: white;
@@ -44,6 +50,7 @@
   border-radius: var(--border-radius);
   color: #fff;
   display: flex;
+  flex-shrink: 0;
   height: 16px;
   justify-content: center;
   width: 16px;

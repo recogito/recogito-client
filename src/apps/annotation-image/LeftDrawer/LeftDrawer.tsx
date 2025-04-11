@@ -8,9 +8,9 @@ import { FilterPanel } from '@components/AnnotationDesktop';
 import { IIIFThumbnailStrip, type IIIFImage } from '../IIIF';
 import type { ActiveUsers } from '../IIIF/useMultiPagePresence';
 import type {
-  DocumentLayer,
   DocumentWithContext,
   IIIFMetadata,
+  Layer,
   MyProfile,
   Translations,
 } from 'src/Types';
@@ -28,7 +28,7 @@ interface LeftDrawerProps {
 
   iiifCanvases: Canvas[];
 
-  layers?: DocumentLayer[];
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
 

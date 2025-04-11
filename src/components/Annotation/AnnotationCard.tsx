@@ -74,7 +74,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
   const comments = annotation.bodies
-    .filter(b => !b.purpose || b.purpose === 'commenting')
+    .filter(b => !b.purpose || b.purpose === 'commenting' || b.purpose === 'replying')
     .slice()
     .sort((a, b) => {
       if (!a.created || !b.created) return 0;

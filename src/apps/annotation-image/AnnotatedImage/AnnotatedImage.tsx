@@ -33,6 +33,8 @@ interface AnnotatedImageProps {
 
   channelId: string;
 
+  embeddedAnnotations?: any[];
+
   i18n: Translations;
 
   isLocked: boolean;
@@ -109,6 +111,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     // `@recogito/annotorious-supabase` library (used by the SupabasePlugin
     // component) takes care of the filtering.
     setInitialAnnotations(annotations);
+
+    // Add annotations embedded in the manifest, if any
+    if (props.embeddedAnnotations && props.embeddedAnnotations.length > 0) {
+      anno.setAnnotations(props.embeddedAnnotations, false);
+    }
+
     props.onLoad();
   }
 
