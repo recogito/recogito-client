@@ -59,6 +59,8 @@ export const DeleteSelected = (props: DeleteSelectedProps) => {
         />
       )}
 
+      <div className='anno-toolbar-divider' />
+
       <button
         className='delete-selected'
         aria-label={props.i18n.t['Delete selected annotation']}

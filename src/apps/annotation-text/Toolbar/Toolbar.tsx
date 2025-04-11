@@ -144,8 +144,6 @@ export const Toolbar = (props: ToolbarProps) => {
           />
         )}
 
-        {!collapsed && <div className='anno-toolbar-divider' />}
-
         {isPDF && !collapsed && (
           <div className='anno-toolbar-group'>
             <PDFControls i18n={props.i18n} />
