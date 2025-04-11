@@ -336,7 +336,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   authToken={authToken}
                   channelId={props.channelId}
                   i18n={props.i18n}
-                  imageManifestURL={currentImage}
+                  currentImage={currentImage}
                   isLocked={isLocked}
                   isPresentationManifest={isPresentationManifest}
                   layers={documentLayers}

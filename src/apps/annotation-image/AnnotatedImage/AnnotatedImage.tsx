@@ -4,6 +4,7 @@ import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@compo
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { getImageURL, type IIIFImage } from '../IIIF';
 import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
@@ -36,7 +37,7 @@ interface AnnotatedImageProps {
 
   isLocked: boolean;
 
-  imageManifestURL: string;
+  currentImage: IIIFImage;
 
   isPresentationManifest?: boolean;
 
@@ -76,6 +77,17 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
 
+  const { source, tilesource } = useMemo(() => {
+    if (typeof props.currentImage === 'string') {
+      // Image API - use URL as both 'source' ID and for tilesource URL
+      return { source: props.currentImage, tilesource: props.currentImage }
+    } else {
+      const tilesource = getImageURL(props.currentImage);
+      const source = props.currentImage.uri;
+      return { source, tilesource };
+    }
+  }, [props.currentImage])
+
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
   const [initialAnnotations, setInitialAnnotations] = useState<SupabaseAnnotation[]>([]);
@@ -93,17 +105,21 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const onInitialLoad = (annotations: SupabaseAnnotation[]) => {
     // In case of IIIF: the annotations in the callback are ALL annotations 
-    // for this document, not just the ones for the current page.
+    // for this document, not just the ones for the current page. The 
+    // `@recogito/annotorious-supabase` library (used by the SupabasePlugin
+    // component) takes care of the filtering.
     setInitialAnnotations(annotations);
     props.onLoad();
   }
 
   const options: OpenSeadragon.Options = useMemo(() => ({
-    tileSources: props.imageManifestURL,
+    tileSources: tilesource,
     gestureSettingsMouse: {
       clickToZoom: false,
       dblClickToZoom: false
     },
+    // Ommitting this leads to poor performance in Chrome
+    crossOriginPolicy: 'Anonymous',
     ajaxHeaders: authToken ? {
       Authorization: `Bearer ${authToken}`
     } : undefined,
@@ -114,7 +130,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     minZoomLevel: 0.1,
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true
-  }), [props.imageManifestURL]);
+  }), [tilesource]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
     if (props.isLocked) return UserSelectAction.SELECT;
@@ -160,8 +176,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     }
   }
 
-  const onSelectionChange = (user: PresentUser) =>
-    props.onPageActivity!({ source: props.imageManifestURL, user });
+  const onSelectionChange = (user: PresentUser) => props.onPageActivity!({ source, user });
 
   return (
     <OpenSeadragonAnnotator
@@ -183,7 +198,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           defaultLayer={props.activeLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={props.privacy === 'PRIVATE'} 
-          source={props.isPresentationManifest ? props.imageManifestURL : undefined} 
+          source={props.isPresentationManifest ? props.currentImage : undefined} 
           onInitialLoad={onInitialLoad}
           onOffPageActivity={props.onPageActivity}
           onPresence={props.onChangePresent}

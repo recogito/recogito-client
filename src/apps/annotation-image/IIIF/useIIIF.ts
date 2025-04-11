@@ -8,18 +8,32 @@ type ManifestType = 'PRESENTATION' | 'IMAGE';
 const CANTALOUPE_PATH: string | undefined = import.meta.env
   .PUBLIC_IIIF_CANTALOUPE_PATH;
 
+export type IIIFImage = string | Canvas; 
+
 // IIIF mandates that URIs are without 'info.json', but doesn't 
 // say anything about with our without trailing slash AFAIK. 
 // Needless to say: people will still sometimes append the '/info.json'
 // in the real world... this helper should cover all flavours.
-const getImageURL = (uri: string) =>
-  uri.endsWith('info.json') ? uri : `${uri.endsWith('/') ? uri : `${uri}/`}info.json`;
+export const getImageURL = (image: IIIFImage) => {
+  if (!image) return;
+
+  if (typeof image === 'string') return image;
+
+  const uri = image?.image.uri;
+
+  if (!uri) {
+    console.error('Missing image URI on canvas', image);
+    return;
+  }
+
+  return uri.endsWith('info.json') ? uri : `${uri.endsWith('/') ? uri : `${uri}/`}info.json`;
+}
 
 export const useIIIF = (document: DocumentWithContext) => {
 
   const [canvases, setCanvases] = useState<Canvas[]>([]);
 
-  const [currentImage, setCurrentImage] = useState<string | undefined>();
+  const [currentImage, setCurrentImage] = useState<IIIFImage | undefined>();
 
   const [manifestError, setManifestError] = useState<string | undefined>();
 
@@ -67,7 +81,7 @@ export const useIIIF = (document: DocumentWithContext) => {
         const parsed = IIIF.parse(data);
         if (parsed.type === 'manifest') {
           setCanvases(parsed.canvases);
-          setCurrentImage(getImageURL(parsed.canvases[0]?.image.uri));
+          setCurrentImage(parsed.canvases[0]);
           setManifestType('PRESENTATION');
           setMetadata(parsed.metadata);
         } else {
@@ -86,19 +100,19 @@ export const useIIIF = (document: DocumentWithContext) => {
   const next = () => {
     if (!currentImage || canvases.length === 0) return;
 
-    const idx = canvases.findIndex(c => getImageURL(c.image.uri) === currentImage);
+    const idx = canvases.findIndex(c => c.uri === (currentImage as Canvas).uri);
     const nextIdx = Math.min(idx + 1, canvases.length - 1);
 
-    setCurrentImage(getImageURL(canvases[nextIdx].image.uri));
+    setCurrentImage(canvases[nextIdx]);
   };
 
   const previous = () => {
     if (!currentImage || canvases.length === 0) return;
 
-    const idx = canvases.findIndex(c => `${c.image.uri}/info.json` === currentImage);
+    const idx = canvases.findIndex(c => c.uri === (currentImage as Canvas).uri);
     const nextIdx = Math.max(0, idx - 1);
 
-    setCurrentImage(`${canvases[nextIdx].image.uri}/info.json`);
+    setCurrentImage(canvases[nextIdx]);
   };
 
   return {
