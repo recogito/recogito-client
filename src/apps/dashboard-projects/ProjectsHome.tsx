@@ -17,7 +17,7 @@ import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
-  Translations
+  Translations,
 } from 'src/Types';
 
 import './ProjectsHome.css';
@@ -55,7 +55,9 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const [error, setError] = useState<ToastContent | null>(null);
 
-  const [filter, setFilter] = useState<ProjectFilter | string>(ProjectFilter.MINE);
+  const [filter, setFilter] = useState<ProjectFilter | string>(
+    ProjectFilter.MINE
+  );
 
   const [search, setSearch] = useState('');
 
@@ -123,9 +125,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           p.users.filter((u) => u.user.id === me.id).length > 0
       );
 
-  const tagDefinition = useMemo(() => (
-    tagDefinitions.find((tagDefinition) => tagDefinition.id === filter)
-  ), [filter, tagDefinitions]);
+  const tagDefinition = useMemo(
+    () => tagDefinitions.find((tagDefinition) => tagDefinition.id === filter),
+    [filter, tagDefinitions]
+  );
 
   const filteredProjects = useMemo(() => {
     let value;
@@ -141,10 +144,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       value = projects.filter((project) => projectIds?.includes(project.id));
     }
 
-    if (include === 'active') {
+    if (include === 'active' && value) {
       value = value.filter((p) => !p.is_locked);
-    } else if (include === 'locked') {
-      value = value.filter((p) => p.is_locked)
+    } else if (include === 'locked' && value) {
+      value = value.filter((p) => p.is_locked);
     }
 
     return value;
@@ -154,7 +157,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     let value;
 
     if (filter === ProjectFilter.MINE) {
-      value = t['My Projects']
+      value = t['My Projects'];
     } else if (filter === ProjectFilter.SHARED) {
       value = t['Shared with me'];
     } else if (filter === ProjectFilter.PUBLIC) {
@@ -213,7 +216,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
-
         <TopBar
           invitations={invitations}
           i18n={props.i18n}
@@ -224,9 +226,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           onInvitationDeclined={onInvitationDeclined}
           isCreator={!isReader}
         />
-        <div
-          className='dashboard-projects-container'
-        >
+        <div className='dashboard-projects-container'>
           <Sidebar
             filter={filter}
             i18n={props.i18n}
@@ -237,19 +237,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
                 ? [sharedProjects, [], openJoinProjects]
                 : [myProjects, sharedProjects, openJoinProjects]
             }
+            me={props.me}
           />
-          <div
-            className='dashboard-projects-content'
-          >
+          <div className='dashboard-projects-content'>
             <Header
-              filter={filterLabel}
+              filter={filterLabel as string}
               i18n={props.i18n}
               me={me}
               policies={policies}
-              projects={[
-                ...myProjects,
-                ...sharedProjects
-              ]}
+              projects={[...myProjects, ...sharedProjects]}
               onChangeDisplay={setInclude}
               onChangeSearch={setSearch}
               onChangeSort={(fn: any, name: string): void => {
@@ -264,7 +260,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               tagDefinition={tagDefinition}
             />
 
-            {filteredProjects.length === 0 ? (
+            {filteredProjects?.length === 0 ? (
               policies && !tagDefinition ? (
                 <ProjectsEmpty
                   i18n={props.i18n}
@@ -273,15 +269,14 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
                   onProjectCreated={onProjectCreated}
                   onError={onError}
                 />
-              )
-              : (
+              ) : (
                 <ProjectGroupEmpty i18n={props.i18n} />
               )
             ) : display === 'cards' ? (
               <ProjectsGrid
                 i18n={props.i18n}
                 me={me}
-                projects={filteredProjects}
+                projects={filteredProjects as ExtendedProjectData[]}
                 search={search}
                 sort={sort}
                 onProjectDeleted={onProjectDeleted}
@@ -294,7 +289,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               <ProjectsList
                 i18n={props.i18n}
                 me={me}
-                projects={filteredProjects}
+                projects={filteredProjects as ExtendedProjectData[]}
                 search={search}
                 sort={sort}
                 sortType={sortType}
@@ -321,12 +316,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   );
 };
 
-export const ProjectsHomeWrapper = (props) => (
-  <TagContextProvider
-    scope='user'
-    scopeId={props.me.id}
-    targetType='project'
-  >
+export const ProjectsHomeWrapper = (props: ProjectsHomeProps) => (
+  <TagContextProvider scope='user' scopeId={props.me.id} targetType='project'>
     <ProjectsHome
       i18n={props.i18n}
       me={props.me}

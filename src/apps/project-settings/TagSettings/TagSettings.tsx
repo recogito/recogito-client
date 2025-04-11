@@ -1,32 +1,37 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { clearProjectTagVocabulary, getProjectTagVocabulary, setProjectTagVocabulary } from '@backend/helpers';
+import {
+  clearProjectTagVocabulary,
+  getProjectTagVocabulary,
+  setProjectTagVocabulary,
+} from '@backend/helpers';
 import type { SaveState } from '@components/TinySaveIndicator';
 import { TagColorPicker } from './TagColorPicker';
-import type { ExtendedProjectData, Translations, VocabularyTerm } from 'src/Types';
+import type {
+  ExtendedProjectData,
+  Translations,
+  VocabularyTerm,
+} from 'src/Types';
 
 import './TagSettings.css';
 
 interface TagSettingsProps {
-
   i18n: Translations;
 
   project: ExtendedProjectData;
 
   onError(message: string): void;
-
 }
 
 export const TagSettings = (props: TagSettingsProps) => {
-
   const { t } = props.i18n;
 
   const [inputVal, setInputVal] = useState<string>('');
 
   const [vocabulary, setVocabulary] = useState<VocabularyTerm[] | undefined>();
 
-  const [unsaved, setUnsaved] = useState(false); 
+  const [unsaved, setUnsaved] = useState(false);
 
   const [addState, setAddState] = useState<SaveState>('idle');
 
@@ -48,9 +53,10 @@ export const TagSettings = (props: TagSettingsProps) => {
 
   const onChangeColor = (term: VocabularyTerm, color?: string) => {
     setUnsaved(true);
-    setVocabulary(vocab => vocab?.map(t => 
-      t === term ? ({ label: t.label, color }) : t));
-  }
+    setVocabulary((vocab) =>
+      vocab?.map((t) => (t === term ? { label: t.label, color } : t))
+    );
+  };
 
   const onClear = () => {
     setClearState('saving');
@@ -79,25 +85,27 @@ export const TagSettings = (props: TagSettingsProps) => {
       .then(() => {
         setSaveState('success');
         setUnsaved(false);
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
         setSaveState('failed');
         props.onError(t['Error saving tag vocabulary.']);
       });
-  }
+  };
 
   const onAddTerms = () => {
     const prev = vocabulary;
 
-    const existingTerms = new Set(prev?.map(t => t.label) || []);
+    const existingTerms = new Set(prev?.map((t) => t.label) || []);
 
-    const toAdd = inputVal.split('\n')
+    const toAdd = inputVal
+      .split('\n')
       .filter(Boolean) // Remove empty string
-      .filter(term => !existingTerms.has(term)); // De-duplicate
-      
+      .filter((term) => !existingTerms.has(term)); // De-duplicate
+
     if (toAdd.length === 0) return;
 
-    const next = [...(vocabulary || []), ...toAdd.map(label => ({ label }))];
+    const next = [...(vocabulary || []), ...toAdd.map((label) => ({ label }))];
 
     setAddState('saving');
     setVocabulary(next);
@@ -106,7 +114,8 @@ export const TagSettings = (props: TagSettingsProps) => {
       .then(() => {
         setAddState('success');
         setInputVal('');
-      }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
         setAddState('failed');
 
@@ -121,17 +130,13 @@ export const TagSettings = (props: TagSettingsProps) => {
     <div className='tag-settings tab-container'>
       <h2>{t['Tagging Vocabulary']}</h2>
 
-      <p>
-        {t['You can pre-define a tagging vocabulary']}
-      </p>
+      <p>{t['You can pre-define a tagging vocabulary']}</p>
 
-      {vocabulary && (
-        vocabulary.length === 0 ? (
-          <div className="no-vocabulary">
-            {t['No tagging vocabulary']}
-          </div>
+      {vocabulary &&
+        (vocabulary.length === 0 ? (
+          <div className='no-vocabulary'>{t['No tagging vocabulary']}</div>
         ) : (
-          <div className="current-vocabulary">
+          <div className='current-vocabulary'>
             <table>
               <thead>
                 <tr>
@@ -140,62 +145,64 @@ export const TagSettings = (props: TagSettingsProps) => {
                 </tr>
               </thead>
               <tbody>
-                {vocabulary.map(term => (
+                {vocabulary.map((term) => (
                   <tr key={term.label}>
                     <td>{term.label}</td>
 
                     <td>
-                      <TagColorPicker 
-                        color={term.color} 
-                        onChange={color => onChangeColor(term, color)} />
+                      <TagColorPicker
+                        color={term.color}
+                        onChange={(color) => onChangeColor(term, color)}
+                        i18n={props.i18n}
+                      />
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
 
-            <div className="button-container">
-              <Button 
-                className="sm"
+            <div className='button-container'>
+              <Button
+                className='sm'
                 busy={clearState === 'saving'}
-                onClick={onClear}>
+                onClick={onClear}
+              >
                 <span>{t['Clear All']}</span>
               </Button>
 
-              <Button 
+              <Button
                 disabled={!unsaved}
-                className="sm primary"
+                className='sm primary'
                 busy={saveState === 'saving'}
-                onClick={onSave}>
+                onClick={onSave}
+              >
                 <span>{t['Save Changes']}</span>
               </Button>
             </div>
           </div>
-        )
-      )}
+        ))}
 
       <div>
-        <p>
-          {t['Add vocabulary terms below']}
-        </p>
+        <p>{t['Add vocabulary terms below']}</p>
 
         <div>
-          <textarea 
-            placeholder={'Tag A\nTag B\n...'} 
+          <textarea
+            placeholder={'Tag A\nTag B\n...'}
             value={inputVal}
-            onChange={evt => setInputVal(evt.target.value)} />
+            onChange={(evt) => setInputVal(evt.target.value)}
+          />
         </div>
 
-        <div className="button-container">
-          <Button 
-            className="primary"
+        <div className='button-container'>
+          <Button
+            className='primary'
             busy={addState === 'saving'}
-            onClick={onAddTerms}>
+            onClick={onAddTerms}
+          >
             {t['Add to Vocabulary']}
           </Button>
         </div>
       </div>
     </div>
-  )
-
-}
+  );
+};

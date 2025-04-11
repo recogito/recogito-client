@@ -31,11 +31,13 @@ export const LayerIcon = (props: LayerIconProps) => {
           </div>
         </Tooltip.Trigger>
 
-        <Tooltip.Content 
-          className="tooltip-content"
-          side="top">
-          {label}
-        </Tooltip.Content>
+        <Tooltip.Portal>
+          <Tooltip.Content 
+            className="tooltip-content"
+            side="top">
+            {label}
+          </Tooltip.Content>
+        </Tooltip.Portal>
       </Tooltip.Root>
     </Tooltip.Provider>
   )

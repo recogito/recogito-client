@@ -139,6 +139,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
                   onChange={formik.handleChange}
                   value={formik.values.email}
                   required
+                  aria-label={t['enter user email address']}
                 />
               </div>
 
@@ -150,9 +151,14 @@ export const InviteUserDialog = (props: InviteUserProps) => {
                   name='group'
                   onChange={formik.handleChange}
                   value={formik.values.group}
+                  aria-label={t['select users access level']}
                 >
                   {props.project.groups.map((group) => (
-                    <option key={group.id} value={group.id}>
+                    <option
+                      key={group.id}
+                      value={group.id}
+                      aria-label={t[group.name]}
+                    >
                       {t[group.name]}
                     </option>
                   ))}

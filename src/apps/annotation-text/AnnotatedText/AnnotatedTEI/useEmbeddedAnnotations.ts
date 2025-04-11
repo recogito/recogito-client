@@ -27,7 +27,6 @@ interface Change {
 }
 
 // Helpers
-// Helpers
 const normalizeId = (id?: string | null) =>
   id?.startsWith('#') ? id.substring(1) : id;
 

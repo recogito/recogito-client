@@ -21,6 +21,12 @@ export const quillToPlainText = (value: string) => {
   return serialized.trim();
 }
 
+export const quillToHTML = (value: string) => {
+  const input = JSON.parse(value) as Delta;
+  const converter = new QuillDeltaToHtmlConverter(input.ops);
+  return converter.convert();
+}
+
 export const quillToPDFRichText = (value: string) => {
   const input = JSON.parse(value) as Delta;
 
@@ -52,7 +58,7 @@ export const quillToPDFRichText = (value: string) => {
 
   const converter = new QuillDeltaToHtmlConverter(ops, {
     linkTarget: undefined,
-    customTag: (format, op) => {
+    customTag: format => {
       if (format === 'bold') return 'b';
       if (format === 'italic') return 'i';
     }

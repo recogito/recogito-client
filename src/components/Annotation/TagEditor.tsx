@@ -8,17 +8,14 @@ import type { Translations, VocabularyTerm } from 'src/Types';
 import './TagEditor.css';
 
 interface TagEditorProps {
-
   i18n: Translations;
 
   vocabulary?: VocabularyTerm[];
 
   onCreateTag(tag: VocabularyTerm): void;
-
 }
 
 export const TagEditor = (props: TagEditorProps) => {
-
   const { t } = props.i18n;
 
   const [editing, setEditing] = useState(false);
@@ -31,63 +28,61 @@ export const TagEditor = (props: TagEditorProps) => {
     props.onCreateTag(value);
     setValue(undefined);
     setEditing(false);
-  }
+  };
 
   const onSave = () => {
-    if (value)
-      props.onCreateTag(value);
+    if (value) props.onCreateTag(value);
 
     setValue(undefined);
     setEditing(false);
-  }
+  };
 
   const onCancel = () => {
     setValue(undefined);
     setEditing(false);
-  }
+  };
 
   return editing ? (
-    <div className="tag-editor">
+    <div className='tag-editor'>
       {Boolean(extensionConfig) ? (
-        <ExtensionMount 
+        <ExtensionMount
           extension={extensionConfig.extension}
           pluginConfig={extensionConfig.config}
-          autoFocus 
+          autoFocus
           autoSize
           value={value}
           onChange={setValue}
-          onSubmit={onSubmit} />
+          onSubmit={onSubmit}
+        />
       ) : (
         <Autosuggest
           autoFocus
           autoSize
           openOnFocus
           value={value}
-          onChange={setValue} 
+          onChange={setValue}
           onSubmit={onSubmit}
-          vocabulary={props.vocabulary} />
+          vocabulary={props.vocabulary}
+        />
       )}
 
-      <div className="tag-editor-actions">
-        <button
-          className="unstyled"
-          onClick={onCancel}>
-          <X size={16} />
+      <div className='tag-editor-actions'>
+        <button className='unstyled' onClick={onCancel}>
+          <X size={16} aria-label={t['cancel adding tag']} />
         </button>
 
         <button
-          className="unstyled"
-          onClick={onSave}>
+          className='unstyled'
+          onClick={onSave}
+          aria-label={t['save tag']}
+        >
           <Check size={16} />
         </button>
       </div>
     </div>
   ) : (
-    <button 
-      className="tag-editor-trigger"
-      onClick={() => setEditing(true)}>
+    <button className='tag-editor-trigger' onClick={() => setEditing(true)}>
       <TagIcon size={12} /> <span>{t['Add a tag']}</span>
     </button>
-  )
-
-}
+  );
+};

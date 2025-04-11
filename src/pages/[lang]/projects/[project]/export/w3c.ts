@@ -1,42 +1,148 @@
-
-import { getAllLayersInProject, getProjectPolicies } from '@backend/helpers';
-import { getAnnotations } from '@backend/helpers/annotationHelpers';
-import { getMyProfile } from '@backend/crud';
-import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
+import { getAllDocumentLayersInProject, getAllLayersInProject, getAnnotations, getAssignment, getAvailableLayers, getProjectPolicies } from '@backend/helpers';
+import { getMyProfile, getProject } from '@backend/crud';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Project } from 'src/Types';
+import { annotationsToW3C } from '@util/export/w3c/w3cExporter';
+import { Visibility } from '@recogito/annotorious-supabase';
+import { sanitizeFilename } from '@util/export';
 
-const crosswalkTarget = (target: any) => {
-
-  const value = JSON.parse(target.value);
-
-  if (value.type === 'RECTANGLE') {
-    const { x, y, w, h } = value.geometry;
+const exportForProject = async (
+  supabase: SupabaseClient, 
+  url: URL, 
+  project: Project, 
+  documentId: string | null
+) => {
+  // Retrieve all layers, or just for the selected document, based on
+  // URL query param
+  const layers = documentId ? 
+    await getAllDocumentLayersInProject(supabase, documentId, project.id) :
+    await getAllLayersInProject(supabase, project.id);
   
-    return {
-      type: 'FragmentSelector',
-      conformsTo: 'http://www.w3.org/TR/media-frags/',
-      value: `xywh=pixel:${x},${y},${w},${h}`
-    };
-  } else if (value.type === 'POLYGON') {
-    const { points } = value.geometry;
+  if (layers.error || !layers.data || layers.data.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 }); 
 
-    return  {
-      type: 'SvgSelector',
-      // @ts-ignore
-      value: `<polygon points="${points.map(xy => xy.join(',')).join(' ')}" />`
-    };
-  } else if (value.startSelector?.type === 'XPathSelector') {
-    return {
-      startSelector: value.startSelector,
-      endSelector: value.endSelector
-    }
-  } else {
-    return value;
+  const layerIds = layers.data.map(l => l.id);
+
+  // Get annotations for all layers
+  const annotations = await getAnnotations(supabase, layerIds);
+  if (annotations.error) { 
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving annotations' }), 
+      { status: 500 }); 
   }
+
+  // Retrieve meta for all layers in project, so we have the name
+  // of the context each layer belongs to
+  const layerMeta = await getAvailableLayers(supabase, project.id);
+
+  if (layerMeta.error || !layerMeta.data || layerMeta.data.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 }); 
+
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+
+  const filtered = includePrivate 
+      ? annotations.data
+      : annotations.data.filter(a => a.visibility !== Visibility.PRIVATE);
+
+  const w3c = annotationsToW3C(
+    filtered, 
+    project.id
+  );
+
+  const filename = documentId
+    ? `${sanitizeFilename(layers.data[0].document.name)}.json`
+    : `project-${sanitizeFilename(project.name)}.json`;
+
+  return new Response(    
+    JSON.stringify(w3c, null, 2),
+    { 
+      headers: { 
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment;filename=${filename}`
+      },
+      status: 200 
+    }
+  );
 }
 
-export const GET: APIRoute = async ({ cookies, params, request }) => {
-  // Verify if the user is logged in
+const exportForContext = async (
+  supabase: SupabaseClient, 
+  url: URL, 
+  project: Project,
+  contextId: string, 
+  documentId: string | null
+) => {
+ const assignment = await getAssignment(supabase, contextId);
+  if (assignment.error || !assignment.data) {
+    const error = await fetch(`${url}/404`);
+    return new Response(error.body, { 
+      headers: { 'Content-Type': 'text/html;charset=utf-8' },
+      status: 404, 
+      statusText: 'Not Found' 
+    });
+  }
+
+  // Retrieve all layers, or just for the selected document
+  const layers = documentId 
+    ? assignment.data.layers.filter(l => l.document.id === documentId) 
+    : assignment.data.layers;
+
+  // Should never happen
+  if (layers.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 });
+
+  const annotations = await getAnnotations(supabase, layers.map(l => l.id));
+  if (annotations.error)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving annotations' }), 
+      { status: 500 }); 
+
+  // Retrieve meta for all layers in project, so we have the name
+  // of the context each layer belongs to
+  const layerMeta = await getAvailableLayers(supabase, assignment.data.project_id);
+  if (layerMeta.error || !layerMeta.data || layerMeta.data.length === 0)
+    return new Response(
+      JSON.stringify({ message: 'Error retrieving layers' }), 
+      { status: 500 }); 
+
+  const includePrivate = url.searchParams.get('private')?.toLowerCase() === 'true';
+  
+  const filtered = includePrivate 
+      ? annotations.data
+      : annotations.data.filter(a => a.visibility !== Visibility.PRIVATE);
+
+  const w3c = annotationsToW3C(
+    filtered, 
+    project.id 
+  );
+
+  const assignmentName = assignment.data.name || project.name;
+
+  const filename = documentId
+    ? `${sanitizeFilename(layers[0].document.name)}-assignment-${sanitizeFilename(assignmentName)}.json`
+    : `${sanitizeFilename(assignmentName)}.json`;
+
+  return new Response(    
+    JSON.stringify(w3c, null, 2),
+    { 
+      headers: { 
+        'Content-Type': 'application/json',
+        'Content-Disposition': `attachment;filename=${filename}`
+      },
+      status: 200 
+    }
+  );
+}
+
+export const GET: APIRoute = async ({ cookies, params, request, url }) => {
   const supabase = await createSupabaseServerClient(request, cookies);
 
   const profile = await getMyProfile(supabase);
@@ -47,51 +153,30 @@ export const GET: APIRoute = async ({ cookies, params, request }) => {
 
   const projectId = params.project!;
 
+  const project = await getProject(supabase, projectId);
+  if (project.error || !project.data)
+    return new Response(
+      JSON.stringify({ error: 'Unauthorized'}),
+      { status: 401 });
+
   const policies = await getProjectPolicies(supabase, projectId);
   if (policies.error)
     return new Response(
       JSON.stringify({ error: 'Unauthorized'}),
       { status: 401 });
 
-  const isAdmin = policies.data.get('projects').has('UPDATE') || profile.data.isOrgAdmin;
-  if (!isAdmin)
-  return new Response(
-    JSON.stringify({ error: 'Unauthorized'}),
-    { status: 401 });
-
-  const layers = await getAllLayersInProject(supabase, projectId);
-  if (layers.error) { 
+  const hasSelectPermissions = policies.data.get('project_documents').has('SELECT') || profile.data.isOrgAdmin;
+  if (!hasSelectPermissions)
     return new Response(
-      JSON.stringify({ message: 'Error retrieving layers' }), 
-      { status: 500 }); 
+      JSON.stringify({ error: 'Unauthorized'}),
+      { status: 401 });
+
+  const documentId = url.searchParams.get('document');
+  const contextId = url.searchParams.get('context');
+
+  if (contextId) {
+    return exportForContext(supabase, url, project.data, contextId, documentId);
+  } else {
+    return exportForProject(supabase, url, project.data, documentId);
   }
-
-  const layerIds = layers.data.map(l => l.id);
-
-  const annotations = await getAnnotations(supabase, layerIds);
-  if (annotations.error) { 
-    return new Response(
-      JSON.stringify({ message: 'Error retrieving annotations' }), 
-      { status: 500 }); 
-  }
-
-  const w3c = annotations.data.map(a => ({
-    '@context': 'http://www.w3.org/ns/anno.jsonld',
-    id: a.id,
-    type: 'Annotation',
-    body: a.bodies.map(b => ({
-      purpose: b.purpose,
-      value: b.value,
-      // @ts-ignore
-      creator: b.created_by.id,
-      // created: b.created_at
-    })),
-    target: crosswalkTarget(a.target)
-  }));
-
-  return new Response(    
-    JSON.stringify(w3c, null, 2),
-    { status: 200 }
-  );
-
-};
+}

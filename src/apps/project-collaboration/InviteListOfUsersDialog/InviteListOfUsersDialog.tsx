@@ -132,7 +132,10 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
                     <input {...getInputProps()} />
                     <p>{t['invite-list-instructions']}</p>
                     <p>{t['invite-list-instructions-2']}</p>
-                    <img src='/img/invite-user-list.png' />
+                    <img
+                      src='/img/invite-user-list.png'
+                      alt={t['example of invite users spreadsheet']}
+                    />
                   </div>
                 </section>
               )}

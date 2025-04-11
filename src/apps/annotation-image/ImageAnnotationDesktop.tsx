@@ -22,7 +22,7 @@ import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
 import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
-import type { Document, DocumentLayer } from 'src/Types';
+import type { Document, DocumentLayer, EmbeddedLayer } from 'src/Types';
 import type {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
@@ -75,6 +75,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     isPresentationManifest,
     manifestError,
     metadata,
+    embeddedAnnotations,
     currentImage,
     setCurrentImage,
   } = useIIIF(document);
@@ -85,7 +86,16 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     DocumentLayer[] | undefined
   >();
 
-  const layerNames = useLayerNames(document);
+  const embeddedLayers = useMemo(() => {
+    if (embeddedAnnotations?.layer) return [embeddedAnnotations.layer];
+  }, [embeddedAnnotations]);
+
+  const layers = useMemo(
+    () => [...(documentLayers || []), ...(embeddedLayers || [])],
+    [documentLayers, embeddedLayers]
+  );
+
+  const layerNames = useLayerNames(document, embeddedLayers);
 
   const { t } = props.i18n;
 
@@ -157,8 +167,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   };
 
   const style: DrawingStyleExpression<ImageAnnotation> = useMemo(() => {
-    const readOnly = new Set(
-      (documentLayers || []).filter((l) => !l.is_active).map((l) => l.id)
+    // In practice, there should only ever be one active layer
+    const activeLayers = new Set(
+      (documentLayers || []).filter((l) => l.is_active).map((l) => l.id)
     );
 
     const readOnlyStyle = (state?: AnnotationState) => ({
@@ -169,13 +180,12 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       strokeWidth: state?.selected ? 2.5 : 2,
     });
 
-    return ((annotation: ImageAnnotation, state?: AnnotationState) => {
-      const a = annotation as SupabaseAnnotation;
-      return a.layer_id && readOnly.has(a.layer_id)
+    return ((a: SupabaseAnnotation, state?: AnnotationState) => {
+      return a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state)
         : typeof activeLayerStyle === 'function'
-        ? activeLayerStyle(a as ImageAnnotation, state)
-        : activeLayerStyle;
+          ? activeLayerStyle(a as ImageAnnotation, state)
+          : activeLayerStyle;
     }) as DrawingStyleExpression;
   }, [activeLayerStyle, documentLayers]);
 
@@ -317,7 +327,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               document={document}
               i18n={props.i18n}
               iiifCanvases={canvases}
-              layers={documentLayers}
+              layers={layers}
               layerNames={layerNames}
               me={props.me}
               metadata={metadata}
@@ -335,8 +345,9 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   activeLayer={activeLayer}
                   authToken={authToken}
                   channelId={props.channelId}
+                  embeddedAnnotations={embeddedAnnotations?.annotations}
                   i18n={props.i18n}
-                  imageManifestURL={currentImage}
+                  currentImage={currentImage}
                   isLocked={isLocked}
                   isPresentationManifest={isPresentationManifest}
                   layers={documentLayers}

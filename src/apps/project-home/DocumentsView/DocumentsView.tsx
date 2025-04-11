@@ -408,7 +408,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         uploads={uploads}
         onClose={() => setShowUploads(false)}
       />
-      <input {...getInputProps()} />
+      <input
+        {...getInputProps()}
+        aria-label={t['drag and drop target for documents']}
+      />
     </>
   );
 };

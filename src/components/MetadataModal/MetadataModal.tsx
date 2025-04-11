@@ -47,7 +47,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
    * Adds a new item to the state and sets the editable index as the new index.
    */
   const onAddItem = useCallback(() => {
-    setItems((prevItems) => [...prevItems, { }]);
+    setItems((prevItems) => [...prevItems, {}]);
     setEditIndex(items.length);
   }, [items]);
 
@@ -62,30 +62,38 @@ export const MetadataModal = (props: MetadataModalProps) => {
   /**
    * Saves the document metadata.
    */
-  const onSave = useCallback((e) => {
-    e.preventDefault();
-    setBusy(true);
+  const onSave = useCallback(
+    (e) => {
+      e.preventDefault();
+      setBusy(true);
 
-    updateDocumentMetadata(supabase, props.document.id, title, {
-      ...(props.document.meta_data || {}),
-      meta: items,
-    }).then(({ error, data }) => {
-      setBusy(false);
+      updateDocumentMetadata(supabase, props.document.id, title, {
+        ...(props.document.meta_data || {}),
+        meta: items,
+      }).then(({ error, data }) => {
+        setBusy(false);
 
-      if (error) props.onError(error.details);
-      else props.onUpdated(data);
+        if (error) props.onError(error.details);
+        else props.onUpdated(data);
 
-      props.onClose();
-    });
-  }, [items, title, props.document]);
+        props.onClose();
+      });
+    },
+    [items, title, props.document]
+  );
 
   /**
    * Updates the item at the passed index with the passed attributes.
    */
-  const onUpdateItem = useCallback((index, attributes) => {
-    const item = Object.assign(items[index], attributes);
-    setItems((prevItems) => prevItems.map((i, idx) => idx === index ? item : i));
-  }, [items]);
+  const onUpdateItem = useCallback(
+    (index, attributes) => {
+      const item = Object.assign(items[index], attributes);
+      setItems((prevItems) =>
+        prevItems.map((i, idx) => (idx === index ? item : i))
+      );
+    },
+    [items]
+  );
 
   /**
    * Resets the items, title, and edit index when the modal is opened.
@@ -109,6 +117,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
               onChange={(value) => setTitle(value)}
               readOnly={props.readOnly}
               value={title}
+              i18n={props.i18n}
             />
           </Dialog.Title>
 
@@ -125,68 +134,65 @@ export const MetadataModal = (props: MetadataModalProps) => {
             )}
             <table>
               <tbody>
-              {(items && items.length > 0) && items.map((item, index) => (
-                <tr
-                  key={index}
-                >
-                  <td>
-                    <MetadataAttribute
-                      autoFocus
-                      onChange={(label) => onUpdateItem(index, { label })}
-                      readOnly={props.readOnly || !isEditable(index)}
-                      value={item.label}
-                    />
-                  </td>
-                  <td>
-                    <MetadataAttribute
-                      onChange={(value) => onUpdateItem(index, { value })}
-                      readOnly={props.readOnly || !isEditable(index)}
-                      value={item.value}
-                    />
-                  </td>
-                  {!props.readOnly && (
-                    <td>
-                      <div className='metadata-actions'>
-                        {isEditable(index) && (
-                          <button
-                            className='unstyled icon-only'
-                            onClick={() => setEditIndex(null)}
-                            type='button'
-                          >
-                            <Check />
-                          </button>
-                        )}
-                        {!isEditable(index) && (
-                          <button
-                            className='unstyled icon-only'
-                            onClick={() => setEditIndex(index)}
-                            type='button'
-                          >
-                            <PencilSimple />
-                          </button>
-                        )}
-                        <button
-                          className='unstyled icon-only'
-                          onClick={() => onRemoveItem(index)}
-                          type='button'
-                        >
-                          <X />
-                        </button>
-                      </div>
+                {items &&
+                  items.length > 0 &&
+                  items.map((item, index) => (
+                    <tr key={index}>
+                      <td>
+                        <MetadataAttribute
+                          autoFocus
+                          onChange={(label) => onUpdateItem(index, { label })}
+                          readOnly={props.readOnly || !isEditable(index)}
+                          value={item.label}
+                        />
+                      </td>
+                      <td>
+                        <MetadataAttribute
+                          onChange={(value) => onUpdateItem(index, { value })}
+                          readOnly={props.readOnly || !isEditable(index)}
+                          value={item.value}
+                        />
+                      </td>
+                      {!props.readOnly && (
+                        <td>
+                          <div className='metadata-actions'>
+                            {isEditable(index) && (
+                              <button
+                                className='unstyled icon-only'
+                                onClick={() => setEditIndex(null)}
+                                type='button'
+                              >
+                                <Check />
+                              </button>
+                            )}
+                            {!isEditable(index) && (
+                              <button
+                                className='unstyled icon-only'
+                                onClick={() => setEditIndex(index)}
+                                type='button'
+                              >
+                                <PencilSimple />
+                              </button>
+                            )}
+                            <button
+                              className='unstyled icon-only'
+                              onClick={() => onRemoveItem(index)}
+                              type='button'
+                            >
+                              <X />
+                            </button>
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                {(!items || items.length === 0) && (
+                  <tr>
+                    <td className='empty' colSpan={3}>
+                      {t['No document metadata available.']}
                     </td>
-                  )}
-                </tr>
-              ))}
-              {(!items || items.length === 0) && (
-                <tr>
-                  <td
-                    className='empty'
-                    colSpan={3}
-                  >
-                    {t['No document metadata available.']}
-                  </td>
-                </tr>
-              )}
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

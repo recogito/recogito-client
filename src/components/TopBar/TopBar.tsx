@@ -43,6 +43,7 @@ export const TopBar = (props: TopBarProps) => {
                 : '/img/recogito-studio-logo.svg'
             }
             height={40}
+            alt='branding logo'
           />
           {/* <div className='top-bar-platform'>
             {config.branding.platform_name}

@@ -44,7 +44,10 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className='unstyled icon-only'>
+        <button
+          className='unstyled icon-only'
+          aria-label={t['delete this unaccepted invitation']}
+        >
           <Trash size={16} />
         </button>
       </Dialog.Trigger>

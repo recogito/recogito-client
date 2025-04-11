@@ -32,6 +32,7 @@ export const RadioCards = (props: RadioCardsProps) => {
                 value={e.id}
                 checked={props.activeEntry === e.id}
                 className='radio-cards-radio'
+                aria-label={e.label}
               />
               <Text
                 className={

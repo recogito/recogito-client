@@ -36,7 +36,7 @@
   flex-grow: 1;
   font-size: 14px;
   font-weight: 400;
-  color: var(--gray-600);
+  color: var(--gray-800);
   max-height: 150px;
   overflow-y: auto;
 }

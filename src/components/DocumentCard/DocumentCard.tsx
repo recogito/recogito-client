@@ -44,7 +44,7 @@ interface DocumentCardProps {
 export const DocumentCard = (props: DocumentCardProps) => {
   const { context, document } = props;
 
-  const { lang } = props.i18n;
+  const { t, lang } = props.i18n;
 
   const [openMetadata, setOpenMetadata] = useState(false);
 
@@ -117,6 +117,16 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
+  const onExportW3C = (includePrivate: boolean) =>
+    (window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+
+  const onExportManifest = (includePrivate: boolean) =>
+    (window.location.href = props.context.is_project_default
+      ? `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
+      : `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+    
   return (
     <article
       className={classNames('document-card-container', props.className)}
@@ -125,7 +135,12 @@ export const DocumentCard = (props: DocumentCardProps) => {
     >
       <div className='document-card' onClick={onClick}>
         {props.isAdmin && (
-          <div className='document-drag-handle' {...attributes} {...listeners}>
+          <div
+            className='document-drag-handle'
+            {...attributes}
+            {...listeners}
+            aria-label={t['rearrange this document by dragging']}
+          >
             <DotsSix />
           </div>
         )}
@@ -147,6 +162,8 @@ export const DocumentCard = (props: DocumentCardProps) => {
                 onExportTEI={onExportTEI}
                 onExportPDF={onExportPDF}
                 onExportCSV={onExportCSV}
+                onExportW3C={onExportW3C}
+                onExportManifest={onExportManifest}
                 onOpenMetadata={() => setOpenMetadata(true)}
               />
             </div>

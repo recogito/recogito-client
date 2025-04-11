@@ -50,6 +50,7 @@ export const AccountActions = (props: AccountProps) => {
           <button
             className='unstyled account-actions-trigger'
             style={{ border: 'none' }}
+            aria-label={t['profile']}
           >
             <Avatar
               id={profile.id}
@@ -98,7 +99,7 @@ export const AccountActions = (props: AccountProps) => {
             {helpRedirect && (
               <Item className='dropdown-item'>
                 <Question size={16} />
-                <a href={helpRedirect} target='_blank'>
+                <a href={helpRedirect} target='_blank' aria-label={t['help']}>
                   {t['Help']}
                 </a>
               </Item>
@@ -109,12 +110,14 @@ export const AccountActions = (props: AccountProps) => {
               onSelect={goto(`/${lang}/sign-out`)}
             >
               <SignOut size={16} />
-              <a href={`/${lang}/sign-out`}>{t['Sign out']}</a>
+              <a href={`/${lang}/sign-out`} aria-label={t['sign out']}>
+                {t['Sign out']}
+              </a>
             </Item>
 
             {props.profile.isOrgAdmin && (
               <>
-                <div className='dropdown-divider' />
+                <div className='dropdown-separator' />
 
                 <div className='dropdown-label'>{t['Site Administration']}</div>
 
@@ -123,7 +126,9 @@ export const AccountActions = (props: AccountProps) => {
                   onSelect={goto(`/${lang}/users`)}
                 >
                   <Users size={16} />
-                  <a href={`/${lang}/users`}>{t['Users']}</a>
+                  <a href={`/${lang}/users`} aria-label={t['user management']}>
+                    {t['Users']}
+                  </a>
                 </Item>
               </>
             )}

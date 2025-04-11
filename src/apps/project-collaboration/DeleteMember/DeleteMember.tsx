@@ -58,7 +58,10 @@ export const DeleteMember = (props: DeleteMemberProps) => {
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
-        <button className='unstyled icon-only'>
+        <button
+          className='unstyled icon-only'
+          aria-label={t['remove this user from the project']}
+        >
           <Trash size={16} color='black' />
         </button>
       </Dialog.Trigger>
@@ -85,7 +88,12 @@ export const DeleteMember = (props: DeleteMemberProps) => {
             </Dialog.Description>
 
             <footer className='dialog-footer'>
-              <Button busy={busy} className='danger' onClick={onDelete}>
+              <Button
+                busy={busy}
+                className='danger'
+                onClick={onDelete}
+                aria-label={t['remove this user from the project']}
+              >
                 {isMe ? (
                   t['Yes, I want to leave']
                 ) : (

@@ -20,24 +20,31 @@ export const DocumentMetadata = (props: Props) => {
 
   const { t } = props.i18n;
 
-  const internal = useMemo(() => props.document.meta_data?.meta, [props.document]);
+  const internal = useMemo(
+    () => props.document.meta_data?.meta,
+    [props.document]
+  );
 
-  const external = useMemo(() => props.metadata?.map((i) => ({
-    label: Object.values(i.label).flat().at(0),
-    value: Object.values(i.value).flat().at(0)
-  })), [props.metadata]);
+  const external = useMemo(
+    () =>
+      props.metadata?.map((i) => ({
+        label: Object.values(i.label).flat().at(0),
+        value: Object.values(i.value).flat().at(0),
+      })),
+    [props.metadata]
+  );
 
-  const hasMedata = useMemo(() => internal?.length > 0 || external?.length > 0, [external, internal]);
+  const hasMedata = useMemo(
+    () => internal?.length > 0 || external?.length > 0,
+    [external, internal]
+  );
 
   if (!(hasMedata || props.allowEdit)) {
-    return (
-      <EmptyMetadata i18n={props.i18n} />
-    );
+    return <EmptyMetadata i18n={props.i18n} />;
   }
 
   return (
     <div className='document-metadata'>
-
       {(props.allowEdit || internal?.length > 0) && (
         <div className='document-metadata-header'>
           <h2>{t['Internal']}</h2>
@@ -45,6 +52,7 @@ export const DocumentMetadata = (props: Props) => {
             <button
               className='icon-only primary'
               onClick={() => setModal(true)}
+              aria-label={t['edit document metadata']}
             >
               <PencilSimple />
             </button>
@@ -52,11 +60,7 @@ export const DocumentMetadata = (props: Props) => {
         </div>
       )}
 
-      {internal && internal?.length > 0 && (
-        <MetadataList
-          items={internal}
-        />
-      )}
+      {internal && internal?.length > 0 && <MetadataList items={internal} />}
 
       {!(internal && internal.length > 0) && (
         <EmptyMetadata i18n={props.i18n} />
@@ -67,9 +71,7 @@ export const DocumentMetadata = (props: Props) => {
           <div className='document-metadata-header'>
             <h2>{t['External']}</h2>
           </div>
-          <MetadataList
-            items={external}
-          />
+          <MetadataList items={external} />
         </>
       )}
 

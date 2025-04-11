@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IIIF } from '@allmaps/iiif-parser';
-import { getCanvasLabel } from 'src/util';
+import { getResourceLabel } from 'src/util';
 import type { Translations } from 'src/Types';
 
 /**
@@ -57,7 +57,7 @@ export const validateIIIF = (url: string, i18n: Translations): Promise<Validatio
               } as ValidationResult;
             } else if (parsed.type === 'manifest') {
               // Presentation API v1/2/3
-              const label = getCanvasLabel(parsed.label, i18n.lang);
+              const label = getResourceLabel(parsed.label, i18n.lang);
               return {
                 isValid: true,
                 result: {

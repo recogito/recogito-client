@@ -1,1 +1,2 @@
-export * from './getCanvasLabel';
+export * from './getResourceLabel';
+export * from './parseManifestAnnotations';

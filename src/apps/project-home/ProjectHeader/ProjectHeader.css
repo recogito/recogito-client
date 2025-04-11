@@ -35,7 +35,7 @@
   word-wrap: break-word;
   -webkit-box-orient: vertical;
   transition: all 500ms ease;
-  color: var(--gray-700);
+  color: var(--gray-800);
 }
 
 .project-header-description-bar.collapsed {

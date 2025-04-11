@@ -380,10 +380,16 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
                   className='project-collaboration-link-input'
                   value={encodeURI(link)}
                   disabled
+                  aria-label={
+                    t[
+                      'a link that can be sent to users you wish to invite to the project'
+                    ]
+                  }
                 ></input>
                 <Button
                   className='primary project-collaboration-link-button'
                   onClick={handleCopyLink}
+                  aria-label={t['copy join link']}
                 >
                   {t['Copy Link']}
                 </Button>

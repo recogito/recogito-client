@@ -61,7 +61,12 @@ export const AssignmentListItem = (props: AssignmentListItemProps) => {
         </div>
       </div>
       {props.isAdmin && !assignment.is_project_default && (
-        <div className='document-drag-handle' {...attributes} {...listeners}>
+        <div
+          className='document-drag-handle'
+          {...attributes}
+          {...listeners}
+          aria-label={t['rearrange this assignment by dragging']}
+        >
           <DotsSix size={24} />
         </div>
       )}

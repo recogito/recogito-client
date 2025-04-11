@@ -14,6 +14,7 @@ import {
   type AssignmentSpec,
 } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
+import { Label } from '@radix-ui/react-label';
 
 import './Document.css';
 
@@ -78,14 +79,19 @@ export const Documents = (props: DocumentsProps) => {
 
                     {!isAllSelected && (
                       <span>
-                        <Square size={20} />
+                        <Label
+                          htmlFor='all-documents'
+                          aria-label={t['select all documents in project']}
+                        >
+                          <Square size={20} id='all-documents' />
+                        </Label>
                       </span>
                     )}
                   </Checkbox.Root>
                 </th>
 
-                <th></th>
-                <th></th>
+                <th aria-label='No value'></th>
+                <th aria-label='No value'></th>
               </tr>
             </thead>
             <tbody>
@@ -100,13 +106,23 @@ export const Documents = (props: DocumentsProps) => {
                       }
                     >
                       <Checkbox.Indicator>
-                        <CheckSquare size={20} weight='fill' />
+                        <Label
+                          htmlFor={`document-${document.id}`}
+                          aria-label={`${t['remove document']} ${document.name} ${t['from this assignment']}`}
+                        >
+                          <CheckSquare size={20} weight='fill' />
+                        </Label>
                       </Checkbox.Indicator>
 
                       {!selected.includes(document.id) && (
-                        <span>
-                          <Square size={20} />
-                        </span>
+                        <Label
+                          htmlFor={`document-${document.id}`}
+                          aria-label={`${t['add document']} ${document.name} ${t['to this assignment']}`}
+                        >
+                          <span>
+                            <Square size={20} id={`document-${document.id}`} />
+                          </span>
+                        </Label>
                       )}
                     </Checkbox.Root>
                   </td>
