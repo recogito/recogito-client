@@ -4,7 +4,7 @@ import { getAllDocumentLayersInProject, getAssignment, getProjectPolicies } from
 import { getAnnotations } from '@backend/helpers/annotationHelpers';
 import { getDocument, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { mergeAnnotations, sanitizeFilename } from 'src/util';
+import { mergeAnnotations, sanitizeFilename } from 'src/util/export';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Document } from 'src/Types';
 
