@@ -141,6 +141,7 @@ export const TagSettings = (props: TagSettingsProps) => {
               <thead>
                 <tr>
                   <th>{t['Tag']}</th>
+                  <th>{t['ID']}</th>
                   <th>{t['Color']}</th>
                 </tr>
               </thead>
@@ -148,7 +149,7 @@ export const TagSettings = (props: TagSettingsProps) => {
                 {vocabulary.map((term) => (
                   <tr key={term.label}>
                     <td>{term.label}</td>
-
+                    <td>{term.id}</td>
                     <td>
                       <TagColorPicker
                         color={term.color}
@@ -187,7 +188,7 @@ export const TagSettings = (props: TagSettingsProps) => {
 
         <div>
           <textarea
-            placeholder={'Tag A\nTag B\n...'}
+            placeholder={t['VOCABULARY_PLACEHOLDER']}
             value={inputVal}
             onChange={(evt) => setInputVal(evt.target.value)}
           />

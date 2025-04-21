@@ -21,7 +21,12 @@
 
 .project-settings .tag-settings th:first-child,
 .project-settings .tag-settings td:first-child {
-  width: 90%;
+  width: 70%;
+}
+
+.project-settings .tag-settings th:nth-child(2),
+.project-settings .tag-settings td:nth-child(2) {
+  width: 15%;
 }
 
 .project-settings .tag-settings th:last-child {
