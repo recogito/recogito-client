@@ -3,7 +3,7 @@
   "Tagging Vocabulary": "Tagging Vocabulary",
   "Tag": "Tag",
   "Color": "Color",
-  "You can pre-define a tagging vocabulary": "Terms from the tagging vocabulary are automatically suggested to users when they create new tags. However, users can still create their own custom tags. Optionally, fixed colors can be assigned to the vocabulary tags.",
+  "You can pre-define a tagging vocabulary": "Terms defined in the tagging vocabulary are automatically suggested to users when they create new tags. Vocabulary terms can be associated with an ID (e.g. an alphanumberic code or URI) and a fixed color. Note that users will still be able to create their own custom tags (without ID or fixed color) in the annotation interface.",
   "No tagging vocabulary": "No tagging vocabulary defined",
   "Add vocabulary terms below": "Add terms to the vocabulary by pasting into the text field (one term per line).",
   "Clear All": "Clear All",

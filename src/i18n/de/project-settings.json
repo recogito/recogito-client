@@ -3,7 +3,7 @@
   "Tagging Vocabulary": "Tag-Vokabular",
   "Tag": "Tag",
   "Color": "Farbe",
-  "You can pre-define a tagging vocabulary": "Begriffe aus dem Tag-Vokabular werden Benutzern automatisch als Vorschläge angezeigt, wenn sie neue Tags erstellen. Benutzer können aber weiterhin auch eigene Tags verwenden. Optional lassen sich den Vokabular-Tags vordefinierte Farben zuordnen.",
+  "You can pre-define a tagging vocabulary": "Begriffe aus dem Tag-Vokabular werden Benutzern automatisch als Vorschläge angezeigt, wenn sie neue Tags erstellen. Vokabular-Begriffe können mit einer ID (z.B. einem alphanumerischen Code oder einer URI) und einer fixen Farbe verknüpft werden. Achtung: Benutzer können auch weiterhin eigene Tags (ohne ID oder fixe Farbe) verwenden.",
   "No tagging vocabulary": "Kein Tag-Vokabular festgelegt",
   "Add vocabulary terms below": "Füge Begriffe zum Vokabular hinzu, indem du sie in das Textfeld einfügst (ein Begriff pro Zeile).",
   "Clear All": "Alle Löschen",
