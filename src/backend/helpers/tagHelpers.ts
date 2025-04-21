@@ -162,6 +162,7 @@ export const getTagDefinitions = (
       metadata,
       tags (
         id,
+        created_at,
         tag_definition_id,
         target_id
       )
@@ -176,7 +177,7 @@ export const getTagDefinitions = (
       if (error || !data) {
         return  { error, data: [] };
       } else {
-        return { data };
+        return { data, error };
       }
     })
 
