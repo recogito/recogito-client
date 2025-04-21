@@ -3,13 +3,14 @@ import { AnnotationFactory } from 'annotpdf';
 import { format } from 'date-fns';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { canExport as _canExport } from './_common';
-import { getDocument } from '@backend/crud';
-import type { Document } from 'src/Types';
-import { getAllDocumentLayersInProject, getAnnotations, getAssignment } from '@backend/helpers';
+import type { AnnotationBody } from '@annotorious/annotorious';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFSelector } from '@recogito/react-pdf-annotator';
-import { quillToPDFRichText, sanitizeFilename } from 'src/util/export';
+import { getDocument } from '@backend/crud';
+import { getAllDocumentLayersInProject, getAnnotations, getAssignment } from '@backend/helpers';
+import { quillToPDFRichText, sanitizeFilename } from '@util/export';
+import { canExport as _canExport } from './_common';
+import type { Document, VocabularyTerm } from 'src/Types';
 
 const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
   const factory = new AnnotationFactory(pdf);
@@ -43,8 +44,17 @@ const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[])
       richText += quillToPDFRichText(reply.value!);
     }
 
+    const serializeTag = (b: AnnotationBody) => {
+      try {
+        const term: VocabularyTerm = JSON.parse(b.value!);
+        return term.id ? `${term.label} (${term.id})` : term.label;
+      } catch {
+        return b.value;
+      }
+    }
+
     if (tags.length > 0)
-      richText += `<p>${tags.map(b => `<span color="gray">[<i>${b.value}</i>]</span>`).join(' ')}</p>\n\n`;
+      richText += `<p>${tags.map(b => `<span color="gray">[<i>${serializeTag(b)}</i>]</span>`).join(' ')}</p>\n\n`;
 
     return `<html><body>${richText}</body></html>`;
   }
