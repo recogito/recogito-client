@@ -104,7 +104,7 @@ const exportForProject = async (
   const filename = sanitizeName(document.name);
 
   return new Response(
-    pdfWithAnnotations.buffer,
+    new Uint8Array(pdfWithAnnotations.buffer),
     { 
       headers: { 
         'Content-Type': 'application/pdf',
@@ -160,7 +160,7 @@ const exportForAssignment = async (
   const filename = sanitizeName(document.name);
 
   return new Response(
-    pdfWithAnnotations.buffer,
+    new Uint8Array(pdfWithAnnotations.buffer),
     { 
       headers: { 
         'Content-Type': 'application/pdf',
