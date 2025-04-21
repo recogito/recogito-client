@@ -9,7 +9,7 @@ import type { Document } from 'src/Types';
 import { getAllDocumentLayersInProject, getAnnotations, getAssignment } from '@backend/helpers';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFSelector } from '@recogito/react-pdf-annotator';
-import { quillToPDFRichText, sanitizeFilename } from 'src/util';
+import { quillToPDFRichText, sanitizeFilename } from 'src/util/export';
 
 const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
   const factory = new AnnotationFactory(pdf);
@@ -28,7 +28,7 @@ const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[])
 
     // Initial comment doesn't need author/timestamp, since that's
     // already in the PDF annotation metadata.
-    let richText = quillToPDFRichText(comment.value!) + '\n\n';
+    let richText = comment ? quillToPDFRichText(comment.value!) + '\n\n' : '';
 
     for (const reply of replies) {
       if (reply.creator?.name && reply.created)
@@ -97,6 +97,7 @@ const exportForProject = async (
   const annotations = includePrivate 
     ? all.data
     : all.data.filter(a => a.visibility !== Visibility.PRIVATE);
+
 
   const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
 
