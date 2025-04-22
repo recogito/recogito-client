@@ -33,7 +33,9 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    Thumbnails[plugin.name]().then(data => setImage(data.default.src));
+    const importThumbnail = Thumbnails[plugin.name];
+    if (typeof importThumbnail === 'function')
+      importThumbnail().then(data => setImage(data.default.src));
   }, []);
 
   const onInstall = () => {

@@ -13,8 +13,7 @@
 
 .dialog-content.plugin-gallery {
   box-sizing: border-box;
-  height: 60vh;
-  max-height: 85vh;
+  max-height: 90vh;
   max-width: 840px;
   padding: 25px 30px;
 }
