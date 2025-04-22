@@ -46,7 +46,7 @@ export const PluginGallery = (props: PluginGalleryProps) => {
 
           <VisuallyHidden>
             <Dialog.Description>
-              Available Plugins
+              {t['Available Plugins']}
             </Dialog.Description>
           </VisuallyHidden>
           
