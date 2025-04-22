@@ -6,6 +6,8 @@ import { deleteInstalledPlugin, insertInstalledPlugin } from '@backend/helpers';
 import { Button } from '@components/Button';
 import type { Project } from 'src/Types';
 
+import Thumbnails from '../../../plugins/generated/thumbnails';
+
 interface PluginGalleryItemProps {
 
   project: Project
@@ -31,9 +33,7 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    // TODO
-    // import(`../../../../plugins/${plugin.directory}/thumbnail.jpg`)
-    //  .then(data => setImage(data.default));
+    Thumbnails[plugin.name]().then(data => setImage(data.default.src));
   }, []);
 
   const onInstall = () => {

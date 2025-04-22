@@ -32,12 +32,12 @@ export const insertInstalledPlugin = (
 export const deleteInstalledPlugin = (
   supabase: SupabaseClient,
   project_id: string,
-  plugin_id: string
+  plugin_name: string
 ) => 
   supabase
     .from('installed_plugins')
     .delete()
-    .match({ project_id, plugin_id });
+    .match({ project_id, plugin_name });
 
 export const updatePluginSettings = (
   supabase: SupabaseClient,
