@@ -36,6 +36,9 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
     const importThumbnail = Thumbnails[plugin.name];
     if (typeof importThumbnail === 'function')
       importThumbnail().then(data => setImage(data.default.src));
+    else 
+      import('../../../plugins/default-thumbnail.png')
+        .then(data => setImage(data.default.src));
   }, []);
 
   const onInstall = () => {
