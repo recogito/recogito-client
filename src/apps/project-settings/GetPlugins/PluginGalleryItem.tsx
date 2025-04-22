@@ -4,9 +4,8 @@ import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteInstalledPlugin, insertInstalledPlugin } from '@backend/helpers';
 import { Button } from '@components/Button';
-import type { Project } from 'src/Types';
-
 import Thumbnails from '../../../plugins/generated/thumbnails';
+import type { Project } from 'src/Types';
 
 interface PluginGalleryItemProps {
 
@@ -34,11 +33,13 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
 
   useEffect(() => {
     const importThumbnail = Thumbnails[plugin.name];
-    if (typeof importThumbnail === 'function')
-      importThumbnail().then(data => setImage(data.default.src));
-    else 
+    if (typeof importThumbnail === 'function') {
+      importThumbnail()
+        .then(data => setImage(data.default.src));
+    } else {
       import('../../../plugins/default-thumbnail.png')
         .then(data => setImage(data.default.src));
+    }
   }, []);
 
   const onInstall = () => {
