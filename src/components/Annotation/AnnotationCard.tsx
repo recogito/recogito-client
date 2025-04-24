@@ -11,6 +11,7 @@ import { ReplyField } from './ReplyField';
 import type { Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
+import { CreateRevision } from './CreateRevision';
 
 export interface AnnotationCardProps {
 
@@ -328,6 +329,10 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 onSubmit={onReply} />
             </animated.div>
           )))}
+
+          {(props.isSelected && props.isReadOnly) && (
+            <CreateRevision />
+          )}
         </div>
       )}
     </div>
