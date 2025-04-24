@@ -8,10 +8,10 @@ import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
 import { ReplyField } from './ReplyField';
-import type { Policies, Translations, VocabularyTerm } from 'src/Types';
+import { CreateRevision } from './CreateRevision';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
-import { CreateRevision } from './CreateRevision';
 
 export interface AnnotationCardProps {
 
@@ -30,6 +30,8 @@ export interface AnnotationCardProps {
   isReadOnly?: boolean;
 
   isSelected?: boolean;
+
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
   
@@ -331,7 +333,10 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           )))}
 
           {(props.isSelected && props.isReadOnly) && (
-            <CreateRevision />
+            <CreateRevision 
+              annotation={annotation} 
+              layers={props.layers}
+              me={me} />
           )}
         </div>
       )}

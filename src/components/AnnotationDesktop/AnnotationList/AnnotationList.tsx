@@ -197,6 +197,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               isProjectLocked={props.isProjectLocked}
               isReadOnly={isReadOnly(annotation)}
               isSelected={isSelected(annotation)}
+              layers={props.layers}
               layerNames={props.layerNames}
               policies={props.policies}
               present={props.present}
