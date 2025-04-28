@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { useExtensions } from '@recogito/studio-sdk';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
@@ -11,6 +12,7 @@ import { ReplyField } from './ReplyField';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
+import { ExtensionMount } from '@components/Plugins';
 
 export interface AnnotationCardProps {
 
@@ -109,6 +111,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  const extensions = useExtensions('annotation:*:annotation-editor');
 
   const interstitialTtransition = useTransition(isCollapsed ? 
     [] : comments.slice(1, comments.length - 1), {
@@ -331,12 +335,19 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             </animated.div>
           )))}
 
-          {/* (props.isSelected && props.isReadOnly) && (
-            <CreateRevision 
-              annotation={annotation} 
+          {extensions.map(({ extension, config }) => (
+            <ExtensionMount
+              key={extension.name}
+              extension={extension}
+              pluginConfig={config}
+              annotation={props.annotation}
+              isReadOnly={props.isReadOnly}
+              isSelected={props.isSelected}
               layers={props.layers}
-              me={me} />
-          ) */}
+              me={me}
+              onUpdateAnnotation={props.onUpdateAnnotation}
+            />
+          ))}
         </div>
       )}
     </div>
