@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useAnnotator, type PresentUser } from '@annotorious/react';
+import { AnnotoriousPlugin, useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
 import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { mountPlugin as RevisionsPlugin } from '@components/Annotation/createRevisionPlugin';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
@@ -128,6 +129,9 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
           )}
 
           <UndoStack undoEmpty={true} />
+
+          <AnnotoriousPlugin
+            plugin={RevisionsPlugin} />
 
           {layers && (
             <SupabasePlugin

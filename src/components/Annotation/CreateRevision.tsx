@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { PencilLine } from '@phosphor-icons/react';
 import { v4 as uuidv4 } from 'uuid';
-import { Origin, useAnnotator } from '@annotorious/react';
+import { useAnnotator } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
 import type { 
@@ -57,8 +57,10 @@ export const CreateRevision = (props: CreateRevisionProps) => {
         ...b,
         id: uuidv4(),
         annotation: id,
-        updated: new Date(),
-        updatedBy: props.me
+        creator: props.me,
+        created: new Date,
+        updated: undefined,
+        updatedBy: undefined
       })), {
         // Bit of an ad-hoc solution: add a marker body
         // with a custom 'correctig' purpose to establish
@@ -71,9 +73,13 @@ export const CreateRevision = (props: CreateRevisionProps) => {
       target: {
         ...target,
         creator: props.me,
-        created: new Date()
+        created: new Date(),
+        updated: undefined,
+        updatedBy: undefined
       } as ImageAnnotationTarget
     };
+
+    console.log('clone', clone);
 
     // anno.state.store.deleteAnnotation(origId, Origin.REMOTE);
     anno.state.store.addAnnotation(clone as ImageAnnotation);
