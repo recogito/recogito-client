@@ -5,6 +5,7 @@ import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { ExtensionMount } from '@components/Plugins';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
@@ -12,7 +13,6 @@ import { ReplyField } from './ReplyField';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
-import { ExtensionMount } from '@components/Plugins';
 
 export interface AnnotationCardProps {
 
@@ -321,20 +321,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             )}
           </ul>
 
-          {!props.isProjectLocked && (replyFieldTransition((style, open) => open && (
-            <animated.div style={style}>
-              <ReplyField
-                autoFocus
-                i18n={props.i18n}
-                isPrivate={isPrivate}
-                annotation={props.annotation}
-                me={me}
-                placeholder={props.i18n.t['Reply']}
-                beforeSubmit={beforeReply} 
-                onSubmit={onReply} />
-            </animated.div>
-          )))}
-
           {extensions.map(({ extension, config }) => (
             <ExtensionMount
               key={extension.name}
@@ -348,6 +334,20 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               onUpdateAnnotation={props.onUpdateAnnotation}
             />
           ))}
+
+          {!props.isProjectLocked && (replyFieldTransition((style, open) => open && (
+            <animated.div style={style}>
+              <ReplyField
+                autoFocus
+                i18n={props.i18n}
+                isPrivate={isPrivate}
+                annotation={props.annotation}
+                me={me}
+                placeholder={props.i18n.t['Reply']}
+                beforeSubmit={beforeReply} 
+                onSubmit={onReply} />
+            </animated.div>
+          )))}
         </div>
       )}
     </div>

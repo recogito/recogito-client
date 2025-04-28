@@ -61,7 +61,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
   const { target } = props.annotation;
 
-  const extensions = useExtensions('annotation.*.annotation-editor');
+  const extensions = useExtensions('annotation:*:annotation-editor');
 
   const creator: PresentUser | User | undefined =
     props.present.find((p) => p.id === target?.creator?.id) || target?.creator;
