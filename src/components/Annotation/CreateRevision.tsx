@@ -63,6 +63,8 @@ export const CreateRevision = (props: CreateRevisionProps) => {
         // Bit of an ad-hoc solution: add a marker body
         // with a custom 'correctig' purpose to establish
         // the link to the original annotation.
+        id: uuidv4(),
+        annotation: id,
         purpose: 'correcting',
         value: origId
       }],
@@ -72,11 +74,8 @@ export const CreateRevision = (props: CreateRevisionProps) => {
         created: new Date()
       } as ImageAnnotationTarget
     };
-    anno.cancelSelected();
 
-    console.log(clone, selected[0]);
-
-    anno.state.store.deleteAnnotation(origId, Origin.REMOTE);
+    // anno.state.store.deleteAnnotation(origId, Origin.REMOTE);
     anno.state.store.addAnnotation(clone as ImageAnnotation);
 
     anno.setSelected(id);
