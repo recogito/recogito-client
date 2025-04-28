@@ -90,8 +90,11 @@ export const CreateRevision = (props: CreateRevisionProps) => {
   return (
     <div className="create-revision">
       <button onClick={onCloneToActiveLayer}>
-        <PencilLine size={18} /> Create Editable Revision
+        <PencilLine size={18} /> Make Editable
       </button>
+      <p>
+        Creates an editable copy, hiding the original annotation.
+      </p>
     </div>
   )
 

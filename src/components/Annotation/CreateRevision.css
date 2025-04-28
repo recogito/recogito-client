@@ -1,5 +1,6 @@
 .annotation .create-revision {
-  padding: 0.5rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 0.625rem 0.5rem 0 0.5rem;
 }
 
 .annotation .create-revision button {
@@ -16,4 +17,11 @@
 
 .annotation .create-revision button svg {
   color: var(--gray-300);
+}
+
+.annotation .create-revision p {
+  color: var(--font-light);
+  font-size: var(--font-tiny);
+  line-height: 140%;
+  text-align: center;
 }

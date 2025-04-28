@@ -22,6 +22,7 @@ import {
   useAnnotator,
   AnnotoriousPlugin
 } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -99,6 +100,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const [drawingEnabled, setDrawingEnabled] = useState(false);
 
   const { filter } = useFilter();
+
+  const extensions = useExtensions('annotation.image.annotator');
 
   // Workaround
   const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
