@@ -1,29 +1,20 @@
 
 
+import { useMemo } from 'react';
 import { PencilLine } from '@phosphor-icons/react';
-import { v4 as uuidv4, v5 as uuidv5 } from 'uuid';
-import { Origin, useAnnotator, type AnnotoriousOpenSeadragonAnnotator, type ImageAnnotation, type ImageAnnotationTarget, type PresentUser, type User } from '@annotorious/react';
+import { v4 as uuidv4 } from 'uuid';
+import { Origin, useAnnotator } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
+import type { 
+  AnnotoriousOpenSeadragonAnnotator, 
+  ImageAnnotation, 
+  ImageAnnotationTarget, 
+  PresentUser, 
+  User 
+} from '@annotorious/react';
 
 import './CreateRevision.css';
-import { useMemo } from 'react';
-
-const SUPABASE_URL: string = import.meta.env.PUBLIC_SUPABASE;
-
-/**
- * Generates a stable UUID from any string, using UUID v5.
- * - First, generates a "namespace UUID", unique to this Recogito Studio instance.
- * - Next, generates a UUID from the namespace and the string.
- */
-const uuidFromString = (str: string) => {
-  // The pre-defined namespace for UUIDs supposed to represent a URL.
-  // Cf. https://www.rfc-editor.org/rfc/rfc4122.html
-  const NAMESPACE_URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
-
-  const namespace = uuidv5(SUPABASE_URL, NAMESPACE_URL);
-  return uuidv5(str, namespace);
-}
 
 interface CreateRevisionProps {
 
@@ -57,24 +48,24 @@ export const CreateRevision = (props: CreateRevisionProps) => {
 
     const { id: origId, bodies, target } = selected[0] as SupabaseAnnotation;
 
-    // TODO temporary hack
-    const id = uuidv4(); // uuidFromString(origId);
-
-    // Changes needed:
-    // - Set layer_id to active layer
-    // - Set target to my user
+    const id = uuidv4(); 
 
     const clone = {
       id,
-      via: origId,
       layer_id: activeLayer,
-      bodies: bodies.map(b => ({
+      bodies: [...bodies.map(b => ({
         ...b,
         id: uuidv4(),
         annotation: id,
         updated: new Date(),
         updatedBy: props.me
-      })),
+      })), {
+        // Bit of an ad-hoc solution: add a marker body
+        // with a custom 'correctig' purpose to establish
+        // the link to the original annotation.
+        purpose: 'correcting',
+        value: origId
+      }],
       target: {
         ...target,
         creator: props.me,
