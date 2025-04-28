@@ -1,7 +1,6 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
 import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
-import { mountPlugin as RevisionsPlugin } from '@components/Annotation/createRevisionPlugin';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -19,10 +18,10 @@ import {
   OpenSeadragonAnnotationPopup,
   OpenSeadragonViewer,
   UserSelectAction,
-  useAnnotator,
-  AnnotoriousPlugin
+  useAnnotator
 } from '@annotorious/react';
 import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -101,7 +100,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const { filter } = useFilter();
 
-  const extensions = useExtensions('annotation.image.annotator');
+  const extensions = useExtensions('annotation:image:annotator');
 
   // Workaround
   const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
@@ -200,9 +199,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       filter={filter}
       style={props.style}>
 
-      <AnnotoriousPlugin
-        plugin={RevisionsPlugin} />
-
       <UndoStack
         undoEmpty={true} />
 
@@ -232,6 +228,14 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       <SelectionURLState
         backButton 
         onInitialSelectError={onInitialSelectError} />
+
+      {extensions.map(({ extension, config }) => (
+        <ExtensionMount
+          key={extension.name}
+          extension={extension}
+          pluginConfig={config} 
+          anno={anno} />
+      ))}
 
       {props.usePopup && (
         <OpenSeadragonAnnotationPopup

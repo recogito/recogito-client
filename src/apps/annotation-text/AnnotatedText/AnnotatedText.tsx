@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
-import { AnnotoriousPlugin, useAnnotator, type PresentUser } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
+import { useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
 import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
-import { mountPlugin as RevisionsPlugin } from '@components/Annotation/createRevisionPlugin';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
@@ -12,6 +12,7 @@ import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState
 import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
 import { AnnotatedPDF } from './AnnotatedPDF';
 import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import { ExtensionMount } from '@components/Plugins';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
 
@@ -79,6 +80,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
   const { filter } = useFilter();
 
+  const extensions = useExtensions('annotation:image:annotator');
+
   useEffect(() => {
     if (!loading)
       props.onLoad();
@@ -130,9 +133,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
           <UndoStack undoEmpty={true} />
 
-          <AnnotoriousPlugin
-            plugin={RevisionsPlugin} />
-
           {layers && (
             <SupabasePlugin
               supabaseUrl={SUPABASE}
@@ -148,6 +148,14 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               privacyMode={props.privacy === 'PRIVATE'}
             />
           )}
+
+          {extensions.map(({ extension, config }) => (
+            <ExtensionMount
+              key={extension.name}
+              extension={extension}
+              pluginConfig={config} 
+              anno={anno} />
+          ))}
 
           {props.usePopup && (
             <TextAnnotationPopup

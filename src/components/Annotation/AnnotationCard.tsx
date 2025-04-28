@@ -8,7 +8,6 @@ import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
 import { ReplyField } from './ReplyField';
-import { CreateRevision } from './CreateRevision';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
@@ -332,12 +331,12 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             </animated.div>
           )))}
 
-          {(props.isSelected && props.isReadOnly) && (
+          {/* (props.isSelected && props.isReadOnly) && (
             <CreateRevision 
               annotation={annotation} 
               layers={props.layers}
               me={me} />
-          )}
+          ) */}
         </div>
       )}
     </div>
