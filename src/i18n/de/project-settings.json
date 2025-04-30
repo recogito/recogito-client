@@ -33,5 +33,6 @@
   "Right panel will be closed by default when opening a document": "Die rechte Seitenleiste ist beim Öffnen des Dokuments geschlossen",
   "Right panel will display annotations when opening a document": "Die rechte Seitenlesite zeigt beim Öffnen des Dokuments die Annotationsliste",
   "Right panel will display notes when opening a document": "Die rechte Seitenleiste zeigt beim Öffnen des Dokuments die Notizen-Liste",
-  "Are you sure you want to lock this project?": "Bist Du sicher dass Du dieses Projekt sperren willst?"
+  "Are you sure you want to lock this project?": "Bist Du sicher dass Du dieses Projekt sperren willst?",
+    "Available Plugins": "Verfügbare Plugins"
 }

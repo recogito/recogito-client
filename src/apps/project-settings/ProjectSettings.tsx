@@ -601,6 +601,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                 </p>
 
                 <GetPlugins
+                  i18n={props.i18n}
                   project={props.project}
                   availablePlugins={props.availablePlugins}
                   installedPlugins={installedPlugins}

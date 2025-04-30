@@ -1,0 +1,4 @@
+const Thumbnails: Record<string, () => Promise<typeof import("*.jpg") | typeof import("*.png")>> = {
+}
+
+export default Thumbnails;
