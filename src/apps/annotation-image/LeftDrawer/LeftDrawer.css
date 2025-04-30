@@ -14,6 +14,10 @@
   height: 100%;
 }
 
+.ta-left-drawer aside .tablist {
+  background-color: var(--gray-50);
+}
+
 .anno-drawer.ia-left-drawer aside .tabcontent {
   flex: 1;
   overflow-x: hidden;
