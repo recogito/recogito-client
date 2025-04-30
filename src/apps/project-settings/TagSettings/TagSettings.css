@@ -19,9 +19,18 @@
   padding: 1rem 0 0.5rem 0;
 }
 
+.project-settings .tag-settings th {
+  padding: 0.2rem 0.5rem 0.2rem 0.8rem;
+}
+
 .project-settings .tag-settings th:first-child,
 .project-settings .tag-settings td:first-child {
-  width: 90%;
+  width: 60%;
+}
+
+.project-settings .tag-settings th:nth-child(2),
+.project-settings .tag-settings td:nth-child(2) {
+  width: 50%;
 }
 
 .project-settings .tag-settings th:last-child {

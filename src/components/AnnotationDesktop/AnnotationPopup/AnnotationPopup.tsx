@@ -3,6 +3,7 @@ import { type AnnotationBody, useAnnotationStore, useAnnotator } from '@annotori
 import type { Annotation as Anno, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { AnnotationCard } from '@components/Annotation';
+import { isMobile } from './isMobile';
 import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationPopup.css';
@@ -72,7 +73,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
       key={selected.id}
       className="annotation-popup not-annotatable">
       <AnnotationCard 
-        autoFocus
+        autoFocus={!isMobile()}
         annotation={selected}
         i18n={props.i18n}
         isProjectLocked={props.isProjectLocked}

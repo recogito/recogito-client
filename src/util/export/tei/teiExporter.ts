@@ -2,8 +2,9 @@ import { DOMParser } from 'linkedom';
 import { customAlphabet } from 'nanoid';
 import slugify from 'slugify';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { User } from '@annotorious/react';
+import type { AnnotationBody, User } from '@annotorious/react';
 import { quillToPlainText } from '../serializeQuillComment';
+import type { VocabularyTerm } from 'src/Types';
 
 // Helper
 const generateRandomId = (alreadyInUse: Set<string>) => {
@@ -77,22 +78,31 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
     [...existingTaxonomies].map((el) => el.getAttribute('xml:id'))
   );
 
-  // TODO verify if the generated ID already exists in the header
   const taxonomyId = generateRandomId(existingTaxonomyIds);
 
-  const distinctTags = new Set(
+  const distinctTags: (string | VocabularyTerm)[] = [...new Set(
     annotations.reduce<string[]>((all, annotation) => {
       const tagBodies = (annotation.bodies || []).filter(
         (b) => b.purpose === 'tagging' && b.value
       );
       return [...all, ...tagBodies.map((b) => b.value!)];
     }, [])
-  );
+  )].map(str => {
+    // Tags might be plaintext or semantic
+    try {
+      return JSON.parse(str) as VocabularyTerm;
+    } catch {
+      return str;
+    }
+  });
 
   // Note: we'll later want to use URIs for tag IDs. Slugifying
   // the label is going to be a fallback option
-  const idFromLabel = (label: string) =>
-    slugify(label, {
+  const idFromTerm = (term: string | VocabularyTerm, taxonomyId: string) => {
+    if (typeof term !== 'string' && term.id) return term.id;
+
+    const label = typeof term === 'string' ? term : term.label;
+    const localId = slugify(label, {
       replacement: '_',
       remove: /[*+~.()'"!:@]/g,
       lower: false,
@@ -100,9 +110,13 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
       locale: 'en',
     });
 
-  const tagsAndIds = [...distinctTags].map((label) => ({
-    label,
-    id: `${taxonomyId}.${idFromLabel(label)}`,
+    return `${taxonomyId}.${localId}`
+  }
+
+  const tagsAndIds = [...distinctTags].map(term => ({
+    key: typeof term === 'string' ? term : term.id,
+    label: typeof term === 'string' ? term : term.label,
+    id: idFromTerm(term, taxonomyId)
   }));
 
   const taxonomyEl = document.createElement('taxonomy');
@@ -123,7 +137,7 @@ const createTaxonomy = (annotations: SupabaseAnnotation[], document: any) => {
   return {
     taxonomyEl,
     taxonomy: Object.fromEntries(
-      tagsAndIds.map(({ label, id }) => [label, id])
+      tagsAndIds.map(({ key, id }) => [key, id])
     ),
   };
 };
@@ -248,9 +262,20 @@ export const mergeAnnotations = (
     const tags = a.bodies.filter((b) => b.purpose === 'tagging' && b.value);
     if (tags.length > 0) {
       const rsEl = document.createElement('rs');
+
+      const getKey = (b: AnnotationBody) => { 
+        try {
+          const tag: VocabularyTerm = JSON.parse(b.value!);
+          const key = tag.id || tag.label;
+          return key.match(/^https?:/) ? key : `#${key}`;
+        } catch {
+          return b.value;
+        }
+      }
+
       rsEl.setAttribute(
         'ana',
-        tags.map((b) => `#${taxonomy[b.value!]}`).join(' ')
+        tags.map((b) => getKey(b)).join(' ')
       );
       annotationEl.appendChild(rsEl);
     }
