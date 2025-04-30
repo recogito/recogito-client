@@ -53,8 +53,9 @@ export const TagSettings = (props: TagSettingsProps) => {
 
   const onChangeColor = (term: VocabularyTerm, color?: string) => {
     setUnsaved(true);
-    setVocabulary((vocab) =>
-      vocab?.map((t) => (t === term ? { label: t.label, color } : t))
+    setVocabulary(prev =>
+      // Not that we don't allow the same label twice (even with different IDs)
+      (prev || []).map(t => (t.label === term.label ? { ...t, color } : t))
     );
   };
 
@@ -94,18 +95,22 @@ export const TagSettings = (props: TagSettingsProps) => {
   };
 
   const onAddTerms = () => {
-    const prev = vocabulary;
+    const prev = vocabulary || [];
 
-    const existingTerms = new Set(prev?.map((t) => t.label) || []);
+    const existingTermLabels = new Set(prev.map((t) => t.label));
 
     const toAdd = inputVal
       .split('\n')
-      .filter(Boolean) // Remove empty string
-      .filter((term) => !existingTerms.has(term)); // De-duplicate
-
+      .map(line => {
+        const [label, id] = line.split(',').map(str => str.trim());
+        return { label, id } as VocabularyTerm;
+      })
+      .filter(t => t.label) // Remove empty
+      .filter(term => !existingTermLabels.has(term.label)); // De-duplicate by label
+      
     if (toAdd.length === 0) return;
 
-    const next = [...(vocabulary || []), ...toAdd.map((label) => ({ label }))];
+    const next = [...prev, ...toAdd];
 
     setAddState('saving');
     setVocabulary(next);
@@ -141,6 +146,7 @@ export const TagSettings = (props: TagSettingsProps) => {
               <thead>
                 <tr>
                   <th>{t['Tag']}</th>
+                  <th>{t['ID']}</th>
                   <th>{t['Color']}</th>
                 </tr>
               </thead>
@@ -148,7 +154,7 @@ export const TagSettings = (props: TagSettingsProps) => {
                 {vocabulary.map((term) => (
                   <tr key={term.label}>
                     <td>{term.label}</td>
-
+                    <td>{term.id}</td>
                     <td>
                       <TagColorPicker
                         color={term.color}
@@ -187,7 +193,7 @@ export const TagSettings = (props: TagSettingsProps) => {
 
         <div>
           <textarea
-            placeholder={'Tag A\nTag B\n...'}
+            placeholder={t['VOCABULARY_PLACEHOLDER']}
             value={inputVal}
             onChange={(evt) => setInputVal(evt.target.value)}
           />

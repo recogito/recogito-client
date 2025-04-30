@@ -16,3 +16,7 @@
   left: 0;
   width: 280px;
 }
+
+.ta-left-drawer aside .tablist {
+  background-color: var(--gray-50);
+}

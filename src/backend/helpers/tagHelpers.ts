@@ -93,7 +93,8 @@ export const getProjectTagVocabulary = (
           error, 
           data: data.map(def => ({ 
             label: def.name,
-            color: def.metadata?.color
+            color: def.metadata?.color,
+            id: def.metadata?.id
           } as VocabularyTerm))
         };
       }
@@ -119,9 +120,18 @@ export const setProjectTagVocabulary = (
   supabase: SupabaseClient,
   projectId: string,
   terms: VocabularyTerm[]
-): Promise<void> => 
+): Promise<void> => {
+  const getMetadata = (term: VocabularyTerm) => {
+    const metadata = {} as any;
+  
+    if (term.color) metadata.color = term.color;
+    if (term.id) metadata.id = term.id;
+    
+    return metadata;
+  }
+
   // Clear vocab first
-  clearProjectTagVocabulary(supabase, projectId)
+  return clearProjectTagVocabulary(supabase, projectId)
     .then(() => new Promise((resolve, reject) => {
       supabase
         .from('tag_definitions')
@@ -129,9 +139,7 @@ export const setProjectTagVocabulary = (
           scope: 'project',
           scope_id: projectId,
           name: term.label,
-          metadata: term.color ? {
-            color: term.color
-          } : {}
+          metadata: getMetadata(term)
         })))
         .then(({ error }) => {
           if (error)
@@ -140,6 +148,7 @@ export const setProjectTagVocabulary = (
             resolve();
         })
     }));
+}
 
 export const getTagDefinitions = (
   supabase: SupabaseClient,
@@ -162,6 +171,7 @@ export const getTagDefinitions = (
       metadata,
       tags (
         id,
+        created_at,
         tag_definition_id,
         target_id
       )
@@ -176,7 +186,7 @@ export const getTagDefinitions = (
       if (error || !data) {
         return  { error, data: [] };
       } else {
-        return { data };
+        return { data, error };
       }
     })
 
