@@ -21,7 +21,7 @@ interface EmptyNoteProps {
 
   onCancel(): void;
 
-  onSubmit(content: Delta, tags: string[], isPrivate?: boolean): void;
+  onSubmit(content: Delta, tags: VocabularyTerm[], isPrivate?: boolean): void;
 
 }
 
@@ -31,7 +31,7 @@ export const EmptyNote = (props: EmptyNoteProps) => {
 
   const [value, setValue] = useState<Delta | undefined>();
 
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<VocabularyTerm[]>([]);
 
   const onSave = () => {
     if (value) {
@@ -41,9 +41,9 @@ export const EmptyNote = (props: EmptyNoteProps) => {
     }
   }
 
-  const onCreateTag = (tag: string) => setTags(tags => ([...tags, tag]));
+  const onCreateTag = (tag: VocabularyTerm) => setTags(tags => ([...tags, tag]));
 
-  const onDeleteTag = (tag: string) => setTags(tags => tags.filter(t => t !== tag));
+  const onDeleteTag = (tag: VocabularyTerm) => setTags(tags => tags.filter(t => t !== tag));
 
   const className = [
     'annotation note empty',
