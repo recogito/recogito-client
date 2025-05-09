@@ -1,24 +1,24 @@
 import { X } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import type { Translations, VocabularyTerm } from 'src/Types';
 import { TagEditor } from '@components/Annotation/TagEditor';
 
 interface TagListProps {
 
-  tags: string[];
+  tags: VocabularyTerm[];
 
   i18n: Translations;
 
-  vocabulary?: string[];
+  vocabulary?: VocabularyTerm[];
 
-  onCreateTag(value: string): void;
+  onCreateTag(value: VocabularyTerm): void;
 
-  onDeleteTag(value: string): void;
+  onDeleteTag(value: VocabularyTerm): void;
 
 }
 
 export const TagList = (props: TagListProps) => {
 
-  const onCreateTag = (value: string) => {
+  const onCreateTag = (value: VocabularyTerm) => {
     // Don't create a tag that already exists
     const existing = props.tags.find(tag => tag === value);
     if (!existing)
@@ -28,7 +28,7 @@ export const TagList = (props: TagListProps) => {
   return (
     <ul className="taglist editable">
       {props.tags.map(tag => (
-        <li key={tag}>
+        <li key={tag.id || tag.label}>
           <Tag 
             value={tag} 
             onDelete={() => props.onDeleteTag(tag)} />
@@ -46,7 +46,7 @@ export const TagList = (props: TagListProps) => {
 
 interface TagProps {
 
-  value: string;
+  value: VocabularyTerm;
 
   onDelete(): void;
 
@@ -56,7 +56,7 @@ export const Tag = (props: TagProps) => {
 
   return (
     <span className="tag editable">
-      <span>{props.value}</span>
+      <span>{props.value.label}</span>
       
       <button onClick={props.onDelete}>
         <X />

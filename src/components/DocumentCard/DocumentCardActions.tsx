@@ -294,8 +294,8 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 extension={extension}
                 pluginConfig={config}
                 projectId={props.context.project_id}
-                contextId={props.context.id}
-                documentId={props.document.id}
+                context={props.context}
+                document={props.document}
               />
             ))}
 
