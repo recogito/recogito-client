@@ -60,7 +60,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
 
   const [newNote, setNewNote] = useState<'public' | 'private' | undefined>();
   
-  const createNote = (content: Delta, tags: string[], isPrivate: boolean) => {
+  const createNote = (content: Delta, tags: VocabularyTerm[], isPrivate: boolean) => {
     setNewNote(undefined);
     _createNote(content, tags, isPrivate);
   }
@@ -100,6 +100,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
           i18n={props.i18n}
           isPrivate={newNote === 'private'} 
           me={me}
+          tagVocabulary={props.tagVocabulary}
           present={props.present}
           onSubmit={createNote} 
           onCancel={() => setNewNote(undefined)} />

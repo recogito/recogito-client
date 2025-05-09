@@ -91,7 +91,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
   const { t } = props.i18n;
 
-  const extensions = useExtensions('annotation.*.annotation-editor');
+  const extensions = useExtensions('annotation:*:annotation-editor');
 
   const [editable, setEditable] = useState(false);
 
