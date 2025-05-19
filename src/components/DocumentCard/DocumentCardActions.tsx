@@ -297,7 +297,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Sub>
             )}
 
-            <Separator className="dropdown-separator" />
+            {extensions.length > 0 && (
+              <Separator className="dropdown-separator" />
+            )}
 
             {extensions.map(({ extension, config }) => (
               <Item className="dropdown-item" key={extension.name}>
@@ -311,21 +313,21 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 />
               </Item>
             ))}
-
-            {extensions.length > 0 && (
-              <Separator className="dropdown-separator" />
-            )}
-
+            
             {props.allowDeleteDocument && (
-              <ConfirmedAction.Trigger>
-                <Item
-                  className='dropdown-item'
-                  aria-label={t['remove this document from the project']}
-                >
-                  <Trash size={16} className='destructive' />{' '}
-                  <span>{t['Delete document']}</span>
-                </Item>
-              </ConfirmedAction.Trigger>
+              <>
+                <Separator className="dropdown-separator" />
+                
+                <ConfirmedAction.Trigger>
+                  <Item
+                    className='dropdown-item'
+                    aria-label={t['remove this document from the project']}
+                  >
+                    <Trash size={16} className='destructive' />{' '}
+                    <span>{t['Delete document']}</span>
+                  </Item>
+                </ConfirmedAction.Trigger>
+              </>
             )}
           </Content>
         </Portal>
