@@ -29,6 +29,11 @@
   user-select: none;
 }
 
+.dropdown-item > a {
+  align-items: center;
+  display: flex;
+}
+
 .dropdown-item a[href] {
   color: var(--font-dark);
 }

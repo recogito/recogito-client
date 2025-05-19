@@ -289,14 +289,15 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Separator className="dropdown-separator" />
 
             {extensions.map(({ extension, config }) => (
-              <ExtensionMount
-                key={extension.name}
-                extension={extension}
-                pluginConfig={config}
-                projectId={props.context.project_id}
-                context={props.context}
-                document={props.document}
-              />
+              <Item className="dropdown-item" key={extension.name}>
+                <ExtensionMount
+                  extension={extension}
+                  pluginConfig={config}
+                  projectId={props.context.project_id}
+                  context={props.context}
+                  document={props.document}
+                />
+              </Item>
             ))}
 
             {extensions.length > 0 && (
