@@ -5,7 +5,7 @@ let registry: Plugin[] = [];
 
 try {
   const mod = await import('../../plugins/generated/registered.json', { assert: { type: 'json' } });
-  registry = mod.default;
+  registry = mod.default as Plugin[];
 } catch {
   // File doesn't exist yet, use empty registry
   registry = [];

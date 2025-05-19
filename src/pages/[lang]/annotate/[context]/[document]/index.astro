@@ -80,10 +80,10 @@ let viewer, extensionPoint;
 
 if (document.data.content_type === 'text/plain') {
   viewer = 'TEXT';
-  extensionPoint = 'annotation.text';
+  extensionPoint = 'annotation:text';
 } else if (document.data.content_type === 'text/xml') {
   viewer = 'TEI';
-  extensionPoint = 'annotation.text';
+  extensionPoint = 'annotation:text';
 } else if (document.data.content_type === 'application/pdf') {
   viewer = 'PDF';
 } else if (
@@ -92,7 +92,7 @@ if (document.data.content_type === 'text/plain') {
   document.data.meta_data?.protocol === 'IIIF_PRESENTATION'
 ) {
   viewer = 'OPENSEADRAGON';
-  extensionPoint = 'annotation.image';
+  extensionPoint = 'annotation:image';
 } else {
   // Should never happen
   const error = await fetch(`${Astro.url}/500`);

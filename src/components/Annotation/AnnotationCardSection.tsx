@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
-import { useExtensions } from '@recogito/studio-sdk';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Delta } from 'quill/core';
-import { ExtensionMount } from '@components/Plugins';
 import {
   QuillEditor,
   QuillEditorRoot,
@@ -90,8 +88,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
   } = props;
 
   const { t } = props.i18n;
-
-  const extensions = useExtensions('annotation:*:annotation-editor');
 
   const [editable, setEditable] = useState(false);
 
@@ -344,21 +340,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           </button>
         </div>
       )}
-
-      {props.index === 0
-        ? extensions.map(({ extension, config }) => (
-            <ExtensionMount
-              key={extension.name}
-              extension={extension}
-              pluginConfig={config}
-              annotation={props.annotation}
-              isEditable={editable}
-              isSelected={props.isSelected}
-              me={me}
-              onUpdateAnnotation={props.onUpdateAnnotation}
-            />
-          ))
-        : null}
     </div>
   );
 };

@@ -20,6 +20,8 @@ import {
   UserSelectAction,
   useAnnotator
 } from '@annotorious/react';
+import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -97,6 +99,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const [drawingEnabled, setDrawingEnabled] = useState(false);
 
   const { filter } = useFilter();
+
+  const extensions = useExtensions('annotation:image:annotator');
 
   // Workaround
   const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
@@ -224,6 +228,14 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       <SelectionURLState
         backButton 
         onInitialSelectError={onInitialSelectError} />
+
+      {extensions.map(({ extension, config }) => (
+        <ExtensionMount
+          key={extension.name}
+          extension={extension}
+          pluginConfig={config} 
+          anno={anno} />
+      ))}
 
       {props.usePopup && (
         <OpenSeadragonAnnotationPopup

@@ -52,22 +52,33 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
   const { t } = props.i18n;
 
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const [confirming, setConfirming] = useState(false);
 
   const onOpen = (tab: boolean) => (evt: Event) => {
     evt.preventDefault();
     evt.stopPropagation();
     props.onOpen(tab);
+
+    setMenuOpen(false);
   };
 
   const extensions = useExtensions('project:document-actions');
 
-  const onExport = (fn: ((includePrivate?: boolean) => void) | undefined, includePrivate: boolean) => () =>
+  const onExport = (fn: ((includePrivate?: boolean) => void) | undefined, includePrivate: boolean) => () => {
     fn && fn(includePrivate);
+    setMenuOpen(false);
+  }
+
+  const onSelectOption = (fn?: () => void) => () => {
+    fn && fn();
+    setMenuOpen(false);
+  }
 
   return (
     <ConfirmedAction.Root open={confirming} onOpenChange={setConfirming}>
-      <Root>
+      <Root open={menuOpen} onOpenChange={setMenuOpen}>
         <Trigger asChild>
           <button
             className='unstyled icon-only'
@@ -103,7 +114,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.onOpenMetadata && (
               <Item
                 className='dropdown-item'
-                onSelect={props.onOpenMetadata}
+                onSelect={onSelectOption(props.onOpenMetadata)}
                 aria-label={t['view this documents metadata']}
               >
                 <PencilSimple size={16} />
@@ -286,33 +297,37 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Sub>
             )}
 
-            <Separator className="dropdown-separator" />
-
-            {extensions.map(({ extension, config }) => (
-              <ExtensionMount
-                key={extension.name}
-                extension={extension}
-                pluginConfig={config}
-                projectId={props.context.project_id}
-                context={props.context}
-                document={props.document}
-              />
-            ))}
-
             {extensions.length > 0 && (
               <Separator className="dropdown-separator" />
             )}
 
+            {extensions.map(({ extension, config }) => (
+              <Item className="dropdown-item" key={extension.name}>
+                <ExtensionMount
+                  extension={extension}
+                  pluginConfig={config}
+                  projectId={props.context.project_id}
+                  context={props.context}
+                  document={props.document}
+                  closeDialog={() => setMenuOpen(false)}
+                />
+              </Item>
+            ))}
+            
             {props.allowDeleteDocument && (
-              <ConfirmedAction.Trigger>
-                <Item
-                  className='dropdown-item'
-                  aria-label={t['remove this document from the project']}
-                >
-                  <Trash size={16} className='destructive' />{' '}
-                  <span>{t['Delete document']}</span>
-                </Item>
-              </ConfirmedAction.Trigger>
+              <>
+                <Separator className="dropdown-separator" />
+                
+                <ConfirmedAction.Trigger>
+                  <Item
+                    className='dropdown-item'
+                    aria-label={t['remove this document from the project']}
+                  >
+                    <Trash size={16} className='destructive' />{' '}
+                    <span>{t['Delete document']}</span>
+                  </Item>
+                </ConfirmedAction.Trigger>
+              </>
             )}
           </Content>
         </Portal>
@@ -328,7 +343,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Trash size={16} /> <span>{t['Delete document']}</span>
           </>
         }
-        onConfirm={props.onDelete!}
+        onConfirm={onSelectOption(props.onDelete)}
       />
     </ConfirmedAction.Root>
   );

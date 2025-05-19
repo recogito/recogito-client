@@ -78,6 +78,8 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
         i18n={props.i18n}
         isProjectLocked={props.isProjectLocked}
         isReadOnly={isReadOnly}
+        isSelected
+        layers={props.layers}
         layerNames={props.layerNames}
         policies={props.policies}
         present={props.present}
