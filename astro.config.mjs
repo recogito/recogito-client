@@ -2,12 +2,9 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
 
-import RevisionsPlugin from '@recogito/plugin-revisions';
-
 export default defineConfig({
   integrations: [
-    react(),
-    RevisionsPlugin()
+    react()
   ],
   output: 'server',
   adapter: netlify(),
