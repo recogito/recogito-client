@@ -1,10 +1,12 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
+import PluginNER from '@recogito/plugin-ner';
 
 export default defineConfig({
   integrations: [
-    react()
+    react(),
+    PluginNER()
   ],
   output: 'server',
   adapter: netlify(),
