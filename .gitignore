@@ -14,7 +14,6 @@ pnpm-debug.log*
 .idea
 
 src/components/Plugins/deployedPlugins.ts
-src/plugins/generated/**
 plugins/**
 public/pdf.worker.min.mjs
 
