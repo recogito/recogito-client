@@ -1,17 +1,23 @@
 import { X } from '@phosphor-icons/react';
-import type { AnnotationBody } from '@annotorious/react';
+import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 import { TagEditor } from './TagEditor';
 import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagList.css';
 
 interface TagListProps {
-
-  tags: AnnotationBody[];
+  annotation: SupabaseAnnotation;
 
   i18n: Translations;
 
   isEditable?: boolean;
+
+  me: PresentUser | User;
+  
+  tags: AnnotationBody[];
 
   vocabulary?: VocabularyTerm[];
 
@@ -19,9 +25,12 @@ interface TagListProps {
 
   onDeleteTag(body: AnnotationBody): void;
 
+  onUpdateAnnotation(updated: SupabaseAnnotation): void;
 }
 
 export const TagList = (props: TagListProps) => {
+
+  const extensions = useExtensions('annotation:*:taglist');
 
   const onCreateTag = (value: VocabularyTerm) => {
     // Don't create a tag that already exists
@@ -43,11 +52,25 @@ export const TagList = (props: TagListProps) => {
       ))}
 
       {props.isEditable && (
-        <TagEditor 
-          i18n={props.i18n}
-          vocabulary={props.vocabulary}
-          onCreateTag={onCreateTag} />
+        <div className='taglist-editor-wrapper'>
+          <TagEditor 
+            i18n={props.i18n}
+            vocabulary={props.vocabulary}
+            onCreateTag={onCreateTag} />
+
+          {extensions.map(({ extension, config }) => (
+            <ExtensionMount
+              key={extension.name}
+              extension={extension}
+              pluginConfig={config}
+              me={props.me}
+              annotation={props.annotation}
+              onUpdateAnnotation={props.onUpdateAnnotation}
+            />
+          ))}
+        </div>
       )}
+
     </ul>
   )
 

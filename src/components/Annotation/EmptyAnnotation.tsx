@@ -150,12 +150,15 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
         <div className='annotation-footer'>
           <div className='annotation-footer-left'>
             <TagList
+              annotation={props.annotation}
               isEditable
               i18n={props.i18n}
+              me={props.me}
               tags={tags}
               vocabulary={props.tagVocabulary}
               onCreateTag={onCreateTag}
               onDeleteTag={props.onDeleteBody}
+              onUpdateAnnotation={props.onUpdateAnnotation}
             />
           </div>
 
@@ -172,10 +175,11 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
       {extensions.map(({ extension, config }) => (
         <ExtensionMount
           key={extension.name}
-          extension={extension}
-          pluginConfig={config}
-          me={props.me}
           annotation={props.annotation}
+          extension={extension}
+          isSelected
+          me={props.me}
+          pluginConfig={config}
           onUpdateAnnotation={props.onUpdateAnnotation}
         />
       ))}

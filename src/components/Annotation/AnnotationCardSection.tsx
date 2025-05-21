@@ -311,12 +311,15 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
       {props.index === 0 && ((props.tags || []).length > 0 || editable) && (
         <div className='annotation-taglist-wrapper'>
           <TagList
+            annotation={annotation}
             isEditable={editable}
             i18n={props.i18n}
+            me={me}
             tags={props.tags || []}
             vocabulary={props.tagVocabulary}
             onCreateTag={onCreateTag}
             onDeleteTag={props.onDeleteBody}
+            onUpdateAnnotation={props.onUpdateAnnotation}
           />
         </div>
       )}
