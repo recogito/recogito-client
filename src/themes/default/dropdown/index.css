@@ -29,9 +29,9 @@
   user-select: none;
 }
 
-.dropdown-item > a {
-  align-items: center;
-  display: flex;
+.dropdown-item[data-disabled],
+.dropdown-subtrigger[data-disabled] {
+  opacity: 50%;
 }
 
 .dropdown-item a[href] {
