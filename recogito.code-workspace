@@ -31,6 +31,9 @@
     {
       "name": "plugin-duke-unreal-export",
       "path": "../plugin-duke-unreal-export"
+    },
+    {
+      "path": "../plugin-sandcastle-export"
     }
   ],
   "settings": {}

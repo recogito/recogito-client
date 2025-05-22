@@ -1,8 +1,6 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
 import type { Translations } from 'src/Types';
 
-import './PublicWarningMessage.css';
-
 interface PublicWarningMessageProps {
   open: boolean;
   message: string;

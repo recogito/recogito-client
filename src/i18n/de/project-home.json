@@ -13,6 +13,8 @@
   "Open document in new tab": "In neuem Tab öffnen",
   "Export TEI file": "TEI/XML exportieren",
   "Export PDF file": "PDF exportieren",
+  "Export Annotations as W3C/JSONLD": "Annotationen als W3C/JSONLD exportieren",
+  "Export IIIF Manifest": "IIIF Manifest exportieren",
   "Public annotations only": "Nur öffentliche Annotationen",
   "Include my private annotations": "Inkl. meiner privaten Annotationen",
   "Export Annotations": "Annotationen exportieren",
@@ -79,5 +81,9 @@
   "Locked": "Gesperrt",
   "Collections": "Sammlungen",
   "No document metadata available.": "Keine Metadaten vorhanden.",
-  "Add Metadata": "Neues Metadatenfeld"
+  "Add Metadata": "Neues Metadatenfeld",
+  "Accept End User License Agreement": "Endbenutzer-Lizenzvereinbarung akzeptieren",
+  "I have read and accept EULA": "Ich habe die EULA gelesen und akzeptiere sie",
+  "Read EULA": "EULA lesen",
+  "uploaded_content_warning": "Hochgeladene Dokumente und Bilder müssen allen geltenden Urheberrechtsregeln und -vorschriften entsprechen. Bitte lesen und akzeptieren Sie die verlinkte Endbenutzer-Lizenzvereinbarung (EULA) bevor Sie Inhalte hochladen."
 }

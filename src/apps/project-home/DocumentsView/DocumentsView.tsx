@@ -59,6 +59,8 @@ interface DocumentsViewProps {
   setDocuments(documents: Document[]): void;
 
   onRemoveDocument(document: Document): void;
+
+  onSetUser(user: MyProfile): void;
 }
 
 export const DocumentsView = (props: DocumentsViewProps) => {
@@ -384,8 +386,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           UploadActions={
             <UploadActions
               i18n={props.i18n}
+              me={props.user}
               onUpload={open}
               onImport={onImportRemote}
+              onSetUser={props.onSetUser}
             />
           }
           onDocumentsSelected={onDocumentsSelected}
@@ -404,7 +408,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         uploads={uploads}
         onClose={() => setShowUploads(false)}
       />
-      <input {...getInputProps()} />
+      <input
+        {...getInputProps()}
+        aria-label={t['drag and drop target for documents']}
+      />
     </>
   );
 };

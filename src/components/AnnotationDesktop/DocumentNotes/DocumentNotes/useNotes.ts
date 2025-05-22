@@ -5,6 +5,7 @@ import { useAnnotatorUser } from '@annotorious/react';
 import type { PresentUser, User } from '@annotorious/react';
 import { DocumentNotesContext } from './DocumentNotes';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
+import type { VocabularyTerm } from 'src/Types';
 import { 
   archiveBody, 
   archiveNote,
@@ -29,7 +30,7 @@ export const useNotes = () => {
   const markAsRead = (id: string) => 
     setNotes(notes => notes.map(n => n.id === id ? ({ ...n, unread: undefined }) : n));
 
-  const createNote = (text: Delta, tags: string[], isPrivate = false) => {
+  const createNote = (text: Delta, tags: VocabularyTerm[], isPrivate = false) => {
     const before = notes;
 
     const annotationId = uuidv4();
@@ -55,7 +56,7 @@ export const useNotes = () => {
         created: new Date(),
         creator: me,      
         purpose: 'tagging',        
-        value: tag,
+        value: tag.id ? JSON.stringify(tag) : JSON.stringify({ label: tag.label }),
         layer_id: activeLayerId
       }))]
     } as DocumentNote;

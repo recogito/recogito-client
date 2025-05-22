@@ -17,6 +17,7 @@ import type {
 } from 'src/Types';
 
 import './MembersTable.css';
+import { Label } from '@radix-ui/react-label';
 
 interface MembersTableProps {
   i18n: Translations;
@@ -70,22 +71,27 @@ export const MembersTable = (props: MembersTableProps) => {
               className='checkbox-root'
               checked={isAllSelected}
               onCheckedChange={onSelectAll}
+              name='select all users for an action'
             >
               <Checkbox.Indicator>
                 <CheckSquare size={20} weight='fill' />
               </Checkbox.Indicator>
 
               {!isAllSelected && (
-                <span>
-                  <Square size={20} />
-                </span>
+                <Label
+                  htmlFor='all-users'
+                  aria-label={t['select all users for this action']}
+                >
+                  <span>
+                    <Square size={20} id='all-users' />
+                  </span>
+                </Label>
               )}
             </Checkbox.Root>
           </th>
-
           <th>{t['Name']}</th>
           <th>{t['Access Level']}</th>
-          <th></th>
+          <th aria-label='No value'></th>
         </tr>
       </thead>
 
@@ -104,7 +110,12 @@ export const MembersTable = (props: MembersTableProps) => {
 
                 {!selected.includes(member.user.id) && (
                   <span>
-                    <Square size={20} />
+                    <Label
+                      htmlFor={`member-${member.user.id}`}
+                      aria-label={t['select this user for an action']}
+                    >
+                      <Square size={20} id={`member-${member.user.id}`} />
+                    </Label>
                   </span>
                 )}
               </Checkbox.Root>

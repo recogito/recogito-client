@@ -1,15 +1,18 @@
-import type { PluginInstallationConfig, PluginMetadata } from '@components/Plugins';
 import * as Dialog from '@radix-ui/react-dialog';
+import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { PluginGalleryItem } from './PluginGalleryItem';
-import type { Project } from 'src/Types';
+import type { Project, Translations } from 'src/Types';
 
 import './PluginGallery.css';
 
 interface PluginGalleryProps {
 
+  i18n: Translations;
+
   project: Project;
 
-  availablePlugins: PluginMetadata[];
+  availablePlugins: Plugin[];
 
   installedPlugins: PluginInstallationConfig[];
 
@@ -24,9 +27,10 @@ interface PluginGalleryProps {
 }
 
 export const PluginGallery = (props: PluginGalleryProps) => {
+  const { t } = props.i18n;
 
-  const getInstalled = (meta: PluginMetadata) => 
-    props.installedPlugins.find(p => p.meta.id === meta.id);
+  const getInstalled = (plugin: Plugin) => 
+    props.installedPlugins.find(i => i.plugin.name === plugin.name);
 
   return (
     <Dialog.Root open={true} onOpenChange={props.onClose}>
@@ -36,7 +40,15 @@ export const PluginGallery = (props: PluginGalleryProps) => {
         <Dialog.Content 
           className="dialog-content plugin-gallery">
 
-          <h2>Available Plugins</h2>
+          <Dialog.Title asChild>
+            <h2>{t['Available Plugins']}</h2>
+          </Dialog.Title>
+
+          <VisuallyHidden>
+            <Dialog.Description>
+              {t['Available Plugins']}
+            </Dialog.Description>
+          </VisuallyHidden>
           
           <ul className="plugin-grid">
             {props.availablePlugins.map(plugin => (

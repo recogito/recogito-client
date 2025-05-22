@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { useExtensions } from '@recogito/studio-sdk';
 import { useAnnotatorUser } from '@annotorious/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { AnnotationBody, Color, PresentUser, User } from '@annotorious/react';
 import { Visibility, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { ExtensionMount } from '@components/Plugins';
 import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
 import { ReplyField } from './ReplyField';
-import type { Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 
 import './AnnotationCard.css';
 
@@ -29,6 +31,8 @@ export interface AnnotationCardProps {
   isReadOnly?: boolean;
 
   isSelected?: boolean;
+
+  layers?: Layer[];
 
   layerNames: Map<string, string>;
   
@@ -56,10 +60,6 @@ export interface AnnotationCardProps {
 
 }
 
-const getCreator = (annotation: SupabaseAnnotation) =>
-  annotation.target?.creator || 
-    (annotation.bodies.length > 0 ? annotation.bodies[0].creator : undefined);
-
 /**
  * Per convention, we only support tags created along with the first comment.
  * But they could be anywhere in the ordered list of bodies, because the
@@ -78,7 +78,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
     { '--card-border': props.borderColor } as React.CSSProperties : undefined;
 
   const comments = annotation.bodies
-    .filter(b => !b.purpose || b.purpose === 'commenting')
+    .filter(b => !b.purpose || b.purpose === 'commenting' || b.purpose === 'replying')
     .slice()
     .sort((a, b) => {
       if (!a.created || !b.created) return 0;
@@ -111,6 +111,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
   const isPrivate = annotation.visibility === Visibility.PRIVATE;
 
   const [shouldAnimate, setShouldAnimate] = useState(false);
+
+  const extensions = useExtensions('annotation:*:annotation-editor');
 
   const interstitialTtransition = useTransition(isCollapsed ? 
     [] : comments.slice(1, comments.length - 1), {
@@ -318,6 +320,20 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
               </li>
             )}
           </ul>
+
+          {extensions.map(({ extension, config }) => (
+            <ExtensionMount
+              key={extension.name}
+              extension={extension}
+              pluginConfig={config}
+              annotation={props.annotation}
+              isReadOnly={props.isReadOnly}
+              isSelected={props.isSelected}
+              layers={props.layers}
+              me={me}
+              onUpdateAnnotation={props.onUpdateAnnotation}
+            />
+          ))}
 
           {!props.isProjectLocked && (replyFieldTransition((style, open) => open && (
             <animated.div style={style}>

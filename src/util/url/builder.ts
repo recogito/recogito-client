@@ -54,7 +54,7 @@ export const getSearchParameters = () => new URLSearchParams(window.location.sea
  *
  * @param str
  */
-export const isValidURL = (str) => {
+export const isValidURL = (str: string) => {
   let isValid;
 
   try {

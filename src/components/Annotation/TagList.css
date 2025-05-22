@@ -9,6 +9,10 @@
   padding: 0 0 10px 0; 
 }
 
+.annotation .taglist-editor-wrapper {
+  display: flex;
+}
+
 .annotation .taglist button {
   height: auto;
 }

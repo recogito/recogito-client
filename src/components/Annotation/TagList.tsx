@@ -1,17 +1,23 @@
 import { X } from '@phosphor-icons/react';
-import type { AnnotationBody } from '@annotorious/react';
+import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 import { TagEditor } from './TagEditor';
 import type { Translations, VocabularyTerm } from 'src/Types';
 
 import './TagList.css';
 
 interface TagListProps {
-
-  tags: AnnotationBody[];
+  annotation: SupabaseAnnotation;
 
   i18n: Translations;
 
   isEditable?: boolean;
+
+  me: PresentUser | User;
+  
+  tags: AnnotationBody[];
 
   vocabulary?: VocabularyTerm[];
 
@@ -19,15 +25,19 @@ interface TagListProps {
 
   onDeleteTag(body: AnnotationBody): void;
 
+  onUpdateAnnotation(updated: SupabaseAnnotation): void;
 }
 
 export const TagList = (props: TagListProps) => {
 
+  const extensions = useExtensions('annotation:*:taglist');
+
   const onCreateTag = (value: VocabularyTerm) => {
     // Don't create a tag that already exists
     const existing = props.tags.find(b => b.value === value.label);
-    if (!existing)
+    if (!existing) {
       props.onCreateTag(value);
+    }
   }
 
   return (
@@ -42,11 +52,25 @@ export const TagList = (props: TagListProps) => {
       ))}
 
       {props.isEditable && (
-        <TagEditor 
-          i18n={props.i18n}
-          vocabulary={props.vocabulary}
-          onCreateTag={onCreateTag} />
+        <div className='taglist-editor-wrapper'>
+          <TagEditor 
+            i18n={props.i18n}
+            vocabulary={props.vocabulary}
+            onCreateTag={onCreateTag} />
+
+          {extensions.map(({ extension, config }) => (
+            <ExtensionMount
+              key={extension.name}
+              extension={extension}
+              pluginConfig={config}
+              me={props.me}
+              annotation={props.annotation}
+              onUpdateAnnotation={props.onUpdateAnnotation}
+            />
+          ))}
+        </div>
       )}
+
     </ul>
   )
 
@@ -64,9 +88,12 @@ interface TagProps {
 
 export const Tag = (props: TagProps) => {
 
+  // Bit of a hack
+  const tag = props.tag.value?.startsWith('{') ? JSON.parse(props.tag.value) : { label: props.tag.value };
+
   return (
     <span className={props.isEditable ? 'tag editable' : 'tag'}>
-      <span>{props.tag.value}</span>
+      <span>{tag.label}</span>
       
       {props.isEditable && (
         <button onClick={props.onDelete}>

@@ -1,19 +1,14 @@
 import { Button } from '@components/Button';
-import {
-  CheckSquare,
-  MagnifyingGlass,
-  Square,
-  X
-} from '@phosphor-icons/react';
+import { CheckSquare, MagnifyingGlass, Square, X } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
-  ReactNode,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
-  useState
+  useState,
 } from 'react';
 import type { Translations } from 'src/Types.ts';
 import './SelectRecordsDialog.css';
@@ -27,7 +22,7 @@ interface Column {
 }
 
 interface Record {
-  id: string
+  id: string;
 }
 
 interface Props {
@@ -41,21 +36,13 @@ interface Props {
 
   i18n: Translations;
 
-  labels: {
-    columnCount;
-    columnName: string;
-    header: string;
-    subtitle: string;
-    title: string;
-  };
-
   onCancel(): void;
 
   onSave(ids: string[]): void;
 
   open: boolean;
 
-  records: Record[]
+  records: Record[];
 
   selected?: string[];
 
@@ -76,20 +63,32 @@ export const SelectRecordsDialog = (props: Props) => {
     }
 
     const regex = new RegExp(query, 'i');
-    return props.records.filter((record) => props.filterBy?.some((attr) => regex.test(record[attr])));
+    return props.records.filter((record) =>
+      // @ts-expect-error
+      props.filterBy?.some((attr) => regex.test(record[attr]))
+    );
   }, [query, props.filterBy, props.records]);
 
-  const isSelected = useCallback((id) => selectedRecords.includes(id), [selectedRecords]);
+  const isSelected = useCallback(
+    (id: string) => selectedRecords.includes(id),
+    [selectedRecords]
+  );
 
-  const onSave = useCallback(() => props.onSave(selectedRecords), [selectedRecords, props.onSave])
+  const onSave = useCallback(
+    () => props.onSave(selectedRecords),
+    [selectedRecords, props.onSave]
+  );
 
-  const toggleSelected = useCallback((id) => {
-    if (isSelected(id)) {
-      setSelectedRecords(selectedRecords.filter((i) => i !== id));
-    } else {
-      setSelectedRecords((prevSelected) => [...prevSelected, id]);
-    }
-  }, [isSelected, selectedRecords]);
+  const toggleSelected = useCallback(
+    (id: string) => {
+      if (isSelected(id)) {
+        setSelectedRecords(selectedRecords.filter((i) => i !== id));
+      } else {
+        setSelectedRecords((prevSelected) => [...prevSelected, id]);
+      }
+    },
+    [isSelected, selectedRecords]
+  );
 
   useEffect(() => {
     setSelectedRecords(props.selected || []);
@@ -104,21 +103,15 @@ export const SelectRecordsDialog = (props: Props) => {
           <Dialog.Title asChild className='dialog-title'>
             <h1>{props.title}</h1>
           </Dialog.Title>
-          {props.subtitle && (
-            <span>{props.subtitle}</span>
-          )}
+          {props.subtitle && <span>{props.subtitle}</span>}
 
           <VisuallyHidden.Root asChild>
             <Dialog.Description>{props.description}</Dialog.Description>
           </VisuallyHidden.Root>
 
           {(props.header || props.filterBy) && (
-            <div
-              className='header'
-            >
-              {props.header && (
-                <h2>{props.header}</h2>
-              )}
+            <div className='header'>
+              {props.header && <h2>{props.header}</h2>}
 
               {props.filterBy && (
                 <div className='search-container'>
@@ -129,11 +122,8 @@ export const SelectRecordsDialog = (props: Props) => {
                     placeholder={t['Search']}
                     value={query}
                   />
-                  <MagnifyingGlass
-                    className='search-icon'
-                    size={16}
-                  />
-                  { query && query.length && (
+                  <MagnifyingGlass className='search-icon' size={16} />
+                  {query && query.length && (
                     <button
                       className='search-clear unstyled'
                       onClick={() => setQuery('')}
@@ -150,65 +140,58 @@ export const SelectRecordsDialog = (props: Props) => {
             <div className='table-container'>
               <table>
                 <thead>
-                <tr>
-                  <th></th>
-                  { props.columns.map((column) => (
-                    <th key={column.name}>{column.label}</th>
-                  ))}
-                </tr>
+                  <tr>
+                    <th></th>
+                    {props.columns.map((column) => (
+                      <th key={column.name}>{column.label}</th>
+                    ))}
+                  </tr>
                 </thead>
 
                 <tbody>
-                {filteredRecords && filteredRecords.map((record) => (
-                  <tr
-                    key={record.id}
-                  >
-                    <td>
-                      <Checkbox.Root
-                        className='checkbox-root'
-                        checked={isSelected(record.id)}
-                        onCheckedChange={() => toggleSelected(record.id)}
-                      >
-                        <Checkbox.Indicator>
-                          <CheckSquare size={20} weight='fill' />
-                        </Checkbox.Indicator>
+                  {filteredRecords &&
+                    filteredRecords.map((record) => (
+                      <tr key={record.id}>
+                        <td>
+                          <Checkbox.Root
+                            className='checkbox-root'
+                            checked={isSelected(record.id)}
+                            onCheckedChange={() => toggleSelected(record.id)}
+                          >
+                            <Checkbox.Indicator>
+                              <CheckSquare size={20} weight='fill' />
+                            </Checkbox.Indicator>
 
-                        { !isSelected(record.id) && (
-                          <span>
-                          <Square size={20} />
-                        </span>
-                        )}
-                      </Checkbox.Root>
-                    </td>
-                    { props.columns.map((column) => (
-                      <td>{column.resolve(record)}</td>
+                            {!isSelected(record.id) && (
+                              <span>
+                                <Square size={20} />
+                              </span>
+                            )}
+                          </Checkbox.Root>
+                        </td>
+                        {props.columns.map((column) => (
+                          <td>{column.resolve(record)}</td>
+                        ))}
+                      </tr>
                     ))}
-                  </tr>
-                ))}
                 </tbody>
               </table>
             </div>
           )}
 
           {!(filteredRecords && filteredRecords.length) && (
-            <div className='no-results text-body-small'>{t['No matching records']}</div>
+            <div className='no-results text-body-small'>
+              {t['No matching records']}
+            </div>
           )}
 
           <div className='buttons'>
-            <button onClick={props.onCancel}>
-              {t['Cancel']}
-            </button>
+            <button onClick={props.onCancel}>{t['Cancel']}</button>
 
-            <Button
-              className='primary'
-              onClick={onSave}
-            >
-                <span>
-                  {t['Add to Selected']}
-                </span>
+            <Button className='primary' onClick={onSave}>
+              <span>{t['Add to Selected']}</span>
             </Button>
           </div>
-
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

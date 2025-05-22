@@ -250,7 +250,12 @@
   border: 1px solid var(--gray-200);
   font-size: var(--font-small);
   margin-top: 20px;
+  max-width: 75ch;
   position: relative;
+}
+
+.project-plugins .plugin-admin-tile .description {
+  max-width: 420px;
 }
 
 .project-plugins .plugin-admin-tile .uninstall {

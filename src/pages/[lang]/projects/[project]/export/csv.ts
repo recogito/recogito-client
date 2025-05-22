@@ -5,9 +5,8 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { annotationsToCSV } from 'src/util/export/csv';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { getTranslations } from '@i18n';
-import { sanitizeFilename } from 'src/util';
+import { sanitizeFilename } from 'src/util/export';
 import type {Project, Translations } from 'src/Types';
-
 import { 
   getAllDocumentLayersInProject, 
   getAllLayersInProject, 

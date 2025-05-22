@@ -32,6 +32,8 @@ export const SelectionURLState = (props: SelectionURLStateProps) => {
 
     if (selected.length > 0) {
       hash.set('selected', selected.join(','))
+    } else {
+      hash.delete('selected');
     }
 
     const nextURL = buildURL(window.location.pathname, search, hash);

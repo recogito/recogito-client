@@ -10,6 +10,9 @@ import type { AvailableLayers } from '@backend/Types';
 import { DocumentsView } from './DocumentsView';
 import { AssignmentsView } from './AssignmentsView';
 import { useLocalStorageBackedState } from 'src/util/hooks';
+import { getAvailableLayers } from '@backend/helpers';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { PluginProvider, type PluginInstallationConfig } from '@recogito/studio-sdk';
 import type {
   Context,
   Document,
@@ -21,8 +24,6 @@ import type {
 } from 'src/Types';
 
 import './ProjectHome.css';
-import { getAvailableLayers } from '@backend/helpers';
-import { supabase } from '@backend/supabaseBrowserClient';
 
 export interface ProjectHomeProps {
   i18n: Translations;
@@ -40,6 +41,8 @@ export interface ProjectHomeProps {
   availableLayers: AvailableLayers[];
 
   user: MyProfile;
+
+  plugins: PluginInstallationConfig[];
 }
 
 export const ProjectHome = (props: ProjectHomeProps) => {
@@ -50,6 +53,8 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
 
   const [toast, setToast] = useState<ToastContent | null>(null);
+
+  const [me, setMe] = useState(props.user);
 
   const [documents, setDocuments] = useState<Document[]>(props.documents);
 
@@ -180,12 +185,12 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   };
 
   return (
-    <>
+    <PluginProvider installed={props.plugins}>
       <TopBar
         invitations={props.invitations}
         i18n={props.i18n}
         onError={onError}
-        me={props.user}
+        me={me}
       />
 
       <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
@@ -214,15 +219,16 @@ export const ProjectHome = (props: ProjectHomeProps) => {
               i18n={props.i18n}
               project={props.project}
               setToast={setToast}
-              user={props.user}
+              user={me}
               setDocuments={onSetDocuments}
               onRemoveDocument={removeDocumentFromAssignments}
+              onSetUser={(user: MyProfile) => setMe(user)}
             />
           ) : tab === 'assignments' ? (
             <AssignmentsView
               i18n={props.i18n}
               project={project}
-              me={props.user}
+              me={me}
               documents={documents}
               assignments={assignments}
               setToast={setToast}
@@ -239,6 +245,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
           />
         </ToastProvider>
       </div>
-    </>
+    </PluginProvider>
   );
 };

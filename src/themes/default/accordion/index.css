@@ -1,11 +1,9 @@
 .accordion-root {
   border-radius: 6px;
-  width: 300px;
 }
 
 .accordion-item {
-  overflow: hidden;
-  margin-top: 1px;
+	overflow: hidden;
 }
 
 .accordion-item:first-child {
@@ -20,44 +18,46 @@
 }
 
 .accordion-item:focus-within {
-  position: relative;
-  z-index: 1;
+	position: relative;
+	z-index: 1;
 }
 
 .accordion-header {
+  border-radius: 6px;
   display: flex;
+  z-index: 2;
+  position: relative;
   margin-block-start: 0 !important;
   margin-block-end: 0 !important;
 }
 
-h3 button {
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  justify-content: left;
-  height: 30px;
+.accordion-header[data-state='open'] {
+	border-bottom: 1px solid var(--gray-200);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.accordion-trigger {
-  font-family: inherit;
-  background-color: transparent;
-  padding: 0 20px;
-  height: 30px;
-  flex: 1;
-  display: flex;
-  font-size: 15px;
-  line-height: 1;
-  background-color: white;
+button.accordion-trigger {
+	background-color: white;
+	font-family: inherit;
+	background-color: transparent;
+	padding: 0 20px;
+	height: 45px;
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	line-height: 1;
 }
 
-.accordion-trigger:hover {
-  background-color: var(--gray-200);
+button.accordion-trigger:hover {
+	background-color: var(--gray-2);
 }
 
 .accordion-content {
-  overflow: hidden;
-  font-size: 15px;
+	transform: translateY(-2px);
 }
+
 .accordion-content[data-state='open'] {
   animation: slideDown 300ms cubic-bezier(0.87, 0, 0.13, 1);
 }
@@ -65,17 +65,12 @@ h3 button {
   animation: slideUp 300ms cubic-bezier(0.87, 0, 0.13, 1);
 }
 
-/* .accordion-content-text {
-  padding: 15px 20px;
-} */
-
 .accordion-chevron {
-  color: var(--violet-10);
-  transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
-  margin-right: 4px !important;
+	transition: transform 300ms cubic-bezier(0.87, 0, 0.13, 1);
 }
-.accordion-trigger[data-state='open'] > .accordion-chevron {
-  transform: rotate(180deg);
+
+.accordion-trigger[data-state="open"] > .accordion-chevron {
+	transform: rotate(180deg);
 }
 
 @keyframes slideDown {

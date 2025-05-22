@@ -35,8 +35,11 @@
   position: relative;
 }
 
+.document-card-actions {
+  display: flex;
+}
+
 .document-card-actions button.unstyled.icon-only {
-  padding-top: 10px;
   height: 38px;
   width: 38px;
 }
