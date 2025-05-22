@@ -47,7 +47,7 @@
     "@recogito/pdf-annotator": "^1.0.3",
     "@recogito/react-pdf-annotator": "^1.0.3",
     "@recogito/react-text-annotator": "^3.0.4",
-    "@recogito/studio-sdk": "^0.6.6",
+    "@recogito/studio-sdk": "^0.6.7",
     "@recogito/text-annotator": "^3.0.4",
     "@recogito/text-annotator-tei": "^3.0.4",
     "@supabase/ssr": "0.6.1",
