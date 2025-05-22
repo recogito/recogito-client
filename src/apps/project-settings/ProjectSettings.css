@@ -254,6 +254,10 @@
   position: relative;
 }
 
+.project-plugins .plugin-admin-tile .description {
+  max-width: 420px;
+}
+
 .project-plugins .plugin-admin-tile .uninstall {
   position: absolute;
   top: 20px;
