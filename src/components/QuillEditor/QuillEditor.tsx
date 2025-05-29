@@ -3,8 +3,13 @@ import Quill from 'quill';
 import { Delta } from 'quill/core';
 import type { Op, QuillOptions } from 'quill/core';
 import { useQuillEditor } from './QuillEditorRoot';
-import { getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
+import {
+  getAnnotationShortLink,
+  isAnnotationLink,
+  splitStringBy,
+} from './utils';
 import type { Translations } from 'src/Types';
+import PatchedLink from './links';
 
 import './QuillEditor.css';
 import 'quill/dist/quill.core.css';
@@ -13,7 +18,6 @@ import 'quill/dist/quill.core.css';
 const DEFAULT_MAX_IMAGE_SIZE = 64 * 1024;
 
 interface QuillEditorProps {
-
   autoFocus?: boolean;
 
   i18n: Translations;
@@ -27,50 +31,51 @@ interface QuillEditorProps {
   value?: Delta;
 
   onChange?(value: Delta): void;
-
 }
 
 export const QuillEditor = (props: QuillEditorProps) => {
-
   const el = useRef<HTMLDivElement>(null);
 
   const { quill, setQuill } = useQuillEditor();
 
   const isBase64Image = (op: Op) => {
-    if (typeof op.insert !== 'object') 
-      return false;
+    if (typeof op.insert !== 'object') return false;
 
     return (
       typeof op.insert?.image === 'string' &&
       op.insert.image.startsWith('data:image/')
     );
-  }
+  };
 
   useEffect(() => {
     const options: QuillOptions = {
       placeholder: props.placeholder,
-      readOnly: props.readOnly
+      readOnly: props.readOnly,
     };
 
+    //Quill.register(PatchedLink);
+
     const quill = new Quill(el.current!, options);
-  
-    if (props.value)
-      quill.setContents(props.value);
+
+    if (props.value) quill.setContents(props.value);
 
     const maxSize = props.maxImageSize || DEFAULT_MAX_IMAGE_SIZE;
 
     const onChange = () => {
       const { ops } = quill.getContents();
 
-      const filteredOps = 
-        ops.filter(op => !isBase64Image(op) || ((op.insert as any).image as string).length < maxSize);
+      const filteredOps = ops.filter(
+        (op) =>
+          !isBase64Image(op) ||
+          ((op.insert as any).image as string).length < maxSize
+      );
 
-      if (ops.length !== filteredOps.length)  
+      if (ops.length !== filteredOps.length)
         // Note that this will re-trigger onChange
         quill.setContents({ ops: filteredOps } as Delta);
 
       props.onChange && props.onChange(quill.getContents());
-    }
+    };
 
     const onPaste = (evt: ClipboardEvent) => {
       const text = evt.clipboardData?.getData('Text');
@@ -86,35 +91,41 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
         const cursorPos = range?.index;
 
-        const withThisLink = ops.filter(op => 
-            typeof op.insert === 'string' 
-              && !op.attributes 
-              && op.insert.includes(text));
+        const withThisLink = ops.filter(
+          (op) =>
+            typeof op.insert === 'string' &&
+            !op.attributes &&
+            op.insert.includes(text)
+        );
 
         if (withThisLink.length > 0) {
           // Found un-formatted occurrences of this link!
           const short = getAnnotationShortLink(text);
 
           const formatLink = (op: Op): Op[] => {
-            const { before, after } = splitStringBy((op.insert as string), text)
+            const { before, after } = splitStringBy(op.insert as string, text);
 
             return [
               { insert: before },
               { insert: `@${short}`, attributes: { link: text } },
-              { insert: after }
-            ].filter(op => op.insert); // Remove empty
-          }
+              { insert: after },
+            ].filter((op) => op.insert); // Remove empty
+          };
 
-          const next = ops.reduce<Op[]>((all, op) => 
-            withThisLink.includes(op) ? [...all, ...formatLink(op)] : [...all, op], []);
+          const next = ops.reduce<Op[]>(
+            (all, op) =>
+              withThisLink.includes(op)
+                ? [...all, ...formatLink(op)]
+                : [...all, op],
+            []
+          );
 
           quill.setContents(next);
 
-          if (cursorPos)
-            quill.setSelection({ index: cursorPos, length: 0 });
+          if (cursorPos) quill.setSelection({ index: cursorPos, length: 0 });
         }
       }
-    }
+    };
 
     quill.on('text-change', onChange);
     quill.root.addEventListener('paste', onPaste);
@@ -124,15 +135,15 @@ export const QuillEditor = (props: QuillEditorProps) => {
     return () => {
       quill.off('text-change', onChange);
       quill.root.removeEventListener('paste', onPaste);
-    }
+    };
   }, []);
 
   useEffect(() => {
-    if (!quill) return
+    if (!quill) return;
 
     if (props.readOnly) {
       quill.disable();
-    } else { 
+    } else {
       quill.enable();
     }
   }, [quill, props.readOnly]);
@@ -140,8 +151,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
   useEffect(() => {
     if (!quill) return;
 
-    if (props.autoFocus)
-      quill.focus({ preventScroll: true });
+    if (props.autoFocus) quill.focus({ preventScroll: true });
   }, [quill, props.autoFocus]);
 
   useEffect(() => {
@@ -152,12 +162,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
     if (JSON.stringify(current) !== JSON.stringify(next))
       quill.setContents(next);
-  }, [props.value, quill])
+  }, [props.value, quill]);
 
-  return (
-    <div 
-      ref={el}
-      className="quill-rte not-annotatable" />
-  )
-
-}
+  return <div ref={el} className='quill-rte not-annotatable' />;
+};
