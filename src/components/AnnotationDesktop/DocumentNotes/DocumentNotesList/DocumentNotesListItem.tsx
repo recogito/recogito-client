@@ -33,6 +33,8 @@ interface DocumentNotesListItemProps {
 
   onDeleteBody(body: DocumentNoteBody): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onUpdateBody(oldValue: DocumentNoteBody, newValue: DocumentNoteBody): void;
 
 }
@@ -67,6 +69,7 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
       onUpdateBody={props.onUpdateBody}
       onUpdateAnnotation={() => {}}
       onDeleteAnnotation={props.onDeleteNote} 
+      onNavigateTo={props.onNavigateTo}
       onSubmit={() => {}} />
   )
 

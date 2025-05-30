@@ -54,6 +54,8 @@ export interface AnnotationCardProps {
 
   onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onSubmit(): void;
 
   onUpdateBody(oldValue: AnnotationBody, newValue: AnnotationBody): void;
@@ -215,6 +217,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
           onDeleteAnnotation={props.onDeleteAnnotation}
           onDeleteBody={props.onDeleteBody}
           onMakePublic={onMakePublic} 
+          onNavigateTo={props.onNavigateTo}
           onSubmit={onSubmit}
           onUpdateAnnotation={props.onUpdateAnnotation} 
           onUpdateBody={props.onUpdateBody} />  
@@ -242,6 +245,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 onDeleteBody={props.onDeleteBody}
                 onBulkDeleteBodies={props.onBulkDeleteBodies}
                 onMakePublic={() => onMakePublic()}
+                onNavigateTo={props.onNavigateTo}
                 onSubmit={onSubmit}
                 onUpdateAnnotation={props.onUpdateAnnotation}
                 onUpdateBody={props.onUpdateBody} />
@@ -284,6 +288,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   onDeleteBody={props.onDeleteBody}
                   onBulkDeleteBodies={props.onBulkDeleteBodies}
                   onMakePublic={() => onMakePublic()}
+                  onNavigateTo={props.onNavigateTo}
                   onSubmit={props.onSubmit}
                   onUpdateAnnotation={props.onUpdateAnnotation}
                   onUpdateBody={props.onUpdateBody} />
@@ -314,6 +319,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   onDeleteBody={props.onDeleteBody}
                   onBulkDeleteBodies={props.onBulkDeleteBodies}
                   onMakePublic={() => onMakePublic()}
+                  onNavigateTo={props.onNavigateTo}
                   onSubmit={props.onSubmit}
                   onUpdateAnnotation={props.onUpdateAnnotation}
                   onUpdateBody={props.onUpdateBody} />
@@ -345,6 +351,7 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 me={me}
                 placeholder={props.i18n.t['Reply']}
                 beforeSubmit={beforeReply} 
+                onNavigateTo={props.onNavigateTo}
                 onSubmit={onReply} />
             </animated.div>
           )))}

@@ -49,6 +49,8 @@ interface EmptyAnnotationProps {
 
   onMakePublic(): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onSubmit(): void;
 
   onUpdateAnnotation(updated: SupabaseAnnotation): void;
@@ -143,6 +145,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
             i18n={props.i18n}
             value={value}
             onChange={setValue}
+            onNavigateTo={props.onNavigateTo}
             placeholder={t['Add a comment']}
           />
         </div>

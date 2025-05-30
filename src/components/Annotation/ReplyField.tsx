@@ -32,6 +32,8 @@ interface ReplyFieldProps {
 
   beforeSubmit?(body: AnnotationBody): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onSubmit(body: AnnotationBody): void;
 }
 
@@ -78,6 +80,7 @@ export const ReplyField = (props: ReplyFieldProps) => {
             placeholder={props.placeholder}
             value={value}
             onChange={setValue}
+            onNavigateTo={props.onNavigateTo}
           />
 
           <button

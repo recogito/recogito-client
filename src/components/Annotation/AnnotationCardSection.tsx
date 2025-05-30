@@ -60,6 +60,8 @@ export interface AnnotationCardSectionProps {
 
   onMakePublic(): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onSubmit(): void;
 
   onUpdateAnnotation(updated: SupabaseAnnotation): void;
@@ -303,6 +305,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
               readOnly={!editable}
               value={commentValue}
               onChange={setCommentValue}
+              onNavigateTo={props.onNavigateTo}
             />
           </div>
         )}

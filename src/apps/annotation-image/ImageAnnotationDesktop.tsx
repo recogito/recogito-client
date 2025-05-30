@@ -234,23 +234,30 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
     setRightPanelTab(tab);
 
+  const onNavigateTo = (annotationId: string) => {
+    const vw = Math.max(
+      window.document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    const vh = Math.max(
+      window.document.documentElement.clientHeight || 0,
+      window.innerHeight || 0
+    );
+
+    anno.fitBounds(annotationId, {
+      padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2],
+    });
+
+    anno.state.selection.setSelected(annotationId);
+  }
+
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't fit the view if the annotation is already selected
       if (anno.state.selection.isSelected(a)) return;
 
-      const vw = Math.max(
-        window.document.documentElement.clientWidth || 0,
-        window.innerWidth || 0
-      );
-      const vh = Math.max(
-        window.document.documentElement.clientHeight || 0,
-        window.innerHeight || 0
-      );
-
-      anno.fitBounds(a, {
-        padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2],
-      });
+      onNavigateTo(a.id);
     }
   };
 
@@ -362,6 +369,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   onChangeImage={setCurrentImage}
                   onChangePresent={setPresent}
                   onConnectionError={() => setConnectionError(true)}
+                  onNavigateTo={onNavigateTo}
                   onPageActivity={
                     canvases.length > 1 ? onPageActivity : undefined
                   }
@@ -384,6 +392,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               beforeSelectAnnotation={beforeSelectAnnotation}
               onTabChanged={onRightTabChanged}
               tab={rightPanelTab}
+              onNavigateTo={onNavigateTo}
             />
           </main>
         </div>

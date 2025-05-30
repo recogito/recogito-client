@@ -56,13 +56,24 @@ interface AnnotatedTextProps {
 
   onLoad(): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onLoadEmbeddedLayers(layers: EmbeddedLayer[], notes: DocumentNote[]): void;
 
 }
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { 
+    i18n, 
+    isLocked, 
+    layers, 
+    layerNames, 
+    policies, 
+    present, 
+    tagVocabulary,
+    onNavigateTo
+  } = props;
 
   const contentType = props.document.content_type;
 
@@ -168,7 +179,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                 layerNames={layerNames}
                 present={present}
                 policies={policies}
-                tagVocabulary={tagVocabulary} />
+                tagVocabulary={tagVocabulary} 
+                onNavigateTo={onNavigateTo} />
               )}
             />
           )}

@@ -30,6 +30,8 @@ interface RightDrawerProps {
 
   beforeSelectAnnotation(a?: ImageAnnotation): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onTabChanged(tab: 'ANNOTATIONS' | 'NOTES'): void;
 
   tab: 'ANNOTATIONS' | 'NOTES';
@@ -89,7 +91,8 @@ export const RightDrawer = (props: RightDrawerProps) => {
               me={me}
               policies={props.policies}
               tagVocabulary={props.tagVocabulary}
-              beforeSelect={props.beforeSelectAnnotation} />
+              beforeSelect={props.beforeSelectAnnotation} 
+              onNavigateTo={props.onNavigateTo}/>
           ) : (
             <DocumentNotesList 
               i18n={props.i18n}
@@ -98,7 +101,8 @@ export const RightDrawer = (props: RightDrawerProps) => {
               layerNames={props.layerNames}
               present={props.present}
               policies={props.policies} 
-              tagVocabulary={props.tagVocabulary} />
+              tagVocabulary={props.tagVocabulary} 
+              onNavigateTo={props.onNavigateTo} />
           )}
         </div>
       </aside>

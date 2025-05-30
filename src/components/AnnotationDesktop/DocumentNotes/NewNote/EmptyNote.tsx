@@ -21,6 +21,8 @@ interface EmptyNoteProps {
 
   onCancel(): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onSubmit(content: Delta, tags: VocabularyTerm[], isPrivate?: boolean): void;
 
 }
@@ -72,6 +74,7 @@ export const EmptyNote = (props: EmptyNoteProps) => {
             i18n={props.i18n}
             value={value}
             onChange={setValue}
+            onNavigateTo={props.onNavigateTo}
             placeholder={t['Add a comment']} />
         </div>
 

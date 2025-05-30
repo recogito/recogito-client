@@ -2,8 +2,9 @@ import { useEffect, useRef } from 'react';
 import Quill from 'quill';
 import { Delta } from 'quill/core';
 import type { Op, QuillOptions } from 'quill/core';
+import { useAnnotations } from '@annotorious/react';
 import { useQuillEditor } from './QuillEditorRoot';
-import { getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
+import { getAnnotationIdFromLink, getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
 import type { Translations } from 'src/Types';
 
 import './QuillEditor.css';
@@ -28,6 +29,8 @@ interface QuillEditorProps {
 
   onChange?(value: Delta): void;
 
+  onNavigateTo(annotationId: string): void;
+
 }
 
 export const QuillEditor = (props: QuillEditorProps) => {
@@ -35,6 +38,8 @@ export const QuillEditor = (props: QuillEditorProps) => {
   const el = useRef<HTMLDivElement>(null);
 
   const { quill, setQuill } = useQuillEditor();
+
+  const annotations = useAnnotations();
 
   const isBase64Image = (op: Op) => {
     if (typeof op.insert !== 'object') 
@@ -49,7 +54,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
   useEffect(() => {
     const options: QuillOptions = {
       placeholder: props.placeholder,
-      readOnly: props.readOnly
+      readOnly: props.readOnly,
     };
 
     const quill = new Quill(el.current!, options);
@@ -126,6 +131,31 @@ export const QuillEditor = (props: QuillEditorProps) => {
       quill.root.removeEventListener('paste', onPaste);
     }
   }, []);
+
+  useEffect(() => {
+    if (!el.current) return;
+
+    const onClick = (evt: MouseEvent) => {
+      const target = evt.target as HTMLElement;
+      const link = target.closest('a');
+      if (!link) return; // Not a link
+
+      const annotationId = getAnnotationIdFromLink(link.href);
+      if (annotationId && annotations.some(a => a.id === annotationId)) {
+        // Intercept
+        evt.preventDefault();
+        evt.stopPropagation();
+
+        props.onNavigateTo(annotationId);
+      }
+    }
+
+    el.current.addEventListener('click', onClick);
+
+    return () => {
+      el.current?.removeEventListener('click', onClick);
+    }
+  }, [quill, annotations])
 
   useEffect(() => {
     if (!quill) return

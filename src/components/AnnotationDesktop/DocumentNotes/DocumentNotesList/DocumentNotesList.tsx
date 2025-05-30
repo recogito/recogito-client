@@ -27,6 +27,8 @@ interface DocumentNotesListProps {
 
   tagVocabulary?: VocabularyTerm[];
 
+  onNavigateTo(annotationId: string): void;
+
 }
 
 export const DocumentNotesList = (props: DocumentNotesListProps) => {
@@ -102,6 +104,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
           me={me}
           tagVocabulary={props.tagVocabulary}
           present={props.present}
+          onNavigateTo={props.onNavigateTo}
           onSubmit={createNote} 
           onCancel={() => setNewNote(undefined)} />
       )}
@@ -129,6 +132,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}
               onDeleteNote={() => deleteNote(note.id)} 
+              onNavigateTo={props.onNavigateTo}
               onBulkDeleteBodies={onBulkDeleteBodies} />
           </li>
         ))}

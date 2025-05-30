@@ -69,6 +69,8 @@ interface AnnotatedImageProps {
 
   onConnectionError(): void;
 
+  onNavigateTo(annotationId: string): void;
+
   onPageActivity?(event: { source: string, user: User }): void;
 
   onSaveError(): void;
@@ -79,7 +81,17 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { 
+    authToken, 
+    i18n, 
+    isLocked, 
+    layers, 
+    layerNames, 
+    policies, 
+    present, 
+    tagVocabulary,
+    onNavigateTo
+  } = props;
 
   const { source, tilesource } = useMemo(() => {
     if (typeof props.currentImage === 'string') {
@@ -248,7 +260,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
               layerNames={layerNames}
               policies={policies}
               present={present}
-              tagVocabulary={tagVocabulary} />)} />
+              tagVocabulary={tagVocabulary} 
+              onNavigateTo={onNavigateTo} />)} />
       )}
     </OpenSeadragonAnnotator>
   )

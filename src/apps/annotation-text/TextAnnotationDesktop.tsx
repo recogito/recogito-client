@@ -201,6 +201,11 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
     setRightPanelTab(tab);
 
+  const onNavigateTo = (annotationId: string) => {
+    anno.state.selection.setSelected(annotationId);
+    anno.scrollIntoView(annotationId);
+  }
+
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't scroll if the annotation is already selected
@@ -330,6 +335,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 onSaveError={() => setConnectionError(true)}
                 onLoad={() => setLoading(false)}
                 onLoadEmbeddedLayers={onLoadEmbeddedLayers}
+                onNavigateTo={onNavigateTo}
                 styleSheet={props.styleSheet}
               />
             )}
@@ -346,6 +352,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
               style={style}
               tagVocabulary={tagVocabulary}
               beforeSelectAnnotation={beforeSelectAnnotation}
+              onNavigateTo={onNavigateTo}
               onTabChanged={onRightTabChanged}
               tab={rightPanelTab}
             />
