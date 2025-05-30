@@ -28,7 +28,7 @@ interface AnnotationPopupProps {
 
   tagVocabulary?: VocabularyTerm[];
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
 }
 

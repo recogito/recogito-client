@@ -3,6 +3,7 @@ import Quill from 'quill';
 import { Delta } from 'quill/core';
 import type { Op, QuillOptions } from 'quill/core';
 import { useAnnotations } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useQuillEditor } from './QuillEditorRoot';
 import { getAnnotationIdFromLink, getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
 import type { Translations } from 'src/Types';
@@ -29,7 +30,7 @@ interface QuillEditorProps {
 
   onChange?(value: Delta): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
 }
 
@@ -39,7 +40,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
 
   const { quill, setQuill } = useQuillEditor();
 
-  const annotations = useAnnotations();
+  const annotations = useAnnotations<SupabaseAnnotation>();
 
   const isBase64Image = (op: Op) => {
     if (typeof op.insert !== 'object') 
@@ -141,12 +142,14 @@ export const QuillEditor = (props: QuillEditorProps) => {
       if (!link) return; // Not a link
 
       const annotationId = getAnnotationIdFromLink(link.href);
-      if (annotationId && annotations.some(a => a.id === annotationId)) {
-        // Intercept
-        evt.preventDefault();
-        evt.stopPropagation();
+      if (annotationId) {
+        const annotation = annotations.find(a => a.id === annotationId);
+        if (annotation) {
+          evt.preventDefault();
+          evt.stopPropagation();
 
-        props.onNavigateTo(annotationId);
+          props.onNavigateTo(annotation);
+        }
       }
     }
 

@@ -2,6 +2,7 @@ import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react
 import type { Policies, Translations, VocabularyTerm } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { AnnotationCard } from '@components/Annotation';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface DocumentNotesListItemProps {
 
@@ -33,7 +34,7 @@ interface DocumentNotesListItemProps {
 
   onDeleteBody(body: DocumentNoteBody): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onUpdateBody(oldValue: DocumentNoteBody, newValue: DocumentNoteBody): void;
 

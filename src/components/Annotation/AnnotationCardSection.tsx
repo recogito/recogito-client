@@ -60,7 +60,7 @@ export interface AnnotationCardSectionProps {
 
   onMakePublic(): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onSubmit(): void;
 

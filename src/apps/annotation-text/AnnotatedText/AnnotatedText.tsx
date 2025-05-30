@@ -3,6 +3,7 @@ import { useExtensions } from '@recogito/studio-sdk';
 import { useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -56,7 +57,7 @@ interface AnnotatedTextProps {
 
   onLoad(): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onLoadEmbeddedLayers(layers: EmbeddedLayer[], notes: DocumentNote[]): void;
 

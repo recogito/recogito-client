@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ArrowRight } from '@phosphor-icons/react';
 import { Delta } from 'quill/core';
 import type { AnnotationBody, PresentUser, User } from '@annotorious/react';
+import { AuthorAvatar } from './AuthorAvatar';
 import type {
   SupabaseAnnotation,
   SupabaseAnnotationBody,
@@ -12,7 +13,6 @@ import {
   QuillEditorRoot,
   QuillEditorToolbar,
 } from '@components/QuillEditor';
-import { AuthorAvatar } from './AuthorAvatar';
 import type { Translations } from 'src/Types';
 
 import './ReplyField.css';
@@ -32,7 +32,7 @@ interface ReplyFieldProps {
 
   beforeSubmit?(body: AnnotationBody): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onSubmit(body: AnnotationBody): void;
 }

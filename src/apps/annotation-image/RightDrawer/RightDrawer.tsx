@@ -1,7 +1,7 @@
 import { Chats } from '@phosphor-icons/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
-import { isMe } from '@recogito/annotorious-supabase';
+import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
@@ -30,7 +30,7 @@ interface RightDrawerProps {
 
   beforeSelectAnnotation(a?: ImageAnnotation): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onTabChanged(tab: 'ANNOTATIONS' | 'NOTES'): void;
 

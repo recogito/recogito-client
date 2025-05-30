@@ -54,7 +54,7 @@ export interface AnnotationCardProps {
 
   onBulkDeleteBodies(bodies: AnnotationBody[]): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onSubmit(): void;
 

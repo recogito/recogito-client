@@ -4,6 +4,8 @@ import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@compo
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 import { getImageURL, type IIIFImage } from '../IIIF';
 import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type {
@@ -20,8 +22,6 @@ import {
   UserSelectAction,
   useAnnotator
 } from '@annotorious/react';
-import { useExtensions } from '@recogito/studio-sdk';
-import { ExtensionMount } from '@components/Plugins';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -69,7 +69,7 @@ interface AnnotatedImageProps {
 
   onConnectionError(): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onPageActivity?(event: { source: string, user: User }): void;
 

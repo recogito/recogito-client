@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Delta } from 'quill/core';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { type Sorter, Sorting, SortSelector } from '../SortSelector';
@@ -27,7 +28,7 @@ interface DocumentNotesListProps {
 
   tagVocabulary?: VocabularyTerm[];
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
 }
 

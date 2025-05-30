@@ -48,7 +48,7 @@ interface AnnotationListProps<T extends Anno> {
 
   beforeSelect(a: SupabaseAnnotation | undefined): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
 }
 

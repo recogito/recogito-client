@@ -4,7 +4,7 @@ import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@comp
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { Chats } from '@phosphor-icons/react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
-import { isMe } from '@recogito/annotorious-supabase';
+import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
@@ -35,7 +35,7 @@ interface RightDrawerProps {
 
   beforeSelectAnnotation(a?: Annotation): void;
 
-  onNavigateTo(annotationId: string): void;
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onTabChanged(tab: 'ANNOTATIONS' | 'NOTES'): void;
 

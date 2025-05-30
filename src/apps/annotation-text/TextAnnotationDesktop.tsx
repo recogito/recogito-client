@@ -201,9 +201,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
     setRightPanelTab(tab);
 
-  const onNavigateTo = (annotationId: string) => {
-    anno.state.selection.setSelected(annotationId);
-    anno.scrollIntoView(annotationId);
+  const onNavigateTo = (annotation: SupabaseAnnotation) => {
+    anno.state.selection.setSelected(annotation.id);
+    anno.scrollIntoView(annotation.id);
   }
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
