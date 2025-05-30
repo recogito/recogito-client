@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import type { Delta } from 'quill/core';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { type Sorter, Sorting, SortSelector } from '../SortSelector';
@@ -26,6 +27,8 @@ interface DocumentNotesListProps {
   policies?: Policies;
 
   tagVocabulary?: VocabularyTerm[];
+
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
 }
 
@@ -102,6 +105,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
           me={me}
           tagVocabulary={props.tagVocabulary}
           present={props.present}
+          onNavigateTo={props.onNavigateTo}
           onSubmit={createNote} 
           onCancel={() => setNewNote(undefined)} />
       )}
@@ -129,6 +133,7 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
               onDeleteBody={deleteBody}
               onUpdateBody={updateBody}
               onDeleteNote={() => deleteNote(note.id)} 
+              onNavigateTo={props.onNavigateTo}
               onBulkDeleteBodies={onBulkDeleteBodies} />
           </li>
         ))}

@@ -40,7 +40,7 @@ interface LeftDrawerProps {
 
   present: PresentUser[];
 
-  onChangeImage(url: string): void;
+  onChangeImage(image: IIIFImage): void;
 
   onError(error: string): void;
 

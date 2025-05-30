@@ -4,7 +4,7 @@ import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@comp
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { Chats } from '@phosphor-icons/react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
-import { isMe } from '@recogito/annotorious-supabase';
+import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
 import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
@@ -34,6 +34,8 @@ interface RightDrawerProps {
   tagVocabulary?: VocabularyTerm[];
 
   beforeSelectAnnotation(a?: Annotation): void;
+
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onTabChanged(tab: 'ANNOTATIONS' | 'NOTES'): void;
 
@@ -115,7 +117,8 @@ export const RightDrawer = (props: RightDrawerProps) => {
                   present={props.present} 
                   sorting={props.sorting}
                   tagVocabulary={props.tagVocabulary}
-                  beforeSelect={props.beforeSelectAnnotation} />
+                  beforeSelect={props.beforeSelectAnnotation}
+                  onNavigateTo={props.onNavigateTo} />
                 ) : (
                   <DocumentNotesList 
                     i18n={props.i18n}
@@ -124,7 +127,8 @@ export const RightDrawer = (props: RightDrawerProps) => {
                     layerNames={props.layerNames}
                     present={props.present}
                     policies={props.policies} 
-                    tagVocabulary={props.tagVocabulary} />
+                    tagVocabulary={props.tagVocabulary}
+                    onNavigateTo={props.onNavigateTo} />
                 )}
             </div>
           </aside>

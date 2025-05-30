@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import type { Delta } from 'quill/core';
 import type { PresentUser, User } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ArrowRight } from '@phosphor-icons/react';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
 import type { Translations, VocabularyTerm } from 'src/Types';
 import { AuthorAvatar } from '@components/Annotation/AuthorAvatar';
 import { TagList } from './TagList';
+
 
 interface EmptyNoteProps {
 
@@ -20,6 +22,8 @@ interface EmptyNoteProps {
   tagVocabulary?: VocabularyTerm[];
 
   onCancel(): void;
+
+  onNavigateTo(annotation: SupabaseAnnotation): void;
 
   onSubmit(content: Delta, tags: VocabularyTerm[], isPrivate?: boolean): void;
 
@@ -72,6 +76,7 @@ export const EmptyNote = (props: EmptyNoteProps) => {
             i18n={props.i18n}
             value={value}
             onChange={setValue}
+            onNavigateTo={props.onNavigateTo}
             placeholder={t['Add a comment']} />
         </div>
 

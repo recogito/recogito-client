@@ -37,6 +37,24 @@ export const isAnnotationLink = (str: string) => {
   }
 }
 
+export const getAnnotationIdFromLink = (url: string) => {
+  if (!isAnnotationLink(url)) return;
+
+  try {
+    const hash = new URL(url).hash.slice(1);
+    
+    const params = new URLSearchParams(hash);
+    
+    const selected = params.get('selected');    
+    if (selected) {
+      const isUUID = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+      return isUUID.test(selected) ? selected : undefined;
+    }
+  } catch {
+    // 
+  }
+}
+
 export const getAnnotationShortLink = (str: string) => {
   const hash = new URL(str).hash.slice(1);
   const params = new URLSearchParams(hash);

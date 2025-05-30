@@ -2,8 +2,10 @@ import { useEffect, useRef } from 'react';
 import Quill from 'quill';
 import { Delta } from 'quill/core';
 import type { Op, QuillOptions } from 'quill/core';
+import { useAnnotations } from '@annotorious/react';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useQuillEditor } from './QuillEditorRoot';
-import { getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
+import { getAnnotationIdFromLink, getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
 import type { Translations } from 'src/Types';
 
 import './QuillEditor.css';
@@ -28,6 +30,8 @@ interface QuillEditorProps {
 
   onChange?(value: Delta): void;
 
+  onNavigateTo(annotation: SupabaseAnnotation): void;
+
 }
 
 export const QuillEditor = (props: QuillEditorProps) => {
@@ -35,6 +39,8 @@ export const QuillEditor = (props: QuillEditorProps) => {
   const el = useRef<HTMLDivElement>(null);
 
   const { quill, setQuill } = useQuillEditor();
+
+  const annotations = useAnnotations<SupabaseAnnotation>();
 
   const isBase64Image = (op: Op) => {
     if (typeof op.insert !== 'object') 
@@ -126,6 +132,33 @@ export const QuillEditor = (props: QuillEditorProps) => {
       quill.root.removeEventListener('paste', onPaste);
     }
   }, []);
+
+  useEffect(() => {
+    if (!el.current) return;
+
+    const onClick = (evt: MouseEvent) => {
+      const target = evt.target as HTMLElement;
+      const link = target.closest('a');
+      if (!link) return; // Not a link
+
+      const annotationId = getAnnotationIdFromLink(link.href);
+      if (annotationId) {
+        const annotation = annotations.find(a => a.id === annotationId);
+        if (annotation) {
+          evt.preventDefault();
+          evt.stopPropagation();
+
+          props.onNavigateTo(annotation);
+        }
+      }
+    }
+
+    el.current.addEventListener('click', onClick);
+
+    return () => {
+      el.current?.removeEventListener('click', onClick);
+    }
+  }, [quill, annotations])
 
   useEffect(() => {
     if (!quill) return
