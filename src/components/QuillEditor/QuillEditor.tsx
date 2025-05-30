@@ -55,7 +55,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
   useEffect(() => {
     const options: QuillOptions = {
       placeholder: props.placeholder,
-      readOnly: props.readOnly,
+      readOnly: props.readOnly
     };
 
     const quill = new Quill(el.current!, options);
