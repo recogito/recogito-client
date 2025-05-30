@@ -102,7 +102,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       const source = props.currentImage.uri;
       return { source, tilesource };
     }
-  }, [props.currentImage])
+  }, [props.currentImage]);
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
