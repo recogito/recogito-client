@@ -20,9 +20,9 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
-import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
+import { useIIIF, useMultiPagePresence, ManifestErrorDialog, type IIIFImage } from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
-import type { Document, DocumentLayer, EmbeddedLayer } from 'src/Types';
+import type { Document, DocumentLayer } from 'src/Types';
 import type {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
@@ -261,12 +261,21 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   };
 
-  const onGoToImage = (source: string) => {
+  const onGoToImage = (source: IIIFImage | string, clearSelection = false) => {
     // When navigating via the thumbnail strip, clear the selection from the
     // hash, otherwise we'll get looped right back.
-    clearSelectionURLHash();
-    setCurrentImage(source);
+    if (clearSelection)
+      clearSelectionURLHash();
+
+    if (typeof source === 'string') {
+      const canvas = canvases.find(c => c.uri === source);
+      setCurrentImage(canvas || source);
+    } else {
+      setCurrentImage(source);
+    }
   };
+
+
 
   const onError = (error: string) =>
     setToast({
@@ -340,7 +349,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               metadata={metadata}
               open={leftPanelOpen}
               present={present}
-              onChangeImage={onGoToImage}
+              onChangeImage={source => onGoToImage(source, true)}
               onError={onError}
               onUpdated={onUpdated}
             />
@@ -366,7 +375,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   tagVocabulary={tagVocabulary}
                   tool={tool}
                   usePopup={usePopup}
-                  onChangeImage={setCurrentImage}
+                  onChangeImage={source => onGoToImage(source, false)}
                   onChangePresent={setPresent}
                   onConnectionError={() => setConnectionError(true)}
                   onNavigateTo={onNavigateTo}
