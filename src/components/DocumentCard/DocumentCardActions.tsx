@@ -271,9 +271,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Portal>
             </Sub>
 
-            {props.document.meta_data?.protocol === 'IIIF_PRESENTATION' && (
+            {props.document.meta_data?.protocol?.startsWith('IIIF') && (
               <Sub>
-                <SubTrigger className="dropdown-subtrigger">
+                <SubTrigger 
+                  className="dropdown-subtrigger"
+                  disabled={props.document.meta_data.protocol !== 'IIIF_PRESENTATION'}>
                   <DownloadSimple size={16} /> <span>{t['Export IIIF Manifest']}</span>
                   <div className="right-slot">
                     <CaretRight size={14} />
