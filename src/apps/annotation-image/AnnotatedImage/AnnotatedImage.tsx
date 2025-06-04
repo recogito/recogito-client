@@ -4,6 +4,8 @@ import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@compo
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
+import { useExtensions } from '@recogito/studio-sdk';
+import { ExtensionMount } from '@components/Plugins';
 import { getImageURL, type IIIFImage } from '../IIIF';
 import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
 import type {
@@ -20,8 +22,6 @@ import {
   UserSelectAction,
   useAnnotator
 } from '@annotorious/react';
-import { useExtensions } from '@recogito/studio-sdk';
-import { ExtensionMount } from '@components/Plugins';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -69,6 +69,8 @@ interface AnnotatedImageProps {
 
   onConnectionError(): void;
 
+  onNavigateTo(annotation: SupabaseAnnotation): void;
+
   onPageActivity?(event: { source: string, user: User }): void;
 
   onSaveError(): void;
@@ -79,7 +81,17 @@ interface AnnotatedImageProps {
 
 export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImageProps>((props, ref) => {
 
-  const { authToken, i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { 
+    authToken, 
+    i18n, 
+    isLocked, 
+    layers, 
+    layerNames, 
+    policies, 
+    present, 
+    tagVocabulary,
+    onNavigateTo
+  } = props;
 
   const { source, tilesource } = useMemo(() => {
     if (typeof props.currentImage === 'string') {
@@ -90,7 +102,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       const source = props.currentImage.uri;
       return { source, tilesource };
     }
-  }, [props.currentImage])
+  }, [props.currentImage]);
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -248,7 +260,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
               layerNames={layerNames}
               policies={policies}
               present={present}
-              tagVocabulary={tagVocabulary} />)} />
+              tagVocabulary={tagVocabulary} 
+              onNavigateTo={onNavigateTo} />)} />
       )}
     </OpenSeadragonAnnotator>
   )

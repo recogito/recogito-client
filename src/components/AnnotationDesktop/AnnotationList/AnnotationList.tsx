@@ -48,6 +48,8 @@ interface AnnotationListProps<T extends Anno> {
 
   beforeSelect(a: SupabaseAnnotation | undefined): void;
 
+  onNavigateTo(annotation: SupabaseAnnotation): void;
+
 }
 
 export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) => {
@@ -209,6 +211,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               onBulkDeleteBodies={onBulkDeleteBodies}
               onUpdateBody={onUpdateBody}
               onDeleteAnnotation={() => onDeleteAnnotation(annotation)} 
+              onNavigateTo={props.onNavigateTo}
               onSubmit={() => onSubmit(annotation)} />
           </li>
         ))}
