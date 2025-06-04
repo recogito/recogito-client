@@ -165,6 +165,10 @@ export interface Document {
 
     document_id: string;
   };
+
+  is_document_group: boolean;
+
+  document_group_id: string;
 }
 
 export interface DocumentMetadata {
