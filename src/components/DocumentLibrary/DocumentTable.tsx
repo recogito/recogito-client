@@ -5,7 +5,10 @@ import {
   HeaderCell,
   Cell,
 } from '@table-library/react-table-library/table';
-import { CellSelect, type Select } from '@table-library/react-table-library/select';
+import {
+  CellSelect,
+  type Select,
+} from '@table-library/react-table-library/select';
 import type { Translations } from 'src/Types';
 import type { Theme } from '@table-library/react-table-library/theme';
 import type { TableNode } from '@table-library/react-table-library/types/table';
@@ -18,24 +21,76 @@ import {
   type Sort,
 } from '@table-library/react-table-library/sort';
 import { Virtualized } from '@table-library/react-table-library/virtualized';
-import { CheckCircle } from '@phosphor-icons/react';
-import { Fragment } from 'react';
+import { CheckCircle, CheckSquare, Square } from '@phosphor-icons/react';
+import { Fragment, useEffect, useState } from 'react';
+import { useTree, CellTree } from '@table-library/react-table-library/tree';
 import type { LibraryDocument } from './DocumentLibrary';
 
 interface DocumentTableProps {
   data: { nodes: LibraryDocument[] };
   disabledIds: string[];
   i18n: Translations;
-  select: Select<LibraryDocument>;
   theme: Theme;
   columns: Column<TableNode>[];
   sort: Sort<LibraryDocument>;
   hasRevisions?: boolean;
   selectedIds?: string[];
+  onSelectChange(id: string): void;
+  hasGroups?: boolean;
+}
+
+interface TableDocument extends LibraryDocument {
+  nodes?: LibraryDocument[];
 }
 
 export const DocumentTable = (props: DocumentTableProps) => {
+  const [data, setData] = useState<TableDocument[]>([]);
+
   const theme = props.theme;
+  const { t } = props.i18n;
+
+  useEffect(() => {
+    if (props.data) {
+      if (!props.hasGroups) {
+        setData(props.data.nodes);
+      } else {
+        const nodes: TableDocument[] = [];
+        const groups = props.data.nodes
+          .filter(
+            (n) =>
+              n.is_document_group ||
+              !n.document_group_id ||
+              n.document_group_id === ''
+          )
+          .forEach((n) => {
+            nodes.push({
+              ...n,
+              nodes: [],
+            });
+          });
+
+        props.data.nodes
+          .filter((n) => n.document_group_id)
+          .forEach((n) => {
+            const idx = nodes.findIndex((no) => no.id === n.document_group_id);
+            if (idx > -1) {
+              nodes[idx].nodes?.push(n);
+            }
+          });
+
+        setData(nodes);
+      }
+    }
+  }, [props.data, props.hasGroups]);
+
+  const tree = useTree(
+    // @ts-ignore
+    { nodes: data },
+    {},
+    {
+      treeYLevel: 2,
+    }
+  );
 
   const disabled = (item: LibraryDocument) => {
     let disabled = props.disabledIds.includes(item.id);
@@ -52,10 +107,10 @@ export const DocumentTable = (props: DocumentTableProps) => {
 
   return (
     <Table
-      data={props.data}
+      data={{ nodes: data }}
       theme={theme}
-      select={props.select}
       sort={props.sort}
+      tree={tree}
       layout={{ isDiv: true, fixedHeader: true }}
     >
       {(tableList: LibraryDocument[]) => (
@@ -88,12 +143,31 @@ export const DocumentTable = (props: DocumentTableProps) => {
                   <Cell>
                     <CheckCircle size={24} />
                   </Cell>
+                ) : props.selectedIds?.includes(item.id) ? (
+                  <Cell>
+                    <CheckSquare
+                      size={24}
+                      fill='#0c529c'
+                      onClick={() => props.onSelectChange(item.id)}
+                    />
+                  </Cell>
                 ) : (
-                  <CellSelect item={item} />
+                  <Cell>
+                    <Square
+                      size={24}
+                      onClick={() => props.onSelectChange(item.id)}
+                    />
+                  </Cell>
                 )}
-                {props.columns.map((c, idx) => (
-                  <Cell key={idx}>{c.renderCell(item)}</Cell>
-                ))}
+                {props.columns.map((c, idx) =>
+                  c.label === t['Title'] ? (
+                    <CellTree item={item} key={idx}>
+                      {c.renderCell(item)}
+                    </CellTree>
+                  ) : (
+                    <Cell key={idx}>{c.renderCell(item)}</Cell>
+                  )
+                )}
               </Row>
             </Fragment>
           )}

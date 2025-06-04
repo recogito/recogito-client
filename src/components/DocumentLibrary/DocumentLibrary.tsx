@@ -24,7 +24,14 @@ import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
+import {
+  CheckCircle,
+  Files,
+  Folder,
+  User,
+  CaretDown,
+  CaretUp,
+} from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { groupRevisionsByDocument } from './utils';
 
@@ -45,6 +52,8 @@ export type LibraryDocument = Pick<
   revision_count?: number;
   is_latest?: boolean;
   revisions?: LibraryDocument[];
+  is_document_group?: boolean;
+  document_group_id?: string;
 };
 
 export interface DocumentLibraryProps {
@@ -77,7 +86,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const [documents, setDocuments] = useState<LibraryDocument[] | null>(null);
   const [collections, setCollections] = useState<
-    { collection: Collection; documents: Document[] }[]
+    { collection: Collection; documents: LibraryDocument[] }[]
   >([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
@@ -90,6 +99,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   >();
   const [publicWarningOpen, setPublicWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
+  const [collectionSortDir, setCollectionSortDir] = useState({
+    TITLE: 'forward',
+    AUTHOR: 'forward',
+    TYPE: 'forward',
+    REVISION: 'forward',
+  });
 
   const filterLabel = useMemo(() => {
     let value = '';
@@ -132,7 +148,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     setPublicWarningOpen(false);
   };
 
-  const matchesSearch = (document: Document) => {
+  const matchesSearch = (document: LibraryDocument) => {
     const author =
       document.meta_data?.meta && Array.isArray(document.meta_data.meta)
         ? document.meta_data.meta.find(
@@ -182,7 +198,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     getTheme(),
     {
       Table: `
-        --data-table-library_grid-template-columns:  50px 350px 200px repeat(3, minmax(0, 1fr)) 60px !important;
+        --data-table-library_grid-template-columns:  50px 325px 200px repeat(3, minmax(0, 1fr)) 60px !important;
       `,
       HeaderRow: `
         font-size: 13px;
@@ -227,7 +243,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           const docsResp = await supabase
             .from('documents')
             .select(
-              'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private, collection_id, collection_metadata'
+              'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private, collection_id, collection_metadata, is_document_group, document_group_id'
             )
             .range(start, start + DOCUMENTS_PER_FETCH - 1);
 
@@ -287,6 +303,17 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       getCollections();
     }
   }, [documents, props.disabledIds]);
+
+  const handleOpenGroup = (id: string) => {
+    setExpandedGroups([...expandedGroups, id]);
+  };
+
+  const handleCloseGroup = (id: string) => {
+    const findIdx = expandedGroups.findIndex((g) => g === id);
+    if (findIdx > -1) {
+      setExpandedGroups([...expandedGroups].splice(findIdx, 0));
+    }
+  };
 
   const columnsMine: Column<TableNode>[] = [
     {
@@ -379,7 +406,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const columnsCollection: Column<TableNode>[] = [
     {
       label: t['Title'],
-      renderCell: (item) => item.name,
+      renderCell: (item) =>
+        item.document_group_id && item.document_group_id !== '' ? (
+          <div style={{ paddingLeft: 15 }}>{item.name}</div>
+        ) : (
+          item.name
+        ),
       select: true,
       pinLeft: true,
       sort: { sortKey: 'TITLE' },
@@ -431,17 +463,19 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       label: '',
       renderCell: (item) => (
         <>
-          <CollectionDocumentActions
-            i18n={props.i18n}
-            disabledIds={props.disabledIds}
-            selectedIds={selectedIds}
-            onOpenMetadata={() => {
-              setCurrentDocument(item as Document);
-              setMetaOpen(true);
-            }}
-            onSelectVersion={onSelectChange}
-            revisions={item.revisions}
-          />
+          {!item.is_document_group && (
+            <CollectionDocumentActions
+              i18n={props.i18n}
+              disabledIds={props.disabledIds}
+              selectedIds={selectedIds}
+              onOpenMetadata={() => {
+                setCurrentDocument(item as Document);
+                setMetaOpen(true);
+              }}
+              onSelectVersion={onSelectChange}
+              revisions={item.revisions}
+            />
+          )}
         </>
       ),
     },
@@ -470,58 +504,45 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       )
     : [];
 
-  const selectAll = useRowSelect(
-    { nodes: allDocuments },
-    {
-      onChange: onSelectChange,
-    },
-    {
-      rowSelect: SelectTypes.MultiSelect,
-      clickType: SelectClickTypes.ButtonClick,
-    }
-  );
+  function onSelectChange(id: string) {
+    if (documents) {
+      const type = selectedIds.includes(id) ? 'REMOVE_BY_ID' : 'ADD_BY_ID';
+      // Handle any selected group documents
+      let newIds: string[] = [];
+      const doc = documents.find((d) => d.id === id);
 
-  const selectMine = useRowSelect(
-    { nodes: myDocuments },
-    {
-      onChange: onSelectChange,
-    },
-    {
-      rowSelect: SelectTypes.MultiSelect,
-      clickType: SelectClickTypes.ButtonClick,
-    }
-  );
+      if (doc) {
+        if (!doc.is_document_group) {
+          newIds.push(id);
+          if (type === 'REMOVE_BY_ID' && doc.document_group_id) {
+            if (selectedIds.includes(doc.document_group_id)) {
+              newIds.push(doc.document_group_id);
+            }
+          } else if (type === 'ADD_BY_ID' && doc.document_group_id) {
+            const groupDocIds = documents
+              .filter((d) => d.document_group_id === doc.document_group_id)
+              .map((d) => d.id);
 
-  const selectCollection = useRowSelect(
-    {
-      nodes: activeCollection
-        ? collections[activeCollection - 1].documents
-        : [],
-    },
-    {
-      onChange: onSelectChange,
-    },
-    {
-      rowSelect: SelectTypes.MultiSelect,
-      clickType: SelectClickTypes.ButtonClick,
-    }
-  );
-
-  function onSelectChange(action: Action, _state: any) {
-    if (action.type === 'ADD_BY_IDS') {
-      const ids = [...selectedIds, ...action.payload.ids];
-      setSelectedIds(ids);
-    } else if (action.type === 'SET') {
-      setSelectedIds(action.payload.ids);
-    } else if (action.type === 'REMOVE_BY_IDS') {
-      const ids = selectedIds.filter((i) => i !== action.payload.ids[0]);
-      setSelectedIds(ids);
-    } else if (action.type === 'ADD_BY_ID') {
-      const ids = [...selectedIds, action.payload.id];
-      setSelectedIds(ids);
-    } else if (action.type === 'REMOVE_BY_ID') {
-      const ids = selectedIds.filter((i) => i !== action.payload.id);
-      setSelectedIds(ids);
+            if (
+              groupDocIds.every((v) => [...selectedIds, doc.id].includes(v))
+            ) {
+              newIds.push(doc.document_group_id);
+            }
+          }
+        } else {
+          const groupDocs = documents?.filter(
+            (d) => d.document_group_id === id
+          );
+          newIds = [...newIds, ...groupDocs.map((d) => d.id), id];
+        }
+      }
+      if (type === 'ADD_BY_ID') {
+        const ids = [...selectedIds, ...newIds];
+        setSelectedIds(ids);
+      } else if (type === 'REMOVE_BY_ID') {
+        const ids = selectedIds.filter((i) => !newIds.includes(i));
+        setSelectedIds(ids);
+      }
     }
   }
 
@@ -561,6 +582,31 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     }
   );
 
+  const doCollectionSort = (data: LibraryDocument[]) => {
+    // This moves the sorted children underneath the parents for group document
+    // This assumes the data is sorted
+    // Pull out all of the children
+    const children = data.filter(
+      (d) => d.document_group_id && d.document_group_id !== ''
+    );
+    const all = data.filter(
+      (d) => !d.document_group_id || d.document_group_id === ''
+    );
+
+    // Now add back any children which are expanded
+    expandedGroups.forEach((g) => {
+      const add = children.filter((c) => c.document_group_id === g);
+
+      const idx = all.findIndex((a) => a.id === g);
+
+      if (idx > -1) {
+        all.splice(idx + 1, 0, ...add);
+      }
+    });
+
+    return all;
+  };
+
   const sortCollection = useSort(
     {
       nodes: activeCollection
@@ -570,7 +616,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     {},
     {
       sortFns: {
-        TITLE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        TITLE: (array) =>
+          array.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          ) as LibraryDocument[],
         AUTHOR: (array) =>
           array.sort((a, b) => {
             const aAuthorFind =
@@ -589,13 +638,15 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             const bAuthor = bAuthorFind ? bAuthorFind.value : '';
 
             return aAuthor.localeCompare(bAuthor);
-          }),
+          }) as LibraryDocument[],
         TYPE: (array) =>
           array.sort((a, b) =>
             (a.content_type || '').localeCompare(b.content_type || '')
-          ),
+          ) as LibraryDocument[],
         REVISION: (array) =>
-          array.sort((a, b) => a.revision_count - b.revision_count),
+          array.sort(
+            (a, b) => a.revision_count - b.revision_count
+          ) as LibraryDocument[],
       },
     }
   );
@@ -603,6 +654,18 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const handleCancel = () => {
     setSelectedIds([]);
     props.onCancel();
+  };
+
+  const handleSubmit = () => {
+    // Filter out any document groups
+    const ids: string[] = [];
+    selectedIds.forEach((id) => {
+      const doc = documents?.find((d) => d.id === id);
+      if (!doc?.is_document_group) {
+        ids.push(id);
+      }
+    });
+    props.onDocumentsSelected(ids);
   };
 
   return (
@@ -731,10 +794,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         data={{ nodes: myDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectMine}
+                        onSelectChange={onSelectChange}
                         theme={themeMine}
                         columns={columnsMine}
                         sort={sortMine}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'mine' &&
@@ -744,7 +808,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         disabledIds={props.disabledIds}
                         documents={myDocuments}
                         i18n={props.i18n}
-                        select={selectMine}
+                        selectedIds={selectedIds}
+                        onSelectChange={onSelectChange}
                       />
                     )}
                   {view === 'mine' &&
@@ -759,10 +824,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         data={{ nodes: allDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectAll}
+                        onSelectChange={onSelectChange}
                         theme={themeAll}
                         columns={columnsAll}
                         sort={sortAll}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'all' &&
@@ -772,7 +838,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         disabledIds={props.disabledIds}
                         documents={allDocuments}
                         i18n={props.i18n}
-                        select={selectAll}
+                        onSelectChange={onSelectChange}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'all' &&
@@ -787,10 +854,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         data={{ nodes: collectionDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectCollection}
+                        onSelectChange={onSelectChange}
                         theme={themeCollection}
                         columns={columnsCollection}
                         sort={sortCollection}
+                        hasGroups={true}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'collection' &&
@@ -800,7 +869,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         disabledIds={props.disabledIds}
                         documents={collectionDocuments}
                         i18n={props.i18n}
-                        select={selectCollection}
+                        onSelectChange={onSelectChange}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'collection' &&
@@ -819,7 +889,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   type='submit'
                   className='primary'
                   disabled={selectedIds.length === 0}
-                  onClick={() => props.onDocumentsSelected(selectedIds)}
+                  onClick={() => handleSubmit()}
                 >
                   {t['Add Selected']}
                 </Button>

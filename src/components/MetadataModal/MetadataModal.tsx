@@ -7,6 +7,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocumentMetadata } from '@backend/crud';
 import { Button } from '@components/Button';
 import type { Document, Translations } from 'src/Types';
+import type { LibraryDocument } from '@components/DocumentLibrary';
 import './MetadataModal.css';
 
 interface Item {
@@ -15,7 +16,7 @@ interface Item {
 }
 
 interface MetadataModalProps {
-  document: Document;
+  document: Document | LibraryDocument;
 
   i18n: Translations;
 

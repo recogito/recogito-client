@@ -169,6 +169,10 @@ export interface Document {
   };
 
   collection_metadata?: CollectionMetadata;
+
+  is_document_group: boolean;
+
+  document_group_id: string;
 }
 
 export interface DocumentMetadata {
