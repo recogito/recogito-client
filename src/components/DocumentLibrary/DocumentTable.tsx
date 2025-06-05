@@ -65,7 +65,7 @@ export const DocumentTable = (props: DocumentTableProps) => {
           .forEach((n) => {
             nodes.push({
               ...n,
-              nodes: [],
+              nodes: n.is_document_group ? [] : undefined,
             });
           });
 
