@@ -799,7 +799,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                                 : 'badge'
                             }
                           >
-                            {c.documents.length}
+                            {
+                              c.documents.filter((d) => !d.is_document_group)
+                                .length
+                            }
                           </span>
                         </li>
                       ))}
