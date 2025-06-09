@@ -368,7 +368,21 @@ export const updateDocumentsSort = (
   supabase
     .rpc('update_project_documents_sort_rpc', {
       _project_id: projectId,
-      _document_ids: documentIds
+      _document_ids: documentIds,
+    })
+    .then(({ error, data }) => {
+      return { error, data };
+    });
+
+export const updateContextDocumentsSort = (
+  supabase: SupabaseClient,
+  contextId: string,
+  documentIds: string[]
+): Response<boolean> =>
+  supabase
+    .rpc('update_context_documents_sort_rpc', {
+      _context_id: contextId,
+      _document_ids: documentIds,
     })
     .then(({ error, data }) => {
       return { error, data };

@@ -198,7 +198,8 @@ export const getProjectExtended = (
             name,
             content_type,
             meta_data
-          )
+          ),
+          sort
         )
       )
     `

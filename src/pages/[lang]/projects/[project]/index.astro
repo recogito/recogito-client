@@ -5,7 +5,11 @@ import {
   listMyInvites,
   listPendingRequests,
 } from '@backend/crud';
-import { getAvailableLayers, getInstalledPlugins, listMyProjectsExtended } from '@backend/helpers';
+import {
+  getAvailableLayers,
+  getInstalledPlugins,
+  listMyProjectsExtended,
+} from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
@@ -80,6 +84,7 @@ if (installedPlugins.error || !installedPlugins.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
+
 <BaseLayout title={project.data.name}>
   <ProjectHome
     client:only='react'
