@@ -396,6 +396,22 @@ export interface Invitation {
   ignored?: boolean;
 }
 
+export interface Notification {
+  id: string;
+
+  created_at: string;
+
+  target_user_id: string;
+
+  message: string;
+
+  action_url: string;
+
+  message_type: 'INFO' | 'ERROR' | undefined;
+
+  is_acknowledged: boolean;
+}
+
 export interface JoinRequest {
   id: string;
 

@@ -1,0 +1,17 @@
+.notification-item {
+  font-size: var(--font-tiny);
+}
+
+.notification-item p {
+  margin: 0;
+  padding: 0;
+}
+
+.notification-item time {
+  color: var(--font-light);
+  font-size: 11px;
+}
+
+.notification-item .invitation-actions {
+  padding-top: 1em;
+}

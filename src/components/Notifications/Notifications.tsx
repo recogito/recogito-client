@@ -4,7 +4,9 @@ import { Bell, X } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
 import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
+import { NotificationItem } from './NotificationItem/NotificationItem';
 import { InvitationConfirmation } from './InvitiationConfirmation';
+import type { Notification } from '../../Types';
 
 import './Notifications.css';
 
@@ -14,6 +16,8 @@ interface NotificationsProps {
   i18n: Translations;
 
   invitations: Invitation[];
+
+  notifications: Notification[];
 
   isCreator?: boolean;
 
@@ -50,6 +54,8 @@ export const Notifications = (props: NotificationsProps) => {
       setShowConfirmation(invitation);
       props.onInvitationAccepted(invitation, project);
     };
+
+  const handleAcknowledge = (notification: Notification) => {};
 
   return (
     <>
@@ -98,6 +104,15 @@ export const Notifications = (props: NotificationsProps) => {
                       onAccepted={onAccepted(invitation)}
                       onDeclined={() => props.onInvitationDeclined(invitation)}
                       onError={props.onError}
+                    />
+                  ))}
+                  {props.notifications.map((notification) => (
+                    <NotificationItem
+                      key={notification.id}
+                      i18n={props.i18n}
+                      notification={notification}
+                      onError={props.onError}
+                      onAcknowledged={() => handleAcknowledge(notification)}
                     />
                   ))}
                 </ol>
