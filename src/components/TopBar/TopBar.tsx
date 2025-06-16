@@ -4,22 +4,20 @@ import config from 'src/config.json';
 import type {
   Invitation,
   Translations,
+  Notification,
   ExtendedProjectData,
   MyProfile,
 } from 'src/Types';
 
 import './TopBar.css';
+import { useState } from 'react';
 
 interface TopBarProps {
   i18n: Translations;
 
-  invitations: Invitation[];
-
   me: MyProfile;
 
   onError(error: string): void;
-
-  showNotifications?: boolean;
 
   isCreator?: boolean;
 
@@ -52,24 +50,18 @@ export const TopBar = (props: TopBarProps) => {
           <div className='top-bar-site_name'>{config.branding.site_name}</div>
         </div>
         <div className='top-bar-actions'>
-          {props.showNotifications && (
-            <Notifications
-              i18n={props.i18n}
-              invitations={props.invitations}
-              onInvitationAccepted={
-                props.onInvitationAccepted
-                  ? props.onInvitationAccepted
-                  : () => {}
-              }
-              onInvitationDeclined={
-                props.onInvitationDeclined
-                  ? props.onInvitationDeclined
-                  : () => {}
-              }
-              onError={props.onError}
-              isCreator={props.isCreator}
-            />
-          )}
+          <Notifications
+            i18n={props.i18n}
+            onInvitationAccepted={
+              props.onInvitationAccepted ? props.onInvitationAccepted : () => {}
+            }
+            onInvitationDeclined={
+              props.onInvitationDeclined ? props.onInvitationDeclined : () => {}
+            }
+            onError={props.onError}
+            isCreator={props.isCreator}
+            me={props.me}
+          />
           <AccountActions i18n={props.i18n} profile={props.me} />
         </div>
       </header>

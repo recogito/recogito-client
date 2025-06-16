@@ -101,5 +101,6 @@
   "All Projects": "Alle Projekte",
   "Select project(s) to add to group": "Projekt(e) auswählen",
   "Add projects to group": "Projekt zu ${name} hinzufügen",
-  "Successfully updated projects in group": "Projekte in ${name} wurden aktualisiert"
+  "Successfully updated projects in group": "Projekte in ${name} wurden aktualisiert",
+  "Acknowledge": "Acknowledge"
 }

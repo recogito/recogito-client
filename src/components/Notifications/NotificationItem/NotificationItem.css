@@ -12,6 +12,23 @@
   font-size: 11px;
 }
 
-.notification-item .invitation-actions {
+.notification-item .notification-actions {
   padding-top: 1em;
+  display: flex;
+  flex-direction: row;
+  flex-direction: row-reverse;
+}
+
+.notification-message-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.notification-item-container {
+  font-size: var(--font-tiny);
+  line-height: 160%;
+  padding: 15px;
+  border-bottom: 1px solid var(--gray-200);
 }

@@ -154,8 +154,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state, z)
         : typeof activeLayerStyle === 'function'
-          ? activeLayerStyle(a, state, z)
-          : activeLayerStyle;
+        ? activeLayerStyle(a, state, z)
+        : activeLayerStyle;
   }, [activeLayerStyle, documentLayers]);
 
   useEffect(() => {
@@ -204,7 +204,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const onNavigateTo = (annotation: SupabaseAnnotation) => {
     anno.state.selection.setSelected(annotation.id);
     anno.scrollIntoView(annotation.id);
-  }
+  };
 
   const beforeSelectAnnotation = (a?: TextAnnotation) => {
     if (a && !usePopup && anno) {
@@ -273,13 +273,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           {loading && <LoadingOverlay />}
 
           <div className='header'>
-            <TopBar
-              i18n={props.i18n}
-              invitations={[]}
-              me={props.me}
-              showNotifications={false}
-              onError={() => {}}
-            />
+            <TopBar i18n={props.i18n} me={props.me} onError={() => {}} />
 
             <Toolbar
               i18n={props.i18n}

@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { Bell, X } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
+import type {
+  ExtendedProjectData,
+  Invitation,
+  MyProfile,
+  Translations,
+} from 'src/Types';
 import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
 import { NotificationItem } from './NotificationItem/NotificationItem';
 import { InvitationConfirmation } from './InvitiationConfirmation';
 import type { Notification } from '../../Types';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { listMyInvites, listMyNotifications } from '@backend/crud';
+import { acknowledgeNotification } from '@backend/helpers';
 
 import './Notifications.css';
 
@@ -14,10 +22,6 @@ const { Close, Content, Portal, Root, Trigger } = Popover;
 
 interface NotificationsProps {
   i18n: Translations;
-
-  invitations: Invitation[];
-
-  notifications: Notification[];
 
   isCreator?: boolean;
 
@@ -29,21 +33,37 @@ interface NotificationsProps {
   onInvitationDeclined(invitation: Invitation): void;
 
   onError(error: string): void;
+
+  me: MyProfile;
 }
 
 export const Notifications = (props: NotificationsProps) => {
   const { t } = props.i18n;
 
-  const remaining = props.invitations.filter((i) => !i.ignored);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [repeat, setRepeat] = useState(1);
 
-  // Workaround - silently accept duplicate invites, i.e. invites
-  // to projects we're already a member of
-  // LWJ: I will make sure this does not happen
-  // const duplicates = unhandled.filter(i => props.myProjects.find(p => p.id === i.project_id));
+  const remaining = invitations.filter((i) => !i.ignored);
 
-  // const remaining = unhandled.filter(i => !duplicates.includes(i));
+  const count = remaining.length + notifications.length;
+  useEffect(() => {
+    const timerId = setTimeout(async () => {
+      const inviteResp = await listMyInvites(supabase, props.me);
+      if (!inviteResp.error) {
+        setInvitations(inviteResp.data);
+      }
 
-  const count = remaining.length;
+      const notificationResp = await listMyNotifications(supabase, props.me);
+      if (!notificationResp.error) {
+        setNotifications(notificationResp.data);
+      }
+
+      setRepeat(repeat + 1);
+    }, 5000);
+
+    return () => clearTimeout(timerId);
+  }, [repeat]);
 
   const [showConfirmation, setShowConfirmation] = useState<
     Invitation | undefined
@@ -55,7 +75,9 @@ export const Notifications = (props: NotificationsProps) => {
       props.onInvitationAccepted(invitation, project);
     };
 
-  const handleAcknowledge = (notification: Notification) => {};
+  const handleAcknowledge = async (notification: Notification) => {
+    await acknowledgeNotification(supabase, notification.id);
+  };
 
   return (
     <>
@@ -106,7 +128,7 @@ export const Notifications = (props: NotificationsProps) => {
                       onError={props.onError}
                     />
                   ))}
-                  {props.notifications.map((notification) => (
+                  {notifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
                       i18n={props.i18n}

@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const acknowledgeNotification = (
   supabase: SupabaseClient,
@@ -7,7 +7,7 @@ export const acknowledgeNotification = (
   supabase
     .from('notifications')
     .update({ is_acknowledged: true })
-    .eq('notification_id', notificationId)
+    .eq('id', notificationId)
     .then(({ error, data }) => {
       if (error) {
         return false;
