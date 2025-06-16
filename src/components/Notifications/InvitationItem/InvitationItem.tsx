@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { TimeAgo } from '@components/TimeAgo';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
-import { declineInvitation, joinProject } from '@backend/helpers/invitationHelpers';
+import {
+  declineInvitation,
+  joinProject,
+} from '@backend/helpers/invitationHelpers';
 import type { Invitation, ExtendedProjectData, Translations } from 'src/Types';
 
 import './InvitationItem.css';
@@ -13,8 +16,6 @@ interface InvitationItemProps {
   invitation: Invitation;
 
   onAccepted(project: ExtendedProjectData): void;
-
-  onDeclined(): void;
 
   onError(error: string): void;
 }
@@ -57,7 +58,6 @@ export const InvitationItem = (props: InvitationItemProps) => {
 
     Promise.all([minWait, decline]).then(([_, { error }]) => {
       if (error) props.onError(error.message);
-      else props.onDeclined();
     });
   };
 

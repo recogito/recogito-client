@@ -48,8 +48,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const policies = useOrganizationPolicies();
 
-  const [invitations, setInvitations] = useState<Invitation[]>();
-
   const [error, setError] = useState<ToastContent | null>(null);
 
   const [filter, setFilter] = useState<ProjectFilter | string>(
@@ -189,10 +187,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       type: 'error',
     });
 
-  const onInvitationAccepted = (
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ) => {
+  const onInvitationAccepted = (project: ExtendedProjectData) => {
     // Make sure we're not creating a duplicate in the list by joining a
     // project we're already a member of!
     setProjects((projects) => [

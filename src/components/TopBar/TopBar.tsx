@@ -21,12 +21,7 @@ interface TopBarProps {
 
   isCreator?: boolean;
 
-  onInvitationAccepted?(
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ): void;
-
-  onInvitationDeclined?(invitation: Invitation): void;
+  onInvitationAccepted?(project: ExtendedProjectData): void;
 }
 
 export const TopBar = (props: TopBarProps) => {
@@ -54,9 +49,6 @@ export const TopBar = (props: TopBarProps) => {
             i18n={props.i18n}
             onInvitationAccepted={
               props.onInvitationAccepted ? props.onInvitationAccepted : () => {}
-            }
-            onInvitationDeclined={
-              props.onInvitationDeclined ? props.onInvitationDeclined : () => {}
             }
             onError={props.onError}
             isCreator={props.isCreator}

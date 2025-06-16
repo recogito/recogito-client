@@ -25,12 +25,7 @@ interface NotificationsProps {
 
   isCreator?: boolean;
 
-  onInvitationAccepted(
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ): void;
-
-  onInvitationDeclined(invitation: Invitation): void;
+  onInvitationAccepted(project: ExtendedProjectData): void;
 
   onError(error: string): void;
 
@@ -72,7 +67,7 @@ export const Notifications = (props: NotificationsProps) => {
   const onAccepted =
     (invitation: Invitation) => (project: ExtendedProjectData) => {
       setShowConfirmation(invitation);
-      props.onInvitationAccepted(invitation, project);
+      props.onInvitationAccepted(project);
     };
 
   const handleAcknowledge = async (notification: Notification) => {
@@ -124,7 +119,6 @@ export const Notifications = (props: NotificationsProps) => {
                       i18n={props.i18n}
                       invitation={invitation}
                       onAccepted={onAccepted(invitation)}
-                      onDeclined={() => props.onInvitationDeclined(invitation)}
                       onError={props.onError}
                     />
                   ))}
