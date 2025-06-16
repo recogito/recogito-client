@@ -4,7 +4,6 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
 import { AccountPreferences } from '@apps/dashboard-account/AccountPreferences';
-import { listMyInvites, listMyNotifications } from '@backend/crud';
 
 const i18n = getTranslations(Astro.request, 'dashboard-account');
 

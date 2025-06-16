@@ -2,11 +2,7 @@
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { TagContextProvider } from '@components/TagContext';
 import { getLangFromUrl, getTranslations } from '@i18n';
-import {
-  getMyProfile,
-  listMyInvites,
-  listMyNotifications,
-} from '@backend/crud';
+import { getMyProfile } from '@backend/crud';
 import { ProjectsHomeWrapper } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
 import BaseLayout from '@layouts/BaseLayout.astro';

@@ -1,11 +1,6 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import {
-  getMyProfile,
-  listMyInvites,
-  listMyNotifications,
-  listPendingRequests,
-} from '@backend/crud';
+import { getMyProfile, listPendingRequests } from '@backend/crud';
 import {
   getAvailableLayers,
   getInstalledPlugins,
