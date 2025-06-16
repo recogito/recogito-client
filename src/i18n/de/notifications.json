@@ -6,5 +6,7 @@
   "Accept": "Annehmen",
   "Ignore": "Ignorieren",
   "Confirmed-student": "<strong>${project}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Meine Projekte'.",
-  "Confirmed-creator": "<strong>${project}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Mit mir geteilt'."
+  "Confirmed-creator": "<strong>${project}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Mit mir geteilt'.",
+  "Select Projects": "Select Projects",
+  "Acknowledge": "Acknowledge"
 }

@@ -27,9 +27,9 @@ export const NotificationItem = (props: NotificationItemProps) => {
     <li className='notification-item'>
       <div className='notification-message-row'>
         {notification.message_type === 'ERROR' ? (
-          <WarningCircle size={32} color='red' />
+          <WarningCircle size={24} color='red' />
         ) : (
-          <Info size={32} color='blue' />
+          <Info size={24} color='blue' />
         )}
         <p>{notification.message}</p>
       </div>

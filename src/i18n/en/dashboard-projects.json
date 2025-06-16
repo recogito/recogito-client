@@ -110,7 +110,5 @@
   "Select project(s) to add to group": "Select project(s) to add to group",
   "Add projects to group": "Add projects to ${name}",
   "Successfully updated projects in group": "Successfully updated projects in ${name}",
-  "Select Groups": "Select Groups",
-  "Select Projects": "Select Projects",
-  "Acknowledge": "Acknowledge"
+  "Select Groups": "Select Groups"
 }
