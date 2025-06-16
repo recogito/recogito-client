@@ -9,7 +9,7 @@ import type {
 } from 'src/Types';
 import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
-import { NotificationItem } from './NotificationItem/NotificationItem';
+import { NotificationItem } from './NotificationItem';
 import { InvitationConfirmation } from './InvitiationConfirmation';
 import type { Notification } from '../../Types';
 import { supabase } from '@backend/supabaseBrowserClient';
