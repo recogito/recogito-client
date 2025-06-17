@@ -43,7 +43,7 @@ export const Notifications = (props: NotificationsProps) => {
 
   const count = remaining.length + notifications.length;
   useEffect(() => {
-    const timerId = setTimeout(async () => {
+    const updateNotifications = async () => {
       const inviteResp = await listMyInvites(supabase, props.me);
       if (!inviteResp.error) {
         setInvitations(inviteResp.data);
@@ -53,12 +53,31 @@ export const Notifications = (props: NotificationsProps) => {
       if (!notificationResp.error) {
         setNotifications(notificationResp.data);
       }
+    };
+    supabase
+      .channel('notification-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'notifications',
+        },
+        () => updateNotifications()
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'invites',
+        },
+        () => updateNotifications()
+      )
+      .subscribe();
 
-      setRepeat(repeat + 1);
-    }, 5000);
-
-    return () => clearTimeout(timerId);
-  }, [repeat]);
+    updateNotifications();
+  }, []);
 
   const [showConfirmation, setShowConfirmation] = useState<
     Invitation | undefined

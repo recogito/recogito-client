@@ -1,16 +1,9 @@
 import { AccountActions } from '@components/AccountActions';
 import { Notifications } from '@components/Notifications';
 import config from 'src/config.json';
-import type {
-  Invitation,
-  Translations,
-  Notification,
-  ExtendedProjectData,
-  MyProfile,
-} from 'src/Types';
+import type { Translations, ExtendedProjectData, MyProfile } from 'src/Types';
 
 import './TopBar.css';
-import { useState } from 'react';
 
 interface TopBarProps {
   i18n: Translations;
