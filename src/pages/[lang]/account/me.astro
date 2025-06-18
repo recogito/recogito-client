@@ -4,7 +4,6 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
 import { AccountPreferences } from '@apps/dashboard-account/AccountPreferences';
-import { listMyInvites } from '@backend/crud';
 
 const i18n = getTranslations(Astro.request, 'dashboard-account');
 
@@ -14,24 +13,10 @@ const { error, data } = await getMyProfile(supabase);
 if (error || !data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
 }
-
-const invitations = await listMyInvites(supabase);
-if (invitations.error || !invitations.data) {
-  const error = await fetch(`${Astro.url}/404`);
-  return new Response(error.body, {
-    headers: { 'Content-Type': 'text/html;charset=utf-8' },
-    status: 404,
-    statusText: 'Not Found',
-  });
-}
 ---
 
 <BaseLayout title={i18n.t['Account Preferences']}>
-  <AccountPreferences 
-    client:load 
-    i18n={i18n}
-    invitations={invitations.data}
-    profile={data} />
+  <AccountPreferences client:load i18n={i18n} profile={data} />
 </BaseLayout>
 
 <style>

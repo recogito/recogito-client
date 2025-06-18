@@ -1,10 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import { Bell, X } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Invitation, Translations } from 'src/Types';
+import type {
+  ExtendedProjectData,
+  Invitation,
+  MyProfile,
+  Translations,
+  Notification,
+} from 'src/Types';
 import { EmptyList } from './EmptyList';
 import { InvitationItem } from './InvitationItem';
+import { NotificationItem } from './NotificationItem';
 import { InvitationConfirmation } from './InvitiationConfirmation';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { listMyInvites, listMyNotifications } from '@backend/crud';
+import { acknowledgeNotification } from '@backend/helpers';
 
 import './Notifications.css';
 
@@ -13,33 +23,61 @@ const { Close, Content, Portal, Root, Trigger } = Popover;
 interface NotificationsProps {
   i18n: Translations;
 
-  invitations: Invitation[];
-
   isCreator?: boolean;
 
-  onInvitationAccepted(
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ): void;
-
-  onInvitationDeclined(invitation: Invitation): void;
+  onInvitationAccepted(project: ExtendedProjectData): void;
 
   onError(error: string): void;
+
+  me: MyProfile;
 }
 
 export const Notifications = (props: NotificationsProps) => {
   const { t } = props.i18n;
 
-  const remaining = props.invitations.filter((i) => !i.ignored);
+  const [invitations, setInvitations] = useState<Invitation[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [repeat, setRepeat] = useState(1);
 
-  // Workaround - silently accept duplicate invites, i.e. invites
-  // to projects we're already a member of
-  // LWJ: I will make sure this does not happen
-  // const duplicates = unhandled.filter(i => props.myProjects.find(p => p.id === i.project_id));
+  const remaining = invitations.filter((i) => !i.ignored);
 
-  // const remaining = unhandled.filter(i => !duplicates.includes(i));
+  const count = remaining.length + notifications.length;
+  useEffect(() => {
+    const updateNotifications = async () => {
+      const inviteResp = await listMyInvites(supabase, props.me);
+      if (!inviteResp.error) {
+        setInvitations(inviteResp.data);
+      }
 
-  const count = remaining.length;
+      const notificationResp = await listMyNotifications(supabase, props.me);
+      if (!notificationResp.error) {
+        setNotifications(notificationResp.data);
+      }
+    };
+    supabase
+      .channel('notification-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'notifications',
+        },
+        () => updateNotifications()
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'invites',
+        },
+        () => updateNotifications()
+      )
+      .subscribe();
+
+    updateNotifications();
+  }, []);
 
   const [showConfirmation, setShowConfirmation] = useState<
     Invitation | undefined
@@ -48,8 +86,12 @@ export const Notifications = (props: NotificationsProps) => {
   const onAccepted =
     (invitation: Invitation) => (project: ExtendedProjectData) => {
       setShowConfirmation(invitation);
-      props.onInvitationAccepted(invitation, project);
+      props.onInvitationAccepted(project);
     };
+
+  const handleAcknowledge = async (notification: Notification) => {
+    await acknowledgeNotification(supabase, notification.id);
+  };
 
   return (
     <>
@@ -96,8 +138,16 @@ export const Notifications = (props: NotificationsProps) => {
                       i18n={props.i18n}
                       invitation={invitation}
                       onAccepted={onAccepted(invitation)}
-                      onDeclined={() => props.onInvitationDeclined(invitation)}
                       onError={props.onError}
+                    />
+                  ))}
+                  {notifications.map((notification) => (
+                    <NotificationItem
+                      key={notification.id}
+                      i18n={props.i18n}
+                      notification={notification}
+                      onError={props.onError}
+                      onAcknowledged={() => handleAcknowledge(notification)}
                     />
                   ))}
                 </ol>

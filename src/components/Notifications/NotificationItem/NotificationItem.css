@@ -1,0 +1,33 @@
+.notification-item {
+  font-size: var(--font-tiny);
+}
+
+.notification-item p {
+  margin: 0;
+  padding: 0;
+}
+
+.notification-item time {
+  color: var(--font-light);
+  font-size: 11px;
+}
+
+.notification-item .notification-actions {
+  padding-top: 1em;
+  display: flex;
+  flex-direction: row;
+}
+
+.notification-message-row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+}
+
+.notification-item-container {
+  font-size: var(--font-tiny);
+  line-height: 160%;
+  padding: 15px;
+  border-bottom: 1px solid var(--gray-200);
+}

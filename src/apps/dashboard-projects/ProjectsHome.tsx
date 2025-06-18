@@ -16,6 +16,7 @@ import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   ExtendedProjectData,
   Invitation,
+  Notification,
   MyProfile,
   Translations,
 } from 'src/Types';
@@ -28,8 +29,6 @@ export interface ProjectsHomeProps {
   me: MyProfile;
 
   projects: ExtendedProjectData[];
-
-  invitations: Invitation[];
 }
 
 export enum ProjectFilter {
@@ -48,10 +47,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   );
 
   const policies = useOrganizationPolicies();
-
-  const [invitations, setInvitations] = useState<Invitation[]>(
-    props.invitations
-  );
 
   const [error, setError] = useState<ToastContent | null>(null);
 
@@ -192,14 +187,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
       type: 'error',
     });
 
-  const onInvitationAccepted = (
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ) => {
-    setInvitations((invitations) =>
-      invitations.filter((i) => i.id !== invitation.id)
-    );
-
+  const onInvitationAccepted = (project: ExtendedProjectData) => {
     // Make sure we're not creating a duplicate in the list by joining a
     // project we're already a member of!
     setProjects((projects) => [
@@ -208,22 +196,14 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     ]);
   };
 
-  const onInvitationDeclined = (invitation: Invitation) =>
-    setInvitations((invitations) =>
-      invitations.filter((i) => i.id !== invitation.id)
-    );
-
   return (
     <ToastProvider>
       <div className='dashboard-projects-home'>
         <TopBar
-          invitations={invitations}
           i18n={props.i18n}
           onError={onError}
           me={me}
-          showNotifications={true}
           onInvitationAccepted={onInvitationAccepted}
-          onInvitationDeclined={onInvitationDeclined}
           isCreator={!isReader}
         />
         <div className='dashboard-projects-container'>
@@ -265,7 +245,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
                 <ProjectsEmpty
                   i18n={props.i18n}
                   canCreateProjects={policies.get('projects').has('INSERT')}
-                  invitations={invitations.length}
                   onProjectCreated={onProjectCreated}
                   onError={onError}
                 />
@@ -318,11 +297,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
 export const ProjectsHomeWrapper = (props: ProjectsHomeProps) => (
   <TagContextProvider scope='user' scopeId={props.me.id} targetType='project'>
-    <ProjectsHome
-      i18n={props.i18n}
-      me={props.me}
-      projects={props.projects}
-      invitations={props.invitations}
-    />
+    <ProjectsHome i18n={props.i18n} me={props.me} projects={props.projects} />
   </TagContextProvider>
 );

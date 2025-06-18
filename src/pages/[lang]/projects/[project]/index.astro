@@ -1,10 +1,6 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import {
-  getMyProfile,
-  listMyInvites,
-  listPendingRequests,
-} from '@backend/crud';
+import { getMyProfile, listPendingRequests } from '@backend/crud';
 import {
   getAvailableLayers,
   getInstalledPlugins,
@@ -66,8 +62,6 @@ if (documents.error) {
 
 const i18n = getTranslations(Astro.request, 'project-home');
 
-const invitations = await listMyInvites(supabase);
-
 const projects = await listMyProjectsExtended(supabase);
 
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
@@ -94,7 +88,6 @@ if (installedPlugins.error || !installedPlugins.data) {
     requests={requests.data}
     documents={documents.data}
     user={profile.data}
-    invitations={invitations.data}
     availableLayers={availableLayers.data}
     plugins={PluginRegistry.resolvePlugins(installedPlugins.data)}
   />

@@ -9,3 +9,4 @@ export * from './tagHelpers';
 export * from './userPermissionsHelpers';
 export * from './contextHelpers';
 export * from './userHelpers';
+export * from './notificationHelpers';

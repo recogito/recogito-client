@@ -20,7 +20,12 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
-import { useIIIF, useMultiPagePresence, ManifestErrorDialog, type IIIFImage } from './IIIF';
+import {
+  useIIIF,
+  useMultiPagePresence,
+  ManifestErrorDialog,
+  type IIIFImage,
+} from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { Document, DocumentLayer } from 'src/Types';
 import type {
@@ -184,8 +189,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       return a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state)
         : typeof activeLayerStyle === 'function'
-          ? activeLayerStyle(a as ImageAnnotation, state)
-          : activeLayerStyle;
+        ? activeLayerStyle(a as ImageAnnotation, state)
+        : activeLayerStyle;
     }) as DrawingStyleExpression;
   }, [activeLayerStyle, documentLayers]);
 
@@ -250,7 +255,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     });
 
     anno.state.selection.setSelected(annotation.id);
-  }
+  };
 
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
@@ -264,18 +269,15 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onGoToImage = (source: IIIFImage | string, clearSelection = false) => {
     // When navigating via the thumbnail strip, clear the selection from the
     // hash, otherwise we'll get looped right back.
-    if (clearSelection)
-      clearSelectionURLHash();
+    if (clearSelection) clearSelectionURLHash();
 
     if (typeof source === 'string') {
-      const canvas = canvases.find(c => c.uri === source);
+      const canvas = canvases.find((c) => c.uri === source);
       setCurrentImage(canvas || source);
     } else {
       setCurrentImage(source);
     }
   };
-
-
 
   const onError = (error: string) =>
     setToast({
@@ -303,9 +305,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         <div className='anno-desktop ia-desktop'>
           <TopBar
             i18n={props.i18n}
-            invitations={[]}
             me={props.me}
-            showNotifications={false}
             onError={() => setConnectionError(true)}
           />
 
@@ -349,7 +349,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               metadata={metadata}
               open={leftPanelOpen}
               present={present}
-              onChangeImage={source => onGoToImage(source, true)}
+              onChangeImage={(source) => onGoToImage(source, true)}
               onError={onError}
               onUpdated={onUpdated}
             />
@@ -375,7 +375,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   tagVocabulary={tagVocabulary}
                   tool={tool}
                   usePopup={usePopup}
-                  onChangeImage={source => onGoToImage(source, false)}
+                  onChangeImage={(source) => onGoToImage(source, false)}
                   onChangePresent={setPresent}
                   onConnectionError={() => setConnectionError(true)}
                   onNavigateTo={onNavigateTo}

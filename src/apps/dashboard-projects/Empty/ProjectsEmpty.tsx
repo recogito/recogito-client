@@ -10,15 +10,13 @@ export interface ProjectsEmptyProps {
 
   canCreateProjects: boolean;
 
-  invitations: number;
-
   onProjectCreated(project: ExtendedProjectData): void;
 
   onError(error: string): void;
 }
 
 export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
-  const { canCreateProjects, invitations } = props;
+  const { canCreateProjects } = props;
 
   const { t } = props.i18n;
 
@@ -67,27 +65,14 @@ export const ProjectsEmpty = (props: ProjectsEmptyProps) => {
             <Button
               className='primary lg'
               onClick={() => setCreateProjectOpen(true)}
-              busy={busy}>
+              busy={busy}
+            >
               <RocketLaunch size={20} />{' '}
               <span>{t['Start Your First Annotation Project']}</span>
             </Button>
           ) : (
             <p className='no-creator-rights'>
               {t["You don't have creator rights"]}{' '}
-              {invitations === 1 ? (
-                <>
-                  {t['Fret not one'].split('${icon}')[0]} <Bell size={18} />
-                  {t['Fret not one'].split('${icon}')[1]}
-                </>
-              ) : invitations > 1 && (
-                <>
-                  {t['Fret not more']
-                    .split('${icon}')[0]
-                    .replace('${count}', `${invitations}`)}{' '}
-                  <Bell size={18} />
-                  {t['Fret not more'].split('${icon}')[1]}
-                </>
-              )}
             </p>
           )}
         </div>

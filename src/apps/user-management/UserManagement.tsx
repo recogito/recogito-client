@@ -175,7 +175,6 @@ export const UserManagement = (props: UserManagementProps) => {
     <div className='user-management'>
       <ToastProvider>
         <TopBar
-          invitations={[]}
           i18n={props.i18n}
           onError={(error) => console.log(error)}
           me={props.me}
