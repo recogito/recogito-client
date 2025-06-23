@@ -6,8 +6,26 @@ import type {
   Translations,
   UserProfile,
   Document,
-  Group
+  Group,
+  ContextDocument,
 } from 'src/Types';
+import {
+  closestCenter,
+  DndContext,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  rectSortingStrategy,
+} from '@dnd-kit/sortable';
+import { useCallback, useEffect, useState } from 'react';
+import { supabase } from '@backend/supabaseBrowserClient';
+import { updateContextDocumentsSort } from '@backend/helpers';
 
 import './AssignmentDetail.css';
 
@@ -27,6 +45,65 @@ interface AssignmentDetailProps {
 
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
   const { lang, t } = props.i18n;
+  const { context_documents } = props.assignment;
+
+  const [activeId, setActiveId] = useState(null);
+  const [documents, setDocuments] = useState<Document[]>([]);
+
+  const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
+
+  const onDragStart = useCallback(
+    (event: any) => setActiveId(event.active.id),
+    []
+  );
+
+  useEffect(() => {
+    if (props.assignment) {
+      setDocuments(
+        props.assignment.context_documents
+          .map((d) => ({
+            ...d.document,
+            sort: d.sort,
+          }))
+          .sort((a, b) => a.sort - b.sort)
+      );
+    }
+  }, [props.assignment]);
+
+  const onDragEnd = useCallback(
+    (event: any) => {
+      const { active, over } = event;
+
+      if (active.id !== over?.id) {
+        const oldIndex = documents.findIndex(
+          (document) => document.id === active.id
+        );
+        const newIndex = documents.findIndex(
+          (document) => document.id === over!.id
+        );
+
+        const newDocuments = arrayMove(documents, oldIndex, newIndex);
+        setDocuments(newDocuments);
+
+        const newDocumentIds = newDocuments.map((document) => document.id);
+
+        updateContextDocumentsSort(
+          supabase,
+          props.assignment.id,
+          newDocumentIds
+        ).then(({ error }) => {
+          if (error) {
+            console.log(error);
+          }
+        });
+      }
+
+      setActiveId(null);
+    },
+    [documents, props.assignment]
+  );
+
+  const onDragCancel = useCallback(() => setActiveId(null), []);
 
   const members = props.assignment.members.reduce(
     (members, context_user) => [...members, context_user.user as UserProfile],
@@ -102,17 +179,27 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
         </div>
 
         <div className='assignment-detail-document-grid'>
-          <div className='project-home-grid'>
-            {props.assignment.context_documents.map(({ document }) => (
-              <DocumentCard
-                key={document.id}
-                isAdmin={false}
-                i18n={props.i18n}
-                document={document as Document}
-                context={props.assignment}
-              />
-            ))}
-          </div>
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            onDragCancel={onDragCancel}
+          >
+            <div className='project-home-grid'>
+              <SortableContext items={documents} strategy={rectSortingStrategy}>
+                {documents.map((document) => (
+                  <DocumentCard
+                    key={document.id}
+                    isAdmin={props.isAdmin}
+                    i18n={props.i18n}
+                    document={document as Document}
+                    context={props.assignment}
+                  />
+                ))}
+              </SortableContext>
+            </div>
+          </DndContext>
         </div>
       </div>
     </div>

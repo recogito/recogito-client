@@ -61,12 +61,7 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
   if (requestState === RequestState.INIT) {
     return (
       <>
-        <TopBar
-          i18n={props.i18n}
-          onError={() => {}}
-          me={props.user}
-          invitations={[]}
-        />
+        <TopBar i18n={props.i18n} onError={() => {}} me={props.user} />
         <div className='project-request-root'>
           {!props.isAlreadyMember ? (
             <>
@@ -114,12 +109,7 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
   } else if (requestState === RequestState.REQUESTING) {
     return (
       <>
-        <TopBar
-          i18n={props.i18n}
-          onError={() => {}}
-          me={props.user}
-          invitations={[]}
-        />
+        <TopBar i18n={props.i18n} onError={() => {}} me={props.user} />
         <div className='project-request-spinner-container'>
           <Spinner />
         </div>
@@ -128,12 +118,7 @@ export const ProjectRequest = (props: ProjectRequestProps) => {
   } else {
     return (
       <>
-        <TopBar
-          i18n={props.i18n}
-          onError={() => {}}
-          me={props.user}
-          invitations={[]}
-        />
+        <TopBar i18n={props.i18n} onError={() => {}} me={props.user} />
         <RequestResultMessage
           i18n={props.i18n}
           open={messageOpen}

@@ -20,9 +20,14 @@ import type { ImageAnnotationProps } from './ImageAnnotation';
 import { LeftDrawer } from './LeftDrawer';
 import { RightDrawer } from './RightDrawer';
 import { Toolbar } from './Toolbar';
-import { useIIIF, useMultiPagePresence, ManifestErrorDialog } from './IIIF';
+import {
+  useIIIF,
+  useMultiPagePresence,
+  ManifestErrorDialog,
+  type IIIFImage,
+} from './IIIF';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
-import type { Document, DocumentLayer, EmbeddedLayer } from 'src/Types';
+import type { Document, DocumentLayer } from 'src/Types';
 import type {
   AnnotationState,
   AnnotoriousOpenSeadragonAnnotator,
@@ -184,8 +189,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       return a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state)
         : typeof activeLayerStyle === 'function'
-          ? activeLayerStyle(a as ImageAnnotation, state)
-          : activeLayerStyle;
+        ? activeLayerStyle(a as ImageAnnotation, state)
+        : activeLayerStyle;
     }) as DrawingStyleExpression;
   }, [activeLayerStyle, documentLayers]);
 
@@ -234,31 +239,44 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const onRightTabChanged = (tab: 'ANNOTATIONS' | 'NOTES') =>
     setRightPanelTab(tab);
 
+  const onNavigateTo = (annotation: SupabaseAnnotation) => {
+    const vw = Math.max(
+      window.document.documentElement.clientWidth || 0,
+      window.innerWidth || 0
+    );
+
+    const vh = Math.max(
+      window.document.documentElement.clientHeight || 0,
+      window.innerHeight || 0
+    );
+
+    anno.fitBounds(annotation, {
+      padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2],
+    });
+
+    anno.state.selection.setSelected(annotation.id);
+  };
+
   const beforeSelectAnnotation = (a?: ImageAnnotation) => {
     if (a && !usePopup && anno) {
       // Don't fit the view if the annotation is already selected
       if (anno.state.selection.isSelected(a)) return;
 
-      const vw = Math.max(
-        window.document.documentElement.clientWidth || 0,
-        window.innerWidth || 0
-      );
-      const vh = Math.max(
-        window.document.documentElement.clientHeight || 0,
-        window.innerHeight || 0
-      );
-
-      anno.fitBounds(a, {
-        padding: [vh / 2, vw / 2 + 600, vh / 2, (vw - 600) / 2],
-      });
+      onNavigateTo(a);
     }
   };
 
-  const onGoToImage = (source: string) => {
+  const onGoToImage = (source: IIIFImage | string, clearSelection = false) => {
     // When navigating via the thumbnail strip, clear the selection from the
     // hash, otherwise we'll get looped right back.
-    clearSelectionURLHash();
-    setCurrentImage(source);
+    if (clearSelection) clearSelectionURLHash();
+
+    if (typeof source === 'string') {
+      const canvas = canvases.find((c) => c.uri === source);
+      setCurrentImage(canvas || source);
+    } else {
+      setCurrentImage(source);
+    }
   };
 
   const onError = (error: string) =>
@@ -287,9 +305,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         <div className='anno-desktop ia-desktop'>
           <TopBar
             i18n={props.i18n}
-            invitations={[]}
             me={props.me}
-            showNotifications={false}
             onError={() => setConnectionError(true)}
           />
 
@@ -333,7 +349,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               metadata={metadata}
               open={leftPanelOpen}
               present={present}
-              onChangeImage={onGoToImage}
+              onChangeImage={(source) => onGoToImage(source, true)}
               onError={onError}
               onUpdated={onUpdated}
             />
@@ -359,9 +375,10 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   tagVocabulary={tagVocabulary}
                   tool={tool}
                   usePopup={usePopup}
-                  onChangeImage={setCurrentImage}
+                  onChangeImage={(source) => onGoToImage(source, false)}
                   onChangePresent={setPresent}
                   onConnectionError={() => setConnectionError(true)}
+                  onNavigateTo={onNavigateTo}
                   onPageActivity={
                     canvases.length > 1 ? onPageActivity : undefined
                   }
@@ -384,6 +401,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               beforeSelectAnnotation={beforeSelectAnnotation}
               onTabChanged={onRightTabChanged}
               tab={rightPanelTab}
+              onNavigateTo={onNavigateTo}
             />
           </main>
         </div>

@@ -255,12 +255,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
 
   return (
     <>
-      <TopBar
-        invitations={props.invitations}
-        i18n={props.i18n}
-        onError={onError}
-        me={props.me}
-      />
+      <TopBar i18n={props.i18n} onError={onError} me={props.me} />
       <BackButtonBar
         i18n={props.i18n}
         showBackToProjects={false}

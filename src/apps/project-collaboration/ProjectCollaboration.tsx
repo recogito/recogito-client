@@ -291,12 +291,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   return (
     <>
-      <TopBar
-        invitations={props.invitations}
-        i18n={props.i18n}
-        onError={onError}
-        me={props.user}
-      />
+      <TopBar i18n={props.i18n} onError={onError} me={props.user} />
       <BackButtonBar
         i18n={props.i18n}
         showBackToProjects={false}

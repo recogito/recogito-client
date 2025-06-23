@@ -234,6 +234,22 @@ export const Protocols = ['IIIF_IMAGE', 'IIIF_PRESENTATION'] as const;
 
 export type Protocol = (typeof Protocols)[number];
 
+export type ContextDocument = {
+  document: {
+    id: string;
+
+    name: string;
+
+    content_type: string;
+
+    meta_data: any;
+
+    is_private: boolean;
+  };
+
+  sort: number;
+};
+
 export interface Context {
   id: string;
 
@@ -267,19 +283,7 @@ export interface Context {
     };
   }[];
 
-  context_documents: {
-    document: {
-      id: string;
-
-      name: string;
-
-      content_type: string;
-
-      meta_data: any;
-
-      is_private: boolean;
-    };
-  }[];
+  context_documents: ContextDocument[];
 }
 
 export interface TaggedContext extends Context {
@@ -390,6 +394,24 @@ export interface Invitation {
   accepted?: boolean;
 
   ignored?: boolean;
+}
+
+export interface Notification {
+  id: string;
+
+  created_at: string;
+
+  target_user_id: string;
+
+  message: string;
+
+  action_url: string;
+
+  action_message: string;
+
+  message_type: 'INFO' | 'ERROR' | undefined;
+
+  is_acknowledged: boolean;
 }
 
 export interface JoinRequest {

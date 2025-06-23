@@ -1,34 +1,20 @@
 import { AccountActions } from '@components/AccountActions';
 import { Notifications } from '@components/Notifications';
 import config from 'src/config.json';
-import type {
-  Invitation,
-  Translations,
-  ExtendedProjectData,
-  MyProfile,
-} from 'src/Types';
+import type { Translations, ExtendedProjectData, MyProfile } from 'src/Types';
 
 import './TopBar.css';
 
 interface TopBarProps {
   i18n: Translations;
 
-  invitations: Invitation[];
-
   me: MyProfile;
 
   onError(error: string): void;
 
-  showNotifications?: boolean;
-
   isCreator?: boolean;
 
-  onInvitationAccepted?(
-    invitation: Invitation,
-    project: ExtendedProjectData
-  ): void;
-
-  onInvitationDeclined?(invitation: Invitation): void;
+  onInvitationAccepted?(project: ExtendedProjectData): void;
 }
 
 export const TopBar = (props: TopBarProps) => {
@@ -52,24 +38,15 @@ export const TopBar = (props: TopBarProps) => {
           <div className='top-bar-site_name'>{config.branding.site_name}</div>
         </div>
         <div className='top-bar-actions'>
-          {props.showNotifications && (
-            <Notifications
-              i18n={props.i18n}
-              invitations={props.invitations}
-              onInvitationAccepted={
-                props.onInvitationAccepted
-                  ? props.onInvitationAccepted
-                  : () => {}
-              }
-              onInvitationDeclined={
-                props.onInvitationDeclined
-                  ? props.onInvitationDeclined
-                  : () => {}
-              }
-              onError={props.onError}
-              isCreator={props.isCreator}
-            />
-          )}
+          <Notifications
+            i18n={props.i18n}
+            onInvitationAccepted={
+              props.onInvitationAccepted ? props.onInvitationAccepted : () => {}
+            }
+            onError={props.onError}
+            isCreator={props.isCreator}
+            me={props.me}
+          />
           <AccountActions i18n={props.i18n} profile={props.me} />
         </div>
       </header>

@@ -28,6 +28,8 @@ interface AnnotationPopupProps {
 
   tagVocabulary?: VocabularyTerm[];
 
+  onNavigateTo(annotation: SupabaseAnnotation): void;
+
 }
 
 export const AnnotationPopup = (props: AnnotationPopupProps) => {
@@ -91,6 +93,7 @@ export const AnnotationPopup = (props: AnnotationPopupProps) => {
         onBulkDeleteBodies={onBulkDeleteBodies}
         onUpdateBody={onUpdateBody}
         onDeleteAnnotation={() => onDeleteAnnotation(selected)} 
+        onNavigateTo={props.onNavigateTo}
         onSubmit={onSaveAnnotation} />
     </div>
   )

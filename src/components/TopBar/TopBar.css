@@ -42,8 +42,9 @@
 .top-bar-actions {
   display: flex;
   flex-direction: row;
+  align-items: center;
 }
 
 .top-bar-actions svg {
   color: #fff;
-} 
+}

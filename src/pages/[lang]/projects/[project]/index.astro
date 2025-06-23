@@ -1,11 +1,11 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getMyProfile, listPendingRequests } from '@backend/crud';
 import {
-  getMyProfile,
-  listMyInvites,
-  listPendingRequests,
-} from '@backend/crud';
-import { getAvailableLayers, getInstalledPlugins, listMyProjectsExtended } from '@backend/helpers';
+  getAvailableLayers,
+  getInstalledPlugins,
+  listMyProjectsExtended,
+} from '@backend/helpers';
 import { getLangFromUrl, getTranslations } from '@i18n';
 import { ProjectHome } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
@@ -62,8 +62,6 @@ if (documents.error) {
 
 const i18n = getTranslations(Astro.request, 'project-home');
 
-const invitations = await listMyInvites(supabase);
-
 const projects = await listMyProjectsExtended(supabase);
 
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
@@ -80,6 +78,7 @@ if (installedPlugins.error || !installedPlugins.data) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 ---
+
 <BaseLayout title={project.data.name}>
   <ProjectHome
     client:only='react'
@@ -89,7 +88,6 @@ if (installedPlugins.error || !installedPlugins.data) {
     requests={requests.data}
     documents={documents.data}
     user={profile.data}
-    invitations={invitations.data}
     availableLayers={availableLayers.data}
     plugins={PluginRegistry.resolvePlugins(installedPlugins.data)}
   />

@@ -3,6 +3,7 @@ import { useExtensions } from '@recogito/studio-sdk';
 import { useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
+import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -56,13 +57,24 @@ interface AnnotatedTextProps {
 
   onLoad(): void;
 
+  onNavigateTo(annotation: SupabaseAnnotation): void;
+
   onLoadEmbeddedLayers(layers: EmbeddedLayer[], notes: DocumentNote[]): void;
 
 }
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { i18n, isLocked, layers, layerNames, policies, present, tagVocabulary } = props;
+  const { 
+    i18n, 
+    isLocked, 
+    layers, 
+    layerNames, 
+    policies, 
+    present, 
+    tagVocabulary,
+    onNavigateTo
+  } = props;
 
   const contentType = props.document.content_type;
 
@@ -168,7 +180,8 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
                 layerNames={layerNames}
                 present={present}
                 policies={policies}
-                tagVocabulary={tagVocabulary} />
+                tagVocabulary={tagVocabulary} 
+                onNavigateTo={onNavigateTo} />
               )}
             />
           )}

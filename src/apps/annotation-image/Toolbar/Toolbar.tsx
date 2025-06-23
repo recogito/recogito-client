@@ -85,7 +85,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const back = `/${props.i18n.lang}/projects/${project_id}`;
 
-  const extensions = useExtensions('annotation.image.toolbar');
+  const extensions = useExtensions('annotation:image:toolbar');
 
   const colorCoding = useColorCoding();
 
