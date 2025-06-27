@@ -143,16 +143,22 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     console.log('authToken', authToken);
 
     return {
-      tileSources: tilesource,
+      tileSources: {
+        tileSource: tilesource,
+        loadTilesWithAjax: true,
+        ajaxHeaders: authToken ? {
+          Authorization: `Bearer ${authToken}`
+        } : undefined
+      },
       gestureSettingsMouse: {
         clickToZoom: false,
         dblClickToZoom: false
       },
       // Ommitting this leads to poor performance in Chrome
-      // crossOriginPolicy: 'Anonymous',
-      ajaxHeaders: authToken ? {
-        Authorization: `Bearer ${authToken}`
-      } : undefined,
+      crossOriginPolicy: 'Anonymous',
+      // ajaxHeaders: authToken ? {
+      //   Authorization: `Bearer ${authToken}`
+      // } : undefined,
       loadTilesWithAjax: Boolean(authToken),
       ajaxWithCredentials: authToken ? true : undefined,
       showNavigationControl: false,
