@@ -146,7 +146,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       tileSources: {
         tileSource: tilesource,
         loadTilesWithAjax: true,
-        ajaxHeaders: true ? {
+        ajaxHeaders: authToken ? {
           Authorization: `Bearer ${authToken}`
         } : undefined
       },
