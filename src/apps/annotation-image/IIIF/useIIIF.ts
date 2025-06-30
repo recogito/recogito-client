@@ -58,8 +58,6 @@ export const useIIIF = (document: DocumentWithContext) => {
   useEffect(() => {
     const isUploadedFile = document.content_type?.startsWith('image/');
 
-    console.log('[useIIIF] isUploadedFile?', isUploadedFile);
-
     const url = isUploadedFile
       ? // Locally uploaded image - for now, assume this is served via built-in IIIF
         `${CANTALOUPE_PATH}/${document.id}/info.json`
