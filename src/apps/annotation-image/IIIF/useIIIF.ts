@@ -65,8 +65,6 @@ export const useIIIF = (document: DocumentWithContext) => {
         `${CANTALOUPE_PATH}/${document.id}/info.json`
       : document.meta_data?.url;
 
-    console.log('url', url);
-
     if (!url) {
       console.error('Could not resolve IIIF URL for document', document);
       return;
@@ -74,8 +72,6 @@ export const useIIIF = (document: DocumentWithContext) => {
 
     if (url.endsWith('info.json')  || url.includes('info.json?')) {
       if (isUploadedFile) {
-        console.log('inserting auth token...');
-
         // For uploaded files, we need to include the auth token
         // into image requests
         supabase.auth.getSession().then(({ error, data }) => {
@@ -84,7 +80,6 @@ export const useIIIF = (document: DocumentWithContext) => {
             // Shouldn't really happen at this point
             console.error(error);
           } else {
-            console.log('setting token', data.session?.access_token);
             setAuthToken(data.session?.access_token);
             setCurrentImage(url);
             setManifestType('IMAGE');
