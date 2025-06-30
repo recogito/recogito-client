@@ -155,7 +155,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
         dblClickToZoom: false
       },
       // Ommitting this leads to poor performance in Chrome
-      crossOriginPolicy: 'Anonymous',
+      crossOriginPolicy: authToken ? undefined : 'Anonymous',
       loadTilesWithAjax: Boolean(authToken),
       ajaxWithCredentials: authToken ? true : undefined,
       showNavigationControl: false,
