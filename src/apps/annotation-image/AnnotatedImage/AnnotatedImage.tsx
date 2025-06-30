@@ -136,35 +136,28 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     props.onLoad();
   }
 
-  const options: OpenSeadragon.Options = useMemo(() => {
-
-    console.log('[AnnotatedImage] Creating OSD config');
-    console.log(tilesource);
-    console.log('authToken', authToken);
-
-    return {
-      tileSources: {
-        tileSource: tilesource,
-        loadTilesWithAjax: true,
-        ajaxHeaders: authToken ? {
-          Authorization: `Bearer ${authToken}`
-        } : undefined
-      },
-      gestureSettingsMouse: {
-        clickToZoom: false,
-        dblClickToZoom: false
-      },
-      // Ommitting this leads to poor performance in Chrome
-      crossOriginPolicy: authToken ? undefined : 'Anonymous',
-      loadTilesWithAjax: Boolean(authToken),
-      ajaxWithCredentials: authToken ? true : undefined,
-      showNavigationControl: false,
-      maxZoomLevel: 100,
-      minZoomLevel: 0.1,
-      visibilityRatio: 0.2,
-      preserveImageSizeOnResize: true
-    }
-  }, [tilesource]);
+  const options: OpenSeadragon.Options = useMemo(() => ({
+    tileSources: {
+      tileSource: tilesource,
+      loadTilesWithAjax: true,
+      ajaxHeaders: true ? {
+        Authorization: `Bearer ${authToken}`
+      } : undefined
+    },
+    gestureSettingsMouse: {
+      clickToZoom: false,
+      dblClickToZoom: false
+    },
+    // Ommitting this leads to poor performance in Chrome
+    crossOriginPolicy: authToken ? undefined : 'Anonymous',
+    loadTilesWithAjax: Boolean(authToken),
+    ajaxWithCredentials: authToken ? true : undefined,
+    showNavigationControl: false,
+    maxZoomLevel: 100,
+    minZoomLevel: 0.1,
+    visibilityRatio: 0.2,
+    preserveImageSizeOnResize: true
+  }), [tilesource]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
     if (props.isLocked) return UserSelectAction.SELECT;
