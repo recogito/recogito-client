@@ -139,7 +139,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: {
       tileSource: tilesource,
-      loadTilesWithAjax: true,
+      loadTilesWithAjax: Boolean(authToken),
       ajaxHeaders: authToken ? {
         Authorization: `Bearer ${authToken}`
       } : undefined
@@ -150,7 +150,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     },
     // Ommitting this leads to poor performance in Chrome
     crossOriginPolicy: authToken ? undefined : 'Anonymous',
-    loadTilesWithAjax: Boolean(authToken),
     ajaxWithCredentials: authToken ? true : undefined,
     showNavigationControl: false,
     maxZoomLevel: 100,
