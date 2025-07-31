@@ -140,7 +140,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         : null;
     return (
       document.name.toLowerCase().includes(search.toLowerCase()) ||
-      (author && author.value.toLowerCase().includes(search.toLowerCase()))
+      (author &&
+        author.value &&
+        author.value.toLowerCase().includes(search.toLowerCase()))
     );
   };
 
