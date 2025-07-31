@@ -21,5 +21,5 @@ export const getUser = (supabase: SupabaseClient): Promise<User> =>
 
 export const isLoggedIn = (supabase: SupabaseClient) =>
   getUser(supabase)
-    .then(user => Boolean(user))
+    .then((user) => Boolean(user))
     .catch(() => false);

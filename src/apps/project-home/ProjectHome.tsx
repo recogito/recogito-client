@@ -12,7 +12,10 @@ import { AssignmentsView } from './AssignmentsView';
 import { useLocalStorageBackedState } from 'src/util/hooks';
 import { getAvailableLayers } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { PluginProvider, type PluginInstallationConfig } from '@recogito/studio-sdk';
+import {
+  PluginProvider,
+  type PluginInstallationConfig,
+} from '@recogito/studio-sdk';
 import type {
   Context,
   Document,
@@ -33,8 +36,6 @@ export interface ProjectHomeProps {
   projects: ExtendedProjectData[];
 
   documents: Document[];
-
-  invitations: Invitation[];
 
   requests: JoinRequest[];
 
@@ -186,12 +187,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   return (
     <PluginProvider installed={props.plugins}>
-      <TopBar
-        invitations={props.invitations}
-        i18n={props.i18n}
-        onError={onError}
-        me={me}
-      />
+      <TopBar i18n={props.i18n} onError={onError} me={me} />
 
       <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
 

@@ -46,11 +46,13 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
           {props.isCreator ? (
             <img
               className='graphic-invitation-accepted'
+              alt='invite-accepted'
               src='/img/graphic-invitation-accepted-creators.png'
             />
           ) : (
             <img
               className='graphic-invitation-accepted'
+              alt='invite-accepted'
               src='/img/graphic-invitation-accepted-student.png'
             />
           )}
