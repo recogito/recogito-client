@@ -20,7 +20,6 @@ import type {
   Context,
   Document,
   ExtendedProjectData,
-  Invitation,
   JoinRequest,
   MyProfile,
   Translations,
