@@ -343,6 +343,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   className={classNames({ active: document.id === activeId })}
                   key={document.id}
                   isAdmin={props.isAdmin}
+                  isDocumentsView
                   isOwner={isOwner(document)}
                   i18n={props.i18n}
                   document={document}

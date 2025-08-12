@@ -7,12 +7,10 @@ import type {
   UserProfile,
   Document,
   Group,
-  ContextDocument,
 } from 'src/Types';
 import {
   closestCenter,
   DndContext,
-  DragOverlay,
   MouseSensor,
   TouchSensor,
   useSensor,

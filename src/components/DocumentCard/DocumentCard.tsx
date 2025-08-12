@@ -24,6 +24,8 @@ interface DocumentCardProps {
 
   isOwner?: boolean;
 
+  isDocumentsView?: boolean;
+
   context: Context;
 
   document: Document;
@@ -103,27 +105,27 @@ export const DocumentCard = (props: DocumentCardProps) => {
   };
 
   const onExportTEI = (includePrivate: boolean) =>
-    (window.location.href = props.context.is_project_default
+    (window.location.href = props.isDocumentsView
       ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportPDF = (includePrivate: boolean) =>
-    (window.location.href = props.context.is_project_default
+    (window.location.href = props.isDocumentsView
       ? `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportCSV = (includePrivate: boolean) =>
-    (window.location.href = props.context.is_project_default
+    (window.location.href = props.isDocumentsView
       ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportW3C = (includePrivate: boolean) =>
-    (window.location.href = props.context.is_project_default
+    (window.location.href = props.isDocumentsView
       ? `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportManifest = (includePrivate: boolean) =>
-    (window.location.href = props.context.is_project_default
+    (window.location.href = props.isDocumentsView
       ? `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
     
