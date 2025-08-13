@@ -85,7 +85,7 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
 
   const filename = document.name.endsWith('.xml')
     ? `${sanitizeFilename(document.name.slice(0, -4))}-${sanitizeFilename(assignment.data.name || '_base')}.xml`
-    : `${sanitizeFilename(document.name)}-${sanitizeFilename(assignment.data.name)}.xml`;
+    : `${sanitizeFilename(document.name)}-${sanitizeFilename(assignment.data.name || '_base')}.xml`;
 
   return new Response(    
     merged,
