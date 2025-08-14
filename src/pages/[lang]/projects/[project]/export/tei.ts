@@ -61,12 +61,14 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
       statusText: 'Not Found' 
      }); 
   }
-  
+    
   // At the assignment level, only the assignment layer will be exported
   const annotations = await getAnnotations(
     supabase, 
     assignment.data.layers
       .filter(l => l.document.id === document.id)
+      // Uncomment to export JUST the active layer, not all layers in this assignment
+      // .filter(l => l.is_active_layer)
       .map(l => l.id));
 
   if (annotations.error)
@@ -82,8 +84,8 @@ const exportForAssignment = async (supabase: SupabaseClient, url: URL, contextId
     mergeAnnotations(xml, annotations.data.filter(a => a.visibility !== Visibility.PRIVATE));
 
   const filename = document.name.endsWith('.xml')
-    ? `${sanitizeFilename(document.name.slice(0, -4))}-${sanitizeFilename(assignment.data.name)}.xml`
-    : `${sanitizeFilename(document.name)}-${sanitizeFilename(assignment.data.name)}.xml`;
+    ? `${sanitizeFilename(document.name.slice(0, -4))}-${sanitizeFilename(assignment.data.name || '_base')}.xml`
+    : `${sanitizeFilename(document.name)}-${sanitizeFilename(assignment.data.name || '_base')}.xml`;
 
   return new Response(    
     merged,
