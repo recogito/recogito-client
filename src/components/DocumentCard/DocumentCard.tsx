@@ -128,12 +128,14 @@ export const DocumentCard = (props: DocumentCardProps) => {
     (window.location.href = props.isDocumentsView
       ? `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
       : `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
-    
+
   return (
     <article
       className={classNames('document-card-container', props.className)}
       ref={setNodeRef}
       style={style}
+      tabIndex={0}
+      aria-label={props.document.name}
     >
       <div className='document-card' onClick={onClick}>
         {props.isAdmin && (

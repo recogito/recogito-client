@@ -311,6 +311,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             <a
               href={`/${lang}/projects/${props.project.id}/export/csv`}
               className='button'
+              tabIndex={0}
             >
               <DownloadSimple size={20} />
               <span>{t['Export Annotations']}</span>
@@ -318,6 +319,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             <button
               className='button primary project-home-add-document'
               onClick={onAddDocument}
+              tabIndex={0}
             >
               <Plus size={20} /> <span>{t['Add Document']}</span>
             </button>
@@ -333,7 +335,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         onDragCancel={onDragCancel}
       >
         <div className='project-home-grid-wrapper'>
-          <div className='project-home-grid'>
+          <div className='project-home-grid' role='grid'>
             <SortableContext
               items={props.documents}
               strategy={rectSortingStrategy}
