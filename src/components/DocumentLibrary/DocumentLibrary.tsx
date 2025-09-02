@@ -63,7 +63,7 @@ export interface DocumentLibraryProps {
   isAdmin: boolean | undefined;
 }
 
-const DOCUMENTS_PER_FETCH = 1000;
+const DOCUMENTS_PER_FETCH = 500;
 
 export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const { t } = props.i18n;
