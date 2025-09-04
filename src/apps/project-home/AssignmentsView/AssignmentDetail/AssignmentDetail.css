@@ -47,6 +47,7 @@
   font-weight: 600;
   margin-left: 10px;
   width: 25%;
+  overflow-x: hidden;
 }
 
 .assignment-detail-team-list {
