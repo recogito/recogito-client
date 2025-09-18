@@ -20,7 +20,7 @@ interface PresenceStackProps {
 
 export const PresenceStack = (props: PresenceStackProps) => {
 
-  const limit = props.limit || 5;
+  const limit = props.limit || 4;
 
   const present = props.showMe ? 
     props.present : props.present.filter(u => !isMe(u));
