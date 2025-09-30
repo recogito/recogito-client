@@ -15,6 +15,7 @@
 }
 
 .ia-thumbnail-strip .thumbnail-strip-item .label {
+  max-width: 90%;
   overflow: hidden;
   position: relative;
   text-overflow: ellipsis;
