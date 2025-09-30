@@ -6,6 +6,7 @@ import authForgotPassword from './auth-forgot-password.json';
 import authLogin from './auth-login.json';
 import authResetPassword from './auth-reset-password.json';
 import branding from './branding.json';
+import collectionManagement from './collection-management.json';
 import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
@@ -41,6 +42,7 @@ export default {
   'auth-login': { ...authLogin, ...a11y },
   'auth-reset-password': { ...authResetPassword, ...a11y },
   branding: { ...branding, a11y },
+  'collection-management': { ...collectionManagement, ...accountMenu, ...a11y },
   'dashboard-account': { ...dashboardAccount, ...accountMenu, ...a11y },
   'dashboard-projects': {
     ...dashboardProjects,

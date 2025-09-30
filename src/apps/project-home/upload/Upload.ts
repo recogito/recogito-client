@@ -1,18 +1,24 @@
-import type { Protocol } from 'src/Types';
+import type { CollectionMetadata, Protocol } from 'src/Types';
 
 export interface Upload {
 
   name: string;
 
-  projectId: string;
+  projectId?: string;
 
-  contextId: string;
+  contextId?: string;
 
   file?: File;
 
   url?: string;
 
   protocol?: Protocol;
+
+  isPrivate: boolean;
+
+  collectionId?: string;
+
+  collectionMetadata?: CollectionMetadata;
 
 }
 

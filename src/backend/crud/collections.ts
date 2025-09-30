@@ -12,3 +12,43 @@ export const getCollection = (
     .eq('id', collectionId)
     .single()
     .then(({ error, data }) => ({ error, data: data as Collection }));
+
+export const getCollections = (
+  supabase: SupabaseClient,
+): Response<Collection[]> =>
+  supabase
+    .from('collections')
+    .select(`
+      *,
+      document_count:documents(count)
+    `)
+    .then(({ error, data }) => {
+      return { error, data: data as Collection[] };
+    });
+
+export const createCollection = (
+  supabase: SupabaseClient,
+  name: string
+): Response<Collection> =>
+  supabase
+    .from('collections')
+    .insert({
+      name,
+    })
+    .select()
+    .single()
+    .then(({ error, data }) => {
+      return { error, data: data as Collection };
+    });
+
+export const updateCollection = (
+  supabase: SupabaseClient,
+  partial: { id: string; [key: string]: string | null }
+): Response<Collection> =>
+  supabase
+    .from('collections')
+    .update({ ...partial })
+    .eq('id', partial.id)
+    .select()
+    .single()
+    .then(({ error, data }) => ({ error, data: data as Collection }));

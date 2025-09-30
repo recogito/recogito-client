@@ -157,6 +157,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
             projectId: props.project.id,
             contextId: defaultContext!.id,
             file,
+            isPrivate: true,
           }))
         );
 
@@ -175,6 +176,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                     result?.type === 'image'
                       ? 'IIIF_IMAGE'
                       : 'IIIF_PRESENTATION',
+                  isPrivate: true,
                 },
               ]);
 
@@ -204,6 +206,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         contextId: defaultContext!.id,
         url,
         protocol,
+        isPrivate: true,
       },
     ]);
   };
