@@ -171,6 +171,7 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
 
           {props.usePopup && (
             <TextAnnotationPopup
+              asPortal
               popup={(props) => (
               <AnnotationPopup
                 {...props}
