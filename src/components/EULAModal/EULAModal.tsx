@@ -23,7 +23,7 @@ export const EULAModal = (props: EULAModalProps) => {
             {t['uploaded_content_warning']}
           </AlertDialog.Description>
           <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
-            <a href={import.meta.env.PUBLIC_EULA_URL} target='_blank'>
+            <a href={import.meta.env.PUBLIC_EULA_URL} target='_blank' rel='noreferrer'>
               <button className='alert-dialog-button'>{t['Read EULA']}</button>
             </a>
             <AlertDialog.Cancel asChild>
