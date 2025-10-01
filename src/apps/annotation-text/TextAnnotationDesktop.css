@@ -56,7 +56,6 @@ html, body {
   height: fit-content;
   line-height: 190%;
   min-height: 100%;
-  pointer-events: all;
   position: relative;
   white-space: break-spaces;
   word-wrap: break-word;
