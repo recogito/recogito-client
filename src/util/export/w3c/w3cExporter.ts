@@ -38,7 +38,7 @@ const isImageAnnotation = (a: SupabaseAnnotation) =>
  *   without a motivation. 
  */
 const normalize = (annotation: SupabaseAnnotation) => {
-  const { layer_id, ...rest } = annotation;
+  const { layer_id: _, ...rest } = annotation;
 
   return {
     ...rest,
@@ -56,7 +56,7 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
       if (typeof body.value !== 'string') return false;
       try {
         JSON.parse(body.value);
-      } catch (e) {
+      } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
         return false;
       }
       return true;

@@ -269,3 +269,5 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   )
 
 });
+
+AnnotatedImage.displayName = 'AnnotatedImage';

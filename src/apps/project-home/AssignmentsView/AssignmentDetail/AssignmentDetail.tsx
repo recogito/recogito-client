@@ -43,9 +43,8 @@ interface AssignmentDetailProps {
 
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
   const { lang, t } = props.i18n;
-  const { context_documents } = props.assignment;
 
-  const [activeId, setActiveId] = useState(null);
+  const [_, setActiveId] = useState(null);
   const [documents, setDocuments] = useState<Document[]>([]);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));

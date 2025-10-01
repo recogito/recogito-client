@@ -12,7 +12,7 @@ export const sanitizeFilename = (unsafe: string) => {
   });
 
   // Additional safety net to remove or replace non-ASCII characters
-  const asciiOnly = slugified.replace(/[^\x00-\x7F]/g, '_');
+  const asciiOnly = slugified.replace(/[^\x20-\x7F]/g, '_');
 
   return sanitize(asciiOnly);
 }

@@ -52,3 +52,5 @@ export const AnnotatedPDF = memo((props: AnnotatedPDFProps) => {
     && prev.onError === next.onError
     && prev.onRendered === next.onRendered;
 });
+
+AnnotatedPDF.displayName = 'AnnotatedPDF';

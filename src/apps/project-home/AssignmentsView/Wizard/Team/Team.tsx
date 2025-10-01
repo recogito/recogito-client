@@ -97,7 +97,6 @@ export const Team = (props: TeamProps) => {
     field: 'name',
     ascending: false,
   });
-  const [activeMode, setActiveMode] = useState('all');
 
   const members = getMembers(props.project.groups, sorting);
 

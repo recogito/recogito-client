@@ -6,7 +6,7 @@ import { Avatar } from '@components/Avatar';
 import { Toast, ToastProvider } from '@components/Toast';
 import type { ToastContent } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
-import type { Translations, MyProfile, Invitation } from 'src/Types';
+import type { Translations, MyProfile } from 'src/Types';
 import { getGravatar } from './getGravatar';
 
 import './AccountPreferences.css';
