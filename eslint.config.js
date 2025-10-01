@@ -57,17 +57,11 @@ export default defineConfig([
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
     },
-  },
-  {
-    languageOptions: {
-      globals: {
-        ...globals.node,
+
+    settings: {
+      react: {
+        version: 'detect',
       },
-
-      sourceType: 'script',
-      parserOptions: {},
     },
-
-    files: ['**/.eslintrc.{js,cjs}'],
   },
 ]);
