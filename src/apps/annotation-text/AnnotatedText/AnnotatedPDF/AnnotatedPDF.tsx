@@ -40,6 +40,7 @@ export const AnnotatedPDF = memo((props: AnnotatedPDFProps) => {
       annotatingEnabled={!props.isLocked}
       filter={props.filter}
       style={props.style}
+      mergeHighlights={{ verticalTolerance: 8, horizontalTolerance: 25 }}
       onRendered={props.onRendered} />
   )
   
