@@ -56,7 +56,7 @@ const crosswalkAnnotationBodies = (bodies: AnnotationBody[]) => {
       if (typeof body.value !== 'string') return false;
       try {
         JSON.parse(body.value);
-      } catch (e) { // eslint-disable-line @typescript-eslint/no-unused-vars
+      } catch {
         return false;
       }
       return true;
