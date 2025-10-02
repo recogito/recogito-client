@@ -44,15 +44,9 @@ interface AssignmentDetailProps {
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
   const { lang, t } = props.i18n;
 
-  const [_, setActiveId] = useState(null);
   const [documents, setDocuments] = useState<Document[]>([]);
 
   const sensors = useSensors(useSensor(MouseSensor), useSensor(TouchSensor));
-
-  const onDragStart = useCallback(
-    (event: any) => setActiveId(event.active.id),
-    []
-  );
 
   useEffect(() => {
     if (props.assignment) {
@@ -94,13 +88,9 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           }
         });
       }
-
-      setActiveId(null);
     },
     [documents, props.assignment]
   );
-
-  const onDragCancel = useCallback(() => setActiveId(null), []);
 
   const members = props.assignment.members.reduce(
     (members, context_user) => [...members, context_user.user as UserProfile],
@@ -179,9 +169,7 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            onDragCancel={onDragCancel}
           >
             <div className='project-home-grid'>
               <SortableContext items={documents} strategy={rectSortingStrategy}>
