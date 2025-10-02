@@ -49,7 +49,12 @@ export const processAcceptInvite = (supabase: SupabaseClient, id: string) =>
     .from('invites')
     .update({ accepted: true })
     .eq('id', id)
-    .then(({ error, data }) => ({ error, data }));
+    .then(({ error, data }) => {
+      if (error)
+        console.log(error);
+      
+      return { error, data };
+    });
 
 export const processIgnoreInvite = (supabase: SupabaseClient, id: string) =>
   supabase
