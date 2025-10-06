@@ -40,6 +40,8 @@ export const Collection = (props: CollectionsTableProps) => {
   const [showUploads, setShowUploads] = useState(false);
   const [me, setMe] = useState(props.me);
 
+  const [revisionDocument, setRevisionDocument] = useState<Document | undefined>(undefined);
+
   useEffect(() => {
     if (props.documents) {
       setDocuments(props.documents);
@@ -58,14 +60,16 @@ export const Collection = (props: CollectionsTableProps) => {
   }, [search, documents]);
 
   const { addUploads, isIdle, uploads } = useUpload(
-    (docs) => 
+    (docs) => {
       setDocuments(
         [...props.documents, ...docs].reduce<Document[]>(
           (all, document) =>
             all.some((d) => d.id === document.id) ? all : [...all, document],
           []
         )
-      )
+      );
+      setRevisionDocument(undefined);
+    }
   );
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
@@ -79,13 +83,13 @@ export const Collection = (props: CollectionsTableProps) => {
       if (Array.isArray(accepted)) {
         addUploads(
           accepted.map((file) => ({
-            name: file.name,
+            name: revisionDocument?.name || file.name,
             file,
             collectionId: collection.id,
             isPrivate: false,
             collectionMetadata: {
-              document_id: `${collection.name}_${uuidv4()}`,
-              revision_number: 1,
+              document_id: revisionDocument?.collection_metadata?.document_id || `${collection.name}_${uuidv4()}`,
+              revision_number: (revisionDocument?.collection_metadata?.revision_number || 0) + 1,
             }
           }))
         );
@@ -97,7 +101,7 @@ export const Collection = (props: CollectionsTableProps) => {
             if (isValid) {
               addUploads([
                 {
-                  name: result?.label || accepted,
+                  name: revisionDocument?.name || result?.label || accepted,
                   url: accepted,
                   protocol:
                     result?.type === 'image'
@@ -106,8 +110,8 @@ export const Collection = (props: CollectionsTableProps) => {
                   collectionId: collection.id,
                   isPrivate: false,
                   collectionMetadata: {
-                    document_id: `${collection.name}_${uuidv4()}`,
-                    revision_number: 1,
+                    document_id: revisionDocument?.collection_metadata?.document_id || `${collection.name}_${uuidv4()}`,
+                    revision_number: (revisionDocument?.collection_metadata?.revision_number || 0) + 1,
                   }
                 },
               ]);
@@ -126,21 +130,31 @@ export const Collection = (props: CollectionsTableProps) => {
     }
   };
 
-  const { open: onUpload } = useDragAndDrop(onDrop);
+  const { open: onUpload, getInputProps } = useDragAndDrop(onDrop);
 
-  const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
+  const onUploadRevision = (document: Document) => {
+    setRevisionDocument(document);
+  }
+
+  useEffect(() => {
+    if (revisionDocument?.collection_metadata?.document_id && revisionDocument.collection_metadata.revision_number) {
+      onUpload();
+    }
+  }, [revisionDocument?.collection_metadata])
+
+  const onImportRemote = (protocol: Protocol, url: string, label?: string, document?: Document) => {
     setShowUploads(true);
 
     addUploads([
       {
-        name: label || url,
+        name: document?.name || label || url,
         url,
         protocol,
         isPrivate: false,
         collectionId: collection.id,
         collectionMetadata: {
-          document_id: `${collection.name}_${uuidv4()}`,
-          revision_number: 1,
+          document_id: document?.collection_metadata?.document_id || `${collection.name}_${uuidv4()}`,
+          revision_number: (document?.collection_metadata?.revision_number || 0) + 1,
         }
       },
     ]);
@@ -223,6 +237,8 @@ export const Collection = (props: CollectionsTableProps) => {
               <CollectionDocumentsTable
                 documents={filteredDocuments}
                 i18n={props.i18n}
+                onUpload={onUploadRevision}
+                onImport={onImportRemote}
                 setToast={setToast}
                 setDocuments={setDocuments}
               />
@@ -244,6 +260,10 @@ export const Collection = (props: CollectionsTableProps) => {
             closable={isIdle}
             uploads={uploads}
             onClose={() => setShowUploads(false)}
+          />
+          <input
+            {...getInputProps()}
+            aria-label={t['drag and drop target for documents']}
           />
         </div>
       </ToastProvider>

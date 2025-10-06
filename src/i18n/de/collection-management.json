@@ -36,6 +36,7 @@
   "IIIF import hint": "Import von Einzelbildern (IIIF Image Manifest) oder Bilderserien (IIIF Presentation Manifest).",
   "Import": "In Sammlung importieren",
   "Import IIIF": "IIIF Importieren",
+  "Import new revision": "Neue Version importieren",
   "Importing ${n} items": "Importiere ${n} Dateien",
   "invalid_manifest": "Kein gültiges IIIF Manifest",
   "invalid_url": "Ungültige URL",

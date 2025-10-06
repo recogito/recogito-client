@@ -1,7 +1,7 @@
 import type { LibraryDocument } from '@components/DocumentLibrary';
 import { groupRevisionsByDocument } from '@components/DocumentLibrary/utils';
 import { useEffect, useState } from 'react';
-import type { Document, Translations } from 'src/Types';
+import type { Document, Protocol, Translations } from 'src/Types';
 import { CollectionManagementDocumentActions } from './CollectionManagementDocumentActions';
 import { MetadataModal } from '@components/MetadataModal';
 import type { ToastContent } from '@components/Toast';
@@ -10,6 +10,10 @@ interface CollectionDocumentsTableProps {
   i18n: Translations;
 
   documents: Document[];
+
+  onImport(format: Protocol, url: string, label?: string, document?: Document): void;
+
+  onUpload(document?: Document): void;
 
   setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
 
@@ -76,7 +80,9 @@ export const CollectionDocumentsTable = (
                 <CollectionManagementDocumentActions
                   i18n={props.i18n}
                   document={document}
+                  onImport={props.onImport}
                   onOpenMetadata={() => setOpenMetadata(document.id)}
+                  onUpload={props.onUpload}
                 />
                 <MetadataModal
                   open={openMetadata === document.id}

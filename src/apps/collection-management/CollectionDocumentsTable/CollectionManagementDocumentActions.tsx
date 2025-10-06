@@ -1,14 +1,18 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import type { Document, Translations } from 'src/Types';
+import type { Document, Protocol, Translations } from 'src/Types';
 import {
+  CaretLeftIcon,
   DotsThreeVertical,
+  File,
+  LinkSimple,
   PencilSimple,
   Trash,
 } from '@phosphor-icons/react';
+import { IIIFDialog, type IIIFManifest } from '@apps/project-home/upload/dialogs';
 
-const { Content, Item, Portal, Root, Separator, Trigger } = Dropdown;
+const { Content, Item, Portal, Root, Separator, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
 interface CollectionManagementDocumentActionsProps {
   i18n: Translations;
@@ -16,6 +20,10 @@ interface CollectionManagementDocumentActionsProps {
   document: Document;
 
   onDelete?(): void;
+
+  onImport(format: Protocol, url: string, label?: string, document?: Document): void;
+
+  onUpload(document?: Document): void;
 
   onOpenMetadata?(): void;
 }
@@ -27,6 +35,23 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [confirming, setConfirming] = useState(false);
+
+  const [dialog, setDialog] = useState<ReactNode | undefined>();
+
+  const onImportIIIF = () => {
+    const onSubmit = (manifest: IIIFManifest) => {
+      setDialog(undefined);
+      props.onImport(manifest.protocol, manifest.url, manifest.label, props.document);
+    };
+
+    setDialog(
+      <IIIFDialog
+        i18n={props.i18n}
+        onCancel={() => setDialog(undefined)}
+        onSubmit={onSubmit}
+      />
+    );
+  };
 
   const onSelectOption = (fn?: () => void) => () => {
     fn?.();
@@ -49,7 +74,7 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
           <Content
             className='dropdown-content no-icons'
             sideOffset={5}
-            align='start'
+            align='end'
           >
             {props.onOpenMetadata && (
               <Item
@@ -63,6 +88,36 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
                 </span>
               </Item>
             )}
+            <Sub>
+              <SubTrigger
+                className='dropdown-item'
+                aria-label={t["import new revision of this document"]}
+              >
+                <CaretLeftIcon size={16} />
+                <span>
+                  {t['Import new revision']}
+                </span>
+              </SubTrigger>
+              <Portal>
+                <SubContent className='dropdown-content'>
+                  <Item className='dropdown-item' onSelect={() => props.onUpload(props.document)}>
+                    <File size={16} />
+                    <div>
+                      <span>{t['File upload']}</span>
+                      <p>.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf</p>
+                    </div>
+                  </Item>
+      
+                  <Item className='dropdown-item' onSelect={onImportIIIF}>
+                    <LinkSimple size={16} />
+                    <div>
+                      <span>{t['From IIIF image manifest']}</span>
+                      <p>{t['IIIF import hint']}</p>
+                    </div>
+                  </Item>
+                </SubContent>
+              </Portal>
+            </Sub>
       
             <Separator className="dropdown-separator" />
 
@@ -91,6 +146,7 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
         }
         onConfirm={onSelectOption(props.onDelete)}
       />
+      {dialog}
     </ConfirmedAction.Root>
   );
 };
