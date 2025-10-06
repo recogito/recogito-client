@@ -48,7 +48,7 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
   }, [search, collections]);
 
   const handleCreateCollection = (name: string) => {
-    createCollection(supabase, name).then(({ error, data }) => {
+    createCollection(supabase, name).then(({ error }) => {
       if (error) {
         setToast({
           title: t['Something went wrong'],

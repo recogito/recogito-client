@@ -2,7 +2,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { X, Plus, PencilSimple } from '@phosphor-icons/react';
 import './CollectionDialog.css';
 import type { Collection, Translations } from 'src/Types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface CollectionDialogProps {
   collection?: Collection;

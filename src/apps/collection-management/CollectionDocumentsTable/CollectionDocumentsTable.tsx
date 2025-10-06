@@ -19,7 +19,7 @@ interface CollectionDocumentsTableProps {
 export const CollectionDocumentsTable = (
   props: CollectionDocumentsTableProps
 ) => {
-  const { lang, t } = props.i18n;
+  const { t } = props.i18n;
 
   const [groupedDocs, setGroupedDocs] = useState<LibraryDocument[]>(
     props.documents

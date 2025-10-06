@@ -29,7 +29,7 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
   const [confirming, setConfirming] = useState(false);
 
   const onSelectOption = (fn?: () => void) => () => {
-    fn && fn();
+    fn?.();
     setMenuOpen(false);
   }
 
