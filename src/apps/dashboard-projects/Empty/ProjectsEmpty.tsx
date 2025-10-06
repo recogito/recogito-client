@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, RocketLaunch } from '@phosphor-icons/react';
+import { RocketLaunch } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';

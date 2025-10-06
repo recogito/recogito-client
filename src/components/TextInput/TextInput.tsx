@@ -29,7 +29,7 @@ export const TextInput = (props: TextInputProps) => {
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target;
     setValue(value);
-    props.onChange && props.onChange(value);
+    props.onChange?.(value);
   }
 
   return (

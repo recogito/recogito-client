@@ -99,7 +99,7 @@ export const AccountActions = (props: AccountProps) => {
             {helpRedirect && (
               <Item className='dropdown-item'>
                 <Question size={16} />
-                <a href={helpRedirect} target='_blank' aria-label={t['help']}>
+                <a href={helpRedirect} target='_blank' aria-label={t['help']} rel='noreferrer'>
                   {t['Help']}
                 </a>
               </Item>

@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Envelope, UsersFour, X } from '@phosphor-icons/react';
+import { Envelope, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import papa, { type ParseResult } from 'papaparse';
@@ -30,17 +30,9 @@ interface InviteListOfUsersProps {
 }
 
 export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
-  const { lang, t } = props.i18n;
-
-  const { me } = props;
+  const { t } = props.i18n;
 
   const [csv, setCsv] = useState<InviteListEntry[] | undefined>();
-
-  const invitedBy = me.nickname
-    ? me.nickname
-    : me.first_name || me.last_name
-    ? [me.first_name, me.last_name].join(' ')
-    : undefined;
 
   useEffect(() => {
     setCsv(undefined);

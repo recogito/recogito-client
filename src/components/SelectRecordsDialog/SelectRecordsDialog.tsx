@@ -170,7 +170,7 @@ export const SelectRecordsDialog = (props: Props) => {
                           </Checkbox.Root>
                         </td>
                         {props.columns.map((column) => (
-                          <td>{column.resolve(record)}</td>
+                          <td key={`${record.id}-${column.name}`}>{column.resolve(record)}</td>
                         ))}
                       </tr>
                     ))}

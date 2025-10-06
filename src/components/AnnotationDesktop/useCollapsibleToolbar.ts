@@ -22,15 +22,16 @@ export const useCollapsibleToolbar = () => {
 
   useEffect(() => {
     if (!ref.current) return;
-    
-    const shouldCollapse = ref.current ? ref.current.scrollWidth > ref.current.clientWidth : false;
-    
-    if (shouldCollapse && !collapsed) {
-      setBreakpoint(windowWidth);
-      setCollapsed(true);
-    } else if (!shouldCollapse && windowWidth > breakpoint) {
-      setCollapsed(false);
-    }
+
+    setTimeout(() => {
+      const shouldCollapse = ref.current ? ref.current.scrollWidth > ref.current.clientWidth : false;
+      if (shouldCollapse && !collapsed) {
+        setBreakpoint(windowWidth);
+        setCollapsed(true);
+      } else if (!shouldCollapse && windowWidth > breakpoint) {
+        setCollapsed(false);
+      }
+    }, 1);
   }, [windowWidth]);
 
   return { ref, collapsed };

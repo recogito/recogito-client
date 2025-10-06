@@ -87,6 +87,8 @@
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.4",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.36.0",
     "@types/accept-language-parser": "^1.5.8",
     "@types/crypto-js": "4.2.2",
     "@types/nodemailer": "^7.0.2",
@@ -94,11 +96,11 @@
     "@types/papaparse": "5.3.16",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-    "@types/react-window": "1.8.8",
-    "@typescript-eslint/eslint-plugin": "^8.32.1",
-    "@typescript-eslint/parser": "^8.32.1",
-    "eslint": "^9.27.0",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
+    "eslint": "^9.36.0",
     "eslint-plugin-react": "^7.37.5",
+    "globals": "^16.4.0",
     "typescript": "^5.9.2"
   },
   "optionalDependencies": {

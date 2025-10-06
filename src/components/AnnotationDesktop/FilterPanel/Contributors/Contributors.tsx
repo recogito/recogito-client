@@ -1,7 +1,7 @@
 import { User as UserIcon } from '@phosphor-icons/react';
 import * as Toggle from '@radix-ui/react-toggle';
 import type { Annotation, PresentUser, User } from '@annotorious/react';
-import { getContributors, getCreator } from '@components/AnnotationDesktop';
+import { getContributors } from '@components/AnnotationDesktop';
 import { useContributors } from './useContributors';
 import { useFilterSettingsState } from '../FilterState';
 import type { Translations } from 'src/Types';
