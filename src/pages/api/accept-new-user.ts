@@ -11,7 +11,7 @@ const supabaseServerUrl =
 
 const invitesAllowed = import.meta.env.PUBLIC_ENABLE_USER_INVITE;
 
-export const POST: APIRoute = async ({ request, url, redirect }) => {
+export const POST: APIRoute = async ({ request, redirect }) => {
   // Should this be callable at all?
   if (!invitesAllowed) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {

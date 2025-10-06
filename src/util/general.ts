@@ -11,22 +11,22 @@ export const truncateString = (str: string, maxLength: number) => {
 export const cleanHTML = (str: string) => {
   //Convert the string to an HTML document
   function stringToHTML() {
-    let parser = new DOMParser();
-    let doc = parser.parseFromString(str, 'text/html');
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(str, 'text/html');
     return doc.body || document.createElement('body');
   }
 
   //Remove <script> elements
   function removeScripts(html: any) {
-    let scripts = html.querySelectorAll('script');
-    for (let script of scripts) {
+    const scripts = html.querySelectorAll('script');
+    for (const script of scripts) {
       script.remove();
     }
   }
 
   //Check if the attribute is potentially dangerous
   function isPossiblyDangerous(name: string, value: string) {
-    let val = value.replace(/\s+/g, '').toLowerCase();
+    const val = value.replace(/\s+/g, '').toLowerCase();
     if (['src', 'href', 'xlink:href'].includes(name)) {
       if (val.includes('javascript:') || val.includes('data:text/html'))
         return true;
@@ -38,8 +38,8 @@ export const cleanHTML = (str: string) => {
   function removeAttributes(elem: any) {
     // Loop through each attribute
     // If it's dangerous, remove it
-    let atts = elem.attributes;
-    for (let { name, value } of atts) {
+    const atts = elem.attributes;
+    for (const { name, value } of atts) {
       if (!isPossiblyDangerous(name, value)) continue;
       elem.removeAttribute(name);
     }
@@ -47,15 +47,15 @@ export const cleanHTML = (str: string) => {
 
   // Remove dangerous stuff from the HTML document's nodes
   function clean(html: any) {
-    let nodes = html.children;
-    for (let node of nodes) {
+    const nodes = html.children;
+    for (const node of nodes) {
       removeAttributes(node);
       clean(node);
     }
   }
 
   // Convert the string to HTML
-  let html = stringToHTML();
+  const html = stringToHTML();
 
   // Sanitize it
   removeScripts(html);

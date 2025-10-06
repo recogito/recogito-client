@@ -51,6 +51,23 @@
 
 .assignment-wizard .tabs-content section.column:last-child {
   flex: 75%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.assignment-wizard .tabs-content section.column:last-child table {
+  max-width: 100%;
+}
+
+.assignment-wizard .tabs-content section.column:last-child td {
+  max-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.assignment-wizard .tabs-content section.column:last-child tr td:not(:last-of-type) {
+  min-width: 18px;
 }
 
 .assignment-wizard .tabs-content h1 {

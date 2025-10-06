@@ -54,9 +54,7 @@ export const uploadImage = (
           data: file
         });
       
-        uppy.on('progress', progress => {
-          onProgress && onProgress(progress);
-        });
+        uppy.on('progress', progress => onProgress?.(progress));
       
         uppy.upload().then(result => {
           if (result?.successful?.length === 1) {

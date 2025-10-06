@@ -4,7 +4,7 @@ import type { PresentUser, User } from '@annotorious/react';
 // Active user IDs per source
 export type ActiveUsers = { [source: string]: PresentUser[] };
 
-export const useMultiPagePresence = (present: PresentUser[], source?: string) => {
+export const useMultiPagePresence = (present: PresentUser[]) => {
 
   // Track active user IDs per source
   const [active, setActivity] = useState<{ [source: string]: string[] }>({});

@@ -8,7 +8,7 @@ export const acknowledgeNotification = (
     .from('notifications')
     .update({ is_acknowledged: true })
     .eq('id', notificationId)
-    .then(({ error, data }) => {
+    .then(({ error }) => {
       if (error) {
         return false;
       }

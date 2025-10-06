@@ -108,9 +108,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               className={
                 props.currentTab === 'documents' ? 'active' : undefined
               }
-              onClick={() => {
-                props.onSwitchTab && props.onSwitchTab('documents');
-              }}
+              onClick={() => props.onSwitchTab?.('documents')}
             >
               <button aria-label={t['documents view']}>{t['Documents']}</button>
             </li>
@@ -118,9 +116,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               className={
                 props.currentTab === 'assignments' ? 'active' : undefined
               }
-              onClick={() => {
-                props.onSwitchTab && props.onSwitchTab('assignments');
-              }}
+              onClick={() => props.onSwitchTab?.('assignments')}
             >
               <button aria-label={t['assignments view']}>
                 {t['Assignments']}

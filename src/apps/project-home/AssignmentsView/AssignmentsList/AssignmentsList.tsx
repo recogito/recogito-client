@@ -37,8 +37,6 @@ import './AssignmentsList.css';
 import { AssignmentListItem } from './AssignmentListItem';
 
 export const AssignmentsList = (props: AssignmentsListProps) => {
-  const { t } = props.i18n;
-
   const [activeId, setActiveId] = useState(null);
 
   const [activeAssignment, setActiveAssignment] = useState<

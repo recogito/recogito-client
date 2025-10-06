@@ -22,7 +22,8 @@ export const behaviors = {
 
       if (graphic) {
         const img = new Image();
-        img.src = graphic.getAttribute('url')?.trim()!;
+        const url = graphic.getAttribute('url');
+        img.src = url ? url.trim() : '';
 
         copyAttr('width', graphic, img);
         copyAttr('height', graphic, img);
@@ -45,7 +46,8 @@ export const behaviors = {
       // handled as a child of a figure already.
       if (elem.parentElement?.getAttribute('data-origname') !== 'figure') {
         const img = new Image();
-        img.src = elem.getAttribute('url')?.trim()!;
+        const url = elem.getAttribute('url');
+        img.src = url ? url.trim() : '';
 
         copyAttr('width', elem, img);
         copyAttr('height', elem, img);

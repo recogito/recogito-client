@@ -15,8 +15,6 @@ import type { ToggleDisplayValue } from '@components/ToggleDisplay';
 import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   ExtendedProjectData,
-  Invitation,
-  Notification,
   MyProfile,
   Translations,
 } from 'src/Types';

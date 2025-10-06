@@ -1,7 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Invitation, MyProfile, Notification } from 'src/Types';
 import type { Response } from '@backend/Types';
-import { getUser } from '@backend/auth';
 
 export const listMyInvites = (
   supabase: SupabaseClient,
@@ -51,7 +50,9 @@ export const processAcceptInvite = (supabase: SupabaseClient, id: string) =>
     .update({ accepted: true })
     .eq('id', id)
     .then(({ error, data }) => {
-      error && console.log(error);
+      if (error)
+        console.log(error);
+      
       return { error, data };
     });
 

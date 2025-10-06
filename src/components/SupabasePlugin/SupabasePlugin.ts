@@ -47,24 +47,24 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
 
       supabase
         .connect()
-        .then(user => props.onConnected && props.onConnected(user))
+        .then(user => props.onConnected?.(user))
         .catch(error => { 
           console.error('Connection error', error);
-          props.onConnectError && props.onConnectError(error);
+          props.onConnectError?.(error);
         });
 
-      supabase.on('initialLoad', annotations => props.onInitialLoad && props.onInitialLoad(annotations));
-      supabase.on('integrityError', message => props.onIntegrityError && props.onIntegrityError(message));
-      supabase.on('offPageActivity', event => props.onOffPageActivity && props.onOffPageActivity(event));
-      supabase.on('presence', users => props.onPresence && props.onPresence(users));
-      supabase.on('selectionChange', user => props.onSelectionChange && props.onSelectionChange(user));
+      supabase.on('initialLoad', annotations => props.onInitialLoad?.(annotations));
+      supabase.on('integrityError', message => props.onIntegrityError?.(message));
+      supabase.on('offPageActivity', event => props.onOffPageActivity?.(event));
+      supabase.on('presence', users => props.onPresence?.(users));
+      supabase.on('selectionChange', user => props.onSelectionChange?.(user));
       supabase.on('initialLoadError', error => {
         console.error('Initial load error', error);
-        props.onInitialLoadError && props.onInitialLoadError(error)
+        props.onInitialLoadError?.(error)
       });
       supabase.on('saveError', error => {
         console.error('Save error', error);
-        props.onSaveError && props.onSaveError(error)
+        props.onSaveError?.(error)
       });
 
       setPlugin(supabase);

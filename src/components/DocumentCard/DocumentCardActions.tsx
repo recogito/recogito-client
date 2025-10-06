@@ -67,12 +67,12 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
   const extensions = useExtensions('project:document-actions');
 
   const onExport = (fn: ((includePrivate?: boolean) => void) | undefined, includePrivate: boolean) => () => {
-    fn && fn(includePrivate);
+    fn?.(includePrivate);
     setMenuOpen(false);
   }
 
   const onSelectOption = (fn?: () => void) => () => {
-    fn && fn();
+    fn?.();
     setMenuOpen(false);
   }
 
