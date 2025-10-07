@@ -40,9 +40,7 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
     } else {
       const low = search.toLowerCase();
       setFilteredCollections(
-        collections.filter((c) =>
-          c.name?.toLowerCase().includes(low)
-        )
+        collections.filter((c) => c.name?.toLowerCase().includes(low))
       );
     }
   }, [search, collections]);
@@ -121,9 +119,16 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
 
           <div className='collection-management-table'>
             {filteredCollections.length > 0 ? (
-              <CollectionsTable i18n={props.i18n} collections={filteredCollections} />
+              <CollectionsTable
+                i18n={props.i18n}
+                collections={filteredCollections}
+              />
             ) : (
-              <p>{search ? t['No collections matching search criteria'] : t['No collections']}</p>
+              <p>
+                {search
+                  ? t['No collections matching search criteria']
+                  : t['No collections']}
+              </p>
             )}
           </div>
           <Toast

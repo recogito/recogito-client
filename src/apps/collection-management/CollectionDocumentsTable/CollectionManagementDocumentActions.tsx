@@ -10,10 +10,23 @@ import {
   PencilSimple,
   Trash,
 } from '@phosphor-icons/react';
-import { IIIFDialog, type IIIFManifest } from '@apps/project-home/upload/dialogs';
+import {
+  IIIFDialog,
+  type IIIFManifest,
+} from '@apps/project-home/upload/dialogs';
 import type { LibraryDocument } from '@components/DocumentLibrary';
 
-const { Content, Item, Portal, Root, Separator, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
+const {
+  Content,
+  Item,
+  Portal,
+  Root,
+  Separator,
+  Sub,
+  SubContent,
+  SubTrigger,
+  Trigger,
+} = Dropdown;
 
 interface CollectionManagementDocumentActionsProps {
   i18n: Translations;
@@ -22,15 +35,21 @@ interface CollectionManagementDocumentActionsProps {
 
   onDelete(document?: Document): void;
 
-  onImport(format: Protocol, url: string, label?: string, document?: Document): void;
+  onImport(
+    format: Protocol,
+    url: string,
+    label?: string,
+    document?: Document
+  ): void;
 
   onUpload(document?: Document): void;
 
   onOpenMetadata?(): void;
 }
 
-export const CollectionManagementDocumentActions = (props: CollectionManagementDocumentActionsProps) => {
-
+export const CollectionManagementDocumentActions = (
+  props: CollectionManagementDocumentActionsProps
+) => {
   const { t } = props.i18n;
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -42,7 +61,12 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
   const onImportIIIF = () => {
     const onSubmit = (manifest: IIIFManifest) => {
       setDialog(undefined);
-      props.onImport(manifest.protocol, manifest.url, manifest.label, props.document);
+      props.onImport(
+        manifest.protocol,
+        manifest.url,
+        manifest.label,
+        props.document
+      );
     };
 
     setDialog(
@@ -57,7 +81,7 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
   const onSelectOption = (fn?: () => void) => () => {
     fn?.();
     setMenuOpen(false);
-  }
+  };
 
   return (
     <ConfirmedAction.Root open={confirming} onOpenChange={setConfirming}>
@@ -84,31 +108,30 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
                 aria-label={t["view this document's metadata"]}
               >
                 <PencilSimple size={16} />
-                <span>
-                  {t['Edit document metadata']}
-                </span>
+                <span>{t['Edit document metadata']}</span>
               </Item>
             )}
             <Sub>
               <SubTrigger
                 className='dropdown-item'
-                aria-label={t["import new revision of this document"]}
+                aria-label={t['import new revision of this document']}
               >
                 <CaretLeftIcon size={16} />
-                <span>
-                  {t['Import new revision']}
-                </span>
+                <span>{t['Import new revision']}</span>
               </SubTrigger>
               <Portal>
                 <SubContent className='dropdown-content'>
-                  <Item className='dropdown-item' onSelect={() => props.onUpload(props.document)}>
+                  <Item
+                    className='dropdown-item'
+                    onSelect={() => props.onUpload(props.document)}
+                  >
                     <File size={16} />
                     <div>
                       <span>{t['File upload']}</span>
                       <p>.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf</p>
                     </div>
                   </Item>
-      
+
                   <Item className='dropdown-item' onSelect={onImportIIIF}>
                     <LinkSimple size={16} />
                     <div>
@@ -119,8 +142,8 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
                 </SubContent>
               </Portal>
             </Sub>
-      
-            <Separator className="dropdown-separator" />
+
+            <Separator className='dropdown-separator' />
 
             <ConfirmedAction.Trigger>
               <Item
@@ -128,7 +151,12 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
                 aria-label={t['remove this document from the collection']}
               >
                 <Trash size={16} className='destructive' />{' '}
-                <span>{props.document.revisions && props.document.revisions?.length > 1 ? t['Delete latest revision'] : t['Delete document']}</span>
+                <span>
+                  {props.document.revisions &&
+                  props.document.revisions?.length > 1
+                    ? t['Delete latest revision']
+                    : t['Delete document']}
+                </span>
               </Item>
             </ConfirmedAction.Trigger>
           </Content>

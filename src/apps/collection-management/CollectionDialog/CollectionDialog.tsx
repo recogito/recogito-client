@@ -41,7 +41,9 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
             {props.collection ? t['Edit Collection'] : t['Create Collection']}
           </Dialog.Title>
           <Dialog.Description className='dialog-description'>
-            {props.collection ? t['Edit collection settings.'] : t['Create a collection of documents.']}
+            {props.collection
+              ? t['Edit collection settings.']
+              : t['Create a collection of documents.']}
           </Dialog.Description>
           <fieldset className='collection-dialog-fieldset'>
             <label
