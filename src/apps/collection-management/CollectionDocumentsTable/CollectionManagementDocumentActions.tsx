@@ -19,7 +19,7 @@ interface CollectionManagementDocumentActionsProps {
 
   document: Document;
 
-  onDelete?(): void;
+  onDelete(document?: Document): void;
 
   onImport(format: Protocol, url: string, label?: string, document?: Document): void;
 
@@ -137,14 +137,18 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
       <ConfirmedAction.Dialog
         i18n={props.i18n}
         title={t['Are you sure?']}
-        description={t['Are you sure you want to delete this document?']}
+        description={
+          t[
+            'Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.'
+          ]
+        }
         cancelLabel={t['Cancel']}
         confirmLabel={
           <>
             <Trash size={16} /> <span>{t['Delete document']}</span>
           </>
         }
-        onConfirm={onSelectOption(props.onDelete)}
+        onConfirm={onSelectOption(() => props.onDelete(props.document))}
       />
       {dialog}
     </ConfirmedAction.Root>

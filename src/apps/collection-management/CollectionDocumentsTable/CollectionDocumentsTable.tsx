@@ -11,7 +11,14 @@ interface CollectionDocumentsTableProps {
 
   documents: Document[];
 
-  onImport(format: Protocol, url: string, label?: string, document?: Document): void;
+  onDelete(document?: Document): void;
+
+  onImport(
+    format: Protocol,
+    url: string,
+    label?: string,
+    document?: Document
+  ): void;
 
   onUpload(document?: Document): void;
 
@@ -80,6 +87,7 @@ export const CollectionDocumentsTable = (
                 <CollectionManagementDocumentActions
                   i18n={props.i18n}
                   document={document}
+                  onDelete={props.onDelete}
                   onImport={props.onImport}
                   onOpenMetadata={() => setOpenMetadata(document.id)}
                   onUpload={props.onUpload}

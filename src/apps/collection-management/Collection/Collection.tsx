@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { updateCollection } from '@backend/crud';
+import { archiveDocument, updateCollection } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
@@ -14,7 +14,12 @@ import type {
 } from 'src/Types';
 import { CollectionDialog } from '../CollectionDialog/CollectionDialog';
 import { CollectionDocumentsTable } from '../CollectionDocumentsTable';
-import { UploadActions, UploadTracker, useDragAndDrop, useUpload } from '@apps/project-home/upload';
+import {
+  UploadActions,
+  UploadTracker,
+  useDragAndDrop,
+  useUpload,
+} from '@apps/project-home/upload';
 import type { FileRejection } from 'react-dropzone';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 
@@ -40,7 +45,9 @@ export const Collection = (props: CollectionsTableProps) => {
   const [showUploads, setShowUploads] = useState(false);
   const [me, setMe] = useState(props.me);
 
-  const [revisionDocument, setRevisionDocument] = useState<Document | undefined>(undefined);
+  const [revisionDocument, setRevisionDocument] = useState<
+    Document | undefined
+  >(undefined);
 
   useEffect(() => {
     if (props.documents) {
@@ -59,18 +66,16 @@ export const Collection = (props: CollectionsTableProps) => {
     }
   }, [search, documents]);
 
-  const { addUploads, isIdle, uploads } = useUpload(
-    (docs) => {
-      setDocuments(
-        [...props.documents, ...docs].reduce<Document[]>(
-          (all, document) =>
-            all.some((d) => d.id === document.id) ? all : [...all, document],
-          []
-        )
-      );
-      setRevisionDocument(undefined);
-    }
-  );
+  const { addUploads, isIdle, uploads } = useUpload((docs) => {
+    setDocuments(
+      [...props.documents, ...docs].reduce<Document[]>(
+        (all, document) =>
+          all.some((d) => d.id === document.id) ? all : [...all, document],
+        []
+      )
+    );
+    setRevisionDocument(undefined);
+  });
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
@@ -88,9 +93,13 @@ export const Collection = (props: CollectionsTableProps) => {
             collectionId: collection.id,
             isPrivate: false,
             collectionMetadata: {
-              document_id: revisionDocument?.collection_metadata?.document_id || `${collection.name}_${uuidv4()}`,
-              revision_number: (revisionDocument?.collection_metadata?.revision_number || 0) + 1,
-            }
+              document_id:
+                revisionDocument?.collection_metadata?.document_id ||
+                `${collection.name}_${uuidv4()}`,
+              revision_number:
+                (revisionDocument?.collection_metadata?.revision_number || 0) +
+                1,
+            },
           }))
         );
 
@@ -110,9 +119,13 @@ export const Collection = (props: CollectionsTableProps) => {
                   collectionId: collection.id,
                   isPrivate: false,
                   collectionMetadata: {
-                    document_id: revisionDocument?.collection_metadata?.document_id || `${collection.name}_${uuidv4()}`,
-                    revision_number: (revisionDocument?.collection_metadata?.revision_number || 0) + 1,
-                  }
+                    document_id:
+                      revisionDocument?.collection_metadata?.document_id ||
+                      `${collection.name}_${uuidv4()}`,
+                    revision_number:
+                      (revisionDocument?.collection_metadata?.revision_number ||
+                        0) + 1,
+                  },
                 },
               ]);
 
@@ -130,19 +143,49 @@ export const Collection = (props: CollectionsTableProps) => {
     }
   };
 
+  // This actually archives the document
+  const onDeleteDocumentFromCollection = (document: Document) => {
+    archiveDocument(supabase, document.id).then(({ data }) => {
+      if (data) {
+        setToast({
+          title: t['Deleted'],
+          description: t['Document deleted successfully.'],
+          type: 'success',
+        });
+        setDocuments((prevDocuments) =>
+          prevDocuments.filter((prevDoc) => prevDoc.id !== document.id)
+        );
+      } else {
+        setToast({
+          title: t['Something went wrong'],
+          description: t['Could not delete the document.'],
+          type: 'error',
+        });
+      }
+    });
+  };
+
   const { open: onUpload, getInputProps } = useDragAndDrop(onDrop);
 
   const onUploadRevision = (document: Document) => {
     setRevisionDocument(document);
-  }
+  };
 
   useEffect(() => {
-    if (revisionDocument?.collection_metadata?.document_id && revisionDocument.collection_metadata.revision_number) {
+    if (
+      revisionDocument?.collection_metadata?.document_id &&
+      revisionDocument.collection_metadata.revision_number
+    ) {
       onUpload();
     }
-  }, [revisionDocument?.collection_metadata])
+  }, [revisionDocument?.collection_metadata]);
 
-  const onImportRemote = (protocol: Protocol, url: string, label?: string, document?: Document) => {
+  const onImportRemote = (
+    protocol: Protocol,
+    url: string,
+    label?: string,
+    document?: Document
+  ) => {
     setShowUploads(true);
 
     addUploads([
@@ -153,9 +196,12 @@ export const Collection = (props: CollectionsTableProps) => {
         isPrivate: false,
         collectionId: collection.id,
         collectionMetadata: {
-          document_id: document?.collection_metadata?.document_id || `${collection.name}_${uuidv4()}`,
-          revision_number: (document?.collection_metadata?.revision_number || 0) + 1,
-        }
+          document_id:
+            document?.collection_metadata?.document_id ||
+            `${collection.name}_${uuidv4()}`,
+          revision_number:
+            (document?.collection_metadata?.revision_number || 0) + 1,
+        },
       },
     ]);
   };
@@ -237,6 +283,7 @@ export const Collection = (props: CollectionsTableProps) => {
               <CollectionDocumentsTable
                 documents={filteredDocuments}
                 i18n={props.i18n}
+                onDelete={onDeleteDocumentFromCollection}
                 onUpload={onUploadRevision}
                 onImport={onImportRemote}
                 setToast={setToast}
