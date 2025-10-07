@@ -9,8 +9,14 @@
     7px 12px 22px rgba(0, 0, 0, 0.06),
     12px 24px 73px rgba(0, 0, 0, 0.07);
   font-family: Inter;
+  max-height: 95vh;
+  overflow-y: auto;
   width: 340px;
   z-index: 9999;
+}
+
+.annotation-popup .annotation {
+  border-radius: 0;
 }
 
 .r6o-popup-sr-only, .r6o-popup-sr-only:active, .r6o-popup-sr-only:focus {
