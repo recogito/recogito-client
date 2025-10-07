@@ -11,13 +11,14 @@ import {
   Trash,
 } from '@phosphor-icons/react';
 import { IIIFDialog, type IIIFManifest } from '@apps/project-home/upload/dialogs';
+import type { LibraryDocument } from '@components/DocumentLibrary';
 
 const { Content, Item, Portal, Root, Separator, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
 interface CollectionManagementDocumentActionsProps {
   i18n: Translations;
 
-  document: Document;
+  document: LibraryDocument;
 
   onDelete(document?: Document): void;
 
@@ -127,7 +128,7 @@ export const CollectionManagementDocumentActions = (props: CollectionManagementD
                 aria-label={t['remove this document from the collection']}
               >
                 <Trash size={16} className='destructive' />{' '}
-                <span>{t['Delete document']}</span>
+                <span>{props.document.revisions && props.document.revisions?.length > 1 ? t['Delete latest revision'] : t['Delete document']}</span>
               </Item>
             </ConfirmedAction.Trigger>
           </Content>
