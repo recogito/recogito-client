@@ -80,8 +80,14 @@ export const Collection = (props: CollectionsTableProps) => {
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
       setToast({
-        title: 'Sorry',
-        description: 'Unsupported file format.',
+        title: t['Something went wrong'],
+        description: t['Unsupported file format.'],
+        type: 'error',
+      });
+    } else if (revisionDocument && Array.isArray(accepted) && accepted?.length > 1) {
+      setToast({
+        title: t['Something went wrong'],
+        description: t['Only one document can be used as a revision.'],
         type: 'error',
       });
     } else {
@@ -132,7 +138,7 @@ export const Collection = (props: CollectionsTableProps) => {
               setShowUploads(true);
             } else {
               setToast({
-                title: 'Error',
+                title: t['Something went wrong'],
                 description: error,
                 type: 'error',
               });
