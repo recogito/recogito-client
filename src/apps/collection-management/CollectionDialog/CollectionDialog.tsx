@@ -9,7 +9,13 @@ interface CollectionDialogProps {
 
   i18n: Translations;
 
+  noTrigger?: boolean;
+
+  onClose?: () => void;
+
   onSave(name: string): void;
+
+  open?: boolean;
 }
 
 export const CollectionDialog = (props: CollectionDialogProps) => {
@@ -18,22 +24,24 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
   const [collectionName, setName] = useState(props.collection?.name || '');
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button className='primary'>
-          {props.collection ? (
-            <>
-              <PencilSimple size={20} />
-              <span>{t['Edit Collection']}</span>
-            </>
-          ) : (
-            <>
-              <Plus size={20} />
-              <span>{t['Create Collection']}</span>
-            </>
-          )}
-        </button>
-      </Dialog.Trigger>
+    <Dialog.Root open={props.open} onOpenChange={props.onClose}>
+      {!props.noTrigger && (
+        <Dialog.Trigger asChild>
+          <button className='primary'>
+            {props.collection ? (
+              <>
+                <PencilSimple size={20} />
+                <span>{t['Edit Collection']}</span>
+              </>
+            ) : (
+              <>
+                <Plus size={20} />
+                <span>{t['Create Collection']}</span>
+              </>
+            )}
+          </button>
+        </Dialog.Trigger>
+      )}
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
         <Dialog.Content className='dialog-content'>
@@ -42,7 +50,7 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
           </Dialog.Title>
           <Dialog.Description className='dialog-description'>
             {props.collection
-              ? t['Edit collection settings.']
+              ? t['Edit collection metadata']
               : t['Create a collection of documents.']}
           </Dialog.Description>
           <fieldset className='collection-dialog-fieldset'>

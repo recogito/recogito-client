@@ -5,7 +5,12 @@ import { CheckFat, WarningDiamond, ArrowLeft } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
-import { createCollection, getCollections } from '@backend/crud';
+import {
+  archiveCollection,
+  createCollection,
+  getCollections,
+  updateCollection,
+} from '@backend/crud';
 import { CollectionDialog } from './CollectionDialog/CollectionDialog';
 
 import './CollectionManagement.css';
@@ -78,6 +83,63 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
     });
   };
 
+  // This actually archives the collection
+  const handleDeleteCollection = (collection: Collection) => {
+    archiveCollection(supabase, collection.id).then(({ data }) => {
+      if (data) {
+        setToast({
+          title: t['Deleted'],
+          description: t['Collection deleted successfully.'],
+          type: 'success',
+        });
+        setCollections((prevCollections) =>
+          prevCollections.filter(
+            (prevCollection) => prevCollection.id !== collection.id
+          )
+        );
+      } else {
+        setToast({
+          title: t['Something went wrong'],
+          description: t['Could not delete the collection.'],
+          type: 'error',
+        });
+      }
+    });
+  };
+
+  const handleUpdateCollection = (name: string, collectionId: string) => {
+    updateCollection(supabase, { id: collectionId, name }).then(
+      ({ error, data }) => {
+        if (error) {
+          setToast({
+            title: t['Something went wrong'],
+            description: t['Could not update collection.'],
+            type: 'error',
+            icon: <WarningDiamond color='red' />,
+          });
+          return;
+        } else {
+          setToast({
+            title: t['Success'],
+            description: t['Collection has been updated.'],
+            type: 'success',
+            icon: <CheckFat color='green' />,
+          });
+          setCollections((prevCollections) =>
+            prevCollections.map((prevCollection) =>
+              prevCollection.id === collectionId
+                ? {
+                    ...prevCollection,
+                    ...data,
+                  }
+                : prevCollection
+            )
+          );
+        }
+      }
+    );
+  };
+
   return (
     <div className='collection-management'>
       <ToastProvider>
@@ -122,6 +184,8 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
               <CollectionsTable
                 i18n={props.i18n}
                 collections={filteredCollections}
+                onDelete={handleDeleteCollection}
+                onSave={handleUpdateCollection}
               />
             ) : (
               <p>

@@ -1,4 +1,4 @@
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
 import type { Collection } from 'src/Types';
 
@@ -52,3 +52,26 @@ export const updateCollection = (
     .select()
     .single()
     .then(({ error, data }) => ({ error, data: data as Collection }));
+
+export const archiveCollection = (
+  supabase: SupabaseClient,
+  collectionId: string
+): Response<boolean> =>
+  supabase
+    .rpc('archive_collection_rpc', {
+      _collection_id: collectionId,
+    })
+    .then(({ data }) => {
+      if (data) {
+        return {
+          error: null,
+          data: true,
+        };
+      }
+      return {
+        error: {
+          message: 'Failed to archive collection',
+        } as PostgrestError,
+        data: false,
+      };
+    });
