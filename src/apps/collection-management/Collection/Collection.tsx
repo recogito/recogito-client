@@ -101,7 +101,7 @@ export const Collection = (props: CollectionsTableProps) => {
             collectionMetadata: {
               document_id:
                 revisionDocument?.collection_metadata?.document_id ||
-                `${collection.name}_${uuidv4()}`,
+                `${collection.id}_${uuidv4()}`,
               revision_number:
                 (revisionDocument?.collection_metadata?.revision_number || 0) +
                 1,
@@ -127,7 +127,7 @@ export const Collection = (props: CollectionsTableProps) => {
                   collectionMetadata: {
                     document_id:
                       revisionDocument?.collection_metadata?.document_id ||
-                      `${collection.name}_${uuidv4()}`,
+                      `${collection.id}_${uuidv4()}`,
                     revision_number:
                       (revisionDocument?.collection_metadata?.revision_number ||
                         0) + 1,
@@ -204,7 +204,7 @@ export const Collection = (props: CollectionsTableProps) => {
         collectionMetadata: {
           document_id:
             document?.collection_metadata?.document_id ||
-            `${collection.name}_${uuidv4()}`,
+            `${collection.id}_${uuidv4()}`,
           revision_number:
             (document?.collection_metadata?.revision_number || 0) + 1,
         },
