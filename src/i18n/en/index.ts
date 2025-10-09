@@ -42,7 +42,14 @@ export default {
   'auth-login': { ...authLogin, ...a11y },
   'auth-reset-password': { ...authResetPassword, ...a11y },
   branding: { ...branding, a11y },
-  'collection-management': { ...collectionManagement, ...accountMenu, ...a11y },
+  'collection-management': {
+    ...projectHome,
+    ...projectSidedbar,
+    ...accountMenu,
+    ...notifications,
+    ...collectionManagement,
+    ...a11y,
+  },
   'dashboard-account': { ...dashboardAccount, ...accountMenu, ...a11y },
   'dashboard-projects': {
     ...dashboardProjects,
