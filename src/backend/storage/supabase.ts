@@ -40,9 +40,7 @@ export const uploadFile = (
           meta: { type: file.type }
         });
 
-        uppy.on('progress', progress => {
-          onProgress && onProgress(progress);
-        });
+        uppy.on('progress', progress => onProgress?.(progress));
 
         uppy.on('error', error => {
           reject(error);

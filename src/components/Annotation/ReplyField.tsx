@@ -58,8 +58,8 @@ export const ReplyField = (props: ReplyFieldProps) => {
 
     setValue(new Delta());
 
-    props.beforeSubmit && props.beforeSubmit(body);
-    props.onSubmit && props.onSubmit(body);
+    props.beforeSubmit?.(body);
+    props.onSubmit?.(body);
   };
 
   return (

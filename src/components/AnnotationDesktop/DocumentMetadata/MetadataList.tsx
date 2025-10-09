@@ -12,7 +12,7 @@ export const MetadataList = (props: Props) => {
   const renderValue = useCallback((item: any) => {
     if (isValidURL(item.value)) {
       return (
-        <a href={item.value} target='_blank'>
+        <a href={item.value} target='_blank' rel='noreferrer'>
           {item.value}
         </a>
       );

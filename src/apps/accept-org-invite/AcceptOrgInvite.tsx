@@ -3,7 +3,6 @@ import { WarningOctagon } from '@phosphor-icons/react';
 import { TextInput } from '@components/TextInput';
 import type { ApiAcceptOrgInvite, Translations } from 'src/Types';
 import { Button } from '@components/Button';
-import { supabase } from '@backend/supabaseBrowserClient';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 
 import './AcceptOrgInvite.css';

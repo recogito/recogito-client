@@ -28,7 +28,7 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
     evt.stopPropagation();
   }
 
-  const withStopEvent = (fn: Function) => (evt: Event | React.MouseEvent) => {
+  const withStopEvent = (fn: () => void) => (evt: Event | React.MouseEvent) => {
     evt.preventDefault();
     evt.stopPropagation();
     fn();

@@ -31,17 +31,19 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
   }, [uploads]);
 
   const onProgress = (id: string, progress: number, status: UploadStatus) => {
-    setUploads((prev) =>
-      prev.map((upload) =>
-        upload.id === id
-          ? {
-              ...upload,
-              progress,
-              status,
-            }
-          : upload
-      )
-    );
+    if (progress < 100) {
+      setUploads((prev) =>
+        prev.map((upload) =>
+          upload.id === id
+            ? {
+                ...upload,
+                progress,
+                status,
+              }
+            : upload
+        )
+      );
+    }
   };
 
   const onSuccess = (id: string, document: Document) => {

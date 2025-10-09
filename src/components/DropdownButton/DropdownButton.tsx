@@ -1,9 +1,11 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { CaretDown } from '@phosphor-icons/react';
+import type { ReactNode } from 'react';
 import './DropdownButton.css';
 
 interface DropdownButtonProps {
-  options: { node: any }[];
+  options: { node: ReactNode }[];
+
   icon: any;
 
   label: string;
@@ -22,13 +24,11 @@ export const DropdownButton = (props: DropdownButtonProps) => {
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content className='dropdown-content' sideOffset={5}>
-          {props.options.map((o) => {
-            return (
-              <DropdownMenu.Item className='.dropdown-item'>
-                {o.node}
-              </DropdownMenu.Item>
-            );
-          })}
+          {props.options.map((o, i) => (
+            <DropdownMenu.Item className='.dropdown-item' key={i}>
+              {o.node}
+            </DropdownMenu.Item>
+          ))}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

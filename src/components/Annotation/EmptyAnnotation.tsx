@@ -112,7 +112,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
       value: JSON.stringify(value)
     };
 
-    props.onCreateBody && props.onCreateBody(tag);
+    props.onCreateBody?.(tag);
   };
 
   const isPrivate = props.annotation.visibility === Visibility.PRIVATE;

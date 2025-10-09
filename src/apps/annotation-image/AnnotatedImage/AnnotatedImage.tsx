@@ -136,6 +136,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     props.onLoad();
   }
 
+  // Cf. https://github.com/openseadragon/openseadragon/issues/2659#issuecomment-2583944426
   const options: OpenSeadragon.Options = useMemo(() => ({
     tileSources: {
       tileSource: tilesource,
@@ -269,3 +270,5 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   )
 
 });
+
+AnnotatedImage.displayName = 'AnnotatedImage';

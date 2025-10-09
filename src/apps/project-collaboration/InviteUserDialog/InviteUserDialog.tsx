@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Envelope, User, X } from '@phosphor-icons/react';
+import { Envelope, X } from '@phosphor-icons/react';
 import { useFormik } from 'formik';
 import { inviteUserToProject } from '@backend/crud';
 import { Button } from '@components/Button';
@@ -34,7 +34,7 @@ interface InviteUserProps {
 }
 
 export const InviteUserDialog = (props: InviteUserProps) => {
-  const { lang, t } = props.i18n;
+  const { t } = props.i18n;
 
   const { me, project } = props;
 
