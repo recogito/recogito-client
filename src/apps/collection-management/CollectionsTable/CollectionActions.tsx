@@ -49,10 +49,10 @@ export const CollectionActions = (props: CollectionActionsProps) => {
               <Item
                 className='dropdown-item'
                 onSelect={onSelectOption(props.onOpenMetadata)}
-                aria-label={t["edit this collection's metadata"]}
+                aria-label={t["edit this collection's name"]}
               >
                 <PencilSimpleIcon size={16} />
-                <span>{t['Edit collection metadata']}</span>
+                <span>{t['Edit collection name']}</span>
               </Item>
             )}
 

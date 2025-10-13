@@ -31,7 +31,7 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
             {props.collection ? (
               <>
                 <PencilSimple size={20} />
-                <span>{t['Edit Collection']}</span>
+                <span>{t['Edit Collection Name']}</span>
               </>
             ) : (
               <>
@@ -46,13 +46,15 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
         <Dialog.Overlay className='dialog-overlay' />
         <Dialog.Content className='dialog-content'>
           <Dialog.Title className='dialog-title'>
-            {props.collection ? t['Edit Collection'] : t['Create Collection']}
-          </Dialog.Title>
-          <Dialog.Description className='dialog-description'>
             {props.collection
-              ? t['Edit collection metadata']
-              : t['Create a collection of documents.']}
-          </Dialog.Description>
+              ? t['Edit Collection Name']
+              : t['Create Collection']}
+          </Dialog.Title>
+          {!props.collection && (
+            <Dialog.Description className='dialog-description'>
+              {t['Create a collection of documents.']}
+            </Dialog.Description>
+          )}
           <fieldset className='collection-dialog-fieldset'>
             <label
               className='collection-dialog-label'
