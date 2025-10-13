@@ -131,6 +131,14 @@ export interface Group {
   }[];
 }
 
+export interface CollectionMetadata {
+
+  document_id: string;
+
+  revision_number: number;
+
+}
+
 export interface Document {
   id: string;
 
@@ -160,11 +168,7 @@ export interface Document {
     meta?: DocumentMetadata[];
   };
 
-  collection_metadata?: {
-    revision_number: number;
-
-    document_id: string;
-  };
+  collection_metadata?: CollectionMetadata;
 }
 
 export interface DocumentMetadata {
@@ -314,6 +318,8 @@ export interface Collection {
   created_at?: string;
 
   created_by?: string;
+
+  document_count?: {count: number}[];
 
   updated_at?: string;
 

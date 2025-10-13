@@ -91,7 +91,10 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
         initDocument(
           supabase,
           i.name,
-          i.projectId,
+          i.isPrivate,
+          i.projectId || null,
+          i.collectionId || null,
+          i.collectionMetadata || null,
           (progress) => onProgress(id, progress, 'uploading'),
           i.file,
           i.url,
