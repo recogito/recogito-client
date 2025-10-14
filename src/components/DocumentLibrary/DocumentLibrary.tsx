@@ -263,7 +263,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   useEffect(() => {
     async function getCollections() {
-      const resp = await supabase.from('collections').select('id, name');
+      const resp = await supabase.from('collections').select('id, name').order('created_at');
 
       if (!resp.error && resp.data) {
         const arr = [];
