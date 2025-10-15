@@ -8,7 +8,7 @@ import { TopBar } from '@components/TopBar';
 import {
   archiveCollection,
   createCollection,
-  getCollections,
+  getInstanceCollections,
   updateCollection,
 } from '@backend/crud';
 import { CollectionDialog } from './CollectionDialog/CollectionDialog';
@@ -61,7 +61,7 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
         });
         return;
       } else {
-        getCollections(supabase).then(({ error, data }) => {
+        getInstanceCollections(supabase).then(({ error, data }) => {
           if (error) {
             setToast({
               title: t['Something went wrong'],
