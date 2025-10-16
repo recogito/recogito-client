@@ -13,7 +13,7 @@ export const getCollection = (
     .single()
     .then(({ error, data }) => ({ error, data: data as Collection }));
 
-export const getCollections = (
+export const getInstanceCollections = (
   supabase: SupabaseClient,
 ): Response<Collection[]> =>
   supabase
@@ -22,6 +22,7 @@ export const getCollections = (
       *,
       document_count:documents(count)
     `)
+    .is('extension_id', null)
     .then(({ error, data }) => {
       return { error, data: data as Collection[] };
     });
