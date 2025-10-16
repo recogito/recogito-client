@@ -1,5 +1,4 @@
 import { DocumentCard } from '@components/DocumentCard';
-import { type Select } from '@table-library/react-table-library/select';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import type { LibraryDocument } from './DocumentLibrary';

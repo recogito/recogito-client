@@ -5,10 +5,6 @@ import {
   HeaderCell,
   Cell,
 } from '@table-library/react-table-library/table';
-import {
-  CellSelect,
-  type Select,
-} from '@table-library/react-table-library/select';
 import type { Translations } from 'src/Types';
 import type { Theme } from '@table-library/react-table-library/theme';
 import type { TableNode } from '@table-library/react-table-library/types/table';
@@ -55,7 +51,7 @@ export const DocumentTable = (props: DocumentTableProps) => {
         setData(props.data.nodes);
       } else {
         const nodes: TableDocument[] = [];
-        const groups = props.data.nodes
+        props.data.nodes
           .filter(
             (n) =>
               n.is_document_group ||

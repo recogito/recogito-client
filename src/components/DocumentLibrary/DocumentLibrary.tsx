@@ -9,16 +9,10 @@ import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Column } from '@table-library/react-table-library/compact';
-import {
-  useRowSelect,
-  SelectTypes,
-  SelectClickTypes,
-} from '@table-library/react-table-library/select';
 import './DocumentLibrary.css';
 import type { TableNode } from '@table-library/react-table-library/types/table';
 import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline';
-import type { Action } from '@table-library/react-table-library/types/common';
 import { useSort } from '@table-library/react-table-library/sort';
 import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
@@ -29,8 +23,6 @@ import {
   Files,
   Folder,
   User,
-  CaretDown,
-  CaretUp,
 } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { groupRevisionsByDocument } from './utils';
@@ -99,13 +91,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   >();
   const [publicWarningOpen, setPublicWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<string[]>([]);
-  const [collectionSortDir, setCollectionSortDir] = useState({
-    TITLE: 'forward',
-    AUTHOR: 'forward',
-    TYPE: 'forward',
-    REVISION: 'forward',
-  });
 
   const filterLabel = useMemo(() => {
     let value = '';
@@ -303,17 +288,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       getCollections();
     }
   }, [documents, props.disabledIds]);
-
-  const handleOpenGroup = (id: string) => {
-    setExpandedGroups([...expandedGroups, id]);
-  };
-
-  const handleCloseGroup = (id: string) => {
-    const findIdx = expandedGroups.findIndex((g) => g === id);
-    if (findIdx > -1) {
-      setExpandedGroups([...expandedGroups].splice(findIdx, 0));
-    }
-  };
 
   const columnsMine: Column<TableNode>[] = [
     {
@@ -581,31 +555,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       },
     }
   );
-
-  const doCollectionSort = (data: LibraryDocument[]) => {
-    // This moves the sorted children underneath the parents for group document
-    // This assumes the data is sorted
-    // Pull out all of the children
-    const children = data.filter(
-      (d) => d.document_group_id && d.document_group_id !== ''
-    );
-    const all = data.filter(
-      (d) => !d.document_group_id || d.document_group_id === ''
-    );
-
-    // Now add back any children which are expanded
-    expandedGroups.forEach((g) => {
-      const add = children.filter((c) => c.document_group_id === g);
-
-      const idx = all.findIndex((a) => a.id === g);
-
-      if (idx > -1) {
-        all.splice(idx + 1, 0, ...add);
-      }
-    });
-
-    return all;
-  };
 
   const sortCollection = useSort(
     {

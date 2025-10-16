@@ -10,7 +10,6 @@ import {
   PencilSimple,
 } from '@phosphor-icons/react';
 import type { LibraryDocument } from './DocumentLibrary';
-import type { Action } from '@table-library/react-table-library/types/common';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
