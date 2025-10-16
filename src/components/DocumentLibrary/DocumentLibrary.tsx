@@ -645,7 +645,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       }}
                     >
                       <Files />
-                      {t['All Documents']}
+                      <span className='name'>{t['All Documents']}</span>
                       <span
                         className={
                           allDocuments.length === 0 ? 'badge disabled' : 'badge'
@@ -662,7 +662,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       }}
                     >
                       <User />
-                      {t['My Documents']}
+                      <span className='name'>{t['My Documents']}</span>
                       <span
                         className={
                           myDocuments.length === 0 ? 'badge disabled' : 'badge'
@@ -694,7 +694,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                           key={idx}
                         >
                           <Folder />
-                          {c.collection.name}
+                          <span className='name'>{c.collection.name}</span>
                           <span
                             className={
                               c.documents.length === 0
