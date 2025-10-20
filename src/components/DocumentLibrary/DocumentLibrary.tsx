@@ -55,13 +55,15 @@ export interface DocumentLibraryProps {
   dataDirty: boolean;
   clearDirtyFlag(): void;
   onCancel(): void;
-  UploadActions: React.ReactNode;
+  UploadActions?: React.ReactNode;
   onDocumentsSelected(documentIds: string[]): void;
   onUpdated(document: Document): void;
   onDeleteFromLibrary?(document: Document): void;
   onTogglePrivate(document: Document): void;
   onError(error: string): void;
   isAdmin: boolean | undefined;
+  hideCollections?: boolean;
+  readOnly?: boolean;
 }
 
 export const DOCUMENTS_PER_FETCH = 500;
@@ -107,8 +109,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   }, [activeCollection, collections, view]);
 
   const allowEditMetadata = useCallback(
-    (item: any) => item.created_by === props.user.id,
-    [props.user]
+    (item: any) => item.created_by === props.user.id && !props.readOnly,
+    [props.user, props.readOnly]
   );
 
   const handleTogglePrivate = (document: Document) => {
@@ -316,14 +318,14 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => (
         <>
           <DocumentActions
-            allowEditMetadata={allowEditMetadata(item)}
+            allowEditMetadata={!props.readOnly && allowEditMetadata(item)}
             i18n={props.i18n}
             onDelete={() =>
               props.onDeleteFromLibrary
                 ? props.onDeleteFromLibrary(item as Document)
                 : {}
             }
-            showPrivate={true}
+            showPrivate={!props.readOnly}
             isPrivate={item.is_private}
             onOpenMetadata={() => {
               setCurrentDocument(item as Document);
@@ -662,7 +664,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   </ul>
                 </section>
 
-                {collections && (
+                {collections && !props.hideCollections && (
                   <section className='doc-lib-header-bottom collections'>
                     <h3>{t['Collections']}</h3>
 
