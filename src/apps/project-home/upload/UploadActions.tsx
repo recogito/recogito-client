@@ -1,6 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { File, LinkSimple, Plus } from '@phosphor-icons/react';
+import { FileIcon, FileArrowDownIcon, LinkSimpleIcon, PlusIcon } from '@phosphor-icons/react';
 import { IIIFDialog, type IIIFManifest } from './dialogs';
 import type { MyProfile, Protocol, Translations } from 'src/Types';
 import { EULAModal } from '@components/EULAModal/EULAModal';
@@ -18,6 +18,8 @@ interface UploadActionsProps {
   onUpload(): void;
 
   onImport(format: Protocol, url: string, label?: string): void;
+
+  onOpenLibrary?(): void;
 
   onSetUser(user: MyProfile): void;
 }
@@ -67,7 +69,7 @@ export const UploadActions = (props: UploadActionsProps) => {
       <Root>
         <Trigger asChild>
           <button className='primary'>
-            <Plus size={20} /> <span>{t['Import']}</span>
+            <PlusIcon size={20} /> <span>{t['Import']}</span>
           </button>
         </Trigger>
 
@@ -78,7 +80,7 @@ export const UploadActions = (props: UploadActionsProps) => {
             align='start'
           >
             <Item className='dropdown-item' onSelect={handleUpload}>
-              <File size={16} />
+              <FileIcon size={16} />
               <div>
                 <span>{t['File upload']}</span>
                 <p>.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf</p>
@@ -86,12 +88,21 @@ export const UploadActions = (props: UploadActionsProps) => {
             </Item>
 
             <Item className='dropdown-item' onSelect={onImportIIIF}>
-              <LinkSimple size={16} />
+              <LinkSimpleIcon size={16} />
               <div>
                 <span>{t['From IIIF image manifest']}</span>
                 <p>{t['IIIF import hint']}</p>
               </div>
             </Item>
+            {props.onOpenLibrary && (
+              <Item className='dropdown-item' onSelect={props.onOpenLibrary}>
+                <FileArrowDownIcon size={16} />
+                <div>
+                  <span>{t['From existing project']}</span>
+                  <p>{t['Import an existing document from a project.']}</p>
+                </div>
+              </Item>
+            )}
           </Content>
         </Portal>
       </Root>

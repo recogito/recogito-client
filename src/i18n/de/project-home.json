@@ -85,5 +85,11 @@
   "Accept End User License Agreement": "Endbenutzer-Lizenzvereinbarung akzeptieren",
   "I have read and accept EULA": "Ich habe die EULA gelesen und akzeptiere sie",
   "Read EULA": "EULA lesen",
-  "uploaded_content_warning": "Hochgeladene Dokumente und Bilder müssen allen geltenden Urheberrechtsregeln und -vorschriften entsprechen. Bitte lesen und akzeptieren Sie die verlinkte Endbenutzer-Lizenzvereinbarung (EULA) bevor Sie Inhalte hochladen."
+  "uploaded_content_warning": "Hochgeladene Dokumente und Bilder müssen allen geltenden Urheberrechtsregeln und -vorschriften entsprechen. Bitte lesen und akzeptieren Sie die verlinkte Endbenutzer-Lizenzvereinbarung (EULA) bevor Sie Inhalte hochladen.",
+  "From existing project": "Aus bestehendem Projekt",
+  "Import an existing document from a project.": "Dokument aus Projekt importieren.",
+  "Copied": "Kopiert",
+  "Document copied successfully.": "Dokument erfolgreich kopiert.",
+  "Could not copy file contents of ${name}.": "Inhalte von ${name} konnten nicht kopiert werden.",
+  "Could not copy documents into collection.": "Dokumente konnten nicht in die Sammlung kopiert werden."
 }
