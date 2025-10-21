@@ -5,6 +5,7 @@
 .doc-lib-header {
   background-color: #fff;
   border-right: 1px solid var(--gray-100);
+  max-width: 275px;
 }
 
 .doc-lib-header section {
@@ -93,10 +94,15 @@
   font-size: var(--font-small);
   font-weight: 500;
   padding: 10px 20px 10px 20px;
+  justify-content: flex-start;
 }
 
 .doc-lib-header-bottom li > svg {
+  flex: 0 0 16px;
   margin-right: 15px;
+}
+.doc-lib-header-bottom li > .name {
+  flex: 0 1 auto;
 }
 
 .doc-lib-header-bottom .doc-lib-header-tabs li.active {

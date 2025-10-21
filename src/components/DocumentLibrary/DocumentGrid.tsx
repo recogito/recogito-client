@@ -1,5 +1,4 @@
 import { DocumentCard } from '@components/DocumentCard';
-import { type Select } from '@table-library/react-table-library/select';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import type { LibraryDocument } from './DocumentLibrary';
@@ -9,41 +8,50 @@ import './DocumentGrid.css';
 interface Props {
   disabledIds: string[];
 
-  documents: Document[];
+  documents: LibraryDocument[];
 
   i18n: Translations;
 
-  select: Select<LibraryDocument>;
+  selectedIds: string[];
+
+  onSelectChange(id: string): void;
 }
 
 export const DocumentGrid = (props: Props) => {
-  const { onToggleById } = props.select.fns;
+  const isDisabled = useCallback(
+    (id: string) => props.disabledIds.includes(id),
+    [props.disabledIds]
+  );
 
-  const isDisabled = useCallback((id) => props.disabledIds.includes(id), [props.disabledIds])
+  const isSelected = useCallback(
+    (id: string) => {
+      return props.selectedIds?.includes(id);
+    },
+    [props.selectedIds]
+  );
 
-  const isSelected = useCallback((id) => {
-    const { ids } = props.select.state;
-    return ids?.includes(id);
-  }, [props.select]);
+  const onClick = useCallback(
+    (id: string) => {
+      if (isDisabled(id)) {
+        return;
+      }
 
-  const onClick = useCallback((id) => {
-    if (isDisabled(id)) {
-      return;
-    }
-
-    return onToggleById(id);
-  }, [isDisabled, onToggleById]);
+      return props.onSelectChange(id);
+    },
+    [isDisabled]
+  );
 
   return (
     <div className='document-grid'>
       <div className='grid-container'>
         {props.documents.map((document) => (
+          // @ts-ignore
           <DocumentCard
             className={classNames(
-              { 'selected': isSelected(document.id) },
-              { 'disabled': isDisabled(document.id) }
+              { selected: isSelected(document.id) },
+              { disabled: isDisabled(document.id) }
             )}
-            document={document}
+            document={document as Document}
             key={document.id}
             i18n={props.i18n}
             onClick={() => onClick(document.id)}

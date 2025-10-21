@@ -1,10 +1,9 @@
-import type { Document } from 'src/Types';
 import type { LibraryDocument } from './DocumentLibrary';
 
 export const groupRevisionsByDocument = (
-  collectionDocs: Document[]
+  collectionDocs: LibraryDocument[]
 ): LibraryDocument[] => {
-  const map: { [key: string]: Document[] } = {};
+  const map: { [key: string]: LibraryDocument[] } = {};
   for (let j = 0; j < collectionDocs.length; j++) {
     const doc = collectionDocs[j];
     if (doc.collection_metadata) {
