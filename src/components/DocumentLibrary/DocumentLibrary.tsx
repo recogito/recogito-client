@@ -18,12 +18,7 @@ import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import {
-  CheckCircle,
-  Files,
-  Folder,
-  User,
-} from '@phosphor-icons/react';
+import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { groupRevisionsByDocument } from './utils';
 
@@ -91,6 +86,19 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   >();
   const [publicWarningOpen, setPublicWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // Allow usersnap focus while inside DocumentLibrary Radix dialog.
+  // from https://github.com/radix-ui/primitives/issues/1859#issuecomment-1890182513
+  const handleUsersnapFocus = (e: Event) => {
+    const usersnapWidget = document.querySelector('us-widget');
+    if (usersnapWidget && e.composedPath().includes(usersnapWidget)) {
+      e.preventDefault();
+    }
+  };
+  useEffect(() => {
+    // Disable Radix ui dialog pointer events lockout
+    setTimeout(() => (document.body.style.pointerEvents = ""), 0)    
+  });
 
   const filterLabel = useMemo(() => {
     let value = '';
@@ -264,7 +272,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   useEffect(() => {
     async function getCollections() {
-      const resp = await supabase.from('collections').select('id, name').order('created_at');
+      const resp = await supabase
+        .from('collections')
+        .select('id, name')
+        .order('created_at');
 
       if (!resp.error && resp.data) {
         const arr = [];
@@ -623,7 +634,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
           <Dialog.Overlay className='dialog-overlay' />
-          <Dialog.Content className='dialog-content-doc-lib'>
+          <Dialog.Content
+            className='dialog-content-doc-lib'
+            onInteractOutside={handleUsersnapFocus}
+          >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
                 {t['Add Document']}
