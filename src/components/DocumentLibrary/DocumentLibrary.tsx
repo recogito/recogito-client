@@ -21,6 +21,7 @@ import { CollectionDocumentActions } from './CollectionDocumentActions';
 import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { groupRevisionsByDocument } from './utils';
+import { DialogContent } from '@components/DialogContent';
 
 export type LibraryDocument = Pick<
   Document,
@@ -86,19 +87,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   >();
   const [publicWarningOpen, setPublicWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Allow usersnap focus while inside DocumentLibrary Radix dialog.
-  // from https://github.com/radix-ui/primitives/issues/1859#issuecomment-1890182513
-  const handleUsersnapFocus = (e: Event) => {
-    const usersnapWidget = document.querySelector('us-widget');
-    if (usersnapWidget && e.composedPath().includes(usersnapWidget)) {
-      e.preventDefault();
-    }
-  };
-  useEffect(() => {
-    // Disable Radix ui dialog pointer events lockout
-    setTimeout(() => (document.body.style.pointerEvents = ""), 0)    
-  });
 
   const filterLabel = useMemo(() => {
     let value = '';
@@ -634,9 +622,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
           <Dialog.Overlay className='dialog-overlay' />
-          <Dialog.Content
+          <DialogContent
             className='dialog-content-doc-lib'
-            onInteractOutside={handleUsersnapFocus}
           >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
@@ -861,7 +848,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                 </Button>
               </div>
             </div>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog.Portal>
       </Dialog.Root>
 

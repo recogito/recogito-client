@@ -3,6 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type { Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 interface ConfirmDeleteDialogProps {
   i18n: Translations;
@@ -31,7 +32,7 @@ export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
     <Dialog.Root open={props.open}>
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay doc-lib-confirm-overlay'>
-          <Dialog.Content className='dialog-content doc-lib-confirm-content'>
+          <DialogContent className='dialog-content doc-lib-confirm-content'>
             <Dialog.Title className='dialog-title'>{props.title}</Dialog.Title>
 
             <Dialog.Description className='dialog-description'>
@@ -55,7 +56,7 @@ export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
             >
               <X />
             </button>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog.Overlay>
       </Dialog.Portal>
     </Dialog.Root>

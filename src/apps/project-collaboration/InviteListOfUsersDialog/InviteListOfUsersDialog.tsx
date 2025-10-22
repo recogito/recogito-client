@@ -5,6 +5,7 @@ import { Button } from '@components/Button';
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import papa, { type ParseResult } from 'papaparse';
 import Dropzone from 'react-dropzone';
+import { DialogContent } from '@components/DialogContent';
 
 import './InviteListOfUsersDialog.css';
 
@@ -107,7 +108,7 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='invite-users dialog-content'>
+        <DialogContent className='invite-users dialog-content'>
           <Dialog.Title className='dialog-title'>
             {t['Invite Users to the Project']}
           </Dialog.Title>
@@ -178,7 +179,7 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
               <X size={16} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -6,6 +6,7 @@ import type { Invitation, Translations } from 'src/Types';
 import { deleteInvitation } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { PostgrestError } from '@supabase/supabase-js';
+import { DialogContent } from '@components/DialogContent';
 
 interface DeleteInviteProps {
   i18n: Translations;
@@ -54,7 +55,7 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
 
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay'>
-          <Dialog.Content className='dialog-content'>
+          <DialogContent className='dialog-content'>
             <Dialog.Title className='dialog-title'>
               {t['Confirm Delete Invite']}
             </Dialog.Title>
@@ -92,7 +93,7 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
                 <X />
               </button>
             </Dialog.Close>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog.Overlay>
       </Dialog.Portal>
     </Dialog.Root>

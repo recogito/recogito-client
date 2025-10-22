@@ -3,6 +3,7 @@ import { X, User } from '@phosphor-icons/react';
 import './InviteUserDialog.css';
 import type { Translations } from 'src/Types';
 import { useState } from 'react';
+import { DialogContent } from '@components/DialogContent';
 
 interface InviteUserDialogProps {
   i18n: Translations;
@@ -33,7 +34,7 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
-        <Dialog.Content className='dialog-content'>
+        <DialogContent className='dialog-content'>
           <Dialog.Title className='dialog-title'>
             {t['Invite User']}
           </Dialog.Title>
@@ -81,7 +82,7 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
               <X size={18} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );
