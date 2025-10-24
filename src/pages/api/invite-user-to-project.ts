@@ -88,7 +88,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
             },
           },
           props: {
-            url: `${url.protocol}//${url.host}/img/branding/email/top-logo.svg`,
+            url: `${url.protocol}//${url.host}/img/branding/email/top-logo.png`,
             alt: 'RecogitoStudio',
             linkHref: url.host,
             contentAlignment: 'middle',
