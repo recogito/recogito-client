@@ -18,14 +18,10 @@ import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import {
-  CheckCircle,
-  Files,
-  Folder,
-  User,
-} from '@phosphor-icons/react';
+import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { groupRevisionsByDocument } from './utils';
+import { DialogContent } from '@components/DialogContent';
 
 export type LibraryDocument = Pick<
   Document,
@@ -266,7 +262,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   useEffect(() => {
     async function getCollections() {
-      const resp = await supabase.from('collections').select('id, name').order('created_at');
+      const resp = await supabase
+        .from('collections')
+        .select('id, name')
+        .order('created_at');
 
       if (!resp.error && resp.data) {
         const arr = [];
@@ -625,7 +624,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
           <Dialog.Overlay className='dialog-overlay' />
-          <Dialog.Content className='dialog-content-doc-lib'>
+          <DialogContent
+            className='dialog-content-doc-lib'
+          >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
                 {t['Add Document']}
@@ -849,7 +850,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                 </Button>
               </div>
             </div>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog.Portal>
       </Dialog.Root>
 

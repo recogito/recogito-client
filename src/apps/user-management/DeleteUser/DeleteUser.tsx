@@ -6,6 +6,7 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Translations, UserProfile, ExtendedUserProfile } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 interface DeleteUserProps {
   i18n: Translations;
@@ -63,7 +64,7 @@ export const DeleteUser = (props: DeleteUserProps) => {
 
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay'>
-          <Dialog.Content className='dialog-content'>
+          <DialogContent className='dialog-content'>
             <Dialog.Title className='dialog-title'>
               {isMe ? t['Leave Project?'] : t['Confirm Remove User']}
             </Dialog.Title>
@@ -107,7 +108,7 @@ export const DeleteUser = (props: DeleteUserProps) => {
                 <X />
               </button>
             </Dialog.Close>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog.Overlay>
       </Dialog.Portal>
     </Dialog.Root>

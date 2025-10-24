@@ -5,6 +5,7 @@ import * as RadioGroup from '@radix-ui/react-radio-group';
 import './CreateProjectDialog.css';
 import { Button } from '@components/Button';
 import { useState } from 'react';
+import { DialogContent } from '@components/DialogContent';
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -41,7 +42,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='dialog-content-alt'>
+        <DialogContent className='dialog-content-alt'>
           <div className='create-project-container'>
             <Dialog.Title className='dialog-title'>
               {t['Create Project']}
@@ -231,7 +232,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
               {t['Create']}
             </Button>
           </div>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

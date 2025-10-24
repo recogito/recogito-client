@@ -5,6 +5,7 @@ import { Button } from '@components/Button';
 import { Spinner } from '@components/Spinner';
 import { useIIIFValidation } from './useIIIFValidation';
 import type { Protocol, Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 import './IIIFDialog.css';
 
@@ -59,7 +60,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
     <Dialog.Root open={true}>
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
-        <Dialog.Content className="dialog-content import-iiif-dialog">
+        <DialogContent className="dialog-content import-iiif-dialog">
           <form onSubmit={onSubmit}>
             <Dialog.Title className="dialog-title">{t['Import IIIF']}</Dialog.Title>
               <input 
@@ -109,7 +110,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                 </Button>
               </div>
           </form>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   )

@@ -3,6 +3,7 @@ import { X, Plus, PencilSimple } from '@phosphor-icons/react';
 import './CollectionDialog.css';
 import type { Collection, Translations } from 'src/Types';
 import { useState } from 'react';
+import { DialogContent } from '@components/DialogContent';
 
 interface CollectionDialogProps {
   collection?: Collection;
@@ -44,7 +45,7 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
       )}
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
-        <Dialog.Content className='dialog-content'>
+        <DialogContent className='dialog-content'>
           <Dialog.Title className='dialog-title'>
             {props.collection
               ? t['Edit Collection Name']
@@ -106,7 +107,7 @@ export const CollectionDialog = (props: CollectionDialogProps) => {
               <X size={18} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import type { ExtendedProjectData, Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 import './JoinProjectDialog.css';
 
@@ -24,7 +25,7 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='dialog-content'>
+        <DialogContent className='dialog-content'>
           <Dialog.Title className='dialog-title'>
             {`${t['Join']}: ${props.project.name}`}
           </Dialog.Title>
@@ -56,7 +57,7 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
               <X onClick={props.onClose} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -5,6 +5,7 @@ import * as Label from '@radix-ui/react-label';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useEffect, useState } from 'react';
 import type { TagDefinition, Translations } from 'src/Types.ts';
+import { DialogContent } from '@components/DialogContent';
 import './TagDefinitionDialog.css';
 
 interface Props {
@@ -43,7 +44,7 @@ export const TagDefinitionDialog = (props: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='dialog-content'>
+        <DialogContent className='dialog-content'>
           <Dialog.Title className='dialog-title project-group-dialog-title'>
             <span>{props.title}</span>
             <Dialog.Close asChild>
@@ -89,7 +90,7 @@ export const TagDefinitionDialog = (props: Props) => {
             </div>
 
           </div>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

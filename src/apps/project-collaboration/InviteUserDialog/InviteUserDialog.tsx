@@ -12,6 +12,7 @@ import type {
 } from 'src/Types';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { DialogContent } from '@components/DialogContent';
 
 import './InviteUserDialog.css';
 
@@ -119,7 +120,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='invite-users dialog-content'>
+        <DialogContent className='invite-users dialog-content'>
           <Dialog.Title className='dialog-title'>
             {t['Invite User to Project']}
           </Dialog.Title>
@@ -182,7 +183,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
               <X size={16} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

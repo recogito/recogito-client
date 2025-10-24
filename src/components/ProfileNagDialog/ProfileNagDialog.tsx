@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 import './ProfileNagDialog.css';
 
@@ -20,7 +21,7 @@ export const ProfileNagDialog = (props: ProfileNagDialogProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content
+        <DialogContent
           className='dialog-content'
           aria-label={t['User Profile Message']}
         >
@@ -51,7 +52,7 @@ export const ProfileNagDialog = (props: ProfileNagDialogProps) => {
               <X />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -5,6 +5,7 @@ import { Image, Video } from '@phosphor-icons/react';
 import type { Translations } from 'src/Types';
 import { useQuillEditor } from './QuillEditorRoot';
 import { parseYoutubeURL } from './quillEmbedUtils';
+import { DialogContent } from '@components/DialogContent';
 
 import './QuillEmbedDialog.css';
 
@@ -159,7 +160,7 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay not-annotatable" />
         
-        <Dialog.Content className="dialog-content not-annotatable quill-embed-dialog">
+        <DialogContent className="dialog-content not-annotatable quill-embed-dialog">
           <Dialog.Title className='dialog-title'>
             {props.icon} {props.title}
           </Dialog.Title>
@@ -186,7 +187,7 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
               {t['Save']}
             </button>
           </div>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   )
