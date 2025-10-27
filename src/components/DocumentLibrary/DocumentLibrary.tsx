@@ -265,7 +265,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       const resp = await supabase
         .from('collections')
         .select('id, name')
-        .order('created_at');
+        .order('name');
 
       if (!resp.error && resp.data) {
         const arr = [];
