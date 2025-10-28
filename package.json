@@ -5,9 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "NODE_OPTIONS=--max_old_space_size=7168 && astro build",
-    "build-node": "NODE_OPTIONS=--max_old_space_size=7168 && astro build --config astro.config.node.mjs",
-    "preview-node": "node --max-old-space-size=7168 ./dist/server/entry.mjs",
+    "build": "NODE_OPTIONS=--max_old_space_size=8192 && astro build",
+    "build-node": "NODE_OPTIONS=--max_old_space_size=8192 && astro build --config astro.config.node.mjs",
+    "preview-node": "node --max-old-space-size=8192 ./dist/server/entry.mjs",
     "astro": "astro",
     "postinstall": "node copy-pdf-worker.js"
   },
