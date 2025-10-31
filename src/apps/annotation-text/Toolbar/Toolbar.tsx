@@ -117,7 +117,9 @@ export const Toolbar = (props: ToolbarProps) => {
                 </a>
                 <span>/</span>
                 <div className='document-title in-assignment'>
-                  {props.document.name}
+                  <div>
+                    {props.document.name}
+                  </div>
                 </div>
               </h1>
             </>

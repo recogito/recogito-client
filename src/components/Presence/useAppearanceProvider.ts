@@ -28,7 +28,7 @@ const createAppearenceProvider = (colors: AuthorColors): AppearanceProvider => {
     return { color, label, avatar };
   }
 
-  const removeUser = (user: PresentUser) => {
+  const removeUser = (_: PresentUser) => {
     // nothing to do
   }
   

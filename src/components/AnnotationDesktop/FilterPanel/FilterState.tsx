@@ -53,11 +53,11 @@ export const FilterState = (props: FilterStateProps) => {
   // Note: this may move into the context provider later
   useEffect(() => {
     const filters = [
-      layerSettings?.filter!,
-      contributorSettings?.filter!,
-      tagSettings?.filter!,
-      visibilitySettings?.filter!
-    ].filter(Boolean);
+      layerSettings?.filter,
+      contributorSettings?.filter,
+      tagSettings?.filter,
+      visibilitySettings?.filter
+    ].filter((fn): fn is (a: Annotation) => boolean => Boolean(fn));
 
     if (filters.length > 0) {
       const chained = (a: Annotation) => filters.every(fn => fn(a));

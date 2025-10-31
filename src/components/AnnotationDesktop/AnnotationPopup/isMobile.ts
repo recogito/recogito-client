@@ -3,7 +3,7 @@ export const isMobile = () => {
   if (typeof navigator === 'undefined') return false;
 
   // @ts-ignore
-  var userAgent: string = navigator.userAgent || navigator.vendor || window?.opera;
+  const userAgent: string = navigator.userAgent || navigator.vendor || window?.opera;
 
   if (/android/i.test(userAgent)) 
     return true;

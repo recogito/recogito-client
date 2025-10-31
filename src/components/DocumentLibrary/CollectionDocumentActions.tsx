@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, Fragment } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import type { Translations } from 'src/Types';
@@ -7,10 +7,9 @@ import {
   CheckSquare,
   Square,
   CheckCircle,
-  PencilSimple
+  PencilSimple,
 } from '@phosphor-icons/react';
 import type { LibraryDocument } from './DocumentLibrary';
-import type { Action } from '@table-library/react-table-library/types/common';
 import * as Tooltip from '@radix-ui/react-tooltip';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
@@ -21,7 +20,7 @@ interface CollectionDocumentActionsProps {
   selectedIds: string[];
   revisions: LibraryDocument[];
   onOpenMetadata(): void;
-  onSelectVersion(action: Action, _state: any): void;
+  onSelectVersion(id: string): void;
 }
 
 export const CollectionDocumentActions = (
@@ -59,7 +58,7 @@ export const CollectionDocumentActions = (
             align='start'
           >
             {props.revisions.map((r: LibraryDocument, idx: number) => (
-              <>
+              <Fragment key={idx}>
                 {props.disabledIds.includes(r.id) && (
                   <Item className='dropdown-item' key={idx}>
                     <CheckCircle size={24} />{' '}
@@ -69,21 +68,7 @@ export const CollectionDocumentActions = (
                 {!props.disabledIds.includes(r.id) && (
                   <Item
                     className='dropdown-item'
-                    onSelect={() => {
-                      const type = props.selectedIds?.includes(r.id)
-                        ? 'REMOVE_BY_IDS'
-                        : 'ADD_BY_IDS';
-
-                      props.onSelectVersion(
-                        {
-                          type: type,
-                          payload: {
-                            ids: [r.id],
-                          },
-                        },
-                        {}
-                      );
-                    }}
+                    onSelect={() => props.onSelectVersion(r.id)}
                     key={idx}
                   >
                     {props.selectedIds?.includes(r.id) ? (
@@ -98,7 +83,7 @@ export const CollectionDocumentActions = (
                   <PencilSimple size={16} />{' '}
                   <span>{t['View document metadata']}</span>
                 </Item>
-              </>
+              </Fragment>
             ))}
           </Content>
         </Portal>

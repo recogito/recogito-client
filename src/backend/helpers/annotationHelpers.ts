@@ -113,7 +113,7 @@ export const getAnnotations = (
       } else {
         return ({
           error,
-          data: data.map(({ targets, created_at, is_private, bodies, ...annotation }) => ({
+          data: data.map(({ targets, created_at: _, is_private, bodies, ...annotation }) => ({
             ...annotation,
             target: crosswalkTarget(targets[0]),
             bodies: bodies.map(crosswalkBody),

@@ -9,16 +9,10 @@ import type { Translations, Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Column } from '@table-library/react-table-library/compact';
-import {
-  useRowSelect,
-  SelectTypes,
-  SelectClickTypes,
-} from '@table-library/react-table-library/select';
 import './DocumentLibrary.css';
 import type { TableNode } from '@table-library/react-table-library/types/table';
 import { useTheme } from '@table-library/react-table-library/theme';
 import { getTheme } from '@table-library/react-table-library/baseline';
-import type { Action } from '@table-library/react-table-library/types/common';
 import { useSort } from '@table-library/react-table-library/sort';
 import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
@@ -26,6 +20,8 @@ import { DocumentTable } from './DocumentTable';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
 import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
+import { groupRevisionsByDocument } from './utils';
+import { DialogContent } from '@components/DialogContent';
 
 export type LibraryDocument = Pick<
   Document,
@@ -44,6 +40,8 @@ export type LibraryDocument = Pick<
   revision_count?: number;
   is_latest?: boolean;
   revisions?: LibraryDocument[];
+  is_document_group?: boolean;
+  document_group_id?: string;
 };
 
 export interface DocumentLibraryProps {
@@ -54,16 +52,18 @@ export interface DocumentLibraryProps {
   dataDirty: boolean;
   clearDirtyFlag(): void;
   onCancel(): void;
-  UploadActions: React.ReactNode;
+  UploadActions?: React.ReactNode;
   onDocumentsSelected(documentIds: string[]): void;
   onUpdated(document: Document): void;
   onDeleteFromLibrary?(document: Document): void;
   onTogglePrivate(document: Document): void;
   onError(error: string): void;
   isAdmin: boolean | undefined;
+  hideCollections?: boolean;
+  readOnly?: boolean;
 }
 
-const DOCUMENTS_PER_FETCH = 500;
+export const DOCUMENTS_PER_FETCH = 500;
 
 export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const { t } = props.i18n;
@@ -76,7 +76,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const [documents, setDocuments] = useState<LibraryDocument[] | null>(null);
   const [collections, setCollections] = useState<
-    { collection: Collection; documents: Document[] }[]
+    { collection: Collection; documents: LibraryDocument[] }[]
   >([]);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [search, setSearch] = useState('');
@@ -106,8 +106,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   }, [activeCollection, collections, view]);
 
   const allowEditMetadata = useCallback(
-    (item: any) => item.created_by === props.user.id,
-    [props.user]
+    (item: any) => item.created_by === props.user.id && !props.readOnly,
+    [props.user, props.readOnly]
   );
 
   const handleTogglePrivate = (document: Document) => {
@@ -131,7 +131,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     setPublicWarningOpen(false);
   };
 
-  const matchesSearch = (document: Document) => {
+  const matchesSearch = (document: LibraryDocument) => {
     const author =
       document.meta_data?.meta && Array.isArray(document.meta_data.meta)
         ? document.meta_data.meta.find(
@@ -181,7 +181,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     getTheme(),
     {
       Table: `
-        --data-table-library_grid-template-columns:  50px 350px 200px repeat(3, minmax(0, 1fr)) 60px !important;
+        --data-table-library_grid-template-columns:  50px 325px 200px repeat(3, minmax(0, 1fr)) 60px !important;
       `,
       HeaderRow: `
         font-size: 13px;
@@ -226,7 +226,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           const docsResp = await supabase
             .from('documents')
             .select(
-              'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private, collection_id, collection_metadata'
+              'id,created_at,created_by,updated_at,updated_by,name,bucket_id,content_type,meta_data, is_private, collection_id, collection_metadata, is_document_group, document_group_id'
             )
             .range(start, start + DOCUMENTS_PER_FETCH - 1);
 
@@ -262,7 +262,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   useEffect(() => {
     async function getCollections() {
-      const resp = await supabase.from('collections').select('id, name');
+      const resp = await supabase
+        .from('collections')
+        .select('id, name')
+        .order('name');
 
       if (!resp.error && resp.data) {
         const arr = [];
@@ -270,59 +273,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           // Find all members of this collection
           const collectionDocs =
             documents?.filter((d) => d.collection_id === resp.data[i].id) || [];
-          const map: { [key: string]: Document[] } = {};
 
           // collection documents can have multiple versions.  Collect them up
-          for (let j = 0; j < collectionDocs.length; j++) {
-            const doc = collectionDocs[j];
-            if (doc.collection_metadata) {
-              if (!map[doc.collection_metadata.document_id]) {
-                map[doc.collection_metadata.document_id] = [];
-              }
-
-              map[doc.collection_metadata.document_id].push(doc);
-            }
-          }
-
-          // Sort versions so the highest revision is in front
-          const docs = [];
-          for (const key in map) {
-            map[key].sort((a, b) => {
-              if (a.collection_metadata && b.collection_metadata) {
-                return (
-                  b.collection_metadata.revision_number -
-                  a.collection_metadata.revision_number
-                );
-              }
-              return 0;
-            });
-            const obj: LibraryDocument = {
-              ...map[key][0],
-              revisions: [],
-              revision_count: 0,
-            };
-            for (let k = 0; k < map[key].length; k++) {
-              const date = new Date(map[key][k].created_at as string);
-              obj.revisions?.push({
-                ...map[key][k],
-                date_number: date.getTime(),
-                published_date: date.toLocaleDateString(),
-              });
-            }
-            obj.revisions?.sort(
-              (a, b) => (b.date_number || 0) - (a.date_number || 0)
-            );
-
-            if (obj.revisions && obj.revisions.length > 0) {
-              obj.revisions[0].is_latest = true;
-              if (obj.id === obj.revisions[0].id) {
-                obj.is_latest = true;
-              }
-            }
-
-            obj.revision_count = obj.revisions ? obj.revisions.length : 0;
-            docs.push(obj);
-          }
+          const docs = groupRevisionsByDocument(collectionDocs);
           arr.push({
             collection: resp.data[i],
             documents: docs,
@@ -365,14 +318,14 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) => (
         <>
           <DocumentActions
-            allowEditMetadata={allowEditMetadata(item)}
+            allowEditMetadata={!props.readOnly && allowEditMetadata(item)}
             i18n={props.i18n}
             onDelete={() =>
               props.onDeleteFromLibrary
                 ? props.onDeleteFromLibrary(item as Document)
                 : {}
             }
-            showPrivate={true}
+            showPrivate={!props.readOnly}
             isPrivate={item.is_private}
             onOpenMetadata={() => {
               setCurrentDocument(item as Document);
@@ -428,7 +381,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const columnsCollection: Column<TableNode>[] = [
     {
       label: t['Title'],
-      renderCell: (item) => item.name,
+      renderCell: (item) =>
+        item.document_group_id && item.document_group_id !== '' ? (
+          <div style={{ paddingLeft: 15 }}>{item.name}</div>
+        ) : (
+          item.name
+        ),
       select: true,
       pinLeft: true,
       sort: { sortKey: 'TITLE' },
@@ -480,17 +438,19 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       label: '',
       renderCell: (item) => (
         <>
-          <CollectionDocumentActions
-            i18n={props.i18n}
-            disabledIds={props.disabledIds}
-            selectedIds={selectedIds}
-            onOpenMetadata={() => {
-              setCurrentDocument(item as Document);
-              setMetaOpen(true);
-            }}
-            onSelectVersion={onSelectChange}
-            revisions={item.revisions}
-          />
+          {!item.is_document_group && (
+            <CollectionDocumentActions
+              i18n={props.i18n}
+              disabledIds={props.disabledIds}
+              selectedIds={selectedIds}
+              onOpenMetadata={() => {
+                setCurrentDocument(item as Document);
+                setMetaOpen(true);
+              }}
+              onSelectVersion={onSelectChange}
+              revisions={item.revisions}
+            />
+          )}
         </>
       ),
     },
@@ -519,58 +479,45 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       )
     : [];
 
-  const selectAll = useRowSelect(
-    { nodes: allDocuments },
-    {
-      onChange: onSelectChange,
-    },
-    {
-      rowSelect: SelectTypes.MultiSelect,
-      clickType: SelectClickTypes.ButtonClick,
-    }
-  );
+  function onSelectChange(id: string) {
+    if (documents) {
+      const type = selectedIds.includes(id) ? 'REMOVE_BY_ID' : 'ADD_BY_ID';
+      // Handle any selected group documents
+      let newIds: string[] = [];
+      const doc = documents.find((d) => d.id === id);
 
-  const selectMine = useRowSelect(
-    { nodes: myDocuments },
-    {
-      onChange: onSelectChange,
-    },
-    {
-      rowSelect: SelectTypes.MultiSelect,
-      clickType: SelectClickTypes.ButtonClick,
-    }
-  );
+      if (doc) {
+        if (!doc.is_document_group) {
+          newIds.push(id);
+          if (type === 'REMOVE_BY_ID' && doc.document_group_id) {
+            if (selectedIds.includes(doc.document_group_id)) {
+              newIds.push(doc.document_group_id);
+            }
+          } else if (type === 'ADD_BY_ID' && doc.document_group_id) {
+            const groupDocIds = documents
+              .filter((d) => d.document_group_id === doc.document_group_id)
+              .map((d) => d.id);
 
-  const selectCollection = useRowSelect(
-    {
-      nodes: activeCollection
-        ? collections[activeCollection - 1].documents
-        : [],
-    },
-    {
-      onChange: onSelectChange,
-    },
-    {
-      rowSelect: SelectTypes.MultiSelect,
-      clickType: SelectClickTypes.ButtonClick,
-    }
-  );
-
-  function onSelectChange(action: Action, _state: any) {
-    if (action.type === 'ADD_BY_IDS') {
-      const ids = [...selectedIds, ...action.payload.ids];
-      setSelectedIds(ids);
-    } else if (action.type === 'SET') {
-      setSelectedIds(action.payload.ids);
-    } else if (action.type === 'REMOVE_BY_IDS') {
-      const ids = selectedIds.filter((i) => i !== action.payload.ids[0]);
-      setSelectedIds(ids);
-    } else if (action.type === 'ADD_BY_ID') {
-      const ids = [...selectedIds, action.payload.id];
-      setSelectedIds(ids);
-    } else if (action.type === 'REMOVE_BY_ID') {
-      const ids = selectedIds.filter((i) => i !== action.payload.id);
-      setSelectedIds(ids);
+            if (
+              groupDocIds.every((v) => [...selectedIds, doc.id].includes(v))
+            ) {
+              newIds.push(doc.document_group_id);
+            }
+          }
+        } else {
+          const groupDocs = documents?.filter(
+            (d) => d.document_group_id === id
+          );
+          newIds = [...newIds, ...groupDocs.map((d) => d.id), id];
+        }
+      }
+      if (type === 'ADD_BY_ID') {
+        const ids = [...selectedIds, ...newIds];
+        setSelectedIds(ids);
+      } else if (type === 'REMOVE_BY_ID') {
+        const ids = selectedIds.filter((i) => !newIds.includes(i));
+        setSelectedIds(ids);
+      }
     }
   }
 
@@ -619,7 +566,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     {},
     {
       sortFns: {
-        TITLE: (array) => array.sort((a, b) => a.name.localeCompare(b.name)),
+        TITLE: (array) =>
+          array.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          ) as LibraryDocument[],
         AUTHOR: (array) =>
           array.sort((a, b) => {
             const aAuthorFind =
@@ -638,13 +588,15 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             const bAuthor = bAuthorFind ? bAuthorFind.value : '';
 
             return aAuthor.localeCompare(bAuthor);
-          }),
+          }) as LibraryDocument[],
         TYPE: (array) =>
           array.sort((a, b) =>
             (a.content_type || '').localeCompare(b.content_type || '')
-          ),
+          ) as LibraryDocument[],
         REVISION: (array) =>
-          array.sort((a, b) => a.revision_count - b.revision_count),
+          array.sort(
+            (a, b) => a.revision_count - b.revision_count
+          ) as LibraryDocument[],
       },
     }
   );
@@ -654,13 +606,27 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     props.onCancel();
   };
 
+  const handleSubmit = () => {
+    // Filter out any document groups
+    const ids: string[] = [];
+    selectedIds.forEach((id) => {
+      const doc = documents?.find((d) => d.id === id);
+      if (!doc?.is_document_group) {
+        ids.push(id);
+      }
+    });
+    props.onDocumentsSelected(ids);
+  };
+
   return (
     <>
       {loading && props.open && <LoadingOverlay />}
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
           <Dialog.Overlay className='dialog-overlay' />
-          <Dialog.Content className='dialog-content-doc-lib'>
+          <DialogContent
+            className='dialog-content-doc-lib'
+          >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
                 {t['Add Document']}
@@ -682,7 +648,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       }}
                     >
                       <Files />
-                      {t['All Documents']}
+                      <span className='name'>{t['All Documents']}</span>
                       <span
                         className={
                           allDocuments.length === 0 ? 'badge disabled' : 'badge'
@@ -699,7 +665,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       }}
                     >
                       <User />
-                      {t['My Documents']}
+                      <span className='name'>{t['My Documents']}</span>
                       <span
                         className={
                           myDocuments.length === 0 ? 'badge disabled' : 'badge'
@@ -711,7 +677,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   </ul>
                 </section>
 
-                {collections && (
+                {collections && !props.hideCollections && (
                   <section className='doc-lib-header-bottom collections'>
                     <h3>{t['Collections']}</h3>
 
@@ -731,7 +697,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                           key={idx}
                         >
                           <Folder />
-                          {c.collection.name}
+                          <span className='name'>{c.collection.name}</span>
                           <span
                             className={
                               c.documents.length === 0
@@ -739,7 +705,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                                 : 'badge'
                             }
                           >
-                            {c.documents.length}
+                            {
+                              c.documents.filter((d) => !d.is_document_group)
+                                .length
+                            }
                           </span>
                         </li>
                       ))}
@@ -780,10 +749,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         data={{ nodes: myDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectMine}
+                        onSelectChange={onSelectChange}
                         theme={themeMine}
                         columns={columnsMine}
                         sort={sortMine}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'mine' &&
@@ -793,7 +763,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         disabledIds={props.disabledIds}
                         documents={myDocuments}
                         i18n={props.i18n}
-                        select={selectMine}
+                        selectedIds={selectedIds}
+                        onSelectChange={onSelectChange}
                       />
                     )}
                   {view === 'mine' &&
@@ -808,10 +779,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         data={{ nodes: allDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectAll}
+                        onSelectChange={onSelectChange}
                         theme={themeAll}
                         columns={columnsAll}
                         sort={sortAll}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'all' &&
@@ -821,7 +793,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         disabledIds={props.disabledIds}
                         documents={allDocuments}
                         i18n={props.i18n}
-                        select={selectAll}
+                        onSelectChange={onSelectChange}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'all' &&
@@ -836,10 +809,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         data={{ nodes: collectionDocuments }}
                         disabledIds={props.disabledIds}
                         i18n={props.i18n}
-                        select={selectCollection}
+                        onSelectChange={onSelectChange}
                         theme={themeCollection}
                         columns={columnsCollection}
                         sort={sortCollection}
+                        hasGroups={true}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'collection' &&
@@ -849,7 +824,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         disabledIds={props.disabledIds}
                         documents={collectionDocuments}
                         i18n={props.i18n}
-                        select={selectCollection}
+                        onSelectChange={onSelectChange}
+                        selectedIds={selectedIds}
                       />
                     )}
                   {view === 'collection' &&
@@ -868,13 +844,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   type='submit'
                   className='primary'
                   disabled={selectedIds.length === 0}
-                  onClick={() => props.onDocumentsSelected(selectedIds)}
+                  onClick={() => handleSubmit()}
                 >
                   {t['Add Selected']}
                 </Button>
               </div>
             </div>
-          </Dialog.Content>
+          </DialogContent>
         </Dialog.Portal>
       </Dialog.Root>
 

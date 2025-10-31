@@ -18,6 +18,7 @@ import type {
   Translations,
   UserProfile,
 } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 import './AssignmentWizard.css';
 
@@ -164,7 +165,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
         <VisuallyHidden.Root>
           <Dialog.Title>{t['Assignments Wizard']}</Dialog.Title>
         </VisuallyHidden.Root>
-        <Dialog.Content
+        <DialogContent
           className='dialog-content assignment-wizard'
           onPointerDownOutside={onPointerDownOutside}
         >
@@ -311,7 +312,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
               </button>
             </Dialog.Close>
           )}
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

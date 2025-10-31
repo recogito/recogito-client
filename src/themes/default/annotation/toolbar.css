@@ -23,8 +23,12 @@
   justify-content: flex-end;
 }
 
+.anno-toolbar-slot-right {
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
 .anno-toolbar-presence {
-  max-width: 12vw;
   overflow: hidden;
 }
 

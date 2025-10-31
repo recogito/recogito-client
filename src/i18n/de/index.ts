@@ -6,6 +6,7 @@ import authForgotPassword from './auth-forgot-password.json';
 import authLogin from './auth-login.json';
 import authResetPassword from './auth-reset-password.json';
 import branding from './branding.json';
+import collectionManagement from './collection-management.json';
 import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
@@ -19,37 +20,50 @@ import projectSidedbar from './project-sidebar.json';
 import userManagement from './user-management.json';
 import projectRequest from './project-request.json';
 import email from './email.json';
+import a11y from './a11y.json';
 
 export default {
-  'annotation-common': annotationCommon,
+  'annotation-common': { ...annotationCommon, ...a11y },
   'annotation-image': {
     ...annotationCommon,
     ...annotationImage,
     ...accountMenu,
+    ...a11y,
     ...notifications,
   },
   'annotation-text': {
     ...annotationCommon,
     ...annotationText,
     ...accountMenu,
+    ...a11y,
     ...notifications,
   },
-  'auth-forgot-password': authForgotPassword,
-  'auth-login': authLogin,
+  'auth-forgot-password': { ...authForgotPassword, ...a11y },
+  'auth-login': { ...authLogin, ...a11y },
   'auth-reset-password': authResetPassword,
-  branding: branding,
-  'dashboard-account': { ...dashboardAccount, ...accountMenu },
+  branding: { ...branding, a11y },
+  'collection-management': { 
+    ...projectHome,
+    ...projectSidedbar,
+    ...accountMenu,
+    ...notifications,
+    ...collectionManagement,
+    ...a11y,
+  },
+  'dashboard-account': { ...dashboardAccount, ...accountMenu, ...a11y },
   'dashboard-projects': {
     ...dashboardProjects,
     ...notifications,
     ...accountMenu,
+    ...a11y,
   },
-  error: error,
-  'project-assignment-details': projectAssignmentDetails,
-  'project-assignments': projectAssignments,
+  error: { ...error, ...a11y },
+  'project-assignment-details': { ...projectAssignmentDetails, ...a11y },
+  'project-assignments': { ...projectAssignments, ...a11y },
   'project-collaboration': {
     ...projectCollaboration,
     ...accountMenu,
+    ...a11y,
     ...notifications,
   },
   'project-home': {
@@ -58,15 +72,17 @@ export default {
     ...notifications,
     ...projectSidedbar,
     ...projectAssignments,
+    ...a11y
   },
   'project-settings': {
     ...projectSettings,
     ...dashboardProjects,
     ...accountMenu,
     ...notifications,
+    ...a11y
   },
-  'project-sidebar': { ...projectSidedbar, ...accountMenu },
-  'user-management': userManagement,
-  'project-request': { ...projectRequest, ...accountMenu },
-  email: email,
+  'project-sidebar': { ...projectSidedbar, ...accountMenu, ...a11y },
+  'user-management': { ...userManagement, ...accountMenu, ...a11y },
+  'project-request': { ...projectRequest, ...accountMenu, ...a11y },
+  email: { ...email, ...a11y },
 };

@@ -1,12 +1,16 @@
 import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
-import type { Document, ProjectDocument } from 'src/Types';
+import type { CollectionMetadata, Document, ProjectDocument } from 'src/Types';
+import { DOCUMENTS_PER_FETCH } from '@components/DocumentLibrary';
 
 export const createDocument = (
   supabase: SupabaseClient,
   name: string,
+  is_private: boolean,
   content_type?: string,
-  meta_data?: object
+  meta_data?: object,
+  collection_id?: string | null,
+  collection_metadata?: CollectionMetadata | null,
 ): Response<Document> =>
   supabase
     .from('documents')
@@ -15,6 +19,9 @@ export const createDocument = (
       content_type,
       bucket_id: content_type ? 'documents' : undefined,
       meta_data,
+      is_private,
+      collection_id,
+      collection_metadata,
     })
     .select()
     .single()
@@ -133,3 +140,53 @@ export const getDocument = (
     .eq('id', documentId)
     .single()
     .then(({ error, data }) => ({ error, data: data as Document }));
+
+export const getCollectionDocuments = (
+  supabase: SupabaseClient,
+  collectionId: string
+): Response<Document[]> =>
+  supabase
+    .from('documents')
+    .select('*', { count: 'exact', head: true })
+    .eq('collection_id', collectionId)
+    .then(({ count, error }) => {
+      if (error) {
+        return { error, data: [] };
+      }
+      let start = 0;
+      const iterations = Math.ceil((count || 0) / DOCUMENTS_PER_FETCH);
+      const fetches = [];
+
+      for (let i = 0; i < iterations; i++) {
+        fetches.push(
+          supabase
+            .from('documents')
+            .select(
+              `
+              id,
+              created_at,
+              created_by,
+              updated_at,
+              updated_by,
+              name,
+              bucket_id,
+              content_type,
+              meta_data,
+              is_private,
+              collection_id,
+              collection_metadata
+              `
+            )
+            .eq('collection_id', collectionId)
+            .range(start, start + DOCUMENTS_PER_FETCH - 1)
+        );
+        start += DOCUMENTS_PER_FETCH;
+      }
+
+      return Promise.all(fetches).then((responses) => {
+        return {
+          data: responses.flatMap((r) => r.data) as Document[],
+          error: responses.find((r) => r.error)?.error || null,
+        };
+      });
+    });

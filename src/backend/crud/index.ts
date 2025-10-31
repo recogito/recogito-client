@@ -1,4 +1,5 @@
 export * from './contexts';
+export * from './collections';
 export * from './documents';
 export * from './groupUsers';
 export * from './layers';

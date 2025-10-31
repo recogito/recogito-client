@@ -83,7 +83,7 @@ export const Autosuggest = (props: AutosuggestProps) => {
     } else if (evt.key === 'Escape') {
       setSuggestions([]);
       setHighlightedIndex(undefined);
-      props.onCancel && props.onCancel();
+      props.onCancel?.();
     } else {
       // Neither enter nor cancel
       if (suggestions.length > 0) {
@@ -114,7 +114,7 @@ export const Autosuggest = (props: AutosuggestProps) => {
 
   const onChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = evt.target;
-    props.onChange({ label: value });
+    props.onChange({ label: value });
 
     // Typing on the input resets the highlight
     setHighlightedIndex(undefined);

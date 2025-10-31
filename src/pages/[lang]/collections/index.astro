@@ -1,0 +1,43 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import { getInstanceCollections } from '@backend/crud';
+import { getMyProfile } from '@backend/crud/profiles';
+import { CollectionManagement } from '@apps/collection-management';
+
+const lang = getLangFromUrl(Astro.url);
+
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+
+const { error, data } = await getMyProfile(supabase);
+
+if (error) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
+
+if (!data.isOrgAdmin) {
+  return Astro.redirect(`/${lang}/projects`);
+}
+
+const me = data;
+
+const { error: collectionsError, data: collections } =
+  await getInstanceCollections(supabase);
+
+if (collectionsError) {
+  console.log(collectionsError);
+  const error = await fetch(`${Astro.url}/500`);
+  return new Response(error.body, { headers: error.headers, status: 500 });
+}
+
+---
+
+<BaseLayout title='Collection Management'>
+  <CollectionManagement
+    i18n={getTranslations(Astro.request, 'collection-management')}
+    client:only='react'
+    collections={collections}
+    me={me}
+  />
+</BaseLayout>

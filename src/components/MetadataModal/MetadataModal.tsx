@@ -7,6 +7,8 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocumentMetadata } from '@backend/crud';
 import { Button } from '@components/Button';
 import type { Document, Translations } from 'src/Types';
+import type { LibraryDocument } from '@components/DocumentLibrary';
+import { DialogContent } from '@components/DialogContent';
 import './MetadataModal.css';
 
 interface Item {
@@ -15,7 +17,7 @@ interface Item {
 }
 
 interface MetadataModalProps {
-  document: Document;
+  document: Document | LibraryDocument;
 
   i18n: Translations;
 
@@ -111,7 +113,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='dialog-content metadata-modal'>
+        <DialogContent className='dialog-content metadata-modal'>
           <Dialog.Title className='dialog-title'>
             <DocumentTitle
               onChange={(value) => setTitle(value)}
@@ -223,7 +225,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
               <X size={16} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

@@ -40,6 +40,7 @@ export const AnnotatedPDF = memo((props: AnnotatedPDFProps) => {
       annotatingEnabled={!props.isLocked}
       filter={props.filter}
       style={props.style}
+      mergeHighlights={{ verticalTolerance: 8, horizontalTolerance: 25 }}
       onRendered={props.onRendered} />
   )
   
@@ -51,3 +52,5 @@ export const AnnotatedPDF = memo((props: AnnotatedPDFProps) => {
     && prev.onError === next.onError
     && prev.onRendered === next.onRendered;
 });
+
+AnnotatedPDF.displayName = 'AnnotatedPDF';

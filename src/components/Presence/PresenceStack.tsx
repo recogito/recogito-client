@@ -20,7 +20,7 @@ interface PresenceStackProps {
 
 export const PresenceStack = (props: PresenceStackProps) => {
 
-  const limit = props.limit || 5;
+  const limit = props.limit || 4;
 
   const present = props.showMe ? 
     props.present : props.present.filter(u => !isMe(u));
@@ -81,13 +81,13 @@ export const PresenceStack = (props: PresenceStackProps) => {
               sideOffset={5}>
               <ul>
                 {present.map(user => (
-                  <li>
-                    <Avatar 
+                  <li key={user.id}>
+                    <Avatar
                       id={user.id}
                       name={user.appearance.label}
                       color={user.appearance.color} 
-                      avatar={user.appearance.avatar} />
-                    
+                      avatar={user.appearance.avatar}
+                    />
                     <span>{getDisplayName(user)}</span>
                   </li>                  
                 ))}

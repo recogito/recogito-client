@@ -75,7 +75,7 @@ export const QuillEditor = (props: QuillEditorProps) => {
         // Note that this will re-trigger onChange
         quill.setContents({ ops: filteredOps } as Delta);
 
-      props.onChange && props.onChange(quill.getContents());
+      props.onChange?.(quill.getContents());
     }
 
     const onPaste = (evt: ClipboardEvent) => {

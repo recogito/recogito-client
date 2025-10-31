@@ -7,6 +7,7 @@ import { updateProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import type { ExtendedProjectData, Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 interface ProjectDetailsFormProps {
 
@@ -77,7 +78,7 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className="dialog-overlay" />
 
-        <Dialog.Content className="invite-users dialog-content">
+        <DialogContent className="invite-users dialog-content">
           <Dialog.Title className="dialog-title">
             {t['Project Details']}
           </Dialog.Title>
@@ -128,7 +129,7 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
               {t['Cancel']}
             </button>
           </form>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   )

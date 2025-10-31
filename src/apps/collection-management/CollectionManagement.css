@@ -1,0 +1,37 @@
+.collection-management {
+  box-sizing: context-box;
+}
+.collection-management-content {
+  padding: 20px 40px;
+  clear: both;
+}
+
+.collection-management-header {
+  box-sizing: border-box;
+  padding: 70px 40px 0 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.collection-management-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collection-management-search {
+  margin-left: 10px;
+  z-index: 100;
+  position: relative;
+}
+
+.collection-management-table {
+  height: calc(100vh - 260px);
+  overflow-y: auto;
+  margin-top: 10px;
+}

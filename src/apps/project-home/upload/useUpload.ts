@@ -31,17 +31,19 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
   }, [uploads]);
 
   const onProgress = (id: string, progress: number, status: UploadStatus) => {
-    setUploads((prev) =>
-      prev.map((upload) =>
-        upload.id === id
-          ? {
-              ...upload,
-              progress,
-              status,
-            }
-          : upload
-      )
-    );
+    if (progress < 100) {
+      setUploads((prev) =>
+        prev.map((upload) =>
+          upload.id === id
+            ? {
+                ...upload,
+                progress,
+                status,
+              }
+            : upload
+        )
+      );
+    }
   };
 
   const onSuccess = (id: string, document: Document) => {
@@ -89,7 +91,10 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
         initDocument(
           supabase,
           i.name,
-          i.projectId,
+          i.isPrivate,
+          i.projectId || null,
+          i.collectionId || null,
+          i.collectionMetadata || null,
           (progress) => onProgress(id, progress, 'uploading'),
           i.file,
           i.url,

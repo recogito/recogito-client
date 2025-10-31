@@ -1,6 +1,6 @@
 import type { Filter } from '@annotorious/react';
 
-export interface FilterSetting<T extends unknown> {
+export interface FilterSetting<T> {
 
   state: T;
   

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { Question, SignOut, Sliders, Users } from '@phosphor-icons/react';
+import { Folder, Question, SignOut, Sliders, Users } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import type { MyProfile, Translations } from 'src/Types';
 
@@ -99,7 +99,7 @@ export const AccountActions = (props: AccountProps) => {
             {helpRedirect && (
               <Item className='dropdown-item'>
                 <Question size={16} />
-                <a href={helpRedirect} target='_blank' aria-label={t['help']}>
+                <a href={helpRedirect} target='_blank' aria-label={t['help']} rel='noreferrer'>
                   {t['Help']}
                 </a>
               </Item>
@@ -128,6 +128,16 @@ export const AccountActions = (props: AccountProps) => {
                   <Users size={16} />
                   <a href={`/${lang}/users`} aria-label={t['user management']}>
                     {t['Users']}
+                  </a>
+                </Item>
+
+                <Item
+                  className='dropdown-item'
+                  onSelect={goto(`/${lang}/collections`)}
+                >
+                  <Folder size={16} />
+                  <a href={`/${lang}/collections`} aria-label={t['collection management']}>
+                    {t['Collections']}
                   </a>
                 </Item>
               </>

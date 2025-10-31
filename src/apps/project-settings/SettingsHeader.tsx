@@ -19,25 +19,19 @@ export const SettingsHeader = (props: SettingsHeaderProps) => {
           <ul className='settings-header-header-tabs'>
             <li
               className={props.currentTab === 'settings' ? 'active' : undefined}
-              onClick={() => {
-                props.onSwitchTab && props.onSwitchTab('settings');
-              }}
+              onClick={() => props.onSwitchTab?.('settings')}
             >
               <button>{t['Project Settings']}</button>
             </li>
             <li
               className={props.currentTab === 'tagging' ? 'active' : undefined}
-              onClick={() => {
-                props.onSwitchTab && props.onSwitchTab('tagging');
-              }}
+              onClick={() => props.onSwitchTab?.('tagging')}
             >
               <button>{t['Tagging']}</button>
             </li>
             <li
               className={props.currentTab === 'plugins' ? 'active' : undefined}
-              onClick={() => {
-                props.onSwitchTab && props.onSwitchTab('plugins');
-              }}
+              onClick={() => props.onSwitchTab?.('plugins')}
             >
               <button>{t['Plugins']}</button>
             </li>

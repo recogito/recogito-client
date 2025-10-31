@@ -37,7 +37,6 @@ export const Notifications = (props: NotificationsProps) => {
 
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [repeat, setRepeat] = useState(1);
 
   const remaining = invitations.filter((i) => !i.ignored);
 

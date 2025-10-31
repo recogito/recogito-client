@@ -1,6 +1,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { Invitation, Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 import './InvitationConfirmation.css';
 
@@ -22,7 +23,7 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='invitation-confirmation dialog-content'>
+        <DialogContent className='invitation-confirmation dialog-content'>
           <div className='success-icon'>
             <AnimatedCheck size={36} />
           </div>
@@ -60,7 +61,7 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
           <Dialog.Close className='close' asChild>
             <button className='primary'>Ok</button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

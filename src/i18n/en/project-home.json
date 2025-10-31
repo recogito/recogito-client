@@ -84,5 +84,11 @@
   "Accept End User License Agreement": "Accept End User License Agreement",
   "I have read and accept EULA": "I have read and accept EULA",
   "Read EULA": "Read EULA",
-  "uploaded_content_warning": "Uploaded documents and images should comply with all applicable copyright rules and regulations. Please review and accept the linked End User License Agreement (EULA) before uploading any content."
+  "uploaded_content_warning": "Uploaded documents and images should comply with all applicable copyright rules and regulations. Please review and accept the linked End User License Agreement (EULA) before uploading any content.",
+  "From existing project": "From existing project",
+  "Import an existing document from a project.": "Import an existing document from a project.",
+  "Copied": "Copied",
+  "Document copied successfully.": "Document copied successfully.",
+  "Could not copy file contents of ${name}.": "Could not copy file contents of ${name}.",
+  "Could not copy documents into collection.": "Could not copy documents into collection."
 }

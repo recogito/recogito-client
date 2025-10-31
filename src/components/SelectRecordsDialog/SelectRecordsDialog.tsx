@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react';
 import type { Translations } from 'src/Types.ts';
+import { DialogContent } from '@components/DialogContent';
 import './SelectRecordsDialog.css';
 
 interface Column {
@@ -99,7 +100,7 @@ export const SelectRecordsDialog = (props: Props) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='dialog-content select-tag-definitions'>
+        <DialogContent className='dialog-content select-tag-definitions'>
           <Dialog.Title asChild className='dialog-title'>
             <h1>{props.title}</h1>
           </Dialog.Title>
@@ -170,7 +171,7 @@ export const SelectRecordsDialog = (props: Props) => {
                           </Checkbox.Root>
                         </td>
                         {props.columns.map((column) => (
-                          <td>{column.resolve(record)}</td>
+                          <td key={`${record.id}-${column.name}`}>{column.resolve(record)}</td>
                         ))}
                       </tr>
                     ))}
@@ -192,7 +193,7 @@ export const SelectRecordsDialog = (props: Props) => {
               <span>{t['Add to Selected']}</span>
             </Button>
           </div>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );

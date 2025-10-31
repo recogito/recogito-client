@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { Envelope, UsersFour, X } from '@phosphor-icons/react';
+import { Envelope, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
 import papa, { type ParseResult } from 'papaparse';
 import Dropzone from 'react-dropzone';
+import { DialogContent } from '@components/DialogContent';
 
 import './InviteListOfUsersDialog.css';
 
@@ -30,17 +31,9 @@ interface InviteListOfUsersProps {
 }
 
 export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
-  const { lang, t } = props.i18n;
-
-  const { me } = props;
+  const { t } = props.i18n;
 
   const [csv, setCsv] = useState<InviteListEntry[] | undefined>();
-
-  const invitedBy = me.nickname
-    ? me.nickname
-    : me.first_name || me.last_name
-    ? [me.first_name, me.last_name].join(' ')
-    : undefined;
 
   useEffect(() => {
     setCsv(undefined);
@@ -115,7 +108,7 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
 
-        <Dialog.Content className='invite-users dialog-content'>
+        <DialogContent className='invite-users dialog-content'>
           <Dialog.Title className='dialog-title'>
             {t['Invite Users to the Project']}
           </Dialog.Title>
@@ -186,7 +179,7 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
               <X size={16} />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   );
