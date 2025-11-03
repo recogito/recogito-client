@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { PDFDocument } from 'pdf-lib';
 import { AnnotationFactory } from 'annotpdf';
 import { format } from 'date-fns';
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -12,8 +13,31 @@ import { quillToPDFRichText, sanitizeFilename } from '@util/export';
 import { canExport as _canExport } from './_common';
 import type { Document, VocabularyTerm } from 'src/Types';
 
-const writePDFAnnotations = (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
-  const factory = new AnnotationFactory(pdf);
+/**
+ * Important: annotpdf only supports FlateDecode streams:
+ * https://github.com/highkite/pdfAnnotate/blob/b5e5bc2a4947d604610d15d78f47289074a0f2b7/src/object-util.ts#L229
+ *
+ * But PDFs can include images encoded with other filters. In this case, we use 
+ * pdf-lib to normalize all streams to FlateDecode.
+ */
+const normalizePDF = async (pdf: Uint8Array) => {
+  // To avoid re-encoding the PDF unnecessarily, decode the text content, 
+  // search for filters, and re-encode only if any filters other than 
+  // FlateDecode are found.
+  const pdfString = new TextDecoder('latin1').decode(pdf);
+  const filters = new Set([...pdfString.matchAll(/\/Filter\s*\/(\w+)/g)].map(match => match[1]));
+  const unsupportedFilters = [...filters].filter(f => f !== 'FlateDecode');
+
+  if (unsupportedFilters.length > 0) {
+    return PDFDocument.load(pdf).then(doc => doc.save())
+  } else {
+    return Promise.resolve(pdf);
+  }
+}
+
+const writePDFAnnotations = async (pdf: Uint8Array, annotations: SupabaseAnnotation[]) => {
+  const normalizedPdf = await normalizePDF(pdf);
+  const factory = new AnnotationFactory(normalizedPdf);
 
   const toRichText = (annotation: SupabaseAnnotation) => {
     const comments = 
@@ -112,12 +136,12 @@ const exportForProject = async (
     : all.data.filter(a => a.visibility !== Visibility.PRIVATE);
 
 
-  const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
+  const pdfWithAnnotations = await writePDFAnnotations(pdf, annotations);
 
   const filename = sanitizeName(document.name);
 
   return new Response(
-    new Uint8Array(pdfWithAnnotations.buffer),
+    new Uint8Array(pdfWithAnnotations.buffer) as BodyInit,
     { 
       headers: { 
         'Content-Type': 'application/pdf',
@@ -168,12 +192,12 @@ const exportForAssignment = async (
     ? all.data
     : all.data.filter(a => a.visibility !== Visibility.PRIVATE);
 
-  const pdfWithAnnotations = writePDFAnnotations(pdf, annotations);
+  const pdfWithAnnotations = await writePDFAnnotations(pdf, annotations);
 
   const filename = sanitizeName(document.name);
 
   return new Response(
-    new Uint8Array(pdfWithAnnotations.buffer),
+    new Uint8Array(pdfWithAnnotations.buffer) as BodyInit,
     { 
       headers: { 
         'Content-Type': 'application/pdf',
