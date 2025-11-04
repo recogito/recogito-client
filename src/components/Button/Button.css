@@ -6,10 +6,6 @@ button.busy > svg:last-child {
   margin-right: auto;
 }
 
-button.busy .confetti {
-  opacity: 1;
-}
-
 button.busy svg.button-busy-spinner, 
 button.busy svg.button-busy-spinner > * {
   opacity: 1;

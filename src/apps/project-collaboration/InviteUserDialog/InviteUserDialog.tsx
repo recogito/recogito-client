@@ -74,13 +74,8 @@ export const InviteUserDialog = (props: InviteUserProps) => {
       resolve(null);
     });
 
-    // Waits for fixed amount of time, so that confetti can complete
-    const b = new Promise((resolve) => {
-      setTimeout(() => resolve(null), 1500);
-    });
-
-    // Waits for whatever is takes longer and closes the dialog
-    return Promise.all([a, b]).then(() => {
+    // Waits for processing and closes the dialog
+    return a.then(() => {
       setBusy(false);
       props.onClose();
     });
@@ -169,7 +164,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
               {error && <div className='error'>{error}</div>}
             </fieldset>
 
-            <Button busy={busy} confetti className='primary' type='submit'>
+            <Button busy={busy} className='primary' type='submit'>
               <Envelope size={20} />
               <span>{t['Send invitation']}</span>
             </Button>

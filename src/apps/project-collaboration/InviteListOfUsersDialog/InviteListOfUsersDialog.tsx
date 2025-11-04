@@ -161,7 +161,6 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
           )}
 
           <Button
-            confetti
             className='primary'
             type='submit'
             disabled={!csv}
