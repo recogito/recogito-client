@@ -3,6 +3,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type { Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 interface ConfirmedActionTriggerProps {
 
@@ -50,7 +51,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="dialog-overlay">
-        <Dialog.Content 
+        <DialogContent 
           className="dialog-content" 
           onClick={onClick}>
 
@@ -82,7 +83,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
               <X />
             </button>
           </Dialog.Close>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Overlay>
     </Dialog.Portal>
   )

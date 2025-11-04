@@ -2,6 +2,13 @@
   display: flex;
   align-items: center;
   width: 100%;
+  max-width: 100%;
+  gap: 1rem;
+}
+
+.document-title > span {
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
 }
 
 .document-title > input {
@@ -9,5 +16,5 @@
 }
 
 .document-title > button {
-  margin-left: 1em;
+  flex: 0 0 34px;
 }

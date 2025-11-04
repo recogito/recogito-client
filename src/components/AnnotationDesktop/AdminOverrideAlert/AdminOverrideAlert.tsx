@@ -1,5 +1,6 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Translations } from 'src/Types';
+import { DialogContent } from '@components/DialogContent';
 
 import './AdminOverrideAlert.css';
 
@@ -27,7 +28,7 @@ export const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
     <Dialog.Root open={props.open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
-        <Dialog.Content className='dialog-content admin-delete-alert'>
+        <DialogContent className='dialog-content admin-delete-alert'>
           <Dialog.Title className='dialog-title'>
             {t['With Great Power...']}
           </Dialog.Title>
@@ -45,7 +46,7 @@ export const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
               {t['Proceed']}
             </button>
           </div>
-        </Dialog.Content>
+        </DialogContent>
       </Dialog.Portal>
     </Dialog.Root>
   )

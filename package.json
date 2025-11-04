@@ -1,20 +1,20 @@
 {
   "name": "recogito-client",
   "type": "module",
-  "version": "1.5.0",
+  "version": "1.7.0",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "NODE_OPTIONS=--max_old_space_size=4096 && astro build",
-    "build-node": "NODE_OPTIONS=--max_old_space_size=4096 && astro build --config astro.config.node.mjs",
-    "preview-node": "node --max-old-space-size=4096 ./dist/server/entry.mjs",
+    "build": "NODE_OPTIONS=--max_old_space_size=10240 && astro build",
+    "build-node": "NODE_OPTIONS=--max_old_space_size=10240 && astro build --config astro.config.node.mjs",
+    "preview-node": "node --max-old-space-size=10240 ./dist/server/entry.mjs",
     "astro": "astro",
     "postinstall": "node copy-pdf-worker.js"
   },
   "dependencies": {
     "@allmaps/iiif-parser": "^1.0.0-beta.45",
-    "@annotorious/annotorious": "^3.7.11",
-    "@annotorious/react": "^3.7.11",
+    "@annotorious/annotorious": "^3.7.12",
+    "@annotorious/react": "^3.7.12",
     "@astrojs/netlify": "^6.5.11",
     "@astrojs/node": "^9.4.4",
     "@astrojs/react": "^4.4.0",
@@ -44,12 +44,12 @@
     "@radix-ui/themes": "^3.2.1",
     "@react-spring/web": "^10.0.3",
     "@recogito/annotorious-supabase": "1.3.2",
-    "@recogito/pdf-annotator": "^1.3.0",
-    "@recogito/react-pdf-annotator": "^1.3.0",
-    "@recogito/react-text-annotator": "^3.3.3",
+    "@recogito/pdf-annotator": "^1.5.1",
+    "@recogito/react-pdf-annotator": "^1.5.1",
+    "@recogito/react-text-annotator": "^3.4.3",
     "@recogito/studio-sdk": "^0.7.1",
-    "@recogito/text-annotator": "^3.3.3",
-    "@recogito/text-annotator-tei": "^3.3.3",
+    "@recogito/text-annotator": "^3.4.3",
+    "@recogito/text-annotator-tei": "^3.4.3",
     "@supabase/ssr": "0.7.0",
     "@supabase/supabase-js": "^2.58.0",
     "@table-library/react-table-library": "^4.1.15",
@@ -71,6 +71,7 @@
     "nodemailer": "^7.0.6",
     "openseadragon": "5.0.1",
     "papaparse": "5.5.3",
+    "pdf-lib": "^1.17.1",
     "quill": "2.0.3",
     "quill-delta-to-html": "^0.12.1",
     "react": "^19.1.1",
@@ -105,6 +106,7 @@
   },
   "optionalDependencies": {
     "@esbuild/linux-x64": "^0.25.10",
+    "@rollup/rollup-darwin-x64": "^4.52.3",
     "@rollup/rollup-linux-x64-gnu": "^4.52.3"
   }
 }

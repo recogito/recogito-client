@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import { createDocument, createProjectDocument } from '@backend/crud';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
-import type { Document, Protocol } from 'src/Types';
+import type { CollectionMetadata, Document, Protocol } from 'src/Types';
 import type { DocumentWithContext } from '../../Types';
 
 /**
@@ -27,7 +27,10 @@ const IIIF_CONFIGURATION: 'IIIF_CLOUD' | 'SUPABASE_CANTALOUPE' | undefined =
 export const initDocument = (
   supabase: SupabaseClient,
   name: string,
-  projectId: string,
+  isPrivate: boolean,
+  projectId: string | null,
+  collectionId?: string | null,
+  collectionMetadata?: CollectionMetadata | null,
   onProgress?: (progress: number) => void,
   file?: File,
   url?: string,
@@ -38,7 +41,10 @@ export const initDocument = (
       return _initDocument(
         supabase,
         name,
+        isPrivate,
         projectId,
+        collectionId,
+        collectionMetadata,
         onProgress,
         file,
         protocol,
@@ -52,7 +58,10 @@ export const initDocument = (
         _initDocument(
           supabase,
           name,
+          isPrivate,
           projectId,
+          collectionId,
+          collectionMetadata,
           undefined,
           undefined,
           'IIIF_IMAGE',
@@ -64,7 +73,10 @@ export const initDocument = (
     return _initDocument(
       supabase,
       name,
+      isPrivate,
       projectId,
+      collectionId,
+      collectionMetadata,
       onProgress,
       file,
       protocol,
@@ -86,7 +98,10 @@ export const initDocument = (
 const _initDocument = (
   supabase: SupabaseClient,
   name: string,
-  projectId: string,
+  isPrivate: boolean,
+  projectId: string | null,
+  collectionId?: string | null,
+  collectionMetadata?: CollectionMetadata | null,
   onProgress?: (progress: number) => void,
   file?: File,
   protocol?: Protocol,
@@ -97,17 +112,20 @@ const _initDocument = (
     createDocument(
       supabase,
       name,
+      isPrivate,
       file?.type,
       protocol
         ? {
             protocol,
             url,
           }
-        : undefined
+        : undefined,
+      collectionId,
+      collectionMetadata,
     ).then(({ error, data }) => {
       if (error) {
         reject(error);
-      } else {
+      } else if (projectId) {
         createProjectDocument(supabase, data.id, projectId).then(
           ({ error: pdError, data: _projectDocument }) => {
             if (pdError) {
@@ -117,6 +135,8 @@ const _initDocument = (
             }
           }
         );
+      } else {
+        resolve(data);
       }
     })
   );
@@ -132,13 +152,16 @@ const _initDocument = (
         })
         .catch((error) => {
           console.error('File upload failed - rolling back', error);
-
-          return removeDocumentsFromProject(supabase, projectId, [
-            document.id,
-          ]).then(() => {
-            // Forward original error after rollback
+          if (projectId) {
+            return removeDocumentsFromProject(supabase, projectId, [
+              document.id,
+            ]).then(() => {
+              // Forward original error after rollback
+              throw error;
+            });
+          } else {
             throw error;
-          });
+          }
         });
     } else {
       return { ...document, layers: [] };
