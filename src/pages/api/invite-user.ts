@@ -1,12 +1,11 @@
+import { createElement } from 'react';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import nodemailer from 'nodemailer';
 import { getDefaultTranslations } from '@i18n';
-import {
-  type TReaderDocument,
-  renderToStaticMarkup,
-} from '@usewaypoint/email-builder';
+import { render } from '@react-email/render';
+import { InviteUserEmail } from '@components/InviteUserEmail';
 import { encrypt } from '@backend/crypto';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
@@ -105,103 +104,20 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   const token = encrypt(`${inviteResp.data.user.id}|${Date.now()}`, key);
 
   const { t, lang } = i18n;
+  const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${token}`;
 
-  const config: TReaderDocument = {
-    root: {
-      type: 'EmailLayout',
-      data: {
-        backdropColor: '#b5c8dc',
-        borderRadius: 8,
-        canvasColor: '#FFFFFF',
-        textColor: '#242424',
-        fontFamily: 'MODERN_SANS',
-        childrenIds: [
-          'block-1709571212684',
-          'block-1709571228545',
-          'block-1709571234315',
-          'block-1709571302968',
-        ],
-      },
-    },
-    'block-1709571212684': {
-      type: 'Image',
-      data: {
-        style: {
-          padding: {
-            top: 24,
-            bottom: 24,
-            right: 24,
-            left: 24,
-          },
-        },
-        props: {
-          url: `${url.protocol}//${url.host}/img/branding/email/top-logo.png`,
-          alt: 'RecogitoStudio',
-          linkHref: url.host,
-          contentAlignment: 'middle',
-        },
-      },
-    },
-    'block-1709571228545': {
-      type: 'Text',
-      data: {
-        style: {
-          fontWeight: 'normal',
-          padding: {
-            top: 0,
-            bottom: 16,
-            right: 24,
-            left: 24,
-          },
-        },
-        props: {
-          text: t['Greetings'],
-        },
-      },
-    },
-    'block-1709571234315': {
-      type: 'Text',
-      data: {
-        style: {
-          fontWeight: 'normal',
-          padding: {
-            top: 0,
-            bottom: 16,
-            right: 24,
-            left: 24,
-          },
-        },
-        props: {
-          text: t['_join_recogito_message_'].replaceAll(
-            '${instance_name}',
-            url.host
-          ),
-        },
-      },
-    },
-    'block-1709571302968': {
-      type: 'Button',
-      data: {
-        style: {
-          fontSize: 14,
-          padding: {
-            top: 16,
-            bottom: 24,
-            right: 24,
-            left: 24,
-          },
-        },
-        props: {
-          buttonBackgroundColor: '#07529a',
-          buttonStyle: 'rectangle',
-          text: t['Accept Invite'],
-          url: `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${token}`,
-        },
-      },
-    },
-  };
-
-  const html = renderToStaticMarkup(config, { rootBlockId: 'root' });
+  const html = await render(
+    createElement(InviteUserEmail, {
+      welcomeMessage: t['_join_recogito_message_'].replaceAll(
+        '${instance_name}',
+        url.host
+      ),
+      host: url.host,
+      helloMessage: t['Greetings'],
+      acceptInviteLabel: t['Accept Invite'],
+      acceptInviteUrl,
+    })
+  );
 
   const transporter = nodemailer.createTransport({
     // @ts-ignore
