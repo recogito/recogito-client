@@ -156,7 +156,8 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     maxZoomLevel: 100,
     minZoomLevel: 0.1,
     visibilityRatio: 0.2,
-    preserveImageSizeOnResize: true
+    preserveImageSizeOnResize: true,
+    drawer: 'canvas',
   }), [tilesource]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
