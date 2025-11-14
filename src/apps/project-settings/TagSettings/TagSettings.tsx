@@ -145,7 +145,7 @@ export const TagSettings = (props: TagSettingsProps) => {
               <thead>
                 <tr>
                   <th>{t('Tag', { ns: 'common' })}</th>
-                  <th>{t('ID', { ns: 'common' })}</th>
+                  <th>{t('ID', { ns: 'project-settings' })}</th>
                   <th>{t('Color', { ns: 'common' })}</th>
                 </tr>
               </thead>
