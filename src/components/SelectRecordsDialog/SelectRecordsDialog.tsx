@@ -10,8 +10,8 @@ import {
   useMemo,
   useState,
 } from 'react';
-import type { Translations } from 'src/Types.ts';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 import './SelectRecordsDialog.css';
 
 interface Column {
@@ -35,8 +35,6 @@ interface Props {
 
   header?: string;
 
-  i18n: Translations;
-
   onCancel(): void;
 
   onSave(ids: string[]): void;
@@ -56,7 +54,7 @@ export const SelectRecordsDialog = (props: Props) => {
   const [query, setQuery] = useState<string>('');
   const [selectedRecords, setSelectedRecords] = useState<string[]>([]);
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'dashboard-projects']);
 
   const filteredRecords = useMemo(() => {
     if (!(query && query.length && props.filterBy && props.filterBy.length)) {
@@ -120,7 +118,7 @@ export const SelectRecordsDialog = (props: Props) => {
                     className='search-input'
                     name='query'
                     onChange={(evt) => setQuery(evt.target.value)}
-                    placeholder={t['Search']}
+                    placeholder={t('Search', { ns: 'common' })}
                     value={query}
                   />
                   <MagnifyingGlass className='search-icon' size={16} />
@@ -182,15 +180,15 @@ export const SelectRecordsDialog = (props: Props) => {
 
           {!(filteredRecords && filteredRecords.length) && (
             <div className='no-results text-body-small'>
-              {t['No matching records']}
+              {t('No matching records', { ns: 'dashboard-projects' })}
             </div>
           )}
 
           <div className='buttons'>
-            <button onClick={props.onCancel}>{t['Cancel']}</button>
+            <button onClick={props.onCancel}>{t('Cancel', { ns: 'common' })}</button>
 
             <Button className='primary' onClick={onSave}>
-              <span>{t['Add to Selected']}</span>
+              <span>{t('Add to Selected', { ns: 'dashboard-projects' })}</span>
             </Button>
           </div>
         </DialogContent>

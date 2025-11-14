@@ -1,16 +1,16 @@
-import type { Context, Translations } from 'src/Types';
+import type { Context } from 'src/Types';
 import { DotsSix } from '@phosphor-icons/react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import './AssignmentsList.css';
 
 interface AssignmentListItemProps {
   assignment: Context;
 
   active: boolean;
-
-  i18n: Translations;
 
   isAdmin: boolean;
 
@@ -19,7 +19,7 @@ interface AssignmentListItemProps {
 export const AssignmentListItem = (props: AssignmentListItemProps) => {
   const { assignment, active } = props;
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'a11y']);
 
   const sortableProps = useMemo(
     () => ({
@@ -56,7 +56,7 @@ export const AssignmentListItem = (props: AssignmentListItemProps) => {
         </div>
         <div className='assignments-list-item-title'>
           {assignment.is_project_default
-            ? t['Project Baselayer']
+            ? t('Project Baselayer', { ns: 'project-assignments' })
             : assignment.name}
         </div>
       </div>
@@ -65,7 +65,7 @@ export const AssignmentListItem = (props: AssignmentListItemProps) => {
           className='document-drag-handle'
           {...attributes}
           {...listeners}
-          aria-label={t['rearrange this assignment by dragging']}
+          aria-label={t('rearrange this assignment by dragging', { ns: 'a11y' })}
         >
           <DotsSix size={24} />
         </div>

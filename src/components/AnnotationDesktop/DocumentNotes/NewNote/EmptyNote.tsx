@@ -4,14 +4,13 @@ import type { PresentUser, User } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ArrowRight } from '@phosphor-icons/react';
 import { QuillEditor, QuillEditorRoot, QuillEditorToolbar } from '@components/QuillEditor';
-import type { Translations, VocabularyTerm } from 'src/Types';
+import type { VocabularyTerm } from 'src/Types';
 import { AuthorAvatar } from '@components/Annotation/AuthorAvatar';
 import { TagList } from './TagList';
+import { useTranslation } from 'react-i18next';
 
 
 interface EmptyNoteProps {
-
-  i18n: Translations;
 
   isPrivate?: boolean;
 
@@ -31,7 +30,7 @@ interface EmptyNoteProps {
 
 export const EmptyNote = (props: EmptyNoteProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const [value, setValue] = useState<Delta | undefined>();
 
@@ -65,25 +64,22 @@ export const EmptyNote = (props: EmptyNoteProps) => {
           </div>
 
           <div className="annotation-toolbar-wrapper">
-            <QuillEditorToolbar
-              i18n={props.i18n} />
+            <QuillEditorToolbar />
           </div>
         </div>
         
         <div className="annotation-comment-wrapper">
           <QuillEditor 
             autoFocus
-            i18n={props.i18n}
             value={value}
             onChange={setValue}
             onNavigateTo={props.onNavigateTo}
-            placeholder={t['Add a comment']} />
+            placeholder={t('Add a comment', { ns: 'annotation-common' })} />
         </div>
 
         <div className="annotation-footer">
           <div className="annotation-footer-left">
             <TagList 
-              i18n={props.i18n}
               tags={tags}
               vocabulary={props.tagVocabulary}
               onCreateTag={onCreateTag}  

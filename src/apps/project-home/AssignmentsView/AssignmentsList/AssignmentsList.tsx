@@ -1,4 +1,4 @@
-import type { Context, Translations } from 'src/Types';
+import type { Context } from 'src/Types';
 import {
   closestCenter,
   DndContext,
@@ -21,8 +21,6 @@ interface AssignmentsListProps {
   assignments: Context[];
 
   currentAssignment: string;
-
-  i18n: Translations;
 
   projectId: string;
 
@@ -102,7 +100,6 @@ export const AssignmentsList = (props: AssignmentsListProps) => {
           {props.assignments.map((assignment) => (
             <AssignmentListItem
               assignment={assignment}
-              i18n={props.i18n}
               active={assignment.id === props.currentAssignment}
               onClick={() => props.onAssignmentSelect(assignment)}
               isAdmin={props.isAdmin}
@@ -114,7 +111,6 @@ export const AssignmentsList = (props: AssignmentsListProps) => {
           {activeAssignment && (
             <AssignmentListItem
               assignment={activeAssignment}
-              i18n={props.i18n}
               active={activeAssignment.id === activeId}
               onClick={() => props.onAssignmentSelect(activeAssignment)}
               isAdmin={props.isAdmin}

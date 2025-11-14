@@ -2,20 +2,14 @@ import { useState } from 'react';
 import { CaretDown, Check, MagnifyingGlassMinus, MagnifyingGlassPlus } from '@phosphor-icons/react';
 import { useAnnotator } from '@annotorious/react';
 import * as Select from '@radix-ui/react-select';
+import { useTranslation } from 'react-i18next';
 import type { PDFScale, VanillaPDFAnnotator } from '@recogito/react-pdf-annotator';
-import type { Translations } from 'src/Types';
 
 import './PDFControls.css';
 
-interface PDFControlsProps {
+export const PDFControls = () => {
 
-  i18n: Translations;
-
-}
-
-export const PDFControls = (props: PDFControlsProps) => {
-
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common', 'annotation-text'])
 
   const anno = useAnnotator<VanillaPDFAnnotator>();
 
@@ -45,7 +39,7 @@ export const PDFControls = (props: PDFControlsProps) => {
       <Select.Root value={preset} onValueChange={onSelectPreset}>
         <Select.Trigger 
           className="select-trigger"
-          aria-label={t['PDF zoom level']}>
+          aria-label={t('PDF zoom level', { ns: 'annotation-text' })}>
           {currentScale ? (
             <span className="custom-scale" >
               <Select.Value /> 
@@ -64,21 +58,21 @@ export const PDFControls = (props: PDFControlsProps) => {
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['Automatic zoom']}</Select.ItemText>
+                <Select.ItemText>{t('Automatic zoom', { ns: 'annotation-text' })}</Select.ItemText>
               </Select.Item>
 
               <Select.Item value="page-actual" className="select-item">
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['Original size']}</Select.ItemText>
+                <Select.ItemText>{t('Original size', { ns: 'annotation-text' })}</Select.ItemText>
               </Select.Item> 
 
               <Select.Item value="page-width" className="select-item">
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['Fit width']}</Select.ItemText>
+                <Select.ItemText>{t('Fit width', { ns: 'annotation-text' })}</Select.ItemText>
               </Select.Item> 
             </Select.Viewport>
           </Select.Content>
@@ -87,13 +81,13 @@ export const PDFControls = (props: PDFControlsProps) => {
 
       <button 
         onClick={onZoomIn}
-        aria-label={t['Zoom in']}>
+        aria-label={t('Zoom in', { ns: 'annotation-common' })}>
         <MagnifyingGlassPlus size={18} />
       </button>
 
       <button
         onClick={onZoomOut}
-        aria-label={t['Zoom out']}>
+        aria-label={t('Zoom out', { ns: 'annotation-common' })}>
         <MagnifyingGlassMinus size={18} />
       </button>
     </div>

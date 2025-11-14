@@ -48,7 +48,8 @@
   "unsupported_manifest_type": "Nicht unterstützter Manifest-Typ",
   "Validating manifest": "Validiere Manifest...",
   "Valid manifest:": "Gültiges Manifest:",
-  "Importing ${n} items": "Importiere ${n} Dateien",
+  "importingCount_one": "Importiere {{count}} Datei",
+  "importingCount_other": "Importiere {{count}} Dateien",
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not create the document.": "Das Dokument konnte nicht erstellt werden.",
   "Could not rename the document.": "Das Dokument konnte nicht umbenannt werden.",
@@ -61,7 +62,7 @@
   "Document Type": "Format",
   "URL": "URL",
   "Add Selected": "Auswahl hinzufügen",
-  "No Documents": "Keine Dokumente",
+  "No documents": "Keine Dokumente",
   "Search": "Suche",
   "View Document Metadata": "Metadaten anzeigen",
   "View document metadata": "Metadaten anzeigen",
@@ -90,6 +91,6 @@
   "Import an existing document from a project.": "Dokument aus Projekt importieren.",
   "Copied": "Kopiert",
   "Document copied successfully.": "Dokument erfolgreich kopiert.",
-  "Could not copy file contents of ${name}.": "Inhalte von ${name} konnten nicht kopiert werden.",
+  "fileCopyError": "Inhalte von {{docName}} konnten nicht kopiert werden.",
   "Could not copy documents into collection.": "Dokumente konnten nicht in die Sammlung kopiert werden."
 }

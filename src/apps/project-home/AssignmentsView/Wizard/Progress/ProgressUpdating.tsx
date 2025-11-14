@@ -15,6 +15,7 @@ import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { ProgressProps, ProgressState } from './Progress';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import type { UserRole } from '@backend/Types';
+import { useTranslation } from 'react-i18next';
 
 import './Progress.css';
 
@@ -57,7 +58,7 @@ const diff = <T extends { id: string }>(
 };
 
 export const ProgressUpdating = (props: ProgressUpdatingProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'common']);
 
   const { previous } = props;
 
@@ -263,10 +264,10 @@ export const ProgressUpdating = (props: ProgressUpdatingProps) => {
       ) : state === 'success' ? (
         <>
           <AnimatedCheck size={40} />
-          <p>{t['The assignment was updated successfully']}</p>
+          <p>{t('The assignment was updated successfully', { ns: 'project-assignments' })}</p>
         </>
       ) : (
-        <p>{t['Something went wrong']}</p>
+        <p>{t('Something went wrong', { ns: 'common' })}</p>
       )}
     </div>
   );

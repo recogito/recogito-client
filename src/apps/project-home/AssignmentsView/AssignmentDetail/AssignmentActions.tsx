@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ConfirmDelete } from './ConfirmDelete';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import type { Context, Translations } from 'src/Types';
+import type { Context } from 'src/Types';
 import {
   CaretRight,
   Detective,
@@ -11,12 +11,12 @@ import {
   Trash,
   UsersThree,
 } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Sub, SubContent, SubTrigger, Trigger } =
   Dropdown;
 
 interface AssignmentsActionsProps {
-  i18n: Translations;
 
   isAdmin?: boolean;
 
@@ -30,7 +30,7 @@ interface AssignmentsActionsProps {
 }
 
 export const AssignmentsActions = (props: AssignmentsActionsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'common']);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -43,7 +43,7 @@ export const AssignmentsActions = (props: AssignmentsActionsProps) => {
         <Trigger asChild>
           <button
             className='unstyled icon-only-large'
-            aria-label={`${t['Menu actions for assignment:']} ${props.context.name}`}
+            aria-label={`${t('Menu actions for assignment:', { ns: 'project-assignments' })} ${props.context.name}`}
           >
             <DotsThree weight='bold' size={32} />
           </button>
@@ -56,13 +56,13 @@ export const AssignmentsActions = (props: AssignmentsActionsProps) => {
             align='start'
           >
             <Item className='dropdown-item' onSelect={props.onEdit}>
-              <PencilSimple size={16} /> <span>{t['Edit']}</span>
+              <PencilSimple size={16} /> <span>{t('Edit', { ns: 'project-assignments' })}</span>
             </Item>
 
             <Sub>
               <SubTrigger className='dropdown-subtrigger'>
                 <DownloadSimple size={16} />{' '}
-                <span>{t['Export annotations as CSV']}</span>
+                <span>{t('Export annotations as CSV', { ns: 'project-assignments' })}</span>
                 <div className='right-slot'>
                   <CaretRight size={16} />
                 </div>
@@ -71,12 +71,12 @@ export const AssignmentsActions = (props: AssignmentsActionsProps) => {
               <Portal>
                 <SubContent className='dropdown-subcontent' alignOffset={-5}>
                   <Item className='dropdown-item' onSelect={onExportCSV(false)}>
-                    <UsersThree size={16} /> {t['Public annotations only']}
+                    <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
                   </Item>
 
                   <Item className='dropdown-item' onSelect={onExportCSV(true)}>
                     <Detective size={16} />{' '}
-                    {t['Include my private annotations']}
+                    {t('Include my private annotations', { ns: 'common' })}
                   </Item>
                 </SubContent>
               </Portal>
@@ -91,7 +91,7 @@ export const AssignmentsActions = (props: AssignmentsActionsProps) => {
                   }}
                 >
                   <Trash size={16} className='destructive' />{' '}
-                  <span>{t['Delete assignment']}</span>
+                  <span>{t('Delete assignment', { ns: 'project-assignments' })}</span>
                 </Item>
               </>
             )}
@@ -99,7 +99,6 @@ export const AssignmentsActions = (props: AssignmentsActionsProps) => {
         </Portal>
       </Root>
       <ConfirmDelete
-        i18n={props.i18n}
         open={confirmOpen}
         onCancel={() => setConfirmOpen(false)}
         onConfirm={() => {

@@ -1,12 +1,12 @@
 import { AnonymousTooltip } from '@components/AnonymousTooltip';
 import { formatName } from '@components/Avatar';
-import type { ExtendedProjectData, JoinRequest, Translations } from 'src/Types';
+import type { ExtendedProjectData, JoinRequest } from 'src/Types';
+import { Button } from '@components/Button';
+import { useTranslation } from 'react-i18next';
 
 import './JoinRequestsTable.css';
-import { Button } from '@components/Button';
 
 interface JoinRequestsTableProps {
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -20,7 +20,7 @@ interface JoinRequestsTableProps {
 }
 
 export const JoinRequestsTable = (props: JoinRequestsTableProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'project-collaboration']);
 
   const list = props.showIgnored
     ? props.requests.sort((a, b) => (a.ignored ? 0 : 1 - (b.ignored ? 0 : 1)))
@@ -30,7 +30,7 @@ export const JoinRequestsTable = (props: JoinRequestsTableProps) => {
     <table className='join-requests-table'>
       <thead>
         <tr>
-          <th>{t['Name']}</th>
+          <th>{t('Name', { ns: 'common' })}</th>
           <th></th>
         </tr>
       </thead>
@@ -41,8 +41,8 @@ export const JoinRequestsTable = (props: JoinRequestsTableProps) => {
             <td>
               {formatName(request.user) || (
                 <span className='anonymous-member'>
-                  {t['Anonymous team member']}{' '}
-                  <AnonymousTooltip i18n={props.i18n} />
+                  {t('Anonymous team member', { ns: 'common' })}{' '}
+                  <AnonymousTooltip />
                 </span>
               )}
             </td>
@@ -51,18 +51,18 @@ export const JoinRequestsTable = (props: JoinRequestsTableProps) => {
                 className='primary'
                 onClick={() => props.onAcceptUser(request.user_id)}
               >
-                {t['Accept']}
+                {t('Accept', { ns: 'common' })}
               </Button>
               {request.ignored ? (
                 <Button className='primary' disabled>
-                  {t['Ignored']}
+                  {t('Ignored', { ns: 'project-collaboration' })}
                 </Button>
               ) : (
                 <Button
                   className='danger'
                   onClick={() => props.onIgnoreUser(request.user_id)}
                 >
-                  {t['Ignore']}
+                  {t('Ignore', { ns: 'common' })}
                 </Button>
               )}
             </td>

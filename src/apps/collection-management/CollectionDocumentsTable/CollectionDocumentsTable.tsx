@@ -1,13 +1,13 @@
 import type { LibraryDocument } from '@components/DocumentLibrary';
 import { groupRevisionsByDocument } from '@components/DocumentLibrary/utils';
 import { useEffect, useState } from 'react';
-import type { Document, Protocol, Translations } from 'src/Types';
+import type { Document, Protocol } from 'src/Types';
 import { CollectionManagementDocumentActions } from './CollectionManagementDocumentActions';
 import { MetadataModal } from '@components/MetadataModal';
 import type { ToastContent } from '@components/Toast';
+import { useTranslation } from 'react-i18next';
 
 interface CollectionDocumentsTableProps {
-  i18n: Translations;
 
   documents: Document[];
 
@@ -30,7 +30,7 @@ interface CollectionDocumentsTableProps {
 export const CollectionDocumentsTable = (
   props: CollectionDocumentsTableProps
 ) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['collection-management', 'common']);
 
   const [groupedDocs, setGroupedDocs] = useState<LibraryDocument[]>(
     props.documents
@@ -43,8 +43,8 @@ export const CollectionDocumentsTable = (
 
   const onUpdateDocument = (document: Document) => {
     props.setToast({
-      title: t['Success'],
-      description: t['Document has been updated.'],
+      title: t('Success', { ns: 'common' }),
+      description: t('Document has been updated.', { ns: 'collection-management' }),
       type: 'success',
     });
     props.setDocuments((prev: Document[]) =>
@@ -54,8 +54,8 @@ export const CollectionDocumentsTable = (
 
   const onError = (error: string) => {
     props.setToast({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'common' }),
+      description: t(error) || error,
       type: 'error',
     });
   };
@@ -64,11 +64,11 @@ export const CollectionDocumentsTable = (
     <table>
       <thead>
         <tr>
-          <th>{t['Name']}</th>
-          <th>{t['Document Type']}</th>
-          <th>{t['Revision Count']}</th>
-          <th>{t['Latest Revision']}</th>
-          <th aria-label={t['actions']}></th>
+          <th>{t('Name', { ns: 'common' })}</th>
+          <th>{t('Document Type', { ns: 'common' })}</th>
+          <th>{t('Revision Count', { ns: 'common' })}</th>
+          <th>{t('Latest Revision', { ns: 'common' })}</th>
+          <th aria-label={t('actions', { ns: 'collection-management' })}></th>
         </tr>
       </thead>
       <tbody>
@@ -85,7 +85,6 @@ export const CollectionDocumentsTable = (
               </td>
               <td className='actions'>
                 <CollectionManagementDocumentActions
-                  i18n={props.i18n}
                   document={document}
                   onDelete={props.onDelete}
                   onImport={props.onImport}
@@ -94,7 +93,6 @@ export const CollectionDocumentsTable = (
                 />
                 <MetadataModal
                   open={openMetadata === document.id}
-                  i18n={props.i18n}
                   document={document}
                   onClose={() => setOpenMetadata(null)}
                   onUpdated={onUpdateDocument}

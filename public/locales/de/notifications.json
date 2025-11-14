@@ -1,0 +1,12 @@
+{
+  "Notifications": "Benachrichtigungen",
+  "You're up to date!": "Alles erledigt!",
+  "No notifications": "Keine Benachrichtigungen",
+  "Invitation": "{{sender}} lädt dich zum Projekt <strong>{{project}}</strong> ein.",
+  "Accept": "Annehmen",
+  "Ignore": "Ignorieren",
+  "confirmedStudent": "<strong>{{project}}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Meine Projekte'.",
+  "confirmedCreator": "<strong>{{project}}</strong> wurde deinem Dashboard zugefügt. Du findest es unter 'Mit mir geteilt'.",
+  "Select Projects": "Projekte auswählen",
+  "Acknowledge": "Bestätigen"
+}

@@ -7,7 +7,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { ExtensionMount } from '@components/Plugins';
 import { getImageURL, type IIIFImage } from '../IIIF';
-import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
   DrawingStyleExpression,
@@ -36,8 +36,6 @@ interface AnnotatedImageProps {
   channelId: string;
 
   embeddedAnnotations?: any[];
-
-  i18n: Translations;
 
   isLocked: boolean;
 
@@ -83,7 +81,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
   const { 
     authToken, 
-    i18n, 
     isLocked, 
     layers, 
     layerNames, 
@@ -258,7 +255,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           popup={props => (
             <AnnotationPopup
               {...props}
-              i18n={i18n}
               isProjectLocked={isLocked}
               layers={layers}
               layerNames={layerNames}

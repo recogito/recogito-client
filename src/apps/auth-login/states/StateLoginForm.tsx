@@ -3,15 +3,11 @@ import { WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { TextInput } from '@components/TextInput';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
+import { useTranslation } from 'react-i18next';
 
-export interface StateSignInFormProps {
-  i18n: Translations;
-}
-
-export const StateLoginForm = (props: StateSignInFormProps) => {
-  const { t } = props.i18n;
+export const StateLoginForm = () => {
+  const { t, i18n } = useTranslation(['auth-login']);
 
   const [email, setEmail] = useState('');
 
@@ -25,7 +21,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
     evt.preventDefault();
 
     if (!isValidEmail(email)) {
-      setError(t['Please enter a valid email address']);
+      setError(t('Please enter a valid email address', { ns: 'auth-login' }));
     } else {
       setLoading(true);
       setError('');
@@ -36,7 +32,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           password,
         })
         .then(({ error }) => {
-          if (error) setError(t['Invalid email or password']);
+          if (error) setError(t('Invalid email or password', { ns: 'auth-login' }));
         })
         .finally(() => setLoading(false));
     }
@@ -54,7 +50,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           error={Boolean(error)}
           id='email'
           name='email'
-          label={t['Username']}
+          label={t('Username', { ns: 'auth-login' })}
           className='lg w-full'
           onChange={setEmail}
         />
@@ -63,7 +59,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           autoComplete={false}
           id='password'
           name='password'
-          label={t['Password']}
+          label={t('Password', { ns: 'auth-login' })}
           type='password'
           className='lg w-full'
           onChange={setPassword}
@@ -81,8 +77,8 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
         )}
 
         <div className='forgot-password'>
-          <a href={`/${props.i18n.lang}/forgot-password`}>
-            {t['Forgot password?']}
+          <a href={`/${i18n.language}/forgot-password`}>
+            {t('Forgot password?', { ns: 'auth-login' })}
           </a>
         </div>
 
@@ -91,7 +87,7 @@ export const StateLoginForm = (props: StateSignInFormProps) => {
           busy={loading}
           onClick={onSignIn}
         >
-          <span>{t['Sign In']}</span>
+          <span>{t('Sign In', { ns: 'auth-login' })}</span>
         </Button>
       </form>
 

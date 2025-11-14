@@ -3,13 +3,11 @@ import type { PresentUser } from '@annotorious/react';
 import * as Popover from '@radix-ui/react-popover';
 import { ColorCodingSelector, ColorLegend } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
-import type { DocumentLayer, DocumentWithContext, Translations, VocabularyTerm } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, VocabularyTerm } from 'src/Types';
 
 interface MoreToolsProps {
 
   document: DocumentWithContext;
-
-  i18n: Translations;
 
   layers?: DocumentLayer[];
 
@@ -40,19 +38,16 @@ export const MoreTools = (props: MoreToolsProps) => {
 
         <PrivacySelector
           mode={props.privacy}
-          i18n={props.i18n}
           onChangeMode={props.onChangePrivacy} />
 
         <ColorCodingSelector 
           document={props.document}
-          i18n={props.i18n} 
           present={props.present} 
           layers={props.layers}
           layerNames={props.layerNames} 
           tagVocabulary={props.tagVocabulary} />
 
-        <ColorLegend 
-          i18n={props.i18n} />
+        <ColorLegend />
       </Popover.Content>
     </Popover.Root>
   )

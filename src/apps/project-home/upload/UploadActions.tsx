@@ -2,18 +2,17 @@ import { type ReactNode, useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { FileIcon, FileArrowDownIcon, LinkSimpleIcon, PlusIcon } from '@phosphor-icons/react';
 import { IIIFDialog, type IIIFManifest } from './dialogs';
-import type { MyProfile, Protocol, Translations } from 'src/Types';
+import type { MyProfile, Protocol } from 'src/Types';
 import { EULAModal } from '@components/EULAModal/EULAModal';
 import { setProfileEULAAccepted } from '@backend/helpers/profileHelpers';
 import './UploadActions.css';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface UploadActionsProps {
   me: MyProfile;
-
-  i18n: Translations;
 
   onUpload(): void;
 
@@ -25,7 +24,7 @@ interface UploadActionsProps {
 }
 
 export const UploadActions = (props: UploadActionsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'project-home']);
 
   const [dialog, setDialog] = useState<ReactNode | undefined>();
   const [eulaOpen, setEulaOpen] = useState(false);
@@ -38,7 +37,6 @@ export const UploadActions = (props: UploadActionsProps) => {
 
     setDialog(
       <IIIFDialog
-        i18n={props.i18n}
         onCancel={() => setDialog(undefined)}
         onSubmit={onSubmit}
       />
@@ -69,7 +67,7 @@ export const UploadActions = (props: UploadActionsProps) => {
       <Root>
         <Trigger asChild>
           <button className='primary'>
-            <PlusIcon size={20} /> <span>{t['Import']}</span>
+            <PlusIcon size={20} /> <span>{t('Import', { ns: 'common' })}</span>
           </button>
         </Trigger>
 
@@ -82,7 +80,7 @@ export const UploadActions = (props: UploadActionsProps) => {
             <Item className='dropdown-item' onSelect={handleUpload}>
               <FileIcon size={16} />
               <div>
-                <span>{t['File upload']}</span>
+                <span>{t('File upload', { ns: 'project-home' })}</span>
                 <p>.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf</p>
               </div>
             </Item>
@@ -90,16 +88,16 @@ export const UploadActions = (props: UploadActionsProps) => {
             <Item className='dropdown-item' onSelect={onImportIIIF}>
               <LinkSimpleIcon size={16} />
               <div>
-                <span>{t['From IIIF image manifest']}</span>
-                <p>{t['IIIF import hint']}</p>
+                <span>{t('From IIIF image manifest', { ns: 'project-home' })}</span>
+                <p>{t('IIIF import hint', { ns: 'project-home' })}</p>
               </div>
             </Item>
             {props.onOpenLibrary && (
               <Item className='dropdown-item' onSelect={props.onOpenLibrary}>
                 <FileArrowDownIcon size={16} />
                 <div>
-                  <span>{t['From existing project']}</span>
-                  <p>{t['Import an existing document from a project.']}</p>
+                  <span>{t('From existing project', { ns: 'project-home' })}</span>
+                  <p>{t('Import an existing document from a project.', { ns: 'project-home' })}</p>
                 </div>
               </Item>
             )}
@@ -112,7 +110,6 @@ export const UploadActions = (props: UploadActionsProps) => {
         open={eulaOpen}
         onCancel={() => setEulaOpen(false)}
         onConfirm={handleConfirmUpload}
-        i18n={props.i18n}
       />
     </>
   );

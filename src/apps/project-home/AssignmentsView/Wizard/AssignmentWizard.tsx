@@ -15,15 +15,14 @@ import type {
   Document,
   DocumentWithContext,
   ExtendedProjectData,
-  Translations,
   UserProfile,
 } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './AssignmentWizard.css';
 
 interface AssignmentWizardProps {
-  i18n: Translations;
 
   assignment: AssignmentSpec;
 
@@ -43,7 +42,7 @@ interface AssignmentWizardProps {
 const STEPS = ['general', 'documents', 'layers', 'team', 'verify'];
 
 export const AssignmentWizard = (props: AssignmentWizardProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'common']);
 
   const [step, setStep] = useState(0);
 
@@ -163,19 +162,18 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
         <VisuallyHidden.Root>
-          <Dialog.Title>{t['Assignments Wizard']}</Dialog.Title>
+          <Dialog.Title>{t('Assignments Wizard', { ns: 'project-assignments' })}</Dialog.Title>
         </VisuallyHidden.Root>
         <DialogContent
           className='dialog-content assignment-wizard'
           onPointerDownOutside={onPointerDownOutside}
         >
           <VisuallyHidden.Root>
-            <Dialog.Description>{t['Assignments Wizard']}</Dialog.Description>
+            <Dialog.Description>{t('Assignments Wizard', { ns: 'project-assignments' })}</Dialog.Description>
           </VisuallyHidden.Root>
           {saving ? (
             isUpdate ? (
               <ProgressUpdating
-                i18n={props.i18n}
                 project={props.project}
                 assignment={assignment}
                 previous={props.assignment}
@@ -184,7 +182,6 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
               />
             ) : (
               <ProgressCreating
-                i18n={props.i18n}
                 project={props.project}
                 assignment={assignment}
                 onSaved={onSaved}
@@ -193,7 +190,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             )
           ) : (
             <>
-              <h2>{t['Create Assignment']}</h2>
+              <h2>{t('Create Assignment', { ns: 'project-assignments' })}</h2>
 
               <Tabs.Root
                 className='tabs-root'
@@ -202,26 +199,26 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
               >
                 <Tabs.List
                   className='tabs-list'
-                  aria-label={t['Create a new Assignment']}
+                  aria-label={t('Create a new Assignment', { ns: 'project-assignments' })}
                 >
                   <Tabs.Trigger className='tabs-trigger' value={STEPS[0]}>
-                    {t['1. General']}
+                    {t('1. General', { ns: 'project-assignments' })}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className='tabs-trigger' value={STEPS[1]}>
-                    {t['2. Documents']}
+                    {t('2. Documents', { ns: 'project-assignments' })}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className='tabs-trigger' value={STEPS[2]}>
-                    {t['3. Layers']}
+                    {t('3. Layers', { ns: 'project-assignments' })}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className='tabs-trigger' value={STEPS[3]}>
-                    {t['4. Team']}
+                    {t('4. Team', { ns: 'project-assignments' })}
                   </Tabs.Trigger>
 
                   <Tabs.Trigger className='tabs-trigger' value={STEPS[4]}>
-                    {t['5. Verify']}
+                    {t('5. Verify', { ns: 'project-assignments' })}
                     <span
                       className={
                         validityScore < 3
@@ -240,7 +237,6 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
                 <Tabs.Content className='tabs-content' value={STEPS[0]}>
                   <General
-                    i18n={props.i18n}
                     assignment={assignment}
                     onChangeDescription={onChangeDescription}
                     onChangeName={onChangeName}
@@ -252,7 +248,6 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
                 <Tabs.Content className='tabs-content' value={STEPS[1]}>
                   <Documents
-                    i18n={props.i18n}
                     assignment={assignment}
                     documents={props.documents}
                     onChange={onChangeDocuments}
@@ -263,7 +258,6 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
                 <Tabs.Content className='tabs-content' value={STEPS[2]}>
                   <Layers
-                    i18n={props.i18n}
                     assignment={assignment}
                     onChange={onChangeLayers}
                     onCancel={props.onClose}
@@ -276,7 +270,6 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
                 <Tabs.Content className='tabs-content' value={STEPS[3]}>
                   <Team
-                    i18n={props.i18n}
                     me={props.me}
                     assignment={assignment}
                     project={props.project}
@@ -290,7 +283,6 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
 
                 <Tabs.Content className='tabs-content' value={STEPS[4]}>
                   <Verify
-                    i18n={props.i18n}
                     assignment={assignment}
                     isUpdate={isUpdate}
                     onCancel={props.onClose}
@@ -306,7 +298,7 @@ export const AssignmentWizard = (props: AssignmentWizardProps) => {
             <Dialog.Close asChild>
               <button
                 className='dialog-close icon-only unstyled'
-                aria-label={t['Close']}
+                aria-label={t('Close', { ns: 'common' })}
               >
                 <X size={16} />
               </button>

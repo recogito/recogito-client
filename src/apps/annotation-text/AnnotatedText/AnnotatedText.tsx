@@ -12,7 +12,7 @@ import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
 import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
 import { AnnotatedPDF } from './AnnotatedPDF';
-import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, VocabularyTerm } from 'src/Types';
 import { ExtensionMount } from '@components/Plugins';
 
 const SUPABASE = import.meta.env.PUBLIC_SUPABASE;
@@ -26,8 +26,6 @@ interface AnnotatedTextProps {
   channelId: string;
 
   document: DocumentWithContext;
-
-  i18n: Translations;
 
   isLocked: boolean;
 
@@ -65,8 +63,7 @@ interface AnnotatedTextProps {
 
 export const AnnotatedText = (props: AnnotatedTextProps) => {
 
-  const { 
-    i18n, 
+  const {
     isLocked, 
     layers, 
     layerNames, 
@@ -175,7 +172,6 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
               popup={(props) => (
               <AnnotationPopup
                 {...props}
-                i18n={i18n}
                 isProjectLocked={isLocked}
                 layers={layers}
                 layerNames={layerNames}

@@ -1,11 +1,10 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './LockWarningMessage.css';
 
 interface LockWarningMessageProps {
   open: boolean;
-  i18n: Translations;
   isLocked: boolean;
   onCancel(): void;
   onConfirm(): void;
@@ -13,7 +12,7 @@ interface LockWarningMessageProps {
 
 export const LockWarningMessage = (props: LockWarningMessageProps) => {
   const { open, isLocked } = props;
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'project-settings']);
   return (
     <AlertDialog.Root open={open}>
       <AlertDialog.Portal>
@@ -21,11 +20,11 @@ export const LockWarningMessage = (props: LockWarningMessageProps) => {
         <AlertDialog.Content className='dialog-content-alt'>
           <AlertDialog.Title className='dialog-title-alt lock-warning-title'>
             {isLocked
-              ? t['Unlock Project']
-              : t['Are you sure you want to lock this project?']}
+              ? t('Unlock Project', { ns: 'common' })
+              : t('Are you sure you want to lock this project?', { ns: 'project-settings' })}
           </AlertDialog.Title>
           <AlertDialog.Description className='dialog-description-alt'>
-            {isLocked ? t['unlock_message'] : t['lock_warning_message']}
+            {isLocked ? t('unlock_message', { ns: 'project-settings' }) : t('lock_warning_message', { ns: 'project-settings' })}
           </AlertDialog.Description>
           <div
             style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}
@@ -33,7 +32,7 @@ export const LockWarningMessage = (props: LockWarningMessageProps) => {
           >
             <AlertDialog.Cancel asChild>
               <button className='dialog-button cancel' onClick={props.onCancel}>
-                {t['Cancel']}
+                {t('Cancel', { ns: 'common' })}
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
@@ -41,7 +40,7 @@ export const LockWarningMessage = (props: LockWarningMessageProps) => {
                 className='dialog-button primary'
                 onClick={props.onConfirm}
               >
-                {isLocked ? t['Unlock Project'] : t['Lock Project']}
+                {isLocked ? t('Unlock Project', { ns: 'common' }) : t('Lock Project', { ns: 'project-settings' })}
               </button>
             </AlertDialog.Action>
           </div>

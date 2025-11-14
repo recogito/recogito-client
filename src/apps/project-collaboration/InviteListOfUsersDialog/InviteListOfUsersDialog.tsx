@@ -2,10 +2,11 @@ import { useState, useCallback, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Envelope, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, MyProfile, Translations } from 'src/Types';
+import type { ExtendedProjectData, MyProfile } from 'src/Types';
 import papa, { type ParseResult } from 'papaparse';
 import Dropzone from 'react-dropzone';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './InviteListOfUsersDialog.css';
 
@@ -15,7 +16,6 @@ export type InviteListEntry = {
 };
 
 interface InviteListOfUsersProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -31,7 +31,7 @@ interface InviteListOfUsersProps {
 }
 
 export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-collaboration', 'a11y', 'common']);
 
   const [csv, setCsv] = useState<InviteListEntry[] | undefined>();
 
@@ -110,7 +110,7 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
 
         <DialogContent className='invite-users dialog-content'>
           <Dialog.Title className='dialog-title'>
-            {t['Invite Users to the Project']}
+            {t('Invite Users to the Project', { ns: 'project-collaboration' })}
           </Dialog.Title>
 
           {!csv ? (
@@ -123,11 +123,11 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
                 <section className='invite-list-section'>
                   <div {...getRootProps()}>
                     <input {...getInputProps()} />
-                    <p>{t['invite-list-instructions']}</p>
-                    <p>{t['invite-list-instructions-2']}</p>
+                    <p>{t('invite-list-instructions', { ns: 'project-collaboration' })}</p>
+                    <p>{t('invite-list-instructions-2', { ns: 'project-collaboration' })}</p>
                     <img
                       src='/img/invite-user-list.png'
-                      alt={t['example of invite users spreadsheet']}
+                      alt={t('example of invite users spreadsheet', { ns: 'a11y' })}
                     />
                   </div>
                 </section>
@@ -135,12 +135,12 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
             </Dropzone>
           ) : (
             <div className='invite-table-container'>
-              <h2>{t['Invitation List']}</h2>
+              <h2>{t('Invitation List', { ns: 'project-collaboration' })}</h2>
               <table className='users-table'>
                 <thead>
                   <tr>
-                    <th>{t['E-Mail']}</th>
-                    <th>{t['Access Level']}</th>
+                    <th>{t('E-Mail', { ns: 'common' })}</th>
+                    <th>{t('Access Level', { ns: 'common' })}</th>
                   </tr>
                 </thead>
 
@@ -150,8 +150,8 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
                       <td>{user.email}</td>
                       <td>
                         {user.role === 'student'
-                          ? t['Project Students']
-                          : t['Project Admins']}
+                          ? t('Project Students', { ns: 'project-collaboration' })
+                          : t('Project Admins', { ns: 'project-collaboration' })}
                       </td>
                     </tr>
                   ))}
@@ -167,13 +167,13 @@ export const InviteListOfUsersDialog = (props: InviteListOfUsersProps) => {
             onClick={handleSend}
           >
             <Envelope size={20} />
-            <span>{t['Send Invitations']}</span>
+            <span>{t('Send Invitations', { ns: 'project-collaboration' })}</span>
           </Button>
 
           <Dialog.Close asChild>
             <button
               className='dialog-close icon-only unstyled'
-              aria-label={t['Close']}
+              aria-label={t('Close', { ns: 'common' })}
             >
               <X size={16} />
             </button>

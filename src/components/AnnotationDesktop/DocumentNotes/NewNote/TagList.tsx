@@ -1,12 +1,10 @@
 import { X } from '@phosphor-icons/react';
-import type { Translations, VocabularyTerm } from 'src/Types';
+import type { VocabularyTerm } from 'src/Types';
 import { TagEditor } from '@components/Annotation/TagEditor';
 
 interface TagListProps {
 
   tags: VocabularyTerm[];
-
-  i18n: Translations;
 
   vocabulary?: VocabularyTerm[];
 
@@ -36,7 +34,6 @@ export const TagList = (props: TagListProps) => {
       ))}
 
       <TagEditor 
-        i18n={props.i18n}
         vocabulary={props.vocabulary}
         onCreateTag={onCreateTag} />
     </ul>

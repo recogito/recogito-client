@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
 import { Autosuggest } from '@components/Autosuggest';
-import type { Translations, VocabularyTerm } from 'src/Types';
+import type { VocabularyTerm } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './TagEditor.css';
 
 interface TagEditorProps {
-
-  i18n: Translations;
 
   vocabulary?: VocabularyTerm[];
 
@@ -17,7 +16,7 @@ interface TagEditorProps {
 
 export const TagEditor = (props: TagEditorProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'annotation-common']);
 
   const [editing, setEditing] = useState(false);
 
@@ -55,13 +54,13 @@ export const TagEditor = (props: TagEditorProps) => {
 
       <div className='tag-editor-actions'>
         <button className='unstyled' onClick={onCancel}>
-          <X size={16} aria-label={t['cancel adding tag']} />
+          <X size={16} aria-label={t('cancel adding tag', { ns: 'a11y' })} />
         </button>
 
         <button
           className='unstyled'
           onClick={onSave}
-          aria-label={t['save tag']}
+          aria-label={t('save tag', { ns: 'a11y' })}
         >
           <Check size={16} />
         </button>
@@ -69,7 +68,7 @@ export const TagEditor = (props: TagEditorProps) => {
     </div>
   ) : (
     <button className='tag-editor-trigger' onClick={() => setEditing(true)}>
-      <TagIcon size={12} /> <span>{t['Add a tag']}</span>
+      <TagIcon size={12} /> <span>{t('Add a tag', { ns: 'annotation-common' })}</span>
     </button>
   );
 };

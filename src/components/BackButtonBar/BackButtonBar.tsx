@@ -1,12 +1,11 @@
 import { useState } from 'react';
 import { ArrowLeft, CaretRight } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
-import type { Translations } from 'src/Types';
 
 import './BackButtonBar.css';
+import { useTranslation } from 'react-i18next';
 
 interface BackButtonBarProps {
-  i18n: Translations;
 
   showBackToProjects: boolean;
 
@@ -16,17 +15,19 @@ interface BackButtonBarProps {
 export const BackButtonBar = (props: BackButtonBarProps) => {
   const [loading, setLoading] = useState(false);
 
+  const { t, i18n } = useTranslation(['common']);
+
   return (
     <header className="back-button-bar-header">
       {loading && <LoadingOverlay />}
       {props.showBackToProjects ?
         <div className="back-button-bar-back" onClick={() => {
           setLoading(true);
-          window.location.href = `/${props.i18n.lang}/projects`;
+          window.location.href = `/${i18n.language}/projects`;
         }}
         >
           <ArrowLeft size={18} />
-          {props.i18n.t['Back to Projects']}
+          {t('Back to Projects', { ns: 'common' })}
         </div>
 
         :

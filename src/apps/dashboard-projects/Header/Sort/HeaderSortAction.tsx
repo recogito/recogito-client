@@ -1,13 +1,12 @@
 import { Check, CaretDown } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { useEffect, useState } from 'react';
-import type { ExtendedProjectData, Translations } from 'src/Types';
-import type { SortFunction } from '../../../../components/Sort/SortFunction';
+import type { ExtendedProjectData } from 'src/Types';
+import type { SortFunction } from './SortFunction';
+import { useTranslation } from 'react-i18next';
 import './HeaderSortAction.css';
 
 interface HeaderSortActionProps {
-  i18n: Translations;
-
   onChangeSort(sortFn: SortFunction, name: string): void;
 }
 
@@ -23,7 +22,7 @@ const Sorters = {
 };
 
 export const HeaderSortAction = (props: HeaderSortActionProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['dashboard-projects']);
 
   const [sort, setSort] = useState<keyof typeof Sorters | undefined>();
 
@@ -44,7 +43,7 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
       className={sort === key ? 'dropdown-item' : 'dropdown-item no-icon'}
       onSelect={changeSort(key)}
     >
-      {sort === key && <Check size={16} />} {t[key]}
+      {sort === key && <Check size={16} />} {t(key)}
     </Dropdown.Item>
   );
 
@@ -53,8 +52,8 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
       <Dropdown.Trigger asChild>
         <button>
           <div className='header-sort-row'>
-            <div>{`${t['Sort']}: `}</div>
-            <div className='header-sort-name '>{t[sort || 'Name']}</div>
+            <div>{`${t('Sort', { ns: 'dashboard-projects' })}: `}</div>
+            <div className='header-sort-name '>{t(sort || 'Name')}</div>
             <CaretDown size={16} />
           </div>
         </button>

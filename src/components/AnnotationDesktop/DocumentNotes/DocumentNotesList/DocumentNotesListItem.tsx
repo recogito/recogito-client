@@ -1,12 +1,10 @@
 import type { Annotation, AnnotationBody, PresentUser } from '@annotorious/react';
-import type { Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Policies, VocabularyTerm } from 'src/Types';
 import type { DocumentNote, DocumentNoteBody } from '../Types';
 import { AnnotationCard } from '@components/Annotation';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 
 interface DocumentNotesListItemProps {
-
-  i18n: Translations;
 
   isProjectLocked: boolean;
 
@@ -42,14 +40,6 @@ interface DocumentNotesListItemProps {
 
 export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
 
-  const i18n = {
-    ...props.i18n,
-    t: {
-      ...props.i18n.t,
-      'Delete annotation': props.i18n.t['Delete note']
-    }
-  }
-
   return (
     <AnnotationCard
       autoFocus
@@ -57,7 +47,6 @@ export const DocumentNotesListItem = (props: DocumentNotesListItemProps) => {
       isProjectLocked={props.isProjectLocked}
       isSelected={props.isSelected}
       annotation={props.note as unknown as Annotation}
-      i18n={i18n}   
       isReadOnly={props.isReadOnly}
       layerNames={props.layerNames}
       policies={props.policies}    

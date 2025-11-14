@@ -4,11 +4,9 @@ import type { Annotation, PresentUser, User } from '@annotorious/react';
 import { getContributors } from '@components/AnnotationDesktop';
 import { useContributors } from './useContributors';
 import { useFilterSettingsState } from '../FilterState';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface ContributorsProps {
-
-  i18n: Translations;
 
   present: PresentUser[];
 
@@ -16,7 +14,7 @@ interface ContributorsProps {
 
 export const Contributors = (props: ContributorsProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const contributors = useContributors(props.present);
 
@@ -45,7 +43,7 @@ export const Contributors = (props: ContributorsProps) => {
   return (
     <section className="filter-creators filter-toggle-buttons">
       <h2>
-        <UserIcon size={19} /> {t['Contributors']}
+        <UserIcon size={19} /> {t('Contributors', { ns: 'annotation-common' })}
       </h2>
 
       <ul>
@@ -55,7 +53,7 @@ export const Contributors = (props: ContributorsProps) => {
               className="toggle"
               pressed={selected.some(u => u.id === contributor.id)}
               onPressedChange={() => onToggle(contributor)}>
-              {contributor.name || t['Anonymous']}
+              {contributor.name || t('Anonymous', { ns: 'annotation-common' })}
             </Toggle.Root>
           </li>
         ))}

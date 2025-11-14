@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { Translations } from 'src/Types';
 import { Spinner } from '@components/Spinner';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './Logout.css';
 
@@ -12,7 +13,9 @@ const clearCookies = () => {
   document.cookie = `sb-refresh-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 };
 
-export const Logout = (props: { i18n: Translations }) => {
+const Logout = () => {
+  const { i18n } = useTranslation([]);
+
   localStorage.removeItem('redirect-to');
   const arr = []; // Array to hold the keys
   // Iterate over localStorage and find 'sb_
@@ -31,7 +34,7 @@ export const Logout = (props: { i18n: Translations }) => {
   useEffect(() => {
     supabase.auth.signOut().then(() => {
       clearCookies();
-      window.location.href = `/${props.i18n.lang}/sign-in`;
+      window.location.href = `/${i18n.language}/sign-in`;
     });
   }, []);
 
@@ -41,3 +44,9 @@ export const Logout = (props: { i18n: Translations }) => {
     </div>
   );
 };
+
+export const LogoutWrapper = () => (
+  <I18nextProvider i18n={clientI18next}>
+    <Logout />
+  </I18nextProvider>
+);

@@ -382,12 +382,6 @@ export interface VocabularyTerm {
   color?: string;
 }
 
-export interface Translations {
-  lang: string;
-
-  t: { [key: string]: string };
-}
-
 export interface Invitation {
   id: string;
 

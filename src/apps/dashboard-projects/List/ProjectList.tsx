@@ -5,13 +5,12 @@ import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
-  Translations,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './ProjectList.css';
 
 export interface ProjectsListProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -55,7 +54,7 @@ export const ProjectsList = (props: ProjectsListProps) => {
     ? props.orgPolicies.get('projects').has('INSERT')
     : false;
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'dashboard-projects']);
 
   return (
     <main>
@@ -63,10 +62,10 @@ export const ProjectsList = (props: ProjectsListProps) => {
         <div className='dashboard-projects-list'>
           <div className='project-list-header'>
             <div className='project-list-header-name text-body-small-bold'>
-              {t['Name']} {props.sortType === 'Name' ? <CaretDown /> : ''}
+              {t('Name', { ns: 'common' })} {props.sortType === 'Name' ? <CaretDown /> : ''}
             </div>
             <div className='project-list-header-description text-body-small-bold'>
-              {t['Description']}
+              {t('Description', { ns: 'dashboard-projects' })}
             </div>
             <div
               className={
@@ -75,20 +74,20 @@ export const ProjectsList = (props: ProjectsListProps) => {
                   : 'project-list-header-assignments text-body-small-bold'
               }
             >
-              {t['Assignments']}
+              {t('Assignments', { ns: 'common' })}
             </div>
             {showDocs && (
               <div className='project-list-header-texts text-body-small-bold'>
-                {t['Texts']}
+                {t('Texts', { ns: 'dashboard-projects' })}
               </div>
             )}
             {showDocs && (
               <div className='project-list-header-images text-body-small-bold'>
-                {t['Images']}
+                {t('Images', { ns: 'dashboard-projects' })}
               </div>
             )}
             <div className='project-list-header-team text-body-small-bold'>
-              {t['Team']}
+              {t('Team', { ns: 'common' })}
             </div>
             <div className='project-list-header-actions' />
           </div>
@@ -96,7 +95,6 @@ export const ProjectsList = (props: ProjectsListProps) => {
             {filteredBySearch.map((project) => (
               <ProjectsEntry
                 key={project.id}
-                i18n={props.i18n}
                 me={props.me}
                 project={project}
                 onDeleted={() => props.onProjectDeleted(project)}

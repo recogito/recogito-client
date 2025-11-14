@@ -1,6 +1,7 @@
-import type { JoinRequest, Translations } from 'src/Types';
+import type { JoinRequest } from 'src/Types';
 import { Users, Gear, Lock } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import './ProjectHeader.css';
 
@@ -8,7 +9,6 @@ interface ProjectHeaderProps {
   name: string;
   description: string;
   isAdmin: boolean;
-  i18n: Translations;
   showTabs: boolean;
   isOpenJoin: boolean;
   isLocked?: boolean;
@@ -22,7 +22,7 @@ interface ProjectHeaderProps {
 }
 
 export const ProjectHeader = (props: ProjectHeaderProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'project-sidebar', 'project-home', 'a11y']);
 
   const [expanded, setExpanded] = useState(false);
   const [showExpand, setShowExpand] = useState(false);
@@ -48,7 +48,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
           {props.isLocked && (
             <div className='project-header-locked'>
               <Lock size={16} />
-              <div className='text-body-small'>{t['Locked']}</div>
+              <div className='text-body-small'>{t('Locked', { ns: 'common' })}</div>
             </div>
           )}
         </div>
@@ -59,7 +59,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               onClick={props.onGotoUsers}
             >
               <Users color='black' size={20} />
-              <div className='project-header-button-text'>{t['Users']}</div>
+              <div className='project-header-button-text'>{t('Users', { ns: 'common' })}</div>
               {Boolean(requestCount > 0) && !props.isOpenJoin && (
                 <div className='project-header-pip'>{requestCount}</div>
               )}
@@ -69,7 +69,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               onClick={props.onGotoSettings}
             >
               <Gear color='black' size={20} />
-              <div className='project-header-button-text'>{t['Settings']}</div>
+              <div className='project-header-button-text'>{t('Settings', { ns: 'project-sidebar' })}</div>
             </button>
           </div>
         )}
@@ -89,14 +89,14 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               className='show-button'
               onClick={() => setExpanded(!expanded)}
             >
-              {t['Show Less']}
+              {t('Show Less', { ns: 'project-home' })}
             </button>
           ) : (
             <button
               className='show-button'
               onClick={() => setExpanded(!expanded)}
             >
-              {t['Show More']}
+              {t('Show More', { ns: 'project-home' })}
             </button>
           ))}
       </div>
@@ -110,7 +110,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               }
               onClick={() => props.onSwitchTab?.('documents')}
             >
-              <button aria-label={t['documents view']}>{t['Documents']}</button>
+              <button aria-label={t('documents view', { ns: 'a11y' })}>{t('Documents', { ns: 'project-sidebar' })}</button>
             </li>
             <li
               className={
@@ -118,8 +118,8 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
               }
               onClick={() => props.onSwitchTab?.('assignments')}
             >
-              <button aria-label={t['assignments view']}>
-                {t['Assignments']}
+              <button aria-label={t('assignments view', { ns: 'a11y' })}>
+                {t('Assignments', { ns: 'common' })}
               </button>
             </li>
           </ul>

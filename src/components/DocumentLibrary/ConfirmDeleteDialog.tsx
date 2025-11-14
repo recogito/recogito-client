@@ -2,11 +2,12 @@ import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import type { Translations } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
+
+import './DocumentLibrary.css';
 
 interface ConfirmDeleteDialogProps {
-  i18n: Translations;
 
   open: boolean;
 
@@ -25,9 +26,8 @@ interface ConfirmDeleteDialogProps {
   onClose(): void;
 }
 
-import './DocumentLibrary.css';
-
 export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
+  const { t } = useTranslation(['common']);
   return (
     <Dialog.Root open={props.open}>
       <Dialog.Portal>
@@ -51,7 +51,7 @@ export const ConfirmDeleteDialog = (props: ConfirmDeleteDialogProps) => {
             </footer>
             <button
               className='unstyled icon-only dialog-close'
-              aria-label={props.i18n.t['Close']}
+              aria-label={t('Close', { ns: 'common' })}
               onClick={props.onClose}
             >
               <X />

@@ -13,16 +13,15 @@ import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
-  Translations,
 } from 'src/Types';
 import { ProjectCardActions } from './ProjectCardActions';
 import { OpenJoin } from './OpenJoin';
 import { JoinProjectDialog } from './JoinProjectDialog';
 
 import './ProjectCard.css';
+import { useTranslation } from 'react-i18next';
 
 interface ProjectCardProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -57,7 +56,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
 
   const texts = documents.filter(({ content_type }) => content_type);
 
-  const { t, lang } = props.i18n;
+  const { t, i18n } = useTranslation(['common', 'dashboard-projects']);
 
   const showDocs = props.orgPolicies
     ? props.orgPolicies.get('projects').has('INSERT')
@@ -65,7 +64,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
 
   const onClick = () => {
     if (!is_open_join || users.length > 0 || props.me.isOrgAdmin) {
-      window.location.pathname = `${lang}/projects/${id}`;
+      window.location.pathname = `${i18n.language}/projects/${id}`;
     }
   };
 
@@ -77,9 +76,9 @@ export const ProjectCard = (props: ProjectCardProps) => {
     setJoinProjectOpen(false);
     joinProject(supabase, id).then((resp) => {
       if (resp) {
-        window.location.pathname = `${lang}/projects/${id}`;
+        window.location.pathname = `${i18n.language}/projects/${id}`;
       } else {
-        props.onError(props.i18n.t['Something happened']);
+        props.onError(t('Something went wrong', { ns: 'common' }));
       }
     });
   };
@@ -99,14 +98,14 @@ export const ProjectCard = (props: ProjectCardProps) => {
       <div className='project-card-body' onClick={onClick}>
         <div className='project-card-header'>
           <h1>
-            <a href={`/${props.i18n.lang}/projects/${id}`}>{name}</a>
+            <a href={`/${i18n.language}/projects/${id}`}>{name}</a>
           </h1>
-          {is_locked ? <LockedPill i18n={props.i18n} /> : <div />}
+          {is_locked ? <LockedPill /> : <div />}
         </div>
         {description ? (
           <p>{description}</p>
         ) : (
-          <p className='no-description'>{props.i18n.t['No description.']}</p>
+          <p className='no-description'>{t('No description.', { ns: 'dashboard-projects' })}</p>
         )}
         <ul className='document-stats'>
           {contexts.length > 0 && (
@@ -117,8 +116,8 @@ export const ProjectCard = (props: ProjectCardProps) => {
               </span>
               {!showDocs &&
                 (contexts.length === 1 || props.project.is_open_edit
-                  ? ` ${t['assignment']}`
-                  : ` ${t['assignments']}`)}
+                  ? ` ${t('assignment', { ns: 'dashboard-projects' })}`
+                  : ` ${t('assignments', { ns: 'dashboard-projects' })}`)}
             </li>
           )}
 
@@ -142,7 +141,6 @@ export const ProjectCard = (props: ProjectCardProps) => {
       <JoinProjectDialog
         open={joinProjectOpen}
         onClose={() => setJoinProjectOpen(false)}
-        i18n={props.i18n}
         project={props.project}
         onJoin={handleConfirmJoin}
       />
@@ -154,7 +152,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
         }
       >
         <div className='avatar-stack'>
-          {plusUsers > 0 && `       + ${plusUsers} ${t['More']}`}
+          {plusUsers > 0 && `       + ${plusUsers} ${t('More', { ns: 'dashboard-projects' })}`}
           {userList.map((member) => (
             <Avatar
               key={member.user.id}
@@ -173,7 +171,6 @@ export const ProjectCard = (props: ProjectCardProps) => {
         </div>
         {users.length > 0 && (
           <ProjectCardActions
-            i18n={props.i18n}
             me={props.me}
             project={props.project}
             onDeleted={props.onDeleted}
@@ -186,7 +183,6 @@ export const ProjectCard = (props: ProjectCardProps) => {
         {is_open_join && users.length === 0 && (
           <OpenJoin
             projectId={id}
-            i18n={props.i18n}
             onJoin={handleJoinProject}
           />
         )}

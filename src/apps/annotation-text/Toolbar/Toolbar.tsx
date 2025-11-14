@@ -19,16 +19,14 @@ import type {
   DocumentLayer,
   DocumentWithContext,
   Policies,
-  Translations,
   VocabularyTerm,
 } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { MoreTools } from './MoreTools';
+import { useTranslation } from 'react-i18next';
 
 interface ToolbarProps {
   document: DocumentWithContext;
-
-  i18n: Translations;
 
   isLocked: boolean;
 
@@ -62,7 +60,7 @@ interface ToolbarProps {
 }
 
 export const Toolbar = (props: ToolbarProps) => {
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['a11y', 'annotation-common']);
 
   const contextName = props.document.context.name;
 
@@ -72,7 +70,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const { numConditions } = useFilter();
 
-  const back = `/${props.i18n.lang}/projects/${project_id}`;
+  const back = `/${i18n.language}/projects/${project_id}`;
 
   const extensions = useExtensions('annotation:text:toolbar');
 
@@ -93,7 +91,7 @@ export const Toolbar = (props: ToolbarProps) => {
             <button
               className={props.leftDrawerOpen ? 'active' : undefined}
               onClick={props.onToggleLeftDrawer}
-              aria-label={t['open or close the filters tab']}
+              aria-label={t('open or close the filters tab', { ns: 'a11y' })}
             >
               <FunnelSimple size={18} />
             </button>
@@ -112,7 +110,7 @@ export const Toolbar = (props: ToolbarProps) => {
               <GraduationCap size={18} />
 
               <h1>
-                <a href={back} title={t['Back to assignment overview']}>
+                <a href={back} title={t('Back to assignment overview', { ns: 'annotation-common' })}>
                   <div>{contextName}</div>
                 </a>
                 <span>/</span>
@@ -130,7 +128,7 @@ export const Toolbar = (props: ToolbarProps) => {
           )}
         </div>
 
-        {props.showConnectionError && <ErrorBadge i18n={props.i18n} />}
+        {props.showConnectionError && <ErrorBadge />}
       </div>
 
       <div
@@ -141,21 +139,19 @@ export const Toolbar = (props: ToolbarProps) => {
         {!props.isLocked && (
           <PrivacySelector
             mode={props.privacy}
-            i18n={props.i18n}
             onChangeMode={props.onChangePrivacy}
           />
         )}
 
         {isPDF && !collapsed && (
           <div className='anno-toolbar-group'>
-            <PDFControls i18n={props.i18n} />
+            <PDFControls />
           </div>
         )}
 
         {!props.isLocked && (
           <DeleteSelected
             activeLayer={props.layers?.find((l) => l.is_active)}
-            i18n={props.i18n}
             policies={props.policies}
           />
         )}
@@ -166,14 +162,13 @@ export const Toolbar = (props: ToolbarProps) => {
 
             <ColorCodingSelector
               document={props.document}
-              i18n={props.i18n}
               present={props.present}
               layers={props.layers}
               layerNames={props.layerNames}
               tagVocabulary={props.tagVocabulary}
             />
 
-            <ColorLegend i18n={props.i18n} />
+            <ColorLegend />
           </>
         )}
       </div>
@@ -192,7 +187,6 @@ export const Toolbar = (props: ToolbarProps) => {
         {collapsed ? (
           <MoreTools
             document={props.document}
-            i18n={props.i18n}
             isPDF={isPDF}
             layers={props.layers}
             layerNames={props.layerNames}
@@ -216,7 +210,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}
-          aria-label={t['Show annotation list']}
+          aria-label={t('Show annotation list', { ns: 'annotation-common' })}
           onClick={props.onToggleRightDrawer}
         >
           <Chats size={17} />

@@ -1,12 +1,11 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getLangFromUrl, getTranslations } from '@i18n';
 import { getInstanceCollections } from '@backend/crud';
 import { getMyProfile } from '@backend/crud/profiles';
-import { CollectionManagement } from '@apps/collection-management';
+import { CollectionManagementWrapper } from '@apps/collection-management';
 
-const lang = getLangFromUrl(Astro.url);
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -34,8 +33,7 @@ if (collectionsError) {
 ---
 
 <BaseLayout title='Collection Management'>
-  <CollectionManagement
-    i18n={getTranslations(Astro.request, 'collection-management')}
+  <CollectionManagementWrapper
     client:only='react'
     collections={collections}
     me={me}

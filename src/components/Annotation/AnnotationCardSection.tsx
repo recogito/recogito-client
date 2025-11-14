@@ -15,7 +15,8 @@ import { LayerIcon } from './LayerIcon';
 import { PrivateAnnotationActions } from './PrivateAnnotationActions';
 import { PublicAnnotationActions } from './PublicAnnotationActions';
 import { TagList } from './TagList';
-import type { Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Policies, VocabularyTerm } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './AnnotationCardSection.css';
 
@@ -26,9 +27,9 @@ export interface AnnotationCardSectionProps {
 
   emphasizeOnEntry?: boolean;
 
-  i18n: Translations;
-
   index: number;
+
+  isNote?: boolean;
 
   isPrivate?: boolean;
 
@@ -89,7 +90,7 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
     tags,
   } = props;
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'common']);
 
   const [editable, setEditable] = useState(false);
 
@@ -250,7 +251,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
 
             {!editable && (
               <AuthorDetails
-                i18n={props.i18n}
                 isPrivate={isPrivate}
                 creator={creator}
                 createdAt={createdAt}
@@ -259,12 +259,12 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           </div>
 
           {editable ? (
-            <QuillEditorToolbar i18n={props.i18n} />
+            <QuillEditorToolbar />
           ) : isPrivate ? (
             <div className='annotation-header-right'>
               <PrivateAnnotationActions
-                i18n={props.i18n}
                 isFirst={props.index === 0}
+                isNote={props.isNote}
                 onCopyLink={onCopyLink}
                 onDeleteAnnotation={props.onDeleteAnnotation}
                 onDeleteSection={onDeleteSection}
@@ -275,7 +275,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           ) : props.index === 0 && isReadOnly ? (
             <div className='annotation-header-right'>
               <LayerIcon
-                i18n={props.i18n}
                 layerId={props.annotation.layer_id}
                 layerNames={props.layerNames}
               />
@@ -285,9 +284,9 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
               <div className='annotation-header-right'>
                 <PublicAnnotationActions
                   canEdit={canEdit}
-                  i18n={props.i18n}
                   isFirst={props.index === 0}
                   isMine={isMine}
+                  isNote={props.isNote}
                   onCopyLink={onCopyLink}
                   onDeleteAnnotation={props.onDeleteAnnotation}
                   onDeleteSection={onDeleteSection}
@@ -301,7 +300,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
         {(commentValue || editable) && (
           <div className='annotation-comment-wrapper'>
             <QuillEditor
-              i18n={props.i18n}
               readOnly={!editable}
               value={commentValue}
               onChange={setCommentValue}
@@ -316,7 +314,6 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <TagList
             annotation={annotation}
             isEditable={editable}
-            i18n={props.i18n}
             me={me}
             tags={props.tags || []}
             vocabulary={props.tagVocabulary}
@@ -332,17 +329,17 @@ export const AnnotationCardSection = (props: AnnotationCardSectionProps) => {
           <button
             className='sm flat unstyled'
             onClick={() => setEditable(false)}
-            aria-label={t['cancel editing']}
+            aria-label={t('cancel editing', { ns: 'a11y' })}
           >
-            {t['Cancel']}
+            {t('Cancel', { ns: 'common' })}
           </button>
 
           <button
             className='sm flat primary'
             onClick={onSave}
-            aria-label={t['save annotation']}
+            aria-label={t('save annotation', { ns: 'a11y' })}
           >
-            {t['Save']}
+            {t('Save', { ns: 'common' })}
           </button>
         </div>
       )}

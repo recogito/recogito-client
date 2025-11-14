@@ -1,10 +1,10 @@
 import { type ReactNode, forwardRef } from 'react';
 import * as Select from '@radix-ui/react-select';
 import { CaretDown, Check } from '@phosphor-icons/react';
-import type { LoginMethod, Translations } from 'src/Types';
+import type { LoginMethod } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 import './LoginMethodSelector.css';
 interface LoginMethodSelectorProps {
-  i18n: Translations;
 
   currentMethod: LoginMethod | undefined;
 
@@ -36,7 +36,7 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>(
 );
 
 export const LoginMethodSelector = (props: LoginMethodSelectorProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['auth-login']);
 
   const onValueChange = (value: string) => {
     const method = props.availableMethods.find((g) => g.name === value);
@@ -51,8 +51,8 @@ export const LoginMethodSelector = (props: LoginMethodSelectorProps) => {
       value={props.currentMethod?.name}
       onValueChange={onValueChange}
     >
-      <Select.Trigger className='select-trigger' aria-label={t['Login method']}>
-        <Select.Value placeholder={t['Sign In']} />
+      <Select.Trigger className='select-trigger' aria-label={t('Login method', { ns: 'auth-login' })}>
+        <Select.Value placeholder={t('Sign In', { ns: 'auth-login' })} />
         <Select.Icon className='select-icon'>
           <CaretDown />
         </Select.Icon>

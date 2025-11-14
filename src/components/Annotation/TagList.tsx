@@ -4,14 +4,12 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { ExtensionMount } from '@components/Plugins';
 import { TagEditor } from './TagEditor';
-import type { Translations, VocabularyTerm } from 'src/Types';
+import type { VocabularyTerm } from 'src/Types';
 
 import './TagList.css';
 
 interface TagListProps {
   annotation: SupabaseAnnotation;
-
-  i18n: Translations;
 
   isEditable?: boolean;
 
@@ -54,7 +52,6 @@ export const TagList = (props: TagListProps) => {
       {props.isEditable && (
         <div className='taglist-editor-wrapper'>
           <TagEditor 
-            i18n={props.i18n}
             vocabulary={props.vocabulary}
             onCreateTag={onCreateTag} />
 

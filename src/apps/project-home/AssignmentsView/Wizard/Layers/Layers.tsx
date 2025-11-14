@@ -1,4 +1,4 @@
-import type { Document, Translations } from 'src/Types';
+import type { Document } from 'src/Types';
 import type { AssignmentSpec } from '@apps/project-home/AssignmentsView/Wizard/AssignmentSpec';
 import type { AvailableLayers } from '@backend/Types';
 import * as Accordion from '@radix-ui/react-accordion';
@@ -7,11 +7,11 @@ import { CaretDown } from '@phosphor-icons/react';
 import React, { useEffect, useState } from 'react';
 import { CheckSquare, Square, Article, Image } from '@phosphor-icons/react';
 import classNames from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 import './Layers.css';
 
 interface LayersProps {
-  i18n: Translations;
 
   assignment: AssignmentSpec;
 
@@ -80,7 +80,7 @@ export const Layers = (props: LayersProps) => {
     DocumentLayers | undefined
   >();
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'common']);
 
   useEffect(() => {
     if (props.availableLayers && props.documents) {
@@ -197,7 +197,7 @@ export const Layers = (props: LayersProps) => {
                 )}
               </Checkbox.Root>
               <label className='layers-checkbox-label' htmlFor='c1'>
-                {t['Select All']}
+                {t('Select All', { ns: 'project-assignments' })}
               </label>
             </div>
             {val.layers.map((l) => {
@@ -223,7 +223,7 @@ export const Layers = (props: LayersProps) => {
                     )}
                   </Checkbox.Root>
                   <label className='layers-checkbox-label' htmlFor='c1'>
-                    {l.context_name || t['Base Assignment']}
+                    {l.context_name || t('Base Assignment', { ns: 'project-assignments' })}
                   </label>
                 </div>
               );
@@ -237,12 +237,10 @@ export const Layers = (props: LayersProps) => {
       <>
         <div className='row tab-team'>
           <section className='column'>
-            <h1>{`${t['Step']} 3 (${t['Optional']})`}</h1>
+            <h1>{`${t('Step', { ns: 'project-assignments' })} 3 (${t('Optional', { ns: 'project-assignments' })})`}</h1>
             <p>
               {
-                t[
-                  'Import read only layers from other assignments to add to each document.'
-                ]
+                t('Import read only layers from other assignments to add to each document.', { ns: 'project-assignments' })
               }
             </p>
           </section>
@@ -252,12 +250,12 @@ export const Layers = (props: LayersProps) => {
           </section>
         </div>
         <section className='wizard-nav'>
-          <button onClick={props.onCancel}>{t['Cancel']}</button>
+          <button onClick={props.onCancel}>{t('Cancel', { ns: 'common' })}</button>
 
-          <button onClick={props.onBack}>{t['Back']}</button>
+          <button onClick={props.onBack}>{t('Back', { ns: 'project-assignments' })}</button>
 
           <button className='primary' onClick={props.onNext}>
-            {t['Next']}
+            {t('Next', { ns: 'project-assignments' })}
           </button>
         </section>
       </>

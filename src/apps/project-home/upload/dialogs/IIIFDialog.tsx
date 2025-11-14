@@ -4,8 +4,9 @@ import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import { Spinner } from '@components/Spinner';
 import { useIIIFValidation } from './useIIIFValidation';
-import type { Protocol, Translations } from 'src/Types';
+import type { Protocol } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './IIIFDialog.css';
 
@@ -21,8 +22,6 @@ export interface IIIFManifest {
 
 interface IIIFDialogProps {
 
-  i18n: Translations;
-
   onCancel(): void;
 
   onSubmit(manifest: IIIFManifest): void;
@@ -31,7 +30,7 @@ interface IIIFDialogProps {
 
 export const IIIFDialog = (props: IIIFDialogProps) => {
   
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['project-home', 'common']);
 
   const [value, setValue] = useState('');
 
@@ -40,7 +39,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
     isValid,
     lastError,
     result 
-  } = useIIIFValidation(value, props.i18n);
+  } = useIIIFValidation(value, i18n.language);
 
   const onSubmit = (evt: FormEvent) => {
     evt.preventDefault();
@@ -62,25 +61,25 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
         <Dialog.Overlay className="dialog-overlay" />
         <DialogContent className="dialog-content import-iiif-dialog">
           <form onSubmit={onSubmit}>
-            <Dialog.Title className="dialog-title">{t['Import IIIF']}</Dialog.Title>
+            <Dialog.Title className="dialog-title">{t('Import IIIF', { ns: 'project-home' })}</Dialog.Title>
               <input 
                 type="text" 
                 className={lastError && value && !isFetching ? "invalid" : undefined}
                 value={value} 
-                placeholder={t['Paste URL to a IIIF manifest']}
+                placeholder={t('Paste URL to a IIIF manifest', { ns: 'project-home' })}
                 onChange={evt => setValue(evt.target.value)} /> 
 
               {isFetching ? (
                 <p className="message fetching">
                   <Spinner 
                     className="icon text-bottom" 
-                    size={12} /> {t['Validating manifest']}
+                    size={12} /> {t('Validating manifest', { ns: 'project-home' })}
                 </p>
               ) : lastError && value ? (
                 <p className="message invalid">
                   <WarningOctagon 
                     className="icon text-bottom" 
-                    size={18} weight="fill" /> {t[lastError]}
+                    size={18} weight="fill" /> {t(lastError)}
                 </p>
               ) : value && result && (
                 <p className="message valid">
@@ -89,7 +88,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                     size={18} /> 
                     
                   <span>
-                    {t['Valid manifest:']} {result.type === 'image' ? 'IIIF Image API' : 'IIIF Presentation API'} v{result.majorVersion}
+                    {t('Valid manifest:', { ns: 'project-home' })} {result.type === 'image' ? 'IIIF Image API' : 'IIIF Presentation API'} v{result.majorVersion}
                   </span>
                 </p>   
               )}
@@ -99,14 +98,14 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                   type="button"
                   className="sm"
                   onClick={props.onCancel}>
-                  {t['Cancel']}
+                  {t('Cancel', { ns: 'common' })}
                 </Button>  
 
                 <Button 
                   disabled={!value || !isValid}
                   type="submit" 
                   className="primary sm">
-                  {t['Ok']}
+                  {t('Ok', { ns: 'common' })}
                 </Button>
               </div>
           </form>
