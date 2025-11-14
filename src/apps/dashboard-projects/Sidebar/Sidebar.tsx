@@ -50,10 +50,7 @@ export const Sidebar = (props: Props) => {
         .then(() =>
           setToast({
             title: t('Success', { ns: 'common' }),
-            description: t('Project group successfully added', { ns: 'dashboard-projects' }).replace(
-              '${name}',
-              name
-            ),
+            description: t('Project group successfully added', { ns: 'dashboard-projects', name }),
             type: 'success',
           })
         ),

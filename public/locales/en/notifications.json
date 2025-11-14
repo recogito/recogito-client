@@ -2,11 +2,11 @@
   "Notifications": "Notifications",
   "You're up to date!": "You're up to date!",
   "No notifications": "No notifications",
-  "Invitation": "${sender} invites you to join <strong>${project}</strong>.",
+  "Invitation": "{{sender}} invites you to join <strong>{{project}}</strong>.",
   "Accept": "Accept",
   "Ignore": "Ignore",
-  "Confirmed-student": "<strong>${project}</strong> has been added to your Dashboard. You will find it 'My Projects'.",
-  "Confirmed-creator": "<strong>${project}</strong> has been added to your Dashboard. You will find it 'Shared with me'.",
+  "confirmedStudent": "<strong>{{project}}</strong> has been added to your Dashboard. You will find it in 'My Projects'.",
+  "confirmedCreator": "<strong>{{project}}</strong> has been added to your Dashboard. You will find it in 'Shared with me'.",
   "Select Projects": "Select Projects",
   "Acknowledge": "Acknowledge"
 }

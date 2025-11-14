@@ -7,10 +7,9 @@ import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { UserProfile, ExtendedUserProfile } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface DeleteUserProps {
-
   me: UserProfile;
 
   user: ExtendedUserProfile;
@@ -34,8 +33,8 @@ export const DeleteUser = (props: DeleteUserProps) => {
   const name = nickname
     ? nickname
     : first_name || last_name
-    ? [first_name, last_name].join(' ')
-    : undefined;
+      ? [first_name, last_name].join(' ')
+      : undefined;
 
   const onDelete = () => {
     setBusy(true);
@@ -66,20 +65,25 @@ export const DeleteUser = (props: DeleteUserProps) => {
         <Dialog.Overlay className='dialog-overlay'>
           <DialogContent className='dialog-content'>
             <Dialog.Title className='dialog-title'>
-              {isMe ? t('Leave Project?', { ns: 'project-collaboration' }) : t('Confirm Remove User', { ns: 'project-collaboration' })}
+              {isMe
+                ? t('Leave Project?', { ns: 'project-collaboration' })
+                : t('Confirm Remove User', { ns: 'project-collaboration' })}
             </Dialog.Title>
 
             <Dialog.Description className='dialog-description'>
               {isMe ? (
                 t('You are about to leave', { ns: 'project-collaboration' })
               ) : name ? (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: t('Remove_name', { ns: 'common' }).replace('${name}', name),
-                  }}
-                />
+                <span>
+                  <Trans
+                    i18nKey='removeName'
+                    ns='common'
+                    values={{ name }}
+                    components={{ strong: <strong /> }}
+                  />
+                </span>
               ) : (
-                t('Remove_anonymous', { ns: 'project-collaboration' })
+                t('removeAnonymous', { ns: 'project-collaboration' })
               )}
             </Dialog.Description>
 

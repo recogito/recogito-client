@@ -109,10 +109,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
   const html = await render(
     createElement(InviteUserEmail, {
-      welcomeMessage: t('_join_recogito_message_', { ns: 'email' }).replaceAll(
-        '${instance_name}',
-        url.host
-      ),
+      welcomeMessage: t('joinRecogitoMessage', { ns: 'email', instanceName: url.host }),
       host: url.host,
       helloMessage: t('Greetings', { ns: 'email' }),
       acceptInviteLabel: t('Accept Invite', { ns: 'email' }),

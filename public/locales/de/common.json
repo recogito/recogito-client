@@ -50,7 +50,7 @@
   "Access Level": "Berechtigung",
   "Anonymous team member": "Anonymes Teammitglied",
   "You": "Du",
-  "Remove_name": "Bist Du sicher dass Du <strong>${name}</strong> aus dem Projekt entfernen willst?",
+  "removeName": "Bist Du sicher dass Du <strong>{{name}}</strong> aus dem Projekt entfernen willst?",
   "Delete": "Löschen",
   "Select Projects": "Select Projects",
   "Deleted": "Gelöscht",

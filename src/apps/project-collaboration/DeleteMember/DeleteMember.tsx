@@ -7,10 +7,9 @@ import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Member, UserProfile } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface DeleteMemberProps {
-
   me: UserProfile;
 
   member: Member;
@@ -36,8 +35,8 @@ export const DeleteMember = (props: DeleteMemberProps) => {
   const name = nickname
     ? nickname
     : first_name || last_name
-    ? [first_name, last_name].join(' ')
-    : undefined;
+      ? [first_name, last_name].join(' ')
+      : undefined;
 
   const onDelete = () => {
     setBusy(true);
@@ -71,20 +70,25 @@ export const DeleteMember = (props: DeleteMemberProps) => {
         <Dialog.Overlay className='dialog-overlay'>
           <DialogContent className='dialog-content'>
             <Dialog.Title className='dialog-title'>
-              {isMe ? t('Leave Project?', { ns: 'project-collaboration' }) : t('Confirm Remove User', { ns: 'project-collaboration' })}
+              {isMe
+                ? t('Leave Project?', { ns: 'project-collaboration' })
+                : t('Confirm Remove User', { ns: 'project-collaboration' })}
             </Dialog.Title>
 
             <Dialog.Description className='dialog-description'>
               {isMe ? (
                 t('You are about to leave', { ns: 'project-collaboration' })
               ) : name ? (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: t('Remove_name', { ns: 'common' }).replace('${name}', name),
-                  }}
-                />
+                <span>
+                  <Trans
+                    i18nKey='removeName'
+                    ns='common'
+                    values={{ name }}
+                    components={{ strong: <strong /> }}
+                  />
+                </span>
               ) : (
-                t('Remove_anonymous', { ns: 'project-collaboration' })
+                t('removeAnonymous', { ns: 'project-collaboration' })
               )}
             </Dialog.Description>
 
@@ -93,7 +97,9 @@ export const DeleteMember = (props: DeleteMemberProps) => {
                 busy={busy}
                 className='danger'
                 onClick={onDelete}
-                aria-label={t('remove this user from the project', { ns: 'a11y' })}
+                aria-label={t('remove this user from the project', {
+                  ns: 'a11y',
+                })}
               >
                 {isMe ? (
                   t('Yes, I want to leave', { ns: 'project-collaboration' })

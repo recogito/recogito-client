@@ -133,7 +133,7 @@ export const Header = (props: HeaderProps) => {
 
       setToast({
         title: t('Success', { ns: 'common' }),
-        description: t('Successfully deleted group', { ns: 'dashboard-projects' }).replace('${name}', name),
+        description: t('Successfully deleted group', { ns: 'dashboard-projects', name }),
         type: 'success',
       });
     });
@@ -171,10 +171,7 @@ export const Header = (props: HeaderProps) => {
 
         setToast({
           title: t('Success', { ns: 'common' }),
-          description: t('Successfully updated projects in group', { ns: 'dashboard-projects' }).replace(
-            '${name}',
-            name
-          ),
+          description: t('Successfully updated projects in group', { ns: 'dashboard-projects', name }),
           type: 'success',
         });
       });
@@ -352,10 +349,7 @@ export const Header = (props: HeaderProps) => {
               (tag: Tag) => tag.target_id
             )}
             subtitle={t('Select project(s) to add to group', { ns: 'dashboard-projects' })}
-            title={t('Add projects to group', { ns: 'dashboard-projects' }).replace(
-              '${name}',
-              props.tagDefinition.name
-            )}
+            title={t('Add projects to group', { ns: 'dashboard-projects', name: props.tagDefinition.name })}
           />
         )}
       </section>

@@ -112,7 +112,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       .then(() => setAddToGroup(false))
       .then(() => setToast({
         title: t('Success', { ns: 'common' }),
-        description: t('Successfully updated groups for project', { ns: 'dashboard-projects' }).replace('${name}', props.project.name),
+        description: t('Successfully updated groups for project', { ns: 'dashboard-projects', name: props.project.name }),
         type: 'success'
       }))
   ), [props.project]);
@@ -231,8 +231,8 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         open={addToGroup}
         records={tagDefinitions}
         selected={selectedTagDefinitions}
-        subtite={t('Select group(s) to add project to', { ns: 'dashboard-projects' })}
-        title={t('Add project to group', { ns: 'dashboard-projects' }).replace('${name}', props.project.name)}
+        subtitle={t('Select group(s) to add project to', { ns: 'dashboard-projects' })}
+        title={t('Add project to group', { ns: 'dashboard-projects', name: props.project.name })}
       />
 
     </ConfirmedAction.Root>

@@ -134,10 +134,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
   const onInvitationSent = (invitation: Invitation) => {
     setToast({
       title: t('Invitation Sent', { ns: 'project-collaboration' }),
-      description: t('Invitation was sent to', { ns: 'project-collaboration' }).replace(
-        '${user}',
-        invitation.email
-      ),
+      description: t('Invitation was sent to', { ns: 'project-collaboration', user: invitation.email }),
       type: 'success',
     });
 
@@ -206,7 +203,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
         if (resp) {
           setToast({
             title: t('User Added', { ns: 'project-collaboration' }),
-            description: `${name} ${t('was successfully added to project.', { ns: 'project-collaboration' })}`,
+            description: t('was successfully added to project.', { ns: 'project-collaboration', name }),
             type: 'success',
           });
 
@@ -368,7 +365,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
               </div>
               <div className='project-collaboration-link-container'>
                 <label htmlFor='join-link'>{t('Join Link', { ns: 'project-collaboration' })}</label>
-                <InfoTooltip content={t('copy_link_info', { ns: 'project-collaboration' })} />
+                <InfoTooltip content={t('copyLinkInfo', { ns: 'project-collaboration' })} />
                 <input
                   className='project-collaboration-link-input'
                   value={encodeURI(link)}

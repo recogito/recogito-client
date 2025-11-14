@@ -66,10 +66,12 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
         acceptInviteUrl,
         helloMessage: t('Hello Recogito Studio User', { ns: 'email' }),
         host: url.host,
-        welcomeMessage: t('_welcome_message_', { ns: 'email' })
-          .replace('${sender}', body.invitedBy)
-          .replace('${project_name}', body.projectName)
-          .replace('${host}', url.host),
+        welcomeMessage: t('welcomeMessage', {
+          ns: 'email',
+          sender: body.invitedBy,
+          projectName: body.projectName,
+          host: url.host,
+        }),
       })
     );
 
@@ -87,7 +89,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     const mailOptions = {
       from: MAIL_FROM_ADDRESS,
       to: user.email.toLowerCase(),
-      subject: t('_you_have_been_invited_', { ns: 'email' }),
+      subject: t('invitedSubject', { ns: 'email' }),
       html: html,
     };
 

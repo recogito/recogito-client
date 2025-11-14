@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import {
   Article,
-  Check,
+  CheckIcon,
   CheckSquare,
   Image,
   Square,
-  Warning,
+  WarningIcon,
 } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import type { Document, DocumentWithContext } from 'src/Types';
@@ -20,7 +20,6 @@ import { useTranslation } from 'react-i18next';
 import './Document.css';
 
 interface DocumentsProps {
-
   assignment: AssignmentSpec;
 
   documents: Document[];
@@ -60,7 +59,11 @@ export const Documents = (props: DocumentsProps) => {
       <div className='row tab-documents'>
         <section className='column'>
           <h1>{t('Step', { ns: 'project-assignments' })} 2</h1>
-          <p>{t('Add documents to this assignment.', { ns: 'project-assignments' })}</p>
+          <p>
+            {t('Add documents to this assignment.', {
+              ns: 'project-assignments',
+            })}
+          </p>
         </section>
 
         <section className='column'>
@@ -81,7 +84,9 @@ export const Documents = (props: DocumentsProps) => {
                       <span>
                         <Label
                           htmlFor='all-documents'
-                          aria-label={t('select all documents in project', { ns: 'a11y' })}
+                          aria-label={t('select all documents in project', {
+                            ns: 'a11y',
+                          })}
                         >
                           <Square size={20} id='all-documents' />
                         </Label>
@@ -144,26 +149,25 @@ export const Documents = (props: DocumentsProps) => {
 
           {selected.length === 0 ? (
             <p className='hint warn'>
-              <Warning size={16} /> {t('Select at least 1 document', { ns: 'project-assignments' })}
-            </p>
-          ) : selected.length === 1 ? (
-            <p className='hint ok'>
-              <Check size={16} /> {t('Selected 1 document', { ns: 'project-assignments' })}
+              <WarningIcon size={16} />{' '}
+              {t('Select at least 1 document', { ns: 'project-assignments' })}
             </p>
           ) : (
             <p className='hint ok'>
-              <Check size={16} />{' '}
-              {t('Selected ${n} documents', { ns: 'project-assignments' }).replace(
-                '${n}',
-                selected.length.toString()
-              )}
+              <CheckIcon size={16} />{' '}
+              {t('selectedDocuments', {
+                ns: 'project-assignments',
+                count: selected.length,
+              })}
             </p>
           )}
         </section>
       </div>
 
       <section className='wizard-nav'>
-        <button onClick={props.onCancel}>{t('Cancel', { ns: 'common' })}</button>
+        <button onClick={props.onCancel}>
+          {t('Cancel', { ns: 'common' })}
+        </button>
 
         <button className='primary' onClick={props.onNext}>
           {t('Next', { ns: 'project-assignments' })}

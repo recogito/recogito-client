@@ -61,13 +61,7 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
             </Dialog.Title>
 
             <Dialog.Description className='dialog-description'>
-              {
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: t('Delete_invite', { ns: 'project-collaboration' }).replace('${email}', email),
-                  }}
-                />
-              }
+              <span>{t('deleteInvite', { ns: 'project-collaboration', email })}</span>
             </Dialog.Description>
 
             <footer className='dialog-footer'>

@@ -32,7 +32,7 @@ export const UploadTracker = (props: UploadTrackerProps) => {
         open={props.show}>
 
         <Title className="toast-title">
-          {t('Importing ${n} items', { ns: 'project-home' }).replace('${n}', `${props.uploads.length}`)}
+          {t('importingCount', { ns: 'project-home', count: props.uploads.length })}
           {props.closable && (
             <button className="unstyled icon-only" onClick={props.onClose}>
               <X size={20} />

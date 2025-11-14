@@ -50,7 +50,7 @@
   "Access Level": "Access Level",
   "Anonymous team member": "Anonymous team member",
   "You": "You",
-  "Remove_name": "Are you sure you want to remove ${name} from the project?",
+  "removeName": "Are you sure you want to remove <strong>{{name}}</strong> from the project?",
   "Delete": "Delete",
   "Select Projects": "Select Projects",
   "Deleted": "Deleted",

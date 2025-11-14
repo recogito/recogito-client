@@ -1,5 +1,5 @@
 {
-  "Remove_name": "Are you sure you want to remove ${name} from the project?",
+  "removeName": "Are you sure you want to remove <strong>{{name}}</strong> from the project?",
   "First Name": "First Name",
   "Last Name": "Last Name",
   "Display Name": "Display Name",

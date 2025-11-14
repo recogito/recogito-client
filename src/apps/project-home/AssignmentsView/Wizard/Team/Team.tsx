@@ -11,11 +11,7 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import { AnonymousTooltip } from '@components/AnonymousTooltip';
 import { formatName } from '@components/Avatar';
 import { TimeAgo } from '@components/TimeAgo';
-import type {
-  ExtendedProjectData,
-  Group,
-  UserProfile,
-} from 'src/Types';
+import type { ExtendedProjectData, Group, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 import { RadioCards } from '@components/RadioCards';
@@ -25,7 +21,6 @@ import { useTranslation } from 'react-i18next';
 import './Team.css';
 
 interface TeamProps {
-
   me: UserProfile;
 
   assignment: AssignmentSpec;
@@ -153,18 +148,32 @@ export const Team = (props: TeamProps) => {
         <div className='row tab-team'>
           <section className='column'>
             <h1>{t('Step', { ns: 'project-assignments' })} 4</h1>
-            <p>{t('Add people to the assignment.', { ns: 'project-assignments' })}</p>
+            <p>
+              {t('Add people to the assignment.', {
+                ns: 'project-assignments',
+              })}
+            </p>
           </section>
 
           <section className='column'>
             <div className='tab-team-mode'>
               <div className='text-body-bold tab-team-mode-header'>
-                {t('Who has access to this assignment?', { ns: 'project-assignments' })}
+                {t('Who has access to this assignment?', {
+                  ns: 'project-assignments',
+                })}
               </div>
               <RadioCards
                 entries={[
-                  { id: 'all', label: t('All team members', { ns: 'project-assignments' }) },
-                  { id: 'select', label: t('Select team members', { ns: 'project-assignments' }) },
+                  {
+                    id: 'all',
+                    label: t('All team members', { ns: 'project-assignments' }),
+                  },
+                  {
+                    id: 'select',
+                    label: t('Select team members', {
+                      ns: 'project-assignments',
+                    }),
+                  },
                 ]}
                 onSelect={(id) => onChangeTeamMode(id === 'all')}
                 activeEntry={
@@ -203,7 +212,8 @@ export const Team = (props: TeamProps) => {
 
                       <th>
                         <button onClick={sortBy('since')}>
-                          {t('Member since', { ns: 'project-assignments' })} {sortIcon('since')}
+                          {t('Member since', { ns: 'project-assignments' })}{' '}
+                          {sortIcon('since')}
                         </button>
                       </th>
                     </tr>
@@ -243,7 +253,9 @@ export const Team = (props: TeamProps) => {
                             </span>
                           )}
                           {isMe(member) && (
-                            <span className='badge'>{t('You', { ns: 'common' })}</span>
+                            <span className='badge'>
+                              {t('You', { ns: 'common' })}
+                            </span>
                           )}
                         </td>
 
@@ -257,31 +269,26 @@ export const Team = (props: TeamProps) => {
                     ))}
                   </tbody>
                 </table>
-
-                {selected.length === 1 ? (
-                  <p className='hint ok'>
-                    <Check size={16} /> {t('Selected 1 team member', { ns: 'project-assignments' })}
-                  </p>
-                ) : (
-                  <p
-                    className={selected.length === 0 ? 'hint check' : 'hint ok'}
-                  >
-                    <Check size={16} />{' '}
-                    {t('Selected ${n} team members', { ns: 'project-assignments' }).replace(
-                      '${n}',
-                      selected.length.toString()
-                    )}
-                  </p>
-                )}
+                <p className={selected.length === 0 ? 'hint check' : 'hint ok'}>
+                  <Check size={16} />{' '}
+                  {t('selectedTeamMembers', {
+                    ns: 'project-assignments',
+                    count: selected.length,
+                  })}
+                </p>
               </>
             )}
           </section>
         </div>
 
         <section className='wizard-nav'>
-          <button onClick={props.onCancel}>{t('Cancel', { ns: 'common' })}</button>
+          <button onClick={props.onCancel}>
+            {t('Cancel', { ns: 'common' })}
+          </button>
 
-          <button onClick={props.onBack}>{t('Back', { ns: 'project-assignments' })}</button>
+          <button onClick={props.onBack}>
+            {t('Back', { ns: 'project-assignments' })}
+          </button>
 
           <button className='primary' onClick={props.onNext}>
             {t('Next', { ns: 'project-assignments' })}

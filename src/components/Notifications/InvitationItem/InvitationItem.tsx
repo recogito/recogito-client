@@ -7,7 +7,7 @@ import {
   joinProject,
 } from '@backend/helpers/invitationHelpers';
 import type { Invitation, ExtendedProjectData } from 'src/Types';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 import './InvitationItem.css';
 
@@ -63,13 +63,14 @@ export const InvitationItem = (props: InvitationItemProps) => {
 
   return (
     <li className='notification-item invitation-item'>
-      <p
-        dangerouslySetInnerHTML={{
-          __html: t('Invitation', { ns: 'notifications' })
-            .replace('${sender}', i.invited_by_name as string)
-            .replace('${project}', i.project_name as string),
-        }}
-      />
+      <p>
+        <Trans
+          i18nKey='Invitation'
+          ns='notifications'
+          values={{ sender: i.invited_by_name, project: i.project_name }}
+          components={{ strong: <strong /> }}
+        />
+      </p>
 
       <TimeAgo datetime={i.created_at} locale={i18n.language} />
 
