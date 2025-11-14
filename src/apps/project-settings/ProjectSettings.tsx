@@ -28,8 +28,9 @@ import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
-  Translations,
 } from 'src/Types';
+import clientI18next from 'src/i18n/client';
+import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import './ProjectSettings.css';
 
@@ -38,8 +39,6 @@ interface ProjectSettingsProps {
 
   me: MyProfile;
 
-  i18n: Translations;
-
   project: ExtendedProjectData;
 
   availablePlugins: Plugin[];
@@ -47,8 +46,14 @@ interface ProjectSettingsProps {
   installedPlugins: PluginInstallationConfig[];
 }
 
-export const ProjectSettings = (props: ProjectSettingsProps) => {
-  const { t } = props.i18n;
+const ProjectSettings = (props: ProjectSettingsProps) => {
+  const { t, i18n } = useTranslation([
+    'common',
+    'project-sidebar',
+    'dashboard-projects',
+    'a11y',
+    'project-settings',
+  ]);
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -210,7 +215,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
       lockProject(supabase, props.project.id).then((result) => {
         if (result) {
           setState('success');
-          window.location.href = `/${props.i18n.lang}/projects`;
+          window.location.href = `/${i18n.language}/projects`;
         } else {
           setState('failed');
         }
@@ -228,8 +233,8 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
 
   const onError = (error: string) => {
     setToast({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'common' }),
+      description: t(error) || error,
       type: 'error',
     });
   };
@@ -255,23 +260,21 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
 
   return (
     <>
-      <TopBar i18n={props.i18n} onError={onError} me={props.me} />
+      <TopBar onError={onError} me={props.me} />
       <BackButtonBar
-        i18n={props.i18n}
         showBackToProjects={false}
         crumbs={[
-          { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
+          { label: t('Projects', { ns: 'common' }), href: `/${i18n.language}/projects/` },
           {
             label: props.project.name,
-            href: `/${props.i18n.lang}/projects/${props.project.id}`,
+            href: `/${i18n.language}/projects/${props.project.id}`,
           },
-          { label: t['Settings'], href: undefined },
+          { label: t('Settings', { ns: 'project-sidebar' }), href: undefined },
         ]}
       />
       <div className='project-settings'>
         <ToastProvider>
           <SettingsHeader
-            i18n={props.i18n}
             onSwitchTab={setTab}
             currentTab={tab}
           />
@@ -282,25 +285,25 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                   className='project-settings-label-detail text-body-large-bold'
                   htmlFor='firstName'
                 >
-                  {t['Project Details']}
+                  {t('Project Details', { ns: 'dashboard-projects' })}
                 </Label.Root>
                 <Label.Root className='project-settings-label text-body-small-bold'>
-                  {t['Name']}
+                  {t('Name', { ns: 'common' })}
                 </Label.Root>
                 <input
                   className='project-settings-input'
                   type='text'
                   value={name}
-                  placeholder={t['Name your project']}
+                  placeholder={t('Name your project', { ns: 'dashboard-projects' })}
                   onChange={(evt) => setName(evt.target.value)}
                 />
                 <Label.Root className='project-settings-label text-body-small-bold'>
-                  {t['Description']}
+                  {t('Description', { ns: 'dashboard-projects' })}
                 </Label.Root>
                 <input
                   type='text'
                   value={description}
-                  placeholder={t['Describe your project']}
+                  placeholder={t('Describe your project', { ns: 'dashboard-projects' })}
                   onChange={(evt) => setDescription(evt.target.value)}
                 />
                 <div className='project-settings-visibility'>
@@ -308,14 +311,14 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                     className='project-settings-label-detail text-body-large-bold'
                     htmlFor='firstName'
                   >
-                    {t['Project Visibility']}
+                    {t('Project Visibility', { ns: 'dashboard-projects' })}
                   </Label.Root>
                   <div className='project-settings-switches'>
                     <RadioGroup.Root
                       className='project-settings-radio-group-root'
                       defaultValue='private'
                       value={visibility}
-                      aria-label={t['set project visibility']}
+                      aria-label={t('set project visibility', { ns: 'a11y' })}
                       onValueChange={(value) =>
                         value === 'public'
                           ? setOpenJoin(true)
@@ -334,14 +337,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                           className='project-settings-radio-group-label text-body-small-bold'
                           htmlFor='visibility-private'
                         >
-                          {t['Private']}
+                          {t('Private', { ns: 'common' })}
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
                         {
-                          t[
-                            'Project admins choose the users that can join this project'
-                          ]
+                          t('Project admins choose the users that can join this project', { ns: 'dashboard-projects' })
                         }
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -356,14 +357,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                           className='project-settings-radio-group-label text-body-small-bold'
                           htmlFor='visibility-public'
                         >
-                          {t['Public']}
+                          {t('Public', { ns: 'common' })}
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
                         {
-                          t[
-                            'Any registered user can join this project without an invitation'
-                          ]
+                          t('Any registered user can join this project without an invitation', { ns: 'dashboard-projects' })
                         }
                       </div>
                     </RadioGroup.Root>
@@ -372,13 +371,13 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                         className='project-settings-label-detail text-body-large-bold'
                         htmlFor='firstName'
                       >
-                        {t['Project Type']}
+                        {t('Project Type', { ns: 'dashboard-projects' })}
                       </Label.Root>
                       <RadioGroup.Root
                         className='project-settings-radio-group-root'
                         defaultValue='assignments'
                         value={type}
-                        aria-label={t['set project type']}
+                        aria-label={t('set project type', { ns: 'a11y' })}
                         onValueChange={(value) =>
                           value === 'assignments'
                             ? setOpenEdit(false)
@@ -397,14 +396,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                             className='project-settings-radio-group-label text-body-small-bold'
                             htmlFor='type-assignments'
                           >
-                            {t['Assignments']}
+                            {t('Assignments', { ns: 'common' })}
                           </label>
                         </div>
                         <div className='project-settings-radio-group-helper text-body-small'>
                           {
-                            t[
-                              'Project admins create assignments with specific documents and team members'
-                            ]
+                            t('Project admins create assignments with specific documents and team members', { ns: 'dashboard-projects' })
                           }
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -419,24 +416,24 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                             className='project-settings-radio-group-label text-body-small-bold'
                             htmlFor='type-single-team'
                           >
-                            {t['Single Team']}
+                            {t('Single Team', { ns: 'dashboard-projects' })}
                           </label>
                         </div>
                         <div className='project-settings-radio-group-helper text-body-small'>
-                          {t['Project members can annotate any document']}
+                          {t('Project members can annotate any document', { ns: 'dashboard-projects' })}
                         </div>
                       </RadioGroup.Root>
                     </div>
                   </div>
                   <div className='project-settings-documents-view'>
                     <Label.Root className='project-settings-label-detail text-body-large-bold'>
-                      {t['Document View (Right Panel)']}
+                      {t('Document View (Right Panel)', { ns: 'project-settings' })}
                     </Label.Root>
                     <RadioGroup.Root
                       className='project-settings-radio-group-root'
                       defaultValue='closed'
                       value={documentViewRight}
-                      aria-label={t['document view right']}
+                      aria-label={t('document view right', { ns: 'a11y' })}
                       onValueChange={(value: DocumentViewRight) =>
                         setDocumentViewRight(value)
                       }
@@ -453,14 +450,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                           className='project-settings-radio-group-label text-body-small-bold'
                           htmlFor='documents-view-closed'
                         >
-                          {t['Closed']}
+                          {t('Closed', { ns: 'project-settings' })}
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
                         {
-                          t[
-                            'Right panel will be closed by default when opening a document'
-                          ]
+                          t('Right panel will be closed by default when opening a document', { ns: 'project-settings' })
                         }
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -475,14 +470,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                           className='project-settings-radio-group-label text-body-small-bold'
                           htmlFor='documents-view-annotations'
                         >
-                          {t['Annotations']}
+                          {t('Annotations', { ns: 'common' })}
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
                         {
-                          t[
-                            'Right panel will display annotations when opening a document'
-                          ]
+                          t('Right panel will display annotations when opening a document', { ns: 'project-settings' })
                         }
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -497,14 +490,12 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                           className='project-settings-radio-group-label text-body-small-bold'
                           htmlFor='documents-view-notes'
                         >
-                          {t['Notes']}
+                          {t('Notes', { ns: 'common' })}
                         </label>
                       </div>
                       <div className='project-settings-radio-group-helper text-body-small'>
                         {
-                          t[
-                            'Right panel will display notes when opening a document'
-                          ]
+                          t('Right panel will display notes when opening a document', { ns: 'project-settings' })
                         }
                       </div>
                     </RadioGroup.Root>
@@ -516,7 +507,7 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                       onClick={saveProjectSettings}
                       disabled={saveDisabled}
                     >
-                      <span>{t['Save Changes']}</span>
+                      <span>{t('Save Changes', { ns: 'project-settings' })}</span>
                     </Button>
 
                     <TinySaveIndicator
@@ -532,14 +523,14 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                 className='project-settings-label-detail text-body-large-bold'
                 htmlFor='projectStatus'
               >
-                {t['Project Status']}
+                {t('Project Status', { ns: 'project-settings' })}
               </Label.Root>
               <div className='project-settings-status-helper text-body-small'>
-                {t['status_message']}
+                {t('status_message', { ns: 'project-settings' })}
               </div>
               <div className='project-settings-status-row'>
                 <div className='text-body-small-bold'>
-                  {`${t['Current Status']}:`}
+                  {`${t('Current Status', { ns: 'project-settings' })}:`}
                 </div>
                 <div
                   className={
@@ -551,10 +542,10 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                   {project?.is_locked ? (
                     <>
                       <Lock size={16} />
-                      <div className='text-body-small'>{t['Locked']}</div>
+                      <div className='text-body-small'>{t('Locked', { ns: 'common' })}</div>
                     </>
                   ) : (
-                    <div className='text-body-small'>{t['Active']}</div>
+                    <div className='text-body-small'>{t('Active', { ns: 'common' })}</div>
                   )}
                 </div>
               </div>
@@ -571,8 +562,8 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                   <Lock size={16} />
                   <span>
                     {project?.is_locked
-                      ? t['Unlock Project']
-                      : t['Lock Project']}
+                      ? t('Unlock Project', { ns: 'common' })
+                      : t('Lock Project', { ns: 'project-settings' })}
                   </span>
                 </Button>
                 <TinySaveIndicator resultOnly state={state} fadeOut={2500} />
@@ -581,7 +572,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           )}
           {tab === 'tagging' && (
             <TagSettings
-              i18n={props.i18n}
               project={props.project}
               onError={onError}
             />
@@ -596,7 +586,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
                 </p>
 
                 <GetPlugins
-                  i18n={props.i18n}
                   project={props.project}
                   availablePlugins={props.availablePlugins}
                   installedPlugins={installedPlugins}
@@ -664,7 +653,6 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
           />
           <LockWarningMessage
             open={lockOpen}
-            i18n={props.i18n}
             isLocked={!!project?.is_locked}
             onCancel={() => setLockOpen(false)}
             onConfirm={handleLockProject}
@@ -674,3 +662,9 @@ export const ProjectSettings = (props: ProjectSettingsProps) => {
     </>
   );
 };
+
+export const ProjectSettingsWrapper = (props: ProjectSettingsProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <ProjectSettings {...props} />
+  </I18nextProvider>
+);

@@ -7,13 +7,10 @@ import {
   getMyProfile,
 } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
-import { getLangFromUrl, getTranslations } from '@i18n';
-import { ProjectCollaboration } from '@apps/project-collaboration';
+import { ProjectCollaborationWrapper } from '@apps/project-collaboration';
 import { listMyProjectsExtended } from '@backend/helpers';
 
-const lang = getLangFromUrl(Astro.url);
-
-const i18n = getTranslations(Astro.request, 'project-collaboration');
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -43,9 +40,8 @@ const projects = await listMyProjectsExtended(supabase);
 ---
 
 <BaseLayout title='Team'>
-  <ProjectCollaboration
+  <ProjectCollaborationWrapper
     client:only='react'
-    i18n={i18n}
     me={profile.data}
     project={project.data}
     invitations={invitations.data}

@@ -10,13 +10,12 @@ import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
-  Translations,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './ProjectEntry.css';
 
 interface ProjectsEntryProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -34,6 +33,8 @@ interface ProjectsEntryProps {
 }
 
 export const ProjectsEntry = (props: ProjectsEntryProps) => {
+  const { i18n, t } = useTranslation(['common', 'dashboard-projects']);
+
   const {
     contexts,
     description,
@@ -57,7 +58,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
 
   const onClick = () => {
     if (!is_open_join || users.length > 0) {
-      window.location.href = `/${props.i18n.lang}/projects/${id}`;
+      window.location.href = `/${i18n.language}/projects/${id}`;
     }
   };
 
@@ -69,9 +70,9 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
     setJoinProjectOpen(false);
     joinProject(supabase, id).then((resp) => {
       if (resp) {
-        window.location.pathname = `/${props.i18n.lang}/projects/${id}`;
+        window.location.pathname = `/${i18n.language}/projects/${id}`;
       } else {
-        props.onError(props.i18n.t['Something happened']);
+        props.onError(t('Something went wrong', { ns: 'common' }));
       }
     });
   };
@@ -87,7 +88,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
             {description}
           </div>
         ) : (
-          <p className='no-description'>{props.i18n.t['No description.']}</p>
+          <p className='no-description'>{t('No description.', { ns: 'dashboard-projects' })}</p>
         )}
       </div>
 
@@ -130,10 +131,9 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
         ))}
       </div>
       <div className='project-entry-actions'>
-        {is_locked && <LockedPill i18n={props.i18n} />}
+        {is_locked && <LockedPill />}
         {users.length > 0 && (
           <ProjectCardActions
-            i18n={props.i18n}
             me={props.me}
             project={props.project}
             onDeleted={props.onDeleted}
@@ -146,7 +146,6 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
         {is_open_join && users.length === 0 && (
           <OpenJoin
             projectId={id}
-            i18n={props.i18n}
             onJoin={handleJoinProject}
           />
         )}
@@ -154,7 +153,6 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
       <JoinProjectDialog
         open={joinProjectOpen}
         onClose={() => setJoinProjectOpen(false)}
-        i18n={props.i18n}
         project={props.project}
         onJoin={handleConfirmJoin}
       />

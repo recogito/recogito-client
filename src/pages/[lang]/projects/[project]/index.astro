@@ -6,13 +6,12 @@ import {
   getInstalledPlugins,
   listMyProjectsExtended,
 } from '@backend/helpers';
-import { getLangFromUrl, getTranslations } from '@i18n';
-import { ProjectHome } from '@apps/project-home';
+import { ProjectHomeWrapper } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import PluginRegistry from '@components/Plugins/PluginRegistry';
 
-const lang = getLangFromUrl(Astro.url);
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -60,8 +59,6 @@ if (documents.error) {
   return new Response(error.body, { headers: error.headers, status: 500 });
 }
 
-const i18n = getTranslations(Astro.request, 'project-home');
-
 const projects = await listMyProjectsExtended(supabase);
 
 const availableLayers = await getAvailableLayers(supabase, projectId as string);
@@ -80,9 +77,8 @@ if (installedPlugins.error || !installedPlugins.data) {
 ---
 
 <BaseLayout title={project.data.name}>
-  <ProjectHome
+  <ProjectHomeWrapper
     client:only='react'
-    i18n={i18n}
     projects={projects.data}
     project={project.data}
     requests={requests.data}

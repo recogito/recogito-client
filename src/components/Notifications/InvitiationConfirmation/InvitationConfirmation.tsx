@@ -1,12 +1,12 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Invitation, Translations } from 'src/Types';
+import type { Invitation } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './InvitationConfirmation.css';
 
 interface InvitationConfirmationProps {
-  i18n: Translations;
 
   invitation: Invitation;
 
@@ -16,7 +16,8 @@ interface InvitationConfirmationProps {
 }
 
 export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
-  const { invitation, i18n } = props;
+  const { invitation } = props;
+  const { t } = useTranslation(['notifications']);
 
   return (
     <Dialog.Root open={true} onOpenChange={props.onClose}>
@@ -32,11 +33,11 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
             <span
               dangerouslySetInnerHTML={{
                 __html: props.isCreator
-                  ? i18n.t['Confirmed-creator'].replace(
+                  ? t('Confirmed-creator', { ns: 'notifications' }).replace(
                       '${project}',
                       invitation.project_name!
                     )
-                  : i18n.t['Confirmed-student'].replace(
+                  : t('Confirmed-student', { ns: 'notifications' }).replace(
                       '${project}',
                       invitation.project_name!
                     ),

@@ -1,14 +1,9 @@
 ---
+import { i18n } from 'astro:config/server';
 import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { defaultLang, languages } from '@i18n';
-import parser from 'accept-language-parser';
 
-const accepts = Astro.request.headers.get('accept-language');
-
-const lang = accepts
-  ? parser.pick(Object.keys(languages), accepts)
-  : defaultLang;
+const lang = Astro.preferredLocale || i18n?.defaultLocale || "en";
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 

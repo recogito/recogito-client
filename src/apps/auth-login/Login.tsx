@@ -6,8 +6,10 @@ import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { isLoggedIn } from '@backend/auth';
-import type { LoginMethod, Translations } from 'src/Types';
+import type { LoginMethod } from 'src/Types';
 import { StateChecking, StateLoginForm } from './states';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './Login.css';
 
@@ -26,14 +28,13 @@ const clearCookies = () => {
   document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 };
 
-export const Login = (props: {
-  i18n: Translations;
+const Login = (props: {
   methods: LoginMethod[];
 }) => {
   const [isChecking, setIsChecking] = useState(true);
 
   const [primary, ...loginMethods] = props.methods;
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['auth-login']);
 
   const host =
     window.location.port !== ''
@@ -62,7 +63,7 @@ export const Login = (props: {
           localStorage.removeItem('redirect-to');
           window.location.href = redirectUrl;
         } else {
-          window.location.href = `/${props.i18n.lang}/projects`;
+          window.location.href = `/${i18n.language}/projects`;
         }
       }
     });
@@ -75,7 +76,7 @@ export const Login = (props: {
             localStorage.removeItem('redirect-to');
             window.location.href = redirectUrl;
           } else {
-            window.location.href = `/${props.i18n.lang}/projects`;
+            window.location.href = `/${i18n.language}/projects`;
           }
         });
       } else {
@@ -102,7 +103,7 @@ export const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
-    window.location.href = `/${props.i18n.lang}/keycloak`;
+    window.location.href = `/${i18n.language}/keycloak`;
   };
 
   const renderLoginButton = useCallback(
@@ -110,7 +111,7 @@ export const Login = (props: {
       if (method.type === LoginMethods.username_password) {
         return (
           <LoginAccordion key={method.type} label={method.name}>
-            <StateLoginForm i18n={props.i18n} />
+            <StateLoginForm />
           </LoginAccordion>
         );
       }
@@ -145,10 +146,10 @@ export const Login = (props: {
       {isChecking && <StateChecking />}
       {!isChecking && (
         <div className='login'>
-          <h1>{t['Welcome Back']}</h1>
-          <h2>{t['Log into your account']}</h2>
+          <h1>{t('Welcome Back', { ns: 'auth-login' })}</h1>
+          <h2>{t('Log into your account', { ns: 'auth-login' })}</h2>
           {primary.type === LoginMethods.username_password && (
-            <StateLoginForm i18n={props.i18n} />
+            <StateLoginForm />
           )}
           {primary.type !== LoginMethods.username_password &&
             renderLoginButton(primary, 'primary')}
@@ -158,3 +159,9 @@ export const Login = (props: {
     </div>
   );
 };
+
+export const LoginWrapper = (props: { methods: LoginMethod[] }) => (
+  <I18nextProvider i18n={clientI18next}>
+    <Login {...props} />
+  </I18nextProvider>
+);

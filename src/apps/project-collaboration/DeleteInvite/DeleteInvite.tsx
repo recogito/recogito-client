@@ -2,14 +2,14 @@ import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Trash, X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import type { Invitation, Translations } from 'src/Types';
+import type { Invitation } from 'src/Types';
 import { deleteInvitation } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 interface DeleteInviteProps {
-  i18n: Translations;
 
   invitation: Invitation;
 
@@ -19,7 +19,7 @@ interface DeleteInviteProps {
 }
 
 export const DeleteInvite = (props: DeleteInviteProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'project-collaboration', 'common']);
 
   const { invitation } = props;
 
@@ -47,7 +47,7 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
       <Dialog.Trigger asChild>
         <button
           className='unstyled icon-only'
-          aria-label={t['delete this unaccepted invitation']}
+          aria-label={t('delete this unaccepted invitation', { ns: 'a11y' })}
         >
           <Trash size={16} />
         </button>
@@ -57,14 +57,14 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
         <Dialog.Overlay className='dialog-overlay'>
           <DialogContent className='dialog-content'>
             <Dialog.Title className='dialog-title'>
-              {t['Confirm Delete Invite']}
+              {t('Confirm Delete Invite', { ns: 'project-collaboration' })}
             </Dialog.Title>
 
             <Dialog.Description className='dialog-description'>
               {
                 <span
                   dangerouslySetInnerHTML={{
-                    __html: t['Delete_invite'].replace('${email}', email),
+                    __html: t('Delete_invite', { ns: 'project-collaboration' }).replace('${email}', email),
                   }}
                 />
               }
@@ -75,20 +75,20 @@ export const DeleteInvite = (props: DeleteInviteProps) => {
                 {
                   <>
                     <Trash size={16} />
-                    <span>{t['Delete']}</span>
+                    <span>{t('Delete', { ns: 'common' })}</span>
                   </>
                 }
               </Button>
 
               <Dialog.Close asChild>
-                <button>{t['Cancel']}</button>
+                <button>{t('Cancel', { ns: 'common' })}</button>
               </Dialog.Close>
             </footer>
 
             <Dialog.Close asChild>
               <button
                 className='unstyled icon-only dialog-close'
-                aria-label={t['Close']}
+                aria-label={t('Close', { ns: 'common' })}
               >
                 <X />
               </button>

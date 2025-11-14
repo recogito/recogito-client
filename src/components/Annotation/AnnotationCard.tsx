@@ -10,7 +10,8 @@ import { AnnotationCardSection } from './AnnotationCardSection';
 import { EmptyAnnotation } from './EmptyAnnotation';
 import { Interstitial } from './Interstitial';
 import { ReplyField } from './ReplyField';
-import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Layer, Policies, VocabularyTerm } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './AnnotationCard.css';
 
@@ -21,8 +22,6 @@ export interface AnnotationCardProps {
   autoFocus?: boolean;
 
   borderColor?: Color;
-
-  i18n: Translations;
 
   isNote?: boolean;
 
@@ -71,6 +70,8 @@ const getTags = (annotation: SupabaseAnnotation) =>
   annotation.bodies.filter(b => b.purpose === 'tagging');
 
 export const AnnotationCard = (props: AnnotationCardProps) => {
+
+  const { t } = useTranslation(['annotation-common']);
 
   const { annotation } = props;
 
@@ -207,7 +208,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
         <EmptyAnnotation 
           annotation={annotation} 
           autoFocus={props.autoFocus}
-          i18n={props.i18n}
           isSelected={props.isSelected}
           me={me} 
           present={props.present}
@@ -229,8 +229,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                 annotation={annotation}
                 comment={comments[0]}
                 tags={tags}
-                i18n={props.i18n}
                 index={0}
+                isNote={props.isNote}
                 isPrivate={isPrivate}
                 isProjectLocked={props.isProjectLocked}
                 isReadOnly={props.isReadOnly}
@@ -254,7 +254,6 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             {isCollapsed && (
               <li className="interstitial-wrapper">
                 <Interstitial
-                  i18n={props.i18n}
                   count={comments.length - 2}
                   onClick={() => setShouldCollapse(false)} />
               </li>
@@ -272,8 +271,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   annotation={annotation}
                   comment={comment}
                   emphasizeOnEntry={!dontEmphasise.current.has(comment.id)}
-                  i18n={props.i18n}
                   index={index + 1}
+                  isNote={props.isNote}
                   isPrivate={isPrivate}
                   isProjectLocked={props.isProjectLocked}
                   isReadOnly={props.isReadOnly}
@@ -303,8 +302,8 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
                   emphasizeOnEntry={!dontEmphasise.current.has(
                     comments[comments.length - 1].id
                   )}
-                  i18n={props.i18n}
                   index={comments.length - 1}
+                  isNote={props.isNote}
                   isPrivate={isPrivate}
                   isProjectLocked={props.isProjectLocked}
                   isReadOnly={props.isReadOnly}
@@ -345,11 +344,10 @@ export const AnnotationCard = (props: AnnotationCardProps) => {
             <animated.div style={style}>
               <ReplyField
                 autoFocus
-                i18n={props.i18n}
                 isPrivate={isPrivate}
                 annotation={props.annotation}
                 me={me}
-                placeholder={props.i18n.t['Reply']}
+                placeholder={t('Reply', { ns: 'annotation-common' })}
                 beforeSubmit={beforeReply} 
                 onNavigateTo={props.onNavigateTo}
                 onSubmit={onReply} />

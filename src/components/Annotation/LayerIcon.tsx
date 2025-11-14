@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
 import { Stack } from '@phosphor-icons/react';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './LayerIcon.css';
 
 interface LayerIconProps {
-
-  i18n: Translations;
 
   layerId?: string;
 
@@ -17,10 +15,10 @@ interface LayerIconProps {
 
 export const LayerIcon = (props: LayerIconProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const label = useMemo(() => 
-    props.layerId ? props.layerNames.get(props.layerId) || t['Baselayer'] : t['Baselayer'], []);
+    props.layerId ? props.layerNames.get(props.layerId) || t('Baselayer', { ns: 'annotation-common' }) : t('Baselayer', { ns: 'annotation-common' }), []);
 
   return props.layerId && (
     <Tooltip.Provider>

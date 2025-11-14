@@ -13,12 +13,11 @@ import {
   QuillEditorRoot,
   QuillEditorToolbar,
 } from '@components/QuillEditor';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './ReplyField.css';
 
 interface ReplyFieldProps {
-  i18n: Translations;
 
   isPrivate?: boolean;
 
@@ -39,7 +38,7 @@ interface ReplyFieldProps {
 
 export const ReplyField = (props: ReplyFieldProps) => {
   const [value, setValue] = useState<Delta>(new Delta());
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y']);
 
   const onSave = () => {
     const body: SupabaseAnnotationBody = {
@@ -69,14 +68,13 @@ export const ReplyField = (props: ReplyFieldProps) => {
           <AuthorAvatar author={props.me} isPrivate={props.isPrivate} />
 
           <div className='annotation-toolbar-wrapper'>
-            <QuillEditorToolbar i18n={props.i18n} />
+            <QuillEditorToolbar />
           </div>
         </div>
 
         <div className='reply-field-wrapper'>
           <QuillEditor
             autoFocus={props.autoFocus}
-            i18n={props.i18n}
             placeholder={props.placeholder}
             value={value}
             onChange={setValue}
@@ -86,7 +84,7 @@ export const ReplyField = (props: ReplyFieldProps) => {
           <button
             className='save save-arrow'
             onClick={onSave}
-            aria-label={t['save reply']}
+            aria-label={t('save reply', { ns: 'a11y' })}
           >
             <ArrowRight size={20} />
           </button>

@@ -8,18 +8,18 @@ import {
   Warning,
 } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
-import type { Document, DocumentWithContext, Translations } from 'src/Types';
+import type { Document, DocumentWithContext } from 'src/Types';
 import {
   assignmentSpecToContext,
   type AssignmentSpec,
 } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 import { Label } from '@radix-ui/react-label';
+import { useTranslation } from 'react-i18next';
 
 import './Document.css';
 
 interface DocumentsProps {
-  i18n: Translations;
 
   assignment: AssignmentSpec;
 
@@ -33,7 +33,7 @@ interface DocumentsProps {
 }
 
 export const Documents = (props: DocumentsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'a11y', 'common']);
 
   const { documents } = props;
 
@@ -59,8 +59,8 @@ export const Documents = (props: DocumentsProps) => {
     <>
       <div className='row tab-documents'>
         <section className='column'>
-          <h1>{t['Step']} 2</h1>
-          <p>{t['Add documents to this assignment.']}</p>
+          <h1>{t('Step', { ns: 'project-assignments' })} 2</h1>
+          <p>{t('Add documents to this assignment.', { ns: 'project-assignments' })}</p>
         </section>
 
         <section className='column'>
@@ -81,7 +81,7 @@ export const Documents = (props: DocumentsProps) => {
                       <span>
                         <Label
                           htmlFor='all-documents'
-                          aria-label={t['select all documents in project']}
+                          aria-label={t('select all documents in project', { ns: 'a11y' })}
                         >
                           <Square size={20} id='all-documents' />
                         </Label>
@@ -108,7 +108,7 @@ export const Documents = (props: DocumentsProps) => {
                       <Checkbox.Indicator>
                         <Label
                           htmlFor={`document-${document.id}`}
-                          aria-label={`${t['remove document']} ${document.name} ${t['from this assignment']}`}
+                          aria-label={`${t('remove document', { ns: 'a11y' })} ${document.name} ${t('from this assignment', { ns: 'a11y' })}`}
                         >
                           <CheckSquare size={20} weight='fill' />
                         </Label>
@@ -117,7 +117,7 @@ export const Documents = (props: DocumentsProps) => {
                       {!selected.includes(document.id) && (
                         <Label
                           htmlFor={`document-${document.id}`}
-                          aria-label={`${t['add document']} ${document.name} ${t['to this assignment']}`}
+                          aria-label={`${t('add document', { ns: 'a11y' })} ${document.name} ${t('to this assignment', { ns: 'a11y' })}`}
                         >
                           <span>
                             <Square size={20} id={`document-${document.id}`} />
@@ -144,16 +144,16 @@ export const Documents = (props: DocumentsProps) => {
 
           {selected.length === 0 ? (
             <p className='hint warn'>
-              <Warning size={16} /> {t['Select at least 1 document']}
+              <Warning size={16} /> {t('Select at least 1 document', { ns: 'project-assignments' })}
             </p>
           ) : selected.length === 1 ? (
             <p className='hint ok'>
-              <Check size={16} /> {t['Selected 1 document']}
+              <Check size={16} /> {t('Selected 1 document', { ns: 'project-assignments' })}
             </p>
           ) : (
             <p className='hint ok'>
               <Check size={16} />{' '}
-              {t['Selected ${n} documents'].replace(
+              {t('Selected ${n} documents', { ns: 'project-assignments' }).replace(
                 '${n}',
                 selected.length.toString()
               )}
@@ -163,10 +163,10 @@ export const Documents = (props: DocumentsProps) => {
       </div>
 
       <section className='wizard-nav'>
-        <button onClick={props.onCancel}>{t['Cancel']}</button>
+        <button onClick={props.onCancel}>{t('Cancel', { ns: 'common' })}</button>
 
         <button className='primary' onClick={props.onNext}>
-          {t['Next']}
+          {t('Next', { ns: 'project-assignments' })}
         </button>
       </section>
     </>

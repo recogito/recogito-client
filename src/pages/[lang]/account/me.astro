@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
-import { AccountPreferences } from '@apps/dashboard-account/AccountPreferences';
+import { AccountPreferencesWrapper } from '@apps/dashboard-account/AccountPreferences';
+import { getFixedT } from 'src/i18n/server';
 
-const i18n = getTranslations(Astro.request, 'dashboard-account');
+const locale = Astro.currentLocale;
+const t = await getFixedT(locale, ['dashboard-account']);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -15,8 +16,8 @@ if (error || !data) {
 }
 ---
 
-<BaseLayout title={i18n.t['Account Preferences']}>
-  <AccountPreferences client:load i18n={i18n} profile={data} />
+<BaseLayout title={t('Account Preferences', { ns: 'dashboard-account' })}>
+  <AccountPreferencesWrapper client:load profile={data} />
 </BaseLayout>
 
 <style>

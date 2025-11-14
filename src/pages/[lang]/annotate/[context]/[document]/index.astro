@@ -2,7 +2,6 @@
 import crypto from 'crypto';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getLangFromUrl, getTranslations } from '@i18n';
 import { ImageAnnotation } from '@apps/annotation-image';
 import { TextAnnotation } from '@apps/annotation-text';
 import { getDocumentInContext, getInstalledPlugins } from '@backend/helpers';
@@ -10,8 +9,6 @@ import { getCollection } from '@backend/crud/collections';
 import PluginRegistry from '@components/Plugins/PluginRegistry';
 import { isOpenJoinEditFromContext } from '@backend/helpers';
 import { getMyProfile } from '@backend/crud';
-
-const lang = getLangFromUrl(Astro.url);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -116,7 +113,6 @@ const plugins = PluginRegistry.resolvePlugins(
     viewer === 'OPENSEADRAGON' ? (
       <ImageAnnotation
         client:only='react'
-        i18n={getTranslations(Astro.request, 'annotation-image')}
         document={document.data}
         channelId={channelId}
         plugins={plugins}
@@ -125,7 +121,6 @@ const plugins = PluginRegistry.resolvePlugins(
     ) : (
       <TextAnnotation
         client:only='react'
-        i18n={getTranslations(Astro.request, 'annotation-text')}
         document={document.data}
         channelId={channelId}
         plugins={plugins}

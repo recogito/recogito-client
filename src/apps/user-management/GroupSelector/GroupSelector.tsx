@@ -4,10 +4,10 @@ import { CaretDown, Check } from '@phosphor-icons/react';
 import { updateUserProjectGroup } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TinySaveIndicator, type SaveState } from '@components/TinySaveIndicator';
-import type { Group, Translations, ExtendedUserProfile } from 'src/Types';
+import type { Group, ExtendedUserProfile } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface GroupSelectorProps {
-  i18n: Translations;
 
   user: ExtendedUserProfile;
 
@@ -37,7 +37,7 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>(
 );
 
 export const GroupSelector = (props: GroupSelectorProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common']);
 
   const { user } = props;
 
@@ -70,7 +70,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
       <Select.Trigger
         disabled={state === 'saving'}
         className='select-trigger'
-        aria-label={t['Access Level']}
+        aria-label={t('Access Level', { ns: 'common' })}
       >
         <Select.Value />
         <Select.Icon className='select-icon'>

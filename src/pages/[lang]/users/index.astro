@@ -1,13 +1,12 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud/profiles';
-import { UserManagement } from '@apps/user-management';
+import { UserManagementWrapper } from '@apps/user-management';
 import { getProfilesExtended } from '../../../backend/helpers/profileHelpers';
 import { getOrgGroups } from '../../../backend/crud/groups';
 
-const lang = getLangFromUrl(Astro.url);
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -46,8 +45,7 @@ const canInviteUsers = import.meta.env.PUBLIC_ENABLE_USER_INVITE === 'TRUE';
 ---
 
 <BaseLayout title='User Management'>
-  <UserManagement
-    i18n={getTranslations(Astro.request, 'user-management')}
+  <UserManagementWrapper
     profiles={profiles}
     me={me}
     groups={groups}

@@ -1,12 +1,11 @@
 import { AccountActions } from '@components/AccountActions';
 import { Notifications } from '@components/Notifications';
 import config from 'src/config.json';
-import type { Translations, ExtendedProjectData, MyProfile } from 'src/Types';
+import type { ExtendedProjectData, MyProfile } from 'src/Types';
 
 import './TopBar.css';
 
 interface TopBarProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -39,7 +38,6 @@ export const TopBar = (props: TopBarProps) => {
         </div>
         <div className='top-bar-actions'>
           <Notifications
-            i18n={props.i18n}
             onInvitationAccepted={
               props.onInvitationAccepted ? props.onInvitationAccepted : () => {}
             }
@@ -47,7 +45,7 @@ export const TopBar = (props: TopBarProps) => {
             isCreator={props.isCreator}
             me={props.me}
           />
-          <AccountActions i18n={props.i18n} profile={props.me} />
+          <AccountActions profile={props.me} />
         </div>
       </header>
     </div>

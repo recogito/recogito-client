@@ -1,13 +1,6 @@
 import { GraduationCap } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
 
-interface AssignmentEmptyProps {
-
-  i18n: Translations;
-
-}
-
-export const AssignmentsEmpty = (_props: AssignmentEmptyProps) => {
+export const AssignmentsEmpty = () => {
 
   return (
     <div className="project-assignments-empty">

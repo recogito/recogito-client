@@ -89,6 +89,6 @@
   "Import an existing document from a project.": "Import an existing document from a project.",
   "Copied": "Copied",
   "Document copied successfully.": "Document copied successfully.",
-  "Could not copy file contents of ${name}.": "Could not copy file contents of ${name}.",
+  "fileCopyError": "Could not copy file contents of {{docName}}",
   "Could not copy documents into collection.": "Could not copy documents into collection."
 }

@@ -1,19 +1,18 @@
 import { Check, CaretDown } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { useState } from 'react';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 import './HeaderFilterAction.css';
 
 export type Filters = 'active' | 'locked' | 'all';
 
 interface HeaderFilterActionProps {
-  i18n: Translations;
 
   onChangeFilter(filter: Filters): void;
 }
 
 export const HeaderFilterAction = (props: HeaderFilterActionProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['dashboard-projects']);
 
   const [filter, setFilter] = useState<Filters>('active');
 
@@ -27,7 +26,7 @@ export const HeaderFilterAction = (props: HeaderFilterActionProps) => {
       className={f === filter ? 'dropdown-item' : 'dropdown-item no-icon'}
       onSelect={changeFilter(f)}
     >
-      {f === filter && <Check size={16} />} {t[f]}
+      {f === filter && <Check size={16} />} {t(f)}
     </Dropdown.Item>
   );
 
@@ -36,8 +35,8 @@ export const HeaderFilterAction = (props: HeaderFilterActionProps) => {
       <Dropdown.Trigger asChild>
         <button>
           <div className='header-filter-row'>
-            <div>{`${t['View']}: `}</div>
-            <div className='header-filter-bold'>{t[filter]}</div>
+            <div>{`${t('View', { ns: 'dashboard-projects' })}: `}</div>
+            <div className='header-filter-bold'>{t(filter)}</div>
             <CaretDown size={16} />
           </div>
         </button>

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Filter } from '@annotorious/react';
 import { AnnotationCard } from '@components/Annotation';
-import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Layer, Policies, VocabularyTerm } from 'src/Types';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { ViewportFilter, ViewportFilterToggle } from './ViewportFilterToggle';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
@@ -27,8 +27,6 @@ interface AnnotationListProps<T extends Anno> {
   currentStyle?: DrawingStyleExpression<SupabaseAnnotation> | HighlightStyleExpression;
 
   filter?: Filter;
-
-  i18n: Translations;
 
   isProjectLocked: boolean;
 
@@ -179,8 +177,7 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
 
   return (
     <div className={className}>
-      <ViewportFilterToggle 
-        i18n={props.i18n} 
+      <ViewportFilterToggle  
         onChange={setViewportFilter} />
 
       <ul
@@ -195,7 +192,6 @@ export const AnnotationList = <T extends Anno>(props: AnnotationListProps<T>) =>
               annotation={annotation}
               autoFocus={autofocus}
               borderColor={getBorderColor(annotation)}
-              i18n={props.i18n}
               isProjectLocked={props.isProjectLocked}
               isReadOnly={isReadOnly(annotation)}
               isSelected={isSelected(annotation)}

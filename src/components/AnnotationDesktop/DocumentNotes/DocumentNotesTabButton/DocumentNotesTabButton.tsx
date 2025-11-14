@@ -1,10 +1,8 @@
 import { Note} from '@phosphor-icons/react';
 import { useNotes } from '../DocumentNotes/useNotes';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface DocumentNotesTabButtonProps {
-
-  i18n: Translations;
 
   onClick(): void;
 
@@ -12,7 +10,7 @@ interface DocumentNotesTabButtonProps {
 
 export const DocumentNotesTabButton = (props: DocumentNotesTabButtonProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common', 'common']);
 
   const { unread } = useNotes();
 
@@ -20,9 +18,9 @@ export const DocumentNotesTabButton = (props: DocumentNotesTabButtonProps) => {
     <div 
       className="with-notification">
       <button
-        aria-label={props.i18n.t['Show document notes']}
+        aria-label={t('Show document notes', { ns: 'annotation-common' })}
         onClick={props.onClick}>
-        <Note size={18} /> {t['Notes']}
+        <Note size={18} /> {t('Notes', { ns: 'common' })}
       </button>
 
       {unread.length > 0 && (

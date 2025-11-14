@@ -2,7 +2,7 @@ import { DotsThreeVertical } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import * as Popover from '@radix-ui/react-popover';
 import { ColorCodingSelector, ColorLegend } from '@components/AnnotationDesktop';
-import type { DocumentLayer, DocumentWithContext, Translations, VocabularyTerm } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, VocabularyTerm } from 'src/Types';
 import { PDFControls } from './PDFControls';
 
 interface MoreToolsProps {
@@ -12,8 +12,6 @@ interface MoreToolsProps {
   layers?: DocumentLayer[];
 
   layerNames: Map<string, string>;
-
-  i18n: Translations;
 
   isPDF: boolean;
 
@@ -35,20 +33,18 @@ export const MoreTools = (props: MoreToolsProps) => {
         className="popover-content anno-more-tools ta-more-tools"
         collisionPadding={10}
         sideOffset={14}>
-        <PDFControls i18n={props.i18n} />
+        <PDFControls />
 
         <div className="anno-toolbar-divider" />
 
         <ColorCodingSelector 
           document={props.document}
-          i18n={props.i18n} 
           present={props.present} 
           layers={props.layers}
           layerNames={props.layerNames} 
           tagVocabulary={props.tagVocabulary} />
 
-        <ColorLegend 
-          i18n={props.i18n} />
+        <ColorLegend />
       </Popover.Content>
     </Popover.Root>
   )

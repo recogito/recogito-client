@@ -16,14 +16,12 @@ import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
-  Translations,
 } from 'src/Types.ts';
+import { useTranslation } from 'react-i18next';
 import './Sidebar.css';
 
 interface Props {
   filter: ProjectFilter | string;
-
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -39,7 +37,7 @@ export const Sidebar = (props: Props) => {
   const [open, setOpen] = useState<boolean>(true);
 
   const { filter, onChangeFilter } = props;
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'dashboard-projects', 'a11y']);
   const [mine, shared, openJoin] = props.projects;
 
   const { tagDefinitions, onCreateTagDefinition, setToast } =
@@ -51,8 +49,8 @@ export const Sidebar = (props: Props) => {
         .then(() => setAddTagDefinition(false))
         .then(() =>
           setToast({
-            title: t['Success'],
-            description: t['Project group successfully added'].replace(
+            title: t('Success', { ns: 'common' }),
+            description: t('Project group successfully added', { ns: 'dashboard-projects' }).replace(
               '${name}',
               name
             ),
@@ -73,7 +71,7 @@ export const Sidebar = (props: Props) => {
           <Button
             className='primary flat compact'
             onClick={() => setOpen(true)}
-            aria-label={t['open sidebar navigation']}
+            aria-label={t('open sidebar navigation', { ns: 'a11y' })}
           >
             <CaretRight size={16} weight='bold' />
           </Button>
@@ -86,12 +84,12 @@ export const Sidebar = (props: Props) => {
     <aside className='dashboard-sidebar open'>
       <section className='dashboard-sidebar-header'>
         <h1>
-          <span>{t['Projects']}</span>
+          <span>{t('Projects', { ns: 'common' })}</span>
         </h1>
         <button
           className='primary flat compact'
           onClick={() => setOpen(false)}
-          aria-label={t['close sidebar']}
+          aria-label={t('close sidebar', { ns: 'a11y' })}
         >
           <CaretLeft size={16} weight='bold' />
         </button>
@@ -105,7 +103,7 @@ export const Sidebar = (props: Props) => {
           >
             <File className='icon' size={20} />
 
-            {t['My Projects']}
+            {t('My Projects', { ns: 'dashboard-projects' })}
 
             <span className={mine.length === 0 ? 'badge disabled' : 'badge'}>
               {mine.length}
@@ -118,7 +116,7 @@ export const Sidebar = (props: Props) => {
               onClick={() => onChangeFilter(ProjectFilter.SHARED)}
             >
               <Users className='icon' size={20} />
-              {t['Shared with me']}
+              {t('Shared with me', { ns: 'dashboard-projects' })}
 
               <span
                 className={shared.length === 0 ? 'badge disabled' : 'badge'}
@@ -134,7 +132,7 @@ export const Sidebar = (props: Props) => {
           >
             <UsersThree className='icon' size={20} />
 
-            {t['Public Projects']}
+            {t('Public Projects', { ns: 'dashboard-projects' })}
 
             <span
               className={openJoin.length === 0 ? 'badge disabled' : 'badge'}
@@ -148,12 +146,12 @@ export const Sidebar = (props: Props) => {
       <section className='dashboard-sidebar-groups'>
         <div className='dashboard-sidebar-groups-header'>
           <h2>
-            <span>{t['Groups']}</span>
+            <span>{t('Groups', { ns: 'dashboard-projects' })}</span>
           </h2>
           <button
             className='primary flat compact'
             onClick={() => setAddTagDefinition(true)}
-            aria-label={t['add project group']}
+            aria-label={t('add project group', { ns: 'a11y' })}
           >
             <Plus size={16} weight='bold' />
           </button>
@@ -176,12 +174,11 @@ export const Sidebar = (props: Props) => {
         )}
 
         <TagDefinitionDialog
-          description={t['Create Project Group']}
-          i18n={props.i18n}
+          description={t('Create Project Group', { ns: 'dashboard-projects' })}
           onCancel={() => setAddTagDefinition(false)}
           onSaved={onSaved}
           open={addTagDefinition}
-          title={t['Create Project Group']}
+          title={t('Create Project Group', { ns: 'dashboard-projects' })}
         />
       </section>
     </aside>

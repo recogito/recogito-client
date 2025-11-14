@@ -6,12 +6,12 @@ import {
   declineInvitation,
   joinProject,
 } from '@backend/helpers/invitationHelpers';
-import type { Invitation, ExtendedProjectData, Translations } from 'src/Types';
+import type { Invitation, ExtendedProjectData } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './InvitationItem.css';
 
 interface InvitationItemProps {
-  i18n: Translations;
 
   invitation: Invitation;
 
@@ -21,7 +21,7 @@ interface InvitationItemProps {
 }
 
 export const InvitationItem = (props: InvitationItemProps) => {
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['notifications', 'common']);
 
   const i = props.invitation;
 
@@ -65,13 +65,13 @@ export const InvitationItem = (props: InvitationItemProps) => {
     <li className='notification-item invitation-item'>
       <p
         dangerouslySetInnerHTML={{
-          __html: t['Invitation']
+          __html: t('Invitation', { ns: 'notifications' })
             .replace('${sender}', i.invited_by_name as string)
             .replace('${project}', i.project_name as string),
         }}
       />
 
-      <TimeAgo datetime={i.created_at} locale={props.i18n.lang} />
+      <TimeAgo datetime={i.created_at} locale={i18n.language} />
 
       <div className='invitation-actions'>
         <Button
@@ -79,11 +79,11 @@ export const InvitationItem = (props: InvitationItemProps) => {
           busy={accepted}
           onClick={onAccept}
         >
-          <span>{t['Accept']}</span>
+          <span>{t('Accept', { ns: 'common' })}</span>
         </Button>
 
         <Button className='tiny flat' busy={declined} onClick={onDecline}>
-          <span>{t['Ignore']}</span>
+          <span>{t('Ignore', { ns: 'common' })}</span>
         </Button>
       </div>
     </li>

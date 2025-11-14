@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import type { Document, Protocol, Translations } from 'src/Types';
+import type { Document, Protocol } from 'src/Types';
 import {
   CaretLeftIcon,
   DotsThreeVertical,
@@ -15,6 +15,7 @@ import {
   type IIIFManifest,
 } from '@apps/project-home/upload/dialogs';
 import type { LibraryDocument } from '@components/DocumentLibrary';
+import { useTranslation } from 'react-i18next';
 
 const {
   Content,
@@ -29,7 +30,6 @@ const {
 } = Dropdown;
 
 interface CollectionManagementDocumentActionsProps {
-  i18n: Translations;
 
   document: LibraryDocument;
 
@@ -50,7 +50,7 @@ interface CollectionManagementDocumentActionsProps {
 export const CollectionManagementDocumentActions = (
   props: CollectionManagementDocumentActionsProps
 ) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'project-home', 'a11y', 'collection-management']);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -71,7 +71,6 @@ export const CollectionManagementDocumentActions = (
 
     setDialog(
       <IIIFDialog
-        i18n={props.i18n}
         onCancel={() => setDialog(undefined)}
         onSubmit={onSubmit}
       />
@@ -89,7 +88,7 @@ export const CollectionManagementDocumentActions = (
         <Trigger asChild>
           <button
             className='unstyled icon-only'
-            aria-label={`${t['Menu actions for document:']} ${props.document.name}`}
+            aria-label={`${t('Menu actions for document:', { ns: 'common' })} ${props.document.name}`}
           >
             <DotsThreeVertical weight='bold' size={22} />
           </button>
@@ -105,19 +104,19 @@ export const CollectionManagementDocumentActions = (
               <Item
                 className='dropdown-item'
                 onSelect={onSelectOption(props.onOpenMetadata)}
-                aria-label={t["view this document's metadata"]}
+                aria-label={t("view this document's metadata", { ns: 'collection-management' })}
               >
                 <PencilSimple size={16} />
-                <span>{t['Edit document metadata']}</span>
+                <span>{t('Edit document metadata', { ns: 'project-home' })}</span>
               </Item>
             )}
             <Sub>
               <SubTrigger
                 className='dropdown-item'
-                aria-label={t['import new revision of this document']}
+                aria-label={t('import new revision of this document', { ns: 'a11y' })}
               >
                 <CaretLeftIcon size={16} />
-                <span>{t['Import new revision']}</span>
+                <span>{t('Import new revision', { ns: 'collection-management' })}</span>
               </SubTrigger>
               <Portal>
                 <SubContent className='dropdown-content'>
@@ -127,7 +126,7 @@ export const CollectionManagementDocumentActions = (
                   >
                     <File size={16} />
                     <div>
-                      <span>{t['File upload']}</span>
+                      <span>{t('File upload', { ns: 'project-home' })}</span>
                       <p>.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf</p>
                     </div>
                   </Item>
@@ -135,8 +134,8 @@ export const CollectionManagementDocumentActions = (
                   <Item className='dropdown-item' onSelect={onImportIIIF}>
                     <LinkSimple size={16} />
                     <div>
-                      <span>{t['From IIIF image manifest']}</span>
-                      <p>{t['IIIF import hint']}</p>
+                      <span>{t('From IIIF image manifest', { ns: 'project-home' })}</span>
+                      <p>{t('IIIF import hint', { ns: 'project-home' })}</p>
                     </div>
                   </Item>
                 </SubContent>
@@ -148,14 +147,14 @@ export const CollectionManagementDocumentActions = (
             <ConfirmedAction.Trigger>
               <Item
                 className='dropdown-item'
-                aria-label={t['remove this document from the collection']}
+                aria-label={t('remove this document from the collection', { ns: 'collection-management' })}
               >
                 <Trash size={16} className='destructive' />{' '}
                 <span>
                   {props.document.revisions &&
                   props.document.revisions?.length > 1
-                    ? t['Delete latest revision']
-                    : t['Delete document']}
+                    ? t('Delete latest revision', { ns: 'collection-management' })
+                    : t('Delete document', { ns: 'common' })}
                 </span>
               </Item>
             </ConfirmedAction.Trigger>
@@ -164,17 +163,14 @@ export const CollectionManagementDocumentActions = (
       </Root>
 
       <ConfirmedAction.Dialog
-        i18n={props.i18n}
-        title={t['Are you sure?']}
+        title={t('Are you sure?', { ns: 'common' })}
         description={
-          t[
-            'Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.'
-          ]
+          t('Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.', { ns: 'project-home' })
         }
-        cancelLabel={t['Cancel']}
+        cancelLabel={t('Cancel', { ns: 'common' })}
         confirmLabel={
           <>
-            <Trash size={16} /> <span>{t['Delete document']}</span>
+            <Trash size={16} /> <span>{t('Delete document', { ns: 'common' })}</span>
           </>
         }
         onConfirm={onSelectOption(() => props.onDelete(props.document))}

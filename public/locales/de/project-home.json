@@ -61,7 +61,7 @@
   "Document Type": "Format",
   "URL": "URL",
   "Add Selected": "Auswahl hinzufügen",
-  "No Documents": "Keine Dokumente",
+  "No documents": "Keine Dokumente",
   "Search": "Suche",
   "View Document Metadata": "Metadaten anzeigen",
   "View document metadata": "Metadaten anzeigen",
@@ -90,6 +90,6 @@
   "Import an existing document from a project.": "Dokument aus Projekt importieren.",
   "Copied": "Kopiert",
   "Document copied successfully.": "Dokument erfolgreich kopiert.",
-  "Could not copy file contents of ${name}.": "Inhalte von ${name} konnten nicht kopiert werden.",
+  "fileCopyError": "Inhalte von {{docName}} konnten nicht kopiert werden.",
   "Could not copy documents into collection.": "Dokumente konnten nicht in die Sammlung kopiert werden."
 }

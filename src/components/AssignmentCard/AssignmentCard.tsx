@@ -1,12 +1,11 @@
-import type { Context, ExtendedProjectData, Translations } from 'src/Types';
+import type { Context, ExtendedProjectData } from 'src/Types';
 import { GraduationCap } from '@phosphor-icons/react';
 import { AssignmentCardActions } from './AssignmentCardActions';
+import { useTranslation } from 'react-i18next';
 
 import './AssignmentCard.css';
 
 interface AssignmentCardProps {
-
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -21,11 +20,12 @@ interface AssignmentCardProps {
 }
 
 export const AssignmentCard = (props: AssignmentCardProps) => {
+  const { i18n } = useTranslation();
 
   const { assignment, project } = props;
 
   const onClick = () =>
-    window.location.href = `/${props.i18n.lang}/projects/${assignment.project_id}/assignments/${assignment.id}`;
+    window.location.href = `/${i18n.language}/projects/${assignment.project_id}/assignments/${assignment.id}`;
 
   return (
     <article className="assignment-card" onClick={onClick}>
@@ -43,8 +43,7 @@ export const AssignmentCard = (props: AssignmentCardProps) => {
 
       {props.canUpdate && (
         <div className="bottom">
-          <AssignmentCardActions 
-            i18n={props.i18n} 
+          <AssignmentCardActions  
             assignment={assignment}
             onEdit={props.onEdit}
             onDelete={props.onDelete} />

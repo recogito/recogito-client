@@ -1,16 +1,12 @@
 import { Info } from '@phosphor-icons/react';
 import * as Popover from '@radix-ui/react-popover';
 import { useColorCoding } from './ColorState';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './ColorLegend.css';
 
-interface ColorLegendProps {
-  i18n: Translations;
-}
-
-export const ColorLegend = (props: ColorLegendProps) => {
-  const { t } = props.i18n;
+export const ColorLegend = () => {
+  const { t } = useTranslation(['a11y', 'annotation-common']);
 
   const colorCoding = useColorCoding();
 
@@ -19,13 +15,13 @@ export const ColorLegend = (props: ColorLegendProps) => {
   return (
     <Popover.Root>
       <Popover.Trigger asChild>
-        <button disabled={!legend} aria-label={t['color legend']}>
+        <button disabled={!legend} aria-label={t('color legend', { ns: 'a11y' })}>
           <Info size={18} />
         </button>
       </Popover.Trigger>
 
       <Popover.Content className='popover-content color-legend'>
-        <h3>{t['Colors']}</h3>
+        <h3>{t('Colors', { ns: 'annotation-common' })}</h3>
         {legend && (
           <ul>
             {legend.map(({ label, color }, index) => (
@@ -34,7 +30,7 @@ export const ColorLegend = (props: ColorLegendProps) => {
                   className='legend-color'
                   style={{ backgroundColor: color }}
                 />{' '}
-                {t[label] || label}
+                {t(label) || label}
               </li>
             ))}
           </ul>

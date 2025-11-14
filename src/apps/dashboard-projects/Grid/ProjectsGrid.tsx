@@ -4,11 +4,9 @@ import type {
   ExtendedProjectData,
   MyProfile,
   Policies,
-  Translations,
 } from 'src/Types';
 
 export interface ProjectsGridProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -53,7 +51,6 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
           {filteredBySearch.map((project) => (
             <ProjectCard
               key={project.id}
-              i18n={props.i18n}
               me={props.me}
               project={project}
               onDeleted={() => props.onProjectDeleted(project)}

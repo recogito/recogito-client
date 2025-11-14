@@ -5,7 +5,6 @@ import {
   HeaderCell,
   Cell,
 } from '@table-library/react-table-library/table';
-import type { Translations } from 'src/Types';
 import type { Theme } from '@table-library/react-table-library/theme';
 import type { TableNode } from '@table-library/react-table-library/types/table';
 import type {
@@ -21,11 +20,11 @@ import { CheckCircle, CheckSquare, Square } from '@phosphor-icons/react';
 import { Fragment, useEffect, useState } from 'react';
 import { useTree, CellTree } from '@table-library/react-table-library/tree';
 import type { LibraryDocument } from './DocumentLibrary';
+import { useTranslation } from 'react-i18next';
 
 interface DocumentTableProps {
   data: { nodes: LibraryDocument[] };
   disabledIds: string[];
-  i18n: Translations;
   theme: Theme;
   columns: Column<TableNode>[];
   sort: Sort<LibraryDocument>;
@@ -43,7 +42,7 @@ export const DocumentTable = (props: DocumentTableProps) => {
   const [data, setData] = useState<TableDocument[]>([]);
 
   const theme = props.theme;
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-home']);
 
   useEffect(() => {
     if (props.data) {
@@ -156,7 +155,7 @@ export const DocumentTable = (props: DocumentTableProps) => {
                   </Cell>
                 )}
                 {props.columns.map((c, idx) =>
-                  c.label === t['Title'] ? (
+                  c.label === t('Title', { ns: 'project-home' }) ? (
                     <CellTree item={item} key={idx}>
                       {c.renderCell(item)}
                     </CellTree>

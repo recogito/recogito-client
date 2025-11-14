@@ -5,11 +5,10 @@ import { CaretDown, Check } from '@phosphor-icons/react';
 import { updateUserProjectGroup } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TinySaveIndicator, type SaveState } from '@components/TinySaveIndicator';
-import type { Group, Member, Translations } from 'src/Types';
+import type { Group, Member } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface GroupSelectorProps {
-
-  i18n: Translations;
 
   member: Member;
 
@@ -41,7 +40,7 @@ const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, forwarded
 
 export const GroupSelector = (props: GroupSelectorProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common']);
 
   const { member } = props;
 
@@ -76,7 +75,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
     <Select.Root value={props.member.inGroup!.id} onValueChange={onValueChange}>
       <Select.Trigger
         disabled={state === 'saving'}
-        className="select-trigger" aria-label={t['Access Level']}>
+        className="select-trigger" aria-label={t('Access Level', { ns: 'common' })}>
         <Select.Value />
         <Select.Icon className="select-icon">
           <CaretDown />
@@ -91,7 +90,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
         <Select.Content className="select-content">
           <Select.Viewport className="select-viewport">
             {props.availableGroups.map(group => (
-              <SelectItem key={group.id} value={group.id}>{t[group.name]}</SelectItem>
+              <SelectItem key={group.id} value={group.id}>{t(group.name)}</SelectItem>
             ))}
           </Select.Viewport>
         </Select.Content>

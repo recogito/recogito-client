@@ -4,16 +4,15 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Label from '@radix-ui/react-label';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useEffect, useState } from 'react';
-import type { TagDefinition, Translations } from 'src/Types.ts';
+import type { TagDefinition } from 'src/Types.ts';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 import './TagDefinitionDialog.css';
 
 interface Props {
   busy?: boolean;
 
   description: string;
-
-  i18n: Translations;
 
   onCancel(): void;
 
@@ -29,7 +28,7 @@ interface Props {
 export const TagDefinitionDialog = (props: Props) => {
   const [name, setName] = useState('');
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common']);
 
   useEffect(() => {
     if (props.tagDefinition) {
@@ -64,7 +63,7 @@ export const TagDefinitionDialog = (props: Props) => {
           <div className='project-group-root'>
             <div className='form'>
               <Label.Root className='text-body-small-bold'>
-                {t['Name']}
+                {t('Name', { ns: 'common' })}
               </Label.Root>
               <input
                 autoFocus
@@ -75,7 +74,7 @@ export const TagDefinitionDialog = (props: Props) => {
             </div>
             <div className='buttons'>
               <button onClick={props.onCancel}>
-                {t['Cancel']}
+                {t('Cancel', { ns: 'common' })}
               </button>
 
               <Button
@@ -84,7 +83,7 @@ export const TagDefinitionDialog = (props: Props) => {
                 onClick={() => props.onSaved(name)}
               >
                 <span>
-                  {t['Create']}
+                  {t('Create', { ns: 'common' })}
                 </span>
               </Button>
             </div>

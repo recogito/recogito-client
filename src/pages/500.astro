@@ -1,14 +1,15 @@
 ---
-import { getTranslations } from '@i18n';
+import { getFixedT } from 'src/i18n/server';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
-const { t } = getTranslations(Astro.request, 'error');
+const locale = Astro.currentLocale;
+const t = await getFixedT(locale, ['error']);
 ---
 <BaseLayout title="Recogito | Error">
   <div class="container">
     <div class="column">
       <h1>500 Error</h1>
-      <p>{t['Something went wrong.']}</p>
+      <p>{t('Something went wrong.', { ns: 'error' })}</p>
     </div>
   </div>
 </BaseLayout>
