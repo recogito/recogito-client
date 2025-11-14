@@ -3,7 +3,7 @@ import { i18n } from 'astro:config/server';
 import { getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 
-const lang = Astro.preferredLocale || i18n?.defaultLocale || "en";
+const lang = Astro.currentLocale || Astro.preferredLocale || "en";
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
