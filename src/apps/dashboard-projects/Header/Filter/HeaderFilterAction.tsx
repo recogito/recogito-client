@@ -7,7 +7,6 @@ import './HeaderFilterAction.css';
 export type Filters = 'active' | 'locked' | 'all';
 
 interface HeaderFilterActionProps {
-
   onChangeFilter(filter: Filters): void;
 }
 
@@ -26,7 +25,7 @@ export const HeaderFilterAction = (props: HeaderFilterActionProps) => {
       className={f === filter ? 'dropdown-item' : 'dropdown-item no-icon'}
       onSelect={changeFilter(f)}
     >
-      {f === filter && <Check size={16} />} {t(f)}
+      {f === filter && <Check size={16} />} {t(f, { ns: 'dashboard-projects' })}
     </Dropdown.Item>
   );
 
@@ -36,7 +35,7 @@ export const HeaderFilterAction = (props: HeaderFilterActionProps) => {
         <button>
           <div className='header-filter-row'>
             <div>{`${t('View', { ns: 'dashboard-projects' })}: `}</div>
-            <div className='header-filter-bold'>{t(filter)}</div>
+            <div className='header-filter-bold'>{t(filter, { ns: 'dashboard-projects' })}</div>
             <CaretDown size={16} />
           </div>
         </button>

@@ -43,7 +43,7 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
       className={sort === key ? 'dropdown-item' : 'dropdown-item no-icon'}
       onSelect={changeSort(key)}
     >
-      {sort === key && <Check size={16} />} {t(key)}
+      {sort === key && <Check size={16} />} {t(key, { ns: 'dashboard-projects' })}
     </Dropdown.Item>
   );
 
@@ -53,7 +53,7 @@ export const HeaderSortAction = (props: HeaderSortActionProps) => {
         <button>
           <div className='header-sort-row'>
             <div>{`${t('Sort', { ns: 'dashboard-projects' })}: `}</div>
-            <div className='header-sort-name '>{t(sort || 'Name')}</div>
+            <div className='header-sort-name '>{t(sort || 'Name', { ns: 'dashboard-projects' })}</div>
             <CaretDown size={16} />
           </div>
         </button>
