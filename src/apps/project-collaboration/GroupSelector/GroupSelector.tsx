@@ -90,7 +90,7 @@ export const GroupSelector = (props: GroupSelectorProps) => {
         <Select.Content className="select-content">
           <Select.Viewport className="select-viewport">
             {props.availableGroups.map(group => (
-              <SelectItem key={group.id} value={group.id}>{t(group.name)}</SelectItem>
+              <SelectItem key={group.id} value={group.id}>{group.name}</SelectItem>
             ))}
           </Select.Viewport>
         </Select.Content>

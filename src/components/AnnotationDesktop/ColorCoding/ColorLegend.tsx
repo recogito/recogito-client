@@ -30,7 +30,7 @@ export const ColorLegend = () => {
                   className='legend-color'
                   style={{ backgroundColor: color }}
                 />{' '}
-                {t(label) || label}
+                {label}
               </li>
             ))}
           </ul>

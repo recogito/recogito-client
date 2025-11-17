@@ -79,7 +79,7 @@ export const IIIFDialog = (props: IIIFDialogProps) => {
                 <p className="message invalid">
                   <WarningOctagon 
                     className="icon text-bottom" 
-                    size={18} weight="fill" /> {t(lastError)}
+                    size={18} weight="fill" /> {t(lastError, { ns: 'project-home' })}
                 </p>
               ) : value && result && (
                 <p className="message valid">
