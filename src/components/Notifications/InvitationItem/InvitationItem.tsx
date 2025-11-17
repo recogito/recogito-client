@@ -57,7 +57,7 @@ export const InvitationItem = (props: InvitationItemProps) => {
     const decline = declineInvitation(supabase, i);
 
     Promise.all([minWait, decline]).then(([_, { error }]) => {
-      if (error) props.onError(error.message);
+      if (error) props.onError(error.details);
     });
   };
 

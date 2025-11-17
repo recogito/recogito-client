@@ -55,7 +55,7 @@ export const CollectionDocumentsTable = (
   const onError = (error: string) => {
     props.setToast({
       title: t('Something went wrong', { ns: 'common' }),
-      description: t(error) || error,
+      description: error,
       type: 'error',
     });
   };

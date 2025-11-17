@@ -12,8 +12,6 @@ interface NotificationItemProps {
   notification: Notification;
 
   onAcknowledged(): void;
-
-  onError(error: string): void;
 }
 
 export const NotificationItem = (props: NotificationItemProps) => {

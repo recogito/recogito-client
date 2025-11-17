@@ -100,7 +100,7 @@ const ProjectHome = (props: ProjectHomeProps) => {
   const onError = (error: string) => {
     setToast({
       title: t('Something went wrong', { ns: 'common' }),
-      description: t(error) || error,
+      description: error,
       type: 'error',
     });
   };

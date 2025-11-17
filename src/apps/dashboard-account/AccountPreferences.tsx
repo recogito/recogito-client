@@ -34,7 +34,7 @@ const AccountPreferences = (props: AccountPreferencesProps) => {
   const onError = (error: string) =>
     setError({
       title: t('Something went wrong', { ns: 'common' }),
-      description: t(error) || error,
+      description: error,
       type: 'error',
     });
 

@@ -142,7 +142,6 @@ export const Notifications = (props: NotificationsProps) => {
                     <NotificationItem
                       key={notification.id}
                       notification={notification}
-                      onError={props.onError}
                       onAcknowledged={() => handleAcknowledge(notification)}
                     />
                   ))}
