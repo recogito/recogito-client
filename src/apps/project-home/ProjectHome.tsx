@@ -241,7 +241,7 @@ const ProjectHome = (props: ProjectHomeProps) => {
   );
 };
 
-export const ProjectHomeWrapper = (props: ProjectHomeProps) => (
+export const ProjectHomeApp = (props: ProjectHomeProps) => (
   <I18nextProvider i18n={clientI18next}>
     <ProjectHome {...props} />
   </I18nextProvider>

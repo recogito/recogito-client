@@ -426,7 +426,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
   );
 };
 
-export const ProjectCollaborationWrapper = (props: ProjectCollaborationProps) => (
+export const ProjectCollaborationApp = (props: ProjectCollaborationProps) => (
   <I18nextProvider i18n={clientI18next}>
     <ProjectCollaboration {...props} />
   </I18nextProvider>

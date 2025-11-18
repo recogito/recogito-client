@@ -175,7 +175,7 @@ const AccountPreferences = (props: AccountPreferencesProps) => {
 };
 
 
-export const AccountPreferencesWrapper = (props: AccountPreferencesProps) => (
+export const AccountPreferencesApp = (props: AccountPreferencesProps) => (
   <I18nextProvider i18n={clientI18next}>
     <AccountPreferences {...props} />
   </I18nextProvider>

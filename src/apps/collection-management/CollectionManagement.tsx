@@ -221,7 +221,7 @@ const CollectionManagement = (props: CollectionManagementProps) => {
   );
 };
 
-export const CollectionManagementWrapper = (props: CollectionManagementProps) => (
+export const CollectionManagementApp = (props: CollectionManagementProps) => (
   <I18nextProvider i18n={clientI18next}>
     <CollectionManagement {...props} />
   </I18nextProvider>

@@ -663,7 +663,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
   );
 };
 
-export const ProjectSettingsWrapper = (props: ProjectSettingsProps) => (
+export const ProjectSettingsApp = (props: ProjectSettingsProps) => (
   <I18nextProvider i18n={clientI18next}>
     <ProjectSettings {...props} />
   </I18nextProvider>

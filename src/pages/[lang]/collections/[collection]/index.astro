@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getCollection } from '@backend/crud';
 import { getCollectionDocuments } from '@backend/crud/documents';
 import { getMyProfile } from '@backend/crud/profiles';
-import { CollectionWrapper } from '@apps/collection-management/Collection';
+import { CollectionApp } from '@apps/collection-management/Collection';
 
 const lang = Astro.currentLocale;
 
@@ -29,7 +29,7 @@ const documents = await getCollectionDocuments(supabase, collectionId as string)
 ---
 
 <BaseLayout title={collection.data.name}>
-    <CollectionWrapper
+    <CollectionApp
       client:only='react'
       collection={collection.data}
       documents={documents.data}

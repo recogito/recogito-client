@@ -479,7 +479,7 @@ const Collection = (props: CollectionsTableProps) => {
   );
 };
 
-export const CollectionWrapper = (props: CollectionsTableProps) => (
+export const CollectionApp = (props: CollectionsTableProps) => (
   <I18nextProvider i18n={clientI18next}>
     <Collection {...props} />
   </I18nextProvider>

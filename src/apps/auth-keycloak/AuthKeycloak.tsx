@@ -41,7 +41,7 @@ const AuthKeycloak = () => {
   return <div className='keycloak-main'>{t('Redirecting', { ns: 'auth-login' })}</div>;
 };
 
-export const AuthKeycloakWrapper = () => (
+export const AuthKeycloakApp = () => (
   <I18nextProvider i18n={clientI18next}>
     <AuthKeycloak />
   </I18nextProvider>

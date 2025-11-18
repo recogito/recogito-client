@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud/profiles';
-import { UserManagementWrapper } from '@apps/user-management';
+import { UserManagementApp } from '@apps/user-management';
 import { getProfilesExtended } from '../../../backend/helpers/profileHelpers';
 import { getOrgGroups } from '../../../backend/crud/groups';
 
@@ -45,7 +45,7 @@ const canInviteUsers = import.meta.env.PUBLIC_ENABLE_USER_INVITE === 'TRUE';
 ---
 
 <BaseLayout title='User Management'>
-  <UserManagementWrapper
+  <UserManagementApp
     profiles={profiles}
     me={me}
     groups={groups}

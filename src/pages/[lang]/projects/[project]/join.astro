@@ -3,7 +3,7 @@ import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
-import { JoinProjectWrapper } from '@apps/join-project';
+import { JoinProjectApp } from '@apps/join-project';
 
 const lang = Astro.currentLocale;
 
@@ -27,7 +27,7 @@ if (project.error || !project.data) {
 }
 ---
 <HeaderLayout title='join'>
-  <JoinProjectWrapper client:load project={project.data} />
+  <JoinProjectApp client:load project={project.data} />
 </HeaderLayout>
 
 <style>

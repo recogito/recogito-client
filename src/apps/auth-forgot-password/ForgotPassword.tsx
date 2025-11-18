@@ -107,7 +107,7 @@ const ForgotPassword = () => {
   );
 };
 
-export const ForgotPasswordWrapper = () => (
+export const ForgotPasswordApp = () => (
   <I18nextProvider i18n={clientI18next}>
     <ForgotPassword />
   </I18nextProvider>

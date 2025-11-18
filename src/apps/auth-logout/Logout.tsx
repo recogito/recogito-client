@@ -45,7 +45,7 @@ const Logout = () => {
   );
 };
 
-export const LogoutWrapper = () => (
+export const LogoutApp = () => (
   <I18nextProvider i18n={clientI18next}>
     <Logout />
   </I18nextProvider>

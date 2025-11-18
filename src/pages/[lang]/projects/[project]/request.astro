@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
-import { ProjectRequestWrapper } from '@apps/project-request';
+import { ProjectRequestApp } from '@apps/project-request';
 import { getProjectExtended } from '@backend/helpers';
 
 const lang = Astro.currentLocale;
@@ -20,7 +20,7 @@ if (profile.error || !profile.data) {
 ---
 
 <BaseLayout title='join'>
-  <ProjectRequestWrapper
+  <ProjectRequestApp
     client:only='react'
     projectId={projectId as string}
     user={profile.data}

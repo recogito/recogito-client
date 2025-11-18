@@ -13,7 +13,7 @@ interface AcceptOrgInviteProps {
   token: string;
 }
 
-const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
+const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
   const { t, i18n } = useTranslation(['auth-reset-password']);
 
   const [password, setPassword] = useState('');
@@ -138,8 +138,8 @@ const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
 };
 
 
-export const AcceptOrgInviteWrapper = (props: AcceptOrgInviteProps) => (
+export const AcceptOrgInviteApp = (props: AcceptOrgInviteProps) => (
   <I18nextProvider i18n={clientI18next}>
-    <AcceptOrgInviteComponent {...props} />
+    <AcceptOrgInvite {...props} />
   </I18nextProvider>
 );

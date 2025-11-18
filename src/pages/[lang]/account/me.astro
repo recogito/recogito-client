@@ -2,7 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud/profiles';
-import { AccountPreferencesWrapper } from '@apps/dashboard-account/AccountPreferences';
+import { AccountPreferencesApp } from '@apps/dashboard-account/AccountPreferences';
 import { getFixedT } from 'src/i18n/server';
 
 const locale = Astro.currentLocale;
@@ -17,7 +17,7 @@ if (error || !data) {
 ---
 
 <BaseLayout title={t('Account Preferences', { ns: 'dashboard-account' })}>
-  <AccountPreferencesWrapper client:load profile={data} />
+  <AccountPreferencesApp client:load profile={data} />
 </BaseLayout>
 
 <style>

@@ -60,7 +60,7 @@ const JoinProject = (props: JoinProjectProps) => {
   )
 }
 
-export const JoinProjectWrapper = (props: JoinProjectProps) => (
+export const JoinProjectApp = (props: JoinProjectProps) => (
   <I18nextProvider i18n={clientI18next}>
     <JoinProject {...props} />
   </I18nextProvider>

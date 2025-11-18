@@ -232,7 +232,7 @@ const UserManagement = (props: UserManagementProps) => {
   );
 };
 
-export const UserManagementWrapper = (props: UserManagementProps) => (
+export const UserManagementApp = (props: UserManagementProps) => (
   <I18nextProvider i18n={clientI18next}>
     <UserManagement {...props} />
   </I18nextProvider>

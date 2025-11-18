@@ -160,7 +160,7 @@ const Login = (props: {
   );
 };
 
-export const LoginWrapper = (props: { methods: LoginMethod[] }) => (
+export const LoginApp = (props: { methods: LoginMethod[] }) => (
   <I18nextProvider i18n={clientI18next}>
     <Login {...props} />
   </I18nextProvider>

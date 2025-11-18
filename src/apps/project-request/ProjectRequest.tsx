@@ -130,7 +130,7 @@ const ProjectRequest = (props: ProjectRequestProps) => {
   }
 };
 
-export const ProjectRequestWrapper = (props: ProjectRequestProps) => (
+export const ProjectRequestApp = (props: ProjectRequestProps) => (
   <I18nextProvider i18n={clientI18next}>
     <ProjectRequest {...props} />
   </I18nextProvider>

@@ -3,7 +3,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getInstanceCollections } from '@backend/crud';
 import { getMyProfile } from '@backend/crud/profiles';
-import { CollectionManagementWrapper } from '@apps/collection-management';
+import { CollectionManagementApp } from '@apps/collection-management';
 
 const lang = Astro.currentLocale;
 
@@ -33,7 +33,7 @@ if (collectionsError) {
 ---
 
 <BaseLayout title='Collection Management'>
-  <CollectionManagementWrapper
+  <CollectionManagementApp
     client:only='react'
     collections={collections}
     me={me}

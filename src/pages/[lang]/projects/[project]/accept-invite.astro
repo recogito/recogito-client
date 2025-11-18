@@ -2,7 +2,7 @@
 import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
-import { AcceptInviteWrapper } from '@apps/accept-invite';
+import { AcceptInviteApp } from '@apps/accept-invite';
 
 const lang = Astro.currentLocale;
 
@@ -29,7 +29,7 @@ if (!invitation.data || invitation.error) {
 ---
 
 <HeaderLayout title='accept-invite'>
-  <AcceptInviteWrapper client:load invitation={invitation.data} />
+  <AcceptInviteApp client:load invitation={invitation.data} />
 </HeaderLayout>
 
 <style>

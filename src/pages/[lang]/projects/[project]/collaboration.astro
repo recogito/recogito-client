@@ -7,7 +7,7 @@ import {
   getMyProfile,
 } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
-import { ProjectCollaborationWrapper } from '@apps/project-collaboration';
+import { ProjectCollaborationApp } from '@apps/project-collaboration';
 import { listMyProjectsExtended } from '@backend/helpers';
 
 const lang = Astro.currentLocale;
@@ -40,7 +40,7 @@ const projects = await listMyProjectsExtended(supabase);
 ---
 
 <BaseLayout title='Team'>
-  <ProjectCollaborationWrapper
+  <ProjectCollaborationApp
     client:only='react'
     me={profile.data}
     project={project.data}

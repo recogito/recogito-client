@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { LogoutWrapper } from '@apps/auth-logout';
+import { LogoutApp } from '@apps/auth-logout';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
@@ -10,7 +10,7 @@ await supabase.auth.signOut();
 <BaseLayout title='Recogito | Logout'>
   <div class='container'>
     <div class='column'>
-      <LogoutWrapper
+      <LogoutApp
         client:only='react'
       />
     </div>

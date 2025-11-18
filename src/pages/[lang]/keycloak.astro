@@ -1,10 +1,10 @@
 ---
 import LoginLayout from '@layouts/login/LoginLayout.astro';
-import { AuthKeycloakWrapper } from '@apps/auth-keycloak/AuthKeycloak';
+import { AuthKeycloakApp } from '@apps/auth-keycloak/AuthKeycloak';
 ---
 
 <LoginLayout title='' showLogo={true}>
-  <AuthKeycloakWrapper
+  <AuthKeycloakApp
     client:only='react'
   />
 </LoginLayout>

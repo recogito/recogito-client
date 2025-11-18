@@ -286,7 +286,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   );
 };
 
-export const ProjectsHomeWrapper = (props: ProjectsHomeProps) => (
+export const ProjectsHomeApp = (props: ProjectsHomeProps) => (
   <I18nextProvider i18n={clientI18next}>
     <TagContextProvider scope='user' scopeId={props.me.id} targetType='project'>
       <ProjectsHome me={props.me} projects={props.projects} />

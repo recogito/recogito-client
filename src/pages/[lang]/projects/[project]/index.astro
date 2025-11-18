@@ -6,7 +6,7 @@ import {
   getInstalledPlugins,
   listMyProjectsExtended,
 } from '@backend/helpers';
-import { ProjectHomeWrapper } from '@apps/project-home';
+import { ProjectHomeApp } from '@apps/project-home';
 import { getProjectExtended, listDocumentsInProject } from '@backend/helpers';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import PluginRegistry from '@components/Plugins/PluginRegistry';
@@ -77,7 +77,7 @@ if (installedPlugins.error || !installedPlugins.data) {
 ---
 
 <BaseLayout title={project.data.name}>
-  <ProjectHomeWrapper
+  <ProjectHomeApp
     client:only='react'
     projects={projects.data}
     project={project.data}

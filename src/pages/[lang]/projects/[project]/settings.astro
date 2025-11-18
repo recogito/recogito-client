@@ -1,5 +1,5 @@
 ---
-import { ProjectSettingsWrapper } from '@apps/project-settings';
+import { ProjectSettingsApp } from '@apps/project-settings';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile, listPendingInvitations } from '@backend/crud';
@@ -48,7 +48,7 @@ if (installedPlugins.error || !installedPlugins.data) {
 }
 ---
 <BaseLayout title='Settings'>
-  <ProjectSettingsWrapper
+  <ProjectSettingsApp
     client:only='react'
     project={project.data}
     invitations={invitations.data}

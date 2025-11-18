@@ -105,7 +105,7 @@ const ResetPassword = () => {
   );
 };
 
-export const ResetPasswordWrapper = () => (
+export const ResetPasswordApp = () => (
   <I18nextProvider i18n={clientI18next}>
     <ResetPassword />
   </I18nextProvider>

@@ -1,5 +1,5 @@
 ---
-import { LoginWrapper } from '@apps/auth-login';
+import { LoginApp } from '@apps/auth-login';
 import LoginLayout from '@layouts/login/LoginLayout.astro';
 import config from '../../config.json';
 import type { LoginMethod } from '../../Types';
@@ -13,7 +13,7 @@ const methods = config.authentication.methods;
     ? methods.length < 4
     : methods.length < 3}
 >
-  <LoginWrapper
+  <LoginApp
     client:only='react'
     methods={methods as LoginMethod[]}
   />

@@ -64,7 +64,7 @@ const AcceptInvite = (props: AcceptInviteProps) => {
   );
 };
 
-export const AcceptInviteWrapper = (props: AcceptInviteProps) => (
+export const AcceptInviteApp = (props: AcceptInviteProps) => (
   <I18nextProvider i18n={clientI18next}>
     <AcceptInvite {...props} />
   </I18nextProvider>
