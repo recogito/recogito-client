@@ -12,16 +12,12 @@ import {
   EmbedLinkDialog,
   EmbedYouTubeDialog,
 } from './QuillEmbedDialog';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
-interface QuillEditorToolbarProps {
-  i18n: Translations;
-}
-
-export const QuillEditorToolbar = (props: QuillEditorToolbarProps) => {
+export const QuillEditorToolbar = () => {
   const { quill } = useQuillEditor();
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y']);
 
   const [canUndo, setCanUndo] = useState(false);
 
@@ -55,7 +51,7 @@ export const QuillEditorToolbar = (props: QuillEditorToolbarProps) => {
           <button
             disabled={!canUndo}
             onClick={() => quill.history.undo()}
-            aria-label={t['undo last action']}
+            aria-label={t('undo last action', { ns: 'a11y' })}
           >
             <ArrowCounterClockwise size={17} />
           </button>
@@ -63,28 +59,28 @@ export const QuillEditorToolbar = (props: QuillEditorToolbarProps) => {
           <button
             disabled={!canRedo}
             onClick={() => quill.history.redo()}
-            aria-label={t['redo last action']}
+            aria-label={t('redo last action', { ns: 'a11y' })}
           >
             <ArrowClockwise size={17} />
           </button>
 
           <button
             onClick={() => setShowDialog('LINK')}
-            aria-label={t['insert an html link']}
+            aria-label={t('insert an html link', { ns: 'a11y' })}
           >
             <Link size={17} />
           </button>
 
           <button
             onClick={() => setShowDialog('IMAGE')}
-            aria-label={t['insert an image']}
+            aria-label={t('insert an image', { ns: 'a11y' })}
           >
             <Image size={17} />
           </button>
 
           <button
             onClick={() => setShowDialog('YOUTUBE')}
-            aria-label={t['insert a video']}
+            aria-label={t('insert a video', { ns: 'a11y' })}
           >
             <Video size={17} />
           </button>
@@ -92,17 +88,14 @@ export const QuillEditorToolbar = (props: QuillEditorToolbarProps) => {
 
         {showDialog === 'LINK' ? (
           <EmbedLinkDialog
-            i18n={props.i18n}
             onClose={() => setShowDialog(undefined)}
           />
         ) : showDialog === 'IMAGE' ? (
           <EmbedImageDialog
-            i18n={props.i18n}
             onClose={() => setShowDialog(undefined)}
           />
         ) : showDialog === 'YOUTUBE' ? (
           <EmbedYouTubeDialog
-            i18n={props.i18n}
             onClose={() => setShowDialog(undefined)}
           />
         ) : null}

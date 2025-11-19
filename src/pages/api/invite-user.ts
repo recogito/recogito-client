@@ -3,10 +3,11 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import nodemailer from 'nodemailer';
-import { getDefaultTranslations } from '@i18n';
+import { i18n } from 'astro:config/server';
 import { render } from '@react-email/render';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import { encrypt } from '@backend/crypto';
+import { getFixedT } from 'src/i18n/server';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -97,24 +98,21 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     });
   }
 
-  const i18n = getDefaultTranslations('email');
-
   // create a token
   const key = Buffer.from(INVITE_CRYPTO_KEY, 'base64');
   const token = encrypt(`${inviteResp.data.user.id}|${Date.now()}`, key);
 
-  const { t, lang } = i18n;
+    const lang = i18n?.defaultLocale || 'en';
+    const t = await getFixedT(lang, ['email']);
+
   const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${token}`;
 
   const html = await render(
     createElement(InviteUserEmail, {
-      welcomeMessage: t['_join_recogito_message_'].replaceAll(
-        '${instance_name}',
-        url.host
-      ),
+      welcomeMessage: t('joinRecogitoMessage', { ns: 'email', instanceName: url.host }),
       host: url.host,
-      helloMessage: t['Greetings'],
-      acceptInviteLabel: t['Accept Invite'],
+      helloMessage: t('Greetings', { ns: 'email' }),
+      acceptInviteLabel: t('Accept Invite', { ns: 'email' }),
       acceptInviteUrl,
     })
   );
@@ -133,7 +131,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   const mailOptions = {
     from: MAIL_FROM_ADDRESS,
     to: body.email.toLowerCase(),
-    subject: t['Join Recogito'],
+    subject: t('Join Recogito', { ns: 'email' }),
     html: html,
   };
 

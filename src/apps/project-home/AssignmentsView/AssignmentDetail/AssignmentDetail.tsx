@@ -3,7 +3,6 @@ import { DocumentCard } from '@components/DocumentCard';
 import { AssignmentsActions } from './AssignmentActions';
 import type {
   Context,
-  Translations,
   UserProfile,
   Document,
   Group,
@@ -24,6 +23,7 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateContextDocumentsSort } from '@backend/helpers';
+import { useTranslation } from 'react-i18next';
 
 import './AssignmentDetail.css';
 
@@ -31,8 +31,6 @@ interface AssignmentDetailProps {
   assignment: Context;
 
   isAdmin: boolean;
-
-  i18n: Translations;
 
   groups: Group[];
 
@@ -42,7 +40,7 @@ interface AssignmentDetailProps {
 }
 
 export const AssignmentDetail = (props: AssignmentDetailProps) => {
-  const { lang, t } = props.i18n;
+  const { t, i18n } = useTranslation(['project-assignments', 'common']);
 
   const [documents, setDocuments] = useState<Document[]>([]);
 
@@ -114,20 +112,19 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
         <div className='assignment-detail-title-row'>
           <div className='assignment-detail-title'>
             {props.assignment.is_project_default
-              ? t['Project Baselayer']
+              ? t('Project Baselayer', { ns: 'project-assignments' })
               : props.assignment.name}
           </div>
 
           <div className='assignment-detail-buttons'>
             {props.isAdmin && !props.assignment.is_project_default && (
               <AssignmentsActions
-                i18n={props.i18n}
                 context={props.assignment}
                 isAdmin={props.isAdmin}
                 onEdit={() => props.onEditAssignment(props.assignment)}
                 onDelete={handleDelete}
                 onExportCSV={() => {
-                  window.location.href = `/${lang}/projects/${props.assignment.project_id}/export/csv?context=${props.assignment.id}`;
+                  window.location.href = `/${i18n.language}/projects/${props.assignment.project_id}/export/csv?context=${props.assignment.id}`;
                 }}
               />
             )}
@@ -139,11 +136,11 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
             {props.assignment.is_project_default &&
             (!props.assignment.description ||
               props.assignment.description.length === 0)
-              ? t['base_assignment_description']
+              ? t('base_assignment_description', { ns: 'project-assignments' })
               : props.assignment.description}
           </div>
           <div className='assignment-detail-team'>
-            {t['Team']}
+            {t('Team', { ns: 'common' })}
             <div className='assignment-detail-team-list'>
               {[...admins, ...members].map((user: UserProfile) => (
                 <div className='assignment-detail-team-avatar' key={user.id}>
@@ -177,7 +174,6 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
                   <DocumentCard
                     key={document.id}
                     isAdmin={props.isAdmin}
-                    i18n={props.i18n}
                     document={document as Document}
                     context={props.assignment}
                   />

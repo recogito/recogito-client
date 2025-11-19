@@ -2,14 +2,13 @@ import { Check, Stack, EyeSlash } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Switch from '@radix-ui/react-switch';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { Layer, Translations } from 'src/Types';
+import type { Layer } from 'src/Types';
 import { useFilterSettingsState } from '../FilterState';
+import { useTranslation } from 'react-i18next';
 
 import './AnnotationLayers.css';
 
 interface AnnotationLayersProps {
-
-  i18n: Translations;
 
   layers?: Layer[];
 
@@ -19,7 +18,7 @@ interface AnnotationLayersProps {
 
 export const AnnotationLayers = (props: AnnotationLayersProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common', 'common']);
 
   const active = props.layers?.find((l) => l.is_active);
 
@@ -65,7 +64,7 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
   return props.layers?.length === 1 && active ? (
     <section className="filters-annotationlayers single-layer">
       <label htmlFor="hide-annotations">
-        <EyeSlash size={18} /> {t['Hide Annotations']}
+        <EyeSlash size={18} /> {t('Hide Annotations', { ns: 'annotation-common' })}
       </label>
 
       <Switch.Root 
@@ -81,11 +80,11 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
   ) : active ? (
     <section className="filters-annotationlayers">
       <h2>
-        <Stack size={18} /> {t['Annotation Layers']}
+        <Stack size={18} /> {t('Annotation Layers', { ns: 'annotation-common' })}
       </h2>
 
       <section>
-        <h3>{t['Active']}</h3>
+        <h3>{t('Active', { ns: 'common' })}</h3>
 
         <div className="active-layer">
           <Checkbox.Root
@@ -101,14 +100,14 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
           </Checkbox.Root>
 
           <label htmlFor="active-layer">
-            {props.layerNames.get(active.id) || t['Baselayer']}
+            {props.layerNames.get(active.id) || t('Baselayer', { ns: 'annotation-common' })}
           </label>
         </div>
       </section>
 
       {readOnly.length > 0 && (
         <section>
-          <h3>{t['Read-Only']}</h3>
+          <h3>{t('Read-Only', { ns: 'annotation-common' })}</h3>
 
           <ul>
             {readOnly.map((l) => (
@@ -126,7 +125,7 @@ export const AnnotationLayers = (props: AnnotationLayersProps) => {
                 </Checkbox.Root>
 
                 <label htmlFor={`layer-${l.id}`}>
-                  {props.layerNames.get(l.id) || t['Baselayer']}
+                  {props.layerNames.get(l.id) || t('Baselayer', { ns: 'annotation-common' })}
                 </label>
               </li>
             ))}

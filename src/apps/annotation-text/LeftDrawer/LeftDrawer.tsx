@@ -4,13 +4,12 @@ import { animated, easings, useTransition } from '@react-spring/web';
 import type { PresentUser } from '@annotorious/react';
 import { FilterPanel } from '@components/AnnotationDesktop/FilterPanel';
 import { useState } from 'react';
-import type { Document, Layer, MyProfile, Translations } from 'src/Types';
+import type { Document, Layer, MyProfile } from 'src/Types';
 import './LeftDrawer.css';
+import { useTranslation } from 'react-i18next';
 
 interface LeftDrawerProps {
   document: Document;
-
-  i18n: Translations;
 
   layers?: Layer[];
 
@@ -30,7 +29,7 @@ interface LeftDrawerProps {
 export const LeftDrawer = (props: LeftDrawerProps) => {
   const [tab, setTab] = useState<'FILTERS' | 'METADATA'>('FILTERS');
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'annotation-common']);
 
   const transition = useTransition([props.open], {
     from: { flexBasis: 0, opacity: 0 },
@@ -59,18 +58,18 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                 <li className={tab === 'FILTERS' ? 'active' : undefined}>
                   <button
                     onClick={() => setTab('FILTERS')}
-                    aria-label={t['open or close the filters tab']}
+                    aria-label={t('open or close the filters tab', { ns: 'a11y' })}
                   >
-                    <Faders size={18} /> {t['Filters']}
+                    <Faders size={18} /> {t('Filters', { ns: 'annotation-common' })}
                   </button>
                 </li>
 
                 <li className={tab === 'METADATA' ? 'active' : undefined}>
                   <button
                     onClick={() => setTab('METADATA')}
-                    aria-label={t['open or close the metadata tab']}
+                    aria-label={t('open or close the metadata tab', { ns: 'a11y' })}
                   >
-                    <ListBullets size={18} /> {t['Metadata']}
+                    <ListBullets size={18} /> {t('Metadata', { ns: 'annotation-common' })}
                   </button>
                 </li>
               </ul>
@@ -79,7 +78,6 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
             <div className='tabcontent'>
               {tab === 'FILTERS' && (
                 <FilterPanel
-                  i18n={props.i18n}
                   layers={props.layers}
                   layerNames={props.layerNames}
                   present={props.present}
@@ -89,7 +87,6 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                 <DocumentMetadata
                   allowEdit={props.document.created_by === props.me.id}
                   document={props.document}
-                  i18n={props.i18n}
                   onError={props.onError}
                   onUpdated={props.onUpdated}
                 />

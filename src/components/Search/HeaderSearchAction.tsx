@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import { useTransition, animated } from '@react-spring/web';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './HeaderSearchAction.css';
 
 interface HeaderSearchActionProps {
-
-  i18n: Translations;
 
   onChangeSearch(value: string): void;
 
@@ -15,7 +13,7 @@ interface HeaderSearchActionProps {
 
 export const HeaderSearchAction = (props: HeaderSearchActionProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common']);
 
   const el = useRef<HTMLDivElement>(null);
 
@@ -50,7 +48,7 @@ export const HeaderSearchAction = (props: HeaderSearchActionProps) => {
       ))} 
             
       <button onClick={() => setOpen(true)}>
-        <MagnifyingGlass size={16} /> <span>{t['Search']}</span>
+        <MagnifyingGlass size={16} /> <span>{t('Search', { ns: 'common' })}</span>
       </button>
     </div>
   )

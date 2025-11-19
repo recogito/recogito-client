@@ -4,9 +4,8 @@ import { getMyProfile, getProject } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { annotationsToCSV } from 'src/util/export/csv';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getTranslations } from '@i18n';
 import { sanitizeFilename } from 'src/util/export';
-import type {Project, Translations } from 'src/Types';
+import type { Project } from 'src/Types';
 import { 
   getAllDocumentLayersInProject, 
   getAllLayersInProject, 
@@ -14,13 +13,14 @@ import {
   getAssignment,
   getAvailableLayers
 } from '@backend/helpers';
+import { getFixedT } from 'src/i18n/server';
 
 const exportForProject = async (
   supabase: SupabaseClient, 
   url: URL, 
   project: Project, 
   documentId: string | null,
-  i18n: Translations
+  baseLayer: string
 ) => {
   // Retrieve all layers, or just for the selected document, based on
   // URL query param
@@ -59,7 +59,7 @@ const exportForProject = async (
     layers.data, 
     layerMeta.data, 
     includePrivate,
-    i18n,
+    baseLayer,
   );
 
   const filename = documentId
@@ -84,7 +84,7 @@ const exportForContext = async (
   project: Project,
   contextId: string, 
   documentId: string | null,
-  i18n: Translations
+  baseLayer: string,
 ) => {
   const assignment = await getAssignment(supabase, contextId);
   if (assignment.error || !assignment.data) {
@@ -128,7 +128,8 @@ const exportForContext = async (
     assignment.data.layers, 
     layerMeta.data, 
     includePrivate,
-    i18n);
+    baseLayer
+  );
 
   const assignmentName = assignment.data.name || project.name;
 
@@ -149,9 +150,11 @@ const exportForContext = async (
 }
 
 export const GET: APIRoute = async ({ cookies, params, request, url }) => {
-  const i18n = getTranslations(request, 'annotation-common');
-
   const supabase = await createSupabaseServerClient(request, cookies);
+
+  const { lang } = params;
+  const t = await getFixedT(lang, ['annotation-common']);
+  const baseLayer = t('Baselayer', { ns: 'annotation-common' });
 
   const profile = await getMyProfile(supabase);
   if (profile.error || !profile.data)
@@ -183,8 +186,8 @@ export const GET: APIRoute = async ({ cookies, params, request, url }) => {
   const contextId = url.searchParams.get('context');
 
   if (contextId) {
-    return exportForContext(supabase, url, project.data, contextId, documentId, i18n);
+    return exportForContext(supabase, url, project.data, contextId, documentId, baseLayer);
   } else {
-    return exportForProject(supabase, url, project.data, documentId, i18n);
+    return exportForProject(supabase, url, project.data, documentId, baseLayer);
   }
 }

@@ -3,13 +3,12 @@ import { Trash } from '@phosphor-icons/react';
 import { useAnnotationStore, useAnnotatorUser, useSelection } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { AdminOverrideAlert } from '@components/AnnotationDesktop';
-import type { DocumentLayer, Policies, Translations } from 'src/Types';
+import type { DocumentLayer, Policies } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './DeleteSelected.css';
 
 interface DeleteSelectedProps {
-
-  i18n: Translations;
 
   policies?: Policies;
 
@@ -18,6 +17,8 @@ interface DeleteSelectedProps {
 }
 
 export const DeleteSelected = (props: DeleteSelectedProps) => {
+
+  const { t } = useTranslation(['annotation-common']);
 
   const me = useAnnotatorUser();
 
@@ -52,7 +53,6 @@ export const DeleteSelected = (props: DeleteSelectedProps) => {
     <>
       {!isMine && (
         <AdminOverrideAlert
-          i18n={props.i18n}
           open={promptOverride}
           onConfirm={onDeleteSelection}
           onCancel={() => setPromptOverride(false)}
@@ -63,7 +63,7 @@ export const DeleteSelected = (props: DeleteSelectedProps) => {
 
       <button
         className='delete-selected'
-        aria-label={props.i18n.t['Delete selected annotation']}
+        aria-label={t('Delete selected annotation', { ns: 'annotation-common' })}
         onClick={isMine ? onDeleteSelection : () => setPromptOverride(true)}>
         <Trash size={18} />
       </button>

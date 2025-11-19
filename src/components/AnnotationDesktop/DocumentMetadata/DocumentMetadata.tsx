@@ -3,13 +3,13 @@ import { MetadataList } from '@components/AnnotationDesktop/DocumentMetadata/Met
 import { MetadataModal } from '@components/MetadataModal';
 import { PencilSimple } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
-import type { Document, IIIFMetadata, Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
+import type { Document, IIIFMetadata } from 'src/Types';
 import './DocumentMetadata.css';
 
 interface Props {
   allowEdit?: boolean;
   document: Document;
-  i18n: Translations;
   metadata?: IIIFMetadata[];
   onError(error: string): void;
   onUpdated(document: Document): void;
@@ -18,7 +18,7 @@ interface Props {
 export const DocumentMetadata = (props: Props) => {
   const [modal, setModal] = useState<boolean>(false);
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common', 'a11y']);
 
   const internal = useMemo(
     () => props.document.meta_data?.meta,
@@ -35,24 +35,24 @@ export const DocumentMetadata = (props: Props) => {
   );
 
   const hasMedata = useMemo(
-    () => internal?.length > 0 || external?.length > 0,
+    () => internal && internal?.length > 0 || external && external?.length > 0,
     [external, internal]
   );
 
   if (!(hasMedata || props.allowEdit)) {
-    return <EmptyMetadata i18n={props.i18n} />;
+    return <EmptyMetadata />;
   }
 
   return (
     <div className='document-metadata'>
-      {(props.allowEdit || internal?.length > 0) && (
+      {(props.allowEdit || (internal && internal.length > 0)) && (
         <div className='document-metadata-header'>
-          <h2>{t['Internal']}</h2>
+          <h2>{t('Internal', { ns: 'annotation-common' })}</h2>
           {props.allowEdit && (
             <button
               className='icon-only primary'
               onClick={() => setModal(true)}
-              aria-label={t['edit document metadata']}
+              aria-label={t('edit document metadata', { ns: 'a11y' })}
             >
               <PencilSimple />
             </button>
@@ -63,13 +63,13 @@ export const DocumentMetadata = (props: Props) => {
       {internal && internal?.length > 0 && <MetadataList items={internal} />}
 
       {!(internal && internal.length > 0) && (
-        <EmptyMetadata i18n={props.i18n} />
+        <EmptyMetadata />
       )}
 
       {external && external?.length > 0 && (
         <>
           <div className='document-metadata-header'>
-            <h2>{t['External']}</h2>
+            <h2>{t('External', { ns: 'annotation-common' })}</h2>
           </div>
           <MetadataList items={external} />
         </>
@@ -77,7 +77,6 @@ export const DocumentMetadata = (props: Props) => {
 
       <MetadataModal
         document={props.document}
-        i18n={props.i18n}
         open={modal}
         onClose={() => setModal(false)}
         onError={props.onError}

@@ -1,14 +1,12 @@
 import { Check, PencilSimple } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './DocumentTitle.css';
-import type { Translations } from 'src/Types';
 
 interface Props {
   onChange(title: string): void;
 
   readOnly?: boolean;
-
-  i18n: Translations;
 
   value: string;
 }
@@ -16,7 +14,7 @@ interface Props {
 export const DocumentTitle = (props: Props) => {
   const [editable, setEditable] = useState(false);
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y']);
 
   if (editable && !props.readOnly) {
     return (
@@ -29,7 +27,7 @@ export const DocumentTitle = (props: Props) => {
         <button
           className='unstyled icon-only'
           onClick={() => setEditable(false)}
-          aria-label={t['edit document title']}
+          aria-label={t('edit document title', { ns: 'a11y' })}
         >
           <Check />
         </button>
@@ -44,7 +42,7 @@ export const DocumentTitle = (props: Props) => {
         <button
           className='unstyled icon-only'
           onClick={() => setEditable(true)}
-          aria-label={t['edit document title']}
+          aria-label={t('edit document title', { ns: 'a11y' })}
         >
           <PencilSimple />
         </button>

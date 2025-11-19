@@ -1,11 +1,9 @@
 import { CaretDown, Check } from '@phosphor-icons/react';
 import * as Select from '@radix-ui/react-select';
-import type { Translations } from 'src/Types';
 import { Sorting, type Sorter } from './Sorting';
+import { useTranslation } from 'react-i18next';
 
 interface SortSelectorProps {
-
-  i18n: Translations;
 
   onChange(sorting: Sorter): void;
 
@@ -20,17 +18,16 @@ const SORTINGS: { [key: string]: Sorter } = {
 }
 
 export const SortSelector = (props: SortSelectorProps) => {
-
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   return (
     <div className="document-notes-list-sorting">
-      <label>{t['Sort by']}</label>
+      <label>{t('Sort by', { ns: 'annotation-common' })}</label>
 
       <Select.Root 
         defaultValue="newest" 
         onValueChange={value => props.onChange(SORTINGS[value])}>
-        <Select.Trigger className="select-trigger" aria-label={t['Sort annotations by']}>
+        <Select.Trigger className="select-trigger" aria-label={t('Sort annotations by', { ns: 'annotation-common' })}>
           <Select.Value />
           <Select.Icon className="select-icon">
             <CaretDown />
@@ -44,14 +41,14 @@ export const SortSelector = (props: SortSelectorProps) => {
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['newest']}</Select.ItemText>
+                <Select.ItemText>{t('newest', { ns: 'annotation-common' })}</Select.ItemText>
               </Select.Item>
 
               <Select.Item value="oldest" className="select-item">
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['oldest']}</Select.ItemText>
+                <Select.ItemText>{t('oldest', { ns: 'annotation-common' })}</Select.ItemText>
               </Select.Item> 
             </Select.Viewport>
           </Select.Content>

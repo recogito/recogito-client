@@ -3,10 +3,11 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { getDefaultTranslations } from '@i18n';
+import { i18n } from 'astro:config/server';
 import { render } from '@react-email/render';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
+import { getFixedT } from 'src/i18n/server';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -54,22 +55,23 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     respData.push(inviteResponse.data);
 
-    const i18n = getDefaultTranslations('email');
-
-    const { t, lang } = i18n;
+    const lang = i18n?.defaultLocale || 'en';
+    const t = await getFixedT(lang, ['email']);
 
     const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/projects/${body.projectId}/accept-invite`;
 
     const html = await render(
       createElement(InviteUserEmail, {
-        acceptInviteLabel: t['Open dashboard'],
+        acceptInviteLabel: t('Open dashboard', { ns: 'email' }),
         acceptInviteUrl,
-        helloMessage: t['Hello Recogito Studio User'],
+        helloMessage: t('Hello Recogito Studio User', { ns: 'email' }),
         host: url.host,
-        welcomeMessage: t['_welcome_message_']
-          .replace('${sender}', body.invitedBy)
-          .replace('${project_name}', body.projectName)
-          .replace('${host}', url.host),
+        welcomeMessage: t('welcomeMessage', {
+          ns: 'email',
+          sender: body.invitedBy,
+          projectName: body.projectName,
+          host: url.host,
+        }),
       })
     );
 
@@ -87,7 +89,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     const mailOptions = {
       from: MAIL_FROM_ADDRESS,
       to: user.email.toLowerCase(),
-      subject: t['_you_have_been_invited_'],
+      subject: t('invitedSubject', { ns: 'email' }),
       html: html,
     };
 

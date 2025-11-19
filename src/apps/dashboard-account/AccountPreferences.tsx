@@ -6,19 +6,20 @@ import { Avatar } from '@components/Avatar';
 import { Toast, ToastProvider } from '@components/Toast';
 import type { ToastContent } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
-import type { Translations, MyProfile } from 'src/Types';
+import type { MyProfile } from 'src/Types';
 import { getGravatar } from './getGravatar';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './AccountPreferences.css';
 
 interface AccountPreferencesProps {
-  i18n: Translations;
 
   profile: MyProfile;
 }
 
-export const AccountPreferences = (props: AccountPreferencesProps) => {
-  const { t } = props.i18n;
+const AccountPreferences = (props: AccountPreferencesProps) => {
+  const { t } = useTranslation(['common', 'dashboard-account']);
 
   const { profile } = props;
 
@@ -32,8 +33,8 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
 
   const onError = (error: string) =>
     setError({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'common' }),
+      description: error,
       type: 'error',
     });
 
@@ -50,8 +51,8 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
         if (error) {
           console.error(error);
           setError({
-            title: t['Something went wrong'],
-            description: t['Could not update your profile information.'],
+            title: t('Something went wrong', { ns: 'common' }),
+            description: t('Could not update your profile information.', { ns: 'dashboard-account' }),
             type: 'error',
           });
         } else {
@@ -69,14 +70,14 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
   return (
     <ToastProvider>
       <div className='dashboard-account-preferences'>
-        <TopBar i18n={props.i18n} onError={onError} me={profile} />
+        <TopBar onError={onError} me={profile} />
 
         <main>
-          <h1>{t['Your User Profile']}</h1>
+          <h1>{t('Your User Profile', { ns: 'dashboard-account' })}</h1>
           <form onSubmit={formik.handleSubmit}>
             <fieldset>
               <div className='field'>
-                <label htmlFor='email'>{t['E-Mail']}</label>
+                <label htmlFor='email'>{t('E-Mail', { ns: 'common' })}</label>
                 <input
                   readOnly
                   id='email'
@@ -89,31 +90,29 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
               {gravatar && !(gravatar === formik.values.avatar_url) && (
                 <div className='gravatar-preview'>
                   <Avatar id={gravatar} avatar={gravatar} />
-                  <span>{t['We found a Gravatar for your address.']}</span>{' '}
+                  <span>{t('We found a Gravatar for your address.', { ns: 'dashboard-account' })}</span>{' '}
                   <button
                     type='button'
                     className='link'
                     onClick={() => formik.setFieldValue('avatar_url', gravatar)}
                   >
-                    {t['Use as my Avatar.']}
+                    {t('Use as my Avatar.', { ns: 'dashboard-account' })}
                   </button>
                 </div>
               )}
             </fieldset>
 
-            <h2>{t['Public Information']}</h2>
+            <h2>{t('Public Information', { ns: 'dashboard-account' })}</h2>
 
             <p className='public-information-hint'>
               {
-                t[
-                  'Other users can see this information about you. All fields are optional.'
-                ]
+                t('Other users can see this information about you. All fields are optional.', { ns: 'dashboard-account' })
               }
             </p>
 
             <fieldset>
               <div className='field'>
-                <label htmlFor='nickname'>{t['Nickname']}</label>
+                <label htmlFor='nickname'>{t('Nickname', { ns: 'dashboard-account' })}</label>
                 <input
                   id='nickname'
                   name='nickname'
@@ -124,7 +123,7 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
               </div>
 
               <div className='field'>
-                <label htmlFor='first_name'>{t['First Name']}</label>
+                <label htmlFor='first_name'>{t('First Name', { ns: 'common' })}</label>
                 <input
                   id='first_name'
                   name='first_name'
@@ -135,7 +134,7 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
               </div>
 
               <div className='field'>
-                <label htmlFor='last_name'>{t['Last Name']}</label>
+                <label htmlFor='last_name'>{t('Last Name', { ns: 'common' })}</label>
                 <input
                   id='last_name'
                   name='last_name'
@@ -146,7 +145,7 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
               </div>
 
               <div className='field'>
-                <label htmlFor='avatar_url'>{t['Avatar URL']}</label>
+                <label htmlFor='avatar_url'>{t('Avatar URL', { ns: 'dashboard-account' })}</label>
                 <input
                   id='avatar_url'
                   name='avatar_url'
@@ -159,11 +158,11 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
 
             <div className='actions'>
               <button className='unstyled' type='button' onClick={onCancel}>
-                {t['Cancel']}
+                {t('Cancel', { ns: 'common' })}
               </button>
 
               <button className='primary' type='submit'>
-                {t['Save']}
+                {t('Save', { ns: 'common' })}
               </button>
             </div>
           </form>
@@ -174,3 +173,10 @@ export const AccountPreferences = (props: AccountPreferencesProps) => {
     </ToastProvider>
   );
 };
+
+
+export const AccountPreferencesApp = (props: AccountPreferencesProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <AccountPreferences {...props} />
+  </I18nextProvider>
+);

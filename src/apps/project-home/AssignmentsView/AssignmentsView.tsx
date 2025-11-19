@@ -16,13 +16,12 @@ import type {
   Document,
   ExtendedProjectData,
   MyProfile,
-  Translations,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './AssignmentsView.css';
 
 interface AssignmentsViewProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -42,7 +41,7 @@ interface AssignmentsViewProps {
 }
 
 export const AssignmentsView = (props: AssignmentsViewProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'project-assignments']);
 
   const { project } = props;
 
@@ -95,8 +94,8 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
     getAssignment(supabase, assignment.id as string).then(({ data, error }) => {
       if (error || !data) {
         props.setToast({
-          title: t['Something went wrong'],
-          description: t['Could not open the assignment.'],
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not open the assignment.', { ns: 'project-assignments' }),
           type: 'error',
         });
       } else {
@@ -115,8 +114,8 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
         ]);
 
         props.setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete the assignment.'],
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not delete the assignment.', { ns: 'project-assignments' }),
           type: 'error',
         });
       } else {
@@ -124,8 +123,8 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           (props.assignments || []).filter((a) => a.id !== assignment.id)
         );
         props.setToast({
-          title: t['Deleted'],
-          description: t['Assignment deleted successfully.'],
+          title: t('Deleted', { ns: 'common' }),
+          description: t('Assignment deleted successfully.', { ns: 'project-assignments' }),
           type: 'success',
         });
       }
@@ -138,19 +137,18 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
   return (
     <div className='project-assignments'>
       <header className='project-assignments-document-header-bar'>
-        <h2>{t['Assignments']}</h2>
+        <h2>{t('Assignments', { ns: 'common' })}</h2>
         {props.isAdmin && (
           <>
             <Button
               className='primary'
               onClick={() => setEditing(NEW_ASSIGNMENT)}
             >
-              <Plus size={20} /> <span>{t['Add Assignment']}</span>
+              <Plus size={20} /> <span>{t('Add Assignment', { ns: 'project-assignments' })}</span>
             </Button>
 
             {editing && (
               <AssignmentWizard
-                i18n={props.i18n}
                 me={props.me}
                 project={props.project}
                 documents={props.documents}
@@ -169,7 +167,6 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
           <div className='project-assignments-presentation-pane'>
             <AssignmentsList
               assignments={props.assignments}
-              i18n={props.i18n}
               projectId={project.id}
               currentAssignment={currentAssignment.id as string}
               onAssignmentSelect={handleAssignmentSelected}
@@ -183,7 +180,6 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
               onDeleteAssignment={(assignment) =>
                 onDeleteAssignment(assignment)
               }
-              i18n={props.i18n}
               isAdmin={props.isAdmin}
             />
           </div>

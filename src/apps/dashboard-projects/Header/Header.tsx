@@ -18,19 +18,17 @@ import {
 import type {
   MyProfile,
   ExtendedProjectData,
-  Translations,
   Policies,
   Project,
   TagDefinition,
   Tag,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './Header.css';
 
 interface HeaderProps {
   filter: string;
-
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -58,7 +56,7 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['common', 'dashboard-projects']);
 
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
@@ -104,7 +102,7 @@ export const Header = (props: HeaderProps) => {
           props.onProjectCreated(data);
 
           const projectId = data[0]?.id;
-          const projectUrl = `/${props.i18n.lang}/projects/${projectId}`;
+          const projectUrl = `/${i18n.language}/projects/${projectId}`;
 
           if (props.tagDefinition) {
             onSaveTagsForTargets(props.tagDefinition.id, [projectId]).then(
@@ -134,8 +132,8 @@ export const Header = (props: HeaderProps) => {
       }
 
       setToast({
-        title: t['Success'],
-        description: t['Successfully deleted group'].replace('${name}', name),
+        title: t('Success', { ns: 'common' }),
+        description: t('Successfully deleted group', { ns: 'dashboard-projects', name }),
         type: 'success',
       });
     });
@@ -151,8 +149,8 @@ export const Header = (props: HeaderProps) => {
         setTagDefinitionOpen(false);
 
         setToast({
-          title: t['Success'],
-          description: t['Successfully renamed group'],
+          title: t('Success', { ns: 'common' }),
+          description: t('Successfully renamed group', { ns: 'dashboard-projects' }),
           type: 'success',
         });
       });
@@ -172,11 +170,8 @@ export const Header = (props: HeaderProps) => {
         setSelectProjectsOpen(false);
 
         setToast({
-          title: t['Success'],
-          description: t['Successfully updated projects in group'].replace(
-            '${name}',
-            name
-          ),
+          title: t('Success', { ns: 'common' }),
+          description: t('Successfully updated projects in group', { ns: 'dashboard-projects', name }),
           type: 'success',
         });
       });
@@ -209,12 +204,12 @@ export const Header = (props: HeaderProps) => {
                       onSelect={() => setTagDefinitionOpen(true)}
                     >
                       <PencilSimple size={16} />
-                      {t['Rename group']}
+                      {t('Rename group', { ns: 'dashboard-projects' })}
                     </Dropdown.Item>
                     <ConfirmedAction.Trigger>
                       <Dropdown.Item className='dropdown-item'>
                         <Trash className='destructive' size={16} />
-                        {t['Delete group']}
+                        {t('Delete group', { ns: 'dashboard-projects' })}
                       </Dropdown.Item>
                     </ConfirmedAction.Trigger>
                   </Dropdown.Content>
@@ -222,13 +217,12 @@ export const Header = (props: HeaderProps) => {
               </Dropdown.Root>
 
               <ConfirmedAction.Dialog
-                i18n={props.i18n}
-                title={t['Are you sure?']}
-                description={t['Are you sure you want to delete this group?']}
-                cancelLabel={t['Cancel']}
+                title={t('Are you sure?', { ns: 'common' })}
+                description={t('Are you sure you want to delete this group?', { ns: 'dashboard-projects' })}
+                cancelLabel={t('Cancel', { ns: 'common' })}
                 confirmLabel={
                   <>
-                    <Trash size={16} /> <span>{t['Delete group']}</span>
+                    <Trash size={16} /> <span>{t('Delete group', { ns: 'dashboard-projects' })}</span>
                   </>
                 }
                 onConfirm={onDeleteGroup}
@@ -241,19 +235,16 @@ export const Header = (props: HeaderProps) => {
           <ul className='dashboard-header-list-actions'>
             <li>
               <HeaderSearchAction
-                i18n={props.i18n}
                 onChangeSearch={props.onChangeSearch}
               />
             </li>
             <li>
               <HeaderFilterAction
-                i18n={props.i18n}
                 onChangeFilter={props.onChangeDisplay}
               />
             </li>
             <li>
               <HeaderSortAction
-                i18n={props.i18n}
                 onChangeSort={props.onChangeSort}
               />
             </li>
@@ -261,7 +252,6 @@ export const Header = (props: HeaderProps) => {
               <ToggleDisplay
                 display={props.display}
                 onChangeDisplay={props.onSetDisplay}
-                i18n={props.i18n}
               />
             </li>
           </ul>
@@ -272,7 +262,7 @@ export const Header = (props: HeaderProps) => {
                 <Dropdown.Trigger asChild>
                   <button className='new-project primary sm flat'>
                     <Plus size={16} weight='bold' />
-                    <span>{t['Add Project']}</span>
+                    <span>{t('Add Project', { ns: 'dashboard-projects' })}</span>
                     <CaretDown size={16} />
                   </button>
                 </Dropdown.Trigger>
@@ -287,7 +277,7 @@ export const Header = (props: HeaderProps) => {
                         className='dropdown-item'
                         onSelect={onCreateProject}
                       >
-                        {t['New Project']}
+                        {t('New Project', { ns: 'dashboard-projects' })}
                       </Dropdown.Item>
                     )}
 
@@ -295,7 +285,7 @@ export const Header = (props: HeaderProps) => {
                       className='dropdown-item'
                       onSelect={() => setSelectProjectsOpen(true)}
                     >
-                      {t['Existing Project']}
+                      {t('Existing Project', { ns: 'dashboard-projects' })}
                     </Dropdown.Item>
                   </Dropdown.Content>
                 </Dropdown.Portal>
@@ -310,7 +300,7 @@ export const Header = (props: HeaderProps) => {
                   onClick={onCreateProject}
                 >
                   <Plus size={16} weight='bold' />
-                  <span>{t['New Project']}</span>
+                  <span>{t('New Project', { ns: 'dashboard-projects' })}</span>
                 </Button>
               )}
           </div>
@@ -323,16 +313,14 @@ export const Header = (props: HeaderProps) => {
             setCreating(false);
           }}
           onSaveProject={handleSaveProject}
-          i18n={props.i18n}
         />
 
         <TagDefinitionDialog
-          i18n={props.i18n}
           onCancel={() => setTagDefinitionOpen(false)}
           onSaved={onRenameGroup}
           open={tagDefinitionOpen}
           tagDefinition={props.tagDefinition}
-          title={t['Rename Project Group']}
+          title={t('Rename Project Group', { ns: 'dashboard-projects' })}
           description=''
         />
 
@@ -341,19 +329,18 @@ export const Header = (props: HeaderProps) => {
             columns={[
               {
                 name: 'name',
-                label: t['Name'],
+                label: t('Name', { ns: 'common' }),
                 resolve: ({ name }: Project) => name,
               },
               {
                 name: 'count',
-                label: t['Description'],
+                label: t('Description', { ns: 'dashboard-projects' }),
                 resolve: ({ description }: Project) => description,
               },
             ]}
-            description={t['Select Projects']}
+            description={t('Select Projects', { ns: 'common' })}
             filterBy={['name', 'description']}
-            header={t['All Projects']}
-            i18n={props.i18n}
+            header={t('All Projects', { ns: 'dashboard-projects' })}
             onCancel={() => setSelectProjectsOpen(false)}
             onSave={onTagsSaved}
             open={selectProjectsOpen}
@@ -361,11 +348,8 @@ export const Header = (props: HeaderProps) => {
             selected={props.tagDefinition.tags?.map(
               (tag: Tag) => tag.target_id
             )}
-            subtitle={t['Select project(s) to add to group']}
-            title={t['Add projects to group'].replace(
-              '${name}',
-              props.tagDefinition.name
-            )}
+            subtitle={t('Select project(s) to add to group', { ns: 'dashboard-projects' })}
+            title={t('Add projects to group', { ns: 'dashboard-projects', name: props.tagDefinition.name })}
           />
         )}
       </section>

@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { DotsThreeVertical, PencilSimple, Trash } from '@phosphor-icons/react';
-import type { Context, Translations } from 'src/Types';
+import type { Context } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface AssignmentCardActionsProps {
-
-  i18n: Translations;
 
   assignment: Context;
 
@@ -19,7 +18,7 @@ const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments']);
 
   const [open, setOpen] = useState(false);
 
@@ -40,7 +39,7 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
       <Trigger asChild>
         <button 
           className="unstyled icon-only project-card-actions"
-          aria-label={`${t['Menu actions for assignment:']} ${props.assignment.name}`}>
+          aria-label={`${t('Menu actions for assignment:', { ns: 'project-assignments' })} ${props.assignment.name}`}>
           <DotsThreeVertical weight="bold" size={20}/>
         </button>
       </Trigger>
@@ -53,11 +52,11 @@ export const AssignmentCardActions = (props: AssignmentCardActionsProps) => {
           align="start">
           
           <Item className="dropdown-item" onSelect={withStopEvent(props.onEdit)}>
-            <PencilSimple size={16} /> <span>{t['Edit assignment']}</span>
+            <PencilSimple size={16} /> <span>{t('Edit assignment', { ns: 'project-assignments' })}</span>
           </Item>
 
           <Item className="dropdown-item" onSelect={withStopEvent(props.onDelete)}>
-            <Trash size={16} /> <span>{t['Delete assignment']}</span>
+            <Trash size={16} /> <span>{t('Delete assignment', { ns: 'project-assignments' })}</span>
           </Item>
         </Content>
       </Portal>

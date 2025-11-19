@@ -1,11 +1,9 @@
 import { AssignmentCard } from '@components/AssignmentCard';
-import type { Context, ExtendedProjectData, Translations } from 'src/Types';
+import type { Context, ExtendedProjectData } from 'src/Types';
 
 import './AssignmentsGrid.css';
 
 interface AssignmentsGridProps {
-
-  i18n: Translations;
 
   canUpdate?: boolean;
 
@@ -26,7 +24,6 @@ export const AssignmentsGrid = (props: AssignmentsGridProps) => {
       {props.assignments.map(assignment => (
         <AssignmentCard 
           key={assignment.id}
-          i18n={props.i18n}
           canUpdate={props.canUpdate}
           project={props.project}
           assignment={assignment} 

@@ -2,8 +2,8 @@ import type { ReactNode } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
-import type { Translations } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmedActionTriggerProps {
 
@@ -24,8 +24,6 @@ const Trigger = (props: ConfirmedActionTriggerProps) => {
 }
 
 interface ConfirmationDialogProps {
-  
-  i18n: Translations;
 
   busy?: boolean;
 
@@ -42,6 +40,8 @@ interface ConfirmationDialogProps {
 }
 
 const ConfirmationDialog = (props: ConfirmationDialogProps) => {
+  
+  const { t } = useTranslation(['common']);
   
   const onClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
@@ -79,7 +79,7 @@ const ConfirmationDialog = (props: ConfirmationDialogProps) => {
           <Dialog.Close asChild>
             <button 
               className="unstyled icon-only dialog-close" 
-              aria-label={props.i18n.t['Close']}>
+              aria-label={t('Close', { ns: 'common' })}>
               <X />
             </button>
           </Dialog.Close>

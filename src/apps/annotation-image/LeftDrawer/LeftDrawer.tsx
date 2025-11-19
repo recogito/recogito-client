@@ -12,8 +12,8 @@ import type {
   IIIFMetadata,
   Layer,
   MyProfile,
-  Translations,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './LeftDrawer.css';
 
@@ -23,8 +23,6 @@ interface LeftDrawerProps {
   currentImage?: IIIFImage;
 
   document: DocumentWithContext;
-
-  i18n: Translations;
 
   iiifCanvases: Canvas[];
 
@@ -48,7 +46,7 @@ interface LeftDrawerProps {
 }
 
 export const LeftDrawer = (props: LeftDrawerProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'annotation-common']);
 
   const [tab, setTab] = useState<'FILTERS' | 'PAGES' | 'METADATA'>('FILTERS');
 
@@ -79,9 +77,9 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                 <li className={tab === 'FILTERS' ? 'active' : undefined}>
                   <button
                     onClick={() => setTab('FILTERS')}
-                    aria-label={t['open or close the filters tab']}
+                    aria-label={t('open or close the filters tab', { ns: 'a11y' })}
                   >
-                    <Faders size={18} /> {t['Filters']}
+                    <Faders size={18} /> {t('Filters', { ns: 'annotation-common' })}
                   </button>
                 </li>
 
@@ -89,9 +87,9 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                   <li className={tab === 'PAGES' ? 'active' : undefined}>
                     <button
                       onClick={() => setTab('PAGES')}
-                      aria-label={t['open or close the pages tab']}
+                      aria-label={t('open or close the pages tab', { ns: 'a11y' })}
                     >
-                      <Files size={18} /> {t['Pages']}
+                      <Files size={18} /> {t('Pages', { ns: 'annotation-common' })}
                     </button>
                   </li>
                 )}
@@ -99,9 +97,9 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                 <li className={tab === 'METADATA' ? 'active' : undefined}>
                   <button
                     onClick={() => setTab('METADATA')}
-                    aria-label={t['open or close the metadata tab']}
+                    aria-label={t('open or close the metadata tab', { ns: 'a11y' })}
                   >
-                    <ListBullets size={18} /> {t['Metadata']}
+                    <ListBullets size={18} /> {t('Metadata', { ns: 'annotation-common' })}
                   </button>
                 </li>
               </ul>
@@ -110,7 +108,6 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
             <div className='tabcontent'>
               {tab === 'FILTERS' && (
                 <FilterPanel
-                  i18n={props.i18n}
                   layers={props.layers}
                   layerNames={props.layerNames}
                   present={props.present}
@@ -121,7 +118,6 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                   activeUsers={props.activeUsers}
                   canvases={props.iiifCanvases}
                   currentImage={props.currentImage}
-                  i18n={props.i18n}
                   onSelect={props.onChangeImage}
                 />
               )}
@@ -129,7 +125,6 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                 <DocumentMetadata
                   allowEdit={props.document.created_by === props.me.id}
                   document={props.document}
-                  i18n={props.i18n}
                   metadata={props.metadata}
                   onError={props.onError}
                   onUpdated={props.onUpdated}

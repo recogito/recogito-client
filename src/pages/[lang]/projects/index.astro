@@ -1,14 +1,12 @@
 ---
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { TagContextProvider } from '@components/TagContext';
-import { getLangFromUrl, getTranslations } from '@i18n';
 import { getMyProfile } from '@backend/crud';
-import { ProjectsHomeWrapper } from '@apps/dashboard-projects';
+import { ProjectsHomeApp } from '@apps/dashboard-projects';
 import { listMyProjectsExtended } from '@backend/helpers';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { CheckRedirect } from '@components/CheckRedirect';
 
-const lang = getLangFromUrl(Astro.url);
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -29,10 +27,9 @@ if (!projects.data) {
 
 <BaseLayout title='Dashboard'>
   <CheckRedirect client:only='react' />
-  <ProjectsHomeWrapper
+  <ProjectsHomeApp
     client:only='react'
     me={me.data}
     projects={projects.data}
-    i18n={getTranslations(Astro.request, 'dashboard-projects')}
   />
 </BaseLayout>

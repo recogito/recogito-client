@@ -18,7 +18,8 @@ import { ExtensionMount } from '@components/Plugins';
 import { AuthorAvatar } from './AuthorAvatar';
 import { AuthorDetails } from './AuthorDetails';
 import { TagList } from './TagList';
-import type { Translations, VocabularyTerm } from 'src/Types';
+import type { VocabularyTerm } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './EmptyAnnotation.css';
 
@@ -26,8 +27,6 @@ interface EmptyAnnotationProps {
   annotation: SupabaseAnnotation;
 
   autoFocus?: boolean;
-
-  i18n: Translations;
 
   isNote?: boolean;
 
@@ -59,7 +58,7 @@ interface EmptyAnnotationProps {
 }
 
 export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common', 'a11y']);
 
   const { target } = props.annotation;
 
@@ -135,18 +134,17 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           </div>
 
           <div className='annotation-toolbar-wrapper'>
-            <QuillEditorToolbar i18n={props.i18n} />
+            <QuillEditorToolbar />
           </div>
         </div>
 
         <div className='annotation-comment-wrapper'>
           <QuillEditor
             autoFocus={props.autoFocus}
-            i18n={props.i18n}
             value={value}
             onChange={setValue}
             onNavigateTo={props.onNavigateTo}
-            placeholder={t['Add a comment']}
+            placeholder={t('Add a comment', { ns: 'annotation-common' })}
           />
         </div>
 
@@ -155,7 +153,6 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
             <TagList
               annotation={props.annotation}
               isEditable
-              i18n={props.i18n}
               me={props.me}
               tags={tags}
               vocabulary={props.tagVocabulary}
@@ -168,7 +165,7 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
           <button
             className='save save-arrow annotation-footer-right'
             onClick={onSave}
-            aria-label={t['save annotation']}
+            aria-label={t('save annotation', { ns: 'a11y' })}
           >
             <ArrowRight size={20} />
           </button>
@@ -195,7 +192,6 @@ export const EmptyAnnotation = (props: EmptyAnnotationProps) => {
 
           <div>
             <AuthorDetails
-              i18n={props.i18n}
               isPrivate={isPrivate}
               creator={creator}
             />

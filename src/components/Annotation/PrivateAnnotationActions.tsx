@@ -6,12 +6,13 @@ import {
   Trash,
   UsersThree,
 } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface PrivateAnnotationActionsProps {
-  i18n: Translations;
 
   isFirst: boolean;
+
+  isNote?: boolean;
 
   onCopyLink(): void;
 
@@ -27,7 +28,7 @@ interface PrivateAnnotationActionsProps {
 export const PrivateAnnotationActions = (
   props: PrivateAnnotationActionsProps
 ) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'annotation-common']);
 
   const onClick = (evt: React.MouseEvent) => {
     evt.preventDefault();
@@ -39,7 +40,7 @@ export const PrivateAnnotationActions = (
       <Dropdown.Trigger asChild>
         <button
           className='comment-actions unstyled icon-only'
-          aria-label={t['annotation action menu']}
+          aria-label={t('annotation action menu', { ns: 'a11y' })}
         >
           <DotsThree size={20} weight='bold' />
         </button>
@@ -49,7 +50,7 @@ export const PrivateAnnotationActions = (
         <div className='dropdown-content no-icons'>
           <Dropdown.Item className='dropdown-item' onSelect={props.onCopyLink}>
             <LinkSimple size={16} />
-            <span>{t['Copy link to annotation']}</span>
+            <span>{t('Copy link to annotation', { ns: 'annotation-common' })}</span>
           </Dropdown.Item>
 
           <Dropdown.Item
@@ -58,9 +59,9 @@ export const PrivateAnnotationActions = (
           >
             <Pencil size={16} />
             {props.isFirst ? (
-              <span>{t['Edit annotation']}</span>
+              <span>{t('Edit annotation', { ns: 'annotation-common' })}</span>
             ) : (
-              <span>{t['Edit reply']}</span>
+              <span>{t('Edit reply', { ns: 'annotation-common' })}</span>
             )}
           </Dropdown.Item>
 
@@ -71,14 +72,18 @@ export const PrivateAnnotationActions = (
                 onSelect={props.onMakePublic}
               >
                 <UsersThree size={16} />{' '}
-                <span>{t['Make annotation public']}</span>
+                <span>{t('Make annotation public', { ns: 'annotation-common' })}</span>
               </Dropdown.Item>
 
               <Dropdown.Item
                 className='dropdown-item'
                 onSelect={props.onDeleteAnnotation}
               >
-                <Trash size={16} /> <span>{t['Delete annotation']}</span>
+                <Trash size={16} /> <span>
+                  {props.isNote
+                    ? t('Delete note', { ns: 'annotation-common' })
+                    : t('Delete annotation', { ns: 'annotation-common' })}
+                </span>
               </Dropdown.Item>
             </>
           ) : (
@@ -86,7 +91,7 @@ export const PrivateAnnotationActions = (
               className='dropdown-item'
               onSelect={props.onDeleteSection}
             >
-              <Trash size={16} /> <span>{t['Delete reply']}</span>
+              <Trash size={16} /> <span>{t('Delete reply', { ns: 'annotation-common' })}</span>
             </Dropdown.Item>
           )}
         </div>

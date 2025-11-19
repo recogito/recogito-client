@@ -1,16 +1,14 @@
-import type { Translations } from 'src/Types';
 import { Lock } from '@phosphor-icons/react';
 
 import './LockedPill.css';
+import { useTranslation } from 'react-i18next';
 
-interface LockedPillProps {
-  i18n: Translations;
-}
 
-export const LockedPill = (props: LockedPillProps) => {
+export const LockedPill = () => {
+  const { t } = useTranslation(['common']);
   return (
     <div className='locked-pill text-body-tiny'>
-      <Lock /> {props.i18n.t['Locked']}
+      <Lock /> {t('Locked', { ns: 'common' })}
     </div>
   );
 };

@@ -5,12 +5,11 @@ import { Button } from '@components/Button';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { removeUserFromProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
-import type { Member, Translations, UserProfile } from 'src/Types';
+import type { Member, UserProfile } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { Trans, useTranslation } from 'react-i18next';
 
 interface DeleteMemberProps {
-  i18n: Translations;
-
   me: UserProfile;
 
   member: Member;
@@ -23,7 +22,7 @@ interface DeleteMemberProps {
 }
 
 export const DeleteMember = (props: DeleteMemberProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'project-collaboration', 'common']);
 
   const { member } = props;
 
@@ -36,8 +35,8 @@ export const DeleteMember = (props: DeleteMemberProps) => {
   const name = nickname
     ? nickname
     : first_name || last_name
-    ? [first_name, last_name].join(' ')
-    : undefined;
+      ? [first_name, last_name].join(' ')
+      : undefined;
 
   const onDelete = () => {
     setBusy(true);
@@ -61,7 +60,7 @@ export const DeleteMember = (props: DeleteMemberProps) => {
       <Dialog.Trigger asChild>
         <button
           className='unstyled icon-only'
-          aria-label={t['remove this user from the project']}
+          aria-label={t('remove this user from the project', { ns: 'a11y' })}
         >
           <Trash size={16} color='black' />
         </button>
@@ -71,20 +70,25 @@ export const DeleteMember = (props: DeleteMemberProps) => {
         <Dialog.Overlay className='dialog-overlay'>
           <DialogContent className='dialog-content'>
             <Dialog.Title className='dialog-title'>
-              {isMe ? t['Leave Project?'] : t['Confirm Remove User']}
+              {isMe
+                ? t('Leave Project?', { ns: 'project-collaboration' })
+                : t('Confirm Remove User', { ns: 'project-collaboration' })}
             </Dialog.Title>
 
             <Dialog.Description className='dialog-description'>
               {isMe ? (
-                t['You are about to leave']
+                t('You are about to leave', { ns: 'project-collaboration' })
               ) : name ? (
-                <span
-                  dangerouslySetInnerHTML={{
-                    __html: t['Remove_name'].replace('${name}', name),
-                  }}
-                />
+                <span>
+                  <Trans
+                    i18nKey='removeName'
+                    ns='common'
+                    values={{ name }}
+                    components={{ strong: <strong /> }}
+                  />
+                </span>
               ) : (
-                t['Remove_anonymous']
+                t('removeAnonymous', { ns: 'project-collaboration' })
               )}
             </Dialog.Description>
 
@@ -93,27 +97,29 @@ export const DeleteMember = (props: DeleteMemberProps) => {
                 busy={busy}
                 className='danger'
                 onClick={onDelete}
-                aria-label={t['remove this user from the project']}
+                aria-label={t('remove this user from the project', {
+                  ns: 'a11y',
+                })}
               >
                 {isMe ? (
-                  t['Yes, I want to leave']
+                  t('Yes, I want to leave', { ns: 'project-collaboration' })
                 ) : (
                   <>
                     <Trash size={16} />
-                    <span>{t['Remove']}</span>
+                    <span>{t('Remove', { ns: 'project-collaboration' })}</span>
                   </>
                 )}
               </Button>
 
               <Dialog.Close asChild>
-                <button>{t['Cancel']}</button>
+                <button>{t('Cancel', { ns: 'common' })}</button>
               </Dialog.Close>
             </footer>
 
             <Dialog.Close asChild>
               <button
                 className='unstyled icon-only dialog-close'
-                aria-label={t['Close']}
+                aria-label={t('Close', { ns: 'common' })}
               >
                 <X />
               </button>

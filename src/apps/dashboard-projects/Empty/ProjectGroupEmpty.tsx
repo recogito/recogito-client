@@ -1,18 +1,16 @@
-import type { Translations } from 'src/Types.ts';
-import  './ProjectGroupEmpty.css';
+import { useTranslation } from 'react-i18next';
+import './ProjectGroupEmpty.css';
 
-interface Props {
-  i18n: Translations
-}
-
-export const ProjectGroupEmpty = (props: Props) => {
-  const { t } = props.i18n;
+export const ProjectGroupEmpty = () => {
+  const { t } = useTranslation(['dashboard-projects']);
 
   return (
     <main className='dashboard-project-group-empty'>
       <div className='container'>
         <h1 className='dashboard-projects-tagline'>
-          { t['This group doesn\'t have any project files.'] }
+          {t("This group doesn't have any project files.", {
+            ns: 'dashboard-projects',
+          })}
         </h1>
       </div>
     </main>

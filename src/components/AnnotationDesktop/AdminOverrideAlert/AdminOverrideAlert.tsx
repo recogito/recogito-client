@@ -1,12 +1,10 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import type { Translations } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './AdminOverrideAlert.css';
 
 interface AdminOverrideAlertProps {
-
-  i18n: Translations;
 
   open: boolean;
 
@@ -17,8 +15,7 @@ interface AdminOverrideAlertProps {
 }
 
 export const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
-
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common', 'common']);
 
   const onOpenChange = (open: boolean) => {
     if (!open) props.onCancel();
@@ -30,20 +27,20 @@ export const AdminOverrideAlert = (props: AdminOverrideAlertProps) => {
         <Dialog.Overlay className='dialog-overlay' />
         <DialogContent className='dialog-content admin-delete-alert'>
           <Dialog.Title className='dialog-title'>
-            {t['With Great Power...']}
+            {t('With Great Power...', { ns: 'annotation-common' })}
           </Dialog.Title>
 
           <Dialog.Description className='dialog-description'>
-            {t['...comes great responsibility.']}
+            {t('...comes great responsibility.', { ns: 'annotation-common' })}
           </Dialog.Description>
 
           <div className='dialog-footer'>
             <button className='small flat' onClick={props.onCancel}>
-              {t['Cancel']}
+              {t('Cancel', { ns: 'common' })}
             </button>
             
             <button className='primary small flat' onClick={props.onConfirm}>
-              {t['Proceed']}
+              {t('Proceed', { ns: 'annotation-common' })}
             </button>
           </div>
         </DialogContent>

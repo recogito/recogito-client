@@ -1,24 +1,23 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface PublicWarningMessageProps {
   open: boolean;
   message: string;
-  i18n: Translations;
   onCancel(): void;
   onConfirm(): void;
 }
 
 export const PublicWarningMessage = (props: PublicWarningMessageProps) => {
   const { open, message } = props;
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-home', 'common']);
   return (
     <AlertDialog.Root open={open}>
       <AlertDialog.Portal>
         <AlertDialog.Overlay className='alert-dialog-overlay' />
         <AlertDialog.Content className='alert-dialog-content'>
           <AlertDialog.Title className='alert-dialog-title'>
-            {t['Make Document Public']}
+            {t('Make Document Public', { ns: 'project-home' })}
           </AlertDialog.Title>
           <AlertDialog.Description className='alert-dialog-description'>
             {message}
@@ -26,7 +25,7 @@ export const PublicWarningMessage = (props: PublicWarningMessageProps) => {
           <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
             <AlertDialog.Cancel asChild>
               <button className='alert-dialog-button' onClick={props.onCancel}>
-                {t['Cancel']}
+                {t('Cancel', { ns: 'common' })}
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
@@ -34,7 +33,7 @@ export const PublicWarningMessage = (props: PublicWarningMessageProps) => {
                 className='alert-dialog-button-red'
                 onClick={props.onConfirm}
               >
-                {t['Make Public']}
+                {t('Make Public', { ns: 'project-home' })}
               </button>
             </AlertDialog.Action>
           </div>

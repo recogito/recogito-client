@@ -2,16 +2,15 @@ import { GroupSelector } from '../GroupSelector';
 import { Trash } from '@phosphor-icons/react';
 import { Button } from '@components/Button';
 import type {
-  Translations,
   ExtendedUserProfile,
   UserProfile,
   Group,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './UsersTable.css';
 
 interface UsersTableProps {
-  i18n: Translations;
 
   users: ExtendedUserProfile[];
 
@@ -27,7 +26,7 @@ interface UsersTableProps {
 // Helper to flatten the list of groups to the list of users
 
 export const UsersTable = (props: UsersTableProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'user-management']);
 
   // Shorthands
   const isMe = (user: UserProfile) => user.id === props.me.id;
@@ -36,13 +35,13 @@ export const UsersTable = (props: UsersTableProps) => {
     <table className='users-table'>
       <thead>
         <tr>
-          <th>{t['First Name']}</th>
-          <th>{t['Last Name']}</th>
-          <th>{t['Display Name']}</th>
-          <th>{t['Email']}</th>
-          <th>{t['Last Sign In']}</th>
-          <th>{t['User ID']}</th>
-          <th>{t['Access Level']}</th>
+          <th>{t('First Name', { ns: 'common' })}</th>
+          <th>{t('Last Name', { ns: 'common' })}</th>
+          <th>{t('Display Name', { ns: 'user-management' })}</th>
+          <th>{t('Email', { ns: 'user-management' })}</th>
+          <th>{t('Last Sign In', { ns: 'user-management' })}</th>
+          <th>{t('User ID', { ns: 'user-management' })}</th>
+          <th>{t('Access Level', { ns: 'common' })}</th>
           <th></th>
         </tr>
       </thead>
@@ -57,18 +56,17 @@ export const UsersTable = (props: UsersTableProps) => {
             <td>
               {user.last_sign_in_at
                 ? new Date(user.last_sign_in_at).toLocaleString()
-                : t['Never']}
+                : t('Never', { ns: 'user-management' })}
             </td>
             <td>{user.id}</td>
 
             <td>
               {isMe(user) ? (
                 <button disabled className='owner'>
-                  {t['You']}
+                  {t('You', { ns: 'common' })}
                 </button>
               ) : (
                 <GroupSelector
-                  i18n={props.i18n}
                   user={user}
                   availableGroups={props.groups}
                   onChangeGroup={props.onChangeGroup}
@@ -83,7 +81,7 @@ export const UsersTable = (props: UsersTableProps) => {
                   onClick={() => props.onDeleteUser(user)}
                 >
                   <Trash size={16} />
-                  <span>{t['Delete User']}</span>
+                  <span>{t('Delete User', { ns: 'user-management' })}</span>
                 </Button>
               )}
             </td>

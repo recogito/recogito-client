@@ -4,13 +4,12 @@ import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@anno
 import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
-import type { DocumentLayer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 
 import './RightDrawer.css';
+import { useTranslation } from 'react-i18next';
 
 interface RightDrawerProps {
-
-  i18n: Translations;
 
   isLocked: boolean;
 
@@ -39,7 +38,7 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const me = props.present.find(isMe)!;
 
@@ -65,14 +64,13 @@ export const RightDrawer = (props: RightDrawerProps) => {
             <li 
               className={props.tab === 'ANNOTATIONS' ? 'active' : undefined}>
               <button onClick={() => props.onTabChanged('ANNOTATIONS')}>
-                <Chats size={18} /> {t['Annotations']}
+                <Chats size={18} /> {t('Annotations', { ns: 'annotation-common' })}
               </button>
             </li>
 
             <li 
               className={props.tab === 'NOTES' ? 'active' : undefined}>
               <DocumentNotesTabButton
-                i18n={props.i18n}
                 onClick={() => props.onTabChanged('NOTES')} />
             </li>
           </ul>
@@ -83,7 +81,6 @@ export const RightDrawer = (props: RightDrawerProps) => {
             <AnnotationList 
               currentStyle={props.style}
               filter={filter}
-              i18n={props.i18n}
               isProjectLocked={props.isLocked}
               present={props.present} 
               layers={props.layers}
@@ -95,7 +92,6 @@ export const RightDrawer = (props: RightDrawerProps) => {
               onNavigateTo={props.onNavigateTo}/>
           ) : (
             <DocumentNotesList 
-              i18n={props.i18n}
               isProjectLocked={props.isLocked}
               layers={props.layers}
               layerNames={props.layerNames}

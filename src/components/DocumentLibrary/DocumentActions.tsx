@@ -8,14 +8,12 @@ import {
 } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmDeleteDialog } from './ConfirmDeleteDialog';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface DocumentActionsProps {
   allowEditMetadata?: boolean;
-
-  i18n: Translations;
 
   showPrivate?: boolean;
 
@@ -29,7 +27,7 @@ interface DocumentActionsProps {
 }
 
 export const DocumentActions = (props: DocumentActionsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-home', 'common']);
 
   const [confirming, setConfirming] = useState(false);
 
@@ -61,7 +59,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
               <>
                 <Item className='dropdown-item' onSelect={props.onOpenMetadata}>
                   <PencilSimple size={16} />{' '}
-                  <span>{t['Edit document metadata']}</span>
+                  <span>{t('Edit document metadata', { ns: 'project-home' })}</span>
                 </Item>
                 {props.showPrivate && (
                   <Item
@@ -76,14 +74,14 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                       <EyeSlash size={16} />
                     )}{' '}
                     <span>
-                      {props.isPrivate ? t['Make Public'] : t['Make Private']}
+                      {props.isPrivate ? t('Make Public', { ns: 'project-home' }) : t('Make Private', { ns: 'project-home' })}
                     </span>
                   </Item>
                 )}
                 {props.isPrivate && (
                   <Item className='dropdown-item' onSelect={handleDelete}>
                     <Trash size={16} className='destructive' />{' '}
-                    <span>{t['Delete document']}</span>
+                    <span>{t('Delete document', { ns: 'common' })}</span>
                   </Item>
                 )}
               </>
@@ -91,7 +89,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
               <>
                 <Item className='dropdown-item' onSelect={props.onOpenMetadata}>
                   <PencilSimple size={16} />{' '}
-                  <span>{t['View document metadata']}</span>
+                  <span>{t('View document metadata', { ns: 'project-home' })}</span>
                 </Item>
                 {props.showPrivate && (
                   <Item
@@ -104,7 +102,7 @@ export const DocumentActions = (props: DocumentActionsProps) => {
                       <EyeSlash size={16} />
                     )}{' '}
                     <span>
-                      {props.isPrivate ? t['Make Public'] : t['Make Private']}
+                      {props.isPrivate ? t('Make Public', { ns: 'project-home' }) : t('Make Private', { ns: 'project-home' })}
                     </span>
                   </Item>
                 )}
@@ -116,17 +114,14 @@ export const DocumentActions = (props: DocumentActionsProps) => {
 
       <ConfirmDeleteDialog
         open={confirming}
-        i18n={props.i18n}
-        title={t['Are you sure?']}
+        title={t('Are you sure?', { ns: 'common' })}
         description={
-          t[
-            'Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.'
-          ]
+          t('Are you sure you want to remove the document from the document library? Only documents that are not used by active projects can be removed.', { ns: 'project-home' })
         }
-        cancelLabel={t['Cancel']}
+        cancelLabel={t('Cancel', { ns: 'common' })}
         confirmLabel={
           <>
-            <Trash size={16} /> <span>{t['Delete document']}</span>
+            <Trash size={16} /> <span>{t('Delete document', { ns: 'common' })}</span>
           </>
         }
         onConfirm={handleDeleteConfirm}
