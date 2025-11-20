@@ -1,0 +1,23 @@
+{
+  "Back to Projects": "Back to Projects",
+  "Jobs Management": "Jobs Management",
+  "No jobs": "No jobs",
+  "Name": "Name",
+  "Status": "Status",
+  "Timestamp": "Timestamp",
+  "Type": "Type",
+  "User": "User",
+  "Delete job": "Delete job",
+  "Are you sure?": "Are you sure?",
+  "Are you sure you want to remove this job?": "Are you sure you want to remove this job?",
+  "Deleted": "Deleted",
+  "Job deleted successfully.": "Job deleted successfully.",
+  "Something went wrong": "Something went wrong",
+  "Could not delete the job.": "Could not delete the job.",
+  "INITIALIZING": "Initializing",
+  "PROCESSING": "Processing",
+  "COMPLETE": "Complete",
+  "ERROR": "Error",
+  "EXPORT": "Export",
+  "Download": "Download"
+}

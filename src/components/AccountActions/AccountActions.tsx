@@ -1,6 +1,13 @@
 import type { ReactNode } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { Folder, Question, SignOut, Sliders, Users } from '@phosphor-icons/react';
+import {
+  Folder,
+  ListChecks,
+  Question,
+  SignOut,
+  Sliders,
+  Users
+} from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
 import type { MyProfile, Translations } from 'src/Types';
 
@@ -138,6 +145,16 @@ export const AccountActions = (props: AccountProps) => {
                   <Folder size={16} />
                   <a href={`/${lang}/collections`} aria-label={t['collection management']}>
                     {t['Collections']}
+                  </a>
+                </Item>
+
+                <Item
+                  className='dropdown-item'
+                  onSelect={goto(`/${lang}/jobs`)}
+                >
+                  <ListChecks size={16} />
+                  <a href={`/${lang}/jobs`} aria-label={t['jobs management']}>
+                    {t['Jobs']}
                   </a>
                 </Item>
               </>

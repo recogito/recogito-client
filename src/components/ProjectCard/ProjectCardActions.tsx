@@ -1,3 +1,4 @@
+import { exportProject } from '@backend/helpers';
 import { SelectRecordsDialog } from '@components/SelectRecordsDialog';
 import { TagContext } from '@components/TagContext';
 import {
@@ -9,6 +10,7 @@ import {
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
   ArrowRight,
+  CloudArrowDownIcon,
   DotsThreeVertical,
   PencilSimple,
   SignOut,
@@ -49,7 +51,7 @@ export interface ProjectCardActionsProps {
 }
 
 export const ProjectCardActions = (props: ProjectCardActionsProps) => {
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   const [editing, setEditing] = useState(false);
 
@@ -93,6 +95,15 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         props.onError('Could not delete the project.');
         setBusy(false);
       });
+  };
+
+  const onExportProject = () => {
+    setBusy(true);
+
+    exportProject(supabase, props.project).then(() => {
+      setBusy(false);
+      window.location.href = `/${lang}/jobs`;
+    });
   };
 
   const onLeaveProject = () => {
@@ -164,6 +175,16 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
               >
                 <ArrowRight size={16} className='dark' />{' '}
                 <span>{t['Add to group']}</span>
+              </Item>
+            )}
+
+            {isOrgAdmin && (
+              <Item
+                className='dropdown-item'
+                onSelect={onExportProject}
+              >
+                <CloudArrowDownIcon size={16} className='dark' />{' '}
+                <span>{t['Export project']}</span>
               </Item>
             )}
 

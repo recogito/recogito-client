@@ -10,6 +10,7 @@ import collectionManagement from './collection-management.json';
 import dashboardAccount from './dashboard-account.json';
 import dashboardProjects from './dashboard-projects.json';
 import error from './error.json';
+import jobsManagement from './jobs-management.json';
 import notifications from './notifications.json';
 import projectAssignmentDetails from './project-assignment-details.json';
 import projectAssignments from './project-assignments.json';
@@ -58,6 +59,14 @@ export default {
     ...a11y,
   },
   error: { ...error, ...a11y },
+  'jobs-management': {
+    ...a11y,
+    ...accountMenu,
+    ...jobsManagement,
+    ...projectHome,
+    ...projectSidedbar,
+    ...notifications
+  },
   'project-assignment-details': { ...projectAssignmentDetails, ...a11y },
   'project-assignments': { ...projectAssignments, ...a11y },
   'project-collaboration': {

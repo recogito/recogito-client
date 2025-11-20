@@ -1,0 +1,37 @@
+---
+import { JobsManagement } from '@apps/jobs-management';
+import { getJobs, getMyProfile } from '@backend/crud';
+import { createSupabaseServerClient } from '@backend/supabaseServerClient';
+import { getLangFromUrl, getTranslations } from '@i18n';
+import BaseLayout from '@layouts/BaseLayout.astro';
+
+const lang = getLangFromUrl(Astro.url);
+const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
+
+const { error, data: me } = await getMyProfile(supabase);
+
+if (error) {
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url.pathname}`);
+}
+
+if (!me.isOrgAdmin) {
+  return Astro.redirect(`/${lang}/projects`);
+}
+
+const { error: jobsError, data: jobs } = await getJobs(supabase);
+
+if (jobsError) {
+  const { body, headers } = await fetch(`${Astro.url}/500`);
+  return new Response(body, { headers, status: 500 });
+}
+
+---
+
+<BaseLayout title='Jobs Management'>
+  <JobsManagement
+    i18n={getTranslations(Astro.request, 'jobs-management')}
+    jobs={jobs}
+    me={me}
+    client:only='react'
+  />
+</BaseLayout>
