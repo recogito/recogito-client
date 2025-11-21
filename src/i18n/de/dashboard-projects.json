@@ -102,5 +102,5 @@
   "Select project(s) to add to group": "Projekt(e) auswählen",
   "Add projects to group": "Projekt zu ${name} hinzufügen",
   "Successfully updated projects in group": "Projekte in ${name} wurden aktualisiert",
-  "Export project": "Export project"
+  "Export project": "Projekt exportieren"
 }
