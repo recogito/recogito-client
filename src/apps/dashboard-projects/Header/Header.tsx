@@ -10,7 +10,7 @@ import { CaretDown, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
-import { type FileRejection, useDropzone } from 'react-dropzone';
+import { useDropzone } from 'react-dropzone';
 import { HeaderSortAction, type SortFunction } from './Sort';
 import { HeaderFilterAction, type Filters } from './Filter';
 import {
