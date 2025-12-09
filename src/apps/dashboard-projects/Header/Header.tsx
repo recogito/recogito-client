@@ -58,7 +58,7 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
-  const { lang, t, i18n } = useTranslation(['common', 'dashboard-projects']);
+  const { t, i18n } = useTranslation(['common', 'dashboard-projects']);
 
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
@@ -81,7 +81,7 @@ export const Header = (props: HeaderProps) => {
 
     importProject(supabase, file).then(() => {
       setCreating(false);
-      window.location.href = `/${lang}/jobs`;
+      window.location.href = `/${i18n.language}/jobs`;
     });
   };
 
@@ -324,7 +324,7 @@ export const Header = (props: HeaderProps) => {
                 <Dropdown.Trigger asChild>
                   <button className='new-project primary sm flat'>
                     <Plus size={16} weight='bold' />
-                    <span>{t['New Project']}</span>
+                    <span>{t('New Project', { ns: 'dashboard-projects' })}</span>
                     <CaretDown size={16} />
                   </button>
                 </Dropdown.Trigger>
@@ -338,7 +338,7 @@ export const Header = (props: HeaderProps) => {
                       className='dropdown-item'
                       onSelect={onCreateProject}
                     >
-                      {t['Create Project']}
+                      {t('Create Project', { ns: 'dashboard-projects' })}
                     </Dropdown.Item>
 
                     <Dropdown.Item

@@ -20,5 +20,7 @@
   "ERROR": "Error",
   "EXPORT": "Export",
   "Download": "Download",
-  "IMPORT": "Import"
+  "IMPORT": "Import",
+  "Menu actions for job": "Menu actions for job: {{name}}",
+  "remove this job": "remove this job"
 }

@@ -5,34 +5,35 @@ import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
 import { useCallback, useState } from 'react';
-import type { Job, MyProfile, Translations } from 'src/Types';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
+import type { Job, MyProfile } from 'src/Types';
 
 import './JobsManagement.css';
 
 interface Props {
-  i18n: Translations;
   jobs: Job[];
   me: MyProfile;
 }
 
-export const JobsManagement = (props: Props) => {
+const JobsManagement = (props: Props) => {
   const [jobs, setJobs] = useState<Job[]>(props.jobs);
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const { lang, t } = props.i18n;
+  const { t, i18n } = useTranslation(['jobs-management', 'common']);
 
   const onDelete = useCallback((job: Job) => (
     deleteJob(supabase, job.id).then(({ error }) => {
       if (error) {
         setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete the job.'],
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not delete the job.', { ns: 'jobs-management' }),
           type: 'error',
         });
       } else {
         setToast({
-          title: t['Deleted'],
-          description: t['Job deleted successfully.'],
+          title: t('Deleted', { ns: 'common' }),
+          description: t('Job deleted successfully.', { ns: 'jobs-management' }),
           type: 'success',
         });
         setJobs((prevJobs) => prevJobs.filter(
@@ -46,32 +47,30 @@ export const JobsManagement = (props: Props) => {
     <div className='jobs-management'>
       <ToastProvider>
         <TopBar
-          i18n={props.i18n}
           onError={(error) => console.log(error)}
           me={props.me}
         />
         <div className='jobs-management-header'>
           <div>
             <a
-              href={`/${lang}/projects`}
+              href={`/${i18n.language}/projects`}
               style={{ marginTop: 15, zIndex: 1000 }}
             >
               <ArrowLeftIcon className='text-bottom' size={16} />
-              <span>{t['Back to Projects']}</span>
+              <span>{t('Back to Projects', { ns: 'jobs-management' })}</span>
             </a>
-            <h1>{t['Jobs Management']}</h1>
+            <h1>{t('Jobs Management', { ns: 'jobs-management' })}</h1>
           </div>
         </div>
         <div className='jobs-management-content'>
           <div className='jobs-management-table'>
             {jobs.length > 0 ? (
               <JobsTable
-                i18n={props.i18n}
                 jobs={props.jobs}
                 onDelete={onDelete}
               />
             ) : (
-              <p>{t['No jobs']}</p>
+              <p>{t('No jobs', { ns: 'jobs-management' })}</p>
             )}
           </div>
           <Toast
@@ -83,3 +82,9 @@ export const JobsManagement = (props: Props) => {
     </div>
   );
 };
+
+export const JobsManagementApp = (props: Props) => (
+  <I18nextProvider i18n={clientI18next}>
+    <JobsManagement {...props} />
+  </I18nextProvider>
+);

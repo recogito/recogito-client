@@ -20,5 +20,7 @@
   "ERROR": "Fehler",
   "EXPORT": "Exportieren",
   "Download": "Herunterladen",
-  "IMPORT": "Import"
+  "IMPORT": "Import",
+  "Menu actions for job": "Menu actions for job: {{name}}",
+  "remove this job": "remove this job"
 }

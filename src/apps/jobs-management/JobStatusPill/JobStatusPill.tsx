@@ -5,12 +5,12 @@ import {
   WarningIcon
 } from '@phosphor-icons/react';
 import clsx from 'clsx';
-import type { JobStatus, Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
+import type { JobStatus } from 'src/Types';
 
 import './JobStatusPill.css';
 
 interface Props {
-  i18n: Translations;
   status: JobStatus;
 }
 
@@ -21,8 +21,8 @@ const JobStatuses = {
   error: 'ERROR'
 };
 
-export const JobStatusPill = ({ i18n, status }: Props) => {
-  const { t } = i18n;
+export const JobStatusPill = ({ status }: Props) => {
+  const { t } = useTranslation(['jobs-management']);
 
   return (
     <div
@@ -45,7 +45,7 @@ export const JobStatusPill = ({ i18n, status }: Props) => {
       {status === JobStatuses.error && (
         <WarningIcon />
       )}
-      {t[status]}
+      {t(status, { ns: 'jobs-management' })}
     </div>
   );
 };

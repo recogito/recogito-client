@@ -1,11 +1,11 @@
 ---
-import { JobsManagement } from '@apps/jobs-management';
+import { JobsManagementApp } from '@apps/jobs-management';
 import { getJobs, getMyProfile } from '@backend/crud';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
-import { getLangFromUrl, getTranslations } from '@i18n';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
-const lang = getLangFromUrl(Astro.url);
+const lang = Astro.currentLocale;
+
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const { error, data: me } = await getMyProfile(supabase);
@@ -28,8 +28,7 @@ if (jobsError) {
 ---
 
 <BaseLayout title='Jobs Management'>
-  <JobsManagement
-    i18n={getTranslations(Astro.request, 'jobs-management')}
+  <JobsManagementApp
     jobs={jobs}
     me={me}
     client:only='react'

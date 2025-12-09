@@ -149,11 +149,11 @@ export const AccountActions = (props: AccountProps) => {
 
                 <Item
                   className='dropdown-item'
-                  onSelect={goto(`/${lang}/jobs`)}
+                  onSelect={goto(`/${i18n.language}/jobs`)}
                 >
                   <ListChecks size={16} />
-                  <a href={`/${lang}/jobs`} aria-label={t['jobs management']}>
-                    {t['Jobs']}
+                  <a href={`/${i18n.language}/jobs`} aria-label={t('jobs management', { ns: 'jobs-management' })}>
+                    {t('Jobs', { ns: 'jobs-management' })}
                   </a>
                 </Item>
               </>

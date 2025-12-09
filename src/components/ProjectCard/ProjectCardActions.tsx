@@ -50,7 +50,7 @@ export interface ProjectCardActionsProps {
 }
 
 export const ProjectCardActions = (props: ProjectCardActionsProps) => {
-  const { lang, t } = useTranslation(['common', 'dashboard-projects']);
+  const { i18n, t } = useTranslation(['common', 'dashboard-projects']);
 
   const [editing, setEditing] = useState(false);
 
@@ -101,7 +101,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
 
     exportProject(supabase, props.project).then(() => {
       setBusy(false);
-      window.location.href = `/${lang}/jobs`;
+      window.location.href = `/${i18n.language}/jobs`;
     });
   };
 
@@ -183,7 +183,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
                 onSelect={onExportProject}
               >
                 <CloudArrowDownIcon size={16} className='dark' />{' '}
-                <span>{t['Export project']}</span>
+                <span>{t('Export project', { ns: 'dashboard-projects' })}</span>
               </Item>
             )}
 
