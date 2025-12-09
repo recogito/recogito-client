@@ -12,21 +12,23 @@ interface Payload {
   token: string;
 }
 
+const SUPABASE_SERVER_URL = process.env.SUPABASE_SERVERCLIENT_URL || process.env.PUBLIC_SUPABASE;
+const SUPABASE_API_KEY = process.env.PUBLIC_SUPABASE_API_KEY;
+
 const TASK_EXPORT = 'export-project';
 const TASK_IMPORT = 'import-project';
 
 export const runJob = task({
   id: 'run-job',
   run: async (payload: Payload) => {
-    const {
-      key,
-      jobId,
-      serverURL,
-      token,
-      ...rest
-    } = payload;
+    if (!(SUPABASE_SERVER_URL && SUPABASE_API_KEY)) {
+      logger.error('Invalid Supabase credentials');
+      return;
+    }
 
-    const supabase = createClient(serverURL, key, {
+    const { jobId, token, ...rest } = payload;
+
+    const supabase = createClient(SUPABASE_SERVER_URL, SUPABASE_API_KEY, {
       global: {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -61,8 +63,6 @@ export const runJob = task({
 
     // Run the job
     const result = await tasks.triggerAndWait<typeof exportProject | typeof importProject>(task, {
-      key,
-      serverURL,
       token,
       jobId,
       ...rest

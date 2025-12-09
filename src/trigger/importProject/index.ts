@@ -7,9 +7,7 @@ import AdmZip from 'adm-zip';
 import { v4 as uuidv4 } from 'uuid';
 
 interface Payload {
-  key: string;
   jobId: string;
-  serverURL: string;
   token: string;
 }
 

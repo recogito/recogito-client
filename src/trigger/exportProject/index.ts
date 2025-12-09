@@ -14,10 +14,8 @@ const SUPABASE_SERVER_URL = process.env.SUPABASE_SERVERCLIENT_URL || process.env
 const SUPABASE_API_KEY = process.env.PUBLIC_SUPABASE_API_KEY;
 
 interface Payload {
-  key: string;
   jobId: string;
   projectId?: string;
-  serverURL: string;
   token: string;
 }
 
