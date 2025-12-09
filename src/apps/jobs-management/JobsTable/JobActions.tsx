@@ -19,6 +19,12 @@ export const JobActions = (props: Props) => {
 
   const { t } = useTranslation(['jobs-management']);
 
+  const onDownload = () => {
+    if (downloadURL) {
+      window.location.href = downloadURL;
+    }
+  };
+
   const onSelectOption = (fn?: () => void) => () => {
     fn?.();
     setMenuOpen(false);
@@ -43,7 +49,7 @@ export const JobActions = (props: Props) => {
 
         <Dropdown.Portal>
           <Dropdown.Content
-            align='end'
+            align='start'
             className='dropdown-content no-icons'
             sideOffset={5}
           >
@@ -51,11 +57,10 @@ export const JobActions = (props: Props) => {
               <Dropdown.Item
                 aria-label={t('Download', { ns: 'jobs-management' })}
                 className='dropdown-item'
+                onSelect={onDownload}
               >
-                <a href={downloadURL} target='_blank' aria-label={t('help', { ns: 'common' })} rel='noreferrer'>
-                  <CloudArrowDownIcon size={16} />{' '}
-                  <span>{t('Download', { ns: 'jobs-management' })}</span>
-                </a>
+                <CloudArrowDownIcon size={16} />{' '}
+                <span>{t('Download', { ns: 'jobs-management' })}</span>
               </Dropdown.Item>
             )}
             <ConfirmedAction.Trigger>
