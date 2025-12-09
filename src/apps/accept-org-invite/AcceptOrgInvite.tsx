@@ -1,19 +1,20 @@
 import { useState } from 'react';
 import { WarningOctagon } from '@phosphor-icons/react';
 import { TextInput } from '@components/TextInput';
-import type { ApiAcceptOrgInvite, Translations } from 'src/Types';
+import type { ApiAcceptOrgInvite } from 'src/Types';
 import { Button } from '@components/Button';
 import { AnimatedCheck } from '@components/AnimatedIcons';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 
 import './AcceptOrgInvite.css';
+import clientI18next from 'src/i18n/client';
 
 interface AcceptOrgInviteProps {
-  i18n: Translations;
   token: string;
 }
 
-export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
-  const { t } = props.i18n;
+const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
+  const { t, i18n } = useTranslation(['auth-reset-password']);
 
   const [password, setPassword] = useState('');
 
@@ -31,7 +32,7 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
     evt.preventDefault();
 
     if (password !== verification) {
-      setError(t["Passwords don't match"]);
+      setError(t("Passwords don't match", { ns: 'auth-reset-password' }));
     } else {
       setBusy(true);
 
@@ -52,7 +53,9 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
       }).then((response) => {
         if (!response.ok) {
           console.error(response.status);
-          setError(t['Could not set new password']);
+          setError(
+            t('Could not set new password', { ns: 'auth-reset-password' })
+          );
         } else {
           setSuccess(true);
         }
@@ -68,21 +71,23 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
           <div className='success'>
             <AnimatedCheck size={38} />
             <p>
-              {t['Credentials updated.']}{' '}
-              <a href={`/${props.i18n.lang}/sign-in`}>{t['Login']}</a>
+              {t('Credentials updated.', { ns: 'auth-reset-password' })}{' '}
+              <a href={`/${i18n.language}/sign-in`}>
+                {t('Login', { ns: 'auth-reset-password' })}
+              </a>
             </p>
           </div>
         </main>
       ) : (
         <main>
-          <h1>{t['Set Password']}</h1>
+          <h1>{t('Set Password', { ns: 'auth-reset-password' })}</h1>
           <form className='login'>
             <TextInput
               type='text'
               autoComplete={false}
               id='email'
               name='email'
-              label={t['Your email address']}
+              label={t('Your email address', { ns: 'auth-reset-password' })}
               className='lg w-full'
               onChange={setEmail}
             />
@@ -91,7 +96,7 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
               autoComplete={false}
               id='password'
               name='password'
-              label={t['Enter new password']}
+              label={t('Enter new password', { ns: 'auth-reset-password' })}
               className='lg w-full'
               onChange={setPassword}
             />
@@ -101,7 +106,7 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
               autoComplete={false}
               id='verification'
               name='verification'
-              label={t['Confirm password']}
+              label={t('Confirm password', { ns: 'auth-reset-password' })}
               className='lg w-full'
               error={Boolean(error)}
               onChange={setVerification}
@@ -123,7 +128,7 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
               className='primary lg w-full'
               onClick={onAcceptOrgInvite}
             >
-              <span>{t['Set Password']}</span>
+              <span>{t('Set Password', { ns: 'auth-reset-password' })}</span>
             </Button>
           </form>
         </main>
@@ -131,3 +136,10 @@ export const AcceptOrgInviteComponent = (props: AcceptOrgInviteProps) => {
     </div>
   );
 };
+
+
+export const AcceptOrgInviteApp = (props: AcceptOrgInviteProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <AcceptOrgInvite {...props} />
+  </I18nextProvider>
+);

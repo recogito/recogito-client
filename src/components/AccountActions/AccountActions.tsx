@@ -9,9 +9,10 @@ import {
   Users
 } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
-import type { MyProfile, Translations } from 'src/Types';
+import type { MyProfile } from 'src/Types';
 
 import './AccountActions.css';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
@@ -24,8 +25,6 @@ interface AccountProps {
 
   children?: ReactNode;
 
-  i18n: Translations;
-
   profile: MyProfile;
 
   sideOffset?: number;
@@ -34,7 +33,7 @@ interface AccountProps {
 export const AccountActions = (props: AccountProps) => {
   const { profile } = props;
 
-  const { lang, t } = props.i18n;
+  const { i18n, t } = useTranslation(['a11y', 'account-menu', 'common']);
 
   const realname = [profile.first_name, profile.last_name]
     .filter((str) => str)
@@ -57,7 +56,7 @@ export const AccountActions = (props: AccountProps) => {
           <button
             className='unstyled account-actions-trigger'
             style={{ border: 'none' }}
-            aria-label={t['profile']}
+            aria-label={t('profile', { ns: 'a11y' })}
           >
             <Avatar
               id={profile.id}
@@ -97,28 +96,28 @@ export const AccountActions = (props: AccountProps) => {
           <section>
             <Item
               className='dropdown-item'
-              onSelect={goto(`/${lang}/account/me`)}
+              onSelect={goto(`/${i18n.language}/account/me`)}
             >
               <Sliders size={16} />
-              <a href={`/${lang}/account/me`}>{t['Profile Settings']}</a>
+              <a href={`/${i18n.language}/account/me`}>{t('Profile Settings', { ns: 'account-menu' })}</a>
             </Item>
 
             {helpRedirect && (
               <Item className='dropdown-item'>
                 <Question size={16} />
-                <a href={helpRedirect} target='_blank' aria-label={t['help']} rel='noreferrer'>
-                  {t['Help']}
+                <a href={helpRedirect} target='_blank' aria-label={t('help', { ns: 'a11y' })} rel='noreferrer'>
+                  {t('Help', { ns: 'account-menu' })}
                 </a>
               </Item>
             )}
 
             <Item
               className='dropdown-item'
-              onSelect={goto(`/${lang}/sign-out`)}
+              onSelect={goto(`/${i18n.language}/sign-out`)}
             >
               <SignOut size={16} />
-              <a href={`/${lang}/sign-out`} aria-label={t['sign out']}>
-                {t['Sign out']}
+              <a href={`/${i18n.language}/sign-out`} aria-label={t('sign out', { ns: 'a11y' })}>
+                {t('Sign out', { ns: 'account-menu' })}
               </a>
             </Item>
 
@@ -126,25 +125,25 @@ export const AccountActions = (props: AccountProps) => {
               <>
                 <div className='dropdown-separator' />
 
-                <div className='dropdown-label'>{t['Site Administration']}</div>
+                <div className='dropdown-label'>{t('Site Administration', { ns: 'common' })}</div>
 
                 <Item
                   className='dropdown-item'
-                  onSelect={goto(`/${lang}/users`)}
+                  onSelect={goto(`/${i18n.language}/users`)}
                 >
                   <Users size={16} />
-                  <a href={`/${lang}/users`} aria-label={t['user management']}>
-                    {t['Users']}
+                  <a href={`/${i18n.language}/users`} aria-label={t('user management', { ns: 'a11y' })}>
+                    {t('Users', { ns: 'common' })}
                   </a>
                 </Item>
 
                 <Item
                   className='dropdown-item'
-                  onSelect={goto(`/${lang}/collections`)}
+                  onSelect={goto(`/${i18n.language}/collections`)}
                 >
                   <Folder size={16} />
-                  <a href={`/${lang}/collections`} aria-label={t['collection management']}>
-                    {t['Collections']}
+                  <a href={`/${i18n.language}/collections`} aria-label={t('collection management', { ns: 'a11y' })}>
+                    {t('Collections', { ns: 'common' })}
                   </a>
                 </Item>
 

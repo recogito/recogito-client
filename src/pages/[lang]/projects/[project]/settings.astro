@@ -1,15 +1,12 @@
 ---
-import { ProjectSettings } from '@apps/project-settings';
+import { ProjectSettingsApp } from '@apps/project-settings';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile, listPendingInvitations } from '@backend/crud';
 import PluginRegistry from '@components/Plugins/PluginRegistry';
-import { getLangFromUrl, getTranslations } from '@i18n';
 import { getProjectExtended, getInstalledPlugins } from '@backend/helpers';
 
-const lang = getLangFromUrl(Astro.url);
-
-const i18n = getTranslations(Astro.request, 'project-settings');
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -51,9 +48,8 @@ if (installedPlugins.error || !installedPlugins.data) {
 }
 ---
 <BaseLayout title='Settings'>
-  <ProjectSettings
+  <ProjectSettingsApp
     client:only='react'
-    i18n={i18n}
     project={project.data}
     invitations={invitations.data}
     me={profile.data}

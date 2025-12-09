@@ -1,6 +1,5 @@
 ---
-import { Login } from '@apps/auth-login';
-import { getTranslations } from '@i18n';
+import { LoginApp } from '@apps/auth-login';
 import LoginLayout from '@layouts/login/LoginLayout.astro';
 import config from '../../config.json';
 import type { LoginMethod } from '../../Types';
@@ -14,9 +13,8 @@ const methods = config.authentication.methods;
     ? methods.length < 4
     : methods.length < 3}
 >
-  <Login
+  <LoginApp
     client:only='react'
-    i18n={getTranslations(Astro.request, 'auth-login')}
     methods={methods as LoginMethod[]}
   />
 </LoginLayout>

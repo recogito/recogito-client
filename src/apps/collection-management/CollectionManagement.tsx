@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 import { CollectionsTable } from './CollectionsTable';
-import type { MyProfile, Collection, Translations } from 'src/Types';
+import type { MyProfile, Collection } from 'src/Types';
 import { CheckFat, WarningDiamond, ArrowLeft } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
@@ -16,15 +18,17 @@ import { CollectionDialog } from './CollectionDialog/CollectionDialog';
 import './CollectionManagement.css';
 
 interface CollectionManagementProps {
-  i18n: Translations;
-
   collections: Collection[];
 
   me: MyProfile;
 }
 
-export const CollectionManagement = (props: CollectionManagementProps) => {
-  const { lang, t } = props.i18n;
+const CollectionManagement = (props: CollectionManagementProps) => {
+  const { t, i18n } = useTranslation([
+    'collection-management',
+    'project-home',
+    'project-sidebar',
+  ]);
 
   const [collections, setCollections] = useState(props.collections);
   const [filteredCollections, setFilteredCollections] = useState(
@@ -54,8 +58,10 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
     createCollection(supabase, name).then(({ error }) => {
       if (error) {
         setToast({
-          title: t['Something went wrong'],
-          description: t['Could not create collection.'],
+          title: t('Something went wrong', { ns: 'project-home' }),
+          description: t('Could not create collection.', {
+            ns: 'collection-management',
+          }),
           type: 'error',
           icon: <WarningDiamond color='red' />,
         });
@@ -64,8 +70,10 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
         getInstanceCollections(supabase).then(({ error, data }) => {
           if (error) {
             setToast({
-              title: t['Something went wrong'],
-              description: t['Could not retrieve collections.'],
+              title: t('Something went wrong', { ns: 'project-home' }),
+              description: t('Could not retrieve collections.', {
+                ns: 'collection-management',
+              }),
               type: 'error',
               icon: <WarningDiamond color='red' />,
             });
@@ -73,8 +81,10 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
           }
           setCollections(data);
           setToast({
-            title: t['Success'],
-            description: t['Collection has been created.'],
+            title: t('Success', { ns: 'collection-management' }),
+            description: t('Collection has been created.', {
+              ns: 'collection-management',
+            }),
             type: 'success',
             icon: <CheckFat color='green' />,
           });
@@ -88,8 +98,10 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
     archiveCollection(supabase, collection.id).then(({ data }) => {
       if (data) {
         setToast({
-          title: t['Deleted'],
-          description: t['Collection deleted successfully.'],
+          title: t('Deleted', { ns: 'project-home' }),
+          description: t('Collection deleted successfully.', {
+            ns: 'collection-management',
+          }),
           type: 'success',
         });
         setCollections((prevCollections) =>
@@ -99,8 +111,10 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
         );
       } else {
         setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete the collection.'],
+          title: t('Something went wrong', { ns: 'project-home' }),
+          description: t('Could not delete the collection.', {
+            ns: 'collection-management',
+          }),
           type: 'error',
         });
       }
@@ -112,16 +126,20 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
       ({ error, data }) => {
         if (error) {
           setToast({
-            title: t['Something went wrong'],
-            description: t['Could not update collection.'],
+            title: t('Something went wrong', { ns: 'project-home' }),
+            description: t('Could not update collection.', {
+              ns: 'collection-management',
+            }),
             type: 'error',
             icon: <WarningDiamond color='red' />,
           });
           return;
         } else {
           setToast({
-            title: t['Success'],
-            description: t['Collection has been updated.'],
+            title: t('Success', { ns: 'collection-management' }),
+            description: t('Collection has been updated.', {
+              ns: 'collection-management',
+            }),
             type: 'success',
             icon: <CheckFat color='green' />,
           });
@@ -143,27 +161,27 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
   return (
     <div className='collection-management'>
       <ToastProvider>
-        <TopBar
-          i18n={props.i18n}
-          onError={(error) => console.log(error)}
-          me={props.me}
-        />
+        <TopBar onError={(error) => console.log(error)} me={props.me} />
         <div className='collection-management-header'>
           <div>
             <a
-              href={`/${lang}/projects`}
+              href={`/${i18n.language}/projects`}
               style={{ marginTop: 15, zIndex: 1000 }}
             >
               <ArrowLeft className='text-bottom' size={16} />
-              <span>{t['Back to Projects']}</span>
+              <span>{t('Back to Projects', { ns: 'project-sidebar' })}</span>
             </a>
-            <h1>{t['Collection Management']}</h1>
+            <h1>
+              {t('Collection Management', { ns: 'collection-management' })}
+            </h1>
           </div>
         </div>
         <div className='collection-management-content'>
           <div className='collection-management-actions'>
             <div>
-              <label htmlFor='search'>{t['Search Collections']}</label>
+              <label htmlFor='search'>
+                {t('Search Collections', { ns: 'collection-management' })}
+              </label>
               <input
                 autoFocus
                 id='search'
@@ -173,16 +191,12 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
-            <CollectionDialog
-              onSave={handleCreateCollection}
-              i18n={props.i18n}
-            />
+            <CollectionDialog onSave={handleCreateCollection} />
           </div>
 
           <div className='collection-management-table'>
             {filteredCollections.length > 0 ? (
               <CollectionsTable
-                i18n={props.i18n}
                 collections={filteredCollections}
                 onDelete={handleDeleteCollection}
                 onSave={handleUpdateCollection}
@@ -190,8 +204,10 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
             ) : (
               <p>
                 {search
-                  ? t['No collections matching search criteria']
-                  : t['No collections']}
+                  ? t('No collections matching search criteria', {
+                      ns: 'collection-management',
+                    })
+                  : t('No collections', { ns: 'collection-management' })}
               </p>
             )}
           </div>
@@ -204,3 +220,9 @@ export const CollectionManagement = (props: CollectionManagementProps) => {
     </div>
   );
 };
+
+export const CollectionManagementApp = (props: CollectionManagementProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <CollectionManagement {...props} />
+  </I18nextProvider>
+);

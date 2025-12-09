@@ -3,14 +3,14 @@ import { Check, WarningOctagon } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { TextInput } from '@components/TextInput';
 import { Button } from '@components/Button';
-import type { Translations } from 'src/Types';
 import { isValidEmail } from '../validation';
+import { useTranslation } from 'react-i18next';
 
 type ButtonStatus = 'idle' | 'fetching' | 'sent';
 
-export const StateMagicLink = (props: { i18n: Translations }) => {
+export const StateMagicLink = () => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['auth-login']);
 
   const [email, setEmail] = useState('');
 
@@ -53,11 +53,11 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
       <Button 
         disabled
         className="lg w-full success">
-        <Check size={22} /> <span>{t['Link Sent']}</span>
+        <Check size={22} /> <span>{t('Link Sent', { ns: 'auth-login' })}</span>
       </Button>
 
       <p>
-        {t['Check your email for the Magic Link.']}
+        {t('Check your email for the Magic Link.', { ns: 'auth-login' })}
       </p>
     </div>
   ) : (
@@ -68,7 +68,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           error={isInvalid}
           className="lg w-full"
           name="email" 
-          label={t['Your email address']}
+          label={t('Your email address', { ns: 'auth-login' })}
           value={email}
           onChange={setEmail} />
 
@@ -76,7 +76,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           <p className="error">
             <WarningOctagon 
               className="icon text-bottom" 
-              size={18} weight="fill" /> {t['Please enter a valid email address']}
+              size={18} weight="fill" /> {t('Please enter a valid email address', { ns: 'auth-login' })}
           </p>
         )}
 
@@ -93,7 +93,7 @@ export const StateMagicLink = (props: { i18n: Translations }) => {
           type="submit" 
           className="primary lg w-full" 
           onClick={onSend}>
-          <span>{t['Send Magic Link']}</span>
+          <span>{t('Send Magic Link', { ns: 'auth-login' })}</span>
         </Button>
       </form>
     </div>

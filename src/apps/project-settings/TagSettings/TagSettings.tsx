@@ -10,14 +10,13 @@ import type { SaveState } from '@components/TinySaveIndicator';
 import { TagColorPicker } from './TagColorPicker';
 import type {
   ExtendedProjectData,
-  Translations,
   VocabularyTerm,
 } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './TagSettings.css';
 
 interface TagSettingsProps {
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -25,7 +24,7 @@ interface TagSettingsProps {
 }
 
 export const TagSettings = (props: TagSettingsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-settings', 'common']);
 
   const [inputVal, setInputVal] = useState<string>('');
 
@@ -43,7 +42,7 @@ export const TagSettings = (props: TagSettingsProps) => {
     getProjectTagVocabulary(supabase, props.project.id).then(
       ({ error, data }) => {
         if (error) {
-          props.onError(t['Error loading tag vocabulary']);
+          props.onError(t('Error loading tag vocabulary.', { ns: 'project-settings' }));
         } else {
           setVocabulary(data);
         }
@@ -72,7 +71,7 @@ export const TagSettings = (props: TagSettingsProps) => {
       })
       .catch(() => {
         setClearState('failed');
-        props.onError(t['Error saving tag vocabulary.']);
+        props.onError(t('Error saving tag vocabulary.', { ns: 'project-settings' }));
 
         // Roll back
         setVocabulary(prev);
@@ -90,7 +89,7 @@ export const TagSettings = (props: TagSettingsProps) => {
       .catch((error) => {
         console.error(error);
         setSaveState('failed');
-        props.onError(t['Error saving tag vocabulary.']);
+        props.onError(t('Error saving tag vocabulary.', { ns: 'project-settings' }));
       });
   };
 
@@ -127,27 +126,27 @@ export const TagSettings = (props: TagSettingsProps) => {
         // Roll back
         setVocabulary(prev);
 
-        props.onError(t['Error saving tag vocabulary.']);
+        props.onError(t('Error saving tag vocabulary.', { ns: 'project-settings' }));
       });
   };
 
   return (
     <div className='tag-settings tab-container'>
-      <h2>{t['Tagging Vocabulary']}</h2>
+      <h2>{t('Tagging Vocabulary', { ns: 'project-settings' })}</h2>
 
-      <p>{t['You can pre-define a tagging vocabulary']}</p>
+      <p>{t('You can pre-define a tagging vocabulary', { ns: 'project-settings' })}</p>
 
       {vocabulary &&
         (vocabulary.length === 0 ? (
-          <div className='no-vocabulary'>{t['No tagging vocabulary']}</div>
+          <div className='no-vocabulary'>{t('No tagging vocabulary', { ns: 'project-settings' })}</div>
         ) : (
           <div className='current-vocabulary'>
             <table>
               <thead>
                 <tr>
-                  <th>{t['Tag']}</th>
-                  <th>{t['ID']}</th>
-                  <th>{t['Color']}</th>
+                  <th>{t('Tag', { ns: 'common' })}</th>
+                  <th>{t('ID', { ns: 'project-settings' })}</th>
+                  <th>{t('Color', { ns: 'common' })}</th>
                 </tr>
               </thead>
               <tbody>
@@ -159,7 +158,6 @@ export const TagSettings = (props: TagSettingsProps) => {
                       <TagColorPicker
                         color={term.color}
                         onChange={(color) => onChangeColor(term, color)}
-                        i18n={props.i18n}
                       />
                     </td>
                   </tr>
@@ -173,7 +171,7 @@ export const TagSettings = (props: TagSettingsProps) => {
                 busy={clearState === 'saving'}
                 onClick={onClear}
               >
-                <span>{t['Clear All']}</span>
+                <span>{t('Clear All', { ns: 'project-settings' })}</span>
               </Button>
 
               <Button
@@ -182,18 +180,18 @@ export const TagSettings = (props: TagSettingsProps) => {
                 busy={saveState === 'saving'}
                 onClick={onSave}
               >
-                <span>{t['Save Changes']}</span>
+                <span>{t('Save Changes', { ns: 'project-settings' })}</span>
               </Button>
             </div>
           </div>
         ))}
 
       <div>
-        <p>{t['Add vocabulary terms below']}</p>
+        <p>{t('Add vocabulary terms below', { ns: 'project-settings' })}</p>
 
         <div>
           <textarea
-            placeholder={t['VOCABULARY_PLACEHOLDER']}
+            placeholder={t('VOCABULARY_PLACEHOLDER', { ns: 'project-settings' })}
             value={inputVal}
             onChange={(evt) => setInputVal(evt.target.value)}
           />
@@ -205,7 +203,7 @@ export const TagSettings = (props: TagSettingsProps) => {
             busy={addState === 'saving'}
             onClick={onAddTerms}
           >
-            {t['Add to Vocabulary']}
+            {t('Add to Vocabulary', { ns: 'project-settings' })}
           </Button>
         </div>
       </div>

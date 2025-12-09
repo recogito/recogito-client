@@ -1,12 +1,12 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Invitation, Translations } from 'src/Types';
+import type { Invitation } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { Trans } from 'react-i18next';
 
 import './InvitationConfirmation.css';
 
 interface InvitationConfirmationProps {
-  i18n: Translations;
 
   invitation: Invitation;
 
@@ -16,7 +16,7 @@ interface InvitationConfirmationProps {
 }
 
 export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
-  const { invitation, i18n } = props;
+  const { invitation } = props;
 
   return (
     <Dialog.Root open={true} onOpenChange={props.onClose}>
@@ -29,35 +29,20 @@ export const InvitationConfirmation = (props: InvitationConfirmationProps) => {
           </div>
 
           <Dialog.Description className='dialog-description'>
-            <span
-              dangerouslySetInnerHTML={{
-                __html: props.isCreator
-                  ? i18n.t['Confirmed-creator'].replace(
-                      '${project}',
-                      invitation.project_name!
-                    )
-                  : i18n.t['Confirmed-student'].replace(
-                      '${project}',
-                      invitation.project_name!
-                    ),
-              }}
-            />
+            <span>
+              <Trans
+                i18nKey={props.isCreator ? 'confirmedCreator' : 'confirmedStudent'}
+                ns='notifications'
+                values={{ project: invitation.project_name }}
+                components={{ strong: <strong /> }}
+              />
+            </span>
           </Dialog.Description>
-
-          {props.isCreator ? (
-            <img
-              className='graphic-invitation-accepted'
-              alt='invite-accepted'
-              src='/img/graphic-invitation-accepted-creators.png'
-            />
-          ) : (
-            <img
-              className='graphic-invitation-accepted'
-              alt='invite-accepted'
-              src='/img/graphic-invitation-accepted-student.png'
-            />
-          )}
-
+          <img
+            className='graphic-invitation-accepted'
+            alt='invite-accepted'
+            src={`/img/graphic-invitation-accepted-${props.isCreator ? 'creators' : 'student'}.png`}
+          />
           <Dialog.Close className='close' asChild>
             <button className='primary'>Ok</button>
           </Dialog.Close>

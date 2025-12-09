@@ -2,13 +2,10 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
-import { getLangFromUrl, getTranslations } from '@i18n';
-import { ProjectRequest } from '@apps/project-request';
+import { ProjectRequestApp } from '@apps/project-request';
 import { getProjectExtended } from '@backend/helpers';
 
-const lang = getLangFromUrl(Astro.url);
-
-const i18n = getTranslations(Astro.request, 'project-request');
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -23,9 +20,8 @@ if (profile.error || !profile.data) {
 ---
 
 <BaseLayout title='join'>
-  <ProjectRequest
+  <ProjectRequestApp
     client:only='react'
-    i18n={i18n}
     projectId={projectId as string}
     user={profile.data}
     isAlreadyMember={Boolean(project.data)}

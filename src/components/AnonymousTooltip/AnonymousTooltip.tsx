@@ -1,16 +1,12 @@
 import { Info } from '@phosphor-icons/react';
 import * as Popover from '@radix-ui/react-popover';
-import type { Translations } from 'src/Types';
-
-interface AnonymousTooltipProps {
-
-  i18n: Translations;
-
-}
+import { useTranslation } from 'react-i18next';
 
 const { Arrow, Content, Portal, Root, Trigger } = Popover;
 
-export const AnonymousTooltip = (props: AnonymousTooltipProps) => {
+export const AnonymousTooltip = () => {
+
+  const { t } = useTranslation(['common'])
 
   return (
     <Root>
@@ -26,7 +22,7 @@ export const AnonymousTooltip = (props: AnonymousTooltipProps) => {
         <Content 
           className="popover-tooltip-content" 
           side="top">
-          {props.i18n.t['This user has not provided a profile name.']}
+          {t('This user has not provided a profile name.', { ns: 'common' })}
 
           <Arrow className="popover-tooltip-arrow" />
         </Content>

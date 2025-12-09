@@ -3,17 +3,10 @@ import * as Toggle from '@radix-ui/react-toggle';
 import { Tag as TagIcon} from '@phosphor-icons/react';
 import { useTags } from './useTags';
 import { useFilterSettingsState } from '../FilterState';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
-interface TagsProps {
-
-  i18n: Translations;
-
-}
-
-export const Tags = (props: TagsProps) => {
-
-  const { t } = props.i18n;
+export const Tags = () => {
+  const { t } = useTranslation(['annotation-common']);
 
   const tags = useTags();
 
@@ -41,7 +34,7 @@ export const Tags = (props: TagsProps) => {
   return (
     <section className="filter-tags filter-toggle-buttons">
       <h2>
-        <TagIcon size={19} /> {t['Tags']}
+        <TagIcon size={19} /> {t('Tags', { ns: 'annotation-common' })}
       </h2>
 
       <ul>

@@ -1,18 +1,14 @@
 import CustomFooter from '@branding/Footer';
 import { RecogitoLogo } from '@components/RecogitoLogo';
 import config from 'src/config.json';
-import type { Translations } from '../../Types';
+import { useTranslation } from 'react-i18next';
 import './BrandFooter.css';
 
 const { bottom_logos_enabled: useFooter, contrast_color: textColor } =
   config.branding;
 
-interface Props {
-  i18n: Translations;
-}
-
-export const BrandFooter = ({ i18n, ...rest }: Props) => {
-  const { t } = i18n;
+export const BrandFooter = ({ ...rest }) => {
+  const { t } = useTranslation(['branding']);
 
   return (
     <footer className='brand-footer' {...rest}>
@@ -23,7 +19,7 @@ export const BrandFooter = ({ i18n, ...rest }: Props) => {
       )}
       {!useFooter && (
         <div className='logo-container'>
-          <span>{t['powered by']}</span>
+          <span>{t('powered by', { ns: 'branding' })}</span>
           <RecogitoLogo
             color='#FBBA00'
             contrastColor='white'

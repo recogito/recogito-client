@@ -16,13 +16,13 @@ import { useLocalStorageBackedState } from 'src/util/hooks';
 import type {
   ExtendedProjectData,
   MyProfile,
-  Translations,
 } from 'src/Types';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './ProjectsHome.css';
 
 export interface ProjectsHomeProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -36,7 +36,7 @@ export enum ProjectFilter {
 }
 
 export const ProjectsHome = (props: ProjectsHomeProps) => {
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['dashboard-projects']);
 
   const { me } = props;
 
@@ -73,7 +73,7 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   useEffect(() => {
     getMyProfile(supabase).then(({ error }) => {
-      if (error) window.location.href = `/${props.i18n.lang}/sign-in`;
+      if (error) window.location.href = `/${i18n.language}/sign-in`;
     });
   }, []);
 
@@ -150,11 +150,11 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     let value;
 
     if (filter === ProjectFilter.MINE) {
-      value = t['My Projects'];
+      value = t('My Projects', { ns: 'dashboard-projects' });
     } else if (filter === ProjectFilter.SHARED) {
-      value = t['Shared with me'];
+      value = t('Shared with me', { ns: 'dashboard-projects' });
     } else if (filter === ProjectFilter.PUBLIC) {
-      value = t['Public Projects'];
+      value = t('Public Projects', { ns: 'dashboard-projects' });
     } else if (tagDefinition) {
       value = tagDefinition.name;
     }
@@ -180,8 +180,8 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
   const onError = (error: string) =>
     setError({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'dashboard-projects' }),
+      description: error,
       type: 'error',
     });
 
@@ -198,7 +198,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
     <ToastProvider>
       <div className='dashboard-projects-home'>
         <TopBar
-          i18n={props.i18n}
           onError={onError}
           me={me}
           onInvitationAccepted={onInvitationAccepted}
@@ -207,7 +206,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
         <div className='dashboard-projects-container'>
           <Sidebar
             filter={filter}
-            i18n={props.i18n}
             onChangeFilter={setFilter}
             policies={policies}
             projects={
@@ -220,7 +218,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
           <div className='dashboard-projects-content'>
             <Header
               filter={filterLabel as string}
-              i18n={props.i18n}
               me={me}
               policies={policies}
               projects={[...myProjects, ...sharedProjects]}
@@ -241,17 +238,15 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
             {filteredProjects?.length === 0 ? (
               policies && !tagDefinition ? (
                 <ProjectsEmpty
-                  i18n={props.i18n}
                   canCreateProjects={policies.get('projects').has('INSERT')}
                   onProjectCreated={onProjectCreated}
                   onError={onError}
                 />
               ) : (
-                <ProjectGroupEmpty i18n={props.i18n} />
+                <ProjectGroupEmpty />
               )
             ) : display === 'cards' ? (
               <ProjectsGrid
-                i18n={props.i18n}
                 me={me}
                 projects={filteredProjects as ExtendedProjectData[]}
                 search={search}
@@ -264,7 +259,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
               />
             ) : (
               <ProjectsList
-                i18n={props.i18n}
                 me={me}
                 projects={filteredProjects as ExtendedProjectData[]}
                 search={search}
@@ -280,7 +274,6 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
 
             <ProfileNagDialog
               open={showProfileNag}
-              i18n={props.i18n}
               onClose={() => setShowProfileNag(false)}
             />
           </div>
@@ -293,8 +286,10 @@ export const ProjectsHome = (props: ProjectsHomeProps) => {
   );
 };
 
-export const ProjectsHomeWrapper = (props: ProjectsHomeProps) => (
-  <TagContextProvider scope='user' scopeId={props.me.id} targetType='project'>
-    <ProjectsHome i18n={props.i18n} me={props.me} projects={props.projects} />
-  </TagContextProvider>
+export const ProjectsHomeApp = (props: ProjectsHomeProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <TagContextProvider scope='user' scopeId={props.me.id} targetType='project'>
+      <ProjectsHome me={props.me} projects={props.projects} />
+    </TagContextProvider>
+  </I18nextProvider>
 );

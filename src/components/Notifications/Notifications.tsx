@@ -5,7 +5,6 @@ import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
-  Translations,
   Notification,
 } from 'src/Types';
 import { EmptyList } from './EmptyList';
@@ -15,13 +14,13 @@ import { InvitationConfirmation } from './InvitiationConfirmation';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { listMyInvites, listMyNotifications } from '@backend/crud';
 import { acknowledgeNotification } from '@backend/helpers';
+import { useTranslation } from 'react-i18next';
 
 import './Notifications.css';
 
 const { Close, Content, Portal, Root, Trigger } = Popover;
 
 interface NotificationsProps {
-  i18n: Translations;
 
   isCreator?: boolean;
 
@@ -33,7 +32,7 @@ interface NotificationsProps {
 }
 
 export const Notifications = (props: NotificationsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'notifications']);
 
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -98,7 +97,7 @@ export const Notifications = (props: NotificationsProps) => {
         <Trigger asChild>
           <button
             className='unstyled icon-only notification-actions-trigger actions-trigger'
-            aria-label={t['Show notifications']}
+            aria-label={t('Show notifications', { ns: 'common' })}
             disabled={false}
           >
             <Bell size={18} />
@@ -118,23 +117,22 @@ export const Notifications = (props: NotificationsProps) => {
               className={count ? 'notifications' : 'notifications no-pending'}
             >
               <header>
-                <h1>{t['Notifications']}</h1>
+                <h1>{t('Notifications', { ns: 'notifications' })}</h1>
                 <Close
                   className='unstyled icon-only popover-close'
-                  aria-label={t['Close']}
+                  aria-label={t('Close', { ns: 'common' })}
                 >
                   <X size={16} />
                 </Close>
               </header>
 
               {count === 0 ? (
-                <EmptyList i18n={props.i18n} />
+                <EmptyList />
               ) : (
                 <ol>
                   {remaining.map((invitation) => (
                     <InvitationItem
                       key={invitation.id}
-                      i18n={props.i18n}
                       invitation={invitation}
                       onAccepted={onAccepted(invitation)}
                       onError={props.onError}
@@ -143,9 +141,7 @@ export const Notifications = (props: NotificationsProps) => {
                   {notifications.map((notification) => (
                     <NotificationItem
                       key={notification.id}
-                      i18n={props.i18n}
                       notification={notification}
-                      onError={props.onError}
                       onAcknowledged={() => handleAcknowledge(notification)}
                     />
                   ))}
@@ -158,7 +154,6 @@ export const Notifications = (props: NotificationsProps) => {
 
       {showConfirmation && (
         <InvitationConfirmation
-          i18n={props.i18n}
           invitation={showConfirmation}
           isCreator={props.isCreator}
           onClose={() => setShowConfirmation(undefined)}

@@ -2,16 +2,14 @@ import { type ReactNode, useMemo, useState } from 'react';
 import type { Range } from 'quill';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Image, Video } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
 import { useQuillEditor } from './QuillEditorRoot';
 import { parseYoutubeURL } from './quillEmbedUtils';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './QuillEmbedDialog.css';
 
 export interface QuillEmbedDialogProps {
-
-  i18n: Translations;
 
   onClose(): void;
 
@@ -20,8 +18,6 @@ export interface QuillEmbedDialogProps {
 interface EmbedDialogProps {
 
   icon?: ReactNode;
-
-  i18n: Translations;
 
   message?: string;
 
@@ -37,7 +33,7 @@ interface EmbedDialogProps {
 
 export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const { quill } = useQuillEditor();
 
@@ -63,10 +59,9 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
 
   return (
     <QuillEmbedDialog 
-      i18n={props.i18n}
-      title={t['Link']} 
-      placeholder={t['Enter link']}
-      message={t['Type or paste a link to insert it into your annotation.']}
+      title={t('Link', { ns: 'annotation-common' })} 
+      placeholder={t('Enter link', { ns: 'annotation-common' })}
+      message={t('Type or paste a link to insert it into your annotation.', { ns: 'annotation-common' })}
       onSave={onSave}
       onCancel={props.onClose} />
   )
@@ -75,7 +70,7 @@ export const EmbedLinkDialog = (props: QuillEmbedDialogProps) => {
 
 export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const { quill } = useQuillEditor();
 
@@ -94,11 +89,10 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
 
   return (
     <QuillEmbedDialog 
-      i18n={props.i18n}
       icon={<Image size={24} />} 
-      title={t['Image']}
-      message={t['Paste a publicly available URL to the image to insert it into your annotation.']}
-      placeholder={t['Image URL']}
+      title={t('Image', { ns: 'annotation-common' })}
+      message={t('Paste a publicly available URL to the image to insert it into your annotation.', { ns: 'annotation-common' })}
+      placeholder={t('Image URL', { ns: 'annotation-common' })}
       onSave={onSave}
       onCancel={props.onClose}/>
   )
@@ -107,7 +101,7 @@ export const EmbedImageDialog = (props: QuillEmbedDialogProps) => {
 
 export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const { quill } = useQuillEditor();
 
@@ -129,11 +123,10 @@ export const EmbedYouTubeDialog = (props: QuillEmbedDialogProps) => {
 
   return (
     <QuillEmbedDialog 
-      i18n={props.i18n}
       icon={<Video size={24} />} 
-      title={t['YouTube Video']}
-      message={t['Paste a YouTube URL to embed the video into your annotation.']}
-      placeholder={t['YouTube URL']}
+      title={t('YouTube Video', { ns: 'annotation-common' })}
+      message={t('Paste a YouTube URL to embed the video into your annotation.', { ns: 'annotation-common' })}
+      placeholder={t('YouTube URL', { ns: 'annotation-common' })}
       onSave={onSave} 
       onCancel={props.onClose} />
   )
@@ -148,7 +141,7 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
 
   const selection = useMemo(() => quill?.getSelection(), [quill]);
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common']);
 
   const onCancel = () => {
     props.onCancel();
@@ -178,13 +171,13 @@ const QuillEmbedDialog = (props: EmbedDialogProps) => {
           <div className="embed-dialog-actions">
             <button 
               onClick={onCancel}>
-              {t['Cancel']}
+              {t('Cancel', { ns: 'common' })}
             </button>
 
             <button 
               className="primary"
               onClick={() => props.onSave(value, selection)}>
-              {t['Save']}
+              {t('Save', { ns: 'common' })}
             </button>
           </div>
         </DialogContent>

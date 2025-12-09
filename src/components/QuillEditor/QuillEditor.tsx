@@ -6,7 +6,6 @@ import { useAnnotations } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useQuillEditor } from './QuillEditorRoot';
 import { getAnnotationIdFromLink, getAnnotationShortLink, isAnnotationLink, splitStringBy } from './utils';
-import type { Translations } from 'src/Types';
 
 import './QuillEditor.css';
 import 'quill/dist/quill.core.css';
@@ -17,8 +16,6 @@ const DEFAULT_MAX_IMAGE_SIZE = 64 * 1024;
 interface QuillEditorProps {
 
   autoFocus?: boolean;
-
-  i18n: Translations;
 
   maxImageSize?: number;
 

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { ArrowClockwise } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 import { getBrightness, getRandomColor } from './colorUtils';
 
 import './TagColorPicker.css';
-import type { Translations } from 'src/Types';
 
 interface TagColorPickerProps {
   color?: string;
-
-  i18n: Translations;
 
   onChange(color?: string): void;
 }
@@ -19,7 +17,7 @@ const isValidColor = (color: string): boolean =>
 export const TagColorPicker = (props: TagColorPickerProps) => {
   const { color } = props;
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y']);
 
   const [inputValue, setInputValue] = useState(color || '');
 
@@ -50,7 +48,7 @@ export const TagColorPicker = (props: TagColorPickerProps) => {
           borderColor: color || undefined,
         }}
         onClick={() => props.onChange(getRandomColor())}
-        aria-label={t['choose a different color for this tag']}
+        aria-label={t('choose a different color for this tag', { ns: 'a11y' })}
       >
         <ArrowClockwise
           style={{ color: brightness > 0.5 ? '#000000' : '#ffffff' }}
@@ -61,7 +59,7 @@ export const TagColorPicker = (props: TagColorPickerProps) => {
         className='color-hex'
         value={inputValue}
         onChange={(evt) => onChange(evt.target.value)}
-        aria-label={t['hexadecimal value for this color']}
+        aria-label={t('hexadecimal value for this color', { ns: 'a11y' })}
       />
     </div>
   );

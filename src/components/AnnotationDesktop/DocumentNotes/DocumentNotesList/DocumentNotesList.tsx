@@ -3,7 +3,7 @@ import type { Delta } from 'quill/core';
 import { useAnnotatorUser } from '@annotorious/react';
 import type { User, AnnotationBody, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Layer, Policies, VocabularyTerm } from 'src/Types';
 import { useNotes } from '../DocumentNotes';
 import { type Sorter, Sorting, SortSelector } from '../SortSelector';
 import { EmptyNote, NewNoteButton } from '../NewNote';
@@ -13,8 +13,6 @@ import { DocumentNotesListItem } from './DocumentNotesListItem';
 import './DocumentNotesList.css';
 
 interface DocumentNotesListProps {
-
-  i18n: Translations;
 
   isProjectLocked: boolean;
 
@@ -87,20 +85,17 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
         {props.isProjectLocked ? (
           <div className="spacer" />
         ) : (
-          <NewNoteButton 
-            i18n={props.i18n} 
+          <NewNoteButton  
             onCreatePublic={() => setNewNote('public')} 
             onCreatePrivate={() => setNewNote('private')} />
         )}
 
         <SortSelector 
-          i18n={props.i18n}
           onChange={sorter => setSorter(() => sorter)} />
       </div>
 
       {(!props.isProjectLocked && newNote) && (
         <EmptyNote
-          i18n={props.i18n}
           isPrivate={newNote === 'private'} 
           me={me}
           tagVocabulary={props.tagVocabulary}
@@ -119,7 +114,6 @@ export const DocumentNotesList = (props: DocumentNotesListProps) => {
             onPointerEnter={() => note.unread && markAsRead(note.id)}>
               
             <DocumentNotesListItem 
-              i18n={props.i18n}
               isProjectLocked={props.isProjectLocked}
               isReadOnly={isReadOnly(note)}
               isSelected={selected === note.id}

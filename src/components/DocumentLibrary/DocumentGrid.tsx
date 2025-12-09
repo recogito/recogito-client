@@ -2,15 +2,13 @@ import { DocumentCard } from '@components/DocumentCard';
 import classNames from 'classnames';
 import { useCallback } from 'react';
 import type { LibraryDocument } from './DocumentLibrary';
-import type { Document, Translations } from 'src/Types';
+import type { Document } from 'src/Types';
 import './DocumentGrid.css';
 
 interface Props {
   disabledIds: string[];
 
   documents: LibraryDocument[];
-
-  i18n: Translations;
 
   selectedIds: string[];
 
@@ -53,7 +51,6 @@ export const DocumentGrid = (props: Props) => {
             )}
             document={document as Document}
             key={document.id}
-            i18n={props.i18n}
             onClick={() => onClick(document.id)}
             readOnly
           />

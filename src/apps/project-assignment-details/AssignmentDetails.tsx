@@ -1,19 +1,20 @@
 import { DownloadSimple } from '@phosphor-icons/react';
 import { Avatar, formatName } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
-import type { Document, ExtendedAssignmentData, Translations } from 'src/Types';
+import type { Document, ExtendedAssignmentData } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './AssignmentDetails.css';
 
 interface AssignmentDetailsProps {
-
-  i18n: Translations;
 
   assignment: ExtendedAssignmentData;
 
 }
 
 export const AssignmentDetails = (props: AssignmentDetailsProps) => {
+
+  const { t, i18n } = useTranslation(['project-assignments']);
 
   const { assignment } = props;
 
@@ -41,18 +42,17 @@ export const AssignmentDetails = (props: AssignmentDetailsProps) => {
 
       <div className="project-assignment-export">
         <a
-          href={`/${props.i18n.lang}/projects/${assignment.project_id}/assignments/${assignment.id}/export/csv`}
+          href={`/${i18n.language}/projects/${assignment.project_id}/assignments/${assignment.id}/export/csv`}
           className='button'
         >
           <DownloadSimple size={20} />
-          <span>{props.i18n.t['Export annotations as CSV']}</span>
+          <span>{t('Export annotations as CSV', { ns: 'project-assignments' })}</span>
         </a>
       </div>
 
       <div className="project-assignment-document-grid">
         {documents.map(document => (
           <DocumentCard
-            i18n={props.i18n}
             key={document.id}
             document={document}
             context={assignment} />

@@ -11,14 +11,12 @@ import {
   DocumentViewRight,
   type Context,
   type Document,
-  type Translations,
 } from 'src/Types';
 import './DocumentCard.css';
+import { useTranslation } from 'react-i18next';
 
 interface DocumentCardProps {
   className?: string;
-
-  i18n: Translations;
 
   isAdmin?: boolean;
 
@@ -46,7 +44,7 @@ interface DocumentCardProps {
 export const DocumentCard = (props: DocumentCardProps) => {
   const { context, document } = props;
 
-  const { t, lang } = props.i18n;
+  const { t, i18n } = useTranslation(['a11y']);
 
   const [openMetadata, setOpenMetadata] = useState(false);
 
@@ -76,7 +74,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
     hash.set('rtab', props.rtab || DocumentViewRight.closed);
 
     const url = buildURL(
-      `/${lang}/annotate/${context.id}/${document.id}`,
+      `/${i18n.language}/annotate/${context.id}/${document.id}`,
       search,
       hash
     );
@@ -106,28 +104,28 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const onExportTEI = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportPDF = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/export/pdf?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context.project_id}/export/pdf?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportCSV = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportW3C = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/export/w3c?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context.project_id}/export/w3c?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   const onExportManifest = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
-      : `/${lang}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
 
   return (
     <article
@@ -143,7 +141,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
             className='document-drag-handle'
             {...attributes}
             {...listeners}
-            aria-label={t['rearrange this document by dragging']}
+            aria-label={t('rearrange this document by dragging', { ns: 'a11y' })}
           >
             <DotsSix />
           </div>
@@ -158,7 +156,6 @@ export const DocumentCard = (props: DocumentCardProps) => {
               <DocumentCardActions
                 allowDeleteDocument={props.isAdmin}
                 allowEditMetadata={props.isOwner}
-                i18n={props.i18n}
                 context={context}
                 document={document}
                 onOpen={onOpen}
@@ -176,7 +173,6 @@ export const DocumentCard = (props: DocumentCardProps) => {
       </div>
       <MetadataModal
         open={openMetadata}
-        i18n={props.i18n}
         document={document}
         onClose={() => setOpenMetadata(false)}
         onUpdated={props.onUpdate!}

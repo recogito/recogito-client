@@ -5,7 +5,7 @@ import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
-import type { Translations, Document, MyProfile, Collection } from 'src/Types';
+import type { Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Column } from '@table-library/react-table-library/compact';
@@ -22,6 +22,7 @@ import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { groupRevisionsByDocument } from './utils';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 export type LibraryDocument = Pick<
   Document,
@@ -46,7 +47,6 @@ export type LibraryDocument = Pick<
 
 export interface DocumentLibraryProps {
   open: boolean;
-  i18n: Translations;
   user: MyProfile;
   disabledIds: string[];
   dataDirty: boolean;
@@ -66,7 +66,7 @@ export interface DocumentLibraryProps {
 export const DOCUMENTS_PER_FETCH = 500;
 
 export const DocumentLibrary = (props: DocumentLibraryProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-home', 'common', 'collection-management']);
   const { UploadActions } = props;
 
   const [view, setView] = useState<'mine' | 'all' | 'collection'>('mine');
@@ -94,9 +94,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     let value = '';
 
     if (view === 'all') {
-      value = t['All Documents'];
+      value = t('All Documents', { ns: 'project-home' });
     } else if (view === 'mine') {
-      value = t['My Documents'];
+      value = t('My Documents', { ns: 'project-home' });
     } else if (view === 'collection' && activeCollection > 0) {
       const { collection } = collections[activeCollection - 1];
       value = collection.name;
@@ -292,24 +292,24 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const columnsMine: Column<TableNode>[] = [
     {
-      label: t['Title'],
+      label: t('Title', { ns: 'project-home' }),
       renderCell: (item) => item.name,
       select: true,
       pinLeft: true,
       sort: { sortKey: 'TITLE' },
     },
     {
-      label: t['Document Type'],
+      label: t('Document Type', { ns: 'common' }),
       renderCell: (item) => item.content_type,
       sort: { sortKey: 'TYPE' },
     },
     {
-      label: t['URL'],
+      label: t('URL', { ns: 'common' }),
       renderCell: (item) => item.meta_data.url,
       sort: { sortKey: 'URL' },
     },
     {
-      label: t['Private'],
+      label: t('Private', { ns: 'common' }),
       renderCell: (item) => (item.is_private ? 'TRUE' : 'FALSE'),
       sort: { sortKey: 'PRIVATE' },
     },
@@ -319,7 +319,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           <DocumentActions
             allowEditMetadata={!props.readOnly && allowEditMetadata(item)}
-            i18n={props.i18n}
             onDelete={() =>
               props.onDeleteFromLibrary
                 ? props.onDeleteFromLibrary(item as Document)
@@ -340,19 +339,19 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const columnsAll: Column<TableNode>[] = [
     {
-      label: t['Title'],
+      label: t('Title', { ns: 'project-home' }),
       renderCell: (item) => item.name,
       select: true,
       pinLeft: true,
       sort: { sortKey: 'TITLE' },
     },
     {
-      label: t['Document Type'],
+      label: t('Document Type', { ns: 'common' }),
       renderCell: (item) => item.content_type,
       sort: { sortKey: 'TYPE' },
     },
     {
-      label: t['URL'],
+      label: t('URL', { ns: 'common' }),
       renderCell: (item) => item.meta_data.url,
       sort: { sortKey: 'URL' },
     },
@@ -362,7 +361,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           <DocumentActions
             allowEditMetadata={allowEditMetadata(item)}
-            i18n={props.i18n}
             onDelete={() =>
               currentDocument && props.onDeleteFromLibrary
                 ? props.onDeleteFromLibrary(currentDocument)
@@ -380,7 +378,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const columnsCollection: Column<TableNode>[] = [
     {
-      label: t['Title'],
+      label: t('Title', { ns: 'project-home' }),
       renderCell: (item) =>
         item.document_group_id && item.document_group_id !== '' ? (
           <div style={{ paddingLeft: 15 }}>{item.name}</div>
@@ -392,7 +390,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       sort: { sortKey: 'TITLE' },
     },
     {
-      label: t['Author/Artist'],
+      label: t('Author/Artist', { ns: 'project-home' }),
       renderCell: (item) => {
         const author =
           item.meta_data.meta && Array.isArray(item.meta_data.meta)
@@ -408,17 +406,17 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       sort: { sortKey: 'AUTHOR' },
     },
     {
-      label: t['Document Type'],
+      label: t('Document Type', { ns: 'common' }),
       renderCell: (item) => item.content_type,
       sort: { sortKey: 'TYPE' },
     },
     {
-      label: t['Revision Count'],
+      label: t('Revision Count', { ns: 'common' }),
       renderCell: (item) => item.revisions?.length,
       sort: { sortKey: 'REVISION' },
     },
     {
-      label: t['Latest Revision'],
+      label: t('Latest Revision', { ns: 'common' }),
       renderCell: (item) =>
         item.is_latest && props.disabledIds.includes(item.id as string) ? (
           <div style={{ width: '50%', margin: 'auto' }}>
@@ -440,7 +438,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           {!item.is_document_group && (
             <CollectionDocumentActions
-              i18n={props.i18n}
               disabledIds={props.disabledIds}
               selectedIds={selectedIds}
               onOpenMetadata={() => {
@@ -629,11 +626,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
           >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
-                {t['Add Document']}
+                {t('Add Document', { ns: 'project-home' })}
               </Dialog.Title>
 
               <Dialog.Description className='text-body-small'>
-                {t['Select a document or upload a new one.']}
+                {t('Select a document or upload a new one.', { ns: 'project-home' })}
               </Dialog.Description>
             </section>
             <div className='doc-lib-content'>
@@ -648,7 +645,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       }}
                     >
                       <Files />
-                      <span className='name'>{t['All Documents']}</span>
+                      <span className='name'>{t('All Documents', { ns: 'project-home' })}</span>
                       <span
                         className={
                           allDocuments.length === 0 ? 'badge disabled' : 'badge'
@@ -665,7 +662,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       }}
                     >
                       <User />
-                      <span className='name'>{t['My Documents']}</span>
+                      <span className='name'>{t('My Documents', { ns: 'project-home' })}</span>
                       <span
                         className={
                           myDocuments.length === 0 ? 'badge disabled' : 'badge'
@@ -679,7 +676,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
                 {collections && !props.hideCollections && (
                   <section className='doc-lib-header-bottom collections'>
-                    <h3>{t['Collections']}</h3>
+                    <h3>{t('Collections', { ns: 'common' })}</h3>
 
                     <ul className='doc-lib-header-tabs'>
                       {collections.map((c, idx) => (
@@ -726,14 +723,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       className='doc-lib-search'
                       onChange={({ target: { value } }) => setSearch(value)}
                       onClear={() => setSearch('')}
-                      placeholder={t['Search']}
+                      placeholder={t('Search', { ns: 'common' })}
                       search={search}
                     />
 
                     <ToggleDisplay
                       display={documentsView}
                       onChangeDisplay={(value) => setDocumentsView(value)}
-                      i18n={props.i18n}
                     />
 
                     {UploadActions}
@@ -748,7 +744,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       <DocumentTable
                         data={{ nodes: myDocuments }}
                         disabledIds={props.disabledIds}
-                        i18n={props.i18n}
                         onSelectChange={onSelectChange}
                         theme={themeMine}
                         columns={columnsMine}
@@ -762,14 +757,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       <DocumentGrid
                         disabledIds={props.disabledIds}
                         documents={myDocuments}
-                        i18n={props.i18n}
                         selectedIds={selectedIds}
                         onSelectChange={onSelectChange}
                       />
                     )}
                   {view === 'mine' &&
                     myDocuments.length === 0 &&
-                    t['No Documents']}
+                    t('No documents', { ns: 'collection-management' })}
 
                   {/* All Documents */}
                   {view === 'all' &&
@@ -778,7 +772,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       <DocumentTable
                         data={{ nodes: allDocuments }}
                         disabledIds={props.disabledIds}
-                        i18n={props.i18n}
                         onSelectChange={onSelectChange}
                         theme={themeAll}
                         columns={columnsAll}
@@ -792,14 +785,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       <DocumentGrid
                         disabledIds={props.disabledIds}
                         documents={allDocuments}
-                        i18n={props.i18n}
                         onSelectChange={onSelectChange}
                         selectedIds={selectedIds}
                       />
                     )}
                   {view === 'all' &&
                     allDocuments.length === 0 &&
-                    t['No Documents']}
+                    t('No documents', { ns: 'collection-management' })}
 
                   {/* Collection Documents */}
                   {view === 'collection' &&
@@ -808,7 +800,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       <DocumentTable
                         data={{ nodes: collectionDocuments }}
                         disabledIds={props.disabledIds}
-                        i18n={props.i18n}
                         onSelectChange={onSelectChange}
                         theme={themeCollection}
                         columns={columnsCollection}
@@ -823,14 +814,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       <DocumentGrid
                         disabledIds={props.disabledIds}
                         documents={collectionDocuments}
-                        i18n={props.i18n}
                         onSelectChange={onSelectChange}
                         selectedIds={selectedIds}
                       />
                     )}
                   {view === 'collection' &&
                     collectionDocuments.length === 0 &&
-                    t['No Documents']}
+                    t('No documents', { ns: 'collection-management' })}
                 </div>
               </section>
             </div>
@@ -838,7 +828,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             <div className='doc-lib-footer'>
               <div>
                 <Button type='button' onClick={handleCancel}>
-                  {t['Cancel']}
+                  {t('Cancel', { ns: 'common' })}
                 </Button>
                 <Button
                   type='submit'
@@ -846,7 +836,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   disabled={selectedIds.length === 0}
                   onClick={() => handleSubmit()}
                 >
-                  {t['Add Selected']}
+                  {t('Add Selected', { ns: 'project-home' })}
                 </Button>
               </div>
             </div>
@@ -856,7 +846,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
       {currentDocument && (
         <MetadataModal
-          i18n={props.i18n}
           document={currentDocument}
           open={metaOpen}
           onClose={() => {
@@ -871,8 +860,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
       <PublicWarningMessage
         open={publicWarningOpen}
-        message={t['Public Document Warning Message']}
-        i18n={props.i18n}
+        message={t('Public Document Warning Message', { ns: 'project-home' })}
         onCancel={handleWarningCancel}
         onConfirm={handleWarningConfirm}
       />

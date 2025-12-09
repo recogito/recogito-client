@@ -6,9 +6,10 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { updateDocumentMetadata } from '@backend/crud';
 import { Button } from '@components/Button';
-import type { Document, Translations } from 'src/Types';
+import type { Document } from 'src/Types';
 import type { LibraryDocument } from '@components/DocumentLibrary';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 import './MetadataModal.css';
 
 interface Item {
@@ -18,8 +19,6 @@ interface Item {
 
 interface MetadataModalProps {
   document: Document | LibraryDocument;
-
-  i18n: Translations;
 
   open: boolean;
 
@@ -38,12 +37,12 @@ export const MetadataModal = (props: MetadataModalProps) => {
   const [items, setItems] = useState<Item[]>([]);
   const [title, setTitle] = useState<string>('');
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common']);
 
   /**
    * Returns true if the passed index is editable.
    */
-  const isEditable = useCallback((index) => editIndex === index, [editIndex]);
+  const isEditable = useCallback((index: number | null) => editIndex === index, [editIndex]);
 
   /**
    * Adds a new item to the state and sets the editable index as the new index.
@@ -56,7 +55,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
   /**
    * Removes the item at the passed index and clears the edit index.
    */
-  const onRemoveItem = useCallback((index) => {
+  const onRemoveItem = useCallback((index: number) => {
     setItems((prevItems) => prevItems.filter((i, idx) => index !== idx));
     setEditIndex(null);
   }, []);
@@ -65,7 +64,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
    * Saves the document metadata.
    */
   const onSave = useCallback(
-    (e) => {
+    (e: { preventDefault: () => void; }) => {
       e.preventDefault();
       setBusy(true);
 
@@ -88,7 +87,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
    * Updates the item at the passed index with the passed attributes.
    */
   const onUpdateItem = useCallback(
-    (index, attributes) => {
+    (index: number, attributes: any) => {
       const item = Object.assign(items[index], attributes);
       setItems((prevItems) =>
         prevItems.map((i, idx) => (idx === index ? item : i))
@@ -119,7 +118,6 @@ export const MetadataModal = (props: MetadataModalProps) => {
               onChange={(value) => setTitle(value)}
               readOnly={props.readOnly}
               value={title}
-              i18n={props.i18n}
             />
           </Dialog.Title>
 
@@ -131,7 +129,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
                 type='button'
               >
                 <Plus />
-                {t['Add Metadata']}
+                {t('Add Metadata', { ns: 'common' })}
               </Button>
             )}
             <table>
@@ -191,7 +189,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
                 {(!items || items.length === 0) && (
                   <tr>
                     <td className='empty' colSpan={3}>
-                      {t['No document metadata available.']}
+                      {t('No document metadata available.', { ns: 'common' })}
                     </td>
                   </tr>
                 )}
@@ -202,7 +200,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
           {!props.readOnly && (
             <div className='actions'>
               <Button onClick={props.onClose}>
-                <span>{t['Cancel']}</span>
+                <span>{t('Cancel', { ns: 'common' })}</span>
               </Button>
 
               {!props.readOnly && (
@@ -212,7 +210,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
                   onClick={onSave}
                   type='submit'
                 >
-                  <span>{t['Save']}</span>
+                  <span>{t('Save', { ns: 'common' })}</span>
                 </Button>
               )}
             </div>
@@ -220,7 +218,7 @@ export const MetadataModal = (props: MetadataModalProps) => {
           <Dialog.Close asChild>
             <button
               className='dialog-close icon-only unstyled'
-              aria-label={t['Close']}
+              aria-label={t('Close', { ns: 'common' })}
             >
               <X size={16} />
             </button>

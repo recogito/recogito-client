@@ -2,11 +2,9 @@ import { useState } from 'react';
 import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { PuzzlePiece } from '@phosphor-icons/react';
 import { PluginGallery } from './PluginGallery';
-import type { Project, Translations } from 'src/Types';
+import type { Project } from 'src/Types';
 
 interface GetPluginsProps {
-
-  i18n: Translations;
 
   project: Project;
 
@@ -36,7 +34,6 @@ export const GetPlugins = (props: GetPluginsProps) => {
 
       {showGallery && (
         <PluginGallery 
-          i18n={props.i18n}
           project={props.project}
           availablePlugins={props.availablePlugins}
           installedPlugins={props.installedPlugins}
