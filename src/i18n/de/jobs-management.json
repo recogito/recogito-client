@@ -19,5 +19,6 @@
   "COMPLETE": "Complete",
   "ERROR": "Error",
   "EXPORT": "Export",
-  "Download": "Download"
+  "Download": "Download",
+  "IMPORT": "Import"
 }

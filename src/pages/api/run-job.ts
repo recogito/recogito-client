@@ -1,10 +1,7 @@
 import { createSupabaseServerClient } from '@backend/supabaseServerClient.ts';
-import { configure } from '@trigger.dev/sdk';
-import { runJob } from '@trigger/runJob';
+import { configure, tasks } from '@trigger.dev/sdk';
+import type { runJob } from '@trigger/runJob';
 import type { APIRoute } from 'astro';
-
-const supabaseServerUrl = import.meta.env.SUPABASE_SERVERCLIENT_URL || import.meta.env.PUBLIC_SUPABASE;
-const supabaseAPIKey = import.meta.env.PUBLIC_SUPABASE_API_KEY;
 
 configure({
   secretKey:
@@ -60,14 +57,7 @@ export const POST: APIRoute = async ({ cookies, request }) => {
   }
 
   const token = sessionResp.data.session?.access_token || '';
-
-  const handle = await runJob.trigger({
-    key: supabaseAPIKey,
-    serverURL: supabaseServerUrl,
-    jobId,
-    token,
-    ...rest
-  });
+  const handle = await tasks.trigger<typeof runJob>('run-job', { jobId, token, ...rest });
 
   if (handle) {
     return new Response(

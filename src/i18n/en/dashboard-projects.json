@@ -112,5 +112,6 @@
   "Successfully updated projects in group": "Successfully updated projects in ${name}",
   "Select Groups": "Select Groups",
   "Select Projects": "Select Projects",
-  "Export project": "Export project"
+  "Export project": "Export project",
+  "Import Project": "Import Project"
 }

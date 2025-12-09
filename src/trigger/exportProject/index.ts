@@ -10,6 +10,9 @@ import { logger, task } from '@trigger.dev/sdk/v3';
 import { exportProfiles } from '@trigger/exportProject/users';
 import AdmZip from 'adm-zip';
 
+const SUPABASE_SERVER_URL = process.env.SUPABASE_SERVERCLIENT_URL || process.env.PUBLIC_SUPABASE;
+const SUPABASE_API_KEY = process.env.PUBLIC_SUPABASE_API_KEY;
+
 interface Payload {
   key: string;
   jobId: string;
@@ -21,12 +24,13 @@ interface Payload {
 const addToZip = (
   zip: AdmZip,
   filename: string,
-  data: string | null = ''
+  data: any | null = ''
 ) => {
-  zip.addFile(filename, Buffer.alloc(data?.length || 0, data || ''));
+  const content = JSON.stringify(data || '{}');
+  zip.addFile(filename, Buffer.alloc(content.length || 0,  content));
 };
 
-const addFilesToZip = (
+const addDocumentsToZip = (
   zip: AdmZip,
   files: { [key: string]: ArrayBuffer }
 ) => {
@@ -38,13 +42,12 @@ const addFilesToZip = (
 export const exportProject = task({
   id: 'export-project',
   run: async (payload: Payload) => {
-    const {
-      key,
-      jobId,
-      projectId,
-      serverURL,
-      token
-    } = payload;
+    const { jobId, projectId, token } = payload;
+
+    if (!(SUPABASE_SERVER_URL && SUPABASE_API_KEY)) {
+      logger.error('Invalid Supabase credentials');
+      return;
+    }
 
     if (!projectId) {
       logger.error('Project ID is required');
@@ -53,7 +56,7 @@ export const exportProject = task({
 
     logger.info('Creating Supabase client');
 
-    const supabase = createClient(serverURL, key, {
+    const supabase = createClient(SUPABASE_SERVER_URL, SUPABASE_API_KEY, {
       global: {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -65,68 +68,68 @@ export const exportProject = task({
 
     // Export table data to CSV
 
-    logger.info('Exporting data as CSV');
+    logger.info('Exporting data as JSON');
 
     const { data: annotations } = await exportAnnotations(supabase, projectId);
-    addToZip(zip, 'annotations.csv', annotations);
+    addToZip(zip, 'annotations.json', annotations);
 
     const { data: bodies } = await exportBodies(supabase, projectId);
-    addToZip(zip, 'bodies.csv', bodies);
-
-    const { data: contexts } = await exportContexts(supabase, projectId);
-    addToZip(zip, 'contexts.csv', contexts);
+    addToZip(zip, 'bodies.json', bodies);
 
     const { data: contextDocuments } = await exportContextDocuments(supabase, projectId);
-    addToZip(zip, 'context_documents.csv', contextDocuments);
+    addToZip(zip, 'context_documents.json', contextDocuments);
 
     const { data: contextUsers } = await exportContextUsers(supabase, projectId);
-    addToZip(zip, 'context_users.csv', contextUsers);
+    addToZip(zip, 'context_users.json', contextUsers);
+
+    const { data: contexts } = await exportContexts(supabase, projectId);
+    addToZip(zip, 'contexts.json', contexts);
 
     const { data: documents } = await exportDocuments(supabase, projectId);
-    addToZip(zip, 'documents.csv', documents);
+    addToZip(zip, 'documents.json', documents);
 
     const { data: groupUsers } = await exportGroupUsers(supabase, projectId);
-    addToZip(zip, 'group_users.csv', groupUsers);
-
-    const { data: layers } = await exportLayers(supabase, projectId);
-    addToZip(zip, 'layers.csv', layers);
+    addToZip(zip, 'group_users.json', groupUsers);
 
     const { data: layerContexts } = await exportLayerContexts(supabase, projectId);
-    addToZip(zip, 'layer_contexts.csv', layerContexts);
+    addToZip(zip, 'layer_contexts.json', layerContexts);
 
     const { data: layerGroups } = await exportLayerGroups(supabase, projectId);
-    addToZip(zip, 'layer_groups.csv', layerGroups);
+    addToZip(zip, 'layer_groups.json', layerGroups);
+
+    const { data: layers } = await exportLayers(supabase, projectId);
+    addToZip(zip, 'layers.json', layers);
 
     const { data: profiles } = await exportProfiles(supabase, projectId);
-    addToZip(zip, 'profiles.csv', profiles);
-
-    const { data: projects } = await exportProjects(supabase, projectId);
-    addToZip(zip, 'projects.csv', projects);
+    addToZip(zip, 'profiles.json', profiles);
 
     const { data: projectDocuments } = await exportProjectDocuments(supabase, projectId);
-    addToZip(zip, 'project_documents.csv', projectDocuments);
+    addToZip(zip, 'project_documents.json', projectDocuments);
 
     const { data: projectGroups } = await exportProjectGroups(supabase, projectId);
-    addToZip(zip, 'project_groups.csv', projectGroups);
+    addToZip(zip, 'project_groups.json', projectGroups);
+
+    const { data: projects } = await exportProjects(supabase, projectId);
+    addToZip(zip, 'projects.json', projects);
 
     const { data: tagDefinitions } = await exportTagDefinitions(supabase, projectId);
-    addToZip(zip, 'tag_definitions.csv', tagDefinitions);
+    addToZip(zip, 'tag_definitions.json', tagDefinitions);
 
     const { data: tags } = await exportTags(supabase, projectId);
-    addToZip(zip, 'tags.csv', tags);
+    addToZip(zip, 'tags.json', tags);
 
     const { data: targets } = await exportTargets(supabase, projectId);
-    addToZip(zip, 'targets.csv', targets);
+    addToZip(zip, 'targets.json', targets);
 
     // Export storage objects
 
     logger.info('Exporting storage objects');
 
     const { data: files } = await exportFiles(supabase, projectId);
-    addFilesToZip(zip, files);
+    addDocumentsToZip(zip, files);
 
     const { data: iiif } = await exportIIIF(supabase, projectId);
-    addFilesToZip(zip, iiif);
+    addDocumentsToZip(zip, iiif);
 
     // Create the zip file
 

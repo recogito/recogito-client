@@ -1,3 +1,4 @@
+import { importProject } from '@backend/helpers';
 import { Button } from '@components/Button';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import { SelectRecordsDialog } from '@components/SelectRecordsDialog';
@@ -9,6 +10,7 @@ import { CaretDown, PencilSimple, Plus, Trash } from '@phosphor-icons/react';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { CreateProjectDialog } from '@components/CreateProjectDialog';
 import { HeaderSearchAction } from '@components/Search';
+import { type FileRejection, useDropzone } from 'react-dropzone';
 import { HeaderSortAction, type SortFunction } from './Sort';
 import { HeaderFilterAction, type Filters } from './Filter';
 import {
@@ -58,7 +60,7 @@ interface HeaderProps {
 }
 
 export const Header = (props: HeaderProps) => {
-  const { t } = props.i18n;
+  const { lang, t } = props.i18n;
 
   // 'Create new project' button state
   const [creating, setCreating] = useState(false);
@@ -74,12 +76,46 @@ export const Header = (props: HeaderProps) => {
     setToast,
   } = useContext(TagContext);
 
+  const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
+    setCreating(true);
+
+    const [file] = accepted;
+
+    importProject(supabase, file).then(() => {
+      setCreating(false);
+      window.location.href = `/${lang}/jobs`;
+    });
+  };
+
+  const {
+    getInputProps,
+    open
+  } = useDropzone({
+    accept: {
+      'application/zip': ['.zip']
+    },
+    noClick: true,
+    noKeyboard: true,
+    onDrop
+  });
+
+  const isOrgAdmin = props.me.isOrgAdmin;
+
   const onCreateProject = () => {
     if (creating) return;
 
     setCreateProjectOpen(true);
 
     setCreating(true);
+  };
+
+  const onImportProject = () => {
+    setCreating(true);
+
+    importProject(supabase).then(() => {
+      setCreating(false);
+      window.location.href = `/${lang}/jobs`;
+    });
   };
 
   const handleSaveProject = (
@@ -302,8 +338,40 @@ export const Header = (props: HeaderProps) => {
               </Dropdown.Root>
             )}
 
-            {!props.tagDefinition &&
-              props.policies?.get('projects').has('INSERT') && (
+            {!props.tagDefinition && props.policies?.get('projects').has('INSERT') && isOrgAdmin && (
+              <Dropdown.Root>
+                <Dropdown.Trigger asChild>
+                  <button className='new-project primary sm flat'>
+                    <Plus size={16} weight='bold' />
+                    <span>{t['New Project']}</span>
+                    <CaretDown size={16} />
+                  </button>
+                </Dropdown.Trigger>
+
+                <Dropdown.Portal>
+                  <Dropdown.Content
+                    className='dropdown-content'
+                    sideOffset={10}
+                  >
+                    <Dropdown.Item
+                      className='dropdown-item'
+                      onSelect={onCreateProject}
+                    >
+                      {t['Create Project']}
+                    </Dropdown.Item>
+
+                    <Dropdown.Item
+                      className='dropdown-item'
+                      onSelect={open}
+                    >
+                      {t['Import Project']}
+                    </Dropdown.Item>
+                  </Dropdown.Content>
+                </Dropdown.Portal>
+              </Dropdown.Root>
+            )}
+
+            {!props.tagDefinition && props.policies?.get('projects').has('INSERT') && !isOrgAdmin && (
                 <Button
                   busy={creating}
                   className='new-project primary sm flat'
@@ -368,6 +436,10 @@ export const Header = (props: HeaderProps) => {
             )}
           />
         )}
+        <input
+          {...getInputProps()}
+          aria-label={t['drag and drop target for files']}
+        />
       </section>
     </header>
   );

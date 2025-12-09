@@ -7,5 +7,4 @@ export const exportProjects = async (
   supabase
     .from('projects')
     .select()
-    .eq('id', projectId)
-    .csv();
+    .eq('id', projectId);

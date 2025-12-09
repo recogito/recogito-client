@@ -1,7 +1,8 @@
 import type { PostgrestError, SupabaseClient } from '@supabase/supabase-js';
 import type { Response } from '@backend/Types';
 import type { CollectionMetadata, Document, ProjectDocument } from 'src/Types';
-import { DOCUMENTS_PER_FETCH } from '@components/DocumentLibrary';
+
+const DOCUMENTS_PER_FETCH = 500;
 
 export const createDocument = (
   supabase: SupabaseClient,

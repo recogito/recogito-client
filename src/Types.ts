@@ -508,4 +508,4 @@ export interface Job {
 
 export type JobStatus = 'INITIALIZING' | 'PROCESSING' | 'COMPLETE' | 'ERROR';
 
-export type JobType = 'EXPORT';
+export type JobType = 'EXPORT' | 'IMPORT';

@@ -21,8 +21,7 @@ export const exportLayerContexts = async (
   return supabase
     .from('layer_contexts')
     .select()
-    .in('layer_id', layerIds)
-    .csv();
+    .in('layer_id', layerIds);
 };
 
 export const exportLayerGroups = async (
@@ -34,8 +33,7 @@ export const exportLayerGroups = async (
   return supabase
     .from('layer_groups')
     .select()
-    .in('layer_id', layerIds)
-    .csv();
+    .in('layer_id', layerIds);
 };
 
 export const exportLayers = async (
@@ -45,5 +43,4 @@ export const exportLayers = async (
   supabase
     .from('layers')
     .select()
-    .eq('project_id', projectId)
-    .csv();
+    .eq('project_id', projectId);

@@ -1,3 +1,4 @@
+import { generatePassword } from '@util/auth';
 import { createElement } from 'react';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { createClient } from '@supabase/supabase-js';
@@ -142,17 +143,4 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   console.log('Message sent: ', sendResp.messageId);
 
   return new Response(null, { status: 204 });
-};
-
-const generatePassword = (length: number) => {
-  const chars =
-    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=';
-  let password = '';
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * chars.length);
-    password += chars.charAt(randomIndex);
-  }
-
-  return password;
 };

@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-export const getProjectGroupIds = async (
+const getProjectGroupIds = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
@@ -22,8 +22,7 @@ export const exportGroupUsers = async (
     .from('group_users')
     .select()
     .eq('group_type', 'project')
-    .in('type_id', projectGroupIds)
-    .csv();
+    .in('type_id', projectGroupIds);
 }
 
 export const exportProjectGroups = async (
@@ -33,5 +32,4 @@ export const exportProjectGroups = async (
   supabase
     .from('project_groups')
     .select()
-    .eq('project_id', projectId)
-    .csv();
+    .eq('project_id', projectId);

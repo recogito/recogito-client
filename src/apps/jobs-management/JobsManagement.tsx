@@ -21,8 +21,6 @@ export const JobsManagement = (props: Props) => {
 
   const { lang, t } = props.i18n;
 
-  console.log(jobs);
-
   const onDelete = useCallback((job: Job) => (
     deleteJob(supabase, job.id).then(({ error }) => {
       if (error) {
@@ -39,7 +37,7 @@ export const JobsManagement = (props: Props) => {
         });
         setJobs((prevJobs) => prevJobs.filter(
           (prevJob) => prevJob.id !== job.id)
-        )
+        );
       }
     })
   ), []);

@@ -58,8 +58,7 @@ export const exportDocuments = async (
   return supabase
     .from('documents')
     .select()
-    .in('id', documentIds)
-    .csv();
+    .in('id', documentIds);
 };
 
 export const exportFiles = async (
@@ -128,6 +127,5 @@ export const exportProjectDocuments = async (
     .from('project_documents')
     .select()
     .eq('project_id', projectId)
-    .in('document_id', documentIds)
-    .csv();
+    .in('document_id', documentIds);
 };

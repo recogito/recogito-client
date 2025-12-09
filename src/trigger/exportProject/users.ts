@@ -1,20 +1,17 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { getProjectGroupIds } from '@trigger/exportProject/groups';
+
+interface ProjectUsers {
+  user_id: string;
+}
 
 const getUserIds = async (
   supabase: SupabaseClient,
   projectId: string
-) => {
-  const projectGroupIds = await getProjectGroupIds(supabase, projectId);
-
-  const { data: groupUsers } = await supabase
-    .from('group_users')
-    .select('user_id')
-    .in('type_id', projectGroupIds)
-    .eq('group_type', 'project');
-
-  return groupUsers?.map((groupUser) => groupUser.user_id) || [];
-};
+): Promise<string[]> =>
+  supabase
+    .rpc('get_project_users_rpc', { _project_id: projectId })
+    .then(({ data }) => ({ data: data as ProjectUsers[] }))
+    .then(({ data }) => data?.map(({ user_id: userId }) => userId))
 
 export const exportProfiles = async (
   supabase: SupabaseClient,
@@ -25,6 +22,5 @@ export const exportProfiles = async (
   return supabase
     .from('profiles')
     .select()
-    .in('id', userIds)
-    .csv();
+    .in('id', userIds);
 };

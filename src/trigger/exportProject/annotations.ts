@@ -24,8 +24,7 @@ export const exportAnnotations = async  (
   return supabase
     .from('annotations')
     .select()
-    .in('layer_id', layerIds)
-    .csv();
+    .in('layer_id', layerIds);
 };
 
 export const exportBodies = async (
@@ -37,8 +36,7 @@ export const exportBodies = async (
   return supabase
     .from('bodies')
     .select()
-    .in('annotation_id', annotationIds)
-    .csv();
+    .in('annotation_id', annotationIds);
 };
 
 export const exportTargets = async (
@@ -50,6 +48,5 @@ export const exportTargets = async (
   return supabase
     .from('targets')
     .select()
-    .in('annotation_id', annotationIds)
-    .csv();
+    .in('annotation_id', annotationIds);
 };

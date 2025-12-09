@@ -22,8 +22,7 @@ export const exportTagDefinitions = async (
   return supabase
     .from('tag_definitions')
     .select()
-    .in('id', tagDefinitionIds)
-    .csv();
+    .in('id', tagDefinitionIds);
 };
 
 export const exportTags = async (
@@ -35,6 +34,5 @@ export const exportTags = async (
   return supabase
     .from('tags')
     .select()
-    .in('tag_definition_id', tagDefinitionIds)
-    .csv();
+    .in('tag_definition_id', tagDefinitionIds);
 };

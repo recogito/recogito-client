@@ -21,8 +21,7 @@ export const exportContextDocuments = async (
   return supabase
     .from('context_documents')
     .select()
-    .in('context_id', contextIds)
-    .csv();
+    .in('context_id', contextIds);
 };
 
 export const exportContextUsers = async (
@@ -34,8 +33,7 @@ export const exportContextUsers = async (
   return supabase
     .from('context_users')
     .select()
-    .in('context_id', contextIds)
-    .csv();
+    .in('context_id', contextIds);
 }
 
 export const exportContexts = async (
@@ -45,5 +43,4 @@ export const exportContexts = async (
   supabase
     .from('contexts')
     .select()
-    .eq('project_id', projectId)
-    .csv();
+    .eq('project_id', projectId);
