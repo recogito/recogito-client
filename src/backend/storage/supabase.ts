@@ -18,8 +18,6 @@ export const uploadFile = (
   name: string,
   onProgress?: (progress: number) => void
 ): Promise<void> => new Promise((resolve, reject) => {
-  // TODO: We have no session here
-  // TODO: Exract uppy code and pass token?
   return supabase.auth.getSession().then(({ error, data }) => {
     if (error) {
       reject(error)
