@@ -110,5 +110,7 @@
   "Select Groups": "Select Groups",
   "Select Projects": "Select Projects",
   "Export project": "Export project",
-  "Import Project": "Import Project"
+  "Import Project": "Import Project",
+  "Failed to export project.": "Failed to export project.",
+  "Failed to import project.": "Failed to import project."
 }

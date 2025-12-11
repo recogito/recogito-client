@@ -79,9 +79,14 @@ export const Header = (props: HeaderProps) => {
 
     const [file] = accepted;
 
-    importProject(supabase, file).then(() => {
+    importProject(supabase, file).then((success) => {
       setCreating(false);
-      window.location.href = `/${i18n.language}/jobs`;
+
+      if (success) {
+        window.location.href = `/${i18n.language}/jobs`;
+      } else {
+        props.onError(t('Failed to import project.', { ns: 'dashboard-projects' }));
+      }
     });
   };
 

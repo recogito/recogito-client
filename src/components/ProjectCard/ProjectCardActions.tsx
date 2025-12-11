@@ -99,9 +99,14 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
   const onExportProject = () => {
     setBusy(true);
 
-    exportProject(supabase, props.project).then(() => {
+    exportProject(supabase, props.project).then((success) => {
       setBusy(false);
-      window.location.href = `/${i18n.language}/jobs`;
+
+      if (success) {
+        window.location.href = `/${i18n.language}/jobs`;
+      } else {
+        props.onError(t('Failed to export project', { ns: 'dashboard-projects' }))
+      }
     });
   };
 
