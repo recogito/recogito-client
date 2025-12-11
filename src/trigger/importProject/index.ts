@@ -11,7 +11,7 @@ interface Payload {
   token: string;
 }
 
-const IIIF_KEY = process.env.IIIF_KEY || process.env.RECOGITO_TIGER;
+const IIIF_KEY = process.env.IIIF_KEY;
 const IIIF_URL = process.env.IIIF_URL;
 const IIIF_PROJECT_ID = process.env.IIIF_PROJECT_ID;
 
