@@ -2,7 +2,9 @@ import Uppy from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.PUBLIC_SUPABASE;
+const DEFAULT_BUCKET_NAME = 'documents';
+
+const SUPABASE_URL = import.meta.env?.PUBLIC_SUPABASE || process.env?.PUBLIC_SUPABASE;
 
 type Meta = {
 
@@ -58,11 +60,12 @@ export const uploadFile = (
 
 export const getDownloadURL = (
   supabase: SupabaseClient,
-  documentId: string
+  documentId: string,
+  bucket: string = DEFAULT_BUCKET_NAME
 ): Promise<string> => new Promise((resolve, reject) => {
   supabase
     .storage
-    .from('documents')
+    .from(bucket)
     .createSignedUrl(documentId, 60) // Valid for 60 seconds
     .then(({ data, error }) => {
       const url = data?.signedUrl;

@@ -2,6 +2,7 @@ export * from './contexts';
 export * from './collections';
 export * from './documents';
 export * from './groupUsers';
+export * from './jobs';
 export * from './layers';
 export * from './notifications';
 export * from './profiles';

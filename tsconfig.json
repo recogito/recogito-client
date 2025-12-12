@@ -1,6 +1,10 @@
 {
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
+  "include": [
+    ".astro/types.d.ts",
+    "**/*",
+    "trigger.config.ts"
+  ],
   "exclude": ["dist"],
   "compilerOptions": {
     "baseUrl": ".",
@@ -15,6 +19,7 @@
       "@layouts/*": ["src/layouts/*"],
       "@plugins": ["src/plugins"],
       "@themes/*": ["src/themes/*"],
+      "@trigger/*": ["src/trigger/*"],
       "@util/*": ["src/util/*"]
     },
     "resolveJsonModule": true,
