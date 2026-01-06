@@ -83,11 +83,20 @@ const writePDFAnnotations = async (pdf: Uint8Array, annotations: SupabaseAnnotat
     return `<html><body>${richText}</body></html>`;
   }
 
-  annotations
-    .filter(annotation => 
-      (annotation.target.selector as PDFSelector[]).every(s => (s.quadpoints || []).length > 0))
-    .forEach(annotation => {
-      (annotation.target.selector as PDFSelector[]).forEach(selector => {
+  annotations.forEach((annotation) => {
+    if (!annotation.target.selector) return;
+    const selectors = Array.isArray(annotation.target.selector)
+      ? annotation.target.selector
+      : [annotation.target.selector];
+
+    selectors
+      .filter(
+        (s): s is PDFSelector =>
+          Array.isArray(s.quadpoints) &&
+          s.quadpoints.length > 0 &&
+          typeof s.pageNumber === 'number'
+      )
+      .forEach((selector) => {
         factory.createHighlightAnnotation({
           page: selector.pageNumber - 1,
           richtextString: toRichText(annotation),
@@ -95,10 +104,10 @@ const writePDFAnnotations = async (pdf: Uint8Array, annotations: SupabaseAnnotat
           creationDate: annotation.target.created,
           color: { r: 255, g: 255, b: 0 },
           quadPoints: selector.quadpoints,
-          opacity: 0.5
+          opacity: 0.5,
         });
       });
-    });
+  });
 
   return factory.write();
 }
