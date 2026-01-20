@@ -32,6 +32,8 @@
   "Import": "In Sammlung importieren",
   "Import new revision": "Neue Version importieren",
   "Latest Revision": "Neueste Version",
+  "matching_documents_count_one": "({{count}} Dokument entspricht den Suchkriterien)",
+  "matching_documents_count_other": "({{count}} Dokumente entsprechen den Suchkriterien)",
   "Menu actions for collection:": "Menüoptionen für die Sammlung:",
   "Name": "Name",
   "No collections": "Keine Sammlungen",
