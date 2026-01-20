@@ -33,7 +33,7 @@ export const CollectionDocumentActions = (
   const [isLoading, setIsLoading] = useState(false);
 
   const publishedDate = useCallback((revision: LibraryDocument) => {
-    return new Date(revision.created_at as string).toLocaleDateString()
+    return new Date(revision.created_at as string).toLocaleDateString();
   }, []);
 
   const fetchRevisions = useCallback(
@@ -66,8 +66,6 @@ export const CollectionDocumentActions = (
         .eq('collection_id', props.document.collection_id)
         .eq('is_archived', false)
         .order('revision_number', { ascending: false });
-
-      console.log(data);
 
       if (!error && data) {
         setRevisions(data);

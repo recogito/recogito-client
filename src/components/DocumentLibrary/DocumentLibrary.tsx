@@ -447,45 +447,52 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   }, [view, columnsMine, columnsAll, columnsCollection]);
 
   function onSelectChange(id: string) {
-    if (documents) {
-      const type = selectedIds.includes(id) ? 'REMOVE_BY_ID' : 'ADD_BY_ID';
-      // Handle any selected group documents
-      let newIds: string[] = [];
-      const doc = documents.find((d) => d.id === id);
+    setSelectedIds((prevSelected) => {
+      const isAlreadySelected = prevSelected.includes(id);
+      const type = isAlreadySelected ? 'REMOVE' : 'ADD';
 
-      if (doc) {
+      // basic selection toggle
+      let newSelection = isAlreadySelected
+        ? prevSelected.filter((existingId) => existingId !== id)
+        : [...prevSelected, id];
+
+      // handle grouped docs (among currently loaded documents)
+      const doc = documents?.find((d) => d.id === id);
+      if (doc && documents) {
         if (!doc.is_document_group) {
-          newIds.push(id);
-          if (type === 'REMOVE_BY_ID' && doc.document_group_id) {
-            if (selectedIds.includes(doc.document_group_id)) {
-              newIds.push(doc.document_group_id);
-            }
-          } else if (type === 'ADD_BY_ID' && doc.document_group_id) {
+          // remove grouped document from selection
+          if (type === 'REMOVE' && doc.document_group_id) {
+            newSelection = newSelection.filter(
+              (i) => i !== doc.document_group_id
+            );
+          } else if (type === 'ADD' && doc.document_group_id) {
+            // add grouped document to selection
             const groupDocIds = documents
               .filter((d) => d.document_group_id === doc.document_group_id)
               .map((d) => d.id);
-
-            if (
-              groupDocIds.every((v) => [...selectedIds, doc.id].includes(v))
-            ) {
-              newIds.push(doc.document_group_id);
+            if (groupDocIds.every((v) => newSelection.includes(v))) {
+              newSelection = [...newSelection, doc.document_group_id];
             }
           }
         } else {
-          const groupDocs = documents?.filter(
-            (d) => d.document_group_id === id
-          );
-          newIds = [...newIds, ...groupDocs.map((d) => d.id), id];
+          // select all children if a document group itself is selected
+          const childDocs =
+            documents?.filter((d) => d.document_group_id === id) || [];
+          const childIds = childDocs.map((d) => d.id);
+          if (type === 'ADD') {
+            newSelection = Array.from(
+              new Set([...newSelection, ...childIds, id])
+            );
+          } else {
+            newSelection = newSelection.filter(
+              (i) => !childIds.includes(i) && i !== id
+            );
+          }
         }
       }
-      if (type === 'ADD_BY_ID') {
-        const ids = [...selectedIds, ...newIds];
-        setSelectedIds(ids);
-      } else if (type === 'REMOVE_BY_ID') {
-        const ids = selectedIds.filter((i) => !newIds.includes(i));
-        setSelectedIds(ids);
-      }
-    }
+
+      return newSelection;
+    });
   }
 
   const handleCancel = () => {
