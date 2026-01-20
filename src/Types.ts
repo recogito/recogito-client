@@ -323,7 +323,7 @@ export interface Collection {
 
   created_by?: string;
 
-  document_count?: {count: number}[];
+  document_count: number;
 
   updated_at?: string;
 

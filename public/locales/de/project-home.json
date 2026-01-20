@@ -92,5 +92,8 @@
   "Copied": "Kopiert",
   "Document copied successfully.": "Dokument erfolgreich kopiert.",
   "fileCopyError": "Inhalte von {{docName}} konnten nicht kopiert werden.",
-  "Could not copy documents into collection.": "Dokumente konnten nicht in die Sammlung kopiert werden."
+  "Could not copy documents into collection.": "Dokumente konnten nicht in die Sammlung kopiert werden.",
+  "Loading revisions...": "Versionen werden geladen...",
+  "No title": "Ohne Titel",
+  "No author/artist": "Ohne Autor/Künstler"
 }

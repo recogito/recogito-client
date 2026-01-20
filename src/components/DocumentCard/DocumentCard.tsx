@@ -14,6 +14,9 @@ import {
 } from 'src/Types';
 import './DocumentCard.css';
 import { useTranslation } from 'react-i18next';
+import type { LibraryDocument } from '@components/DocumentLibrary';
+
+// TODO: Clarify use of this without props.context, and with LibraryDocument
 
 interface DocumentCardProps {
   className?: string;
@@ -24,9 +27,9 @@ interface DocumentCardProps {
 
   isDocumentsView?: boolean;
 
-  context: Context;
+  context?: Context;
 
-  document: Document;
+  document: Document | LibraryDocument;
 
   onClick?(): void;
 
@@ -68,21 +71,23 @@ export const DocumentCard = (props: DocumentCardProps) => {
   );
 
   const onOpen = (tab: boolean) => {
-    const search = getSearchParameters();
+    if (context) {
+      const search = getSearchParameters();
 
-    const hash = getHashParameters();
-    hash.set('rtab', props.rtab || DocumentViewRight.closed);
+      const hash = getHashParameters();
+      hash.set('rtab', props.rtab || DocumentViewRight.closed);
 
-    const url = buildURL(
-      `/${i18n.language}/annotate/${context.id}/${document.id}`,
-      search,
-      hash
-    );
+      const url = buildURL(
+        `/${i18n.language}/annotate/${context.id}/${document.id}`,
+        search,
+        hash
+      );
 
-    if (tab) {
-      window.open(url, '_blank');
-    } else {
-      window.location.href = url;
+      if (tab) {
+        window.open(url, '_blank');
+      } else {
+        window.location.href = url;
+      }
     }
   };
 
@@ -104,28 +109,28 @@ export const DocumentCard = (props: DocumentCardProps) => {
 
   const onExportTEI = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context.project_id}/export/tei?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context?.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context?.project_id}/export/tei?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
 
   const onExportPDF = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context.project_id}/export/pdf?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context?.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context?.project_id}/export/pdf?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
 
   const onExportCSV = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context.project_id}/export/csv?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context?.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context?.project_id}/export/csv?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
 
   const onExportW3C = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context.project_id}/export/w3c?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context?.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context?.project_id}/export/w3c?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
 
   const onExportManifest = (includePrivate: boolean) =>
     (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context.project_id}/export/manifest?document=${document.id}&context=${context.id}&private=${includePrivate}`);
+      ? `/${i18n.language}/projects/${props.context?.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
+      : `/${i18n.language}/projects/${props.context?.project_id}/export/manifest?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
 
   return (
     <article
@@ -133,7 +138,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ref={setNodeRef}
       style={style}
       tabIndex={0}
-      aria-label={props.document.name}
+      aria-label={props.document.name.trim() || t('No title', { ns: 'project-home' })}
     >
       <div className='document-card' onClick={onClick}>
         {props.isAdmin && (
@@ -150,7 +155,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
         <DocumentCardThumbnail document={props.document} />
 
         <div className='document-card-footer'>
-          <div className='document-card-name'>{document.name}</div>
+          <div className='document-card-name'>{document.name.trim() || t('No title', { ns: 'project-home' })}</div>
           {!props.readOnly && (
             <div className='document-card-actions'>
               <DocumentCardActions

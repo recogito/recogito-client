@@ -41,9 +41,7 @@ export const CollectionsTable = (props: CollectionsTableProps) => {
                 </a>
               </td>
               <td>
-                {collection.document_count?.length
-                  ? collection.document_count[0]?.count
-                  : 0}
+                {collection.document_count || 0}
               </td>
               <td>
                 {collection.created_at && (

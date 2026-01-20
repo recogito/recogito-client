@@ -26,7 +26,7 @@ interface DocumentCardActionsProps {
 
   allowEditMetadata?: boolean;
 
-  context: Context;
+  context?: Context;
 
   document: Document;
 
@@ -295,7 +295,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 key={extension.name}
                 extension={extension}
                 pluginConfig={config}
-                projectId={props.context.project_id}
+                projectId={props.context?.project_id}
                 context={props.context}
                 document={props.document}
                 closeDialog={() => setMenuOpen(false)}
