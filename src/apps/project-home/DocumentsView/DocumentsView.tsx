@@ -346,7 +346,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   className={classNames({ active: document.id === activeId })}
                   key={document.id}
                   isAdmin={props.isAdmin}
-                  isDocumentsView
+                  view='project'
                   isOwner={isOwner(document)}
                   document={document}
                   context={defaultContext!}
@@ -368,6 +368,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   onDelete={() => {}}
                   onUpdate={() => {}}
                   onError={() => {}}
+                  view='project'
                 />
               )}
             </DragOverlay>

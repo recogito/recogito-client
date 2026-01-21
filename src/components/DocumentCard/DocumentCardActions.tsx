@@ -127,7 +127,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
             <Separator className="dropdown-separator" />
 
-            {props.document.content_type === 'text/xml' && (
+            {props.onExportTEI && props.document.content_type === 'text/xml' && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
                   <Code size={16} /> <span>{t('Export TEI file', { ns: 'common' })}</span>
@@ -163,7 +163,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Sub>
             )}
 
-            {props.document.content_type === 'application/pdf' && (
+            {props.onExportPDF && props.document.content_type === 'application/pdf' && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
                   <FilePdf size={16} /> <span>{t('Export PDF file', { ns: 'project-home' })}</span>
@@ -199,66 +199,71 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               </Sub>
             )}
 
-            <Sub>
-              <SubTrigger className='dropdown-subtrigger'>
-                <DownloadSimple size={16} />{' '}
-                <span>{t('Export annotations as CSV', { ns: 'project-assignments' })}</span>
-                <div className='right-slot'>
-                  <CaretRight size={16} />
-                </div>
-              </SubTrigger>
+            {props.onExportCSV && (
+              <Sub>
+                <SubTrigger className='dropdown-subtrigger'>
+                  <DownloadSimple size={16} />{' '}
+                  <span>{t('Export annotations as CSV', { ns: 'project-assignments' })}</span>
+                  <div className='right-slot'>
+                    <CaretRight size={16} />
+                  </div>
+                </SubTrigger>
 
-              <Portal>
-                <SubContent className='dropdown-subcontent' alignOffset={-5}>
-                  <Item
-                    className='dropdown-item'
-                    onSelect={onExport(props.onExportCSV, false)}
-                    aria-label={
-                      t('export this document`s public annotations as a c s v file', { ns: 'a11y' })
-                    }
-                  >
-                    <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
-                  </Item>
+                <Portal>
+                  <SubContent className='dropdown-subcontent' alignOffset={-5}>
+                    <Item
+                      className='dropdown-item'
+                      onSelect={onExport(props.onExportCSV, false)}
+                      aria-label={
+                        t('export this document`s public annotations as a c s v file', { ns: 'a11y' })
+                      }
+                    >
+                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                    </Item>
 
-                  <Item
-                    className='dropdown-item'
-                    onSelect={onExport(props.onExportCSV, true)}
-                    aria-label={
-                      t('download this document`s public and your private annotations as a c s v file', { ns: 'a11y' })
-                    }
-                  >
-                    <Detective size={16} />{' '}
-                    {t('Include my private annotations', { ns: 'common' })}
-                  </Item>
-                </SubContent>
-              </Portal>
-            </Sub>
+                    <Item
+                      className='dropdown-item'
+                      onSelect={onExport(props.onExportCSV, true)}
+                      aria-label={
+                        t('download this document`s public and your private annotations as a c s v file', { ns: 'a11y' })
+                      }
+                    >
+                      <Detective size={16} />{' '}
+                      {t('Include my private annotations', { ns: 'common' })}
+                    </Item>
+                  </SubContent>
+                </Portal>
+              </Sub>
+            )}
 
-            <Sub>
-              <SubTrigger className="dropdown-subtrigger">
-                <DownloadSimple size={16} /> <span>{t('Export Annotations as W3C/JSONLD', { ns: 'project-home' })}</span>
-                <div className="right-slot">
-                  <CaretRight size={14} />
-                </div>
-              </SubTrigger>
 
-              <Portal>
-                <SubContent
-                  className="dropdown-subcontent"
-                  alignOffset={-5}>
+            {props.onExportW3C && (
+              <Sub>
+                <SubTrigger className="dropdown-subtrigger">
+                  <DownloadSimple size={16} /> <span>{t('Export Annotations as W3C/JSONLD', { ns: 'project-home' })}</span>
+                  <div className="right-slot">
+                    <CaretRight size={14} />
+                  </div>
+                </SubTrigger>
 
-                  <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, false)}>
-                    <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
-                  </Item>
+                <Portal>
+                  <SubContent
+                    className="dropdown-subcontent"
+                    alignOffset={-5}>
 
-                  <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, true)}>
-                    <Detective size={16} /> {t('Include my private annotations', { ns: 'common' })}
-                  </Item>
-                </SubContent>
-              </Portal>
-            </Sub>
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, false)}>
+                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                    </Item>
 
-            {props.document.meta_data?.protocol?.startsWith('IIIF') && (
+                    <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, true)}>
+                      <Detective size={16} /> {t('Include my private annotations', { ns: 'common' })}
+                    </Item>
+                  </SubContent>
+                </Portal>
+              </Sub>
+            )}
+
+            {props.onExportManifest && props.document.meta_data?.protocol?.startsWith('IIIF') && (
               <Sub>
                 <SubTrigger 
                   className="dropdown-subtrigger"

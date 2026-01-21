@@ -4,30 +4,25 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { DotsSix } from '@phosphor-icons/react';
 import classNames from 'classnames';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
-import {
-  DocumentViewRight,
-  type Context,
-  type Document,
-} from 'src/Types';
+import { DocumentViewRight, type Context, type Document } from 'src/Types';
 import './DocumentCard.css';
 import { useTranslation } from 'react-i18next';
 import type { LibraryDocument } from '@components/DocumentLibrary';
 
-// TODO: Clarify use of this without props.context, and with LibraryDocument
+type DocumentCardViewProps =
+  | { view: 'project'; context: Context }
+  | { view: 'context'; context: Context }
+  | { view: 'library'; context?: never };
 
-interface DocumentCardProps {
+type DocumentCardProps = DocumentCardViewProps & {
   className?: string;
 
   isAdmin?: boolean;
 
   isOwner?: boolean;
-
-  isDocumentsView?: boolean;
-
-  context?: Context;
 
   document: Document | LibraryDocument;
 
@@ -42,10 +37,10 @@ interface DocumentCardProps {
   rtab?: DocumentViewRight;
 
   readOnly?: boolean;
-}
+};
 
 export const DocumentCard = (props: DocumentCardProps) => {
-  const { context, document } = props;
+  const { context, document, view } = props;
 
   const { t, i18n } = useTranslation(['a11y']);
 
@@ -70,8 +65,10 @@ export const DocumentCard = (props: DocumentCardProps) => {
     [transform, transition]
   );
 
-  const onOpen = (tab: boolean) => {
-    if (context) {
+  const onOpen = useCallback(
+    (tab: boolean) => {
+      if (view === 'library') return;
+
       const search = getSearchParameters();
 
       const hash = getHashParameters();
@@ -88,8 +85,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
       } else {
         window.location.href = url;
       }
-    }
-  };
+    },
+    [view, context, document.id, i18n.language, props.rtab]
+  );
 
   const onClick = (evt: React.MouseEvent) => {
     if (props.onClick) {
@@ -107,30 +105,24 @@ export const DocumentCard = (props: DocumentCardProps) => {
     if (!isClickOnMenu) onOpen(true);
   };
 
-  const onExportTEI = (includePrivate: boolean) =>
-    (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context?.project_id}/export/tei?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context?.project_id}/export/tei?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
+  const onExport = useCallback(
+    (format: string) => (includePrivate: boolean) => {
+      if (view === 'library') return;
 
-  const onExportPDF = (includePrivate: boolean) =>
-    (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context?.project_id}/export/pdf?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context?.project_id}/export/pdf?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
+      const baseUrl = `/${i18n.language}/projects/${context.project_id}/export/${format}`;
+      const params = new URLSearchParams({
+        document: document.id,
+        private: String(includePrivate),
+      });
 
-  const onExportCSV = (includePrivate: boolean) =>
-    (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context?.project_id}/export/csv?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context?.project_id}/export/csv?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
+      if (view === 'context') {
+        params.append('context', context.id);
+      }
 
-  const onExportW3C = (includePrivate: boolean) =>
-    (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context?.project_id}/export/w3c?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context?.project_id}/export/w3c?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
-
-  const onExportManifest = (includePrivate: boolean) =>
-    (window.location.href = props.isDocumentsView
-      ? `/${i18n.language}/projects/${props.context?.project_id}/export/manifest?document=${document.id}&private=${includePrivate}`
-      : `/${i18n.language}/projects/${props.context?.project_id}/export/manifest?document=${document.id}&context=${context?.id}&private=${includePrivate}`);
+      window.location.href = `${baseUrl}?${params.toString()}`;
+    },
+    [view, context, document.id, i18n.language]
+  );
 
   return (
     <article
@@ -138,7 +130,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
       ref={setNodeRef}
       style={style}
       tabIndex={0}
-      aria-label={props.document.name.trim() || t('No title', { ns: 'project-home' })}
+      aria-label={
+        props.document.name.trim() || t('No title', { ns: 'project-home' })
+      }
     >
       <div className='document-card' onClick={onClick}>
         {props.isAdmin && (
@@ -146,7 +140,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
             className='document-drag-handle'
             {...attributes}
             {...listeners}
-            aria-label={t('rearrange this document by dragging', { ns: 'a11y' })}
+            aria-label={t('rearrange this document by dragging', {
+              ns: 'a11y',
+            })}
           >
             <DotsSix />
           </div>
@@ -155,7 +151,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
         <DocumentCardThumbnail document={props.document} />
 
         <div className='document-card-footer'>
-          <div className='document-card-name'>{document.name.trim() || t('No title', { ns: 'project-home' })}</div>
+          <div className='document-card-name'>
+            {document.name.trim() || t('No title', { ns: 'project-home' })}
+          </div>
           {!props.readOnly && (
             <div className='document-card-actions'>
               <DocumentCardActions
@@ -165,12 +163,16 @@ export const DocumentCard = (props: DocumentCardProps) => {
                 document={document}
                 onOpen={onOpen}
                 onDelete={props.onDelete}
-                onExportTEI={onExportTEI}
-                onExportPDF={onExportPDF}
-                onExportCSV={onExportCSV}
-                onExportW3C={onExportW3C}
-                onExportManifest={onExportManifest}
                 onOpenMetadata={() => setOpenMetadata(true)}
+                {...(view !== 'library'
+                  ? {
+                      onExportTEI: onExport('tei'),
+                      onExportPDF: onExport('pdf'),
+                      onExportCSV: onExport('csv'),
+                      onExportW3C: onExport('w3c'),
+                      onExportManifest: onExport('manifest'),
+                    }
+                  : {})}
               />
             </div>
           )}

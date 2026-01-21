@@ -55,6 +55,7 @@ export const DocumentListRow = ({
                 props.onSelectChange(doc.id)
               }
               readOnly
+              view='library'
             />
           </div>
         ))}
