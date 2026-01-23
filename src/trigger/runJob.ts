@@ -5,15 +5,15 @@ import type { exportProject } from '@trigger/exportProject';
 import type { importProject } from '@trigger/importProject';
 
 interface Payload {
-  key: string;
   jobId: string;
   projectId?: string;
-  serverURL: string;
   token: string;
+  publicSupabaseUrl: string;
+  publicSupabaseApiKey: string;
+  iiifProjectId: string;
+  iiifUrl: string;
+  vaultTenantPath?: string;
 }
-
-const SUPABASE_SERVER_URL = process.env.SUPABASE_SERVERCLIENT_URL || process.env.PUBLIC_SUPABASE;
-const SUPABASE_API_KEY = process.env.PUBLIC_SUPABASE_API_KEY;
 
 const TASK_EXPORT = 'export-project';
 const TASK_IMPORT = 'import-project';
@@ -21,14 +21,16 @@ const TASK_IMPORT = 'import-project';
 export const runJob = task({
   id: 'run-job',
   run: async (payload: Payload) => {
-    if (!(SUPABASE_SERVER_URL && SUPABASE_API_KEY)) {
+    const { publicSupabaseUrl, publicSupabaseApiKey } = payload;
+
+    if (!(publicSupabaseUrl && publicSupabaseApiKey)) {
       logger.error('Invalid Supabase credentials');
       return;
     }
 
     const { jobId, token, ...rest } = payload;
 
-    const supabase = createClient(SUPABASE_SERVER_URL, SUPABASE_API_KEY, {
+    const supabase = createClient(publicSupabaseUrl, publicSupabaseApiKey, {
       global: {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -54,7 +56,9 @@ export const runJob = task({
     }
 
     if (!task) {
-      logger.error(`Unable to find task for job_type: ${jobResp.data.job_type}`);
+      logger.error(
+        `Unable to find task for job_type: ${jobResp.data.job_type}`
+      );
       return;
     }
 
@@ -62,17 +66,19 @@ export const runJob = task({
     await updateJob(supabase, { id: jobId, job_status: 'PROCESSING' });
 
     // Run the job
-    const result = await tasks.triggerAndWait<typeof exportProject | typeof importProject>(task, {
+    const result = await tasks.triggerAndWait<
+      typeof exportProject | typeof importProject
+    >(task, {
       token,
       jobId,
-      ...rest
+      ...rest,
     });
 
     // Update the job status based on the result
     if (result.ok) {
-      await updateJob(supabase, { id: jobId, job_status: 'COMPLETE'});
+      await updateJob(supabase, { id: jobId, job_status: 'COMPLETE' });
     } else {
-      await updateJob(supabase, { id: jobId, job_status: 'ERROR'});
+      await updateJob(supabase, { id: jobId, job_status: 'ERROR' });
     }
-  }
+  },
 });

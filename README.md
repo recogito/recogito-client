@@ -28,14 +28,13 @@ In `.env`, set:
 - `TRIGGER_SECRET_KEY` from your trigger project's `API keys` tab
 - and optionally `TRIGGER_SERVER_URL` if using self-hosted Trigger.
 
-Note that the following environment variables are also required for the Trigger tasks to work (can be added manually to the trigger project after deploy):
+
+#### Self-hosted or single instance
+
+For a self-hosted instance, or a single instance without multiple tenants, the following environment variables are also required for the Trigger tasks to work (can be added manually to the trigger project after deploy):
 ```
-PUBLIC_SUPABASE or SUPABASE_SERVERCLIENT_URL
-PUBLIC_SUPABASE_API_KEY
 SUPABASE_SERVICE_KEY
 IIIF_KEY
-IIIF_URL
-IIIF_PROJECT_ID
 ```
 
 You can then deploy import/export tasks to the Trigger.dev server by executing the following command at the root of this project repo:
@@ -43,6 +42,31 @@ You can then deploy import/export tasks to the Trigger.dev server by executing t
 ~~~
 npx trigger.dev@latest deploy -c ./trigger.config.ts
 ~~~
+
+#### Multi-tenant
+
+For a multi-tenant setup, the Trigger project only needs to be deployed once and it will be reused for all tenants; and instead of sending the above .env vars to Trigger, you set the following:
+
+```
+MULTI_TENANT=true
+OP_SERVICE_ACCOUNT_TOKEN=<1password-service-account-token>
+```
+
+(Currently, only [1Password Service Accounts](https://developer.1password.com/docs/service-accounts/) are supported for managing multi-tenant secrets.)
+
+Then run:
+
+~~~
+npx trigger.dev@latest deploy -c ./trigger.config.ts
+~~~
+
+On each individual tenant, ensure the following environment variables are defined (in recogito-client):
+```
+OP_VAULT_NAME
+OP_ITEM_NAME
+```
+
+And ensure `SUPABASE_SERVICE_KEY` and `IIIF_KEY` are both available in that 1password vault/item.
 
 ### NER plugin
 

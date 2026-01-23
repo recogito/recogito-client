@@ -24,26 +24,21 @@ export default defineConfig({
   build: {
     extensions: [
       syncEnvVars(async (_) => {
-        return [
-          { name: 'IIIF_KEY', value: process.env.IIIF_KEY || '' },
-          { name: 'IIIF_URL', value: process.env.IIIF_URL || '' },
-          { name: 'IIIF_PROJECT_ID', value: process.env.IIIF_PROJECT_ID || '' },
-          {
-            name: 'SUPABASE_SERVICE_KEY',
-            value: process.env.SUPABASE_SERVICE_KEY || '',
-          },
-          {
-            name: 'PUBLIC_SUPABASE_API_KEY',
-            value: process.env.PUBLIC_SUPABASE_API_KEY || '',
-          },
-          {
-            name: 'SUPABASE_SERVERCLIENT_URL',
-            value:
-              process.env.SUPABASE_SERVERCLIENT_URL ||
-              process.env.PUBLIC_SUPABASE ||
-              '',
-          },
-        ];
+        return process.env.MULTI_TENANT && process.env.OP_SERVICE_ACCOUNT_TOKEN
+          ? [
+              { name: 'MULTI_TENANT', value: 'true' },
+              {
+                name: 'OP_SERVICE_ACCOUNT_TOKEN',
+                value: process.env.OP_SERVICE_ACCOUNT_TOKEN,
+              },
+            ]
+          : [
+              { name: 'IIIF_KEY', value: process.env.IIIF_KEY || '' },
+              {
+                name: 'SUPABASE_SERVICE_KEY',
+                value: process.env.SUPABASE_SERVICE_KEY || '',
+              },
+            ];
       }),
     ],
   },

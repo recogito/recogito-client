@@ -5,29 +5,56 @@ import { logger, task } from '@trigger.dev/sdk/v3';
 import { generatePassword } from '@util/auth';
 import AdmZip from 'adm-zip';
 import { v4 as uuidv4 } from 'uuid';
+import * as sdk from '@1password/sdk';
 
 interface Payload {
   jobId: string;
   token: string;
+  publicSupabaseUrl: string;
+  publicSupabaseApiKey: string;
+  iiifProjectId: string;
+  iiifUrl: string;
+  vaultTenantPath?: string;
 }
-
-const IIIF_KEY = process.env.IIIF_KEY;
-const IIIF_URL = process.env.IIIF_URL;
-const IIIF_PROJECT_ID = process.env.IIIF_PROJECT_ID;
-
-const SUPABASE_SERVER_URL = process.env.SUPABASE_SERVERCLIENT_URL || process.env.PUBLIC_SUPABASE;
-const SUPABASE_API_KEY = process.env.PUBLIC_SUPABASE_API_KEY;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
 
 const DOCUMENTS_PREFIX = 'documents/';
 const JSON_EXTENSION = '.json';
 
 const PASSWORD_LENGTH = 14;
 
+const getSecrets = async (vaultTenantPath?: string) => {
+  // allow multi-tenant setup with 1password service account and vault path
+  const isMultiTenant =
+    process.env.MULTI_TENANT === 'true' && process.env.OP_SERVICE_ACCOUNT_TOKEN;
+
+  if (!isMultiTenant || !vaultTenantPath) {
+    // otherwise just use env vars
+    return {
+      IIIF_KEY: process.env.IIIF_KEY || '',
+      SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || '',
+    };
+  }
+  const client = await sdk.createClient({
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN!,
+    integrationName: 'Trigger.dev import/export multi-tenant',
+    integrationVersion: '1.0.0',
+  });
+  const IIIF_KEY = await client.secrets.resolve(
+    `op://${vaultTenantPath}/IIIF_KEY`
+  );
+  const SUPABASE_SERVICE_KEY = await client.secrets.resolve(
+    `op://${vaultTenantPath}/SUPABASE_SERVICE_KEY`
+  );
+  return { IIIF_KEY, SUPABASE_SERVICE_KEY };
+};
+
 const createDocuments = async (
   supabase: SupabaseClient,
   importId: string,
-  zip: AdmZip
+  zip: AdmZip,
+  iiifProjectId: string,
+  iiifUrl: string,
+  iiifKey: string,
 ) => {
   const zipEntries = zip.getEntries();
 
@@ -74,7 +101,7 @@ const createDocuments = async (
         } else if (id && metadata?.protocol === 'IIIF_IMAGE') {
           logger.info(`Uploading image: ${id}`);
 
-          const { resource } = await uploadImage(name, file);
+          const { resource } = await uploadImage(name, file, iiifProjectId, iiifUrl, iiifKey);
           const url = resource.content_iiif_url.replace('full/max/0/default.jpg', 'info.json');
 
           const { data, error } = await updateDocumentMetadata(supabase, id, name, { ...metadata, url });
@@ -96,9 +123,11 @@ const createDocuments = async (
 
 const createUsers = async (
   supabase: SupabaseClient,
-  importId: string
+  importId: string,
+  publicSupabaseUrl: string,
+  supabaseServiceKey: string,
 ) => {
-  if (!(SUPABASE_SERVER_URL && SUPABASE_SERVICE_KEY)) {
+  if (!(publicSupabaseUrl && supabaseServiceKey)) {
     logger.error('Invalid admin credentials');
     return;
   }
@@ -112,7 +141,7 @@ const createUsers = async (
 
   if (profiles) {
     // Import jobs can only ever be run by an org admin user, so we'll use the service key to create the user
-    const supa = await createClient(SUPABASE_SERVER_URL, SUPABASE_SERVICE_KEY);
+    const supa = await createClient(publicSupabaseUrl, supabaseServiceKey);
 
     for (const profile of profiles) {
       await supa.auth.admin.createUser({
@@ -232,9 +261,12 @@ const uploadFile = async (
 
 const uploadImage = async (
   name: string,
-  buffer: Buffer
+  buffer: Buffer,
+  iiifProjectId: string,
+  iiifUrl: string,
+  iiifKey: string,
 ) => {
-  if (!(IIIF_PROJECT_ID && IIIF_URL && IIIF_KEY)) {
+  if (!(iiifProjectId && iiifUrl && iiifKey)) {
     logger.error('Invalid IIIF credentials');
     return;
   }
@@ -245,13 +277,13 @@ const uploadImage = async (
   // Forward as outgoing FormData
   const formData = new FormData();
   formData.append('resource[name]', name);
-  formData.append('resource[project_id]', IIIF_PROJECT_ID);
+  formData.append('resource[project_id]', iiifProjectId);
   formData.append('resource[content]', file);
 
-  const response = await fetch(IIIF_URL, {
+  const response = await fetch(iiifUrl, {
     body: formData,
     headers: {
-      'X-API-KEY': IIIF_KEY,
+      'X-API-KEY': iiifKey,
     },
     method: 'POST'
   });
@@ -262,9 +294,17 @@ const uploadImage = async (
 export const importProject = task({
   id: 'import-project',
   run: async (payload: Payload) => {
-    const { jobId, token } = payload;
+    const {
+      jobId,
+      token,
+      publicSupabaseUrl,
+      publicSupabaseApiKey,
+      iiifProjectId,
+      iiifUrl,
+      vaultTenantPath,
+    } = payload;
 
-    if (!(SUPABASE_SERVER_URL && SUPABASE_API_KEY)) {
+    if (!(publicSupabaseUrl && publicSupabaseApiKey)) {
       logger.error('Invalid Supabase credentials');
       return;
     }
@@ -274,7 +314,7 @@ export const importProject = task({
 
     logger.info('Creating Supabase client');
 
-    const supabase = createClient(SUPABASE_SERVER_URL, SUPABASE_API_KEY, {
+    const supabase = createClient(publicSupabaseUrl, publicSupabaseApiKey, {
       global: {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -297,11 +337,13 @@ export const importProject = task({
     // Load the data into the database tables
     await load(supabase, importId);
 
+    const { IIIF_KEY, SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
+
     // Create documents in storage
-    await createDocuments(supabase, importId, zip);
+    await createDocuments(supabase, importId, zip, iiifProjectId, iiifUrl, IIIF_KEY);
 
     // Create users in auth schema
-    await createUsers(supabase, importId);
+    await createUsers(supabase, importId, publicSupabaseUrl, SUPABASE_SERVICE_KEY);
 
     logger.info(`Completed import: ${importId}`);
   }
