@@ -5,7 +5,7 @@ import type { UserProfile } from 'src/Types';
 interface AvatarProps {
   id: string;
 
-  name?: string;
+  initials?: string;
 
   color?: string;
 
@@ -33,19 +33,8 @@ const stringToHash = (str: string) => {
   return hash;
 };
 
-const getInitials = (name: string): string => {
-  const tokens = name.split(/\s+/);
-  if (tokens.length === 1) {
-    return tokens[0].charAt(0).toUpperCase();
-  } else {
-    return (
-      tokens[0].charAt(0) + tokens[tokens.length - 1].charAt(0)
-    ).toUpperCase();
-  }
-};
-
 export const Avatar = (props: AvatarProps) => {
-  const { id, name, color, avatar } = props;
+  const { id, initials, color, avatar } = props;
 
   const fallbackColor = `hsl(${stringToHash(id) % 360}, 35%, 48%)`;
 
@@ -64,7 +53,7 @@ export const Avatar = (props: AvatarProps) => {
         <RadixAvatar.Fallback
           className='avatar-fallback'
           style={{ backgroundColor: fallbackColor }}>
-          {name ? getInitials(name) : <User size={16} />}
+          {initials ? initials : <User size={16} />}
         </RadixAvatar.Fallback>
       </span>
     </RadixAvatar.Root>
