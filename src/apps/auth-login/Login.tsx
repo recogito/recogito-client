@@ -28,22 +28,19 @@ const clearCookies = () => {
   document.cookie = `sb-auth-token=; path=/; expires=${expires}; SameSite=Lax; secure`;
 };
 
-const Login = (props: {
-  methods: LoginMethod[];
-}) => {
+const Login = (props: { methods: LoginMethod[] }) => {
   const [isChecking, setIsChecking] = useState(true);
 
   const [primary, ...loginMethods] = props.methods;
   const { t, i18n } = useTranslation(['auth-login']);
 
-  const host =
-    window.location.port !== ''
-      ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
-      : `${window.location.protocol}//${window.location.hostname}`;
-
   const url = new URLSearchParams(window.location.search);
   let redirectUrl = url.get('redirect-to');
   if (redirectUrl) {
+    if (redirectUrl.includes('/sign-in')) {
+      // don't allow loop back to sign-in from sign-in; go to projects instead
+      redirectUrl = `/${i18n.language}/projects`;
+    }
     localStorage.setItem('redirect-to', redirectUrl);
   } else {
     redirectUrl = localStorage.getItem('redirect-to');
@@ -51,47 +48,54 @@ const Login = (props: {
       redirectUrl = null;
     }
   }
+  const next = redirectUrl || `/${i18n.language}/projects`;
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_OUT') {
-        clearCookies();
-        redirectUrl = null;
-      } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        setCookies(session);
-        if (redirectUrl) {
-          localStorage.removeItem('redirect-to');
-          window.location.href = redirectUrl;
-        } else {
-          window.location.href = `/${i18n.language}/projects`;
+    let isRedirecting = false;
+
+    const performRedirect = (session: Session | null) => {
+      // prevent multiple redirects race condition
+      if (isRedirecting || !session) {
+        return;
+      }
+
+      // set session cookies, perform the redirect
+      isRedirecting = true;
+      setCookies(session);
+      localStorage.removeItem('redirect-to');
+      window.location.replace(next);
+    };
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (event === 'SIGNED_OUT') {
+          clearCookies();
+        } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          performRedirect(session);
         }
       }
-    });
+    );
 
     isLoggedIn(supabase).then((loggedIn) => {
       if (loggedIn) {
         supabase.auth.getSession().then(({ data: { session } }) => {
-          setCookies(session);
-          if (redirectUrl) {
-            localStorage.removeItem('redirect-to');
-            window.location.href = redirectUrl;
-          } else {
-            window.location.href = `/${i18n.language}/projects`;
-          }
+          performRedirect(session);
         });
       } else {
         setIsChecking(false);
       }
     });
-  }, []);
+
+    // ensure we stop firing onAuthStateChange
+    return () => authListener.subscription.unsubscribe();
+  }, [next]);
 
   const signInWithSSO = (domain: string) => {
+    const redirectTo = `${window.location.origin}/auth/callback?next=${next}`;
     supabase.auth
       .signInWithSSO({
         domain: domain,
-        options: {
-          redirectTo: `${host}/auth/callback`,
-        },
+        options: { redirectTo },
       })
       .then(({ data, error }) => {
         if (data?.url) {
@@ -103,7 +107,7 @@ const Login = (props: {
   };
 
   const signInWithKeycloak = () => {
-    window.location.href = `/${i18n.language}/keycloak`;
+    window.location.href = `/${i18n.language}/keycloak?redirect-to=${next}`;
   };
 
   const renderLoginButton = useCallback(
