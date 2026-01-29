@@ -36,7 +36,7 @@ const getSecrets = async (vaultTenantPath?: string) => {
   }
   const client = await sdk.createClient({
     auth: process.env.OP_SERVICE_ACCOUNT_TOKEN!,
-    integrationName: 'Trigger.dev import/export multi-tenant',
+    integrationName: 'Trigger.dev import-export multi-tenant',
     integrationVersion: '1.0.0',
   });
   const IIIF_KEY = await client.secrets.resolve(
