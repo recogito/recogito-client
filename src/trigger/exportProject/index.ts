@@ -151,5 +151,7 @@ const uploadFile = (
   supabase
     .storage
     .from('jobs')
-    .upload(name, file)
+    .upload(name, file, {
+      contentType: 'application/zip'
+    })
 );
