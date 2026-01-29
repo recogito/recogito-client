@@ -10,13 +10,12 @@ import { logger, task } from '@trigger.dev/sdk/v3';
 import { exportProfiles } from '@trigger/exportProject/users';
 import AdmZip from 'adm-zip';
 
-const SUPABASE_SERVER_URL = process.env.SUPABASE_SERVERCLIENT_URL || process.env.PUBLIC_SUPABASE;
-const SUPABASE_API_KEY = process.env.PUBLIC_SUPABASE_API_KEY;
-
 interface Payload {
   jobId: string;
   projectId?: string;
   token: string;
+  publicSupabaseUrl: string;
+  publicSupabaseApiKey: string;
 }
 
 const addToZip = (
@@ -40,9 +39,9 @@ const addDocumentsToZip = (
 export const exportProject = task({
   id: 'export-project',
   run: async (payload: Payload) => {
-    const { jobId, projectId, token } = payload;
+    const { jobId, projectId, token, publicSupabaseUrl, publicSupabaseApiKey } = payload;
 
-    if (!(SUPABASE_SERVER_URL && SUPABASE_API_KEY)) {
+    if (!(publicSupabaseUrl && publicSupabaseApiKey)) {
       logger.error('Invalid Supabase credentials');
       return;
     }
@@ -54,7 +53,7 @@ export const exportProject = task({
 
     logger.info('Creating Supabase client');
 
-    const supabase = createClient(SUPABASE_SERVER_URL, SUPABASE_API_KEY, {
+    const supabase = createClient(publicSupabaseUrl, publicSupabaseApiKey, {
       global: {
         headers: {
           Authorization: `Bearer ${token}`,
