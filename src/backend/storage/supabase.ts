@@ -66,7 +66,11 @@ export const getDownloadURL = (
   supabase
     .storage
     .from(bucket)
-    .createSignedUrl(documentId, 60) // Valid for 60 seconds
+    .createSignedUrl(
+      documentId,
+      60, // Valid for 60 seconds
+      { download: `project-export-${documentId}.zip` }
+    )
     .then(({ data, error }) => {
       const url = data?.signedUrl;
 

@@ -28,6 +28,7 @@ export const JobActions = (props: Props) => {
   const onSelectOption = (fn?: () => void) => () => {
     fn?.();
     setMenuOpen(false);
+    setConfirming(false);
   };
 
   useEffect(() => {

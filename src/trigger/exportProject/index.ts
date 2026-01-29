@@ -24,7 +24,7 @@ const addToZip = (
   data: any | null = ''
 ) => {
   const content = JSON.stringify(data || '{}');
-  zip.addFile(filename, Buffer.alloc(content.length || 0,  content));
+  zip.addFile(filename, Buffer.from(content, 'utf8'));
 };
 
 const addDocumentsToZip = (
@@ -151,5 +151,7 @@ const uploadFile = (
   supabase
     .storage
     .from('jobs')
-    .upload(name, file)
+    .upload(name, file, {
+      contentType: 'application/zip'
+    })
 );
