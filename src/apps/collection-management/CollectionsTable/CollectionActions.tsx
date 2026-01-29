@@ -1,14 +1,13 @@
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import { DotsThreeVerticalIcon, PencilSimpleIcon, TrashIcon } from '@phosphor-icons/react';
 import { useState } from 'react';
-import type { Collection, Translations } from 'src/Types';
+import type { Collection } from 'src/Types';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
+import { useTranslation } from 'react-i18next';
 const { Content, Item, Portal, Root, Separator, Trigger } = Dropdown;
 
 interface CollectionActionsProps {
   collection: Collection;
-
-  i18n: Translations;
 
   onDelete(collection?: Collection): void;
 
@@ -16,7 +15,7 @@ interface CollectionActionsProps {
 }
 
 export const CollectionActions = (props: CollectionActionsProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['collection-management', 'common']);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -33,7 +32,7 @@ export const CollectionActions = (props: CollectionActionsProps) => {
         <Trigger asChild>
           <button
             className='unstyled icon-only'
-            aria-label={`${t['Menu actions for collection:']} ${props.collection.name}`}
+            aria-label={`${t('Menu actions for collection:', { ns: 'collection-management' })} ${props.collection.name}`}
           >
             <DotsThreeVerticalIcon weight='bold' size={22} />
           </button>
@@ -49,10 +48,10 @@ export const CollectionActions = (props: CollectionActionsProps) => {
               <Item
                 className='dropdown-item'
                 onSelect={onSelectOption(props.onOpenMetadata)}
-                aria-label={t["edit this collection's name"]}
+                aria-label={t("edit this collection's name", { ns: 'collection-management' })}
               >
                 <PencilSimpleIcon size={16} />
-                <span>{t['Edit collection name']}</span>
+                <span>{t('Edit collection name', { ns: 'collection-management' })}</span>
               </Item>
             )}
 
@@ -61,10 +60,10 @@ export const CollectionActions = (props: CollectionActionsProps) => {
             <ConfirmedAction.Trigger>
               <Item
                 className='dropdown-item'
-                aria-label={t['remove this collection']}
+                aria-label={t('remove this collection', { ns: 'collection-management' })}
               >
                 <TrashIcon size={16} className='destructive' />{' '}
-                <span>{t['Delete collection']}</span>
+                <span>{t('Delete collection', { ns: 'collection-management' })}</span>
               </Item>
             </ConfirmedAction.Trigger>
           </Content>
@@ -72,17 +71,14 @@ export const CollectionActions = (props: CollectionActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog
-        i18n={props.i18n}
-        title={t['Are you sure?']}
+        title={t('Are you sure?', { ns: 'common' })}
         description={
-          t[
-            'Are you sure you want to remove the collection? Only collections with documents that are not used by active projects can be removed.'
-          ]
+          t('Are you sure you want to remove the collection? Only collections with documents that are not used by active projects can be removed.', { ns: 'collection-management' })
         }
-        cancelLabel={t['Cancel']}
+        cancelLabel={t('Cancel', { ns: 'common' })}
         confirmLabel={
           <>
-            <TrashIcon size={16} /> <span>{t['Delete collection']}</span>
+            <TrashIcon size={16} /> <span>{t('Delete collection', { ns: 'collection-management' })}</span>
           </>
         }
         onConfirm={onSelectOption(() => props.onDelete(props.collection))}

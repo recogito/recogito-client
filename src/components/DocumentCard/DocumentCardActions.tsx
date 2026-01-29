@@ -3,7 +3,7 @@ import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { useExtensions } from '@recogito/studio-sdk';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import { ExtensionMount } from '@components/Plugins';
-import type { Context, Document, Translations } from 'src/Types';
+import type { Context, Document } from 'src/Types';
 import {
   Browser,
   Browsers,
@@ -17,6 +17,7 @@ import {
   Trash,
   UsersThree,
 } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Separator, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
@@ -24,8 +25,6 @@ interface DocumentCardActionsProps {
   allowDeleteDocument?: boolean;
 
   allowEditMetadata?: boolean;
-
-  i18n: Translations;
 
   context: Context;
 
@@ -50,7 +49,7 @@ interface DocumentCardActionsProps {
 
 export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['common', 'a11y', 'project-home', 'project-assignments']);
 
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -82,7 +81,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
         <Trigger asChild>
           <button
             className='unstyled icon-only'
-            aria-label={`${t['Menu actions for document:']} ${props.document.name}`}
+            aria-label={`${t('Menu actions for document:', { ns: 'common' })} ${props.document.name}`}
           >
             <DotsThreeVertical weight='bold' size={22} />
           </button>
@@ -97,31 +96,31 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Item
               className='dropdown-item'
               onSelect={onOpen(false)}
-              aria-label={t['open this document in current window']}
+              aria-label={t('open this document in current window', { ns: 'a11y' })}
             >
-              <Browser size={16} /> <span>{t['Open document']}</span>
+              <Browser size={16} /> <span>{t('Open document', { ns: 'common' })}</span>
             </Item>
 
             <Item
               className='dropdown-item'
               onSelect={onOpen(true)}
-              aria-label={t['open this document in a new window']}
+              aria-label={t('open this document in a new window', { ns: 'a11y' })}
             >
               <Browsers size={16} />{' '}
-              <span>{t['Open document in new tab']}</span>
+              <span>{t('Open document in new tab', { ns: 'common' })}</span>
             </Item>
 
             {props.onOpenMetadata && (
               <Item
                 className='dropdown-item'
                 onSelect={onSelectOption(props.onOpenMetadata)}
-                aria-label={t['view this documents metadata']}
+                aria-label={t('view this documents metadata', { ns: 'a11y' })}
               >
                 <PencilSimple size={16} />
                 <span>
                   {props.allowEditMetadata
-                    ? t['Edit document metadata']
-                    : t['View document metadata']}
+                    ? t('Edit document metadata', { ns: 'project-home' })
+                    : t('View document metadata', { ns: 'project-home' })}
                 </span>
               </Item>
             )}
@@ -131,7 +130,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.document.content_type === 'text/xml' && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
-                  <Code size={16} /> <span>{t['Export TEI file']}</span>
+                  <Code size={16} /> <span>{t('Export TEI file', { ns: 'common' })}</span>
                   <div className='right-slot'>
                     <CaretRight size={16} />
                   </div>
@@ -143,25 +142,21 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                       className='dropdown-item'
                       onSelect={onExport(props.onExportTEI, false)}
                       aria-label={
-                        t[
-                          'export this document`s public annotations as a t e i file'
-                        ]
+                        t('export this document`s public annotations as a t e i file', { ns: 'a11y' })
                       }
                     >
-                      <UsersThree size={16} /> {t['Public annotations only']}
+                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item
                       className='dropdown-item'
                       onSelect={onExport(props.onExportTEI, true)}
                       aria-label={
-                        t[
-                          'download this document`s public and your private annotations as a t e i file'
-                        ]
+                        t('download this document`s public and your private annotations as a t e i file', { ns: 'a11y' })
                       }
                     >
                       <Detective size={16} />{' '}
-                      {t['Include my private annotations']}
+                      {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
                 </Portal>
@@ -171,7 +166,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.document.content_type === 'application/pdf' && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
-                  <FilePdf size={16} /> <span>{t['Export PDF file']}</span>
+                  <FilePdf size={16} /> <span>{t('Export PDF file', { ns: 'project-home' })}</span>
                   <div className='right-slot'>
                     <CaretRight size={16} />
                   </div>
@@ -183,25 +178,21 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                       className='dropdown-item'
                       onSelect={onExport(props.onExportPDF, false)}
                       aria-label={
-                        t[
-                          'export this document`s public annotations as a p d f file'
-                        ]
+                        t('export this document`s public annotations as a p d f file', { ns: 'a11y' })
                       }
                     >
-                      <UsersThree size={16} /> {t['Public annotations only']}
+                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item
                       className='dropdown-item'
                       onSelect={onExport(props.onExportPDF, true)}
                       aria-label={
-                        t[
-                          'download this document`s public and your private annotations as a p d f file'
-                        ]
+                        t('download this document`s public and your private annotations as a p d f file', { ns: 'a11y' })
                       }
                     >
                       <Detective size={16} />{' '}
-                      {t['Include my private annotations']}
+                      {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
                 </Portal>
@@ -211,7 +202,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             <Sub>
               <SubTrigger className='dropdown-subtrigger'>
                 <DownloadSimple size={16} />{' '}
-                <span>{t['Export annotations as CSV']}</span>
+                <span>{t('Export annotations as CSV', { ns: 'project-assignments' })}</span>
                 <div className='right-slot'>
                   <CaretRight size={16} />
                 </div>
@@ -223,25 +214,21 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     className='dropdown-item'
                     onSelect={onExport(props.onExportCSV, false)}
                     aria-label={
-                      t[
-                        'export this document`s public annotations as a c s v file'
-                      ]
+                      t('export this document`s public annotations as a c s v file', { ns: 'a11y' })
                     }
                   >
-                    <UsersThree size={16} /> {t['Public annotations only']}
+                    <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
                   </Item>
 
                   <Item
                     className='dropdown-item'
                     onSelect={onExport(props.onExportCSV, true)}
                     aria-label={
-                      t[
-                        'download this document`s public and your private annotations as a c s v file'
-                      ]
+                      t('download this document`s public and your private annotations as a c s v file', { ns: 'a11y' })
                     }
                   >
                     <Detective size={16} />{' '}
-                    {t['Include my private annotations']}
+                    {t('Include my private annotations', { ns: 'common' })}
                   </Item>
                 </SubContent>
               </Portal>
@@ -249,7 +236,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
 
             <Sub>
               <SubTrigger className="dropdown-subtrigger">
-                <DownloadSimple size={16} /> <span>{t['Export Annotations as W3C/JSONLD']}</span>
+                <DownloadSimple size={16} /> <span>{t('Export Annotations as W3C/JSONLD', { ns: 'project-home' })}</span>
                 <div className="right-slot">
                   <CaretRight size={14} />
                 </div>
@@ -261,11 +248,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                   alignOffset={-5}>
 
                   <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, false)}>
-                    <UsersThree size={16} /> {t['Public annotations only']}
+                    <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
                   </Item>
 
                   <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, true)}>
-                    <Detective size={16} /> {t['Include my private annotations']}
+                    <Detective size={16} /> {t('Include my private annotations', { ns: 'common' })}
                   </Item>
                 </SubContent>
               </Portal>
@@ -276,7 +263,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 <SubTrigger 
                   className="dropdown-subtrigger"
                   disabled={props.document.meta_data.protocol !== 'IIIF_PRESENTATION'}>
-                  <DownloadSimple size={16} /> <span>{t['Export IIIF Manifest']}</span>
+                  <DownloadSimple size={16} /> <span>{t('Export IIIF Manifest', { ns: 'project-home' })}</span>
                   <div className="right-slot">
                     <CaretRight size={14} />
                   </div>
@@ -288,11 +275,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     alignOffset={-5}>
                     
                     <Item className="dropdown-item" onSelect={onExport(props.onExportManifest, false)}>
-                      <UsersThree size={16} /> {t['Public annotations only']}
+                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item className="dropdown-item" onSelect={onExport(props.onExportManifest, true)}>
-                      <Detective size={16} /> {t['Include my private annotations']}
+                      <Detective size={16} /> {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
                 </Portal>
@@ -322,10 +309,10 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 <ConfirmedAction.Trigger>
                   <Item
                     className='dropdown-item'
-                    aria-label={t['remove this document from the project']}
+                    aria-label={t('remove this document from the project', { ns: 'a11y' })}
                   >
                     <Trash size={16} className='destructive' />{' '}
-                    <span>{t['Delete document']}</span>
+                    <span>{t('Delete document', { ns: 'common' })}</span>
                   </Item>
                 </ConfirmedAction.Trigger>
               </>
@@ -335,13 +322,12 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog
-        i18n={props.i18n}
-        title={t['Are you sure?']}
-        description={t['Are you sure you want to delete this document?']}
-        cancelLabel={t['Cancel']}
+        title={t('Are you sure?', { ns: 'common' })}
+        description={t('Are you sure you want to delete this document?', { ns: 'project-home' })}
+        cancelLabel={t('Cancel', { ns: 'common' })}
         confirmLabel={
           <>
-            <Trash size={16} /> <span>{t['Delete document']}</span>
+            <Trash size={16} /> <span>{t('Delete document', { ns: 'common' })}</span>
           </>
         }
         onConfirm={onSelectOption(props.onDelete)}

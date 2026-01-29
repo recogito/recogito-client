@@ -1,13 +1,13 @@
+import { createElement } from 'react';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { getDefaultTranslations } from '@i18n';
-import {
-  type TReaderDocument,
-  renderToStaticMarkup,
-} from '@usewaypoint/email-builder';
+import { i18n } from 'astro:config/server';
+import { render } from '@react-email/render';
+import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
+import { getFixedT } from 'src/i18n/server';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -55,110 +55,25 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     respData.push(inviteResponse.data);
 
-    const i18n = getDefaultTranslations('email');
+    const lang = i18n?.defaultLocale || 'en';
+    const t = await getFixedT(lang, ['email']);
 
-    const { t, lang } = i18n;
+    const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/projects/${body.projectId}/accept-invite`;
 
-    const config: TReaderDocument = {
-      root: {
-        type: 'EmailLayout',
-        data: {
-          backdropColor: '#b5c8dc',
-          borderRadius: 8,
-          canvasColor: '#FFFFFF',
-          textColor: '#242424',
-          fontFamily: 'MODERN_SANS',
-          childrenIds: [
-            'block-1709571212684',
-            'block-1709571228545',
-            'block-1709571234315',
-            'block-1709571302968',
-          ],
-        },
-      },
-      'block-1709571212684': {
-        type: 'Image',
-        data: {
-          style: {
-            padding: {
-              top: 24,
-              bottom: 24,
-              right: 24,
-              left: 24,
-            },
-          },
-          props: {
-            url: `${url.protocol}//${url.host}/img/branding/email/top-logo.png`,
-            alt: 'RecogitoStudio',
-            linkHref: url.host,
-            contentAlignment: 'middle',
-          },
-        },
-      },
-      'block-1709571228545': {
-        type: 'Text',
-        data: {
-          style: {
-            fontWeight: 'normal',
-            padding: {
-              top: 0,
-              bottom: 16,
-              right: 24,
-              left: 24,
-            },
-          },
-          props: {
-            text: t['Hello Recogito Studio User'],
-          },
-        },
-      },
-      'block-1709571234315': {
-        type: 'Text',
-        data: {
-          style: {
-            fontWeight: 'normal',
-            padding: {
-              top: 0,
-              bottom: 16,
-              right: 24,
-              left: 24,
-            },
-          },
-          props: {
-            text: t['_welcome_message_']
-              .replace('${sender}', body.invitedBy)
-              .replace('${project_name}', body.projectName)
-              .replace('${host}', url.host),
-          },
-        },
-      },
-      'block-1709571302968': {
-        type: 'Button',
-        data: {
-          style: {
-            fontSize: 14,
-            padding: {
-              top: 16,
-              bottom: 24,
-              right: 24,
-              left: 24,
-            },
-          },
-          props: {
-            buttonBackgroundColor: '#07529a',
-            buttonStyle: 'rectangle',
-            text: 'Open dashboard',
-            url: `${url.protocol}//${url.host}/${lang}/projects/${body.projectId}/accept-invite`,
-          },
-        },
-      },
-    };
-
-    console.log(
-      `${url.host}/${lang}/projects/${body.projectId}?accept-invite=true`
+    const html = await render(
+      createElement(InviteUserEmail, {
+        acceptInviteLabel: t('Open dashboard', { ns: 'email' }),
+        acceptInviteUrl,
+        helloMessage: t('Hello Recogito Studio User', { ns: 'email' }),
+        host: url.host,
+        welcomeMessage: t('welcomeMessage', {
+          ns: 'email',
+          sender: body.invitedBy,
+          projectName: body.projectName,
+          host: url.host,
+        }),
+      })
     );
-
-    const html = renderToStaticMarkup(config, { rootBlockId: 'root' });
 
     const transporter = nodemailer.createTransport({
       // @ts-ignore
@@ -174,7 +89,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     const mailOptions = {
       from: MAIL_FROM_ADDRESS,
       to: user.email.toLowerCase(),
-      subject: t['_you_have_been_invited_'],
+      subject: t('invitedSubject', { ns: 'email' }),
       html: html,
     };
 

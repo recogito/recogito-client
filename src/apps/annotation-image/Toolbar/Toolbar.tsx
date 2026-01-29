@@ -8,7 +8,6 @@ import type {
   DocumentLayer,
   DocumentWithContext,
   Policies,
-  Translations,
   VocabularyTerm,
 } from 'src/Types';
 import {
@@ -31,11 +30,10 @@ import {
   MagnifyingGlassMinus,
   MagnifyingGlassPlus,
 } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 
 interface ToolbarProps {
   document: DocumentWithContext;
-
-  i18n: Translations;
 
   isLocked: boolean;
 
@@ -75,7 +73,7 @@ interface ToolbarProps {
 }
 
 export const Toolbar = (props: ToolbarProps) => {
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['a11y', 'annotation-common', 'annotation-image']);
 
   const contextName = props.document.context.name;
 
@@ -83,7 +81,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
   const { numConditions } = useFilter();
 
-  const back = `/${props.i18n.lang}/projects/${project_id}`;
+  const back = `/${i18n.language}/projects/${project_id}`;
 
   const extensions = useExtensions('annotation:image:toolbar');
 
@@ -104,7 +102,7 @@ export const Toolbar = (props: ToolbarProps) => {
             <button
               className={props.leftDrawerOpen ? 'active' : undefined}
               onClick={props.onToggleLeftDrawer}
-              aria-label={t['open or close the filters tab']}
+              aria-label={t('open or close the filters tab', { ns: 'a11y' })}
             >
               <FunnelSimple size={18} />
             </button>
@@ -123,7 +121,7 @@ export const Toolbar = (props: ToolbarProps) => {
               <GraduationCap size={18} />
 
               <h1>
-                <a href={back} title={t['Back to assignment overview']}>
+                <a href={back} title={t('Back to assignment overview', { ns: 'annotation-common' })}>
                   <div>{contextName}</div>
                 </a>
                 <span>/</span>
@@ -139,7 +137,7 @@ export const Toolbar = (props: ToolbarProps) => {
           )}
         </div>
 
-        {props.showConnectionError && <ErrorBadge i18n={props.i18n} />}
+        {props.showConnectionError && <ErrorBadge />}
       </div>
 
       <div
@@ -153,7 +151,6 @@ export const Toolbar = (props: ToolbarProps) => {
               <>
                 <PrivacySelector
                   mode={props.privacy}
-                  i18n={props.i18n}
                   onChangeMode={props.onChangePrivacy}
                 />
 
@@ -163,7 +160,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
             <button
               className={props.tool === undefined ? 'active' : undefined}
-              aria-label={t['Pan and zoom the image, select annotations']}
+              aria-label={t('Pan and zoom the image, select annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool(undefined)}
             >
               <Cursor size={18} />
@@ -171,7 +168,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
             <button
               className={props.tool === 'rectangle' ? 'active' : undefined}
-              aria-label={t['Create rectangle annotations']}
+              aria-label={t('Create rectangle annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('rectangle')}
             >
               <Rectangle />
@@ -179,7 +176,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
             <button
               className={props.tool === 'polygon' ? 'active' : undefined}
-              aria-label={t['Create polygon annotations']}
+              aria-label={t('Create polygon annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('polygon')}
             >
               <Polygon />
@@ -189,18 +186,17 @@ export const Toolbar = (props: ToolbarProps) => {
           </>
         )}
 
-        <button onClick={() => props.onZoom(2)} aria-label={t['zoom in']}>
+        <button onClick={() => props.onZoom(2)} aria-label={t('zoom in', { ns: 'a11y' })}>
           <MagnifyingGlassPlus size={18} />
         </button>
 
         <button onClick={() => props.onZoom(0.5)}>
-          <MagnifyingGlassMinus size={18} aria-label={t['zoom out']} />
+          <MagnifyingGlassMinus size={18} aria-label={t('zoom out', { ns: 'a11y' })} />
         </button>
 
         {!props.isLocked && (
           <DeleteSelected
             activeLayer={props.layers?.find((l) => l.is_active)}
-            i18n={props.i18n}
             policies={props.policies}
           />
         )}
@@ -208,7 +204,6 @@ export const Toolbar = (props: ToolbarProps) => {
         {collapsed && (
           <MoreTools
             document={props.document}
-            i18n={props.i18n}
             layers={props.layers}
             layerNames={props.layerNames}
             present={props.present}
@@ -224,14 +219,13 @@ export const Toolbar = (props: ToolbarProps) => {
           <>
             <ColorCodingSelector
               document={props.document}
-              i18n={props.i18n}
               present={props.present}
               layers={props.layers}
               layerNames={props.layerNames}
               tagVocabulary={props.tagVocabulary}
             />
 
-            <ColorLegend i18n={props.i18n} />
+            <ColorLegend />
           </>
         )}
       </div>
@@ -261,7 +255,7 @@ export const Toolbar = (props: ToolbarProps) => {
 
         <button
           className={props.rightDrawerOpen ? 'active' : undefined}
-          aria-label={t['Show annotation list']}
+          aria-label={t('Show annotation list', { ns: 'annotation-common' })}
           onClick={props.onToggleRightDrawer}
         >
           <Chats size={17} />

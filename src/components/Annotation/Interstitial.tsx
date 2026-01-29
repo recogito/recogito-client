@@ -1,11 +1,9 @@
 import { CaretDown } from '@phosphor-icons/react';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './Interstitial.css';
 
 interface InterstitialProps {
-
-  i18n: Translations;
 
   count: number;
 
@@ -15,12 +13,12 @@ interface InterstitialProps {
 
 export const Interstitial = (props: InterstitialProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   return (
     <div className="interstitial">
       <button className="label" onClick={props.onClick}>
-        {`${t['Show N']} ${props.count} ${props.count === 1 ? t['more reply'] : t['more replies']}`}
+        {`${t('Show N', { ns: 'annotation-common' })} ${props.count} ${props.count === 1 ? t('more reply', { ns: 'annotation-common' }) : t('more replies', { ns: 'annotation-common' })}`}
         <CaretDown size={12} />
       </button>
     </div>

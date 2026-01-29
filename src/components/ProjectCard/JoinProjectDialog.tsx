@@ -1,14 +1,13 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from '@phosphor-icons/react';
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 import './JoinProjectDialog.css';
 
 interface JoinProjectDialogProps {
   open: boolean;
-
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -18,7 +17,7 @@ interface JoinProjectDialogProps {
 }
 
 export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['dashboard-projects', 'common']);
 
   return (
     <Dialog.Root open={props.open}>
@@ -27,11 +26,11 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
 
         <DialogContent className='dialog-content'>
           <Dialog.Title className='dialog-title'>
-            {`${t['Join']}: ${props.project.name}`}
+            {`${t('Join', { ns: 'dashboard-projects' })}: ${props.project.name}`}
           </Dialog.Title>
 
           <Dialog.Description className='dialog-description'>
-            {t['Join Project Message']}
+            {t('Join Project Message', { ns: 'dashboard-projects' })}
           </Dialog.Description>
 
           <div className='join-project-dialog-button-container'>
@@ -39,20 +38,20 @@ export const JoinProjectDialog = (props: JoinProjectDialogProps) => {
               className='flat'
               onClick={props.onClose}
             >
-              {t['Cancel']}
+              {t('Cancel', { ns: 'common' })}
             </button>
             <button
               className='primary flat'
               onClick={props.onJoin}
             >
-              {t['Join']}
+              {t('Join', { ns: 'dashboard-projects' })}
             </button>
           </div>
 
           <Dialog.Close asChild>
             <button
               className='dialog-close icon-only unstyled'
-              aria-label={t['Close']}
+              aria-label={t('Close', { ns: 'common' })}
             >
               <X onClick={props.onClose} />
             </button>

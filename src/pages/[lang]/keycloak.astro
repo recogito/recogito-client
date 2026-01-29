@@ -1,12 +1,10 @@
 ---
-import { getTranslations } from '@i18n';
 import LoginLayout from '@layouts/login/LoginLayout.astro';
-import { AuthKeycloak } from '@apps/auth-keycloak/AuthKeycloak';
+import { AuthKeycloakApp } from '@apps/auth-keycloak/AuthKeycloak';
 ---
 
 <LoginLayout title='' showLogo={true}>
-  <AuthKeycloak
+  <AuthKeycloakApp
     client:only='react'
-    i18n={getTranslations(Astro.request, 'auth-login')}
   />
 </LoginLayout>

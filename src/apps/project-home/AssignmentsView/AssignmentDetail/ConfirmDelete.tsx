@@ -1,18 +1,17 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './ConfirmDelete.css';
 
 interface ConfirmDeleteProps {
   open: boolean;
-  i18n: Translations;
 
   onConfirm(): void;
   onCancel(): void;
 }
 
 export const ConfirmDelete = (props: ConfirmDeleteProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'common']);
 
   return (
     <AlertDialog.Root open={props.open}>
@@ -20,13 +19,11 @@ export const ConfirmDelete = (props: ConfirmDeleteProps) => {
         <AlertDialog.Overlay className='dialog-overlay' />
         <AlertDialog.Content className='dialog-content-alt'>
           <AlertDialog.Title className='dialog-title-alt'>
-            {t['Are you sure you want to delete this assignment?']}
+            {t('Are you sure you want to delete this assignment?', { ns: 'project-assignments' })}
           </AlertDialog.Title>
           <AlertDialog.Description className='dialog-description-alt'>
             {
-              t[
-                'Deleting this assignment will remove it from all users and will no longer be visible here.'
-              ]
+              t('Deleting this assignment will remove it from all users and will no longer be visible here.', { ns: 'project-assignments' })
             }
           </AlertDialog.Description>
           <div
@@ -35,12 +32,12 @@ export const ConfirmDelete = (props: ConfirmDeleteProps) => {
           >
             <AlertDialog.Cancel asChild>
               <button className='button' onClick={props.onCancel}>
-                {t['Cancel']}
+                {t('Cancel', { ns: 'common' })}
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
               <button className='button primary' onClick={props.onConfirm}>
-                {t['Delete']}
+                {t('Delete', { ns: 'common' })}
               </button>
             </AlertDialog.Action>
           </div>

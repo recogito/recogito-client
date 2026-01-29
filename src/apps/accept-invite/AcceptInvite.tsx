@@ -1,17 +1,17 @@
-import type { Invitation, Translations } from 'src/Types';
+import type { Invitation } from 'src/Types';
 import { joinProject } from '@backend/helpers/invitationHelpers';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './AcceptInvite.css';
 
 interface AcceptInviteProps {
   invitation: Invitation;
-
-  i18n: Translations;
 }
 
-export const AcceptInvite = (props: AcceptInviteProps) => {
-  const { t } = props.i18n;
+const AcceptInvite = (props: AcceptInviteProps) => {
+  const { t, i18n } = useTranslation(['dashboard-projects', 'project-collaboration']);
 
   const handleAccept = () => {
     joinProject(supabase, props.invitation).then((resp) => {
@@ -21,10 +21,10 @@ export const AcceptInvite = (props: AcceptInviteProps) => {
         if (redirectUrl) {
           window.location.href = redirectUrl;
         } else {
-          window.location.href = `/${props.i18n.lang}/projects/${props.invitation.project_id}`;
+          window.location.href = `/${i18n.language}/projects/${props.invitation.project_id}`;
         }
       } else {
-        window.location.href = `/${props.i18n.lang}/projects`;
+        window.location.href = `/${i18n.language}/projects`;
       }
     });
   };
@@ -32,31 +32,40 @@ export const AcceptInvite = (props: AcceptInviteProps) => {
   return (
     <div className='accept-invite-root'>
       <div className='accept-invite-title'>
-        {`${t['Accept invitation to']}: ${['Project']} ${
-          props.invitation.project_name
-        }?`}
+        {t('acceptInvitationHeader', {
+          projectName: props.invitation.project_name,
+          ns: 'dashboard-projects',
+        })}
       </div>
 
       <div className='accept-invite-description'>
-        {`${t['You have been invited to this project by']} ${props.invitation.invited_by_name}`}
+        {t('invitedBy', {
+          invitedByName: props.invitation.invited_by_name,
+          ns: 'dashboard-projects',
+        })}
+        {`${t('You have been invited to this project by', { ns: 'dashboard-projects' })} ${props.invitation.invited_by_name}`}
       </div>
 
       <div className='accept-invite-button-container'>
         <button
           className='accept-invite-dialog-button-cancel'
-          onClick={() =>
-            (window.location.href = `/${props.i18n.lang}/projects`)
-          }
+          onClick={() => (window.location.href = `/${i18n.language}/projects`)}
         >
-          {t['Cancel']}
+          {t('Cancel', { ns: 'project-collaboration' })}
         </button>
         <button
           className='accept-invite-dialog-button-join'
           onClick={handleAccept}
         >
-          {t['Accept']}
+          {t('Accept', { ns: 'project-collaboration' })}
         </button>
       </div>
     </div>
   );
 };
+
+export const AcceptInviteApp = (props: AcceptInviteProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <AcceptInvite {...props} />
+  </I18nextProvider>
+);

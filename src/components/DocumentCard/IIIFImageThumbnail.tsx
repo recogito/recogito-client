@@ -3,8 +3,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import type { Document } from 'src/Types';
 import { Spinner } from '@components/Spinner';
 
-const CANTALOUPE_PATH: string | undefined = import.meta.env
-  .PUBLIC_IIIF_CANTALOUPE_PATH;
+const CANTALOUPE_PATH: string | undefined = import.meta.env?.PUBLIC_IIIF_CANTALOUPE_PATH;
 
 interface IIIFImageThumbnailProps {
   document: Document;

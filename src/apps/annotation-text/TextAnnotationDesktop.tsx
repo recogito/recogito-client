@@ -33,6 +33,7 @@ import type {
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
+import { useTranslation } from 'react-i18next';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const [document, setDocument] = useState<DocumentWithContext>(props.document);
@@ -107,7 +108,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
     usePopup,
   } = useAnnotationsViewUIState();
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments']);
 
   const [privacy, setPrivacy] = useState<PrivacyMode>('PUBLIC');
 
@@ -248,7 +249,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
 
   const onError = (error: string) =>
     setToast({
-      title: t['Something went wrong'],
+      title: t('Something went wrong', { ns: 'project-assignments' }),
       description: error,
       type: 'error',
     });
@@ -273,10 +274,9 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           {loading && <LoadingOverlay />}
 
           <div className='header'>
-            <TopBar i18n={props.i18n} me={props.me} onError={() => {}} />
+            <TopBar me={props.me} onError={() => {}} />
 
             <Toolbar
-              i18n={props.i18n}
               isLocked={isLocked}
               document={document}
               present={present}
@@ -299,7 +299,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
           <main className={className}>
             <LeftDrawer
               document={document}
-              i18n={props.i18n}
               layers={layers}
               layerNames={layerNames}
               me={props.me}
@@ -314,7 +313,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
                 activeLayer={activeLayer}
                 channelId={props.channelId}
                 document={document}
-                i18n={props.i18n}
                 isLocked={isLocked}
                 layers={documentLayers}
                 layerNames={layerNames}
@@ -335,7 +333,6 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             )}
 
             <RightDrawer
-              i18n={props.i18n}
               isProjectLocked={isLocked}
               layers={layers}
               layerNames={layerNames}

@@ -1,8 +1,7 @@
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 
 export interface ProgressProps {
-  i18n: Translations;
 
   project: ExtendedProjectData;
 

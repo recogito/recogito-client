@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
@@ -7,13 +8,11 @@ import { animated, easings, useSpring, useTransition } from '@react-spring/web';
 import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
 import type { HighlightStyleExpression } from '@recogito/react-text-annotator';
-import type { Layer, Policies, Translations, VocabularyTerm } from 'src/Types';
+import type { Layer, Policies, VocabularyTerm } from 'src/Types';
 
 import './RightDrawer.css';
 
 interface RightDrawerProps {
-
-  i18n: Translations;
 
   isProjectLocked: boolean;
 
@@ -44,7 +43,7 @@ interface RightDrawerProps {
 
 export const RightDrawer = (props: RightDrawerProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const me = props.present.find(isMe)!;
 
@@ -90,14 +89,13 @@ export const RightDrawer = (props: RightDrawerProps) => {
                 <li 
                   className={props.tab === 'ANNOTATIONS' ? 'active' : undefined}>
                   <button onClick={() => props.onTabChanged('ANNOTATIONS')}>
-                    <Chats size={18} /> {t['Annotations']}
+                    <Chats size={18} /> {t('Annotations', { ns: 'annotation-common' })}
                   </button>
                 </li>
 
                 <li 
                   className={props.tab === 'NOTES' ? 'active' : undefined}>
                   <DocumentNotesTabButton
-                    i18n={props.i18n}
                     onClick={() => props.onTabChanged('NOTES')} />
                 </li>
               </ul>
@@ -108,7 +106,6 @@ export const RightDrawer = (props: RightDrawerProps) => {
                 <AnnotationList 
                   currentStyle={props.style}
                   filter={filter}
-                  i18n={props.i18n}
                   isProjectLocked={props.isProjectLocked}
                   layers={props.layers}
                   layerNames={props.layerNames}
@@ -121,7 +118,6 @@ export const RightDrawer = (props: RightDrawerProps) => {
                   onNavigateTo={props.onNavigateTo} />
                 ) : (
                   <DocumentNotesList 
-                    i18n={props.i18n}
                     isProjectLocked={props.isProjectLocked}
                     layers={props.layers}
                     layerNames={props.layerNames}

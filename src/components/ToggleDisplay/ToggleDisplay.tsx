@@ -1,15 +1,13 @@
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { SquaresFour, ListBullets } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 
 import './ToggleDisplay.css';
-import type { Translations } from 'src/Types';
 
 export type ToggleDisplayValue = 'cards' | 'rows';
 
 interface ToggleDisplayProps {
   display: ToggleDisplayValue;
-
-  i18n: Translations;
 
   onChangeDisplay(display: ToggleDisplayValue): void;
 }
@@ -21,20 +19,20 @@ export const ToggleDisplay = (props: ToggleDisplayProps) => {
     if (value) props.onChangeDisplay(value as ToggleDisplayValue);
   };
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y']);
 
   return (
     <ToggleGroup.Root
       className='toggle-display-group'
       type='single'
-      aria-label={t['Text alignment']}
+      aria-label={t('Text alignment', { ns: 'a11y' })}
       value={props.display}
       onValueChange={onValueChange}
     >
       <ToggleGroup.Item
         className='toggle-display-item'
         value='cards'
-        aria-label={t['arrange projects as cards']}
+        aria-label={t('arrange projects as cards', { ns: 'a11y' })}
       >
         <SquaresFour size={16} />
       </ToggleGroup.Item>
@@ -42,7 +40,7 @@ export const ToggleDisplay = (props: ToggleDisplayProps) => {
       <ToggleGroup.Item
         className='toggle-display-item'
         value='rows'
-        aria-label={t['arrange-projects as list']}
+        aria-label={t('arrange-projects as list', { ns: 'a11y' })}
       >
         <ListBullets size={16} />
       </ToggleGroup.Item>

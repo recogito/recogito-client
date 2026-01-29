@@ -1,0 +1,19 @@
+.jobs-management {
+  box-sizing: context-box;
+}
+
+.jobs-management-header {
+  box-sizing: border-box;
+  padding: 70px 40px 0 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.jobs-management-content {
+  padding: 20px 40px;
+  clear: both;
+}

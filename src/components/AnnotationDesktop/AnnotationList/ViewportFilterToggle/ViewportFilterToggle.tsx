@@ -1,10 +1,8 @@
 import { CaretDown, Check } from '@phosphor-icons/react';
 import * as Select from '@radix-ui/react-select';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 interface ViewportFilterToggleProps {
-
-  i18n: Translations;
 
   onChange(filter: ViewportFilter): void;
 
@@ -19,15 +17,14 @@ export enum ViewportFilter {
 }
 
 export const ViewportFilterToggle = (props: ViewportFilterToggleProps) => {
-
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   return (
     <div className="annotation-list-filter">
-      <label>{t['Show']}</label>
+      <label>{t('Show', { ns: 'annotation-common' })}</label>
 
       <Select.Root defaultValue={ViewportFilter.NONE} onValueChange={props.onChange}>
-        <Select.Trigger className="select-trigger" aria-label={t['Filter annotations by']}>
+        <Select.Trigger className="select-trigger" aria-label={t('Filter annotations by', { ns: 'annotation-common' })}>
           <Select.Value />
           <Select.Icon className="select-icon">
             <CaretDown />
@@ -41,14 +38,14 @@ export const ViewportFilterToggle = (props: ViewportFilterToggleProps) => {
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['all annotations']}</Select.ItemText>
+                <Select.ItemText>{t('all annotations', { ns: 'annotation-common' })}</Select.ItemText>
               </Select.Item>
 
               <Select.Item value={ViewportFilter.VIEWPORT} className="select-item">
                 <Select.ItemIndicator className="select-item-indicator">
                   <Check />
                 </Select.ItemIndicator>
-                <Select.ItemText>{t['annotations in current view']}</Select.ItemText>
+                <Select.ItemText>{t('annotations in current view', { ns: 'annotation-common' })}</Select.ItemText>
               </Select.Item> 
             </Select.Viewport>
           </Select.Content>

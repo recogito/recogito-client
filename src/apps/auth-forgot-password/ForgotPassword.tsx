@@ -4,13 +4,10 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
 import { TextInput } from '@components/TextInput';
 import { AnimatedCheck } from '@components/AnimatedIcons';
-import type { Translations } from 'src/Types';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 
 import './ForgotPassword.css';
-
-interface ForgotPasswordProps {
-  i18n: Translations;
-}
+import clientI18next from 'src/i18n/client';
 
 // https://stackoverflow.com/questions/46155/how-can-i-validate-an-email-address-in-javascript
 export const isValidEmail = (email: string) =>
@@ -20,8 +17,8 @@ export const isValidEmail = (email: string) =>
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     );
 
-export const ForgotPassword = (props: ForgotPasswordProps) => {
-  const { t } = props.i18n;
+const ForgotPassword = () => {
+  const { t } = useTranslation(['auth-forgot-password']);
 
   const [email, setEmail] = useState('');
 
@@ -48,7 +45,7 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
         .then(({ error }) => {
           if (error) {
             console.error(error);
-            setError(t[error.message] || t['Something went wrong']);
+            setError(t('Something went wrong', { ns: 'auth-forgot-password' }));
           } else {
             setSent(true);
           }
@@ -66,13 +63,13 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
         <main>
           <div className='success'>
             <AnimatedCheck size={38} />
-            <p>{t['Link sent']}</p>
+            <p>{t('Link sent', { ns: 'auth-forgot-password' })}</p>
           </div>
         </main>
       ) : (
         <main>
-          <h1>{t['Forgot Password?']}</h1>
-          <p>{t['Please enter the email you use to sign in.']}</p>
+          <h1>{t('Forgot Password?', { ns: 'auth-forgot-password' })}</h1>
+          <p>{t('Please enter the email you use to sign in.', { ns: 'auth-forgot-password' })}</p>
 
           <form className='login'>
             <TextInput
@@ -80,7 +77,7 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
               error={Boolean(error)}
               id='email'
               name='email'
-              label={t['Your email']}
+              label={t('Your email', { ns: 'auth-forgot-password' })}
               className='lg w-full'
               onChange={setEmail}
             />
@@ -101,7 +98,7 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
               className='primary lg w-full'
               onClick={onRequestReset}
             >
-              <span>{t['Request password reset']}</span>
+              <span>{t('Request password reset', { ns: 'auth-forgot-password' })}</span>
             </Button>
           </form>
         </main>
@@ -109,3 +106,9 @@ export const ForgotPassword = (props: ForgotPasswordProps) => {
     </div>
   );
 };
+
+export const ForgotPasswordApp = () => (
+  <I18nextProvider i18n={clientI18next}>
+    <ForgotPassword />
+  </I18nextProvider>
+);

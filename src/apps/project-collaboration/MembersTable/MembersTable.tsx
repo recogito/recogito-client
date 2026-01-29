@@ -11,16 +11,15 @@ import type {
   ExtendedProjectData,
   Invitation,
   Group,
-  Translations,
   UserProfile,
   Member,
 } from 'src/Types';
+import { Label } from '@radix-ui/react-label';
+import { useTranslation } from 'react-i18next';
 
 import './MembersTable.css';
-import { Label } from '@radix-ui/react-label';
 
 interface MembersTableProps {
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -40,7 +39,7 @@ interface MembersTableProps {
 }
 
 export const MembersTable = (props: MembersTableProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['a11y', 'common']);
 
   const [selected, setSelected] = useState<string[]>([]);
 
@@ -80,7 +79,7 @@ export const MembersTable = (props: MembersTableProps) => {
               {!isAllSelected && (
                 <Label
                   htmlFor='all-users'
-                  aria-label={t['select all users for this action']}
+                  aria-label={t('select all users for this action', { ns: 'a11y' })}
                 >
                   <span>
                     <Square size={20} id='all-users' />
@@ -89,8 +88,8 @@ export const MembersTable = (props: MembersTableProps) => {
               )}
             </Checkbox.Root>
           </th>
-          <th>{t['Name']}</th>
-          <th>{t['Access Level']}</th>
+          <th>{t('Name', { ns: 'common' })}</th>
+          <th>{t('Access Level', { ns: 'common' })}</th>
           <th aria-label='No value'></th>
         </tr>
       </thead>
@@ -112,7 +111,7 @@ export const MembersTable = (props: MembersTableProps) => {
                   <span>
                     <Label
                       htmlFor={`member-${member.user.id}`}
-                      aria-label={t['select this user for an action']}
+                      aria-label={t('select this user for an action', { ns: 'a11y' })}
                     >
                       <Square size={20} id={`member-${member.user.id}`} />
                     </Label>
@@ -124,21 +123,20 @@ export const MembersTable = (props: MembersTableProps) => {
             <td>
               {formatName(member.user) || (
                 <span className='anonymous-member'>
-                  {t['Anonymous team member']}{' '}
-                  <AnonymousTooltip i18n={props.i18n} />
+                  {t('Anonymous team member', { ns: 'common' })}{' '}
+                  <AnonymousTooltip />
                 </span>
               )}
-              {isMe(member.user) && <span className='badge'>{t['You']}</span>}
+              {isMe(member.user) && <span className='badge'>{t('You', { ns: 'common' })}</span>}
             </td>
 
             <td>
               {isOwner(member.user) && member.inGroup?.is_admin ? (
                 <button disabled className='owner'>
-                  {t['Owner']}
+                  {t('Owner', { ns: 'common' })}
                 </button>
               ) : (
                 <GroupSelector
-                  i18n={props.i18n}
                   member={member}
                   availableGroups={props.project.groups}
                   onChangeGroup={(from, to) =>
@@ -151,7 +149,6 @@ export const MembersTable = (props: MembersTableProps) => {
             <td className='actions'>
               {!isOwner(member.user) && (
                 <DeleteMember
-                  i18n={props.i18n}
                   member={member}
                   me={props.me}
                   projectId={props.project.id}
@@ -175,7 +172,6 @@ export const MembersTable = (props: MembersTableProps) => {
 
             <td className='actions'>
               <DeleteInvite
-                i18n={props.i18n}
                 invitation={invitation}
                 onDeleteInvite={props.onDeleteInvite}
                 onDeleteError={props.onDeleteInvitationError}

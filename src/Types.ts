@@ -382,12 +382,6 @@ export interface VocabularyTerm {
   color?: string;
 }
 
-export interface Translations {
-  lang: string;
-
-  t: { [key: string]: string };
-}
-
 export interface Invitation {
   id: string;
 
@@ -496,3 +490,16 @@ export type IIIFMetadata = {
     [key: string]: string[];
   };
 };
+
+export interface Job {
+  id: string;
+  created_at: string;
+  created_by: UserProfile;
+  name: string;
+  job_status: JobStatus;
+  job_type: JobType;
+}
+
+export type JobStatus = 'INITIALIZING' | 'PROCESSING' | 'COMPLETE' | 'ERROR';
+
+export type JobType = 'EXPORT' | 'IMPORT';

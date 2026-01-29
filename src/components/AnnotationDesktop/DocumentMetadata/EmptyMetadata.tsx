@@ -1,14 +1,10 @@
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 import './EmptyMetadata.css';
 
-interface Props {
-  i18n: Translations
-}
-
-export const EmptyMetadata = (props: Props) => {
-  const { t } = props.i18n;
+export const EmptyMetadata = () => {
+  const { t } = useTranslation(['annotation-common']);
 
   return (
-    <div className='empty-metadata'>{t['No document metadata available.']}</div>
+    <div className='empty-metadata'>{t('No document metadata available.', { ns: 'annotation-common' })}</div>
   );
 };

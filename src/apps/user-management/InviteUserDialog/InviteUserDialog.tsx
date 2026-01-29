@@ -1,18 +1,17 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import { X, User } from '@phosphor-icons/react';
 import './InviteUserDialog.css';
-import type { Translations } from 'src/Types';
 import { useState } from 'react';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 interface InviteUserDialogProps {
-  i18n: Translations;
 
   onSave(email: string): void;
 }
 
 export const InviteUserDialog = (props: InviteUserDialogProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['user-management', 'a11y']);
 
   const [email, setEmail] = useState('');
 
@@ -29,29 +28,27 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
       <Dialog.Trigger asChild>
         <button className='invite-user-button primary'>
           <User />
-          {t['Invite User']}
+          {t('Invite User', { ns: 'user-management' })}
         </button>
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay className='dialog-overlay' />
         <DialogContent className='dialog-content'>
           <Dialog.Title className='dialog-title'>
-            {t['Invite User']}
+            {t('Invite User', { ns: 'user-management' })}
           </Dialog.Title>
           <Dialog.Description className='dialog-description'>
             {
-              t[
-                'Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.'
-              ]
+              t('Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.', { ns: 'user-management' })
             }
           </Dialog.Description>
           <fieldset className='invite-user-fieldset'>
             <label
               className='invite-user-label'
               htmlFor='email'
-              aria-label={t['enter user email']}
+              aria-label={t('enter user email', { ns: 'a11y' })}
             >
-              {t['email']}
+              {t('Email', { ns: 'user-management' })}
             </label>
             <input
               className='invite-user-input'
@@ -73,12 +70,12 @@ export const InviteUserDialog = (props: InviteUserDialogProps) => {
                 disabled={email.length === 0 || !validateEmail(email)}
                 onClick={() => props.onSave(email)}
               >
-                {t['Invite']}
+                {t('Invite', { ns: 'user-management' })}
               </button>
             </Dialog.Close>
           </div>
           <Dialog.Close asChild>
-            <button className='invite-user-icon-button' aria-label={t['close']}>
+            <button className='invite-user-icon-button' aria-label={t('close', { ns: 'a11y' })}>
               <X size={18} />
             </button>
           </Dialog.Close>

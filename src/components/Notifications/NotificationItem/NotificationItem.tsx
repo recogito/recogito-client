@@ -1,23 +1,21 @@
 import { TimeAgo } from '@components/TimeAgo';
 import { Button } from '@components/Button';
-import type { Notification, Translations } from 'src/Types';
+import type { Notification } from 'src/Types';
 import { Info, WarningCircle } from '@phosphor-icons/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import './NotificationItem.css';
 
 interface NotificationItemProps {
-  i18n: Translations;
 
   notification: Notification;
 
   onAcknowledged(): void;
-
-  onError(error: string): void;
 }
 
 export const NotificationItem = (props: NotificationItemProps) => {
-  const { t } = props.i18n;
+  const { t, i18n } = useTranslation(['notifications']);
 
   const [busy, setBusy] = useState(false);
 
@@ -34,7 +32,7 @@ export const NotificationItem = (props: NotificationItemProps) => {
         <p>{notification.message}</p>
       </div>
       <div>
-        <TimeAgo datetime={notification.created_at} locale={props.i18n.lang} />
+        <TimeAgo datetime={notification.created_at} locale={i18n.language} />
         {notification.action_url && (
           <p>
             <a href={notification.action_url}>{notification.action_message}</a>
@@ -50,7 +48,7 @@ export const NotificationItem = (props: NotificationItemProps) => {
             props.onAcknowledged();
           }}
         >
-          <span>{t['Acknowledge']}</span>
+          <span>{t('Acknowledge', { ns: 'notifications' })}</span>
         </Button>
       </div>
     </li>

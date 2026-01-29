@@ -5,13 +5,12 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { updateProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { type SaveState, TinySaveIndicator } from '@components/TinySaveIndicator';
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './ProjectDescription.css';
 
 interface ProjectDescriptionProps {
-
-  i18n: Translations;
 
   editable?: boolean;
 
@@ -25,7 +24,7 @@ interface ProjectDescriptionProps {
 
 export const ProjectDescription = (props: ProjectDescriptionProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-home', 'common']);
 
   const el = useRef<HTMLTextAreaElement>(null);
 
@@ -86,28 +85,28 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
             maxRows={20}
             value={value}
             onChange={evt => setValue(evt.target.value)}
-            placeholder={t['Add a project description...']} />
+            placeholder={t('Add a project description...', { ns: 'project-home' })} />
 
           <div className="buttons">
             <button 
               className="unstyled flat tiny"
               disabled={saveState === 'saving'}
               onClick={onSave}>
-              <Check size={16} weight="bold" /> <span>{t['Save']}</span>
+              <Check size={16} weight="bold" /> <span>{t('Save', { ns: 'common' })}</span>
             </button>
 
             <button 
               className="unstyled flat tiny"
               disabled={saveState === 'saving'}
               onClick={onCancel}>
-              <X size={16} weight="bold" /> <span>{t['Cancel']}</span>
+              <X size={16} weight="bold" /> <span>{t('Cancel', { ns: 'common' })}</span>
             </button>
 
             <button 
               className="unstyled flat tiny"
               disabled={saveState === 'saving' || !value}
               onClick={onClear}>
-              <TrashSimple size={16} weight="bold" /> <span>{t['Clear']}</span>
+              <TrashSimple size={16} weight="bold" /> <span>{t('Clear', { ns: 'project-home' })}</span>
             </button>
           </div>
         </>
@@ -124,7 +123,7 @@ export const ProjectDescription = (props: ProjectDescriptionProps) => {
         </p>
       ) : props.editable && (
         <button className="minimal" onClick={() => setEditable(true)}>
-          <PlusCircle size={16} /> <span>{t['Add a project description']}</span>
+          <PlusCircle size={16} /> <span>{t('Add a project description', { ns: 'project-home' })}</span>
         </button>
       )}
     </div>

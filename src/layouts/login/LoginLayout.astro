@@ -1,7 +1,7 @@
 ---
 import { BrandFooter } from '@components/Branding/BrandFooter';
 import { RecogitoLogo } from '@components/RecogitoLogo';
-import { getTranslations } from '@i18n';
+import { getFixedT } from 'src/i18n/server';
 import HeaderLayout from '@layouts/HeaderLayout.astro';
 import config from 'src/config.json';
 import '@themes/login/index.css';
@@ -12,8 +12,8 @@ export interface Props {
 }
 
 const { title, showLogo } = Astro.props;
-const i18n = getTranslations(Astro.request, 'branding');
-const { t } = i18n;
+const locale = Astro.currentLocale;
+const t = await getFixedT(locale, ['branding']);
 
 const backgroundColor = config.branding.background_color;
 const loginLogo = config.branding.login_logo;
@@ -42,7 +42,7 @@ const useFooter = config.branding.bottom_logos_enabled;
         {
           useFooter && showLogo && (
             <div class='bottom-logo'>
-              <span>{t['powered by']}</span>
+              <span>{t('powered by', { ns: 'branding' })}</span>
               <RecogitoLogo
                 color='#004F9F'
                 contrastColor='black'
@@ -52,7 +52,7 @@ const useFooter = config.branding.bottom_logos_enabled;
             </div>
           )
         }
-        <BrandFooter i18n={i18n} />
+        <BrandFooter />
       </div>
     </main>
     <div class='img-container'>

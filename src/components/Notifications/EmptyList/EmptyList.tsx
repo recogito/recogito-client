@@ -1,21 +1,14 @@
-import type { Translations } from 'src/Types';
-
+import { useTranslation } from 'react-i18next';
 import './EmptyList.css';
 
-interface EmptyListProps {
+export const EmptyList = () => {
 
-  i18n: Translations;
-
-}
-
-export const EmptyList = (props: EmptyListProps) => {
-
-  const { t } = props.i18n;
+  const { t } = useTranslation(['notifications']);
 
   return (
     <section className="notifications-empty">
-      <h1>{t['You\'re up to date!']}</h1>
-      <p>{t['No notifications']}</p>
+      <h1>{t("You're up to date!", { ns: 'notifications' })}</h1>
+      <p>{t('No notifications', { ns: 'notifications' })}</p>
     </section>
   )
 

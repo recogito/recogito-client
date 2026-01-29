@@ -4,7 +4,7 @@ import { IIIFThumbnail } from './IIIFThumbnail';
 import type { IIIFImage } from './useIIIF';
 import type { ActiveUsers } from './useMultiPagePresence';
 import { getResourceLabel } from 'src/util';
-import type { Translations } from 'src/Types';
+import { useTranslation } from 'react-i18next';
 
 import './IIIFThumbnailStrip.css';
 
@@ -16,13 +16,11 @@ interface IIIFThumbnailStripProps {
 
   currentImage?: IIIFImage;
 
-  i18n: Translations;
-
   onSelect(image: IIIFImage): void;
-
 }
 
 export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
+  const { i18n } = useTranslation([]);
 
   const isSelected = (canvas: Canvas) => {
     if (!props.currentImage) return false;
@@ -39,7 +37,7 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
 
   const Row = (arg: RowComponentProps<{ canvases: Canvas[]}>) => {   
     const canvas = props.canvases[arg.index];
-    const label = getResourceLabel(canvas.label, props.i18n.lang);
+    const label = getResourceLabel(canvas.label, i18n.language);
     
     return (
       <div 
@@ -49,7 +47,7 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
         <IIIFThumbnail
           activeUsers={props.activeUsers[canvas.uri]}
           canvas={canvas}
-          i18n={props.i18n} />
+        />
         <span className="label">{label}</span>
       </div>
     )

@@ -36,6 +36,7 @@ import type {
   ImageAnnotation,
   PresentUser,
 } from '@annotorious/react';
+import { useTranslation } from 'react-i18next';
 
 import './ImageAnnotationDesktop.css';
 
@@ -102,7 +103,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const layerNames = useLayerNames(document, embeddedLayers);
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-collaboration']);
 
   const activeLayer = useMemo(() => {
     // Waiting for layers to load
@@ -281,7 +282,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const onError = (error: string) =>
     setToast({
-      title: t['Something went wrong'],
+      title: t('Something went wrong', { ns: 'project-collaboration' }),
       description: error,
       type: 'error',
     });
@@ -304,7 +305,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
       >
         <div className='anno-desktop ia-desktop'>
           <TopBar
-            i18n={props.i18n}
             me={props.me}
             onError={() => setConnectionError(true)}
           />
@@ -313,7 +313,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
           <div className='header'>
             <Toolbar
-              i18n={props.i18n}
               isLocked={isLocked}
               document={document}
               present={present}
@@ -341,7 +340,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
               activeUsers={activeUsers}
               currentImage={currentImage}
               document={document}
-              i18n={props.i18n}
               iiifCanvases={canvases}
               layers={layers}
               layerNames={layerNames}
@@ -362,7 +360,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   authToken={authToken}
                   channelId={props.channelId}
                   embeddedAnnotations={embeddedAnnotations?.annotations}
-                  i18n={props.i18n}
                   currentImage={currentImage}
                   isLocked={isLocked}
                   isPresentationManifest={isPresentationManifest}
@@ -389,7 +386,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             </div>
 
             <RightDrawer
-              i18n={props.i18n}
               isLocked={isLocked}
               layers={documentLayers}
               layerNames={layerNames}
@@ -409,7 +405,6 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         {manifestError && (
           <ManifestErrorDialog
             document={document}
-            i18n={props.i18n}
             message={manifestError}
           />
         )}

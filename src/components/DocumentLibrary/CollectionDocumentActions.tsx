@@ -1,7 +1,6 @@
 import { useState, Fragment } from 'react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import { ConfirmedAction } from '@components/ConfirmedAction';
-import type { Translations } from 'src/Types';
 import {
   DotsThreeVertical,
   CheckSquare,
@@ -11,11 +10,11 @@ import {
 } from '@phosphor-icons/react';
 import type { LibraryDocument } from './DocumentLibrary';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 interface CollectionDocumentActionsProps {
-  i18n: Translations;
   disabledIds: string[];
   selectedIds: string[];
   revisions: LibraryDocument[];
@@ -26,7 +25,7 @@ interface CollectionDocumentActionsProps {
 export const CollectionDocumentActions = (
   props: CollectionDocumentActionsProps
 ) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-home']);
 
   const [confirming, setConfirming] = useState(false);
 
@@ -44,7 +43,7 @@ export const CollectionDocumentActions = (
             </Trigger>
             <Tooltip.Portal>
               <Tooltip.Content className='tooltip-content' sideOffset={5}>
-                {t['Select Revision']}
+                {t('Select Revision', { ns: 'project-home' })}
                 <Tooltip.Arrow className='tooltip-arrow' />
               </Tooltip.Content>
             </Tooltip.Portal>
@@ -62,7 +61,7 @@ export const CollectionDocumentActions = (
                 {props.disabledIds.includes(r.id) && (
                   <Item className='dropdown-item' key={idx}>
                     <CheckCircle size={24} />{' '}
-                    <span>{`${t['Revision']}: ${r.collection_metadata?.revision_number}, ${t['Published Date']}: ${r.published_date}`}</span>
+                    <span>{`${t('Revision', { ns: 'project-home' })}: ${r.collection_metadata?.revision_number}, ${t('Published Date', { ns: 'project-home' })}: ${r.published_date}`}</span>
                   </Item>
                 )}
                 {!props.disabledIds.includes(r.id) && (
@@ -76,12 +75,12 @@ export const CollectionDocumentActions = (
                     ) : (
                       <Square size={24} />
                     )}{' '}
-                    <span>{`${t['Revision']}: ${r.collection_metadata?.revision_number}, ${t['Published Date']}: ${r.published_date}`}</span>
+                    <span>{`${t('Revision', { ns: 'project-home' })}: ${r.collection_metadata?.revision_number}, ${t('Published Date', { ns: 'project-home' })}: ${r.published_date}`}</span>
                   </Item>
                 )}
                 <Item className='dropdown-item' onSelect={props.onOpenMetadata}>
                   <PencilSimple size={16} />{' '}
-                  <span>{t['View document metadata']}</span>
+                  <span>{t('View document metadata', { ns: 'project-home' })}</span>
                 </Item>
               </Fragment>
             ))}

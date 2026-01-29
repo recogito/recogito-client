@@ -1,16 +1,9 @@
-import type { Translations } from 'src/Types';
-
+import { useTranslation } from 'react-i18next';
 import './ErrorBadge.css';
 
-interface ErrorBadgeProps {
+export const ErrorBadge = () => {
 
-  i18n: Translations;
-
-}
-
-export const ErrorBadge = (props: ErrorBadgeProps) => {
-
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const onRefresh = () => location.reload();
 
@@ -18,13 +11,13 @@ export const ErrorBadge = (props: ErrorBadgeProps) => {
     <>
       <div className="anno-error-badge">
         <div className="anno-error-badge-message">
-          {t['Connection Lost.']}
+          {t('Connection Lost.', { ns: 'annotation-common' })}
         </div>
 
         <button 
           className="anno-error-refresh link"
           onClick={onRefresh}>
-          {t['Try refreshing the page.']}
+          {t('Try refreshing the page.', { ns: 'annotation-common' })}
         </button>
       </div>
 

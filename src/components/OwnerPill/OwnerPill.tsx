@@ -1,16 +1,14 @@
-import type { Translations } from 'src/Types';
 import { UserCircle } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 
 import './OwnerPill.css';
 
-interface OwnerPillProps {
-  i18n: Translations;
-}
 
-export const OwnerPill = (props: OwnerPillProps) => {
+export const OwnerPill = () => {
+  const { t } = useTranslation(['common'])
   return (
     <div className='owner-pill text-body-tiny'>
-      <UserCircle /> {props.i18n.t['Owner']}
+      <UserCircle /> {t('Owner', { ns: 'common' })}
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IIIF } from '@allmaps/iiif-parser';
 import { getResourceLabel } from 'src/util';
-import type { Translations } from 'src/Types';
 
 /**
  * Some basic sanity checking on the URL string
@@ -38,7 +37,7 @@ interface ValidationResult {
 
 }
 
-export const validateIIIF = (url: string, i18n: Translations): Promise<ValidationResult> => {
+export const validateIIIF = (url: string, locale: string): Promise<ValidationResult> => {
   if (isValidHTTPSURL(url)) {
     return fetch(url)
       .then((response) => response.json())
@@ -57,7 +56,7 @@ export const validateIIIF = (url: string, i18n: Translations): Promise<Validatio
               } as ValidationResult;
             } else if (parsed.type === 'manifest') {
               // Presentation API v1/2/3
-              const label = getResourceLabel(parsed.label, i18n.lang);
+              const label = getResourceLabel(parsed.label, locale);
               return {
                 isValid: true,
                 result: {
@@ -103,7 +102,7 @@ export const validateIIIF = (url: string, i18n: Translations): Promise<Validatio
   } 
 }
 
-export const useIIIFValidation = (url: string, i18n: Translations) => {
+export const useIIIFValidation = (url: string, locale: string) => {
 
   const [isFetching, setIsFetching] = useState(false);
 
@@ -112,7 +111,7 @@ export const useIIIFValidation = (url: string, i18n: Translations) => {
   const validate = (url: string) => {
     setIsFetching(true);
 
-    validateIIIF(url, i18n).then(result => {
+    validateIIIF(url, locale).then(result => {
       setLastResult(result);
       setIsFetching(false);
     });

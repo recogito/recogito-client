@@ -9,7 +9,6 @@ import type {
   Invitation,
   MyProfile,
   Group,
-  Translations,
   Member,
   JoinRequest,
 } from 'src/Types';
@@ -28,11 +27,12 @@ import {
 } from './InviteListOfUsersDialog';
 import { DropdownButton } from '@components/DropdownButton';
 import { UserPlus, User, UsersFour } from '@phosphor-icons/react';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './ProjectCollaboration.css';
 
 interface ProjectCollaborationProps {
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -47,8 +47,8 @@ interface ProjectCollaborationProps {
   user: MyProfile;
 }
 
-export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
-  const { t } = props.i18n;
+const ProjectCollaboration = (props: ProjectCollaborationProps) => {
+  const { t, i18n } = useTranslation(['common', 'project-collaboration', 'annotation-common', 'a11y']);
 
   const [project, setProject] = useState(props.project);
 
@@ -119,25 +119,22 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const onDeleteError = () =>
     setToast({
-      title: t['Something went wrong'],
-      description: t['Could not delete user.'],
+      title: t('Something went wrong', { ns: 'common' }),
+      description: t('Could not delete user.', { ns: 'project-collaboration' }),
       type: 'error',
     });
 
   const onDeleteInviteError = () =>
     setToast({
-      title: t['Something went wrong'],
-      description: t['Could not delete invitation.'],
+      title: t('Something went wrong', { ns: 'common' }),
+      description: t('Could not delete invitation.', { ns: 'project-collaboration' }),
       type: 'error',
     });
 
   const onInvitationSent = (invitation: Invitation) => {
     setToast({
-      title: t['Invitation Sent'],
-      description: t['Invitation was sent to'].replace(
-        '${user}',
-        invitation.email
-      ),
+      title: t('Invitation Sent', { ns: 'project-collaboration' }),
+      description: t('Invitation was sent to', { ns: 'project-collaboration', user: invitation.email }),
       type: 'success',
     });
 
@@ -146,8 +143,8 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const onInvitationsSent = (invites: Invitation[]) => {
     setToast({
-      title: t['Invitations Sent'],
-      description: t['Invitations were sent to your list of users.'],
+      title: t('Invitations Sent', { ns: 'project-collaboration' }),
+      description: t('Invitations were sent to your list of users.', { ns: 'project-collaboration' }),
       type: 'success',
     });
 
@@ -156,15 +153,15 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   const onInvitationError = () =>
     setToast({
-      title: t['Something went wrong'],
-      description: t['Could not send invitation.'],
+      title: t('Something went wrong', { ns: 'common' }),
+      description: t('Could not send invitation.', { ns: 'project-collaboration' }),
       type: 'error',
     });
 
   const onError = (error: string) => {
     setToast({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'common' }),
+      description: error,
       type: 'error',
     });
   };
@@ -202,11 +199,11 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       const request = requests[requestIdx];
       acceptJoinRequest(supabase, project.id, request.id).then((resp) => {
         const name =
-          requestIdx > -1 ? formatName(request.user) : t['Anonymous'];
+          requestIdx > -1 ? formatName(request.user) : t('Anonymous', { ns: 'annotation-common' });
         if (resp) {
           setToast({
-            title: t['User Added'],
-            description: `${name} ${t['was successfully added to project.']}`,
+            title: t('User Added', { ns: 'project-collaboration' }),
+            description: t('was successfully added to project.', { ns: 'project-collaboration', name }),
             type: 'success',
           });
 
@@ -235,8 +232,8 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           }
         } else {
           setToast({
-            title: t['Adding User Failed!'],
-            description: `${name} ${t['was not added to project.']}`,
+            title: t('Adding User Failed!', { ns: 'project-collaboration' }),
+            description: `${name} ${t('was not added to project.', { ns: 'project-collaboration' })}`,
             type: 'error',
           });
         }
@@ -262,9 +259,9 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           );
 
           setToast({
-            title: t['Request Ignored'],
+            title: t('Request Ignored', { ns: 'project-collaboration' }),
             description: `${formatName(request.user)} ${
-              t['request to join the project has been ignored.']
+              t('request to join the project has been ignored.', { ns: 'project-collaboration' })
             }`,
             type: 'success',
           });
@@ -278,12 +275,12 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       ? `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
       : `${window.location.protocol}//${window.location.hostname}`;
 
-  const link = `${host}/${props.i18n.lang}/projects/${project.id}/request?project-name=${project.name}`;
+  const link = `${host}/${i18n.language}/projects/${project.id}/request?project-name=${project.name}`;
 
   const handleCopyLink = () => {
     setToast({
-      title: t['Copied to clipboard'],
-      description: t['You can now distribute this link to invite users.'],
+      title: t('Copied to clipboard', { ns: 'project-collaboration' }),
+      description: t('You can now distribute this link to invite users.', { ns: 'project-collaboration' }),
       type: 'info',
     });
     navigator.clipboard.writeText(encodeURI(link));
@@ -291,26 +288,25 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
 
   return (
     <>
-      <TopBar i18n={props.i18n} onError={onError} me={props.user} />
+      <TopBar onError={onError} me={props.user} />
       <BackButtonBar
-        i18n={props.i18n}
         showBackToProjects={false}
         crumbs={[
-          { label: t['Projects'], href: `/${props.i18n.lang}/projects/` },
+          { label: t('Projects', { ns: 'common' }), href: `/${i18n.language}/projects/` },
           {
             label: props.project.name,
-            href: `/${props.i18n.lang}/projects/${props.project.id}`,
+            href: `/${i18n.language}/projects/${props.project.id}`,
           },
-          { label: t['Team'], href: undefined },
+          { label: t('Team', { ns: 'common' }), href: undefined },
         ]}
       />
       <div className='project-collaboration'>
         <ToastProvider>
           <div className='project-collaboration-title-bar'>
-            <h1>{t['Project Team']}</h1>
+            <h1>{t('Project Team', { ns: 'project-collaboration' })}</h1>
 
             <DropdownButton
-              label={t['Add a user']}
+              label={t('Add a user', { ns: 'project-collaboration' })}
               icon={<UserPlus />}
               options={[
                 {
@@ -320,7 +316,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
                       onClick={() => setAddUserOpen(true)}
                     >
                       <User size={20} />
-                      <span>{t['Add single user']}</span>
+                      <span>{t('Add single user', { ns: 'project-collaboration' })}</span>
                     </div>
                   ),
                 },
@@ -331,7 +327,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
                       onClick={() => setAddUsersOpen(true)}
                     >
                       <UsersFour size={20} />
-                      <span>{t['Add list of users']}</span>
+                      <span>{t('Add list of users', { ns: 'project-collaboration' })}</span>
                     </div>
                   ),
                 },
@@ -340,7 +336,6 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           </div>
 
           <MembersTable
-            i18n={props.i18n}
             project={project}
             invitations={invitations}
             me={props.me}
@@ -354,9 +349,9 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           {!props.project.is_open_join && (
             <>
               <div className='project-collaboration-request-header'>
-                <h1>{t['Join Requests']}</h1>
+                <h1>{t('Join Requests', { ns: 'project-collaboration' })}</h1>
                 <div className='project-collaboration-ignored-switch'>
-                  <label htmlFor='show-ignored'>{t['Show Ignored']}</label>
+                  <label htmlFor='show-ignored'>{t('Show Ignored', { ns: 'project-collaboration' })}</label>
 
                   <Switch.Root
                     className='switch-root'
@@ -369,31 +364,28 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
                 </div>
               </div>
               <div className='project-collaboration-link-container'>
-                <label htmlFor='join-link'>{t['Join Link']}</label>
-                <InfoTooltip content={t['copy_link_info']} />
+                <label htmlFor='join-link'>{t('Join Link', { ns: 'project-collaboration' })}</label>
+                <InfoTooltip content={t('copyLinkInfo', { ns: 'project-collaboration' })} />
                 <input
                   className='project-collaboration-link-input'
                   value={encodeURI(link)}
                   disabled
                   aria-label={
-                    t[
-                      'a link that can be sent to users you wish to invite to the project'
-                    ]
+                    t('a link that can be sent to users you wish to invite to the project', { ns: 'a11y' })
                   }
                 ></input>
                 <Button
                   className='primary project-collaboration-link-button'
                   onClick={handleCopyLink}
-                  aria-label={t['copy join link']}
+                  aria-label={t('copy join link', { ns: 'a11y' })}
                 >
-                  {t['Copy Link']}
+                  {t('Copy Link', { ns: 'project-collaboration' })}
                 </Button>
               </div>
 
               {requests.filter((r) => (showIgnored ? true : !r.ignored))
                 .length > 0 ? (
                 <JoinRequestsTable
-                  i18n={props.i18n}
                   project={project}
                   requests={requests}
                   onAcceptUser={handleAddUser}
@@ -402,7 +394,7 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
                 />
               ) : (
                 <div className='project-collaboration-no-requests'>
-                  {t['No Open Join Requests']}
+                  {t('No Open Join Requests', { ns: 'project-collaboration' })}
                 </div>
               )}
             </>
@@ -412,7 +404,6 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
             onOpenChange={(open) => !open && setToast(null)}
           />
           <InviteUserDialog
-            i18n={props.i18n}
             me={props.me}
             project={project}
             open={addUserOpen}
@@ -422,7 +413,6 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
             onClose={() => setAddUserOpen(false)}
           />
           <InviteListOfUsersDialog
-            i18n={props.i18n}
             me={props.me}
             project={project}
             onError={onError}
@@ -435,3 +425,9 @@ export const ProjectCollaboration = (props: ProjectCollaborationProps) => {
     </>
   );
 };
+
+export const ProjectCollaborationApp = (props: ProjectCollaborationProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <ProjectCollaboration {...props} />
+  </I18nextProvider>
+);

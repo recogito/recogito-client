@@ -11,11 +11,12 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { Spinner } from '@components/Spinner';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 import type { ProgressProps, ProgressState } from './Progress';
+import { useTranslation } from 'react-i18next';
 
 import './Progress.css';
 
 export const ProgressCreating = (props: ProgressProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['project-assignments', 'common']);
 
   const { name, description, documents, team, assign_all_members } =
     props.assignment;
@@ -114,10 +115,10 @@ export const ProgressCreating = (props: ProgressProps) => {
       ) : state === 'success' ? (
         <>
           <AnimatedCheck size={40} />
-          <p>{t['The assignment was created successfully']}</p>
+          <p>{t('The assignment was created successfully', { ns: 'project-assignments' })}</p>
         </>
       ) : (
-        <p>{t['Something went wrong']}</p>
+        <p>{t('Something went wrong', { ns: 'common' })}</p>
       )}
     </div>
   );

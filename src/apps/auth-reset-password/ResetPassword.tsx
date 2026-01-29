@@ -1,19 +1,16 @@
 import { useState } from 'react';
+import { I18nextProvider, useTranslation } from 'react-i18next';
 import { WarningOctagon } from '@phosphor-icons/react';
 import { TextInput } from '@components/TextInput';
-import type { Translations } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { AnimatedCheck } from '@components/AnimatedIcons';
 
 import './ResetPassword.css';
+import clientI18next from 'src/i18n/client';
 
-interface ResetPasswordProps {
-  i18n: Translations;
-}
-
-export const ResetPassword = (props: ResetPasswordProps) => {
-  const { t } = props.i18n;
+const ResetPassword = () => {
+  const { t, i18n } = useTranslation(['auth-reset-password']);
 
   const [password, setPassword] = useState('');
 
@@ -29,13 +26,13 @@ export const ResetPassword = (props: ResetPasswordProps) => {
     evt.preventDefault();
 
     if (password !== verification) {
-      setError(t["Passwords don't match"]);
+      setError(t("Passwords don't match", { ns: 'auth-reset-password' }));
     } else {
       setBusy(true);
       supabase.auth.updateUser({ password }).then(({ error }) => {
         if (error) {
           console.error(error);
-          setError(t[error.message] || t['Could not reset password']);
+          setError(t('Could not reset password', { ns: 'auth-reset-password' }));
         } else {
           setSuccess(true);
         }
@@ -51,23 +48,23 @@ export const ResetPassword = (props: ResetPasswordProps) => {
           <div className='success'>
             <AnimatedCheck size={38} />
             <p>
-              {t['Password reset.']}{' '}
-              <a href={`/${props.i18n.lang}/projects`}>
-                {t['Go to dashboard.']}
+              {t('Password reset.', { ns: 'auth-reset-password' })}{' '}
+              <a href={`/${i18n.language}/projects`}>
+                {t('Go to dashboard.', { ns: 'auth-reset-password' })}
               </a>
             </p>
           </div>
         </main>
       ) : (
         <main>
-          <h1>{t['Set Password']}</h1>
+          <h1>{t('Set Password', { ns: 'auth-reset-password' })}</h1>
           <form className='login'>
             <TextInput
               type='password'
               autoComplete={false}
               id='password'
               name='password'
-              label={t['Enter new password']}
+              label={t('Enter new password', { ns: 'auth-reset-password' })}
               className='lg w-full'
               onChange={setPassword}
             />
@@ -77,7 +74,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
               autoComplete={false}
               id='verification'
               name='verification'
-              label={t['Confirm password']}
+              label={t('Confirm password', { ns: 'auth-reset-password' })}
               className='lg w-full'
               error={Boolean(error)}
               onChange={setVerification}
@@ -99,7 +96,7 @@ export const ResetPassword = (props: ResetPasswordProps) => {
               className='primary lg w-full'
               onClick={onResetPassword}
             >
-              <span>{t['Set Password']}</span>
+              <span>{t('Set Password', { ns: 'auth-reset-password' })}</span>
             </Button>
           </form>
         </main>
@@ -107,3 +104,9 @@ export const ResetPassword = (props: ResetPasswordProps) => {
     </div>
   );
 };
+
+export const ResetPasswordApp = () => (
+  <I18nextProvider i18n={clientI18next}>
+    <ResetPassword />
+  </I18nextProvider>
+);

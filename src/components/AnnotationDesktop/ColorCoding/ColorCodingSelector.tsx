@@ -3,7 +3,7 @@ import * as Select from '@radix-ui/react-select';
 import type { PresentUser } from '@annotorious/react';
 import { CaretDown, Check, Palette } from '@phosphor-icons/react';
 import { useLocalStorageBackedState } from '@util/hooks';
-import type { DocumentLayer, DocumentWithContext, Translations, VocabularyTerm } from 'src/Types';
+import type { DocumentLayer, DocumentWithContext, VocabularyTerm } from 'src/Types';
 import { useColorCodingState } from './ColorState';
 import { 
   useColorByCreator,
@@ -11,14 +11,13 @@ import {
   useColorByPrivacy, 
   userColorByLayer
 } from './colorCodings';
+import { useTranslation } from 'react-i18next';
 
 import './ColorCodingSelector.css';
 
 interface ColorCodingSelectorProps {
 
   document: DocumentWithContext;
-
-  i18n: Translations;
 
   layers?: DocumentLayer[];
 
@@ -34,7 +33,7 @@ type Coding = 'creator' | 'layer' | 'tag' | 'privacy';
 
 export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['annotation-common']);
 
   const persistenceKey = useMemo(() => 
     `colorcoding-${props.document.context.id}-${props.document.id}`, 
@@ -95,28 +94,28 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>{t['No color coding']}</Select.ItemText>
+              <Select.ItemText>{t('No color coding', { ns: 'annotation-common' })}</Select.ItemText>
             </Select.Item>
 
             <Select.Item value="privacy" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>{t['Public vs. Private']}</Select.ItemText>
+              <Select.ItemText>{t('Public vs. Private', { ns: 'annotation-common' })}</Select.ItemText>
             </Select.Item> 
 
             <Select.Item value="creator" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>{t['Creator']}</Select.ItemText>
+              <Select.ItemText>{t('Creator', { ns: 'annotation-common' })}</Select.ItemText>
             </Select.Item> 
 
             <Select.Item value="tag" className="select-item">
               <Select.ItemIndicator className="select-item-indicator">
                 <Check />
               </Select.ItemIndicator>
-              <Select.ItemText>{t['First Tag']}</Select.ItemText>
+              <Select.ItemText>{t('First Tag', { ns: 'annotation-common' })}</Select.ItemText>
             </Select.Item> 
           </Select.Viewport>
         </Select.Content>

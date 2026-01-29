@@ -1,14 +1,15 @@
 ---
-import { getTranslations } from '@i18n';
+import { getFixedT } from 'src/i18n/server';
 import BaseLayout from '@layouts/BaseLayout.astro';
 
-const { t } = getTranslations(Astro.request, 'error');
+const locale = Astro.currentLocale;
+const t = await getFixedT(locale, ['error']);
 ---
 <BaseLayout title="Recogito | Not Found">
   <div class="container" style="align-items: center; bottom: 0; display: flex; justify-content: center; position: absolute; top: 0; width: 100%;">
     <div class="column">
       <h1 style="margin: 0; padding: 0.2em 0;">404 Not Found</h1>
-      <p style="margin: 0.2em 0">{t['Nothing to see here.']}</p>
+      <p style="margin: 0.2em 0">{t('Nothing to see here.', { ns: 'error' })}</p>
     </div>
   </div>
 </BaseLayout>

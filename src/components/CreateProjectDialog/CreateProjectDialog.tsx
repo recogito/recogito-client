@@ -1,16 +1,14 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import type { Translations } from 'src/Types';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import './CreateProjectDialog.css';
 import { Button } from '@components/Button';
 import { useState } from 'react';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 interface CreateProjectDialogProps {
   open: boolean;
-
-  i18n: Translations;
 
   onSaveProject(
     name: string,
@@ -23,7 +21,7 @@ interface CreateProjectDialogProps {
 }
 
 export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
-  const { t } = props.i18n;
+  const { t } = useTranslation(['dashboard-projects', 'common', 'a11y']);
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -45,32 +43,32 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
         <DialogContent className='dialog-content-alt'>
           <div className='create-project-container'>
             <Dialog.Title className='dialog-title'>
-              {t['Create Project']}
+              {t('Create Project', { ns: 'dashboard-projects' })}
             </Dialog.Title>
             <div className='create-project-root'>
               <Label.Root
                 className='create-project-label-detail text-body-large-bold'
                 htmlFor='firstName'
               >
-                {t['Project Details']}
+                {t('Project Details', { ns: 'dashboard-projects' })}
               </Label.Root>
               <Label.Root className='create-project-label text-body-small-bold'>
-                {t['Name']}
+                {t('Name', { ns: 'common' })}
               </Label.Root>
               <input
                 className='create-project-input'
                 type='text'
                 value={name}
-                placeholder={t['Name your project']}
+                placeholder={t('Name your project', { ns: 'dashboard-projects' })}
                 onChange={(evt) => setName(evt.target.value)}
               />
               <Label.Root className='create-project-label text-body-small-bold'>
-                {t['Description']}
+                {t('Description', { ns: 'dashboard-projects' })}
               </Label.Root>
               <input
                 type='text'
                 value={description}
-                placeholder={t['Describe your project']}
+                placeholder={t('Describe your project', { ns: 'dashboard-projects' })}
                 onChange={(evt) => setDescription(evt.target.value)}
               />
               <div className='create-project-visibility'>
@@ -82,14 +80,14 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     className='create-project-label-detail text-body-large-bold'
                     htmlFor='firstName'
                   >
-                    {t['Project Visibility']}
+                    {t('Project Visibility', { ns: 'dashboard-projects' })}
                   </Label.Root>
                   <div className='create-project-switches'>
                     <RadioGroup.Root
                       className='create-project-radio-group-root'
                       defaultValue='private'
                       value={visibility}
-                      aria-label={t['set project visibility']}
+                      aria-label={t('set project visibility', { ns: 'a11y' })}
                       onValueChange={(value) =>
                         value === 'public'
                           ? setOpenJoin(true)
@@ -109,13 +107,11 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                             className='create-project-radio-group-label text-body-small-bold'
                             htmlFor='r1'
                           >
-                            {t['Private']}
+                            {t('Private', { ns: 'common' })}
                           </label>
                           <div className='create-project-radio-group-helper text-body-small'>
                             {
-                              t[
-                                'Project admins choose the users that can join this project'
-                              ]
+                              t('Project admins choose the users that can join this project', { ns: 'dashboard-projects' })
                             }
                           </div>
                         </div>
@@ -133,13 +129,11 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                             className='create-project-radio-group-label text-body-small-bold'
                             htmlFor='r2'
                           >
-                            {t['Public']}
+                            {t('Public', { ns: 'common' })}
                           </label>
                           <div className='create-project-radio-group-helper text-body-small'>
                             {
-                              t[
-                                'Any registered user can join this project without an invitation'
-                              ]
+                              t('Any registered user can join this project without an invitation', { ns: 'dashboard-projects' })
                             }
                           </div>
                         </div>
@@ -152,14 +146,14 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                     className='create-project-label-detail text-body-large-bold'
                     htmlFor='firstName'
                   >
-                    {t['Project Type']}
+                    {t('Project Type', { ns: 'dashboard-projects' })}
                   </Label.Root>
                   <div className='create-project-switches'>
                     <RadioGroup.Root
                       className='create-project-radio-group-root lower'
                       defaultValue='assignments'
                       value={type}
-                      aria-label={t['set project type']}
+                      aria-label={t('set project type', { ns: 'a11y' })}
                       onValueChange={(value) =>
                         value === 'assignments'
                           ? setOpenEdit(false)
@@ -179,13 +173,11 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                             className='create-project-radio-group-label text-body-small-bold'
                             htmlFor='r3'
                           >
-                            {t['Assignments']}
+                            {t('Assignments', { ns: 'common' })}
                           </label>
                           <div className='create-project-radio-group-helper text-body-small'>
                             {
-                              t[
-                                'Project admins create assignments with specific documents and team members'
-                              ]
+                              t('Project admins create assignments with specific documents and team members', { ns: 'dashboard-projects' })
                             }
                           </div>
                         </div>
@@ -203,10 +195,10 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
                             className='create-project-radio-group-label text-body-small-bold'
                             htmlFor='r4'
                           >
-                            {t['Single Team']}
+                            {t('Single Team', { ns: 'dashboard-projects' })}
                           </label>
                           <div className='create-project-radio-group-helper text-body-small'>
-                            {t['Project members can annotate any document']}
+                            {t('Project members can annotate any document', { ns: 'dashboard-projects' })}
                           </div>
                         </div>
                       </div>
@@ -221,7 +213,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
             style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}
           >
             <Button type='button' className='cancel' onClick={props.onClose}>
-              {t['Cancel']}
+              {t('Cancel', { ns: 'common' })}
             </Button>
 
             <Button
@@ -229,7 +221,7 @@ export const CreateProjectDialog = (props: CreateProjectDialogProps) => {
               className='primary sm'
               onClick={handleCreateProject}
             >
-              {t['Create']}
+              {t('Create', { ns: 'common' })}
             </Button>
           </div>
         </DialogContent>

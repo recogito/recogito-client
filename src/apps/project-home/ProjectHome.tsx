@@ -22,13 +22,13 @@ import type {
   ExtendedProjectData,
   JoinRequest,
   MyProfile,
-  Translations,
 } from 'src/Types';
+import { useTranslation, I18nextProvider } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 import './ProjectHome.css';
 
 export interface ProjectHomeProps {
-  i18n: Translations;
 
   project: ExtendedProjectData;
 
@@ -45,8 +45,8 @@ export interface ProjectHomeProps {
   plugins: PluginInstallationConfig[];
 }
 
-export const ProjectHome = (props: ProjectHomeProps) => {
-  const { t } = props.i18n;
+const ProjectHome = (props: ProjectHomeProps) => {
+  const { t, i18n } = useTranslation(['common']);
 
   const projectPolicies = useProjectPolicies(props.project.id);
 
@@ -90,17 +90,17 @@ export const ProjectHome = (props: ProjectHomeProps) => {
   };
 
   const handleGotoSettings = () => {
-    window.location.href = `/${props.i18n.lang}/projects/${props.project.id}/settings`;
+    window.location.href = `/${i18n.language}/projects/${props.project.id}/settings`;
   };
 
   const handleGotoUsers = () => {
-    window.location.href = `/${props.i18n.lang}/projects/${props.project.id}/collaboration`;
+    window.location.href = `/${i18n.language}/projects/${props.project.id}/collaboration`;
   };
 
   const onError = (error: string) => {
     setToast({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'common' }),
+      description: error,
       type: 'error',
     });
   };
@@ -165,7 +165,7 @@ export const ProjectHome = (props: ProjectHomeProps) => {
         setAvailableLayers(data);
       } else {
         setToast({
-          title: t['Something went wrong'],
+          title: t('Something went wrong', { ns: 'common' }),
           description: error.message,
           type: 'error',
         });
@@ -186,12 +186,11 @@ export const ProjectHome = (props: ProjectHomeProps) => {
 
   return (
     <PluginProvider installed={props.plugins}>
-      <TopBar i18n={props.i18n} onError={onError} me={me} />
+      <TopBar onError={onError} me={me} />
 
-      <BackButtonBar i18n={props.i18n} showBackToProjects={true} />
+      <BackButtonBar showBackToProjects={true} />
 
       <ProjectHeader
-        i18n={props.i18n}
         isAdmin={isAdmin || false}
         isLocked={props.project.is_locked}
         name={props.project.name}
@@ -211,7 +210,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             <DocumentsView
               isAdmin={isAdmin as boolean}
               documents={documents}
-              i18n={props.i18n}
               project={props.project}
               setToast={setToast}
               user={me}
@@ -221,7 +219,6 @@ export const ProjectHome = (props: ProjectHomeProps) => {
             />
           ) : tab === 'assignments' ? (
             <AssignmentsView
-              i18n={props.i18n}
               project={project}
               me={me}
               documents={documents}
@@ -243,3 +240,9 @@ export const ProjectHome = (props: ProjectHomeProps) => {
     </PluginProvider>
   );
 };
+
+export const ProjectHomeApp = (props: ProjectHomeProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <ProjectHome {...props} />
+  </I18nextProvider>
+);

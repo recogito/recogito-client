@@ -13,7 +13,6 @@ import {
   type MyProfile,
   type Collection as CollectionType,
   type Document,
-  type Translations,
   type Protocol,
 } from 'src/Types';
 import { CollectionDialog } from '../CollectionDialog/CollectionDialog';
@@ -30,10 +29,10 @@ import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidatio
 import './Collection.css';
 import { DocumentLibrary } from '@components/DocumentLibrary';
 import { copyDocumentsToCollection } from '@backend/helpers/collectionHelpers';
+import { I18nextProvider, useTranslation } from 'react-i18next';
+import clientI18next from 'src/i18n/client';
 
 interface CollectionsTableProps {
-  i18n: Translations;
-
   collection: CollectionType;
 
   documents: Document[];
@@ -41,8 +40,8 @@ interface CollectionsTableProps {
   me: MyProfile;
 }
 
-export const Collection = (props: CollectionsTableProps) => {
-  const { lang, t } = props.i18n;
+const Collection = (props: CollectionsTableProps) => {
+  const { t, i18n } = useTranslation(['project-home', 'collection-management', 'a11y']);
   const [toast, setToast] = useState<ToastContent | null>(null);
   const [collection, setCollection] = useState(props.collection);
   const [search, setSearch] = useState<string>('');
@@ -69,17 +68,15 @@ export const Collection = (props: CollectionsTableProps) => {
 
   const onError = (error: string) => {
     setToast({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'project-home' }),
+      description: error,
       type: 'error',
       icon: <WarningDiamondIcon color='red' />,
     });
   };
 
   const onCopyFileError = (docName: string) => {
-    onError(
-      t['Could not copy file contents of ${name}.'].replace('${name}', docName)
-    );
+    onError(t('fileCopyError', { ns: 'project-home', docName }));
   };
 
   const onLibraryDocumentsSelected = async (documentIds: string[]) => {
@@ -169,8 +166,10 @@ export const Collection = (props: CollectionsTableProps) => {
       );
       if (successfulDocs.length > 0) {
         setToast({
-          title: t['Copied'],
-          description: t['Document copied successfully.'],
+          title: t('Copied', { ns: 'project-home' }),
+          description: t('Document copied successfully.', {
+            ns: 'project-home',
+          }),
           type: 'success',
         });
       }
@@ -203,8 +202,10 @@ export const Collection = (props: CollectionsTableProps) => {
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
       setToast({
-        title: t['Something went wrong'],
-        description: t['Unsupported file format.'],
+        title: t('Something went wrong', { ns: 'project-home' }),
+        description: t('Unsupported file format.', {
+          ns: 'collection-management',
+        }),
         type: 'error',
       });
     } else if (
@@ -213,8 +214,10 @@ export const Collection = (props: CollectionsTableProps) => {
       accepted?.length > 1
     ) {
       setToast({
-        title: t['Something went wrong'],
-        description: t['Only one document can be used as a revision.'],
+        title: t('Something went wrong', { ns: 'project-home' }),
+        description: t('Only one document can be used as a revision.', {
+          ns: 'collection-management',
+        }),
         type: 'error',
       });
     } else {
@@ -238,7 +241,7 @@ export const Collection = (props: CollectionsTableProps) => {
 
         setShowUploads(true);
       } else if (typeof accepted === 'string') {
-        validateIIIF(accepted, props.i18n).then(
+        validateIIIF(accepted, i18n.language).then(
           ({ isValid, result, error }) => {
             if (isValid) {
               addUploads([
@@ -265,7 +268,7 @@ export const Collection = (props: CollectionsTableProps) => {
               setShowUploads(true);
             } else {
               setToast({
-                title: t['Something went wrong'],
+                title: t('Something went wrong', { ns: 'project-home' }),
                 description: error,
                 type: 'error',
               });
@@ -281,8 +284,10 @@ export const Collection = (props: CollectionsTableProps) => {
     archiveDocument(supabase, document.id).then(({ data }) => {
       if (data) {
         setToast({
-          title: t['Deleted'],
-          description: t['Document deleted successfully.'],
+          title: t('Deleted', { ns: 'project-home' }),
+          description: t('Document deleted successfully.', {
+            ns: 'collection-management',
+          }),
           type: 'success',
         });
         setDocuments((prevDocuments) =>
@@ -290,8 +295,10 @@ export const Collection = (props: CollectionsTableProps) => {
         );
       } else {
         setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete the document.'],
+          title: t('Something went wrong', { ns: 'project-home' }),
+          description: t('Could not delete the document.', {
+            ns: 'project-home',
+          }),
           type: 'error',
         });
       }
@@ -344,16 +351,20 @@ export const Collection = (props: CollectionsTableProps) => {
       ({ error, data }) => {
         if (error) {
           setToast({
-            title: t['Something went wrong'],
-            description: t['Could not update collection.'],
+            title: t('Something went wrong', { ns: 'project-home' }),
+            description: t('Could not update collection.', {
+              ns: 'collection-management',
+            }),
             type: 'error',
             icon: <WarningDiamondIcon color='red' />,
           });
           return;
         } else {
           setToast({
-            title: t['Success'],
-            description: t['Collection has been updated.'],
+            title: t('Success', { ns: 'collection-management' }),
+            description: t('Collection has been updated.', {
+              ns: 'collection-management',
+            }),
             type: 'success',
             icon: <CheckFatIcon color='green' />,
           });
@@ -367,18 +378,19 @@ export const Collection = (props: CollectionsTableProps) => {
     <div className='collection'>
       <ToastProvider>
         <TopBar
-          i18n={props.i18n}
           onError={(error) => console.log(error)}
           me={me}
         />
         <div className='collection-header'>
           <div>
             <a
-              href={`/${lang}/collections`}
+              href={`/${i18n.language}/collections`}
               style={{ marginTop: 15, zIndex: 1000 }}
             >
               <ArrowLeftIcon className='text-bottom' size={16} />
-              <span>{t['Back to Collections']}</span>
+              <span>
+                {t('Back to Collections', { ns: 'collection-management' })}
+              </span>
             </a>
             <h1>{collection.name}</h1>
           </div>
@@ -386,7 +398,9 @@ export const Collection = (props: CollectionsTableProps) => {
         <div className='collection-content'>
           <div className='collection-actions'>
             <div>
-              <label htmlFor='search'>{t['Search Documents']}</label>
+              <label htmlFor='search'>
+                {t('Search Documents', { ns: 'collection-management' })}
+              </label>
               <input
                 autoFocus
                 id='search'
@@ -400,10 +414,8 @@ export const Collection = (props: CollectionsTableProps) => {
               <CollectionDialog
                 collection={collection}
                 onSave={handleUpdateCollection}
-                i18n={props.i18n}
               />
               <UploadActions
-                i18n={props.i18n}
                 me={me}
                 onUpload={onUpload}
                 onImport={onImportRemote}
@@ -416,7 +428,6 @@ export const Collection = (props: CollectionsTableProps) => {
             {filteredDocuments.length > 0 ? (
               <CollectionDocumentsTable
                 documents={filteredDocuments}
-                i18n={props.i18n}
                 onDelete={onDeleteDocumentFromCollection}
                 onUpload={onUploadRevision}
                 onImport={onImportRemote}
@@ -426,8 +437,10 @@ export const Collection = (props: CollectionsTableProps) => {
             ) : (
               <p>
                 {search
-                  ? t['No documents matching search criteria']
-                  : t['No documents']}
+                  ? t('No documents matching search criteria', {
+                      ns: 'collection-management',
+                    })
+                  : t('No documents', { ns: 'collection-management' })}
               </p>
             )}
           </div>
@@ -436,7 +449,6 @@ export const Collection = (props: CollectionsTableProps) => {
             onOpenChange={(open) => !open && setToast(null)}
           />
           <UploadTracker
-            i18n={props.i18n}
             show={showUploads}
             closable={isIdle}
             uploads={uploads}
@@ -444,14 +456,13 @@ export const Collection = (props: CollectionsTableProps) => {
           />
           <input
             {...getInputProps()}
-            aria-label={t['drag and drop target for documents']}
+            aria-label={t('drag and drop target for documents', { ns: 'a11y' })}
           />
           <DocumentLibrary
             clearDirtyFlag={() => {}}
             dataDirty={false}
             disabledIds={documentIds}
             hideCollections
-            i18n={props.i18n}
             isAdmin={false}
             onCancel={() => setLibraryOpen(false)}
             onDocumentsSelected={onLibraryDocumentsSelected}
@@ -467,3 +478,9 @@ export const Collection = (props: CollectionsTableProps) => {
     </div>
   );
 };
+
+export const CollectionApp = (props: CollectionsTableProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <Collection {...props} />
+  </I18nextProvider>
+);

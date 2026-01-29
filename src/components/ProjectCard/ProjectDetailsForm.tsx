@@ -6,12 +6,11 @@ import { useFormik } from 'formik';
 import { updateProject } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Button } from '@components/Button';
-import type { ExtendedProjectData, Translations } from 'src/Types';
+import type { ExtendedProjectData } from 'src/Types';
 import { DialogContent } from '@components/DialogContent';
+import { useTranslation } from 'react-i18next';
 
 interface ProjectDetailsFormProps {
-
-  i18n: Translations;
 
   open: boolean;
 
@@ -27,7 +26,7 @@ interface ProjectDetailsFormProps {
 
 export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
 
-  const { t } = props.i18n;
+  const { t } = useTranslation(['dashboard-projects', 'common']);
 
   const { project } = props;
 
@@ -80,29 +79,29 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
 
         <DialogContent className="invite-users dialog-content">
           <Dialog.Title className="dialog-title">
-            {t['Project Details']}
+            {t('Project Details', { ns: 'dashboard-projects' })}
           </Dialog.Title>
 
           <VisuallyHidden.Root asChild>
-            <Dialog.Description>{t['Project Details']}</Dialog.Description>
+            <Dialog.Description>{t('Project Details', { ns: 'dashboard-projects' })}</Dialog.Description>
           </VisuallyHidden.Root>
 
           <form onSubmit={formik.handleSubmit}>
             <fieldset>
               <div className="field">
-                <label>{t['Name']}</label>
+                <label>{t('Name', { ns: 'common' })}</label>
                 <input
                   id="name"
                   name="name"
                   type="text"
                   onChange={formik.handleChange}
                   value={formik.values.name}
-                  placeholder={t['Project name...']}
+                  placeholder={t('Project name...', { ns: 'dashboard-projects' })}
                   required />
               </div>
 
               <div className="field">
-                <label>{t['Description']}</label>
+                <label>{t('Description', { ns: 'dashboard-projects' })}</label>
 
                 <TextareaAutosize 
                   id="description"
@@ -111,7 +110,7 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
                   maxRows={8}
                   value={formik.values.description}
                   onChange={formik.handleChange}
-                  placeholder={t['Project description...']}/>
+                  placeholder={t('Project description...', { ns: 'dashboard-projects' })}/>
               </div>
             </fieldset>
 
@@ -121,12 +120,12 @@ export const ProjectDetailsForm = (props: ProjectDetailsFormProps) => {
               type="submit">
 
               <span>
-                {t['Ok']}
+                {t('Ok', { ns: 'common' })}
               </span>
             </Button>
 
             <button onClick={props.onCancel}>
-              {t['Cancel']}
+              {t('Cancel', { ns: 'common' })}
             </button>
           </form>
         </DialogContent>

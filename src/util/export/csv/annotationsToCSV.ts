@@ -1,7 +1,7 @@
 import Papa from 'papaparse';
 import { Visibility } from '@recogito/annotorious-supabase';
 import type { SupabaseAnnotation, SupabaseAnnotationBody, SupabaseAnnotationTarget } from '@recogito/annotorious-supabase';
-import type { Document, Translations } from 'src/Types';
+import type { Document } from 'src/Types';
 import { quillToPlainText } from '../serializeQuillComment';
 import type { AvailableLayers } from '@backend/Types';
 
@@ -86,7 +86,7 @@ export const annotationsToCSV = (
   layers: { id: string, document: Document }[],
   projectLayers: AvailableLayers[],
   includePrivate: boolean,
-  i18n: Translations
+  baseLayer: string,
 ) => {
   const filtered = includePrivate 
     ? annotations
@@ -97,7 +97,7 @@ export const annotationsToCSV = (
 
   const getLayerName = (layerId?: string) => {
     const meta = projectLayers.find(l => l.is_active && l.layer_id === layerId);
-    return meta?.context_name ? meta.context_name : i18n.t['Baselayer'];
+    return meta?.context_name ? meta.context_name : baseLayer;
   }
 
   const hasIIIF = hasIIIFAnnotations(annotations);

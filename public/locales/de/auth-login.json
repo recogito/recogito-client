@@ -1,0 +1,21 @@
+{
+  "Welcome Back": "Willkommen Zurück",
+  "Login method": "Login-Methode",
+  "Log into your account": "Account Login",
+  "Username": "Benutzername",
+  "Password": "Passwort",
+  "Please enter a valid email address": "Ungültige Emailadresse",
+  "Invalid email or password": "Email oder Passwort ungültig",
+  "Sign In": "Einloggen",
+  "Forgot password?": "Passwort vergessen?",
+  "OR": "ODER",
+  "Continue with Magic Link": "Login mit Magischem Link",
+  "Continue with SSO": "Login mit SSO",
+  "Don't have an account?": "Noch kein Account?",
+  "Sign up now.": "Jetzt registrieren.",
+  "Your email address": "Email Adresse",
+  "Send Magic Link": "Magischen Link Senden",
+  "Link Sent": "Link gesendet",
+  "Check your email for the Magic Link.": "Überprüfen Sie ihre Email.",
+  "Redirecting": "Weiterleitung"
+}

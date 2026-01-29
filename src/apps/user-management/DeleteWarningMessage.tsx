@@ -1,19 +1,18 @@
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import type { Translations } from 'src/Types';
 import { Warning } from '@phosphor-icons/react';
+import { useTranslation } from 'react-i18next';
 
 import './DeleteWarningMessage.css';
 
 interface DeleteWarningMessageProps {
   open: boolean;
-  i18n: Translations;
   onCancel(): void;
   onConfirm(): void;
 }
 
 export const DeleteWarningMessage = (props: DeleteWarningMessageProps) => {
   const { open } = props;
-  const { t } = props.i18n;
+  const { t } = useTranslation(['user-management', 'common']);
   return (
     <AlertDialog.Root open={open}>
       <AlertDialog.Portal>
@@ -21,10 +20,10 @@ export const DeleteWarningMessage = (props: DeleteWarningMessageProps) => {
         <AlertDialog.Content className='delete-warning-content'>
           <AlertDialog.Title className='delete-warning-title'>
             <Warning fill='red' className='warning-icon' size={24} />
-            {t['Delete User']}
+            {t('Delete User', { ns: 'user-management' })}
           </AlertDialog.Title>
           <AlertDialog.Description className='delete-warning-description'>
-            {t['Delete_Warning_Message']}
+            {t('Delete_Warning_Message', { ns: 'user-management' })}
           </AlertDialog.Description>
           <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
             <AlertDialog.Cancel asChild>
@@ -32,7 +31,7 @@ export const DeleteWarningMessage = (props: DeleteWarningMessageProps) => {
                 className='delete-warning-button'
                 onClick={props.onCancel}
               >
-                {t['Cancel']}
+                {t('Cancel', { ns: 'common' })}
               </button>
             </AlertDialog.Cancel>
             <AlertDialog.Action asChild>
@@ -40,7 +39,7 @@ export const DeleteWarningMessage = (props: DeleteWarningMessageProps) => {
                 className='delete-warning-button-red'
                 onClick={props.onConfirm}
               >
-                {t['Delete User']}
+                {t('Delete User', { ns: 'user-management' })}
               </button>
             </AlertDialog.Action>
           </div>

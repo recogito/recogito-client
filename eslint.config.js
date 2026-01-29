@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
-  globalIgnores(['.astro/*', 'public/pdf.worker.min.mjs']),
+  globalIgnores(['.astro/*', 'public/pdf.worker.min.mjs', 'dist/*']),
   {
     languageOptions: {
       globals: {

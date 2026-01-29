@@ -2,12 +2,9 @@
 import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
-import { getLangFromUrl, getTranslations } from '@i18n';
-import { AcceptInvite as AcceptInviteApp } from '@apps/accept-invite';
+import { AcceptInviteApp } from '@apps/accept-invite';
 
-const lang = getLangFromUrl(Astro.url);
-
-const i18n = getTranslations(Astro.request, 'dashboard-projects');
+const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -32,7 +29,7 @@ if (!invitation.data || invitation.error) {
 ---
 
 <HeaderLayout title='accept-invite'>
-  <AcceptInviteApp client:load i18n={i18n} invitation={invitation.data} />
+  <AcceptInviteApp client:load invitation={invitation.data} />
 </HeaderLayout>
 
 <style>

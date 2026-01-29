@@ -1,3 +1,4 @@
+import { exportProject } from '@backend/helpers';
 import { SelectRecordsDialog } from '@components/SelectRecordsDialog';
 import { TagContext } from '@components/TagContext';
 import {
@@ -9,6 +10,7 @@ import {
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
 import {
   ArrowRight,
+  CloudArrowDownIcon,
   DotsThreeVertical,
   PencilSimple,
   SignOut,
@@ -23,15 +25,14 @@ import type {
   MyProfile,
   Policies,
   Tag,
-  TagDefinition,
-  Translations
+  TagDefinition
 } from 'src/Types';
 import { ProjectDetailsForm } from './ProjectDetailsForm';
+import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
 export interface ProjectCardActionsProps {
-  i18n: Translations;
 
   me: MyProfile;
 
@@ -49,7 +50,7 @@ export interface ProjectCardActionsProps {
 }
 
 export const ProjectCardActions = (props: ProjectCardActionsProps) => {
-  const { t } = props.i18n;
+  const { i18n, t } = useTranslation(['common', 'dashboard-projects']);
 
   const [editing, setEditing] = useState(false);
 
@@ -95,6 +96,20 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       });
   };
 
+  const onExportProject = () => {
+    setBusy(true);
+
+    exportProject(supabase, props.project).then((success) => {
+      setBusy(false);
+
+      if (success) {
+        window.location.href = `/${i18n.language}/jobs`;
+      } else {
+        props.onError(t('Failed to export project', { ns: 'dashboard-projects' }))
+      }
+    });
+  };
+
   const onLeaveProject = () => {
     setBusy(true);
 
@@ -112,8 +127,8 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
     onSaveTagsForTagDefinitions(tagDefinitionIds, props.project.id)
       .then(() => setAddToGroup(false))
       .then(() => setToast({
-        title: t['Success'],
-        description: t['Successfully updated groups for project'].replace('${name}', props.project.name),
+        title: t('Success', { ns: 'common' }),
+        description: t('Successfully updated groups for project', { ns: 'dashboard-projects', name: props.project.name }),
         type: 'success'
       }))
   ), [props.project]);
@@ -135,7 +150,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
         <Trigger asChild>
           <button
             className='unstyled icon-only project-card-actions'
-            aria-label={`${t['Show menu actions menu for project:']} ${props.project.name}`}
+            aria-label={`${t('Show menu actions menu for project:', { ns: 'dashboard-projects' })} ${props.project.name}`}
           >
             <DotsThreeVertical weight='bold' size={20} color='black' />
           </button>
@@ -153,7 +168,7 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
                 onSelect={() => setEditing(true)}
               >
                 <PencilSimple size={16} />{' '}
-                <span>{t['Edit project details']}</span>
+                <span>{t('Edit project details', { ns: 'dashboard-projects' })}</span>
               </Item>
             )}
 
@@ -163,7 +178,17 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
                 onSelect={() => setAddToGroup(true)}
               >
                 <ArrowRight size={16} className='dark' />{' '}
-                <span>{t['Add to group']}</span>
+                <span>{t('Add to group', { ns: 'dashboard-projects' })}</span>
+              </Item>
+            )}
+
+            {isOrgAdmin && (
+              <Item
+                className='dropdown-item'
+                onSelect={onExportProject}
+              >
+                <CloudArrowDownIcon size={16} className='dark' />{' '}
+                <span>{t('Export project', { ns: 'dashboard-projects' })}</span>
               </Item>
             )}
 
@@ -172,12 +197,12 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
                 {isMine || isOrgAdmin ? (
                   <>
                     <Trash size={16} className='destructive' />{' '}
-                    <span>{t['Delete project']}</span>
+                    <span>{t('Delete project', { ns: 'dashboard-projects' })}</span>
                   </>
                 ) : (
                   <>
                     <SignOut size={16} className='destructive' />{' '}
-                    <span>{t['Leave project']}</span>
+                    <span>{t('Leave project', { ns: 'dashboard-projects' })}</span>
                   </>
                 )}
               </Item>
@@ -187,20 +212,19 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       </Root>
 
       <ConfirmedAction.Dialog
-        i18n={props.i18n}
         busy={busy}
-        title={t['Are you sure?']}
+        title={t('Are you sure?', { ns: 'common' })}
         description={
           isMine || isOrgAdmin
-            ? t['Are you sure you want to delete this project permanently?']
-            : t['Are you sure you want to leave this project']
+            ? t('Are you sure you want to delete this project permanently?', { ns: 'dashboard-projects' })
+            : t('Are you sure you want to leave this project', { ns: 'dashboard-projects' })
         }
-        cancelLabel={t['Cancel']}
+        cancelLabel={t('Cancel', { ns: 'common' })}
         confirmLabel={
           <>
             <Trash size={16} />
             <span>
-              {isMine || isOrgAdmin ? t['Delete project'] : t['Leave project']}
+              {isMine || isOrgAdmin ? t('Delete project', { ns: 'dashboard-projects' }) : t('Leave project', { ns: 'dashboard-projects' })}
             </span>
           </>
         }
@@ -208,7 +232,6 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       />
 
       <ProjectDetailsForm
-        i18n={props.i18n}
         project={props.project}
         open={editing}
         onSaved={onDetailsSaved}
@@ -219,24 +242,23 @@ export const ProjectCardActions = (props: ProjectCardActionsProps) => {
       <SelectRecordsDialog
         columns={[{
           name: 'name',
-          label: t['Name'],
+          label: t('Name', { ns: 'common' }),
           resolve: ({ name }: TagDefinition) => name
         }, {
           name: 'count',
-          label: t['Number of Projects'],
+          label: t('Number of Projects', { ns: 'dashboard-projects' }),
           resolve: ({ tags }: TagDefinition) => tags?.length || 0
         }]}
-        description={t['Select Groups']}
+        description={t('Select Groups', { ns: 'dashboard-projects' })}
         filterBy={['name']}
-        header={t['All Groups']}
-        i18n={props.i18n}
+        header={t('All Groups', { ns: 'dashboard-projects' })}
         onCancel={() => setAddToGroup(false)}
         onSave={onTagsSaved}
         open={addToGroup}
         records={tagDefinitions}
         selected={selectedTagDefinitions}
-        subtite={t['Select group(s) to add project to']}
-        title={t['Add project to group'].replace('${name}', props.project.name)}
+        subtitle={t('Select group(s) to add project to', { ns: 'dashboard-projects' })}
+        title={t('Add project to group', { ns: 'dashboard-projects', name: props.project.name })}
       />
 
     </ConfirmedAction.Root>

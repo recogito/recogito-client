@@ -3,7 +3,6 @@ import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { UsersTable } from './UsersTable';
 import type {
   MyProfile,
-  Translations,
   ExtendedUserProfile,
   Group,
 } from 'src/Types';
@@ -15,6 +14,8 @@ import { TopBar } from '@components/TopBar';
 import { InviteUserDialog } from './InviteUserDialog';
 import { inviteUserToOrg } from '@backend/helpers';
 import { getProfilesExtended } from '@backend/helpers/profileHelpers';
+import clientI18next from 'src/i18n/client';
+import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import './UserManagement.css';
 
@@ -26,7 +27,6 @@ const changeGroupMembership = async (
 };
 
 interface UserManagementProps {
-  i18n: Translations;
 
   profiles: ExtendedUserProfile[];
 
@@ -37,8 +37,8 @@ interface UserManagementProps {
   me: MyProfile;
 }
 
-export const UserManagement = (props: UserManagementProps) => {
-  const { lang, t } = props.i18n;
+const UserManagement = (props: UserManagementProps) => {
+  const { t, i18n } = useTranslation(['common', 'project-collaboration', 'user-management']);
 
   const [users, setUsers] = useState(props.profiles);
   const [filteredUsers, setFilteredUsers] = useState(props.profiles);
@@ -88,8 +88,8 @@ export const UserManagement = (props: UserManagementProps) => {
     deleteUser(userToDelete as ExtendedUserProfile).then((result) => {
       if (!result) {
         setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete user.'],
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not delete user.', { ns: 'project-collaboration' }),
           type: 'error',
           icon: <WarningDiamond color='red' />,
         });
@@ -105,8 +105,8 @@ export const UserManagement = (props: UserManagementProps) => {
         }
 
         setToast({
-          title: t['Success'],
-          description: t['User successfully deleted.'],
+          title: t('Success', { ns: 'common' }),
+          description: t('User successfully deleted.', { ns: 'user-management' }),
           type: 'success',
           icon: <CheckFat color='green' />,
         });
@@ -124,8 +124,8 @@ export const UserManagement = (props: UserManagementProps) => {
     changeGroupMembership(user, newGroupId).then((result) => {
       if (!result) {
         setToast({
-          title: t['Something went wrong'],
-          description: t['Could not change user group.'],
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not change user group.', { ns: 'user-management' }),
           type: 'error',
           icon: <WarningDiamond color='red' />,
         });
@@ -139,8 +139,8 @@ export const UserManagement = (props: UserManagementProps) => {
         }
 
         setToast({
-          title: t['Success'],
-          description: t['User Access Level successfully changed.'],
+          title: t('Success', { ns: 'common' }),
+          description: t('User Access Level successfully changed.', { ns: 'user-management' }),
           type: 'success',
           icon: <CheckFat color='green' />,
         });
@@ -160,8 +160,8 @@ export const UserManagement = (props: UserManagementProps) => {
             setUsers(data);
 
             setToast({
-              title: t['Success'],
-              description: t['User has been invited.'],
+              title: t('Success', { ns: 'common' }),
+              description: t('User has been invited.', { ns: 'user-management' }),
               type: 'success',
               icon: <CheckFat color='green' />,
             });
@@ -175,26 +175,25 @@ export const UserManagement = (props: UserManagementProps) => {
     <div className='user-management'>
       <ToastProvider>
         <TopBar
-          i18n={props.i18n}
           onError={(error) => console.log(error)}
           me={props.me}
         />
         <div className='user-management-header'>
           <div>
             <a
-              href={`/${lang}/projects`}
+              href={`/${i18n.language}/projects`}
               style={{ marginTop: 15, zIndex: 1000 }}
             >
               <ArrowLeft className='text-bottom' size={16} />
-              <span>{t['Back to Projects']}</span>
+              <span>{t('Back to Projects', { ns: 'common' })}</span>
             </a>
-            <h1>{t['User Management']}</h1>
+            <h1>{t('User Management', { ns: 'user-management' })}</h1>
           </div>
         </div>
         <div className='user-management-content'>
           <div className='user-management-actions'>
             <div>
-              <label htmlFor='search'>{t['Search Users']}</label>
+              <label htmlFor='search'>{t('Search Users', { ns: 'user-management' })}</label>
               <input
                 autoFocus
                 id='search'
@@ -205,12 +204,11 @@ export const UserManagement = (props: UserManagementProps) => {
               />
             </div>
             {props.canInvite && (
-              <InviteUserDialog onSave={handleInviteUser} i18n={props.i18n} />
+              <InviteUserDialog onSave={handleInviteUser} />
             )}
           </div>
           <div className='user-management-table'>
             <UsersTable
-              i18n={props.i18n}
               me={props.me}
               users={filteredUsers}
               groups={props.groups}
@@ -225,7 +223,6 @@ export const UserManagement = (props: UserManagementProps) => {
           />
           <DeleteWarningMessage
             open={deleteWarningOpen}
-            i18n={props.i18n}
             onCancel={onCancelDelete}
             onConfirm={onDeleteConfirm}
           />
@@ -234,3 +231,9 @@ export const UserManagement = (props: UserManagementProps) => {
     </div>
   );
 };
+
+export const UserManagementApp = (props: UserManagementProps) => (
+  <I18nextProvider i18n={clientI18next}>
+    <UserManagement {...props} />
+  </I18nextProvider>
+);

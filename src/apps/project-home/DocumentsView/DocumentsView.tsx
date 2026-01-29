@@ -26,7 +26,6 @@ import type {
   Document,
   Protocol,
   ExtendedProjectData,
-  Translations,
   MyProfile,
 } from 'src/Types';
 import { useState, useMemo, useCallback } from 'react';
@@ -40,13 +39,12 @@ import {
   removeDocumentsFromProject,
   updateDocumentsSort,
 } from '@backend/helpers';
+import { useTranslation } from 'react-i18next';
 
 import '../ProjectHome.css';
 
 interface DocumentsViewProps {
   isAdmin: boolean;
-
-  i18n: Translations;
 
   documents: Document[];
 
@@ -140,7 +138,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     (documents) => props.setDocuments([...props.documents, ...documents])
   );
 
-  const { t, lang } = props.i18n;
+  const { t, i18n } = useTranslation(['common', 'project-home', 'project-sidebar', 'a11y']);
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
@@ -163,7 +161,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
 
         setShowUploads(true);
       } else if (typeof accepted === 'string') {
-        validateIIIF(accepted, props.i18n).then(
+        validateIIIF(accepted, i18n.language).then(
           ({ isValid, result, error }) => {
             if (isValid) {
               addUploads([
@@ -224,16 +222,16 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         if (resp) {
           props.onRemoveDocument(document);
           props.setToast({
-            title: t['Deleted'],
-            description: t['Document deleted successfully.'],
+            title: t('Deleted', { ns: 'common' }),
+            description: t('Document deleted successfully.', { ns: 'common' }),
             type: 'success',
           });
         } else {
           // Roll back optimistic update in case of failure
           props.setDocuments([...props.documents, document]);
           props.setToast({
-            title: t['Something went wrong'],
-            description: t['Could not delete the document.'],
+            title: t('Something went wrong', { ns: 'common' }),
+            description: t('Could not delete the document.', { ns: 'project-home' }),
             type: 'error',
           });
         }
@@ -246,16 +244,16 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     archiveDocument(supabase, document.id).then(({ data }) => {
       if (data) {
         props.setToast({
-          title: t['Deleted'],
-          description: t['Document deleted successfully.'],
+          title: t('Deleted', { ns: 'common' }),
+          description: t('Document deleted successfully.', { ns: 'common' }),
           type: 'success',
         });
 
         setDocumentUpdated(true);
       } else {
         props.setToast({
-          title: t['Something went wrong'],
-          description: t['Could not delete the document.'],
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not delete the document.', { ns: 'project-home' }),
           type: 'error',
         });
       }
@@ -285,8 +283,8 @@ export const DocumentsView = (props: DocumentsViewProps) => {
 
   const onError = (error: string) => {
     props.setToast({
-      title: t['Something went wrong'],
-      description: t[error] || error,
+      title: t('Something went wrong', { ns: 'common' }),
+      description: error,
       type: 'error',
     });
   };
@@ -308,23 +306,23 @@ export const DocumentsView = (props: DocumentsViewProps) => {
   return (
     <>
       <header className='project-home-document-header-bar'>
-        <h2>{t['Documents']}</h2>
+        <h2>{t('Documents', { ns: 'project-sidebar' })}</h2>
         {props.isAdmin && (
           <div className='admin-actions'>
             <a
-              href={`/${lang}/projects/${props.project.id}/export/csv`}
+              href={`/${i18n.language}/projects/${props.project.id}/export/csv`}
               className='button'
               tabIndex={0}
             >
               <DownloadSimple size={20} />
-              <span>{t['Export Annotations']}</span>
+              <span>{t('Export Annotations', { ns: 'common' })}</span>
             </a>
             <button
               className='button primary project-home-add-document'
               onClick={onAddDocument}
               tabIndex={0}
             >
-              <Plus size={20} /> <span>{t['Add Document']}</span>
+              <Plus size={20} /> <span>{t('Add Document', { ns: 'project-home' })}</span>
             </button>
           </div>
         )}
@@ -350,7 +348,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   isAdmin={props.isAdmin}
                   isDocumentsView
                   isOwner={isOwner(document)}
-                  i18n={props.i18n}
                   document={document}
                   context={defaultContext!}
                   onDelete={() => onDeleteDocument(document)}
@@ -366,7 +363,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                   className='dragging'
                   key={activeDocument.id}
                   isAdmin={props.isAdmin}
-                  i18n={props.i18n}
                   document={activeDocument}
                   context={defaultContext!}
                   onDelete={() => {}}
@@ -381,7 +377,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
       <div>
         <DocumentLibrary
           open={addOpen}
-          i18n={props.i18n}
           onCancel={() => setAddOpen(false)}
           user={props.user}
           dataDirty={dataDirty || documentUpdated}
@@ -391,7 +386,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           }}
           UploadActions={
             <UploadActions
-              i18n={props.i18n}
               me={props.user}
               onUpload={open}
               onImport={onImportRemote}
@@ -408,7 +402,6 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         />
       </div>
       <UploadTracker
-        i18n={props.i18n}
         show={showUploads}
         closable={isIdle}
         uploads={uploads}
@@ -416,7 +409,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
       />
       <input
         {...getInputProps()}
-        aria-label={t['drag and drop target for documents']}
+        aria-label={t('drag and drop target for documents', { ns: 'a11y' })}
       />
     </>
   );
