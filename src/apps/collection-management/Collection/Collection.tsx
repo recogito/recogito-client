@@ -35,36 +35,71 @@ import clientI18next from 'src/i18n/client';
 interface CollectionsTableProps {
   collection: CollectionType;
 
-  documents: Document[];
-
   me: MyProfile;
 }
 
+export const DOCUMENTS_PER_FETCH = 20;
+
 const Collection = (props: CollectionsTableProps) => {
-  const { t, i18n } = useTranslation(['project-home', 'collection-management', 'a11y']);
+  const { t, i18n } = useTranslation([
+    'project-home',
+    'collection-management',
+    'a11y',
+  ]);
   const [toast, setToast] = useState<ToastContent | null>(null);
   const [collection, setCollection] = useState(props.collection);
   const [search, setSearch] = useState<string>('');
-  const [documents, setDocuments] = useState(props.documents);
-  const [filteredDocuments, setFilteredDocuments] = useState(props.documents);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
   const [showUploads, setShowUploads] = useState(false);
   const [me, setMe] = useState(props.me);
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [disabledDocIds, setDisabledDocIds] = useState<string[]>([]);
+  const [count, setCount] = useState<number>(0);
 
   const [revisionDocument, setRevisionDocument] = useState<
     Document | undefined
   >(undefined);
 
-  useEffect(() => {
-    if (props.documents) {
-      setDocuments(props.documents);
-    }
-  }, [props.documents]);
+  const fetchDocuments = async (reset = false) => {
+    setLoading(true);
+    const currentPage = reset ? 0 : page;
 
-  const documentIds = useMemo(
-    () => props.documents.map((d) => d.id),
-    [props.documents]
+    const { data, error } = await supabase.rpc(
+      'get_collection_management_documents_rpc',
+      {
+        _collection_id: collection.id,
+        _search: search,
+        _limit: DOCUMENTS_PER_FETCH,
+        _offset: currentPage * DOCUMENTS_PER_FETCH,
+      }
+    );
+
+    if (!error && data) {
+      setDocuments(data);
+      const count = data.length > 0 ? data[0].total_count : 0;
+      setCount(Number(count));
+      setHasMore(currentPage * DOCUMENTS_PER_FETCH + data.length < count);
+      if (reset) setPage(0);
+    }
+    setLoading(false);
+  };
+  const totalPages = useMemo(
+    () => Math.ceil(count / DOCUMENTS_PER_FETCH),
+    [count]
   );
+  useEffect(() => {
+    const searchDebounce = setTimeout(() => {
+      fetchDocuments(true);
+    }, 400);
+    return () => clearTimeout(searchDebounce);
+  }, [search]);
+
+  useEffect(() => {
+    if (page > 0) fetchDocuments(false);
+  }, [page]);
 
   const onError = (error: string) => {
     setToast({
@@ -74,6 +109,20 @@ const Collection = (props: CollectionsTableProps) => {
       icon: <WarningDiamondIcon color='red' />,
     });
   };
+
+  const fetchAllCollectionIds = async () => {
+    const { data } = await supabase
+      .from('documents')
+      .select('id')
+      .eq('collection_id', collection.id)
+      .eq('is_archived', false);
+
+    if (data) setDisabledDocIds(data.map((d) => d.id));
+  };
+
+  useEffect(() => {
+    fetchAllCollectionIds();
+  }, [collection.id]);
 
   const onCopyFileError = (docName: string) => {
     onError(t('fileCopyError', { ns: 'project-home', docName }));
@@ -157,13 +206,6 @@ const Collection = (props: CollectionsTableProps) => {
       }
       // update the list with successful docs
       const successfulDocs = newDocs.filter((d) => !failedDocs.includes(d.id));
-      setDocuments(
-        [...props.documents, ...successfulDocs].reduce<Document[]>(
-          (all, document) =>
-            all.some((d) => d.id === document.id) ? all : [...all, document],
-          []
-        )
-      );
       if (successfulDocs.length > 0) {
         setToast({
           title: t('Copied', { ns: 'project-home' }),
@@ -172,30 +214,16 @@ const Collection = (props: CollectionsTableProps) => {
           }),
           type: 'success',
         });
+        await fetchDocuments(true);
+        await fetchAllCollectionIds();
       }
       setLibraryOpen(false);
     }
   };
 
-  useEffect(() => {
-    if (!search || search.length === 0) {
-      setFilteredDocuments(documents);
-    } else {
-      const low = search.toLowerCase();
-      setFilteredDocuments(
-        documents.filter((d) => d.name?.toLowerCase().includes(low))
-      );
-    }
-  }, [search, documents]);
-
-  const { addUploads, isIdle, uploads } = useUpload((docs) => {
-    setDocuments(
-      [...props.documents, ...docs].reduce<Document[]>(
-        (all, document) =>
-          all.some((d) => d.id === document.id) ? all : [...all, document],
-        []
-      )
-    );
+  const { addUploads, isIdle, uploads } = useUpload(async () => {
+    await fetchDocuments(true);
+    await fetchAllCollectionIds();
     setRevisionDocument(undefined);
   });
 
@@ -290,9 +318,8 @@ const Collection = (props: CollectionsTableProps) => {
           }),
           type: 'success',
         });
-        setDocuments((prevDocuments) =>
-          prevDocuments.filter((prevDoc) => prevDoc.id !== document.id)
-        );
+        fetchDocuments(false);
+        fetchAllCollectionIds();
       } else {
         setToast({
           title: t('Something went wrong', { ns: 'project-home' }),
@@ -377,10 +404,7 @@ const Collection = (props: CollectionsTableProps) => {
   return (
     <div className='collection'>
       <ToastProvider>
-        <TopBar
-          onError={(error) => console.log(error)}
-          me={me}
-        />
+        <TopBar onError={(error) => console.log(error)} me={me} />
         <div className='collection-header'>
           <div>
             <a
@@ -410,6 +434,41 @@ const Collection = (props: CollectionsTableProps) => {
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+            <div className='pagination'>
+              <button
+                disabled={page === 0 || loading}
+                onClick={() => setPage((p) => p - 1)}
+              >
+                {t('Previous', { ns: 'common' })}
+              </button>
+              <span className='pagination-meta'>
+                {(loading && count === 0) ? (
+                  t('Loading...', { ns: 'common' })
+                ) : (
+                  <>
+                    <span>
+                      {t('Page {{current}} of {{total}}', {
+                        ns: 'common',
+                        current: page + 1,
+                        total: totalPages || 1,
+                      })}
+                    </span>
+                    <small>
+                      {t('matching_documents_count', {
+                        ns: 'collection-management',
+                        count,
+                      })}
+                    </small>
+                  </>
+                )}
+              </span>
+              <button
+                disabled={!hasMore || loading}
+                onClick={() => setPage((p) => p + 1)}
+              >
+                {t('Next', { ns: 'common' })}
+              </button>
+            </div>
             <div>
               <CollectionDialog
                 collection={collection}
@@ -425,14 +484,16 @@ const Collection = (props: CollectionsTableProps) => {
             </div>
           </div>
           <div className='collection-documents-table'>
-            {filteredDocuments.length > 0 ? (
+            {loading && documents.length === 0 ? (
+              <p>{t('Loading...', { ns: 'common' })}</p>
+            ) : documents.length > 0 ? (
               <CollectionDocumentsTable
-                documents={filteredDocuments}
+                documents={documents}
+                fetchDocuments={() => fetchDocuments(true)}
                 onDelete={onDeleteDocumentFromCollection}
                 onUpload={onUploadRevision}
                 onImport={onImportRemote}
                 setToast={setToast}
-                setDocuments={setDocuments}
               />
             ) : (
               <p>
@@ -461,7 +522,7 @@ const Collection = (props: CollectionsTableProps) => {
           <DocumentLibrary
             clearDirtyFlag={() => {}}
             dataDirty={false}
-            disabledIds={documentIds}
+            disabledIds={disabledDocIds}
             hideCollections
             isAdmin={false}
             onCancel={() => setLibraryOpen(false)}

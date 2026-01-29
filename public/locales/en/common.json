@@ -55,5 +55,9 @@
   "Deleted": "Deleted",
   "Document deleted successfully.": "Document removed successfully.",
   "Export Annotations": "Export Annotations",
-  "Import": "Import"
+  "Import": "Import",
+  "Page {{current}} of {{total}}": "Page {{current}} of {{total}}",
+  "Previous": "Previous",
+  "Next": "Next",
+  "Loading...": "Loading..."
 }

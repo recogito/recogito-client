@@ -32,6 +32,8 @@
   "Import": "Import Into Collection",
   "Import new revision": "Import new revision",
   "Latest Revision": "Latest Revision",
+  "matching_documents_count_one": "({{count}} matching document)",
+  "matching_documents_count_other": "({{count}} matching documents)",
   "Menu actions for collection:": "Menu actions for collection:",
   "Name": "Name",
   "No collections": "No collections",

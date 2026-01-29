@@ -55,5 +55,9 @@
   "Deleted": "Gelöscht",
   "Document deleted successfully.": "Das Dokument wurde erfolgreich aus dem Projekt entfernt.",
   "Export Annotations": "Annotationen exportieren",
-  "Import": "Importieren"
+  "Import": "Importieren",
+  "Page {{current}} of {{total}}": "Seite {{current}} von {{total}}",
+  "Previous": "Zurück",
+  "Next": "Weiter",
+  "Loading...": "Laden..."
 }
