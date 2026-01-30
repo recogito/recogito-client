@@ -22,7 +22,7 @@ export const formatName = (user: UserProfile) => {
   if (first_name || last_name) return `${first_name} ${last_name}`.trim();
 
   // Remember that this function returns undefined if user has no (nick)name set!
-}
+};
 
 const stringToHash = (str: string) => {
   let hash = 0;
@@ -36,23 +36,22 @@ const stringToHash = (str: string) => {
 export const Avatar = (props: AvatarProps) => {
   const { id, initials, color, avatar } = props;
 
-  const fallbackColor = `hsl(${stringToHash(id) % 360}, 35%, 48%)`;
+  const hue = Math.abs(stringToHash(id)) % 360;
+  const fallbackColor = `hsl(${hue}, 50%, 75%)`;
+  const fallbackTextColor = `hsl(${hue}, 60%, 10%)`;
 
   return (
     <RadixAvatar.Root className='avatar'>
-      <span 
+      <span
         className={color ? 'avatar-wrapper ring' : 'avatar-wrapper'}
-        style={color ? { borderColor: color } : undefined}>
-        {avatar && (
-          <RadixAvatar.Image
-            className='avatar-image'
-            src={avatar}
-          />
-        )}
+        style={color ? { borderColor: color } : undefined}
+      >
+        {avatar && <RadixAvatar.Image className='avatar-image' src={avatar} />}
 
         <RadixAvatar.Fallback
           className='avatar-fallback'
-          style={{ backgroundColor: fallbackColor }}>
+          style={{ backgroundColor: fallbackColor, color: fallbackTextColor }}
+        >
           {initials ? initials : <User size={16} />}
         </RadixAvatar.Fallback>
       </span>
