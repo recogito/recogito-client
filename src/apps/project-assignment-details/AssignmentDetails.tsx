@@ -1,5 +1,6 @@
 import { DownloadSimple } from '@phosphor-icons/react';
-import { Avatar, formatName } from '@components/Avatar';
+import { getProfileInitials } from '@components/AccountActions';
+import { Avatar } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
 import type { Document, ExtendedAssignmentData } from 'src/Types';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +34,7 @@ export const AssignmentDetails = (props: AssignmentDetailsProps) => {
             <li key={member.user.id} >
               <Avatar
                 id={member.user.id}
-                name={formatName(member.user)}
+                initials={getProfileInitials(member.user)}
                 avatar={member.user.avatar_url} />
             </li>
           ))}

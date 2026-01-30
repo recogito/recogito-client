@@ -9,7 +9,7 @@ import {
   Users,
 } from '@phosphor-icons/react';
 import { Avatar } from '@components/Avatar';
-import type { MyProfile } from 'src/Types';
+import type { MyProfile, UserProfile } from 'src/Types';
 
 import './AccountActions.css';
 import { useTranslation } from 'react-i18next';
@@ -30,16 +30,41 @@ interface AccountProps {
   sideOffset?: number;
 }
 
+export const getRealName = (profile: UserProfile): string =>
+  [profile.first_name, profile.last_name].filter((str) => str).join(' ');
+
+export const getInitials = (name: string): string => {
+  const tokens = name.split(/\s+/);
+  if (tokens.length === 1) {
+    return tokens[0].charAt(0).toUpperCase();
+  } else {
+    return (
+      tokens[0].charAt(0) + tokens[tokens.length - 1].charAt(0)
+    ).toUpperCase();
+  }
+};
+
+export const getProfileInitials = (profile: UserProfile): string => {
+  const realname = getRealName(profile);
+  if (profile.nickname) {
+    // privilege nickname: split at space and show first and last initials
+    return getInitials(profile.nickname);
+  } else if (realname) {
+    // then use first/last name initials
+    return realname
+      .split(' ')
+      .map((name) => name[0])
+      .join(' ')
+      .toUpperCase();
+  }
+  // no name = empty string, will show icon
+  return '';
+};
+
 export const AccountActions = (props: AccountProps) => {
   const { profile } = props;
 
   const { i18n, t } = useTranslation(['a11y', 'account-menu', 'common']);
-
-  const realname = useMemo(
-    () =>
-      [profile.first_name, profile.last_name].filter((str) => str).join(' '),
-    [profile.first_name, profile.last_name]
-  );
 
   const goto = (url: string) => () => (window.location.href = url);
 
@@ -49,27 +74,13 @@ export const AccountActions = (props: AccountProps) => {
 
   const sideOffset = props.sideOffset || 8;
 
+  const realname = useMemo(
+    () => getRealName(profile),
+    [profile.first_name, profile.last_name]
+  );
+
   const initials = useMemo((): string => {
-    if (profile.nickname) {
-      // privilege nickname: split at space and show first and last initials
-      const tokens = profile.nickname.split(/\s+/);
-      if (tokens.length === 1) {
-        return tokens[0].charAt(0).toUpperCase();
-      } else {
-        return (
-          tokens[0].charAt(0) + tokens[tokens.length - 1].charAt(0)
-        ).toUpperCase();
-      }
-    } else if (realname) {
-      // then use first/last name initials
-      return realname
-        .split(' ')
-        .map((name) => name[0])
-        .join(' ')
-        .toUpperCase();
-    }
-    // no name = empty string, will show icon
-    return '';
+    return getProfileInitials(profile);
   }, [profile.first_name, profile.last_name, profile.nickname]);
 
   return (

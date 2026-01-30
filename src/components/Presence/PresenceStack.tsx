@@ -3,6 +3,7 @@ import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition } from '@react-spring/web';
 import * as Popover from '@radix-ui/react-popover';
 import * as Tooltip from '@radix-ui/react-tooltip';
+import { getInitials } from '@components/AccountActions';
 import { getDisplayName } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
 
@@ -50,7 +51,7 @@ export const PresenceStack = (props: PresenceStackProps) => {
                   <Tooltip.Trigger>
                     <Avatar 
                       id={presentUser.id}
-                      name={presentUser.appearance.label}
+                      initials={getInitials(presentUser.appearance.label || '')}
                       color={presentUser.appearance.color} 
                       avatar={presentUser.appearance.avatar} />
                   </Tooltip.Trigger>
@@ -84,7 +85,7 @@ export const PresenceStack = (props: PresenceStackProps) => {
                   <li key={user.id}>
                     <Avatar
                       id={user.id}
-                      name={user.appearance.label}
+                      initials={getInitials(user.appearance.label || '')}
                       color={user.appearance.color} 
                       avatar={user.appearance.avatar}
                     />

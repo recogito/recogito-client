@@ -3,6 +3,7 @@ import type { PresentUser, User } from '@annotorious/react';
 import { Detective } from '@phosphor-icons/react';
 import { useAuthorColors } from '@components/AnnotationDesktop';
 import { Avatar } from '@components/Avatar';
+import { getInitials } from '@components/AccountActions';
 
 import './AuthorAvatar.css';
 
@@ -35,7 +36,7 @@ export const AuthorAvatar = (props: AuthorAvatarProps) => {
   ) : author && (
     <Avatar
       id={author.id}
-      name={(author as PresentUser).appearance?.label || author.name}
+      initials={getInitials((author as PresentUser).appearance?.label || author.name || '')}
       avatar={(author as PresentUser).appearance?.avatar} 
       color={color} />
   )
