@@ -27,10 +27,23 @@ export const Toast = (props: ToastProps) => {
   // Note that we need to keep the content on screen,
   // even after the prop has gone null, for the exit anim.
   const [content, setContent] = useState(props.content);
+  // hide viewport when no content present
+  const [showViewport, setShowViewport] = useState(false);
 
   useEffect(() => {
-    if (props.content) setContent(props.content);
+    if (props.content) {
+      setShowViewport(true);
+      setContent(props.content);
+    }
   }, [props.content]);
+
+  const onOpenChange = (open: boolean) => {
+    props.onOpenChange(open);
+    if (!open) {
+      // hide viewport after 300ms timeout to allow anim to play
+      setTimeout(() => setShowViewport(false), 300);
+    }
+  };
 
   return (
     <>
@@ -38,7 +51,7 @@ export const Toast = (props: ToastProps) => {
         className='toast'
         duration={props.duration || 5000}
         open={Boolean(props.content)}
-        onOpenChange={props.onOpenChange}
+        onOpenChange={onOpenChange}
       >
         <Title className='toast-title'>
           {icon} {content?.title}
@@ -68,7 +81,7 @@ export const Toast = (props: ToastProps) => {
         </Action>
       </Root>
 
-      <Viewport className='toast-viewport' />
+      {showViewport && <Viewport className='toast-viewport' />}
     </>
   );
 };
