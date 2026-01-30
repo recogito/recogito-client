@@ -8,7 +8,7 @@ export const getGridTemplate = (view: 'mine' | 'all' | 'collection') => {
     case 'mine':
       return '50px 450px 150px 1fr 1fr 60px';
     case 'all':
-      return '50px 550px 1fr 1fr 60px';
+      return '50px 450px 1fr 1fr 60px';
     case 'collection':
       return '50px 325px 200px 1fr 1fr 60px';
     default:
