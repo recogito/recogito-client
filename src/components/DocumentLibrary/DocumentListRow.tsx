@@ -9,6 +9,7 @@ import {
 import { DocumentCard } from '@components/DocumentCard';
 import type { LibraryDocument } from './DocumentLibrary';
 import { CARD_WIDTH, GAP } from './helpers';
+import { Spinner } from '@components/Spinner';
 
 interface DocumentListRowProps {
   documents: LibraryDocument[];
@@ -66,7 +67,12 @@ export const DocumentListRow = ({
   // Table / "rows" display
 
   const doc = props.documents[index];
-  if (!doc) return <div style={style}>Loading...</div>;
+  if (!doc)
+    return (
+      <div className='spinner-container' style={style}>
+        <Spinner />
+      </div>
+    );
 
   const isSelected = props.selectedIds.includes(doc.id);
   const isDisabled = props.disabledIds.includes(doc.id);

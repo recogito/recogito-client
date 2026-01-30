@@ -184,7 +184,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const fetchDocs = useCallback(
     async (viewChanged = false) => {
       if (loading) return;
-      setLoading(true);
+      if (viewChanged) {
+        setLoading(true);
+      }
       const currentPage = viewChanged ? 0 : page;
 
       const { data, error } = await supabase.rpc('get_library_documents_rpc', {

@@ -177,3 +177,8 @@
   justify-content: flex-end;
   padding: 20px;
 }
+
+.spinner-container {
+  text-align: center;
+  margin-top: 1.5rem;
+}
