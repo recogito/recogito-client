@@ -9,14 +9,21 @@ const lang = Astro.currentLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
-const projectId = Astro.params.project;
-
-const project = await getProjectExtended(supabase, projectId as string);
-
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
   return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
+
+const projectId = Astro.params.project;
+
+const project = await getProjectExtended(supabase, projectId as string);
+
+const isAlreadyMember = project.data?.users?.some(u => u.user.id === profile.data.id);
+if (isAlreadyMember) {
+   // skip the request page entirely if they are already in
+   return Astro.redirect(`/${lang}/projects/${projectId}`);
+}
+
 ---
 
 <BaseLayout title='join'>
@@ -24,7 +31,6 @@ if (profile.error || !profile.data) {
     client:only='react'
     projectId={projectId as string}
     user={profile.data}
-    isAlreadyMember={Boolean(project.data)}
   />
 </BaseLayout>
 

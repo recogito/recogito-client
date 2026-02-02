@@ -13,7 +13,7 @@ const projectId = Astro.params.project;
 
 const profile = await getMyProfile(supabase);
 if (profile.error || !profile.data) {
-  return Astro.redirect(`/${lang}/sign-in`);
+  return Astro.redirect(`/${lang}/sign-in?redirect-to=${Astro.url}`);
 }
 
 const project = await getProjectExtended(supabase, projectId as string);
@@ -25,6 +25,13 @@ if (project.error || !project.data) {
     statusText: 'Not Found',
   });
 }
+
+const isAlreadyMember = project.data?.users?.some(u => u.user.id === profile.data.id);
+if (isAlreadyMember) {
+   // skip the join page entirely if they are already in
+   return Astro.redirect(`/${lang}/projects/${projectId}`);
+}
+
 ---
 <HeaderLayout title='join'>
   <JoinProjectApp client:load project={project.data} />

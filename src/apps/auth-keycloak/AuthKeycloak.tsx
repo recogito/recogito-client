@@ -18,25 +18,24 @@ const AuthKeycloak = () => {
   }
 
   useEffect(() => {
+    const callbackUrl = `${window.location.origin}/auth/callback`;
+    const next = redirectUrl || `/${i18n.language}/projects`;
     supabaseImplicit.auth
       .signInWithOAuth({
         provider: 'keycloak',
         options: {
           scopes: 'openid',
-          redirectTo: redirectUrl
-            ? redirectUrl
-            : `/${i18n.language}/projects`,
+          redirectTo: `${callbackUrl}?next=${next}`,
         },
       })
       .then(({ data, error }) => {
         if (data?.url) {
-          localStorage.removeItem('redirect-to');
           window.location.href = data.url;
         } else {
           console.error(error);
         }
       });
-  }, []);
+  }, [redirectUrl]);
 
   return <div className='keycloak-main'>{t('Redirecting', { ns: 'auth-login' })}</div>;
 };

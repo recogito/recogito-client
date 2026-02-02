@@ -24,7 +24,7 @@ const invitation = await supabase
   .single();
 
 if (!invitation.data || invitation.error) {
-  return Astro.redirect(`/${lang}/projects`);
+  return Astro.redirect(`/${lang}/projects?no-redirect=true`);
 }
 ---
 

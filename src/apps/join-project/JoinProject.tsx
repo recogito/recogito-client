@@ -18,13 +18,8 @@ const JoinProject = (props: JoinProjectProps) => {
     joinProject(supabase, props.project.id).then((resp) => {
 
       if (resp) {
-        const url = new URLSearchParams(window.location.search);
-        const redirectUrl = url.get('redirect-to');
-        if (redirectUrl) {
-          window.location.href = redirectUrl;
-        } else {
-          window.location.href = `/${i18n.language}/projects`;
-        }
+        // redirect to project on success
+        window.location.href = `/${i18n.language}/projects/${props.project.id}`;
       } else {
         window.location.href = `/${i18n.language}/projects`;
       }
