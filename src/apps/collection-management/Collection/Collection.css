@@ -35,3 +35,15 @@
   overflow-y: auto;
   margin-top: 10px;
 }
+
+.pagination,
+.pagination-meta {
+  justify-content: center;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.pagination-meta {
+  gap: 0.5rem;
+}

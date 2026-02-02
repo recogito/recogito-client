@@ -176,6 +176,7 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
                     isAdmin={props.isAdmin}
                     document={document as Document}
                     context={props.assignment}
+                    view='context'
                   />
                 ))}
               </SortableContext>

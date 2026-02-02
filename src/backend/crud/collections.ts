@@ -18,10 +18,7 @@ export const getInstanceCollections = (
 ): Response<Collection[]> =>
   supabase
     .from('collections')
-    .select(`
-      *,
-      document_count:documents(count)
-    `)
+    .select('*')
     .is('extension_id', null)
     .then(({ error, data }) => {
       return { error, data: data as Collection[] };

@@ -55,7 +55,9 @@ export const AssignmentDetails = (props: AssignmentDetailsProps) => {
           <DocumentCard
             key={document.id}
             document={document}
-            context={assignment} />
+            context={assignment}
+            view='context'
+          />
         ))}
       </div>
     </div>

@@ -91,5 +91,8 @@
   "Copied": "Copied",
   "Document copied successfully.": "Document copied successfully.",
   "fileCopyError": "Could not copy file contents of {{docName}}",
-  "Could not copy documents into collection.": "Could not copy documents into collection."
+  "Could not copy documents into collection.": "Could not copy documents into collection.",
+  "Loading revisions...": "Loading revisions...",
+  "No title": "No title",
+  "No author/artist": "No author/artist"
 }
