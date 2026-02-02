@@ -10,10 +10,7 @@ import clientI18next from 'src/i18n/client';
 import './ProjectRequest.css';
 
 interface ProjectRequestProps {
-
   projectId: string;
-
-  isAlreadyMember: boolean;
 
   user: MyProfile;
 }
@@ -64,46 +61,26 @@ const ProjectRequest = (props: ProjectRequestProps) => {
       <>
         <TopBar onError={() => {}} me={props.user} />
         <div className='project-request-root'>
-          {!props.isAlreadyMember ? (
-            <>
-              <div className='project-request-title'>
-                {`${t('Do you wish to request membership for project', { ns: 'project-request' })}: ${projectName}?`}
-              </div>
+          <div className='project-request-title'>
+            {`${t('Do you wish to request membership for project', { ns: 'project-request' })}: ${projectName}?`}
+          </div>
 
-              <div className='project-request-button-container'>
-                <button
-                  className='project-request-dialog-button-cancel'
-                  onClick={() =>
-                    (window.location.href = `/${i18n.language}/projects`)
-                  }
-                >
-                  {t('Cancel', { ns: 'common' })}
-                </button>
-                <button
-                  className='project-request-dialog-button-join'
-                  onClick={handleRequest}
-                >
-                  {t('Request', { ns: 'project-request' })}
-                </button>
-              </div>
-            </>
-          ) : (
-            <>
-              <div className='project-request-title'>
-                {`${t('You are already a member of this project. You can navigate to it from the Projects screen > My Projects', { ns: 'project-request' })} > ${projectName}`}
-              </div>
-              <div className='project-request-button-container'>
-                <button
-                  className='primary project-request-dialog-button-cancel'
-                  onClick={() =>
-                    (window.location.href = `/${i18n.language}/projects/${props.projectId}`)
-                  }
-                >
-                  {t('Go To Project', { ns: 'project-request' })}
-                </button>
-              </div>
-            </>
-          )}
+          <div className='project-request-button-container'>
+            <button
+              className='project-request-dialog-button-cancel'
+              onClick={() =>
+                (window.location.href = `/${i18n.language}/projects`)
+              }
+            >
+              {t('Cancel', { ns: 'common' })}
+            </button>
+            <button
+              className='project-request-dialog-button-join'
+              onClick={handleRequest}
+            >
+              {t('Request', { ns: 'project-request' })}
+            </button>
+          </div>
         </div>
       </>
     );
