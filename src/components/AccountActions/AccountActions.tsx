@@ -45,20 +45,20 @@ export const getInitials = (name: string): string => {
 };
 
 export const getProfileInitials = (profile: UserProfile): string => {
-  const realname = getRealName(profile);
   if (profile.nickname) {
     // privilege nickname: split at space and show first and last initials
     return getInitials(profile.nickname);
-  } else if (realname) {
-    // then use first/last name initials
-    return realname
-      .split(' ')
-      .map((name) => name[0])
-      .join(' ')
-      .toUpperCase();
   }
-  // no name = empty string, will show icon
-  return '';
+  const realname = getRealName(profile);
+  // then use first/last name initials, if available;
+  // otherwise, no name = empty string, will show icon
+  return realname
+    ? realname
+        .split(' ')
+        .map((name) => name[0])
+        .join(' ')
+        .toUpperCase()
+    : '';
 };
 
 export const AccountActions = (props: AccountProps) => {
