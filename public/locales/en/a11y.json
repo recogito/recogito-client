@@ -33,6 +33,8 @@
   "hexadecimal value for this color": "hexadecimal value for this color",
   "close": "close",
   "profile": "profile",
+  "accountActions": "account actions",
+  "accountActionsWithName": "{{initials}} ({{name}}): account actions",
   "help": "help",
   "sign out": "sign out",
   "user management": "user management",

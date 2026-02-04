@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { joinProject } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { getProfileInitials } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
 import { LockedPill } from '@components/LockedPill';
 import { ProjectCardActions } from '@components/ProjectCard/ProjectCardActions';
@@ -118,14 +119,7 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
           <Avatar
             key={member.user.id}
             id={member.user.id}
-            name={
-              member.user.nickname
-                ? member.user.nickname
-                : [member.user.first_name, member.user.last_name]
-                    .filter((str) => str)
-                    .join(' ')
-                    .trim()
-            }
+            initials={getProfileInitials(member.user)}
             avatar={member.user.avatar_url}
           />
         ))}

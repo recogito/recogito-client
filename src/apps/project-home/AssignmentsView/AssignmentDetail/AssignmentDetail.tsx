@@ -1,3 +1,4 @@
+import { getProfileInitials } from '@components/AccountActions';
 import { Avatar } from '@components/Avatar';
 import { DocumentCard } from '@components/DocumentCard';
 import { AssignmentsActions } from './AssignmentActions';
@@ -146,14 +147,7 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
                 <div className='assignment-detail-team-avatar' key={user.id}>
                   <Avatar
                     id={user.id}
-                    name={
-                      user.nickname
-                        ? user.nickname
-                        : [user.first_name, user.last_name]
-                            .filter((str) => str)
-                            .join(' ')
-                            .trim()
-                    }
+                    initials={getProfileInitials(user)}
                     avatar={user.avatar_url}
                   />
                 </div>
