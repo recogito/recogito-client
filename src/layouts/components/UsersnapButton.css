@@ -1,0 +1,46 @@
+aside.usersnap {
+  display: block;
+  z-index: 2147483647;
+  position: fixed;
+  font-family: 'Inter', 'Helvetica', 'Arial', sans-serif;
+}
+button#usersnap {
+  position: fixed;
+  border: none;
+  cursor: pointer;
+  margin: 0px;
+  display: flex;
+  outline: none;
+  padding: 0px 14px;
+  overflow: visible;
+  box-sizing: border-box;
+  align-items: center;
+  font-weight: 500;
+  white-space: nowrap;
+  justify-content: center;
+  appearance: none;
+  background: rgb(254, 210, 0);
+  color: rgb(0, 0, 0);
+  font-family: Inter, Helvetica, Arial, sans-serif;
+  bottom: 0px;
+  left: 2rem;
+  font-size: 1rem;
+  height: 2.375rem;
+  box-shadow: rgba(0, 0, 0, 0.1) -4px -12px 25px 0px;
+  border-radius: 20px 20px 0px 0px;
+  transform: translateY(0);
+  will-change: transform;
+  animation: usersnapSlide 400ms;
+  transition: transform 400ms;
+}
+button#usersnap[aria-expanded='true'] {
+  transform: translateY(100%);
+}
+@keyframes usersnapSlide {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
