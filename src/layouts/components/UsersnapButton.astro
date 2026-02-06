@@ -1,0 +1,42 @@
+---
+import './UsersnapButton.css';
+const projectKey = import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY;
+const globalKey = import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY;
+const isUsersnapEnabled = !!(projectKey && globalKey);
+---
+
+{isUsersnapEnabled && (
+  <>
+    <aside class="usersnap" aria-label="Report a bug">
+      <button
+        id="usersnap"
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+      >
+        Report a bug
+      </button>
+    </aside>
+    <script is:inline define:vars={{ globalKey }}>
+      window.onUsersnapLoad = function (api) {
+        api.init();
+        const btn = document.getElementById('usersnap');
+        btn?.addEventListener('click', () => {
+          api.logEvent('open-usersnap'); 
+        });
+
+        api.on('open', () => {
+          btn?.setAttribute('aria-expanded', 'true');
+        });
+
+        api.on('close', () => {
+          btn?.setAttribute('aria-expanded', 'false');
+        });
+      };
+      const script = document.createElement('script');
+      script.defer = true;
+      script.src = `https://widget.usersnap.com/global/load/${globalKey}?onload=onUsersnapLoad`;
+      document.head.appendChild(script);
+    </script>
+  </>
+)}

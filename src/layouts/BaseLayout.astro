@@ -1,6 +1,7 @@
 ---
 import config from '../config.json';
 import { truncateString } from '@util/general';
+import UsersnapButton from './components/UsersnapButton.astro';
 import '@themes/default/index.css';
 
 export interface Props {
@@ -34,22 +35,7 @@ const tabTitle = truncateString(title, 61);
   </head>
   <body>
     <slot />
-    <script>
-      // @ts-ignore
-      window.onUsersnapLoad = function (api: any) {
-        api.init();
-        api.show(import.meta.env.PUBLIC_USERSNAP_PROJECT_API_KEY);
-      };
-
-      var script = document.createElement('script');
-      // @ts-ignore
-      script.defer = 1;
-      script.src = `https://widget.usersnap.com/global/load/${
-        import.meta.env.PUBLIC_USERSNAP_GLOBAL_API_KEY
-      }?onload=onUsersnapLoad`;
-
-      document.getElementsByTagName('head')[0].appendChild(script);
-    </script>
+    <UsersnapButton />
   </body>
 </html>
 
