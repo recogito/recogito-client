@@ -31,6 +31,17 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
   const body: ApiPostInviteUserToProject = await request.json();
 
+  // attempt to get lang from headers or req body
+  const supportedLangs = (i18n?.locales as string[]) || ['en', 'de'];
+  const defaultLocale = i18n?.defaultLocale || 'en';
+  const headerLang = request.headers
+    .get('accept-language')
+    ?.split(',')[0]
+    .split('-')[0];
+  const passedLangs = [body.lang, headerLang];
+  const lang =
+    passedLangs.find((l) => l && supportedLangs.includes(l)) || defaultLocale;
+
   const respData = [];
   // Create the invites
   for (let i = 0; i < body.users.length; i++) {
@@ -55,7 +66,6 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
     respData.push(inviteResponse.data);
 
-    const lang = i18n?.defaultLocale || 'en';
     const t = await getFixedT(lang, ['email']);
 
     const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/projects/${body.projectId}/accept-invite`;

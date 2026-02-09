@@ -182,7 +182,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
         groupMap['student'] = g.id;
       }
     });
-    inviteUsersToProject(supabase, invites, project, groupMap, invitedBy).then(
+    inviteUsersToProject(supabase, invites, project, groupMap, i18n.language, invitedBy).then(
       ({ error, data }) => {
         if (error) {
           onInvitationError();

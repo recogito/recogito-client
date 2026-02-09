@@ -34,7 +34,7 @@ interface InviteUserProps {
 }
 
 export const InviteUserDialog = (props: InviteUserProps) => {
-  const { t } = useTranslation(['project-collaboration', 'common', 'a11y']);
+  const { t, i18n } = useTranslation(['project-collaboration', 'common', 'a11y']);
 
   const { me, project } = props;
 
@@ -58,7 +58,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
 
     // Waits until the invite was processed in the backend
     const a = new Promise((resolve) => {
-      inviteUserToProject(supabase, email, project, group, invitedBy).then(
+      inviteUserToProject(supabase, email, project, group, i18n.language, invitedBy).then(
         (invitation) => {
           if (!invitation) {
             //props.onInvitiationError('Failed to invite user');

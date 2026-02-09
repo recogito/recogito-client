@@ -2,7 +2,8 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 export const inviteUserToOrg = (
   supabase: SupabaseClient,
-  email: string
+  email: string,
+  lang: string
 ): Promise<boolean> =>
   supabase.auth.getSession().then(({ error, data }) => {
     // Get Supabase session token first
@@ -24,7 +25,7 @@ export const inviteUserToOrg = (
         // Storage proxy requires authentication
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, lang }),
     }).then((resp) => {
       if (resp.ok) {
         return true;
