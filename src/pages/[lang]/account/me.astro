@@ -5,8 +5,8 @@ import { getMyProfile } from '@backend/crud/profiles';
 import { AccountPreferencesApp } from '@apps/dashboard-account/AccountPreferences';
 import { getFixedT } from 'src/i18n/server';
 
-const locale = Astro.currentLocale;
-const t = await getFixedT(locale, ['dashboard-account']);
+const lang = Astro.currentLocale;
+const t = await getFixedT(lang, ['dashboard-account']);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 

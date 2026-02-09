@@ -12,8 +12,8 @@ export interface Props {
 }
 
 const { title, showLogo } = Astro.props;
-const locale = Astro.currentLocale;
-const t = await getFixedT(locale, ['branding']);
+const lang = Astro.currentLocale;
+const t = await getFixedT(lang, ['branding']);
 
 const backgroundColor = config.branding.background_color;
 const loginLogo = config.branding.login_logo;
