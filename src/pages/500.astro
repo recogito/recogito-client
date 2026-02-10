@@ -10,12 +10,12 @@ const lang = Astro.currentLocale || (preferred && supported.includes(preferred) 
 const t = await getFixedT(lang, ['error']);
 ---
 <BaseLayout title="Recogito | Error">
-  <div class="container">
+  <main class="container" id="main">
     <div class="column">
       <h1>500 Error</h1>
       <p>{t('Something went wrong.', { ns: 'error' })}</p>
     </div>
-  </div>
+  </main>
 </BaseLayout>
 
 <style>

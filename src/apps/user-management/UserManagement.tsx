@@ -190,7 +190,7 @@ const UserManagement = (props: UserManagementProps) => {
             <h1>{t('User Management', { ns: 'user-management' })}</h1>
           </div>
         </div>
-        <div className='user-management-content'>
+        <main className='user-management-content' id='main'>
           <div className='user-management-actions'>
             <div>
               <label htmlFor='search'>{t('Search Users', { ns: 'user-management' })}</label>
@@ -226,7 +226,7 @@ const UserManagement = (props: UserManagementProps) => {
             onCancel={onCancelDelete}
             onConfirm={onDeleteConfirm}
           />
-        </div>
+        </main>
       </ToastProvider>
     </div>
   );

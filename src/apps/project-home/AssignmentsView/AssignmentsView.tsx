@@ -164,7 +164,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
       {props.assignments &&
         props.assignments.length > 0 &&
         currentAssignment && (
-          <div className='project-assignments-presentation-pane'>
+          <main className='project-assignments-presentation-pane' id='main'>
             <AssignmentsList
               assignments={props.assignments}
               projectId={project.id}
@@ -182,7 +182,7 @@ export const AssignmentsView = (props: AssignmentsViewProps) => {
               }
               isAdmin={props.isAdmin}
             />
-          </div>
+          </main>
         )}
     </div>
   );

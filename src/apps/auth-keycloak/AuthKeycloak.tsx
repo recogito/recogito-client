@@ -37,7 +37,14 @@ const AuthKeycloak = () => {
       });
   }, [redirectUrl]);
 
-  return <div className='keycloak-main'>{t('Redirecting', { ns: 'auth-login' })}</div>;
+  return (
+    <main
+      className='keycloak-main'
+      id='main'
+    >
+      {t('Redirecting', { ns: 'auth-login' })}
+    </main>
+  );
 };
 
 export const AuthKeycloakApp = () => (

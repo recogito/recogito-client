@@ -335,7 +335,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             />
           </div>
 
-          <main>
+          <main id='main'>
             <LeftDrawer
               activeUsers={activeUsers}
               currentImage={currentImage}

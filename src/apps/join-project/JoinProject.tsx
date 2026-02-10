@@ -27,7 +27,7 @@ const JoinProject = (props: JoinProjectProps) => {
   }
 
   return (
-    <div className='join-project-root'>
+    <main className='join-project-root' id='main'>
 
       <div className='join-project-title'>
         {`${t('Join', { ns: 'dashboard-projects' })}: ${['Project']} ${props.project.name}?`}
@@ -51,7 +51,7 @@ const JoinProject = (props: JoinProjectProps) => {
           {t('Join', { ns: 'dashboard-projects' })}
         </button>
       </div>
-    </div>
+    </main>
   )
 }
 

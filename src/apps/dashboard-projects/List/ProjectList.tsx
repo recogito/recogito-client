@@ -57,7 +57,7 @@ export const ProjectsList = (props: ProjectsListProps) => {
   const { t } = useTranslation(['common', 'dashboard-projects']);
 
   return (
-    <main>
+    <main id='main'>
       <section>
         <div className='dashboard-projects-list'>
           <div className='project-list-header'>

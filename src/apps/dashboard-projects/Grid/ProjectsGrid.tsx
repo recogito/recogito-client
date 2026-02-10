@@ -45,7 +45,7 @@ export const ProjectsGrid = (props: ProjectsGridProps) => {
     : sorted;
 
   return (
-    <main>
+    <main id='main'>
       <section>
         <div className='dashboard-projects-grid'>
           {filteredBySearch.map((project) => (

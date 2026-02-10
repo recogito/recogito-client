@@ -72,7 +72,7 @@ const AccountPreferences = (props: AccountPreferencesProps) => {
       <div className='dashboard-account-preferences'>
         <TopBar onError={onError} me={profile} />
 
-        <main>
+        <main id='main'>
           <h1>{t('Your User Profile', { ns: 'dashboard-account' })}</h1>
           <form onSubmit={formik.handleSubmit}>
             <fieldset>

@@ -67,7 +67,7 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
   return (
     <div className='accept-org-invite'>
       {success ? (
-        <main>
+        <main id='main'>
           <div className='success'>
             <AnimatedCheck size={38} />
             <p>
@@ -79,7 +79,7 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
           </div>
         </main>
       ) : (
-        <main>
+        <main id='main'>
           <h1>{t('Set Password', { ns: 'auth-reset-password' })}</h1>
           <form className='login'>
             <TextInput
