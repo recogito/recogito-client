@@ -300,7 +300,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           { label: t('Team', { ns: 'common' }), href: undefined },
         ]}
       />
-      <div className='project-collaboration'>
+      <main className='project-collaboration' id='main'>
         <ToastProvider>
           <div className='project-collaboration-title-bar'>
             <h1>{t('Project Team', { ns: 'project-collaboration' })}</h1>
@@ -421,7 +421,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
             onClose={() => setAddUsersOpen(false)}
           />
         </ToastProvider>
-      </div>
+      </main>
     </>
   );
 };

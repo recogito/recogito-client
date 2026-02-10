@@ -62,7 +62,7 @@ const JobsManagement = (props: Props) => {
             <h1>{t('Jobs Management', { ns: 'jobs-management' })}</h1>
           </div>
         </div>
-        <div className='jobs-management-content'>
+        <main className='jobs-management-content' id='main'>
           <div className='jobs-management-table'>
             {jobs.length > 0 ? (
               <JobsTable
@@ -77,7 +77,7 @@ const JobsManagement = (props: Props) => {
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}
           />
-        </div>
+        </main>
       </ToastProvider>
     </div>
   );

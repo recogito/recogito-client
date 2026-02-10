@@ -1,0 +1,12 @@
+.skip-to-main {
+  position: absolute;
+  left: -9999px;
+  z-index: 999999;
+  background-color: white !important;
+  font-weight: 600;
+}
+
+.skip-to-main:focus {
+  left: 0;
+  top: 0;
+}

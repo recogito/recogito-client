@@ -39,9 +39,9 @@ const Logout = () => {
   }, []);
 
   return (
-    <div className='logout logout-processing'>
+    <main className='logout logout-processing' id='main'>
       <Spinner size={24} />
-    </div>
+    </main>
   );
 };
 

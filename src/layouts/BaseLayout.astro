@@ -3,6 +3,7 @@ import config from '../config.json';
 import { truncateString } from '@util/general';
 import UsersnapButton from './components/UsersnapButton.astro';
 import '@themes/default/index.css';
+import SkipToMainContent from '@layouts/components/SkipToMainContent.astro';
 
 export interface Props {
   title: string;
@@ -34,6 +35,7 @@ const tabTitle = truncateString(title, 61);
     <slot name='head' />
   </head>
   <body>
+    <SkipToMainContent />
     <slot />
     <UsersnapButton />
   </body>

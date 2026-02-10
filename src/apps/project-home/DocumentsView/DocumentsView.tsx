@@ -336,7 +336,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         onDragCancel={onDragCancel}
       >
         <div className='project-home-grid-wrapper'>
-          <div className='project-home-grid' role='grid'>
+          <main className='project-home-grid' role='grid' id='main'>
             <SortableContext
               items={props.documents}
               strategy={rectSortingStrategy}
@@ -372,7 +372,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
                 />
               )}
             </DragOverlay>
-          </div>
+          </main>
         </div>
       </DndContext>
       <div>

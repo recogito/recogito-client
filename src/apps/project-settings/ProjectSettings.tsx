@@ -272,7 +272,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
           { label: t('Settings', { ns: 'project-sidebar' }), href: undefined },
         ]}
       />
-      <div className='project-settings'>
+      <main className='project-settings' id='main'>
         <ToastProvider>
           <SettingsHeader
             onSwitchTab={setTab}
@@ -658,7 +658,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
             onConfirm={handleLockProject}
           />
         </ToastProvider>
-      </div>
+      </main>
     </>
   );
 };

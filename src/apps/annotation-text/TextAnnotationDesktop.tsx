@@ -296,7 +296,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
             />
           </div>
 
-          <main className={className}>
+          <main className={className} id='main'>
             <LeftDrawer
               document={document}
               layers={layers}
