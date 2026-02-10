@@ -87,6 +87,16 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
 
   const body = await request.json();
 
+  const supportedLangs = (i18n?.locales as string[]) || ['en', 'de'];
+  const defaultLocale = i18n?.defaultLocale || 'en';
+  const headerLang = request.headers
+    .get('accept-language')
+    ?.split(',')[0]
+    .split('-')[0];
+  const passedLangs = [body.lang, headerLang];
+  const lang =
+    passedLangs.find((l) => l && supportedLangs.includes(l)) || defaultLocale;
+
   // Create the user and then send an immediate
   const inviteResp = await supa.auth.admin.createUser({
     email: body.email,
@@ -103,14 +113,16 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   const key = Buffer.from(INVITE_CRYPTO_KEY, 'base64');
   const token = encrypt(`${inviteResp.data.user.id}|${Date.now()}`, key);
 
-    const lang = i18n?.defaultLocale || 'en';
-    const t = await getFixedT(lang, ['email']);
+  const t = await getFixedT(lang, ['email']);
 
   const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${token}`;
 
   const html = await render(
     createElement(InviteUserEmail, {
-      welcomeMessage: t('joinRecogitoMessage', { ns: 'email', instanceName: url.host }),
+      welcomeMessage: t('joinRecogitoMessage', {
+        ns: 'email',
+        instanceName: url.host,
+      }),
       host: url.host,
       helloMessage: t('Greetings', { ns: 'email' }),
       acceptInviteLabel: t('Accept Invite', { ns: 'email' }),

@@ -149,7 +149,7 @@ const UserManagement = (props: UserManagementProps) => {
   };
 
   const handleInviteUser = (email: string) => {
-    inviteUserToOrg(supabase, email).then((success) => {
+    inviteUserToOrg(supabase, email, i18n.language).then((success) => {
       if (success) {
         // update local user list
         getProfilesExtended(supabase).then(({ error, data }) => {

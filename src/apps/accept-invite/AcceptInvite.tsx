@@ -43,7 +43,6 @@ const AcceptInvite = (props: AcceptInviteProps) => {
           invitedByName: props.invitation.invited_by_name,
           ns: 'dashboard-projects',
         })}
-        {`${t('You have been invited to this project by', { ns: 'dashboard-projects' })} ${props.invitation.invited_by_name}`}
       </div>
 
       <div className='accept-invite-button-container'>

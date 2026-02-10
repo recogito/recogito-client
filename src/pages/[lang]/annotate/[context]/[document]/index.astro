@@ -10,6 +10,7 @@ import PluginRegistry from '@components/Plugins/PluginRegistry';
 import { isOpenJoinEditFromContext } from '@backend/helpers';
 import { getMyProfile } from '@backend/crud';
 
+const lang = Astro.currentLocale;
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
 const profile = await getMyProfile(supabase);
