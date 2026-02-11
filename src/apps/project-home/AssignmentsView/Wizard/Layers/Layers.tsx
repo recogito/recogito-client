@@ -237,7 +237,7 @@ export const Layers = (props: LayersProps) => {
       <>
         <div className='row tab-team'>
           <section className='column'>
-            <h1>{`${t('Step', { ns: 'project-assignments' })} 3 (${t('Optional', { ns: 'project-assignments' })})`}</h1>
+            <h2>{`${t('Step', { ns: 'project-assignments' })} 3 (${t('Optional', { ns: 'project-assignments' })})`}</h2>
             <p>
               {
                 t('Import read only layers from other assignments to add to each document.', { ns: 'project-assignments' })

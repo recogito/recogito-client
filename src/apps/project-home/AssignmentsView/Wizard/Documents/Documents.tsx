@@ -58,7 +58,7 @@ export const Documents = (props: DocumentsProps) => {
     <>
       <div className='row tab-documents'>
         <section className='column'>
-          <h1>{t('Step', { ns: 'project-assignments' })} 2</h1>
+          <h2>{t('Step', { ns: 'project-assignments' })} 2</h2>
           <p>
             {t('Add documents to this assignment.', {
               ns: 'project-assignments',

@@ -171,7 +171,7 @@ const CollectionManagement = (props: CollectionManagementProps) => {
               <ArrowLeft className='text-bottom' size={16} />
               <span>{t('Back to Projects', { ns: 'project-sidebar' })}</span>
             </a>
-            <h1>
+            <h1 data-passed>
               {t('Collection Management', { ns: 'collection-management' })}
             </h1>
           </div>

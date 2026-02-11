@@ -187,7 +187,7 @@ const UserManagement = (props: UserManagementProps) => {
               <ArrowLeft className='text-bottom' size={16} />
               <span>{t('Back to Projects', { ns: 'common' })}</span>
             </a>
-            <h1>{t('User Management', { ns: 'user-management' })}</h1>
+            <h1 data-passed>{t('User Management', { ns: 'user-management' })}</h1>
           </div>
         </div>
         <main className='user-management-content' id='main'>

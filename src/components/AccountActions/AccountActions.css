@@ -14,8 +14,7 @@
   padding: 3px 10px 8px 10px;
 }
 
-.dropdown-content .account-actions-meta h1,
-.dropdown-content .account-actions-meta h2 {
+.dropdown-content .account-actions-meta p {
   margin: 0;
   line-height: 160%;
 }
@@ -30,12 +29,12 @@
   text-align: center;
 }
 
-.dropdown-content .account-actions-meta h1 {
+.dropdown-content .account-actions-meta .account-actions-nickname {
   font-size: var(--font-small);
   font-weight: 500;
 }
 
-.dropdown-content .account-actions-meta h2 {
+.dropdown-content .account-actions-meta .account-actions-real-name {
   color: var(--font-light);
   font-size: 0.675em;
   font-weight: 400;

@@ -120,7 +120,7 @@ export const Toolbar = (props: ToolbarProps) => {
             <>
               <GraduationCap size={18} />
 
-              <h1>
+              <h1 data-passed>
                 <a href={back} title={t('Back to assignment overview', { ns: 'annotation-common' })}>
                   <div>{contextName}</div>
                 </a>
@@ -131,7 +131,7 @@ export const Toolbar = (props: ToolbarProps) => {
               </h1>
             </>
           ) : (
-            <h1>
+            <h1 data-passed>
               <div className='document-title'>{props.document.name}</div>
             </h1>
           )}

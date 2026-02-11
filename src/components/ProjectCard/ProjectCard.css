@@ -42,15 +42,15 @@
   border-right: 1px solid var(--gray-300);
 }
 
-.project-card-body h1 {
+.project-card-body .project-card-name {
   font-size: 1em;
   font-weight: 500;
   margin: 0;
   padding: 0;
 }
 
-.project-card-body h1 a,
-.project-card-body h1 a:hover {
+.project-card-body .project-card-name a,
+.project-card-body .project-card-name a:hover {
   color: var(--font-dark);
   text-decoration: none;
 }

@@ -80,9 +80,9 @@ export const Sidebar = (props: Props) => {
   return (
     <aside className='dashboard-sidebar open'>
       <section className='dashboard-sidebar-header'>
-        <h1>
+        <h2>
           <span>{t('Projects', { ns: 'common' })}</span>
-        </h1>
+        </h2>
         <button
           className='primary flat compact'
           onClick={() => setOpen(false)}

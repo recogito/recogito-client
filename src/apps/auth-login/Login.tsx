@@ -150,7 +150,7 @@ const Login = (props: { methods: LoginMethod[] }) => {
       {isChecking && <StateChecking />}
       {!isChecking && (
         <main className='login' id='main'>
-          <h1>{t('Welcome Back', { ns: 'auth-login' })}</h1>
+          <h1 data-passed>{t('Welcome Back', { ns: 'auth-login' })}</h1>
           <h2>{t('Log into your account', { ns: 'auth-login' })}</h2>
           {primary.type === LoginMethods.username_password && (
             <StateLoginForm />

@@ -416,7 +416,7 @@ const Collection = (props: CollectionsTableProps) => {
                 {t('Back to Collections', { ns: 'collection-management' })}
               </span>
             </a>
-            <h1>{collection.name}</h1>
+            <h1 data-passed>{collection.name}</h1>
           </div>
         </div>
         <main className='collection-content' id='main'>

@@ -26,7 +26,7 @@ export const General = (props: GeneralProps) => {
     <>
       <div className='row tab-general'>
         <section className='column'>
-          <h1>{t('Step', { ns: 'project-assignments' })} 1</h1>
+          <h2>{t('Step', { ns: 'project-assignments' })} 1</h2>
           <p>{t('Add a name and instructions for this assignment.', { ns: 'project-assignments' })}</p>
         </section>
 

@@ -7,7 +7,7 @@ export const EmptyList = () => {
 
   return (
     <section className="notifications-empty">
-      <h1>{t("You're up to date!", { ns: 'notifications' })}</h1>
+      <h2>{t("You're up to date!", { ns: 'notifications' })}</h2>
       <p>{t('No notifications', { ns: 'notifications' })}</p>
     </section>
   )
