@@ -121,13 +121,13 @@ export const AccountActions = (props: AccountProps) => {
             <section className='account-actions-meta'>
               {profile.nickname && realname ? (
                 <>
-                  <h1>{profile.nickname}</h1>
-                  <h2>{realname}</h2>
+                  <p className='account-actions-nickname'>{profile.nickname}</p>
+                  <p className='account-actions-real-name'>{realname}</p>
                 </>
               ) : profile.nickname ? (
-                <h1>{profile.nickname}</h1>
+                <p className='account-actions-nickname'>{profile.nickname}</p>
               ) : (
-                <h1>{realname}</h1>
+                <p className='account-actions-real-name'>{realname}</p>
               )}
 
               {profile.isOrgAdmin && (

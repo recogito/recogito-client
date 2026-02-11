@@ -100,7 +100,7 @@ export const SelectRecordsDialog = (props: Props) => {
 
         <DialogContent className='dialog-content select-tag-definitions'>
           <Dialog.Title asChild className='dialog-title'>
-            <h1>{props.title}</h1>
+            <h2>{props.title}</h2>
           </Dialog.Title>
           {props.subtitle && <span>{props.subtitle}</span>}
 

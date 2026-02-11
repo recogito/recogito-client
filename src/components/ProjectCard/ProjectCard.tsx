@@ -98,9 +98,9 @@ export const ProjectCard = (props: ProjectCardProps) => {
     >
       <div className='project-card-body' onClick={onClick}>
         <div className='project-card-header'>
-          <h1>
+          <p className='project-card-name'>
             <a href={`/${i18n.language}/projects/${id}`}>{name}</a>
-          </h1>
+          </p>
           {is_locked ? <LockedPill /> : <div />}
         </div>
         {description ? (

@@ -27,7 +27,7 @@ export const Verify = (props: VerifyProps) => {
     <>
       <div className='row tab-verify'>
         <section className='column'>
-          <h1>{t('Almost Ready!', { ns: 'project-assignments' })}</h1>
+          <h2>{t('Almost Ready!', { ns: 'project-assignments' })}</h2>
           <p>
             {t('Verify and confirm this assignment.', {
               ns: 'project-assignments',
