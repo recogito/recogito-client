@@ -44,7 +44,7 @@ export const ProjectHeader = (props: ProjectHeaderProps) => {
     <header className='project-header-root'>
       <div className='project-header-name-bar'>
         <div className='project-header-title'>
-          <h1 data-passed>{props.name}</h1>
+          <h1>{props.name}</h1>
           {props.isLocked && (
             <div className='project-header-locked'>
               <Lock size={16} />

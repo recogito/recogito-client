@@ -80,7 +80,7 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
         </main>
       ) : (
         <main id='main'>
-          <h1 data-passed>{t('Set Password', { ns: 'auth-reset-password' })}</h1>
+          <h1>{t('Set Password', { ns: 'auth-reset-password' })}</h1>
           <form className='login'>
             <TextInput
               type='text'

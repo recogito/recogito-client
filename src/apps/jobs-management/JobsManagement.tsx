@@ -59,7 +59,7 @@ const JobsManagement = (props: Props) => {
               <ArrowLeftIcon className='text-bottom' size={16} />
               <span>{t('Back to Projects', { ns: 'jobs-management' })}</span>
             </a>
-            <h1 data-passed>{t('Jobs Management', { ns: 'jobs-management' })}</h1>
+            <h1>{t('Jobs Management', { ns: 'jobs-management' })}</h1>
           </div>
         </div>
         <main className='jobs-management-content' id='main'>

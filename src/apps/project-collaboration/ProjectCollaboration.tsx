@@ -303,7 +303,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
       <main className='project-collaboration' id='main'>
         <ToastProvider>
           <div className='project-collaboration-title-bar'>
-            <h1 data-passed>{t('Project Team', { ns: 'project-collaboration' })}</h1>
+            <h1>{t('Project Team', { ns: 'project-collaboration' })}</h1>
 
             <DropdownButton
               label={t('Add a user', { ns: 'project-collaboration' })}

@@ -579,7 +579,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
           {tab === 'plugins' && (
             <div className='project-plugins'>
               <div className='browse-plugins'>
-                <h1 data-passed>Plugins</h1>
+                <h1>Plugins</h1>
 
                 <p className='hint'>
                   Add super-powers to your annotation project with Plugins.

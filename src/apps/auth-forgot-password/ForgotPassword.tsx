@@ -68,7 +68,7 @@ const ForgotPassword = () => {
         </main>
       ) : (
         <main id='main'>
-          <h1 data-passed>{t('Forgot Password?', { ns: 'auth-forgot-password' })}</h1>
+          <h1>{t('Forgot Password?', { ns: 'auth-forgot-password' })}</h1>
           <p>{t('Please enter the email you use to sign in.', { ns: 'auth-forgot-password' })}</p>
 
           <form className='login'>
