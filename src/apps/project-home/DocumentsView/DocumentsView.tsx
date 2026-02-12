@@ -374,35 +374,33 @@ export const DocumentsView = (props: DocumentsViewProps) => {
               </DragOverlay>
             </main>
           </div>
-          <div>
-            <DocumentLibrary
-              open={addOpen}
-              onCancel={() => setAddOpen(false)}
-              user={props.user}
-              dataDirty={dataDirty || documentUpdated}
-              clearDirtyFlag={() => {
-                clearDirtyFlag();
-                setDocumentUpdated(false);
-              }}
-              UploadActions={
-                <UploadActions
-                  me={props.user}
-                  onUpload={open}
-                  onImport={onImportRemote}
-                  onSetUser={props.onSetUser}
-                />
-              }
-              onDocumentsSelected={onDocumentsSelected}
-              disabledIds={documentIds}
-              onUpdated={onUpdateDocument}
-              onError={onError}
-              onDeleteFromLibrary={onDeleteDocumentFromLibrary}
-              onTogglePrivate={onTogglePrivate}
-              isAdmin={props.isAdmin}
-            />
-          </div>
         </DndContext>
       )}
+      <DocumentLibrary
+        open={addOpen}
+        onCancel={() => setAddOpen(false)}
+        user={props.user}
+        dataDirty={dataDirty || documentUpdated}
+        clearDirtyFlag={() => {
+          clearDirtyFlag();
+          setDocumentUpdated(false);
+        }}
+        UploadActions={
+          <UploadActions
+            me={props.user}
+            onUpload={open}
+            onImport={onImportRemote}
+            onSetUser={props.onSetUser}
+          />
+        }
+        onDocumentsSelected={onDocumentsSelected}
+        disabledIds={documentIds}
+        onUpdated={onUpdateDocument}
+        onError={onError}
+        onDeleteFromLibrary={onDeleteDocumentFromLibrary}
+        onTogglePrivate={onTogglePrivate}
+        isAdmin={props.isAdmin}
+      />
       <UploadTracker
         show={showUploads}
         closable={isIdle}
