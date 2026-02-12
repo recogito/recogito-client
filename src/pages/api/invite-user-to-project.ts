@@ -7,7 +7,11 @@ import { i18n } from 'astro:config/server';
 import { render } from '@react-email/render';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
-import { getFixedT } from 'src/i18n/server';
+import i18next from 'i18next';
+import enEmail from '../../../public/locales/en/email.json';
+import deEmail from '../../../public/locales/de/email.json';
+// NOTE: i18n JSON has to be bundled directly here, as this runs
+// in a serverless function and will not have access to the filesystem
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -42,6 +46,21 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   const lang =
     passedLangs.find((l) => l && supportedLangs.includes(l)) || defaultLocale;
 
+  // create a minimal i18next instance for just this serverless function invocation
+  const i18nextInstance = i18next.createInstance();
+  await i18nextInstance.init({
+    lng: lang,
+    fallbackLng: 'en',
+    ns: ['email'],
+    defaultNS: 'email',
+    interpolation: { escapeValue: false },
+    resources: {
+      en: { email: enEmail },
+      de: { email: deEmail },
+    },
+  });
+  const t = i18nextInstance.getFixedT(lang, 'email');
+
   const respData = [];
   // Create the invites
   for (let i = 0; i < body.users.length; i++) {
@@ -65,8 +84,6 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     }
 
     respData.push(inviteResponse.data);
-
-    const t = await getFixedT(lang, ['email']);
 
     const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/projects/${body.projectId}/accept-invite`;
 
