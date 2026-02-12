@@ -3,15 +3,10 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { i18n } from 'astro:config/server';
 import { render } from '@react-email/render';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
-import i18next from 'i18next';
-import enEmail from '../../../public/locales/en/email.json';
-import deEmail from '../../../public/locales/de/email.json';
-// NOTE: i18n JSON has to be bundled directly here, as this runs
-// in a serverless function and will not have access to the filesystem
+import { useTranslation } from 'src/i18n/serverless';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -34,32 +29,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     });
 
   const body: ApiPostInviteUserToProject = await request.json();
-
-  // attempt to get lang from headers or req body
-  const supportedLangs = (i18n?.locales as string[]) || ['en', 'de'];
-  const defaultLocale = i18n?.defaultLocale || 'en';
-  const headerLang = request.headers
-    .get('accept-language')
-    ?.split(',')[0]
-    .split('-')[0];
-  const passedLangs = [body.lang, headerLang];
-  const lang =
-    passedLangs.find((l) => l && supportedLangs.includes(l)) || defaultLocale;
-
-  // create a minimal i18next instance for just this serverless function invocation
-  const i18nextInstance = i18next.createInstance();
-  await i18nextInstance.init({
-    lng: lang,
-    fallbackLng: 'en',
-    ns: ['email'],
-    defaultNS: 'email',
-    interpolation: { escapeValue: false },
-    resources: {
-      en: { email: enEmail },
-      de: { email: deEmail },
-    },
-  });
-  const t = i18nextInstance.getFixedT(lang, 'email');
+  const { t, lang } = await useTranslation(request, body);
 
   const respData = [];
   // Create the invites
