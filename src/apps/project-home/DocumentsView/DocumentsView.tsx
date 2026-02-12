@@ -327,81 +327,82 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           </div>
         )}
       </header>
-
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-        onDragCancel={onDragCancel}
-      >
-        <div className='project-home-grid-wrapper'>
-          <main className='project-home-grid' role='grid' id='main'>
-            <SortableContext
-              items={props.documents}
-              strategy={rectSortingStrategy}
-            >
-              {props.documents.map((document) => (
-                <DocumentCard
-                  className={classNames({ active: document.id === activeId })}
-                  key={document.id}
-                  isAdmin={props.isAdmin}
-                  view='project'
-                  isOwner={isOwner(document)}
-                  document={document}
-                  context={defaultContext!}
-                  onDelete={() => onDeleteDocument(document)}
-                  onUpdate={onUpdateDocument}
-                  onError={onError}
-                  rtab={props.project.document_view_right}
+      {props.documents.length > 0 && (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          onDragCancel={onDragCancel}
+        >
+          <div className='project-home-grid-wrapper'>
+            <main className='project-home-grid' role='grid' id='main'>
+              <SortableContext
+                items={props.documents}
+                strategy={rectSortingStrategy}
+              >
+                {props.documents.map((document) => (
+                  <DocumentCard
+                    className={classNames({ active: document.id === activeId })}
+                    key={document.id}
+                    isAdmin={props.isAdmin}
+                    view='project'
+                    isOwner={isOwner(document)}
+                    document={document}
+                    context={defaultContext!}
+                    onDelete={() => onDeleteDocument(document)}
+                    onUpdate={onUpdateDocument}
+                    onError={onError}
+                    rtab={props.project.document_view_right}
+                  />
+                ))}
+              </SortableContext>
+              <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
+                {activeDocument && (
+                  <DocumentCard
+                    className='dragging'
+                    key={activeDocument.id}
+                    isAdmin={props.isAdmin}
+                    document={activeDocument}
+                    context={defaultContext!}
+                    onDelete={() => {}}
+                    onUpdate={() => {}}
+                    onError={() => {}}
+                    view='project'
+                  />
+                )}
+              </DragOverlay>
+            </main>
+          </div>
+          <div>
+            <DocumentLibrary
+              open={addOpen}
+              onCancel={() => setAddOpen(false)}
+              user={props.user}
+              dataDirty={dataDirty || documentUpdated}
+              clearDirtyFlag={() => {
+                clearDirtyFlag();
+                setDocumentUpdated(false);
+              }}
+              UploadActions={
+                <UploadActions
+                  me={props.user}
+                  onUpload={open}
+                  onImport={onImportRemote}
+                  onSetUser={props.onSetUser}
                 />
-              ))}
-            </SortableContext>
-            <DragOverlay adjustScale style={{ transformOrigin: '0 0 ' }}>
-              {activeDocument && (
-                <DocumentCard
-                  className='dragging'
-                  key={activeDocument.id}
-                  isAdmin={props.isAdmin}
-                  document={activeDocument}
-                  context={defaultContext!}
-                  onDelete={() => {}}
-                  onUpdate={() => {}}
-                  onError={() => {}}
-                  view='project'
-                />
-              )}
-            </DragOverlay>
-          </main>
-        </div>
-      </DndContext>
-      <div>
-        <DocumentLibrary
-          open={addOpen}
-          onCancel={() => setAddOpen(false)}
-          user={props.user}
-          dataDirty={dataDirty || documentUpdated}
-          clearDirtyFlag={() => {
-            clearDirtyFlag();
-            setDocumentUpdated(false);
-          }}
-          UploadActions={
-            <UploadActions
-              me={props.user}
-              onUpload={open}
-              onImport={onImportRemote}
-              onSetUser={props.onSetUser}
+              }
+              onDocumentsSelected={onDocumentsSelected}
+              disabledIds={documentIds}
+              onUpdated={onUpdateDocument}
+              onError={onError}
+              onDeleteFromLibrary={onDeleteDocumentFromLibrary}
+              onTogglePrivate={onTogglePrivate}
+              isAdmin={props.isAdmin}
             />
-          }
-          onDocumentsSelected={onDocumentsSelected}
-          disabledIds={documentIds}
-          onUpdated={onUpdateDocument}
-          onError={onError}
-          onDeleteFromLibrary={onDeleteDocumentFromLibrary}
-          onTogglePrivate={onTogglePrivate}
-          isAdmin={props.isAdmin}
-        />
-      </div>
+          </div>
+        </DndContext>
+      )}
       <UploadTracker
         show={showUploads}
         closable={isIdle}
