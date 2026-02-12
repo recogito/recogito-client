@@ -4,11 +4,10 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import nodemailer from 'nodemailer';
-import { i18n } from 'astro:config/server';
 import { render } from '@react-email/render';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import { encrypt } from '@backend/crypto';
-import { getFixedT } from 'src/i18n/server';
+import { useTranslation } from 'src/i18n/serverless';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -86,18 +85,9 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   );
 
   const body = await request.json();
+  const { t, lang } = await useTranslation(request, body);
 
-  const supportedLangs = (i18n?.locales as string[]) || ['en', 'de'];
-  const defaultLocale = i18n?.defaultLocale || 'en';
-  const headerLang = request.headers
-    .get('accept-language')
-    ?.split(',')[0]
-    .split('-')[0];
-  const passedLangs = [body.lang, headerLang];
-  const lang =
-    passedLangs.find((l) => l && supportedLangs.includes(l)) || defaultLocale;
-
-  // Create the user and then send an immediate
+  // Create the user and then send an invite
   const inviteResp = await supa.auth.admin.createUser({
     email: body.email,
     password: generatePassword(14),
@@ -112,8 +102,6 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   // create a token
   const key = Buffer.from(INVITE_CRYPTO_KEY, 'base64');
   const token = encrypt(`${inviteResp.data.user.id}|${Date.now()}`, key);
-
-  const t = await getFixedT(lang, ['email']);
 
   const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${token}`;
 
