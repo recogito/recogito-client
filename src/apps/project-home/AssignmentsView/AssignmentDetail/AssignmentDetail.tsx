@@ -156,27 +156,29 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
         </div>
 
-        <div className='assignment-detail-document-grid'>
-          <DndContext
-            sensors={sensors}
-            collisionDetection={closestCenter}
-            onDragEnd={onDragEnd}
-          >
-            <div className='project-home-grid'>
-              <SortableContext items={documents} strategy={rectSortingStrategy}>
-                {documents.map((document) => (
-                  <DocumentCard
-                    key={document.id}
-                    isAdmin={props.isAdmin}
-                    document={document as Document}
-                    context={props.assignment}
-                    view='context'
-                  />
-                ))}
-              </SortableContext>
-            </div>
-          </DndContext>
-        </div>
+        { documents.length === 0 && (
+          <div className='assignment-detail-document-grid'>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={onDragEnd}
+            >
+              <div className='project-home-grid'>
+                <SortableContext items={documents} strategy={rectSortingStrategy}>
+                  {documents.map((document) => (
+                    <DocumentCard
+                      key={document.id}
+                      isAdmin={props.isAdmin}
+                      document={document as Document}
+                      context={props.assignment}
+                      view='context'
+                    />
+                  ))}
+                </SortableContext>
+              </div>
+            </DndContext>
+          </div>
+        )}
       </div>
     </div>
   );
