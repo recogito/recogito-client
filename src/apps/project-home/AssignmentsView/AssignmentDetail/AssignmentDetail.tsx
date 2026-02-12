@@ -156,7 +156,7 @@ export const AssignmentDetail = (props: AssignmentDetailProps) => {
           </div>
         </div>
 
-        {documents.length === 0 && (
+        {documents.length > 0 && (
           <div className='assignment-detail-document-grid'>
             <DndContext
               sensors={sensors}
