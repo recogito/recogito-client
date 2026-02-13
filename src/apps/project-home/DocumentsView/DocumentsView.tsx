@@ -401,12 +401,14 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         onTogglePrivate={onTogglePrivate}
         isAdmin={props.isAdmin}
       />
-      <UploadTracker
-        show={showUploads}
-        closable={isIdle}
-        uploads={uploads}
-        onClose={() => setShowUploads(false)}
-      />
+      {uploads.length > 0 && (
+        <UploadTracker
+          show={showUploads}
+          closable={isIdle}
+          uploads={uploads}
+          onClose={() => setShowUploads(false)}
+        />
+      )}
       <input
         {...getInputProps()}
         aria-label={t('drag and drop target for documents', { ns: 'a11y' })}
