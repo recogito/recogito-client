@@ -419,7 +419,7 @@ const Collection = (props: CollectionsTableProps) => {
             <h1>{collection.name}</h1>
           </div>
         </div>
-        <div className='collection-content'>
+        <main className='collection-content' id='main'>
           <div className='collection-actions'>
             <div>
               <label htmlFor='search'>
@@ -534,7 +534,7 @@ const Collection = (props: CollectionsTableProps) => {
             readOnly
             user={me}
           />
-        </div>
+        </main>
       </ToastProvider>
     </div>
   );

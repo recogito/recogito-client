@@ -32,7 +32,6 @@ export const JobsTable = (props: Props) => {
             <td>{t(job.job_type, { ns: 'jobs-management'})}</td>
             <td>
               <JobStatusPill
-                i18n={i18n}
                 status={job.job_status}
               />
             </td>

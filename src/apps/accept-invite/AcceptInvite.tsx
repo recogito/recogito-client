@@ -30,7 +30,7 @@ const AcceptInvite = (props: AcceptInviteProps) => {
   };
 
   return (
-    <div className='accept-invite-root'>
+    <main className='accept-invite-root' id='main'>
       <div className='accept-invite-title'>
         {t('acceptInvitationHeader', {
           projectName: props.invitation.project_name,
@@ -43,7 +43,6 @@ const AcceptInvite = (props: AcceptInviteProps) => {
           invitedByName: props.invitation.invited_by_name,
           ns: 'dashboard-projects',
         })}
-        {`${t('You have been invited to this project by', { ns: 'dashboard-projects' })} ${props.invitation.invited_by_name}`}
       </div>
 
       <div className='accept-invite-button-container'>
@@ -60,7 +59,7 @@ const AcceptInvite = (props: AcceptInviteProps) => {
           {t('Accept', { ns: 'project-collaboration' })}
         </button>
       </div>
-    </div>
+    </main>
   );
 };
 

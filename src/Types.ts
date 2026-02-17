@@ -474,6 +474,7 @@ export type ApiPostInviteUserToProject = {
   projectId: string;
   projectName: string;
   invitedBy: string;
+  lang: string;
 };
 
 export type ApiAcceptOrgInvite = {

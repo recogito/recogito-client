@@ -60,7 +60,7 @@ const ProjectRequest = (props: ProjectRequestProps) => {
     return (
       <>
         <TopBar onError={() => {}} me={props.user} />
-        <div className='project-request-root'>
+        <main className='project-request-root' id='main'>
           <div className='project-request-title'>
             {`${t('Do you wish to request membership for project', { ns: 'project-request' })}: ${projectName}?`}
           </div>
@@ -81,7 +81,7 @@ const ProjectRequest = (props: ProjectRequestProps) => {
               {t('Request', { ns: 'project-request' })}
             </button>
           </div>
-        </div>
+        </main>
       </>
     );
   } else if (requestState === RequestState.REQUESTING) {

@@ -60,14 +60,14 @@ const ForgotPassword = () => {
   return (
     <div className='forgot-password'>
       {sent ? (
-        <main>
+        <main id='main'>
           <div className='success'>
             <AnimatedCheck size={38} />
             <p>{t('Link sent', { ns: 'auth-forgot-password' })}</p>
           </div>
         </main>
       ) : (
-        <main>
+        <main id='main'>
           <h1>{t('Forgot Password?', { ns: 'auth-forgot-password' })}</h1>
           <p>{t('Please enter the email you use to sign in.', { ns: 'auth-forgot-password' })}</p>
 

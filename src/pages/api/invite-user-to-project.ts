@@ -3,11 +3,10 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { i18n } from 'astro:config/server';
 import { render } from '@react-email/render';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
-import { getFixedT } from 'src/i18n/server';
+import { useTranslation } from 'src/i18n/serverless';
 
 const MAIL_HOST = process.env.MAIL_HOST || import.meta.env.MAIL_HOST;
 const MAIL_PORT = process.env.MAIL_PORT || import.meta.env.MAIL_PORT;
@@ -30,6 +29,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     });
 
   const body: ApiPostInviteUserToProject = await request.json();
+  const { t, lang } = await useTranslation(request, body);
 
   const respData = [];
   // Create the invites
@@ -54,9 +54,6 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     }
 
     respData.push(inviteResponse.data);
-
-    const lang = i18n?.defaultLocale || 'en';
-    const t = await getFixedT(lang, ['email']);
 
     const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/projects/${body.projectId}/accept-invite`;
 

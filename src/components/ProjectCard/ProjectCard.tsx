@@ -20,6 +20,7 @@ import { JoinProjectDialog } from './JoinProjectDialog';
 
 import './ProjectCard.css';
 import { useTranslation } from 'react-i18next';
+import { getProfileInitials } from '@components/AccountActions';
 
 interface ProjectCardProps {
 
@@ -97,9 +98,9 @@ export const ProjectCard = (props: ProjectCardProps) => {
     >
       <div className='project-card-body' onClick={onClick}>
         <div className='project-card-header'>
-          <h1>
+          <p className='project-card-name'>
             <a href={`/${i18n.language}/projects/${id}`}>{name}</a>
-          </h1>
+          </p>
           {is_locked ? <LockedPill /> : <div />}
         </div>
         {description ? (
@@ -157,14 +158,7 @@ export const ProjectCard = (props: ProjectCardProps) => {
             <Avatar
               key={member.user.id}
               id={member.user.id}
-              name={
-                member.user.nickname
-                  ? member.user.nickname
-                  : [member.user.first_name, member.user.last_name]
-                      .filter((str) => str)
-                      .join(' ')
-                      .trim()
-              }
+              initials={getProfileInitials(member.user)}
               avatar={member.user.avatar_url}
             />
           ))}

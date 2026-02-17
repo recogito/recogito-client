@@ -147,7 +147,7 @@ export const Team = (props: TeamProps) => {
       <Theme className='tab-team-theme'>
         <div className='row tab-team'>
           <section className='column'>
-            <h1>{t('Step', { ns: 'project-assignments' })} 4</h1>
+            <h2>{t('Step', { ns: 'project-assignments' })} 4</h2>
             <p>
               {t('Add people to the assignment.', {
                 ns: 'project-assignments',

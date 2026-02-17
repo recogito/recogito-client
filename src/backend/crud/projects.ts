@@ -125,6 +125,7 @@ export const inviteUserToProject = (
   email: string,
   project: Project | ExtendedProjectData,
   groupId: string,
+  lang: string,
   invitedBy?: string
 ): Promise<Invitation> =>
   new Promise((resolve, reject) => {
@@ -133,6 +134,7 @@ export const inviteUserToProject = (
       projectId: project.id,
       projectName: project.name,
       invitedBy: invitedBy || '',
+      lang,
     };
 
     return supabase.auth.getSession().then(({ error, data }) => {
@@ -163,6 +165,7 @@ export const inviteUsersToProject = (
   users: InviteListEntry[],
   project: Project | ExtendedProjectData,
   groupIds: { [key: string]: string },
+  lang: string,
   invitedBy?: string
 ): Response<Invitation[]> => {
   new Promise((resolve, reject) => {
@@ -174,6 +177,7 @@ export const inviteUsersToProject = (
       projectId: project.id,
       projectName: project.name,
       invitedBy: invitedBy || '',
+      lang,
     };
 
     return supabase.auth.getSession().then(({ error, data }) => {

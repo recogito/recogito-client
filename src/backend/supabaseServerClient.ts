@@ -14,7 +14,12 @@ export const createSupabaseServerClient = (
   const supabase = createServerClient(supabaseServerUrl, supabaseAPIKey, {
     cookies: {
       getAll() {
-        return parseCookieHeader(request.headers.get('Cookie') ?? '');
+        return parseCookieHeader(request.headers.get('Cookie') ?? '').map(
+          (cookie) => ({
+            ...cookie,
+            value: cookie.value ?? '',
+          })
+        );
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) =>

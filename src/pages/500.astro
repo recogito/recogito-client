@@ -1,17 +1,21 @@
 ---
 import { getFixedT } from 'src/i18n/server';
 import BaseLayout from '@layouts/BaseLayout.astro';
+import { i18n } from 'astro:config/server';
 
-const locale = Astro.currentLocale;
-const t = await getFixedT(locale, ['error']);
+const supported = i18n?.locales || ['en', 'de'];
+const preferred = Astro.preferredLocale;
+
+const lang = Astro.currentLocale || (preferred && supported.includes(preferred) ? preferred : 'en');
+const t = await getFixedT(lang, ['error']);
 ---
 <BaseLayout title="Recogito | Error">
-  <div class="container">
+  <main class="container" id="main">
     <div class="column">
       <h1>500 Error</h1>
       <p>{t('Something went wrong.', { ns: 'error' })}</p>
     </div>
-  </div>
+  </main>
 </BaseLayout>
 
 <style>

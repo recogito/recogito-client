@@ -117,7 +117,7 @@ export const Notifications = (props: NotificationsProps) => {
               className={count ? 'notifications' : 'notifications no-pending'}
             >
               <header>
-                <h1>{t('Notifications', { ns: 'notifications' })}</h1>
+                <h2>{t('Notifications', { ns: 'notifications' })}</h2>
                 <Close
                   className='unstyled icon-only popover-close'
                   aria-label={t('Close', { ns: 'common' })}

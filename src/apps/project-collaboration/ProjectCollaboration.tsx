@@ -182,7 +182,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
         groupMap['student'] = g.id;
       }
     });
-    inviteUsersToProject(supabase, invites, project, groupMap, invitedBy).then(
+    inviteUsersToProject(supabase, invites, project, groupMap, i18n.language, invitedBy).then(
       ({ error, data }) => {
         if (error) {
           onInvitationError();
@@ -300,7 +300,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           { label: t('Team', { ns: 'common' }), href: undefined },
         ]}
       />
-      <div className='project-collaboration'>
+      <main className='project-collaboration' id='main'>
         <ToastProvider>
           <div className='project-collaboration-title-bar'>
             <h1>{t('Project Team', { ns: 'project-collaboration' })}</h1>
@@ -349,7 +349,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
           {!props.project.is_open_join && (
             <>
               <div className='project-collaboration-request-header'>
-                <h1>{t('Join Requests', { ns: 'project-collaboration' })}</h1>
+                <h2>{t('Join Requests', { ns: 'project-collaboration' })}</h2>
                 <div className='project-collaboration-ignored-switch'>
                   <label htmlFor='show-ignored'>{t('Show Ignored', { ns: 'project-collaboration' })}</label>
 
@@ -421,7 +421,7 @@ const ProjectCollaboration = (props: ProjectCollaborationProps) => {
             onClose={() => setAddUsersOpen(false)}
           />
         </ToastProvider>
-      </div>
+      </main>
     </>
   );
 };

@@ -44,7 +44,7 @@ const ResetPassword = () => {
   return (
     <div className='reset-password'>
       {success ? (
-        <main>
+        <main id='main'>
           <div className='success'>
             <AnimatedCheck size={38} />
             <p>
@@ -56,7 +56,7 @@ const ResetPassword = () => {
           </div>
         </main>
       ) : (
-        <main>
+        <main id='main'>
           <h1>{t('Set Password', { ns: 'auth-reset-password' })}</h1>
           <form className='login'>
             <TextInput

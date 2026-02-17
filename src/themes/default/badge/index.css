@@ -1,6 +1,7 @@
 .badge {
   align-items: center;
   background-color: var(--gray-200);
+  color: var(--gray-900);
   border-radius: 9999px;
   display: inline-flex;
   font-size: 11px;
@@ -11,9 +12,11 @@
   margin: 0 7px;
   min-width: 8px;
   padding: 0 10px;
+  border: 1px solid transparent;
 }
 
 .badge.disabled {
-  color: var(--gray-400);
-  background-color: var(--gray-100);
+  background-color: white;
+  color: var(--gray-700);
+  border: 1px solid var(--gray-300);
 }

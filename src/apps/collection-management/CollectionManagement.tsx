@@ -176,7 +176,7 @@ const CollectionManagement = (props: CollectionManagementProps) => {
             </h1>
           </div>
         </div>
-        <div className='collection-management-content'>
+        <main className='collection-management-content' id='main'>
           <div className='collection-management-actions'>
             <div>
               <label htmlFor='search'>
@@ -215,7 +215,7 @@ const CollectionManagement = (props: CollectionManagementProps) => {
             content={toast}
             onOpenChange={(open) => !open && setToast(null)}
           />
-        </div>
+        </main>
       </ToastProvider>
     </div>
   );

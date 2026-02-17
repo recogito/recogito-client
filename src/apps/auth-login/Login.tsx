@@ -149,7 +149,7 @@ const Login = (props: { methods: LoginMethod[] }) => {
     <div className='login-background-container'>
       {isChecking && <StateChecking />}
       {!isChecking && (
-        <div className='login'>
+        <main className='login' id='main'>
           <h1>{t('Welcome Back', { ns: 'auth-login' })}</h1>
           <h2>{t('Log into your account', { ns: 'auth-login' })}</h2>
           {primary.type === LoginMethods.username_password && (
@@ -158,7 +158,7 @@ const Login = (props: { methods: LoginMethod[] }) => {
           {primary.type !== LoginMethods.username_password &&
             renderLoginButton(primary, 'primary')}
           {loginMethods && loginMethods.map((m) => renderLoginButton(m))}
-        </div>
+        </main>
       )}
     </div>
   );

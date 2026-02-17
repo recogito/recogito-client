@@ -32,6 +32,8 @@
   "hexadecimal value for this color": "Hex-Wert für diese Farbe",
   "close": "Schliessen",
   "profile": "Profil",
+  "accountActions": "Account-Aktionen",
+  "accountActionsWithName": "{{initials}} ({{name}}): Account-Aktionen",
   "help": "Hilfe",
   "sign out": "Ausloggen",
   "user management": "Benutzerverwaltung",
