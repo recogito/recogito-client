@@ -418,7 +418,7 @@ export const Header = (props: HeaderProps) => {
         )}
         <input
           {...getInputProps()}
-          aria-label={t('drag and drop target for documents', { ns: 'a11y' })}
+          aria-hidden={true}
         />
       </section>
     </header>
