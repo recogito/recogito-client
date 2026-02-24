@@ -6,6 +6,13 @@ import node from '@astrojs/node';
 export default defineConfig({
   integrations: [react()],
   output: 'server',
+  i18n: {
+    locales: ['en', 'de'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
   adapter: node({
     mode: 'standalone',
   }),
