@@ -33,6 +33,10 @@
   padding: 30px 30px 20px 30px;
 }
 
+.dashboard-header > section.dashboard-header-container > h1 {
+  font-size: 1.2rem;
+}
+
 .dashboard-header > section.dashboard-header-container > .dashboard-header-actions {
   display: flex;
   justify-content: flex-end;

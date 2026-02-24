@@ -214,7 +214,7 @@ export const Header = (props: HeaderProps) => {
   return (
     <header className='dashboard-header'>
       <section className='dashboard-header-container'>
-        <h2>
+        <h1>
           {props.filter}
 
           {props.tagDefinition && (
@@ -261,7 +261,7 @@ export const Header = (props: HeaderProps) => {
               />
             </ConfirmedAction.Root>
           )}
-        </h2>
+        </h1>
 
         <div className='dashboard-header-actions'>
           <ul className='dashboard-header-list-actions'>
