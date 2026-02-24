@@ -108,7 +108,10 @@ export const ProjectCard = (props: ProjectCardProps) => {
         ) : (
           <p className='no-description'>{t('No description.', { ns: 'dashboard-projects' })}</p>
         )}
-        <ul className='document-stats'>
+        <ul
+          className='document-stats'
+          role='presentation'
+        >
           {contexts.length > 0 && (
             <li>
               <GraduationCap size={16} />
