@@ -388,8 +388,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                 (m: any) => m.label === 'Author' || m.label === 'Artist'
               )
             : null;
-        return author?.value.trim() ? (
-          author.value.trim()
+        const authorValue = author?.value?.trim();
+        return authorValue ? (
+          authorValue
         ) : (
           <MissingBadge text={t('No author/artist', { ns: 'project-home' })} />
         );
