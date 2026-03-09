@@ -1,6 +1,11 @@
+/* global process */
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import node from '@astrojs/node';
+
+const siteUrl = process.env.SITE_URL || 'http://localhost:4321';
+const url = new URL(siteUrl);
+const allowedDomain = url.hostname;
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,5 +25,9 @@ export default defineConfig({
     ssr: {
       noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*']
     }
+  },
+  security: {
+    checkOrigin: true,
+    allowedDomains: [allowedDomain]
   }
 });
