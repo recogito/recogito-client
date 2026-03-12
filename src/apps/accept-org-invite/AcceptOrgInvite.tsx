@@ -32,7 +32,11 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
     evt.preventDefault();
 
     if (password.length < 6) {
-      setError(t('Password should be at least 6 characters', { ns: 'auth-reset-password' }));
+      setError(
+        t('Password should be at least 6 characters', {
+          ns: 'auth-reset-password',
+        })
+      );
     } else if (password !== verification) {
       setError(t("Passwords don't match", { ns: 'auth-reset-password' }));
     } else {
@@ -40,7 +44,7 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
       setError('');
 
       const payload: ApiAcceptOrgInvite = {
-        email,
+        email: email.trim(),
         password,
         token: props.token,
       };
@@ -51,12 +55,35 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-      }).then((response) => {
+      }).then(async (response) => {
         if (!response.ok) {
           console.error(response.status);
-          setError(
-            t('Could not set new password', { ns: 'auth-reset-password' })
-          );
+          try {
+            const errorData = await response.json();
+            if (errorData.error == 'Email not authorized') {
+              setError(
+                t('The provided email must match the invitee email', {
+                  ns: 'auth-reset-password',
+                })
+              );
+            } else if (
+              ['Invalid token', 'Token Expired'].includes(errorData.error)
+            ) {
+              setError(
+                t('The invite token is invalid or has expired', {
+                  ns: 'auth-reset-password',
+                })
+              );
+            } else {
+              setError(
+                t('Could not set new password', { ns: 'auth-reset-password' })
+              );
+            }
+          } catch {
+            setError(
+              t('Could not set new password', { ns: 'auth-reset-password' })
+            );
+          }
         } else {
           setSuccess(true);
         }
