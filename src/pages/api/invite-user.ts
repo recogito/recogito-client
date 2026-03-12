@@ -102,8 +102,9 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
   // create a token
   const key = Buffer.from(INVITE_CRYPTO_KEY, 'base64');
   const token = encrypt(`${inviteResp.data.user.id}|${Date.now()}`, key);
+  const encodedToken = encodeURIComponent(token);
 
-  const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${token}`;
+  const acceptInviteUrl = `${url.protocol}//${url.host}/${lang}/accept-org-invite?token=${encodedToken}`;
 
   const html = await render(
     createElement(InviteUserEmail, {
