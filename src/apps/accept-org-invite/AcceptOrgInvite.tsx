@@ -35,14 +35,13 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
       setError(t("Passwords don't match", { ns: 'auth-reset-password' }));
     } else {
       setBusy(true);
+      setError('');
 
       const payload: ApiAcceptOrgInvite = {
         email,
         password,
         token: props.token,
       };
-
-      console.log(props.token);
 
       fetch('/api/accept-new-user', {
         method: 'POST',
@@ -136,7 +135,6 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
     </div>
   );
 };
-
 
 export const AcceptOrgInviteApp = (props: AcceptOrgInviteProps) => (
   <I18nextProvider i18n={clientI18next}>

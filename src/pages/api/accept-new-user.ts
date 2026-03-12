@@ -11,7 +11,9 @@ const supabaseServerUrl =
 
 const invitesAllowed = import.meta.env.PUBLIC_ENABLE_USER_INVITE;
 
-export const POST: APIRoute = async ({ request, redirect }) => {
+const ONE_DAY_MS = 8.64e7;
+
+export const POST: APIRoute = async ({ request }) => {
   // Should this be callable at all?
   if (!invitesAllowed) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
@@ -31,8 +33,17 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     });
   }
 
+  let values: string;
+
   // Decrypt the token
-  const values = decrypt(token, key);
+  try {
+    values = decrypt(token, key);
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid token' }), {
+      status: 401,
+    });
+  }
+
   const check = values.split('|');
 
   // Get the user
@@ -57,17 +68,18 @@ export const POST: APIRoute = async ({ request, redirect }) => {
   // Verify email
   if (getUserResp.data.user.email !== data.email) {
     return new Response(JSON.stringify({ error: 'Email not authorized' }), {
-      status: 404,
+      status: 401,
     });
   }
 
   // Verify time
-  const sent = new Date(check[1]);
+  const timestamp = parseInt(check[1], 10);
+  const sent = new Date(timestamp);
   const diffInMs = Date.now() - sent.getTime();
 
-  if (diffInMs > 8.64e7) {
+  if (diffInMs > ONE_DAY_MS) {
     return new Response(JSON.stringify({ error: 'Token Expired' }), {
-      status: 404,
+      status: 401,
     });
   }
 
@@ -84,5 +96,5 @@ export const POST: APIRoute = async ({ request, redirect }) => {
     });
   }
 
-  return redirect('/sign-out');
+  return new Response(JSON.stringify({ success: true }), { status: 200 });
 };

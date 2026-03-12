@@ -29,6 +29,7 @@ const ResetPassword = () => {
       setError(t("Passwords don't match", { ns: 'auth-reset-password' }));
     } else {
       setBusy(true);
+      setError('');
       supabase.auth.updateUser({ password }).then(({ error }) => {
         if (error) {
           console.error(error);
