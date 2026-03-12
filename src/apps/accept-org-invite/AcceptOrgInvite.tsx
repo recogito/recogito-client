@@ -31,7 +31,9 @@ const AcceptOrgInvite = (props: AcceptOrgInviteProps) => {
   const onAcceptOrgInvite = (evt: React.MouseEvent) => {
     evt.preventDefault();
 
-    if (password !== verification) {
+    if (password.length < 6) {
+      setError(t('Password should be at least 6 characters', { ns: 'auth-reset-password' }));
+    } else if (password !== verification) {
       setError(t("Passwords don't match", { ns: 'auth-reset-password' }));
     } else {
       setBusy(true);
