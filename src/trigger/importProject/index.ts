@@ -73,7 +73,7 @@ const createDocuments = async (
         .eq('legacy_id', documentId)
         .eq('is_new', true)
         .eq('import_id', importId)
-        .single();
+        .maybeSingle();
 
       const {
         id,
