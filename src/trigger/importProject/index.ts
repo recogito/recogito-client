@@ -193,7 +193,9 @@ const getRecords = (
   try {
     const items = JSON.parse(content);
     records = items?.map((item: any) => {
-      const { id, ...rest } = item;
+      // pull old ID, generated columns out of exported data
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, collection_document_id, revision_number, ...rest } = item;
 
       return {
         legacy_id: id,
