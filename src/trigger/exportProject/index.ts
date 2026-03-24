@@ -32,7 +32,7 @@ const addDocumentsToZip = (
   files: { [key: string]: ArrayBuffer }
 ) => {
   Object.entries(files).forEach(([key, data]) => {
-    zip.addFile(`/documents/${key}`, Buffer.from(data));
+    zip.addFile(`documents/${key}`, Buffer.from(data));
   });
 }
 
