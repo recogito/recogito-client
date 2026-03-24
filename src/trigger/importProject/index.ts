@@ -336,16 +336,17 @@ export const importProject = task({
     // Update foreign keys
     await transform(supabase, importId);
 
+    const { IIIF_KEY, SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
+
+    // Create users in auth schema
+    await createUsers(supabase, importId, publicSupabaseUrl, SUPABASE_SERVICE_KEY);
+
     // Load the data into the database tables
     await load(supabase, importId);
-
-    const { IIIF_KEY, SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
 
     // Create documents in storage
     await createDocuments(supabase, importId, zip, iiifProjectId, iiifUrl, IIIF_KEY);
 
-    // Create users in auth schema
-    await createUsers(supabase, importId, publicSupabaseUrl, SUPABASE_SERVICE_KEY);
 
     logger.info(`Completed import: ${importId}`);
   }
