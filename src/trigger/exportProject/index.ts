@@ -9,14 +9,37 @@ import { exportTagDefinitions, exportTags } from '@trigger/exportProject/tags';
 import { logger, task } from '@trigger.dev/sdk/v3';
 import { exportProfiles } from '@trigger/exportProject/users';
 import AdmZip from 'adm-zip';
+import * as sdk from '@1password/sdk';
 
 interface Payload {
   jobId: string;
   projectId?: string;
-  token: string;
   publicSupabaseUrl: string;
   publicSupabaseApiKey: string;
+  vaultTenantPath?: string;
 }
+
+const getSecrets = async (vaultTenantPath?: string) => {
+  // allow multi-tenant setup with 1password service account and vault path
+  const isMultiTenant =
+    process.env.MULTI_TENANT === 'true' && process.env.OP_SERVICE_ACCOUNT_TOKEN;
+
+  if (!isMultiTenant || !vaultTenantPath) {
+    // otherwise just use env vars
+    return {
+      SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || '',
+    };
+  }
+  const client = await sdk.createClient({
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN!,
+    integrationName: 'Trigger.dev import-export multi-tenant',
+    integrationVersion: '1.0.0',
+  });
+  const SUPABASE_SERVICE_KEY = await client.secrets.resolve(
+    `op://${vaultTenantPath}/SUPABASE_SERVICE_KEY`
+  );
+  return { SUPABASE_SERVICE_KEY };
+};
 
 const addToZip = (
   zip: AdmZip,
@@ -34,32 +57,36 @@ const addDocumentsToZip = (
   Object.entries(files).forEach(([key, data]) => {
     zip.addFile(`documents/${key}`, Buffer.from(data));
   });
-}
+};
 
 export const exportProject = task({
   id: 'export-project',
   run: async (payload: Payload) => {
-    const { jobId, projectId, token, publicSupabaseUrl, publicSupabaseApiKey } = payload;
+    const {
+      jobId,
+      projectId,
+      publicSupabaseUrl,
+      publicSupabaseApiKey,
+      vaultTenantPath,
+    } = payload;
 
     if (!(publicSupabaseUrl && publicSupabaseApiKey)) {
-      logger.error('Invalid Supabase credentials');
-      return;
+      throw new Error('Invalid Supabase credentials');
     }
 
     if (!projectId) {
-      logger.error('Project ID is required');
-      return;
+      throw new Error('Project ID is required');
     }
 
     logger.info('Creating Supabase client');
 
-    const supabase = createClient(publicSupabaseUrl, publicSupabaseApiKey, {
-      global: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      }
-    });
+    const { SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
+
+    if (!SUPABASE_SERVICE_KEY) {
+      throw new Error('Missing Supabase service key');
+    }
+
+    const supabase = createClient(publicSupabaseUrl, SUPABASE_SERVICE_KEY);
 
     const zip = new AdmZip();
 
@@ -117,7 +144,7 @@ export const exportProject = task({
     } catch (error) {
       throw new Error(`Error uploading file: ${(error as Error).message}`);
     }
-  }
+  },
 });
 
 const uploadFile = (
