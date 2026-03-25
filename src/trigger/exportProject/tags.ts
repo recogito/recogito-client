@@ -6,7 +6,7 @@ const getTagDefinitionIds = async (
 ) => {
   const { data: tags } = await supabase
     .from('tags')
-    .select('tag_definition_id, target_id, tag_definitions(target_type)')
+    .select('tag_definition_id, target_id, tag_definitions!inner(target_type)')
     .eq('tag_definitions.target_type', 'project')
     .eq('target_id', projectId);
 
@@ -18,6 +18,10 @@ export const exportTagDefinitions = async (
   projectId: string
 ) => {
   const tagDefinitionIds = await getTagDefinitionIds(supabase, projectId);
+
+  if (tagDefinitionIds.length === 0) {
+    return { data: [], error: null };
+  }
 
   return supabase
     .from('tag_definitions')
@@ -31,8 +35,13 @@ export const exportTags = async (
 ) => {
   const tagDefinitionIds = await getTagDefinitionIds(supabase, projectId);
 
+  if (tagDefinitionIds.length === 0) {
+    return { data: [], error: null };
+  }
+
   return supabase
     .from('tags')
     .select()
-    .in('tag_definition_id', tagDefinitionIds);
+    .in('tag_definition_id', tagDefinitionIds)
+    .eq('target_id', projectId);
 };
