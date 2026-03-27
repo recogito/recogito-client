@@ -35,47 +35,39 @@ const downloadStorage = async (
   }
 
   return data;
-}
-
-const getDocumentIds = async (
-  supabase: SupabaseClient,
-  projectId: string
-) => {
-  const { data: projectDocuments } = await supabase
-    .from('project_documents')
-    .select('document_id')
-    .eq('project_id', projectId);
-
-  return projectDocuments?.map((projectDocument) => projectDocument.document_id) || [];
 };
 
 export const exportDocuments = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  const documentIds = await getDocumentIds(supabase, projectId);
-
-  return supabase
+  // get documents by inner join against project_documents
+  const { data, error } = await supabase
     .from('documents')
-    .select()
-    .in('id', documentIds);
+    .select('*, project_documents!inner(project_id)')
+    .eq('project_documents.project_id', projectId);
+
+  // strip out join metadata
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const cleanData = data?.map(({ project_documents, ...rest }) => rest) || [];
+
+  return { data: cleanData, error };
 };
 
 export const exportFiles = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  const documentIds = await getDocumentIds(supabase, projectId);
-
+  // get documents by inner join against project_documents
   const { data: documents } = await supabase
     .from('documents')
-    .select('id')
-    .in('id', documentIds)
+    .select('id, bucket_id, project_documents!inner(project_id)')
+    .eq('project_documents.project_id', projectId)
     .eq('bucket_id', 'documents');
 
   const files: Files = {};
 
-  for (const document of (documents || [])) {
+  for (const document of documents || []) {
     const buffer = await downloadStorage(supabase, document);
 
     if (buffer) {
@@ -84,7 +76,7 @@ export const exportFiles = async (
   }
 
   return {
-    data: files
+    data: files,
   };
 };
 
@@ -92,17 +84,16 @@ export const exportIIIF = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  const documentIds = await getDocumentIds(supabase, projectId);
-
+  // get documents by inner join against project_documents
   const { data: documents } = await supabase
     .from('documents')
-    .select('id, meta_data')
-    .in('id', documentIds)
+    .select('id, meta_data, project_documents!inner(project_id)')
+    .eq('project_documents.project_id', projectId)
     .eq('meta_data->>protocol', 'IIIF_IMAGE');
 
   const files: Files = {};
 
-  for (const document of (documents || [])) {
+  for (const document of documents || []) {
     const { url } = document.meta_data;
     const imageUrl = url.replace('/info.json', '/full/max/0/default.jpg');
     const buffer = await downloadFile(imageUrl);
@@ -113,7 +104,7 @@ export const exportIIIF = async (
   }
 
   return {
-    data: files
+    data: files,
   };
 };
 
@@ -121,11 +112,8 @@ export const exportProjectDocuments = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  const documentIds = await getDocumentIds(supabase, projectId);
-
   return supabase
     .from('project_documents')
     .select()
-    .eq('project_id', projectId)
-    .in('document_id', documentIds);
+    .eq('project_id', projectId);
 };
