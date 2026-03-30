@@ -1,6 +1,6 @@
 import { updateDocumentMetadata } from '@backend/crud';
 import { getDownloadURL } from '@backend/storage';
-import { createClient, PostgrestError, type SupabaseClient } from '@supabase/supabase-js';
+import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { logger, task } from '@trigger.dev/sdk/v3';
 import { generatePassword } from '@util/auth';
 import AdmZip from 'adm-zip';
@@ -73,7 +73,7 @@ const createDocuments = async (
         .eq('legacy_id', documentId)
         .eq('is_new', true)
         .eq('import_id', importId)
-        .single();
+        .maybeSingle();
 
       const {
         id,
@@ -144,10 +144,15 @@ const createUsers = async (
     const supa = await createClient(publicSupabaseUrl, supabaseServiceKey);
 
     for (const profile of profiles) {
-      await supa.auth.admin.createUser({
+      const { error } = await supa.auth.admin.createUser({
         email: profile.email,
         password: generatePassword(PASSWORD_LENGTH)
       });
+      if (error && !error.message.includes('already exists')) {
+        throw new Error(`Creation failed for user ${profile.email}: ${error.message}`);
+      } else if (error) {
+        logger.warn(`Skipping creation for user ${profile.email}`);
+      }
     }
   }
 };
@@ -175,7 +180,7 @@ const extract = async (
         .insert(records);
 
       if (error) {
-        logError(`Error inserting into ${tableName}`, error);
+        throw new Error(`Error inserting into ${tableName}: ${error.message}`);
       } else {
         logger.info(`Successfully inserted ${records.length} records into ${tableName}`);
       }
@@ -193,7 +198,9 @@ const getRecords = (
   try {
     const items = JSON.parse(content);
     records = items?.map((item: any) => {
-      const { id, ...rest } = item;
+      // pull old ID, generated columns out of exported data
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { id, collection_document_id, revision_number, ...rest } = item;
 
       return {
         legacy_id: id,
@@ -202,10 +209,7 @@ const getRecords = (
       };
     });
   } catch (e) {
-    logger.error(`Error parsing ${entryName}`);
-    logger.error((e as Error).message);
-
-    records = [];
+    throw new Error(`Malformed JSON in ${entryName}: ${(e as Error).message}`);
   }
 
   return records;
@@ -215,23 +219,17 @@ const load = async (
   supabase: SupabaseClient,
   importId: string
 ) => {
-  const { error } = await supabase
+  const { data: success, error } = await supabase
     .schema('etl')
     .rpc('load_rpc', { _import_id: importId });
 
   if (error) {
-    logError(`Error loading data: ${importId}`, error);
+    throw new Error(`Error loading data: ${importId}: ${error.code} - ${error.details} - ${error.message}`);
+  } else if (!success) {
+    throw new Error('Unauthorized');
   } else {
     logger.info(`Successfully loaded data: ${importId}`);
   }
-};
-
-const logError = (
-  message: string,
-  error: PostgrestError
-) => {
-  logger.error(message);
-  logger.error(`Code: ${error.code} Details: ${error.details} Message: ${error.message}`);
 };
 
 const transform = async (
@@ -243,7 +241,7 @@ const transform = async (
     .rpc('transform_rpc', { _import_id: importId });
 
   if (error) {
-    logError(`Error transforming data: ${importId}`, error);
+    throw new Error(`Error transforming data: ${importId}: ${error.code} - ${error.details} - ${error.message}`);
   } else {
     logger.info(`Successfully transformed data: ${importId}`);
   }
@@ -334,16 +332,17 @@ export const importProject = task({
     // Update foreign keys
     await transform(supabase, importId);
 
+    const { IIIF_KEY, SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
+
+    // Create users in auth schema
+    await createUsers(supabase, importId, publicSupabaseUrl, SUPABASE_SERVICE_KEY);
+
     // Load the data into the database tables
     await load(supabase, importId);
-
-    const { IIIF_KEY, SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
 
     // Create documents in storage
     await createDocuments(supabase, importId, zip, iiifProjectId, iiifUrl, IIIF_KEY);
 
-    // Create users in auth schema
-    await createUsers(supabase, importId, publicSupabaseUrl, SUPABASE_SERVICE_KEY);
 
     logger.info(`Completed import: ${importId}`);
   }

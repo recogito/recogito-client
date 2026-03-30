@@ -9,14 +9,37 @@ import { exportTagDefinitions, exportTags } from '@trigger/exportProject/tags';
 import { logger, task } from '@trigger.dev/sdk/v3';
 import { exportProfiles } from '@trigger/exportProject/users';
 import AdmZip from 'adm-zip';
+import * as sdk from '@1password/sdk';
 
 interface Payload {
   jobId: string;
   projectId?: string;
-  token: string;
   publicSupabaseUrl: string;
   publicSupabaseApiKey: string;
+  vaultTenantPath?: string;
 }
+
+const getSecrets = async (vaultTenantPath?: string) => {
+  // allow multi-tenant setup with 1password service account and vault path
+  const isMultiTenant =
+    process.env.MULTI_TENANT === 'true' && process.env.OP_SERVICE_ACCOUNT_TOKEN;
+
+  if (!isMultiTenant || !vaultTenantPath) {
+    // otherwise just use env vars
+    return {
+      SUPABASE_SERVICE_KEY: process.env.SUPABASE_SERVICE_KEY || '',
+    };
+  }
+  const client = await sdk.createClient({
+    auth: process.env.OP_SERVICE_ACCOUNT_TOKEN!,
+    integrationName: 'Trigger.dev import-export multi-tenant',
+    integrationVersion: '1.0.0',
+  });
+  const SUPABASE_SERVICE_KEY = await client.secrets.resolve(
+    `op://${vaultTenantPath}/SUPABASE_SERVICE_KEY`
+  );
+  return { SUPABASE_SERVICE_KEY };
+};
 
 const addToZip = (
   zip: AdmZip,
@@ -32,34 +55,38 @@ const addDocumentsToZip = (
   files: { [key: string]: ArrayBuffer }
 ) => {
   Object.entries(files).forEach(([key, data]) => {
-    zip.addFile(`/documents/${key}`, Buffer.from(data));
+    zip.addFile(`documents/${key}`, Buffer.from(data));
   });
-}
+};
 
 export const exportProject = task({
   id: 'export-project',
   run: async (payload: Payload) => {
-    const { jobId, projectId, token, publicSupabaseUrl, publicSupabaseApiKey } = payload;
+    const {
+      jobId,
+      projectId,
+      publicSupabaseUrl,
+      publicSupabaseApiKey,
+      vaultTenantPath,
+    } = payload;
 
     if (!(publicSupabaseUrl && publicSupabaseApiKey)) {
-      logger.error('Invalid Supabase credentials');
-      return;
+      throw new Error('Invalid Supabase credentials');
     }
 
     if (!projectId) {
-      logger.error('Project ID is required');
-      return;
+      throw new Error('Project ID is required');
     }
 
     logger.info('Creating Supabase client');
 
-    const supabase = createClient(publicSupabaseUrl, publicSupabaseApiKey, {
-      global: {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        }
-      }
-    });
+    const { SUPABASE_SERVICE_KEY } = await getSecrets(vaultTenantPath);
+
+    if (!SUPABASE_SERVICE_KEY) {
+      throw new Error('Missing Supabase service key');
+    }
+
+    const supabase = createClient(publicSupabaseUrl, SUPABASE_SERVICE_KEY);
 
     const zip = new AdmZip();
 
@@ -67,56 +94,34 @@ export const exportProject = task({
 
     logger.info('Exporting data as JSON');
 
-    const { data: annotations } = await exportAnnotations(supabase, projectId);
-    addToZip(zip, 'annotations.json', annotations);
+    const exportTasks = [
+      { name: 'annotations.json', fn: exportAnnotations },
+      { name: 'bodies.json', fn: exportBodies },
+      { name: 'context_documents.json', fn: exportContextDocuments },
+      { name: 'context_users.json', fn: exportContextUsers },
+      { name: 'contexts.json', fn: exportContexts },
+      { name: 'documents.json', fn: exportDocuments },
+      { name: 'group_users.json', fn: exportGroupUsers },
+      { name: 'layer_contexts.json', fn: exportLayerContexts },
+      { name: 'layer_groups.json', fn: exportLayerGroups },
+      { name: 'layers.json', fn: exportLayers },
+      { name: 'profiles.json', fn: exportProfiles },
+      { name: 'project_documents.json', fn: exportProjectDocuments },
+      { name: 'project_groups.json', fn: exportProjectGroups },
+      { name: 'projects.json', fn: exportProjects },
+      { name: 'tag_definitions.json', fn: exportTagDefinitions },
+      { name: 'tags.json', fn: exportTags },
+      { name: 'targets.json', fn: exportTargets },
+    ];
 
-    const { data: bodies } = await exportBodies(supabase, projectId);
-    addToZip(zip, 'bodies.json', bodies);
-
-    const { data: contextDocuments } = await exportContextDocuments(supabase, projectId);
-    addToZip(zip, 'context_documents.json', contextDocuments);
-
-    const { data: contextUsers } = await exportContextUsers(supabase, projectId);
-    addToZip(zip, 'context_users.json', contextUsers);
-
-    const { data: contexts } = await exportContexts(supabase, projectId);
-    addToZip(zip, 'contexts.json', contexts);
-
-    const { data: documents } = await exportDocuments(supabase, projectId);
-    addToZip(zip, 'documents.json', documents);
-
-    const { data: groupUsers } = await exportGroupUsers(supabase, projectId);
-    addToZip(zip, 'group_users.json', groupUsers);
-
-    const { data: layerContexts } = await exportLayerContexts(supabase, projectId);
-    addToZip(zip, 'layer_contexts.json', layerContexts);
-
-    const { data: layerGroups } = await exportLayerGroups(supabase, projectId);
-    addToZip(zip, 'layer_groups.json', layerGroups);
-
-    const { data: layers } = await exportLayers(supabase, projectId);
-    addToZip(zip, 'layers.json', layers);
-
-    const { data: profiles } = await exportProfiles(supabase, projectId);
-    addToZip(zip, 'profiles.json', profiles);
-
-    const { data: projectDocuments } = await exportProjectDocuments(supabase, projectId);
-    addToZip(zip, 'project_documents.json', projectDocuments);
-
-    const { data: projectGroups } = await exportProjectGroups(supabase, projectId);
-    addToZip(zip, 'project_groups.json', projectGroups);
-
-    const { data: projects } = await exportProjects(supabase, projectId);
-    addToZip(zip, 'projects.json', projects);
-
-    const { data: tagDefinitions } = await exportTagDefinitions(supabase, projectId);
-    addToZip(zip, 'tag_definitions.json', tagDefinitions);
-
-    const { data: tags } = await exportTags(supabase, projectId);
-    addToZip(zip, 'tags.json', tags);
-
-    const { data: targets } = await exportTargets(supabase, projectId);
-    addToZip(zip, 'targets.json', targets);
+    for (const task of exportTasks) {
+      // run each export function and throw on any errors
+      const { data, error } = await task.fn(supabase, projectId);
+      if (error) {
+        throw new Error(`Failed to export ${task.name}: ${error.message}`);
+      }
+      addToZip(zip, task.name, data);
+    }
 
     // Export storage objects
 
@@ -137,10 +142,9 @@ export const exportProject = task({
     try {
       await uploadFile(supabase, jobId, file);
     } catch (error) {
-      logger.error('Error uploading file');
-      logger.error((error as Error).message);
+      throw new Error(`Error uploading file: ${(error as Error).message}`);
     }
-  }
+  },
 });
 
 const uploadFile = (
