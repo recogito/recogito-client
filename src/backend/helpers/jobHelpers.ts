@@ -7,10 +7,12 @@ const upload = async (
   name: string,
   file: File
 ) => {
-  supabase
-    .storage
+  const { data, error } = await supabase.storage
     .from('jobs')
-    .upload(name, file)
+    .upload(name, file);
+
+  if (error) throw error;
+  return data;
 };
 
 export const exportProject = (
