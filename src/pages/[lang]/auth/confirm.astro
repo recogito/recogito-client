@@ -1,0 +1,77 @@
+---
+import { createServerClient, parseCookieHeader } from '@supabase/ssr';
+import type { EmailOtpType } from '@supabase/supabase-js';
+import HeaderLayout from '@layouts/HeaderLayout.astro';
+import { getFixedT } from 'src/i18n/server';
+import '@themes/login/index.css';
+
+const token_hash = Astro.url.searchParams.get('token_hash');
+const type = Astro.url.searchParams.get('type') as EmailOtpType | null;
+
+// attempt to get lang from 'next' parameter
+const lang = Astro.currentLocale || 'en';
+const next = Astro.url.searchParams.get('next') || `/${lang}/projects`;
+
+const t = await getFixedT(lang, ['auth-confirm']);
+
+// handle POST request, e.g. user has submitted the form below
+if (Astro.request.method === 'POST') {
+  if (token_hash && type) {
+    const supabase = createServerClient(
+      import.meta.env.SUPABASE_SERVERCLIENT_URL || import.meta.env.PUBLIC_SUPABASE,
+      import.meta.env.PUBLIC_SUPABASE_API_KEY,
+      {
+        cookies: {
+          getAll() {
+            return parseCookieHeader(Astro.request.headers.get('Cookie') ?? '').map(
+              (cookie) => ({ ...cookie, value: cookie.value ?? '' })
+            );
+          },
+          setAll(cookiesToSet) {
+            cookiesToSet.forEach(({ name, value, options }) =>
+              Astro.cookies.set(name, value, options)
+            );
+          },
+        },
+      }
+    );
+
+    const { error } = await supabase.auth.verifyOtp({
+      type,
+      token_hash,
+    });
+
+    // show error message on sign-in page
+    if (error) {
+      const encodedError = encodeURIComponent(error.message);
+      return Astro.redirect(`/${lang}/sign-in?error=${encodedError}`);
+    }
+
+    return Astro.redirect(next);
+  } else {
+    return Astro.redirect(`/${lang}/sign-in?error=${encodeURIComponent('Missing token')}`);
+  }
+}
+
+// below: handle GET request, e.g. user has clicked a link in an email with a token
+---
+
+<HeaderLayout title={t('Email Confirmation', { ns: 'auth-confirm' })}>
+  <main class='container'>
+    <h1>{t('Email Confirmation', { ns: 'auth-confirm' })}</h1>
+    <p>{t('Click the button below to continue.', { ns: 'auth-confirm' })}</p>
+    <form method='POST'>
+      <button type='submit'>
+        <span>{t('Continue', { ns: 'auth-confirm' })}</span>
+      </button>
+    </form>
+  </main>
+</HeaderLayout>
+
+<style>
+  .container {
+    padding: 0 80px;
+    position: relative;
+    width: 100%;
+  }
+</style>

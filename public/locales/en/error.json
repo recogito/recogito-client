@@ -1,4 +1,6 @@
 {
-  "Something went wrong.": "Something went wrong.",
-  "Nothing to see here.": "Nothing to see here." 
+  "Email link is invalid or has expired": "Email link is invalid or has expired",
+  "Missing token": "Missing token",
+  "Nothing to see here.": "Nothing to see here.",
+  "Something went wrong.": "Something went wrong."
 }
