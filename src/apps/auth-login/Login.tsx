@@ -1,6 +1,7 @@
 import { LoginAccordion } from '@apps/auth-login/LoginAccordion';
 import { LoginMethods } from '@apps/auth-login/methods.ts';
 import { Button } from '@components/Button';
+import { ToastProvider, Toast, type ToastContent } from '@components/Toast';
 import classNames from 'classnames';
 import { useCallback, useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
@@ -30,9 +31,10 @@ const clearCookies = () => {
 
 const Login = (props: { methods: LoginMethod[] }) => {
   const [isChecking, setIsChecking] = useState(true);
+  const [error, setError] = useState<ToastContent | null>(null);
 
   const [primary, ...loginMethods] = props.methods;
-  const { t, i18n } = useTranslation(['auth-login']);
+  const { t, i18n } = useTranslation(['auth-login', 'error']);
 
   const url = new URLSearchParams(window.location.search);
   let redirectUrl = url.get('redirect-to');
@@ -90,6 +92,21 @@ const Login = (props: { methods: LoginMethod[] }) => {
     return () => authListener.subscription.unsubscribe();
   }, [next]);
 
+  // show any errors present on page load
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlError = params.get('error');
+    if (urlError) {
+      setError({
+        title: t('Something went wrong.', { ns: 'error' }),
+        description: t(urlError, { ns: 'error' }),
+        type: 'error',
+      });
+      // rm querystring so the error doesn't persist on refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, [t]);
+
   const signInWithSSO = (domain: string) => {
     const redirectTo = `${window.location.origin}/auth/callback?next=${next}`;
     supabase.auth
@@ -146,21 +163,24 @@ const Login = (props: { methods: LoginMethod[] }) => {
   );
 
   return (
-    <div className='login-background-container'>
-      {isChecking && <StateChecking />}
-      {!isChecking && (
-        <main className='login' id='main'>
-          <h1>{t('Welcome Back', { ns: 'auth-login' })}</h1>
-          <h2>{t('Log into your account', { ns: 'auth-login' })}</h2>
-          {primary.type === LoginMethods.username_password && (
-            <StateLoginForm />
-          )}
-          {primary.type !== LoginMethods.username_password &&
-            renderLoginButton(primary, 'primary')}
-          {loginMethods && loginMethods.map((m) => renderLoginButton(m))}
-        </main>
-      )}
-    </div>
+    <ToastProvider>
+      <div className='login-background-container'>
+        {isChecking && <StateChecking />}
+        {!isChecking && (
+          <main className='login' id='main'>
+            <h1>{t('Welcome Back', { ns: 'auth-login' })}</h1>
+            <h2>{t('Log into your account', { ns: 'auth-login' })}</h2>
+            {primary.type === LoginMethods.username_password && (
+              <StateLoginForm />
+            )}
+            {primary.type !== LoginMethods.username_password &&
+              renderLoginButton(primary, 'primary')}
+            {loginMethods && loginMethods.map((m) => renderLoginButton(m))}
+          </main>
+        )}
+      </div>
+      <Toast content={error} onOpenChange={(open) => !open && setError(null)} />
+    </ToastProvider>
   );
 };
 
