@@ -1,4 +1,6 @@
 {
-  "Something went wrong.": "Etwas ist schiefgelaufen.",
-  "Nothing to see here.": "Hier gibt's nichts zu sehen." 
+  "Email link is invalid or has expired": "Der E-Mail-Link ist ungültig oder abgelaufen",
+  "Missing token": "Token fehlt",
+  "Nothing to see here.": "Hier gibt's nichts zu sehen.",
+  "Something went wrong.": "Etwas ist schiefgelaufen."
 }
