@@ -134,7 +134,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
 
         const tags: string[] = Array.from(el.querySelectorAll('rs[ana]'))
           .reduce<string[]>(
-            (all, el) => [...all, ...el.getAttribute('ana')!.split(' ')],
+            (all, el) => [...all, ...el.getAttribute('ana')!.split(' ').map((tag) => decodeURI(tag))],
             []
           )
           .map(resolveTag);

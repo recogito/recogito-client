@@ -267,9 +267,10 @@ export const mergeAnnotations = (
         try {
           const tag: VocabularyTerm = JSON.parse(b.value!);
           const key = tag.id || tag.label;
-          return key.match(/^https?:/) ? key : `#${key}`;
+          // In the first case here we can assume the key is already a valid URI; in the second we should encode
+          return key.match(/^https?:/) ? key : `#${encodeURI(key)}`;
         } catch {
-          return b.value;
+          return encodeURI(b.value);
         }
       }
 
