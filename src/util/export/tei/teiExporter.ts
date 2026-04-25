@@ -153,12 +153,25 @@ export const mergeAnnotations = (
     // Should never happen
     throw new Error('No TEI root element found in the XML');
 
+  const getOrCreateChild = (parent: any, childName: string) => {
+    const existing = parent.querySelector(childName);
+    if (!existing) {
+      const child = document.createElement(childName);
+      parent.appendChild(child);
+      return child;
+    } else {
+      return existing;
+    }
+  };
+
   // https://tei-c.org/release/doc/tei-p5-doc/en/html/ref-standOff.html
-  const standOffEl = document.createElement('standOff');
+  const standOffEl = teiElement.querySelector('standOff[type="recogito_studio_annotations"]') || document.createElement('standOff');
   standOffEl.setAttribute('type', 'recogito_studio_annotations');
 
-  const listAnnotationEl = document.createElement('listAnnotation');
-  standOffEl.appendChild(listAnnotationEl);
+  const listAnnotationEl = getOrCreateChild(standOffEl, 'listAnnotation');
+
+  // Create a list of contributers
+  const listPersonEl = getOrCreateChild(standOffEl, 'listPerson');
 
   const { taxonomyEl, taxonomy } = createTaxonomy(annotations, document);
 
@@ -175,7 +188,7 @@ export const mergeAnnotations = (
 
   const createRespStmtEl = (user: User) => {
     const respStmtEl = document.createElement('respStmt');
-    respStmtEl.setAttribute('xml:id', `uid-${user.id}`);
+    respStmtEl.setAttribute('ref', `#uid-${user.id}`);
 
     const nameEl = document.createElement('name');
     nameEl.innerHTML = user.name || 'Anonymous';
@@ -281,10 +294,21 @@ export const mergeAnnotations = (
     }
 
     // Append respStmt elements for each contributing user
+    // and add to listPerson if necessary
     const contributors = getContributors(a);
-    contributors.forEach((user) =>
-      annotationEl.appendChild(createRespStmtEl(user))
-    );
+    contributors.forEach((user) => {
+      if (!listPersonEl.querySelector(`person[xml\\:id="uid-${user.id}"]`)) {
+        const personEl = document.createElement('person');
+        personEl.setAttribute('xml:id', `uid-${user.id}`);
+        if (user.name) {
+          const persNameEl = document.createElement('persName');
+          persNameEl.innerHTML = user.name;
+          personEl.appendChild(persNameEl);
+        }
+        listPersonEl.appendChild(personEl);
+      }
+      annotationEl.appendChild(createRespStmtEl(user));
+    });
 
     listAnnotationEl.appendChild(annotationEl);
   });
@@ -293,16 +317,6 @@ export const mergeAnnotations = (
   let teiHeader = teiElement.querySelector('teiHeader');
 
   if (Object.keys(taxonomy).length > 0) {
-    const getOrCreateChild = (parent: any, childName: string) => {
-      const existing = parent.querySelector(childName);
-      if (!existing) {
-        const child = document.createElement(childName);
-        parent.appendChild(child);
-        return child;
-      } else {
-        return existing;
-      }
-    };
 
     // Append taxonomy to teiHeader > encodingDesc > classDecl - create if necessary
     if (!teiHeader) {
@@ -317,27 +331,28 @@ export const mergeAnnotations = (
     encodingDesc.appendChild(classDecl);
     teiHeader.appendChild(encodingDesc);
   }
-
-  const existingStandOffEls = teiElement.querySelectorAll('standOff');
-
-  if (existingStandOffEls?.length > 0) {
-    // Insert after the last existing standOff element
-    const lastStandOff = existingStandOffEls[existingStandOffEls.length - 1];
-    const nextSibling = lastStandOff.nextSibling;
-
-    if (nextSibling) teiElement.insertBefore(standOffEl, nextSibling);
-    else teiElement.appendChild(standOffEl);
-  } else if (teiHeader) {
-    // No existing standOffs, but header - insert after header
-    const nextSibling = teiHeader.nextSibling;
-
-    if (nextSibling) {
-      teiElement.insertBefore(standOffEl, nextSibling);
+  
+  if (!standOffEl.parent) {  
+    const existingStandOffEls = teiElement.querySelectorAll('standOff');
+    if (existingStandOffEls?.length > 0) {
+      // Insert after the last existing standOff element
+      const lastStandOff = existingStandOffEls[existingStandOffEls.length - 1];
+      const nextSibling = lastStandOff.nextSibling;
+  
+      if (nextSibling) teiElement.insertBefore(standOffEl, nextSibling);
+      else teiElement.appendChild(standOffEl);
+    } else if (teiHeader) {
+      // No existing standOffs, but header - insert after header
+      const nextSibling = teiHeader.nextSibling;
+  
+      if (nextSibling) {
+        teiElement.insertBefore(standOffEl, nextSibling);
+      } else {
+        teiElement.appendChild(standOffEl);
+      }
     } else {
-      teiElement.appendChild(standOffEl);
+      teiElement.prepend(standOffEl);
     }
-  } else {
-    teiElement.prepend(standOffEl);
   }
 
   return document.toString();
