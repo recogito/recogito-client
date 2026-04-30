@@ -50,10 +50,7 @@ export const AnnotatedTEI = (props: AnnotatedTEIProps) => {
       <TEIAnnotator
         filter={props.filter}
         annotatingEnabled={!props.isLocked}
-        style={props.style}
-        presence={{
-          font: '500 12px Inter, Arial, Helvetica, sans-serif',
-        }}>
+        style={props.style}>
         <CETEIcean 
           // @ts-ignore - will start working with the next release!
           initArgs={{ 
