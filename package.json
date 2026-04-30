@@ -63,7 +63,7 @@
     "accept-language-parser": "^1.5.0",
     "adm-zip": "^0.5.16",
     "annotpdf": "^1.0.15",
-    "astro": "^6.1.10",
+    "astro": "^6.2.0",
     "classnames": "^2.5.1",
     "cozy-iiif": "^0.5.1",
     "crypto-js": "4.2.0",
@@ -93,7 +93,7 @@
     "react-window": "^2.2.5",
     "react-window-infinite-loader": "^2.0.0",
     "sanitize-filename": "^1.6.3",
-    "slugify": "^1.6.6",
+    "slugify": "^1.6.9",
     "timeago-react": "3.0.7",
     "uuid": "14.0.0"
   },
