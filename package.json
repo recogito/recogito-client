@@ -57,7 +57,7 @@
     "@supabase/ssr": "0.10.2",
     "@supabase/supabase-js": "^2.105.1",
     "@table-library/react-table-library": "^4.1.15",
-    "@trigger.dev/sdk": "4.4.3",
+    "@trigger.dev/sdk": "^4.4.5",
     "@uppy/core": "5.2.0",
     "@uppy/xhr-upload": "5.2.0",
     "accept-language-parser": "^1.5.0",
@@ -69,7 +69,7 @@
     "crypto-js": "4.2.0",
     "date-fns": "^4.1.0",
     "dotenv": "^17.2.3",
-    "formik": "2.4.6",
+    "formik": "^2.4.9",
     "i18next": "^25.6.2",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-fs-backend": "^2.6.0",
@@ -81,18 +81,18 @@
     "openseadragon": "^6.0.2",
     "papaparse": "5.5.3",
     "pdf-lib": "^1.17.1",
-    "quill": "2.0.3",
+    "quill": "2.0.2",
     "quill-delta-to-html": "^0.12.1",
     "react": "^19.2.5",
     "react-contenteditable": "^3.3.7",
     "react-dom": "^19.2.5",
     "react-dropzone": "14.3.8",
-    "react-error-boundary": "^6.0.0",
+    "react-error-boundary": "^6.1.1",
     "react-i18next": "^16.3.1",
     "react-textarea-autosize": "8.5.9",
-    "react-window": "^2.2.5",
+    "react-window": "^2.2.7",
     "react-window-infinite-loader": "^2.0.1",
-    "sanitize-filename": "^1.6.3",
+    "sanitize-filename": "^1.6.4",
     "slugify": "^1.6.9",
     "timeago-react": "3.0.7",
     "uuid": "14.0.0"
@@ -103,7 +103,7 @@
     "@eslint/js": "^9.36.0",
     "@trigger.dev/build": "4.4.3",
     "@types/accept-language-parser": "^1.5.8",
-    "@types/adm-zip": "^0.5.7",
+    "@types/adm-zip": "^0.5.8",
     "@types/crypto-js": "4.2.2",
     "@types/nodemailer": "^7.0.2",
     "@types/openseadragon": "5.0.2",
@@ -118,8 +118,8 @@
     "typescript": "^5.9.3"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "^0.25.12",
-    "@rollup/rollup-darwin-x64": "^4.52.3",
-    "@rollup/rollup-linux-x64-gnu": "^4.52.3"
+    "@esbuild/linux-x64": "^0.28.0",
+    "@rollup/rollup-darwin-x64": "^4.60.2",
+    "@rollup/rollup-linux-x64-gnu": "^4.60.2"
   }
 }
