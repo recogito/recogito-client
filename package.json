@@ -52,7 +52,7 @@
     "@recogito/react-text-annotator": "^4.0.0",
     "@recogito/studio-sdk": "^0.8.0-beta",
     "@recogito/text-annotator": "^4.0.0",
-    "@recogito/text-annotator-plugin-awareness": "^0.0.5",
+    "@recogito/text-annotator-plugin-awareness": "^1.0.0",
     "@recogito/text-annotator-tei": "^4.0.0",
     "@supabase/ssr": "0.10.2",
     "@supabase/supabase-js": "^2.105.1",
