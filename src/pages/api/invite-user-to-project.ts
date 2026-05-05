@@ -3,7 +3,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import type { APIRoute } from 'astro';
 import { getMyProfile } from '@backend/crud';
 import nodemailer from 'nodemailer';
-import { render } from '@react-email/render';
+import { render } from 'react-email';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 import { useTranslation } from 'src/i18n/serverless';
