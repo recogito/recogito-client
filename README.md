@@ -28,6 +28,10 @@ In `.env`, set:
 - `TRIGGER_SECRET_KEY` from your trigger project's `API keys` tab
 - and optionally `TRIGGER_SERVER_URL` if using self-hosted Trigger.
 
+Once you have set these, you can enqueue tasks to the Development environment in Trigger with hot reloading by running the following command:
+```
+npx trigger.dev@latest dev
+```
 
 #### Self-hosted or single instance
 
@@ -39,9 +43,9 @@ IIIF_KEY
 
 You can then deploy import/export tasks to the Trigger.dev server by executing the following command at the root of this project repo:
 
-~~~
+```
 npx trigger.dev@latest deploy -c ./trigger.config.ts
-~~~
+```
 
 #### Multi-tenant
 
@@ -56,9 +60,9 @@ OP_SERVICE_ACCOUNT_TOKEN=<1password-service-account-token>
 
 Then run:
 
-~~~
+```
 npx trigger.dev@latest deploy -c ./trigger.config.ts
-~~~
+```
 
 On each individual tenant, ensure the following environment variables are defined (in recogito-client):
 ```

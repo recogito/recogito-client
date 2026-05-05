@@ -6,7 +6,7 @@ import {
   Text,
   Img,
   Button,
-} from '@react-email/components';
+} from 'react-email';
 
 interface InviteUserEmailProps {
   acceptInviteLabel: string;

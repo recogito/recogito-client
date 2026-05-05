@@ -4,7 +4,7 @@ import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { createClient } from '@supabase/supabase-js';
 import type { APIRoute } from 'astro';
 import nodemailer from 'nodemailer';
-import { render } from '@react-email/render';
+import { render } from 'react-email';
 import { InviteUserEmail } from '@components/InviteUserEmail';
 import { encrypt } from '@backend/crypto';
 import { useTranslation } from 'src/i18n/serverless';
