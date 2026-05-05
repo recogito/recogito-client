@@ -43,6 +43,11 @@ You can then deploy import/export tasks to the Trigger.dev server by executing t
 npx trigger.dev@latest deploy -c ./trigger.config.ts
 ~~~
 
+Developers can also run the Trigger.dev task runner locally with:
+~~~
+npx trigger.dev@latest dev
+~~~
+
 #### Multi-tenant
 
 For a multi-tenant setup, the Trigger project only needs to be deployed once and it will be reused for all tenants; and instead of sending the above .env vars to Trigger, you set the following:
