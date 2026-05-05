@@ -30,10 +30,11 @@ import type {
   RecogitoTextAnnotator,
   TextAnnotation,
 } from '@recogito/react-text-annotator';
+import { useTranslation } from 'react-i18next';
 
 import './TextAnnotationDesktop.css';
 import '@recogito/react-text-annotator/react-text-annotator.css';
-import { useTranslation } from 'react-i18next';
+import '@recogito/text-annotator-plugin-awareness/awareness-plugin.css';
 
 export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const [document, setDocument] = useState<DocumentWithContext>(props.document);
@@ -155,7 +156,7 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       a.layer_id && !activeLayers.has(a.layer_id)
         ? readOnlyStyle(state, z)
         : typeof activeLayerStyle === 'function'
-        ? activeLayerStyle(a, state, z)
+        ? activeLayerStyle(a as TextAnnotation, state, z)
         : activeLayerStyle;
   }, [activeLayerStyle, documentLayers]);
 

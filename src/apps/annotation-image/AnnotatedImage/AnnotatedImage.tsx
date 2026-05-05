@@ -112,7 +112,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const extensions = useExtensions('annotation:image:annotator');
 
   // Workaround
-  const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
+  const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>(null);
 
   useEffect(() => {
     annoRef.current = anno;
