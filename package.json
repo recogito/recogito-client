@@ -86,10 +86,10 @@
     "react": "^19.2.5",
     "react-contenteditable": "^3.3.7",
     "react-dom": "^19.2.5",
-    "react-dropzone": "14.3.8",
+    "react-dropzone": "15.0.0",
     "react-error-boundary": "^6.1.1",
     "react-i18next": "^17.0.6",
-    "react-textarea-autosize": "8.5.9",
+    "react-textarea-autosize": "^8.5.9",
     "react-window": "^2.2.7",
     "react-window-infinite-loader": "^2.0.1",
     "sanitize-filename": "^1.6.4",
@@ -103,10 +103,10 @@
     "@trigger.dev/build": "^4.4.5",
     "@types/accept-language-parser": "^1.5.8",
     "@types/adm-zip": "^0.5.8",
-    "@types/crypto-js": "4.2.2",
+    "@types/crypto-js": "^4.2.2",
     "@types/nodemailer": "^7.0.11",
-    "@types/openseadragon": "5.0.2",
-    "@types/papaparse": "5.5.2",
+    "@types/openseadragon": "^5.0.2",
+    "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "eslint": "^10.3.0",
@@ -117,7 +117,7 @@
   },
   "optionalDependencies": {
     "@esbuild/linux-x64": "^0.28.0",
-    "@rollup/rollup-darwin-x64": "^4.60.2",
-    "@rollup/rollup-linux-x64-gnu": "^4.60.2"
+    "@rollup/rollup-darwin-x64": "^4.60.3",
+    "@rollup/rollup-linux-x64-gnu": "^4.60.3"
   }
 }
