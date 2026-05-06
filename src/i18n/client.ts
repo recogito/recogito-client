@@ -22,7 +22,7 @@ clientI18next
     },
     interpolation: { escapeValue: false },
     detection: {
-      order: ['path'],
+      order: ['path', 'navigator'],
       lookupFromPathIndex: 0,
     },
   });
