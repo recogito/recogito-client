@@ -117,7 +117,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
         const users: User[] = Array.from(el.querySelectorAll('respStmt')).map(
           (el) =>
             ({
-              id: el.getAttribute('xml:id'),
+              id: normalizeId(el.getAttribute('ref')),
               name: el.textContent,
             } as User)
         );
