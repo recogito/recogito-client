@@ -104,10 +104,12 @@ export const InviteUserDialog = (props: InviteUserProps) => {
     onSubmit,
   });
 
+  const { resetForm } = formik;
+
   useEffect(() => {
-    formik.resetForm();
+    resetForm();
     setError(undefined);
-  }, [formik, props.open]);
+  }, [props.open, resetForm]);
 
   return (
     <Dialog.Root open={props.open} onOpenChange={props.onClose}>
