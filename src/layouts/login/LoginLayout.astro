@@ -15,6 +15,8 @@ const { title, showLogo } = Astro.props;
 const lang = Astro.currentLocale;
 const t = await getFixedT(lang, ['branding']);
 
+const poweredBy = t('powered by', { ns: 'branding' });
+
 const backgroundColor = config.branding.background_color;
 const loginLogo = config.branding.login_logo;
 const splashURL = config.branding.home_banner;
@@ -52,7 +54,7 @@ const useFooter = config.branding.bottom_logos_enabled;
             </div>
           )
         }
-        <BrandFooter />
+        <BrandFooter poweredBy={poweredBy} />
       </div>
     </main>
     <div class='img-container'>
