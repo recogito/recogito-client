@@ -3,7 +3,7 @@ import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Switch from '@radix-ui/react-switch';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { Layer } from 'src/Types';
-import { useFilterSettingsState } from '../FilterState';
+import { useFilterSettingsState } from '@recogito/studio-sdk/components';
 import { useTranslation } from 'react-i18next';
 
 import './AnnotationLayers.css';

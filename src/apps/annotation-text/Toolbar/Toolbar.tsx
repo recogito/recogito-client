@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import { Chats, FunnelSimple, GraduationCap } from '@phosphor-icons/react';
+import { ChatsIcon, FunnelSimpleIcon, GraduationCapIcon } from '@phosphor-icons/react';
 import type { Color, PresentUser } from '@annotorious/react';
 import { useExtensions } from '@recogito/studio-sdk';
+import { useFilter } from '@recogito/studio-sdk/components';
 import {
   ColorCodingSelector,
   DeleteSelected,
   ColorLegend,
   ErrorBadge,
   useColorCoding,
-  useFilter,
   useCollapsibleToolbar,
 } from '@components/AnnotationDesktop';
 import { ExtensionMount } from '@components/Plugins';
@@ -93,7 +93,7 @@ export const Toolbar = (props: ToolbarProps) => {
               onClick={props.onToggleLeftDrawer}
               aria-label={t('open or close the filters tab', { ns: 'a11y' })}
             >
-              <FunnelSimple size={18} />
+              <FunnelSimpleIcon size={18} />
             </button>
 
             {numConditions > 0 && (
@@ -107,7 +107,7 @@ export const Toolbar = (props: ToolbarProps) => {
         <div className='anno-toolbar-group anno-toolbar-title'>
           {contextName ? (
             <>
-              <GraduationCap size={18} />
+              <GraduationCapIcon size={18} />
 
               <h1>
                 <a href={back} title={t('Back to assignment overview', { ns: 'annotation-common' })}>
@@ -213,7 +213,7 @@ export const Toolbar = (props: ToolbarProps) => {
           aria-label={t('Show annotation list', { ns: 'annotation-common' })}
           onClick={props.onToggleRightDrawer}
         >
-          <Chats size={17} />
+          <ChatsIcon size={17} />
         </button>
       </div>
     </div>

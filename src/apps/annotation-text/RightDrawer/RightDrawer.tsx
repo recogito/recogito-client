@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Annotation, PresentUser } from '@annotorious/react';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { useFilter } from '@recogito/studio-sdk/components';
 import { Chats } from '@phosphor-icons/react';
 import { animated, easings, useSpring, useTransition } from '@react-spring/web';
 import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';

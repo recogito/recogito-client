@@ -19,16 +19,16 @@ import {
   useColorCoding,
 } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { useFilter } from '@recogito/studio-sdk/components';
 import { Polygon, Rectangle } from './Icons';
 import { MoreTools } from './MoreTools';
 import {
-  Chats,
-  Cursor,
-  FunnelSimple,
-  GraduationCap,
-  MagnifyingGlassMinus,
-  MagnifyingGlassPlus,
+  ChatsIcon,
+  CursorIcon,
+  FunnelSimpleIcon,
+  GraduationCapIcon,
+  MagnifyingGlassMinusIcon,
+  MagnifyingGlassPlusIcon,
 } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
 
@@ -104,7 +104,7 @@ export const Toolbar = (props: ToolbarProps) => {
               onClick={props.onToggleLeftDrawer}
               aria-label={t('open or close the filters tab', { ns: 'a11y' })}
             >
-              <FunnelSimple size={18} />
+              <FunnelSimpleIcon size={18} />
             </button>
 
             {numConditions > 0 && (
@@ -118,7 +118,7 @@ export const Toolbar = (props: ToolbarProps) => {
         <div className='anno-toolbar-group anno-toolbar-title'>
           {contextName ? (
             <>
-              <GraduationCap size={18} />
+              <GraduationCapIcon size={18} />
 
               <h1>
                 <a href={back} title={t('Back to assignment overview', { ns: 'annotation-common' })}>
@@ -163,7 +163,7 @@ export const Toolbar = (props: ToolbarProps) => {
               aria-label={t('Pan and zoom the image, select annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool(undefined)}
             >
-              <Cursor size={18} />
+              <CursorIcon size={18} />
             </button>
 
             <button
@@ -187,11 +187,11 @@ export const Toolbar = (props: ToolbarProps) => {
         )}
 
         <button onClick={() => props.onZoom(2)} aria-label={t('zoom in', { ns: 'a11y' })}>
-          <MagnifyingGlassPlus size={18} />
+          <MagnifyingGlassPlusIcon size={18} />
         </button>
 
         <button onClick={() => props.onZoom(0.5)}>
-          <MagnifyingGlassMinus size={18} aria-label={t('zoom out', { ns: 'a11y' })} />
+          <MagnifyingGlassMinusIcon size={18} aria-label={t('zoom out', { ns: 'a11y' })} />
         </button>
 
         {!props.isLocked && (
@@ -258,7 +258,7 @@ export const Toolbar = (props: ToolbarProps) => {
           aria-label={t('Show annotation list', { ns: 'annotation-common' })}
           onClick={props.onToggleRightDrawer}
         >
-          <Chats size={17} />
+          <ChatsIcon size={17} />
         </button>
       </div>
     </div>
