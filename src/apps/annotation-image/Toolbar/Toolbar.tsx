@@ -3,7 +3,7 @@ import type { Color, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { ExtensionMount } from '@components/Plugins';
-import { PresenceStack } from '@components/Presence';
+import { PresenceStack } from '@recogito/studio-sdk/components';
 import type {
   DocumentLayer,
   DocumentWithContext,
@@ -31,6 +31,7 @@ import {
   MagnifyingGlassPlusIcon,
 } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
+import '@components/Presence/PresenceStack.css';
 
 interface ToolbarProps {
   document: DocumentWithContext;

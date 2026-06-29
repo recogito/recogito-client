@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Check, Tag as TagIcon, X } from '@phosphor-icons/react';
-import { Autosuggest } from '@components/Autosuggest';
+import { CheckIcon, TagIcon, XIcon } from '@phosphor-icons/react';
+import { Autosuggest } from '@recogito/studio-sdk/components';
 import type { VocabularyTerm } from 'src/Types';
 import { useTranslation } from 'react-i18next';
 
+import '@components/Autosuggest/Autosuggest.css';
 import './TagEditor.css';
 
 interface TagEditorProps {
@@ -54,7 +55,7 @@ export const TagEditor = (props: TagEditorProps) => {
 
       <div className='tag-editor-actions'>
         <button className='unstyled' onClick={onCancel}>
-          <X size={16} aria-label={t('cancel adding tag', { ns: 'a11y' })} />
+          <XIcon size={16} aria-label={t('cancel adding tag', { ns: 'a11y' })} />
         </button>
 
         <button
@@ -62,7 +63,7 @@ export const TagEditor = (props: TagEditorProps) => {
           onClick={onSave}
           aria-label={t('save tag', { ns: 'a11y' })}
         >
-          <Check size={16} />
+          <CheckIcon size={16} />
         </button>
       </div>
     </div>

@@ -12,8 +12,10 @@ import {
   useCollapsibleToolbar,
 } from '@components/AnnotationDesktop';
 import { ExtensionMount } from '@components/Plugins';
-import { PresenceStack } from '@components/Presence';
+import { PresenceStack } from '@recogito/studio-sdk/components';
 import { type PrivacyMode, PrivacySelector } from '@components/PrivacySelector';
+import '@components/Presence/PresenceStack.css';
+
 import { PDFControls } from './PDFControls';
 import type {
   DocumentLayer,
