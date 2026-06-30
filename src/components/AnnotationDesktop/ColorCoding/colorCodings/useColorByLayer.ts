@@ -3,7 +3,7 @@ import type { Color } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { ColorCoding } from '../ColorCoding';
 import { ColorBrewerDark2_8 } from '../ColorPalettes';
-import { createPalette } from './utils';
+import { createPalette } from '@recogito/studio-sdk';
 import type { DocumentLayer } from 'src/Types';
 
 const PALETTE = ColorBrewerDark2_8;

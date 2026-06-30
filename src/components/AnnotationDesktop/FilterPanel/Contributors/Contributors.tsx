@@ -1,9 +1,9 @@
-import { User as UserIcon } from '@phosphor-icons/react';
+import { UserIcon } from '@phosphor-icons/react';
 import * as Toggle from '@radix-ui/react-toggle';
 import type { Annotation, PresentUser, User } from '@annotorious/react';
-import { getContributors } from '@components/AnnotationDesktop';
+import { getContributors } from '@recogito/studio-sdk';
 import { useContributors } from './useContributors';
-import { useFilterSettingsState } from '../FilterState';
+import { useFilterSettingsState } from '@recogito/studio-sdk/components';
 import { useTranslation } from 'react-i18next';
 
 interface ContributorsProps {

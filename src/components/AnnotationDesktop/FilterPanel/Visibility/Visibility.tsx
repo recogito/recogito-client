@@ -1,8 +1,8 @@
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { Visibility as VisibilityMode } from '@recogito/annotorious-supabase';
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import { Lock } from '@phosphor-icons/react';
-import { useFilterSettingsState } from '../FilterState';
+import { LockIcon } from '@phosphor-icons/react';
+import { useFilterSettingsState } from '@recogito/studio-sdk/components';
 import { useTranslation } from 'react-i18next';
 
 import './Visibility.css';
@@ -30,7 +30,7 @@ export const Visibility = () => {
   return (
     <section className="filter-visibility">
       <h2>
-        <Lock size={19} /> {t('Visibility', { ns: 'annotation-common' })}
+        <LockIcon size={19} /> {t('Visibility', { ns: 'annotation-common' })}
       </h2>
 
       <RadioGroup.Root 

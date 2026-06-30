@@ -1,8 +1,8 @@
 import type { Annotation } from '@annotorious/react';
 import * as Toggle from '@radix-ui/react-toggle';
-import { Tag as TagIcon} from '@phosphor-icons/react';
+import { TagIcon } from '@phosphor-icons/react';
 import { useTags } from './useTags';
-import { useFilterSettingsState } from '../FilterState';
+import { useFilterSettingsState } from '@recogito/studio-sdk/components';
 import { useTranslation } from 'react-i18next';
 
 export const Tags = () => {

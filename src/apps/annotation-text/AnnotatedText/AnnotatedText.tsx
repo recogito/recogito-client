@@ -10,7 +10,7 @@ import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { useFilter } from '@recogito/studio-sdk/components';
 import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
 import { AnnotatedPDF } from './AnnotatedPDF';
 import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, VocabularyTerm } from 'src/Types';

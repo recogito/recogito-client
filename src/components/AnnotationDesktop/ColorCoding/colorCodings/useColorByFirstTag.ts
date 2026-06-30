@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { useAnnotations, type Color } from '@annotorious/react';
-import { enumerateTags } from '@components/AnnotationDesktop';
-import { AdobeCategorical12 } from '../ColorPalettes';
 import type { ColorCoding } from '../ColorCoding';
-import { createPalette } from './utils';
+import {
+  AdobeCategorical12,
+  createPalette,
+  enumerateTags,
+} from '@recogito/studio-sdk';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { VocabularyTerm } from 'src/Types';
 
