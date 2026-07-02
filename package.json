@@ -49,7 +49,7 @@
     "@recogito/pdf-annotator": "^4.2.5",
     "@recogito/react-pdf-annotator": "^4.2.5",
     "@recogito/react-text-annotator": "^4.2.5",
-    "@recogito/studio-sdk": "file:../recogito-studio-sdk",
+    "@recogito/studio-sdk": "^0.9.1",
     "@recogito/text-annotator": "^4.2.5",
     "@recogito/text-annotator-plugin-awareness": "^1.0.0",
     "@recogito/text-annotator-tei": "^4.2.5",
