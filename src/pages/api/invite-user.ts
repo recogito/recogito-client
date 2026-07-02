@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     // @ts-ignore
     host: MAIL_HOST,
     port: MAIL_PORT,
-    tls: true,
+    tls: { rejectUnauthorized: true },
     auth: {
       user: MAIL_USERNAME,
       pass: MAIL_PASSWORD,

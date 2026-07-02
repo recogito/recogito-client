@@ -17,10 +17,5 @@ export default defineConfig({
     ssr: {
       noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*'],
     },
-    optimizeDeps: {
-      esbuildOptions: {
-        target: 'esnext',
-      },
-    },
   },
 });
