@@ -111,6 +111,11 @@
   margin: 0.25rem 0.5rem;
 }
 
+/* handle null mounted component */
+.dropdown-separator + .dropdown-separator {
+  display: none;
+}
+
 .dropdown-label {
   color: var(--gray-500);
   font-size: 12px;
