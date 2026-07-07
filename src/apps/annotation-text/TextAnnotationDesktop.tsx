@@ -142,14 +142,13 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
       (documentLayers || []).filter((l) => l.is_active).map((l) => l.id)
     );
 
-    const readOnlyStyle = (state?: AnnotationState, z?: number) =>
+    const readOnlyStyle = (state?: AnnotationState, _z?: number) =>
       ({
-        fill: state?.selected ? '#000000' : undefined,
-        fillOpacity: state?.selected ? 0.08 : 0,
-        underlineStyle: 'solid',
+        fill: '#000000',
+        fillOpacity: state?.selected ? 0.12 : 0.06,
+        underlineStyle: state?.selected ? 'solid' : undefined,
         underlineColor: '#000000' as Color,
-        underlineOffset: (z || 0) * 3,
-        underlineThickness: 2,
+        underlineThickness: state?.selected ? 2 : 0,
       } as HighlightStyle);
 
     return (a: SupabaseAnnotation, state: AnnotationState, z?: number) =>
