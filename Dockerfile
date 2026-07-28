@@ -1,5 +1,5 @@
 # Modified from https://docs.astro.build/en/recipes/docker/
-FROM node:lts AS runtime
+FROM node:22 AS runtime
 WORKDIR /app
 
 COPY . .
