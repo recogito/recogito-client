@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IIIF } from '@allmaps/iiif-parser';
-import { getResourceLabel } from 'src/util';
+import { getResourceLabel, sanitizeManifest } from 'src/util';
 
 /**
  * Some basic sanity checking on the URL string
@@ -43,7 +43,7 @@ export const validateIIIF = (url: string, locale: string): Promise<ValidationRes
       .then((response) => response.json())
       .then(data => {
           try {
-            const parsed = IIIF.parse(data);
+            const parsed = IIIF.parse(sanitizeManifest(data));
 
             if (parsed.type === 'image') {
               // Image API v1/2/3
