@@ -104,6 +104,9 @@ export const useIIIF = (document: DocumentWithContext) => {
           console.log('Failed to parse IIIF manifest', parsed);
           setManifestError(`Failed to parse IIIF manifest: ${url}`);
         }
+      }).catch(error => {
+        console.error('Failed to load IIIF manifest', error);
+        setManifestError(`Failed to parse IIIF manifest: ${url}`);
       });
     }
   }, [document]);
