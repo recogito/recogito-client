@@ -3,7 +3,7 @@ import type { ImageAnnotation } from '@annotorious/annotorious';
 import { Canvas, IIIF, type Metadata } from '@allmaps/iiif-parser';
 import type { DocumentWithContext, EmbeddedLayer } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { parseManifestAnnotations } from '@util/iiif';
+import { parseManifestAnnotations, sanitizeManifest } from '@util/iiif';
 
 type ManifestType = 'PRESENTATION' | 'IMAGE';
 
@@ -90,7 +90,7 @@ export const useIIIF = (document: DocumentWithContext) => {
       }
     } else {
       fetch(url).then(res => res.json()).then(data => {
-        const parsed = IIIF.parse(data);
+        const parsed = IIIF.parse(sanitizeManifest(data));
         if (parsed.type === 'manifest') {
           setCanvases(parsed.canvases);
           setCurrentImage(parsed.canvases[0]);
@@ -104,6 +104,9 @@ export const useIIIF = (document: DocumentWithContext) => {
           console.log('Failed to parse IIIF manifest', parsed);
           setManifestError(`Failed to parse IIIF manifest: ${url}`);
         }
+      }).catch(error => {
+        console.error('Failed to load IIIF manifest', error);
+        setManifestError(`Failed to parse IIIF manifest: ${url}`);
       });
     }
   }, [document]);
