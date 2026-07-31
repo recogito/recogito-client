@@ -19,6 +19,7 @@ interface Payload {
 
 const DOCUMENTS_PREFIX = 'documents/';
 const JSON_EXTENSION = '.json';
+const ETL_SCHEMA = 'recogito_etl';
 
 const PASSWORD_LENGTH = 14;
 
@@ -67,7 +68,7 @@ const createDocuments = async (
       const documentId = entryName.replace(DOCUMENTS_PREFIX, '');
 
       const { data } = await supabase
-        .schema('etl')
+        .schema(ETL_SCHEMA)
         .from('z_documents')
         .select('id, name, bucket_id, meta_data')
         .eq('legacy_id', documentId)
@@ -133,7 +134,7 @@ const createUsers = async (
   }
 
   const { data: profiles } = await supabase
-    .schema('etl')
+    .schema(ETL_SCHEMA)
     .from('z_profiles')
     .select('email')
     .eq('import_id', importId)
@@ -175,7 +176,7 @@ const extract = async (
       const tableName = `z_${entryName.replace(JSON_EXTENSION, '')}`;
 
       const { error } = await supabase
-        .schema('etl')
+        .schema(ETL_SCHEMA)
         .from(tableName)
         .insert(records);
 
@@ -220,7 +221,7 @@ const load = async (
   importId: string
 ) => {
   const { data: success, error } = await supabase
-    .schema('etl')
+    .schema(ETL_SCHEMA)
     .rpc('load_rpc', { _import_id: importId });
 
   if (error) {
@@ -237,7 +238,7 @@ const transform = async (
   importId: string
 ) => {
   const { error } = await supabase
-    .schema('etl')
+    .schema(ETL_SCHEMA)
     .rpc('transform_rpc', { _import_id: importId });
 
   if (error) {
