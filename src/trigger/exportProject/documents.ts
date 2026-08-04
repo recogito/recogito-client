@@ -137,7 +137,11 @@ export const exportIIIF = async (
       .eq('meta_data->>protocol', 'IIIF_IMAGE');
 
     for (const document of documents || []) {
-      const { url } = document.meta_data;
+      const { url } = document.meta_data || {};
+      if (!url) {
+        logger.warn(`Skipping IIIF document ${document.id}: no url in meta_data`);
+        continue;
+      }
       const imageUrl = url.replace('/info.json', '/full/max/0/default.jpg');
       const buffer = await downloadFile(imageUrl);
 
