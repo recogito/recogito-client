@@ -1,15 +1,8 @@
 import { matchesExtensionPoint } from '@recogito/studio-sdk';
 import type { InstalledPlugin, Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
+import registeredJson from '../../plugins/generated/registered.json';
 
-let registry: Plugin[] = [];
-
-try {
-  const mod = await import('../../plugins/generated/registered.json', { assert: { type: 'json' } });
-  registry = mod.default as Plugin[];
-} catch {
-  // File doesn't exist yet, use empty registry
-  registry = [];
-}
+const registry: Plugin[] = registeredJson as Plugin[];
 
 const createPluginRegistry = () => {
 
