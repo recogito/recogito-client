@@ -23,6 +23,33 @@ const ETL_SCHEMA = 'recogito_etl';
 
 const PASSWORD_LENGTH = 14;
 
+// Ensure valid projects.json with at least one project record
+const validateExport = (zip: AdmZip) => {
+  const entries = zip.getEntries();
+
+  const projectsEntry = entries.find((e) => e.entryName === 'projects.json');
+  if (!projectsEntry) {
+    throw new Error(
+      'Invalid export: projects.json is missing. The uploaded file does not appear to be a project export.'
+    );
+  }
+
+  let projects;
+  try {
+    projects = JSON.parse(zip.readAsText(projectsEntry));
+  } catch (e) {
+    throw new Error(`Invalid export: projects.json is not valid JSON: ${(e as Error).message}`, { cause: e });
+  }
+
+  if (!Array.isArray(projects) || projects.length === 0) {
+    throw new Error('Invalid export: projects.json contains no project records.');
+  }
+
+  if (!projects.every((p) => p && typeof p.id === 'string')) {
+    throw new Error('Invalid export: projects.json records are missing a required id.');
+  }
+};
+
 const getSecrets = async (vaultTenantPath?: string) => {
   // allow multi-tenant setup with 1password service account and vault path
   const isMultiTenant =
@@ -326,6 +353,9 @@ export const importProject = task({
     const fileResp = await fetch(url);
     const buffer = await fileResp.arrayBuffer();
     const zip = new AdmZip(Buffer.from(buffer));
+
+    // Fail fast if the archive isn't a project export, before touching the DB
+    validateExport(zip);
 
     // Extract the data to temporary tables
     await extract(supabase, importId, zip);
