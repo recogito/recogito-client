@@ -68,21 +68,6 @@ export const AdobeCategorical6 = [
   '#72e06a'  // green
 ] as Color[];
 
-export const AdobeCategorical12 = [
-  '#11b5ae', // cyan
-  '#4046ca', // dark blue
-  '#f68512', // orange
-  '#f22483', // pink
-  '#7e84fa', // light blue
-  '#72e06a', // green
-  '#167af3', // blue
-  '#7326d3', // purple
-  '#e8c600', // yellow
-  '#cb5d02', // brown
-  '#008f5d', // dark green
-  '#bce931'  // mint
-] as Color[];
-
 // IBM Carbon Design System
 // https://carbondesignsystem.com/data-visualization/color-palettes/
 export const CarbonCategoricalDark14 = [

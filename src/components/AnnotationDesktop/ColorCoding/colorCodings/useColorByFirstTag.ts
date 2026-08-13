@@ -1,9 +1,11 @@
 import { useMemo } from 'react';
 import { useAnnotations, type Color } from '@annotorious/react';
-import { enumerateTags } from '@components/AnnotationDesktop';
-import { AdobeCategorical12 } from '../ColorPalettes';
 import type { ColorCoding } from '../ColorCoding';
-import { createPalette } from './utils';
+import {
+  AdobeCategorical12,
+  createPalette,
+  enumerateTags,
+} from '@recogito/studio-sdk';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import type { VocabularyTerm } from 'src/Types';
 
@@ -20,13 +22,13 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
   const getColor = useMemo(() => {
     const palette = createPalette(PALETTE);
 
-    const getColor = (tag: string)  => {
+    const getColorFn = (tag: string)  => {
       const preset = vocabulary.find(t => t.label === tag)?.color as Color;
       return preset || palette.getColor(tag);
     }
 
-    return getColor;
-  }, [JSON.stringify(vocabulary), tags.join('-')]);
+    return getColorFn;
+  }, [vocabulary]);
 
   const style = useMemo(() => {
     return (annotation: SupabaseAnnotation): Color => {
@@ -44,8 +46,8 @@ export const useColorByFirstTag = (vocabulary: VocabularyTerm[] = []): ColorCodi
 
   const legend = useMemo(() => {
     return tags.map(tag => ({ color: getColor(tag.label) as Color, label: tag.label }));
-  }, [tags.join('-')]);
+  }, [getColor, tags]);
 
-  return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]); 
+  return useMemo(() => ({ name: 'tag', style, legend }), [style, legend]);
 
 }

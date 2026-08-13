@@ -4,7 +4,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import type { Policies } from 'src/Types';
 import type { Response } from '@backend/Types';
 
-const _usePolicies = (rpc: () => Response<Policies>) => {
+const usePolicies = (rpc: () => Response<Policies>) => {
 
   const [policies, setPolicies] = useState<Policies | undefined>(undefined);
 
@@ -20,10 +20,10 @@ const _usePolicies = (rpc: () => Response<Policies>) => {
 }
 
 export const useProjectPolicies = (projectId: string) =>
-  _usePolicies(() => getProjectPolicies(supabase, projectId));
+  usePolicies(() => getProjectPolicies(supabase, projectId));
 
 export const useOrganizationPolicies = () =>
-  _usePolicies(() => getOrganizationPolicies(supabase));
+  usePolicies(() => getOrganizationPolicies(supabase));
 
 export const useLayerPolicies = (layerId: string) =>
-  _usePolicies(() => getLayerPolicies(supabase, layerId));
+  usePolicies(() => getLayerPolicies(supabase, layerId));

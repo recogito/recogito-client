@@ -6,6 +6,12 @@ import type { ColorCoding } from '../ColorCoding';
 
 const PALETTE = CarbonCategoricalDark14;
 
+const legend = [{
+  color: PALETTE[7] , label: 'All public annotations'
+}, {
+  color: PALETTE[4] , label: 'Your private annotations'
+}];
+
 export const useColorByPrivacy = (): ColorCoding => {
 
   const style = useCallback((annotation: SupabaseAnnotation): Color => {
@@ -15,12 +21,6 @@ export const useColorByPrivacy = (): ColorCoding => {
     return color;
   }, []);
   
-  const legend = [{
-    color: PALETTE[7] , label: 'All public annotations'
-  }, {
-    color: PALETTE[4] , label: 'Your private annotations'
-  }];
-
-  return useMemo(() => ({ name: 'privacy', style, legend }), []);
+  return useMemo(() => ({ name: 'privacy', style, legend }), [style]);
 
 }

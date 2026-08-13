@@ -1,7 +1,7 @@
 import { useAnnotations } from '@annotorious/react';
-import { enumerateTags } from '@components/AnnotationDesktop/utils';
+import { enumerateTags } from '@recogito/studio-sdk';
 import { useMemo } from 'react';
-import { useFilterSettingsState } from '../FilterState';
+import { useFilterSettingsState } from '@recogito/studio-sdk/components';
 
 export const useTags = () => {
 

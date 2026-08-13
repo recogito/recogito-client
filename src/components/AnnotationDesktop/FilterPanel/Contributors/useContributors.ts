@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { type PresentUser, useAnnotations } from '@annotorious/react';
-import { enumerateContributors, useFilterSettingsState } from '@components/AnnotationDesktop';
+import { enumerateContributors } from '@recogito/studio-sdk';
+import { useFilterSettingsState } from '@recogito/studio-sdk/components';
 
 export const useContributors = (present: PresentUser[]) => {
 

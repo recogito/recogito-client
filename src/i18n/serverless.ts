@@ -6,7 +6,7 @@ import deEmail from '../../public/locales/de/email.json';
 // NOTE: i18n JSON has to be bundled directly here, as this runs
 // in a serverless function and will not have access to the filesystem
 
-export async function useTranslation(
+export async function getTranslation(
   request: Request,
   body: ApiPostInviteUserToProject
 ) {

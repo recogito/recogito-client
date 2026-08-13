@@ -233,7 +233,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
         setDocumentLayers(distinct);
       }
     }
-  }, [policies]);
+  }, [
+    policies,
+    document.context.is_project_default,
+    document.context.project_id,
+    document.id,
+    document.layers,
+  ]);
 
   const onZoom = (factor: number) => viewer.current?.viewport.zoomBy(factor);
 

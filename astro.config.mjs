@@ -1,6 +1,9 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import netlify from '@astrojs/netlify';
+import { loadInstalledPlugins } from './installed-plugins.mjs';
+
+const plugins = await loadInstalledPlugins();
 
 export default defineConfig({
   adapter: netlify(),
@@ -11,16 +14,11 @@ export default defineConfig({
       prefixDefaultLocale: true,
     },
   },
-  integrations: [react()],
+  integrations: [react(), ...plugins],
   output: 'server',
   vite: {
     ssr: {
       noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*'],
-    },
-    optimizeDeps: {
-      esbuildOptions: {
-        target: 'esnext',
-      },
     },
   },
 });

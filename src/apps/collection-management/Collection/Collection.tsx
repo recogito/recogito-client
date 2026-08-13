@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { archiveDocument, getDocument, updateCollection } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
@@ -95,10 +95,12 @@ const Collection = (props: CollectionsTableProps) => {
       fetchDocuments(true);
     }, 400);
     return () => clearTimeout(searchDebounce);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   useEffect(() => {
     if (page > 0) fetchDocuments(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   const onError = (error: string) => {
@@ -110,7 +112,7 @@ const Collection = (props: CollectionsTableProps) => {
     });
   };
 
-  const fetchAllCollectionIds = async () => {
+  const fetchAllCollectionIds = useCallback(async () => {
     const { data } = await supabase
       .from('documents')
       .select('id')
@@ -118,11 +120,11 @@ const Collection = (props: CollectionsTableProps) => {
       .eq('is_archived', false);
 
     if (data) setDisabledDocIds(data.map((d) => d.id));
-  };
+  }, [collection.id]);
 
   useEffect(() => {
     fetchAllCollectionIds();
-  }, [collection.id]);
+  }, [collection.id, fetchAllCollectionIds]);
 
   const onCopyFileError = (docName: string) => {
     onError(t('fileCopyError', { ns: 'project-home', docName }));
@@ -345,7 +347,7 @@ const Collection = (props: CollectionsTableProps) => {
     ) {
       onUpload();
     }
-  }, [revisionDocument?.collection_metadata]);
+  }, [revisionDocument?.collection_metadata, onUpload]);
 
   const onImportRemote = (
     protocol: Protocol,

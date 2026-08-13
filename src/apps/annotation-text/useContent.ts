@@ -13,7 +13,7 @@ export const useContent = (document: Document) => {
         if (error) console.error(error);
         else data.text().then(setText);
       });
-  }, []);
+  }, [document.bucket_id, document.id]);
 
   return text;
 };

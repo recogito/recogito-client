@@ -39,7 +39,7 @@ export const IIIFImageThumbnail = (props: IIIFImageThumbnailProps) => {
         setAuthToken(data.session?.access_token);
       }
     });
-  }, []);
+  }, [isUploadedFile, thumbnailURL]);
 
   useEffect(() => {
     if (!authToken || !thumbnailURL) return;
@@ -62,7 +62,7 @@ export const IIIFImageThumbnail = (props: IIIFImageThumbnailProps) => {
       .catch((error) => {
         console.error('Failed thumbnail download', error);
       });
-  }, [authToken]);
+  }, [authToken, thumbnailURL]);
 
   useEffect(() => {
     // Cleanup: free resources properly on unmount

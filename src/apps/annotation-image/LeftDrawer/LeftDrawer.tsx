@@ -52,6 +52,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
 
   useEffect(() => {
     if (!props.open && props.iiifCanvases.length > 1) setTab('PAGES');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.iiifCanvases]);
 
   const transition = useTransition([props.open], {

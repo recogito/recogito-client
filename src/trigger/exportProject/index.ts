@@ -142,7 +142,7 @@ export const exportProject = task({
     try {
       await uploadFile(supabase, jobId, file);
     } catch (error) {
-      throw new Error(`Error uploading file: ${(error as Error).message}`);
+      throw new Error(`Error uploading file: ${(error as Error).message}`, { cause: error });
     }
   },
 });

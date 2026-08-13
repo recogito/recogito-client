@@ -42,7 +42,6 @@ type DocumentLayers = {
   };
 };
 
-// eslint-disable-next-line react/display-name
 const AccordionTrigger = React.forwardRef(
   // @ts-ignore
   ({ children, className, ...props }, forwardedRef) => (
@@ -60,7 +59,6 @@ const AccordionTrigger = React.forwardRef(
   )
 );
 
-// eslint-disable-next-line react/display-name
 const AccordionContent = React.forwardRef(
   // @ts-ignore
   ({ children, className, ...props }, forwardedRef) => (

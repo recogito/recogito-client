@@ -1,8 +1,8 @@
-import { Chats } from '@phosphor-icons/react';
+import { ChatsIcon } from '@phosphor-icons/react';
 import { animated, easings, useTransition } from '@react-spring/web';
 import type { DrawingStyleExpression, ImageAnnotation, PresentUser } from '@annotorious/react';
 import { isMe, type SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel';
+import { useFilter } from '@recogito/studio-sdk/components';
 import { AnnotationList, DocumentNotesList, DocumentNotesTabButton } from '@components/AnnotationDesktop';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 
@@ -64,7 +64,7 @@ export const RightDrawer = (props: RightDrawerProps) => {
             <li 
               className={props.tab === 'ANNOTATIONS' ? 'active' : undefined}>
               <button onClick={() => props.onTabChanged('ANNOTATIONS')}>
-                <Chats size={18} /> {t('Annotations', { ns: 'annotation-common' })}
+                <ChatsIcon size={18} /> {t('Annotations', { ns: 'annotation-common' })}
               </button>
             </li>
 

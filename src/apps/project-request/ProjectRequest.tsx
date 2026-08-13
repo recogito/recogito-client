@@ -1,7 +1,7 @@
 import type { MyProfile } from 'src/Types';
 import { requestJoinProject } from '@backend/helpers';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Spinner } from '@components/Spinner';
 import { RequestResultMessage } from './RequestResultMessage.tsx';
 import { TopBar } from '@components/TopBar';
@@ -52,8 +52,12 @@ const ProjectRequest = (props: ProjectRequestProps) => {
   const url = new URLSearchParams(window.location.search);
   const projectName = url.get('project-name');
 
+  useEffect(() => {
+    if (!projectName) {
+      window.location.href = `/${i18n.language}/projects`;
+    }
+  }, [projectName, i18n.language]);
   if (!projectName) {
-    window.location.href = `/${i18n.language}/projects`;
     return <div />;
   }
   if (requestState === RequestState.INIT) {

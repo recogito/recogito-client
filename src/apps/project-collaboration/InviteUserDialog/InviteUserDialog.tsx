@@ -48,11 +48,6 @@ export const InviteUserDialog = (props: InviteUserProps) => {
     ? [me.first_name, me.last_name].join(' ')
     : undefined;
 
-  useEffect(() => {
-    formik.resetForm();
-    setError(undefined);
-  }, [props.open]);
-
   const sendInvitation = (email: string, group: string) => {
     setBusy(true);
 
@@ -80,7 +75,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
     });
   };
 
-  const onSubmit = (values: { email: string; group: string }) => {
+  const onSubmit = (values: { email: string; group: string }, actions: { resetForm: () => void }) => {
     const { email, group } = values;
 
     // Because you never know what users do...
@@ -95,7 +90,7 @@ export const InviteUserDialog = (props: InviteUserProps) => {
     } else if (hasInvitation) {
       setError(t('This user already has an invitation waiting.', { ns: 'project-collaboration' }));
     } else {
-      sendInvitation(email, group).then(() => formik.resetForm());
+      sendInvitation(email, group).then(() => actions.resetForm());
     }
   };
 
@@ -108,6 +103,13 @@ export const InviteUserDialog = (props: InviteUserProps) => {
     },
     onSubmit,
   });
+
+  const { resetForm } = formik;
+
+  useEffect(() => {
+    resetForm();
+    setError(undefined);
+  }, [props.open, resetForm]);
 
   return (
     <Dialog.Root open={props.open} onOpenChange={props.onClose}>

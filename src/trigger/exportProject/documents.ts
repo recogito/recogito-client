@@ -41,37 +41,69 @@ export const exportDocuments = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  // get documents by inner join against project_documents
-  const { data, error } = await supabase
-    .from('documents')
-    .select('*, project_documents!inner(project_id)')
-    .eq('project_documents.project_id', projectId);
+  // resolve this project's document ids via project_documents (indexed on
+  // project_id), then fetch documents by primary key
+  const { data: projectDocs, error: projectDocsError } = await supabase
+    .from('project_documents')
+    .select('document_id')
+    .eq('project_id', projectId);
 
-  // strip out join metadata
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const cleanData = data?.map(({ project_documents, ...rest }) => rest) || [];
+  if (projectDocsError) return { data: null, error: projectDocsError };
 
-  return { data: cleanData, error };
+  const documentIds = (projectDocs || [])
+    .map((row) => row.document_id)
+    .filter(Boolean);
+
+  if (documentIds.length === 0) return { data: [], error: null };
+
+  // fetch in chunks to prevent timeouts
+  const CHUNK_SIZE = 500;
+  const documents: unknown[] = [];
+
+  for (let i = 0; i < documentIds.length; i += CHUNK_SIZE) {
+    const chunk = documentIds.slice(i, i + CHUNK_SIZE);
+    const { data, error } = await supabase
+      .from('documents')
+      .select('*')
+      .in('id', chunk);
+
+    if (error) return { data: null, error };
+    if (data) documents.push(...data);
+  }
+
+  return { data: documents, error: null };
 };
 
 export const exportFiles = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  // get documents by inner join against project_documents
-  const { data: documents } = await supabase
-    .from('documents')
-    .select('id, bucket_id, project_documents!inner(project_id)')
-    .eq('project_documents.project_id', projectId)
-    .eq('bucket_id', 'documents');
+  const { data: projectDocs } = await supabase
+    .from('project_documents')
+    .select('document_id')
+    .eq('project_id', projectId);
+
+  const documentIds = (projectDocs || [])
+    .map((row) => row.document_id)
+    .filter(Boolean);
 
   const files: Files = {};
+  const CHUNK_SIZE = 500;
 
-  for (const document of documents || []) {
-    const buffer = await downloadStorage(supabase, document);
+  for (let i = 0; i < documentIds.length; i += CHUNK_SIZE) {
+    const chunk = documentIds.slice(i, i + CHUNK_SIZE);
+    const { data: documents } = await supabase
+      .from('documents')
+      .select('id, bucket_id')
+      .in('id', chunk)
+      .eq('bucket_id', 'documents');
 
-    if (buffer) {
-      files[document.id] = buffer;
+    for (const document of documents || []) {
+      const buffer = await downloadStorage(supabase, document);
+
+      if (buffer) {
+        files[document.id] = buffer;
+      }
     }
   }
 
@@ -84,22 +116,38 @@ export const exportIIIF = async (
   supabase: SupabaseClient,
   projectId: string
 ) => {
-  // get documents by inner join against project_documents
-  const { data: documents } = await supabase
-    .from('documents')
-    .select('id, meta_data, project_documents!inner(project_id)')
-    .eq('project_documents.project_id', projectId)
-    .eq('meta_data->>protocol', 'IIIF_IMAGE');
+  const { data: projectDocs } = await supabase
+    .from('project_documents')
+    .select('document_id')
+    .eq('project_id', projectId);
+
+  const documentIds = (projectDocs || [])
+    .map((row) => row.document_id)
+    .filter(Boolean);
 
   const files: Files = {};
+  const CHUNK_SIZE = 500;
 
-  for (const document of documents || []) {
-    const { url } = document.meta_data;
-    const imageUrl = url.replace('/info.json', '/full/max/0/default.jpg');
-    const buffer = await downloadFile(imageUrl);
+  for (let i = 0; i < documentIds.length; i += CHUNK_SIZE) {
+    const chunk = documentIds.slice(i, i + CHUNK_SIZE);
+    const { data: documents } = await supabase
+      .from('documents')
+      .select('id, meta_data')
+      .in('id', chunk)
+      .eq('meta_data->>protocol', 'IIIF_IMAGE');
 
-    if (buffer) {
-      files[document.id] = buffer;
+    for (const document of documents || []) {
+      const { url } = document.meta_data || {};
+      if (!url) {
+        logger.warn(`Skipping IIIF document ${document.id}: no url in meta_data`);
+        continue;
+      }
+      const imageUrl = url.replace('/info.json', '/full/max/0/default.jpg');
+      const buffer = await downloadFile(imageUrl);
+
+      if (buffer) {
+        files[document.id] = buffer;
+      }
     }
   }
 

@@ -28,7 +28,6 @@ interface SelectItemProps {
 
 }
 
-// eslint-disable-next-line react/display-name
 const SelectItem = forwardRef<HTMLDivElement, SelectItemProps>((props, forwardedRef) => (
   <Select.Item className="select-item" {...props} ref={forwardedRef}>
     <Select.ItemIndicator className="select-item-indicator">

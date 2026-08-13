@@ -77,7 +77,7 @@ const ProjectHome = (props: ProjectHomeProps) => {
         setTab('assignments');
       }
     }
-  }, [isAdmin]);
+  }, [isAdmin, project.is_open_edit, projectPolicies, setTab, tab]);
 
   useEffect(() => {
     if (props.availableLayers) {

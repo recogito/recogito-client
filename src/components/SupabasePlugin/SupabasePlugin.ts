@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAnnotator } from '@annotorious/react';
 import type { Annotation, Annotator, PresentUser, User } from '@annotorious/react';
 import { SupabasePlugin as Supabase } from '@recogito/annotorious-supabase';
@@ -37,7 +37,7 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
 
   const anno = useAnnotator<Annotator<Annotation, Annotation>>();
 
-  const [plugin, setPlugin] = useState<ReturnType<typeof Supabase>>();
+  const pluginRef = useRef<ReturnType<typeof Supabase>|null>(null);
 
   const appearanceProvider = useAppearanceProvider();
 
@@ -67,21 +67,21 @@ export const SupabasePlugin = (props: SupabasePluginProps) => {
         props.onSaveError?.(error)
       });
 
-      setPlugin(supabase);
+      pluginRef.current = supabase;
 
       return () => {
         supabase.destroy();
+        pluginRef.current = null;
       }
     }
-  }, [
-    anno, 
-    props.onPresence
-  ]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [anno, appearanceProvider]);
 
   useEffect(() => {
-    if (plugin)
-      plugin.privacyMode = props.privacyMode;
-  }, [props.privacyMode, plugin])
+    if (pluginRef.current) {
+      pluginRef.current.privacyMode = props.privacyMode;
+    }
+  }, [props.privacyMode])
 
   return null;
 

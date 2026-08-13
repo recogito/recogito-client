@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, X } from '@phosphor-icons/react';
 import { Spinner } from '../Spinner';
 
@@ -24,21 +24,25 @@ export const TinySaveIndicator = (props: TinySaveIndicatorProps) => {
 
   const [opacity, setOpacity] = useState(1);
 
-  const [timer, setTimer] = useState<ReturnType<typeof setTimeout> | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (!fadeOut)
       return;
 
     if (timer)
-      clearTimeout(timer);
+      clearTimeout(timer.current ?? undefined);
 
     if (state === 'success') {
-      setTimer(setTimeout(() => setOpacity(0), fadeOut));
+      timer.current = setTimeout(() => setOpacity(0), fadeOut);
     } else {
       setOpacity(1);
     }
-  }, [state]);
+
+    return () => {
+      clearTimeout(timer.current ?? undefined);
+    }
+  }, [state, fadeOut]);
 
   return (
     <div className={`tiny-save-indicator ${state}`} style={{ opacity }}>

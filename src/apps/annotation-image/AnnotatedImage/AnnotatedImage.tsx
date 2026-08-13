@@ -1,10 +1,11 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { AnnotationPopup, SelectionURLState, UndoStack, useFilter } from '@components/AnnotationDesktop';
+import { AnnotationPopup, SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
+import { useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
 import { getImageURL, type IIIFImage } from '../IIIF';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
@@ -112,7 +113,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   const extensions = useExtensions('annotation:image:annotator');
 
   // Workaround
-  const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>();
+  const annoRef = useRef<AnnotoriousOpenSeadragonAnnotator>(null);
 
   useEffect(() => {
     annoRef.current = anno;
@@ -155,7 +156,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     visibilityRatio: 0.2,
     preserveImageSizeOnResize: true,
     drawer: 'canvas',
-  }), [tilesource]);
+  }), [tilesource, authToken]);
 
   const selectAction = useCallback((annotation: SupabaseAnnotation) => {
     if (props.isLocked) return UserSelectAction.SELECT;
@@ -177,12 +178,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   }, [annoRef, props.activeLayer?.id, policies, props.isLocked]);
 
   useEffect(() => {
-    if (props.tool) {
-      if (!drawingEnabled)
-        setDrawingEnabled(true);
-    } else {
-      setDrawingEnabled(false);
-    }
+    setDrawingEnabled(Boolean(props.tool));
   }, [props.tool]);
 
   const onInitialSelectError = (annotationId: string) => {

@@ -4,7 +4,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { type TextAnnotation, serializeW3CTextAnnotation } from '@recogito/text-annotator';
 import { type TEIAnnotation, serializeW3CTEIAnnotation } from '@recogito/text-annotator-tei';
 import type { PDFAnnotation } from '@recogito/pdf-annotator';
-import { serializeW3CPDFAnnotation } from '@recogito/pdf-annotator/w3c';
+import { serializeW3CPDFAnnotation } from '@recogito/pdf-annotator';
 import { quillToHTML } from '@util/export';
 
 const isPlainTextAnnotation = (a: SupabaseAnnotation) => {

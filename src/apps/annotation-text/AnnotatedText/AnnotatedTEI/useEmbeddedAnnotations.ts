@@ -117,7 +117,7 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
         const users: User[] = Array.from(el.querySelectorAll('respStmt')).map(
           (el) =>
             ({
-              id: el.getAttribute('xml:id'),
+              id: normalizeId(el.getAttribute('ref')),
               name: el.textContent,
             } as User)
         );
@@ -132,12 +132,9 @@ export const useEmbeddedTEIAnnotations = (xml?: string) => {
             } as Note)
         );
 
-        const tags: string[] = Array.from(el.querySelectorAll('rs[ana]'))
-          .reduce<string[]>(
-            (all, el) => [...all, ...el.getAttribute('ana')!.split(' ')],
-            []
-          )
-          .map(resolveTag);
+        const tags: string[] = el.getAttribute('ana')
+          ? el.getAttribute('ana')!.split(' ').map((tag) => decodeURI(tag)).map(resolveTag)
+          : [];
 
         const created = changes.find((c) => c.status === 'created');
         const updated = changes.find((c) => c.status === 'modified');

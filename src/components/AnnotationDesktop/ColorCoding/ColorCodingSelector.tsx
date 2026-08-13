@@ -9,7 +9,7 @@ import {
   useColorByCreator,
   useColorByFirstTag,
   useColorByPrivacy, 
-  userColorByLayer
+  useColorByLayer
 } from './colorCodings';
 import { useTranslation } from 'react-i18next';
 
@@ -51,7 +51,7 @@ export const ColorCodingSelector = (props: ColorCodingSelectorProps) => {
   
   const byFirstTag = useColorByFirstTag(props.tagVocabulary);
 
-  const byLayer = userColorByLayer(props.layers, props.layerNames);
+  const byLayer = useColorByLayer(props.layers, props.layerNames);
 
   const byPrivacy = useColorByPrivacy();
 

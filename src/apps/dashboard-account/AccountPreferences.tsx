@@ -29,7 +29,7 @@ const AccountPreferences = (props: AccountPreferencesProps) => {
 
   useEffect(() => {
     getGravatar(profile.email).then(setGravatar);
-  }, []);
+  }, [profile.email]);
 
   const onError = (error: string) =>
     setError({

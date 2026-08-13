@@ -1,15 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useExtensions } from '@recogito/studio-sdk';
-import { useAnnotator, type PresentUser } from '@annotorious/react';
+import { AnnotoriousPlugin, useAnnotator, type PresentUser } from '@annotorious/react';
 import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotator';
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
+import { mountPlugin as AwarenessPlugin } from '@recogito/text-annotator-plugin-awareness';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';
 import { AnnotationPopup } from '@components/AnnotationDesktop/AnnotationPopup';
-import { useFilter } from '@components/AnnotationDesktop/FilterPanel/FilterState';
+import { useFilter } from '@recogito/studio-sdk/components';
 import { AnnotatedTEI } from './AnnotatedTEI/AnnotatedTEI';
 import { AnnotatedPDF } from './AnnotatedPDF';
 import type { DocumentLayer, DocumentWithContext, EmbeddedLayer, Policies, VocabularyTerm } from 'src/Types';
@@ -126,13 +127,13 @@ export const AnnotatedText = (props: AnnotatedTextProps) => {
             <TextAnnotator
               filter={filter}
               annotatingEnabled={!isLocked}
-              style={props.style}
-              presence={{
-                font: '500 12px Inter, Arial, Helvetica, sans-serif',
-              }}>
+              style={props.style}>
               <p className='plaintext'>{text}</p>
             </TextAnnotator>
           )}
+          
+          <AnnotoriousPlugin
+            plugin={AwarenessPlugin} />
 
           {(text && !pdfLoading) && (
             <SelectionURLState 
