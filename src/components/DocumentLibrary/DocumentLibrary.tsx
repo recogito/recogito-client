@@ -160,11 +160,35 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     [props.user, props.readOnly]
   );
 
+  // Update local document state to stay in sync with remote changes
+  const patchDocument = useCallback(
+    (id: string, changes: Partial<LibraryDocument>) =>
+      setDocuments((prev) => {
+        if (!prev) return prev;
+
+        return prev.map((d) => (d.id === id ? { ...d, ...changes } : d));
+      }),
+    []
+  );
+
+  const onUpdated = useCallback(
+    (document: Document) => {
+      patchDocument(document.id, {
+        name: document.name,
+        meta_data: document.meta_data,
+      });
+
+      props.onUpdated(document);
+    },
+    [patchDocument, props]
+  );
+
   const handleTogglePrivate = (document: Document) => {
     if (document.is_private) {
       setPublicToggleDoc(document);
       setPublicWarningOpen(true);
     } else {
+      patchDocument(document.id, { is_private: true });
       props.onTogglePrivate(document);
     }
   };
@@ -176,6 +200,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const handleWarningConfirm = () => {
     if (publicToggleDoc) {
+      patchDocument(publicToggleDoc.id, { is_private: false });
       props.onTogglePrivate(publicToggleDoc);
     }
     setPublicWarningOpen(false);
@@ -691,7 +716,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             setMetaOpen(false);
             setCurrentDocument(undefined);
           }}
-          onUpdated={props.onUpdated!}
+          onUpdated={onUpdated}
           onError={props.onError!}
           readOnly={!allowEditMetadata(currentDocument)}
         />
