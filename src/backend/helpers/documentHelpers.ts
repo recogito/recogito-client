@@ -289,9 +289,14 @@ export const listDocumentsInContext = (
       if (error) {
         return { error, data: [] };
       } else {
-        const docs: Document[] = data
-          .map((datum) => datum.document)
-          .filter(Boolean);
+        const docs: Document[] = [];
+
+        for (const item of data) {
+          if (item.document) {
+            docs.push(item.document);
+          }
+        }
+
         return { error, data: docs };
       }
     });
