@@ -8,11 +8,11 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import {
-  clearSelectionURLHash,
   DocumentNotes,
   useAnnotationsViewUIState,
   useLayerNames,
 } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
