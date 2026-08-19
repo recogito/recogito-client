@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { IIIF } from '@allmaps/iiif-parser';
-import { getResourceLabel, sanitizeManifest } from 'src/util';
+import { getResourceLabel, sanitizeManifest } from '@recogito/studio-sdk/iiif';
 
 /**
  * Some basic sanity checking on the URL string

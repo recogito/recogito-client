@@ -7,7 +7,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
-import { getImageURL, type IIIFImage } from '../IIIF';
+import { getImageURL, type IIIFImage } from '@recogito/studio-sdk/iiif';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,

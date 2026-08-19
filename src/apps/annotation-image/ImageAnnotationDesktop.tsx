@@ -24,8 +24,8 @@ import {
   useIIIF,
   useMultiPagePresence,
   ManifestErrorDialog,
-  type IIIFImage,
 } from './IIIF';
+import type { IIIFImage } from '@recogito/studio-sdk/iiif';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { Document, DocumentLayer } from 'src/Types';
 import type {
