@@ -249,7 +249,14 @@ export const listDocumentsInProject = (
       if (error) {
         return { error, data: [] };
       } else {
-        const docs: Document[] = data.map((datum) => datum.document);
+        const docs: Document[] = [];
+
+        for (const item of data) {
+          if (item.document) {
+            docs.push(item.document);
+          }
+        }
+
         return { error, data: docs };
       }
     });
@@ -282,7 +289,9 @@ export const listDocumentsInContext = (
       if (error) {
         return { error, data: [] };
       } else {
-        const docs: Document[] = data.map((datum) => datum.document);
+        const docs: Document[] = data
+          .map((datum) => datum.document)
+          .filter(Boolean);
         return { error, data: docs };
       }
     });
