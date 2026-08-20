@@ -1,5 +1,9 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createDocument, createProjectDocument } from '@backend/crud';
+import {
+  archiveDocument,
+  createDocument,
+  createProjectDocument,
+} from '@backend/crud';
 import { uploadFile, uploadImage } from '@backend/storage';
 import type { Response } from '@backend/Types';
 import type { CollectionMetadata, Document, Protocol } from 'src/Types';
@@ -85,6 +89,32 @@ export const initDocument = (
   }
 };
 
+const rollBackDocument = async (
+  supabase: SupabaseClient,
+  documentId: string,
+  projectId: string | null
+): Promise<void> => {
+  try {
+    if (projectId) {
+      const { error } = await removeDocumentsFromProject(supabase, projectId, [
+        documentId,
+      ]);
+
+      if (error) {
+        console.error('Rollback: failed to archive project document', error);
+      }
+    }
+
+    const { error } = await archiveDocument(supabase, documentId);
+
+    if (error) {
+      console.error('Rollback: failed to archive document', error);
+    }
+  } catch (error) {
+    console.error('Rollback: unexpected error', error);
+  }
+};
+
 /**
  * Initializes a text (plaintext, TEI) or remote IIIF document.
  *
@@ -129,7 +159,9 @@ const _initDocument = (
         createProjectDocument(supabase, data.id, projectId).then(
           ({ error: pdError, data: _projectDocument }) => {
             if (pdError) {
-              reject(error);
+              rollBackDocument(supabase, data.id, projectId).then(() =>
+                reject(pdError)
+              );
             } else {
               resolve(data);
             }
@@ -152,16 +184,11 @@ const _initDocument = (
         })
         .catch((error) => {
           console.error('File upload failed - rolling back', error);
-          if (projectId) {
-            return removeDocumentsFromProject(supabase, projectId, [
-              document.id,
-            ]).then(() => {
-              // Forward original error after rollback
+          return rollBackDocument(supabase, document.id, projectId).then(
+            () => {
               throw error;
-            });
-          } else {
-            throw error;
-          }
+            }
+          );
         });
     } else {
       return { ...document, layers: [] };
