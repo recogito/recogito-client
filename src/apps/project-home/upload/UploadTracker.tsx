@@ -44,12 +44,7 @@ export const UploadTracker = (props: UploadTrackerProps) => {
           <ul>
             {props.uploads.map(u => (
               <li key={u.id}>
-                <div className="upload-info">
-                  <span className="upload-name">{u.name}</span>
-                  {u.status === 'failed' && u.message && (
-                    <span className="upload-message" title={u.message}>{u.message}</span>
-                  )}
-                </div>
+                <span className="upload-name">{u.name}</span>
                 {u.status === 'preparing' || u.status === 'uploading' ? (
                   <ProgressCircle className="upload-progress" progress={u.progress} />
                 ) : u.status === 'success' ? (

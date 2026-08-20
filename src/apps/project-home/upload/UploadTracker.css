@@ -26,35 +26,15 @@
   align-items: center;
   display: flex;
   font-size: var(--font-tiny);
-  min-width: 0;
   padding: 12px 12px;
   position: relative;
 }
 
-.upload-tracker li .upload-info {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  padding-right: 40px;
-  width: 100%;
-}
-
 .upload-tracker li .upload-name {
   overflow: hidden; 
+  padding-right: 40px;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.upload-tracker li .upload-message {
-  color: var(--red-500);
-  display: -webkit-box;
-  line-clamp: 2;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  line-height: 130%;
-  overflow: hidden;
-  overflow-wrap: anywhere;
-  padding-top: 3px;
 }
 
 .upload-tracker li .upload-progress {
