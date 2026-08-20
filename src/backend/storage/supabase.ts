@@ -1,6 +1,7 @@
 import Uppy from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getAccessToken } from './accessToken';
 
 const DEFAULT_BUCKET_NAME = 'documents';
 
@@ -11,24 +12,6 @@ type Meta = {
   type: string;
 
 }
-
-// get the current access token instead of relying on one from the initial request
-const getAccessToken = async (supabase: SupabaseClient): Promise<string> => {
-  const { data, error } = await supabase.auth.getSession();
-
-  if (error) {
-    throw error;
-  }
-
-  const token = data.session?.access_token;
-
-  if (!token) {
-    // Shouldn't really happen at this point
-    throw new Error('Not authorized');
-  }
-
-  return token;
-};
 
 export const uploadFile = (
   supabase: SupabaseClient,

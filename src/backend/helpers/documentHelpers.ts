@@ -120,10 +120,14 @@ const rollBackDocument = async (
  *
  * Procedure is as follows:
  * 1. A `document` record is created in Supabase.
- * 2. A default `layer` on the document is created in the given context. (Happens in parallel.)
+ * 2. The document is attached to the project, which also creates the default
+ *    `layer` and the `context_document` record server-side.
  * 3. After step 1 and 2 have completed:
  *    - the method returns if the document is a remote IIIF source
  *    - the text file is uploaded to Supabase storage, with a reference to the document ID
+ *
+ * If any step after the `document` record was created fails, the document is
+ * rolled back.
  */
 const _initDocument = (
   supabase: SupabaseClient,
@@ -138,42 +142,46 @@ const _initDocument = (
   url?: string
 ): Promise<Document> => {
   // First promise: create the document
-  const a: Promise<Document> = new Promise((resolve, reject) =>
-    createDocument(
-      supabase,
-      name,
-      isPrivate,
-      file?.type,
-      protocol
-        ? {
-            protocol,
-            url,
-          }
-        : undefined,
-      collectionId,
-      collectionMetadata,
-    ).then(({ error, data }) => {
-      if (error) {
-        reject(error);
-      } else if (projectId) {
-        createProjectDocument(supabase, data.id, projectId).then(
-          ({ error: pdError, data: _projectDocument }) => {
-            if (pdError) {
-              rollBackDocument(supabase, data.id, projectId).then(() =>
-                reject(pdError)
-              );
-            } else {
+  const a: Promise<Document> = new Promise((resolve, reject) => {
+    Promise.resolve(
+      createDocument(
+        supabase,
+        name,
+        isPrivate,
+        file?.type,
+        protocol
+          ? {
+              protocol,
+              url,
+            }
+          : undefined,
+        collectionId,
+        collectionMetadata,
+      )
+    )
+      .then(({ error, data }) => {
+        if (error) {
+          reject(error);
+        } else if (projectId) {
+          return createProjectDocument(supabase, data.id, projectId).then(
+            ({ error: pdError }) => {
+              if (pdError) {
+                return rollBackDocument(supabase, data.id, projectId).then(() =>
+                  reject(pdError)
+                );
+              }
+
               resolve(data);
             }
-          }
-        );
-      } else {
-        resolve(data);
-      }
-    })
-  );
+          );
+        } else {
+          resolve(data);
+        }
+      })
+      .catch(reject);
+  });
 
-  return Promise.all([a]).then(([document]) => {
+  return a.then((document) => {
     if (file) {
       return uploadFile(supabase, file, document.id, onProgress)
         .then(() => {
