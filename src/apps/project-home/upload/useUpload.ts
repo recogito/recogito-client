@@ -7,6 +7,22 @@ import type { Upload, UploadProgress, UploadStatus } from './Upload';
 
 let queue = Promise.resolve();
 
+const getErrorMessage = (error: unknown): string => {
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String((error as { message: unknown }).message);
+  }
+
+  return 'Upload failed';
+};
+
 export const useUpload = (onImport: (documents: Document[]) => void) => {
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
   const [dataDirty, setDataDirty] = useState(false);
@@ -105,7 +121,8 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
         })
       )
       .catch((error) => {
-        onError(id, error);
+        console.error('Upload failed', error);
+        onError(id, getErrorMessage(error));
       });
 
     return id;

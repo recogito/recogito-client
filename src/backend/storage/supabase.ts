@@ -1,6 +1,7 @@
 import Uppy from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getAccessToken } from './accessToken';
 
 const DEFAULT_BUCKET_NAME = 'documents';
 
@@ -13,48 +14,55 @@ type Meta = {
 }
 
 export const uploadFile = (
-  supabase: SupabaseClient, 
+  supabase: SupabaseClient,
   file: File,
   name: string,
   onProgress?: (progress: number) => void
 ): Promise<void> => new Promise((resolve, reject) => {
-  return supabase.auth.getSession().then(({ error, data }) => {
-    if (error) {
-      reject(error)
-    } else {
-      const token = data.session?.access_token;      
-      if (!token) {
-        // Shouldn't really happen at this point
-        reject('Not authorized');
-      } else {
-        const uppy = new Uppy<Meta, any>({ autoProceed: true });
+  return getAccessToken(supabase).then(initialToken => {
+    const uppy = new Uppy<Meta, any>({ autoProceed: true });
 
-        uppy.use(XHR, {
-          endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${name}`,
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+    uppy.use(XHR, {
+      endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${name}`,
 
-        uppy.addFile({
-          name,
-          data: file,
-          meta: { type: file.type }
-        });
+      onBeforeRequest: async (xhr) => {
+        let token = initialToken;
 
-        uppy.on('progress', progress => onProgress?.(progress));
+        try {
+          token = await getAccessToken(supabase);
+        } catch (error) {
+          console.warn('Could not refresh access token before upload', error);
+        }
 
-        uppy.on('error', error => {
-          reject(error);
-        });
-
-        uppy.upload().then(() => {
-          resolve();
-        }).catch(error => {
-          reject(error);
-        })
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
       }
-    }
+    });
+
+    uppy.addFile({
+      name,
+      data: file,
+      meta: { type: file.type }
+    });
+
+    uppy.on('progress', progress => onProgress?.(progress));
+
+    uppy.on('error', error => {
+      reject(error);
+    });
+
+    uppy.upload().then(result => {
+      const failed = result?.failed || [];
+
+      if (failed.length > 0) {
+        reject(new Error(failed[0].error || `Upload failed for ${name}`));
+      } else {
+        resolve();
+      }
+    }).catch(error => {
+      reject(error);
+    });
+  }).catch(error => {
+    reject(error);
   });
 });
 
