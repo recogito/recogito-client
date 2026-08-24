@@ -63,3 +63,19 @@ export const cleanHTML = (str: string) => {
 
   return html.innerHTML;
 };
+
+export const formatFileSize = (bytes: number) => {
+  const units = ['B', 'KB', 'MB', 'GB'];
+
+  let value = bytes;
+  let unit = 0;
+
+  while (value >= 1024 && unit < units.length - 1) {
+    value = value / 1024;
+    unit++;
+  }
+
+  const rounded = unit < 2 ? Math.round(value) : Math.round(value * 10) / 10;
+
+  return `${rounded} ${units[unit]}`;
+};

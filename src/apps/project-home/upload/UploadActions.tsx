@@ -8,10 +8,15 @@ import { setProfileEULAAccepted } from '@backend/helpers/profileHelpers';
 import './UploadActions.css';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useTranslation } from 'react-i18next';
+import { formatFileSize } from '@util/general';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
 
+const SUPPORTED_FORMATS = '.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf';
+
 interface UploadActionsProps {
+  fileSizeLimit?: number;
+
   me: MyProfile;
 
   onUpload(): void;
@@ -80,8 +85,21 @@ export const UploadActions = (props: UploadActionsProps) => {
             <Item className='dropdown-item' onSelect={handleUpload}>
               <FileIcon size={16} />
               <div>
-                <span>{t('File upload', { ns: 'project-home' })}</span>
-                <p>.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf</p>
+                <span>{t('file_upload', { ns: 'project-home' })}</span>
+                <p>
+                  {t('supported_formats', {
+                    ns: 'project-home',
+                    formats: SUPPORTED_FORMATS,
+                  })}
+                </p>
+                {!!props.fileSizeLimit && (
+                  <p>
+                    {t('max_file_size', {
+                      ns: 'project-home',
+                      size: formatFileSize(props.fileSizeLimit),
+                    })}
+                  </p>
+                )}
               </div>
             </Item>
 
