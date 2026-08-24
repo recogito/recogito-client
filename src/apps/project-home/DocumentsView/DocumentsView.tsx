@@ -29,7 +29,7 @@ import type {
   MyProfile,
 } from 'src/Types';
 import { useState, useMemo, useCallback } from 'react';
-import type { FileRejection } from 'react-dropzone';
+import { ErrorCode, type FileRejection } from 'react-dropzone';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { archiveDocument, setDocumentPrivacy } from '@backend/crud';
 import { useDocumentList } from '@apps/project-home/useDocumentList';
@@ -40,6 +40,7 @@ import {
   updateDocumentsSort,
 } from '@backend/helpers';
 import { useTranslation } from 'react-i18next';
+import { formatFileSize } from '@util/general';
 
 import '../ProjectHome.css';
 
@@ -112,7 +113,14 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     [activeId]
   );
 
-  const { addUploads, isIdle, uploads, dataDirty, clearDirtyFlag } = useUpload(
+  const {
+    addUploads,
+    fileSizeLimit,
+    isIdle,
+    uploads,
+    dataDirty,
+    clearDirtyFlag,
+  } = useUpload(
     (documents) =>
       props.setDocuments(
         [...props.documents, ...documents].reduce<Document[]>(
@@ -142,9 +150,18 @@ export const DocumentsView = (props: DocumentsViewProps) => {
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
+      const tooLarge = rejected.some((r) =>
+        r.errors.some((e) => e.code === ErrorCode.FileTooLarge)
+      );
+
       props.setToast({
         title: 'Sorry',
-        description: 'Unsupported file format.',
+        description:
+          tooLarge && fileSizeLimit
+            ? `File is too large. The maximum file size is ${formatFileSize(
+                fileSizeLimit
+              )}.`
+            : 'Unsupported file format.',
         type: 'error',
       });
     } else {
@@ -192,7 +209,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     }
   };
 
-  const { getInputProps, open } = useDragAndDrop(onDrop);
+  const { getInputProps, open } = useDragAndDrop(onDrop, fileSizeLimit);
 
   const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
     setShowUploads(true);
@@ -387,6 +404,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
         }}
         UploadActions={
           <UploadActions
+            fileSizeLimit={fileSizeLimit}
             me={props.user}
             onUpload={open}
             onImport={onImportRemote}
