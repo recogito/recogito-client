@@ -67,8 +67,6 @@ export const UploadActions = (props: UploadActionsProps) => {
     }
   };
 
-  console.log(props.fileSizeLimit)
-
   return (
     <>
       <Root>
