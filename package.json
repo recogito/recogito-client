@@ -58,6 +58,7 @@
     "@table-library/react-table-library": "^4.1.15",
     "@trigger.dev/sdk": "4.5.9",
     "@uppy/core": "^5.2.0",
+    "@uppy/tus": "^5.1.1",
     "@uppy/xhr-upload": "^5.2.0",
     "accept-language-parser": "^1.5.0",
     "adm-zip": "^0.6.0",

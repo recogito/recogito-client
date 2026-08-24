@@ -1,5 +1,5 @@
 import Uppy from '@uppy/core';
-import XHR from '@uppy/xhr-upload';
+import Tus from '@uppy/tus';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { getAccessToken } from './accessToken';
 
@@ -7,9 +7,16 @@ const DEFAULT_BUCKET_NAME = 'documents';
 
 const SUPABASE_URL = import.meta.env?.PUBLIC_SUPABASE || process.env?.PUBLIC_SUPABASE;
 
+// Supabase has a mandatory chunk size of 6MB
+const CHUNK_SIZE = 6 * 1024 * 1024;
+
 type Meta = {
 
-  type: string;
+  bucketName: string;
+
+  objectName: string;
+
+  contentType: string;
 
 }
 
@@ -22,10 +29,20 @@ export const uploadFile = (
   return getAccessToken(supabase).then(initialToken => {
     const uppy = new Uppy<Meta, any>({ autoProceed: true });
 
-    uppy.use(XHR, {
-      endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${name}`,
+    uppy.use(Tus, {
+      endpoint: `${SUPABASE_URL}/storage/v1/upload/resumable`,
 
-      onBeforeRequest: async (xhr) => {
+      chunkSize: CHUNK_SIZE,
+
+      uploadDataDuringCreation: true,
+
+      removeFingerprintOnSuccess: true,
+
+      allowedMetaFields: ['bucketName', 'objectName', 'contentType'],
+
+      retryDelays: [0, 3000, 5000, 10000, 20000],
+
+      onBeforeRequest: async (req) => {
         let token = initialToken;
 
         try {
@@ -34,14 +51,18 @@ export const uploadFile = (
           console.warn('Could not refresh access token before upload', error);
         }
 
-        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        req.setHeader('Authorization', `Bearer ${token}`);
       }
     });
 
     uppy.addFile({
       name,
       data: file,
-      meta: { type: file.type }
+      meta: {
+        bucketName: DEFAULT_BUCKET_NAME,
+        objectName: name,
+        contentType: file.type
+      }
     });
 
     uppy.on('progress', progress => onProgress?.(progress));
