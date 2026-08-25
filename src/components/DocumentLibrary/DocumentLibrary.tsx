@@ -20,7 +20,7 @@ import {
   FolderIcon,
   UserIcon,
 } from '@phosphor-icons/react';
-import { LoadingOverlay } from '@components/LoadingOverlay';
+import { Spinner } from '@components/Spinner';
 import { DialogContent } from '@components/DialogContent';
 import { useTranslation } from 'react-i18next';
 import { DocumentList } from './DocumentList';
@@ -573,7 +573,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   return (
     <>
-      {loading && props.open && <LoadingOverlay />}
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
           <Dialog.Overlay
@@ -728,6 +727,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       onSort={onSort}
                       sort={sort}
                     />
+                  )}
+                  {loading && (
+                    <div className='doc-lib-list-loading'>
+                      <Spinner />
+                    </div>
                   )}
                   {isDragActive && (
                     <div className='dropzone-hint-wrapper'>

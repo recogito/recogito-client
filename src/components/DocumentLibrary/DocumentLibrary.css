@@ -5,7 +5,9 @@
 .doc-lib-header {
   background-color: #fff;
   border-right: 1px solid var(--gray-100);
-  max-width: 275px;
+  flex: 0 0 auto;
+  min-width: 275px;
+  width: max-content;
 }
 
 .doc-lib-header section {
@@ -102,7 +104,12 @@
   margin-right: 15px;
 }
 .doc-lib-header-bottom li > .name {
-  flex: 0 1 auto;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.doc-lib-header-bottom li > .badge {
+  flex: 0 0 auto;
 }
 
 .doc-lib-header-bottom .doc-lib-header-tabs li.active {
@@ -120,6 +127,20 @@
 
 .doc-lib-list.drag-active > * {
   pointer-events: none;
+}
+
+.doc-lib-list .doc-lib-list-loading {
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.75);
+  bottom: 0;
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
 }
 
 .doc-lib-list .dropzone-hint-wrapper {
