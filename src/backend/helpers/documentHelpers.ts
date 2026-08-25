@@ -289,39 +289,6 @@ export const listDocumentsInProject = (
       }
     });
 
-export const listDocumentsInContext = (
-  supabase: SupabaseClient,
-  contextId: string
-): Response<Document[]> =>
-  supabase
-    .from('context_documents')
-    .select(
-      `
-      *,
-      document:document_id (
-        id,
-        created_at,
-        created_by,
-        updated_at,
-        updated_by,
-        name,
-        bucket_id,
-        content_type,
-        meta_data,
-        is_private
-      )
-    `
-    )
-    .eq('context_id', contextId)
-    .then(({ error, data }) => {
-      if (error) {
-        return { error, data: [] };
-      } else {
-        const docs: Document[] = data.map((datum) => datum.document);
-        return { error, data: docs };
-      }
-    });
-
 export const getDocumentInContext = (
   supabase: SupabaseClient,
   documentId: string,
