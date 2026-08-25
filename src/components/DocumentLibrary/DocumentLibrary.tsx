@@ -288,20 +288,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     return () => clearTimeout(searchDebounce);
   }, [search]);
 
-  // An upload (or a metadata edit) landed while this dialog was mounted, so the
-  // list is stale - refetch it, and the tab counts with it. Waiting for `open`
-  // keeps a background upload from fetching a list nobody is looking at; the
-  // flag stays set until then. Waiting for `loading` matters when several
-  // uploads finish in a row: `fetchDocs` drops calls made while a fetch is in
-  // flight, so clearing the flag before that would lose a document.
+  // Update state when a new file is uploaded
   useEffect(() => {
     if (!props.dataDirty || !props.open || loading) return;
 
     props.clearDirtyFlag();
 
-    // No need to blank the list first the way a view change does - fetchDocs
-    // resets page/documents/hasMore itself, and keeping the current rows up
-    // avoids flashing an empty list on every completed upload.
     fetchDocs(true);
     setStatsRefresh((n) => n + 1);
   }, [props.dataDirty, props.open, loading]);
