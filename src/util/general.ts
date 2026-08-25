@@ -79,3 +79,5 @@ export const formatFileSize = (bytes: number) => {
 
   return `${rounded} ${units[unit]}`;
 };
+
+export const SUPPORTED_UPLOAD_FORMATS = '.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf';

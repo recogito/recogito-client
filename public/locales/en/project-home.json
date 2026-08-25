@@ -39,6 +39,7 @@
   "file_upload": "File upload",
   "supported_formats": "Supported formats: {{formats}}",
   "max_file_size": "Max file size: {{size}}",
+  "drop_files_hint": "Drop files or IIIF manifest links here to add them to the library.",
   "From IIIF image manifest": "From IIIF manifest",
   "IIIF import hint": "Import single images (IIIF image manifest) or image series (IIIF presentation manifest).",
   "Import IIIF": "Import IIIF",

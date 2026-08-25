@@ -8,11 +8,9 @@ import { setProfileEULAAccepted } from '@backend/helpers/profileHelpers';
 import './UploadActions.css';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { useTranslation } from 'react-i18next';
-import { formatFileSize } from '@util/general';
+import { formatFileSize, SUPPORTED_UPLOAD_FORMATS } from '@util/general';
 
 const { Content, Item, Portal, Root, Trigger } = Dropdown;
-
-const SUPPORTED_FORMATS = '.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf';
 
 interface UploadActionsProps {
   fileSizeLimit?: number;
@@ -89,7 +87,7 @@ export const UploadActions = (props: UploadActionsProps) => {
                 <p>
                   {t('supported_formats', {
                     ns: 'project-home',
-                    formats: SUPPORTED_FORMATS,
+                    formats: SUPPORTED_UPLOAD_FORMATS,
                   })}
                 </p>
                 {!!props.fileSizeLimit && (
