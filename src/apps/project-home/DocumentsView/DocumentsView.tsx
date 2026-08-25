@@ -209,7 +209,10 @@ export const DocumentsView = (props: DocumentsViewProps) => {
     }
   };
 
-  const { getInputProps, open } = useDragAndDrop(onDrop, fileSizeLimit);
+  const { getInputProps, getRootProps, isDragActive, open } = useDragAndDrop(
+    onDrop,
+    fileSizeLimit
+  );
 
   const onImportRemote = (protocol: Protocol, url: string, label?: string) => {
     setShowUploads(true);
@@ -402,6 +405,7 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           clearDirtyFlag();
           setDocumentUpdated(false);
         }}
+        dropzone={props.isAdmin ? { getRootProps, isDragActive } : undefined}
         UploadActions={
           <UploadActions
             fileSizeLimit={fileSizeLimit}

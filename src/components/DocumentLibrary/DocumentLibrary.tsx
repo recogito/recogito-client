@@ -8,16 +8,24 @@ import type { Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Column } from '@table-library/react-table-library/compact';
+import classNames from 'classnames';
 import './DocumentLibrary.css';
 import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
+import {
+  CheckCircleIcon,
+  CloudArrowUpIcon,
+  FilesIcon,
+  FolderIcon,
+  UserIcon,
+} from '@phosphor-icons/react';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import { DialogContent } from '@components/DialogContent';
 import { useTranslation } from 'react-i18next';
 import { DocumentList } from './DocumentList';
 import { MissingBadge } from './MissingBadge';
+import { SUPPORTED_UPLOAD_FORMATS } from '@util/general';
 
 export type LibraryDocument = Pick<
   Document,
@@ -46,6 +54,10 @@ export interface DocumentLibraryProps {
   clearDirtyFlag(): void;
   onCancel(): void;
   UploadActions?: React.ReactNode;
+  dropzone?: {
+    getRootProps(): Record<string, any>;
+    isDragActive: boolean;
+  };
   onDocumentsSelected(documentIds: string[]): void;
   onUpdated(document: Document): void;
   onDeleteFromLibrary?(document: Document): void;
@@ -69,7 +81,15 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     'common',
     'collection-management',
   ]);
-  const { UploadActions } = props;
+  const { UploadActions, dropzone } = props;
+
+  const isDragActive = Boolean(dropzone?.isDragActive);
+
+  // prevent browser from opening dropped files if the user narrowly misses the dropzone
+  const onDropNearMiss = (evt: React.DragEvent) => {
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'none';
+  };
 
   const [view, setView] = useState<'mine' | 'all' | 'collection'>('mine');
   const [documentsView, setDocumentsView] =
@@ -94,6 +114,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     myDocs: 0,
     allDocs: 0,
   });
+  const [statsRefresh, setStatsRefresh] = useState(0);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   // see sortKey in columnsCollection
@@ -153,7 +174,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     };
 
     fetchStats();
-  }, [collections, props.user.id]);
+  }, [collections, props.user.id, statsRefresh]);
 
   const allowEditMetadata = useCallback(
     (item: any) => item.created_by === props.user.id && !props.readOnly,
@@ -266,6 +287,24 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     }, 400);
     return () => clearTimeout(searchDebounce);
   }, [search]);
+
+  // An upload (or a metadata edit) landed while this dialog was mounted, so the
+  // list is stale - refetch it, and the tab counts with it. Waiting for `open`
+  // keeps a background upload from fetching a list nobody is looking at; the
+  // flag stays set until then. Waiting for `loading` matters when several
+  // uploads finish in a row: `fetchDocs` drops calls made while a fetch is in
+  // flight, so clearing the flag before that would lose a document.
+  useEffect(() => {
+    if (!props.dataDirty || !props.open || loading) return;
+
+    props.clearDirtyFlag();
+
+    // No need to blank the list first the way a view change does - fetchDocs
+    // resets page/documents/hasMore itself, and keeping the current rows up
+    // avoids flashing an empty list on every completed upload.
+    fetchDocs(true);
+    setStatsRefresh((n) => n + 1);
+  }, [props.dataDirty, props.open, loading]);
 
   const isItemLoaded = (index: number) => {
     // if we don't have documents yet, nothing is loaded
@@ -435,11 +474,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) =>
         props.disabledIds.includes(item.id as string) ? (
           <div className='revision-cell'>
-            <CheckCircle size={24} />
+            <CheckCircleIcon size={24} />
           </div>
         ) : (
           <div className='revision-cell'>
-            <CheckCircle size={24} color='green' />
+            <CheckCircleIcon size={24} color='green' />
           </div>
         ),
     },
@@ -545,8 +584,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       {loading && props.open && <LoadingOverlay />}
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
-          <Dialog.Overlay className='dialog-overlay' />
-          <DialogContent className='dialog-content-doc-lib'>
+          <Dialog.Overlay
+            className='dialog-overlay'
+            onDragOver={onDropNearMiss}
+            onDrop={onDropNearMiss}
+          />
+          <DialogContent
+            className='dialog-content-doc-lib'
+            onDragOver={onDropNearMiss}
+            onDrop={onDropNearMiss}
+          >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
                 {t('Add Document', { ns: 'project-home' })}
@@ -569,7 +616,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         setActiveCollection(0);
                       }}
                     >
-                      <Files />
+                      <FilesIcon />
                       <span className='name'>
                         {t('All Documents', { ns: 'project-home' })}
                       </span>
@@ -590,7 +637,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         setActiveCollection(0);
                       }}
                     >
-                      <User />
+                      <UserIcon />
                       <span className='name'>
                         {t('My Documents', { ns: 'project-home' })}
                       </span>
@@ -628,7 +675,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                             }}
                             key={c.id}
                           >
-                            <Folder />
+                            <FolderIcon />
                             <span className='name'>{c.name}</span>
                             <span
                               className={
@@ -667,7 +714,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   </div>
                 </div>
 
-                <div style={{ height: 450 }}>
+                <div
+                  className={classNames('doc-lib-list', {
+                    'drag-active': isDragActive,
+                  })}
+                  {...(dropzone ? dropzone.getRootProps() : {})}
+                >
                   {documents && (
                     <DocumentList
                       documents={documents}
@@ -684,6 +736,24 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       onSort={onSort}
                       sort={sort}
                     />
+                  )}
+                  {isDragActive && (
+                    <div className='dropzone-hint-wrapper'>
+                      <div className='dropzone-hint'>
+                        <div className='dropzone-hint-popup'>
+                          <CloudArrowUpIcon size={32} />
+                          <h1>
+                            {t('drop_files_hint', { ns: 'project-home' })}
+                          </h1>
+                          <p>
+                            {t('supported_formats', {
+                              ns: 'project-home',
+                              formats: SUPPORTED_UPLOAD_FORMATS,
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </section>

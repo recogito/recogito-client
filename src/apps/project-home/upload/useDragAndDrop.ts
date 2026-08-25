@@ -25,13 +25,18 @@ export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: Fil
     maxSize,
     noClick: true, 
     noKeyboard: true,
+    noDragEventsBubbling: true,
     onDrop 
   });
+
+  const isUploadDrag = (evt: React.DragEvent) =>
+    evt.dataTransfer.types.includes('Files') ||
+    evt.dataTransfer.types.includes('text/uri-list');
 
   const handleDragOver = (evt: React.DragEvent) => { 
     evt.preventDefault();
 
-    if (!isDragActive)
+    if (!isDragActive && isUploadDrag(evt))
       setIsDragActive(true);
   }
 
