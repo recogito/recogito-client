@@ -359,11 +359,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           <DocumentActions
             allowEditMetadata={!props.readOnly && allowEditMetadata(item)}
-            onDelete={() =>
-              props.onDeleteFromLibrary
-                ? props.onDeleteFromLibrary(item as Document)
-                : {}
-            }
+            onDelete={() => handleDeleteFromLibrary(item as Document)}
             showPrivate={!props.readOnly}
             isPrivate={item.is_private}
             onOpenMetadata={() => {
@@ -403,11 +399,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           <DocumentActions
             allowEditMetadata={allowEditMetadata(item)}
-            onDelete={() =>
-              currentDocument && props.onDeleteFromLibrary
-                ? props.onDeleteFromLibrary(currentDocument)
-                : {}
-            }
+            onDelete={() => {
+              if (currentDocument) {
+                handleDeleteFromLibrary(currentDocument);
+              }
+            }}
             onOpenMetadata={() => {
               setCurrentDocument(item as Document);
               setMetaOpen(true);
@@ -552,6 +548,29 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
       return newSelection;
     });
+  }
+
+  function handleDeleteFromLibrary(document: Document) {
+    if (!props.onDeleteFromLibrary) return;
+
+    setSelectedIds((prevSelected) => {
+      const doc = documents?.find((d) => d.id === document.id);
+
+      const childIds = doc?.is_document_group
+        ? (documents || [])
+            .filter((d) => d.document_group_id === doc.id)
+            .map((d) => d.id)
+        : [];
+
+      return prevSelected.filter(
+        (id) =>
+          id !== document.id &&
+          id !== doc?.document_group_id &&
+          !childIds.includes(id)
+      );
+    });
+
+    props.onDeleteFromLibrary(document);
   }
 
   const handleCancel = () => {
