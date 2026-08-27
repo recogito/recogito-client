@@ -14,6 +14,7 @@
   "Job deleted successfully.": "Job erfolgreich gelöscht.",
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not delete the job.": "Der Job konnte nicht gelöscht werden.",
+  "Could not load the jobs.": "Die Jobs konnten nicht geladen werden.",
   "INITIALIZING": "Initialisieren",
   "PROCESSING": "In Arbeit",
   "COMPLETE": "Abgeschlossen",

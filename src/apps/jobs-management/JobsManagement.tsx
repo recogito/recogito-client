@@ -1,10 +1,10 @@
 import { JobsTable } from '@apps/jobs-management/JobsTable';
-import { deleteJob } from '@backend/crud';
+import { deleteJob, getJobs } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import clientI18next from 'src/i18n/client';
 import type { Job, MyProfile } from 'src/Types';
@@ -12,15 +12,47 @@ import type { Job, MyProfile } from 'src/Types';
 import './JobsManagement.css';
 
 interface Props {
-  jobs: Job[];
   me: MyProfile;
 }
 
 const JobsManagement = (props: Props) => {
-  const [jobs, setJobs] = useState<Job[]>(props.jobs);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const { t, i18n } = useTranslation(['jobs-management', 'common']);
+
+  useEffect(() => {
+    const refresh = () => (
+      getJobs(supabase).then(({ error, data }) => {
+        if (error) {
+          setToast({
+            title: t('Something went wrong', { ns: 'common' }),
+            description: t('Could not load the jobs.', { ns: 'jobs-management' }),
+            type: 'error',
+          });
+        } else {
+          setJobs(data);
+        }
+      })
+    );
+
+    const channel = supabase
+      .channel('jobs-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'jobs',
+        },
+        () => refresh()
+      )
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  }, []);
 
   const onDelete = useCallback((job: Job) => (
     deleteJob(supabase, job.id).then(({ error }) => {
@@ -66,7 +98,7 @@ const JobsManagement = (props: Props) => {
           <div className='jobs-management-table'>
             {jobs.length > 0 ? (
               <JobsTable
-                jobs={props.jobs}
+                jobs={jobs}
                 onDelete={onDelete}
               />
             ) : (

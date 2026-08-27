@@ -14,6 +14,7 @@
   "Job deleted successfully.": "Job deleted successfully.",
   "Something went wrong": "Something went wrong",
   "Could not delete the job.": "Could not delete the job.",
+  "Could not load the jobs.": "Could not load the jobs.",
   "INITIALIZING": "Initializing",
   "PROCESSING": "Processing",
   "COMPLETE": "Complete",
