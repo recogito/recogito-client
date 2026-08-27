@@ -17,3 +17,10 @@
   padding: 20px 40px;
   clear: both;
 }
+
+.jobs-management-loading {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  padding: 40px 0;
+}

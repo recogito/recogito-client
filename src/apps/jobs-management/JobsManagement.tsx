@@ -1,6 +1,7 @@
 import { JobsTable } from '@apps/jobs-management/JobsTable';
 import { deleteJob, getJobs } from '@backend/crud';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { Spinner } from '@components/Spinner';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
@@ -17,6 +18,7 @@ interface Props {
 
 const JobsManagement = (props: Props) => {
   const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [toast, setToast] = useState<ToastContent | null>(null);
 
   const { t, i18n } = useTranslation(['jobs-management', 'common']);
@@ -33,6 +35,8 @@ const JobsManagement = (props: Props) => {
         } else {
           setJobs(data);
         }
+
+        setLoading(false);
       })
     );
 
@@ -41,13 +45,44 @@ const JobsManagement = (props: Props) => {
       .on(
         'postgres_changes',
         {
-          event: '*',
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'jobs',
+        },
+        ({ new: row }) => setJobs((prevJobs) => prevJobs.map((prevJob) => (
+          prevJob.id === row.id ? {
+            ...prevJob,
+            name: row.name,
+            job_status: row.job_status,
+            job_type: row.job_type,
+          } : prevJob
+        )))
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'DELETE',
+          schema: 'public',
+          table: 'jobs',
+        },
+        ({ old }) => setJobs((prevJobs) => prevJobs.filter(
+          (prevJob) => prevJob.id !== old.id)
+        )
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
           schema: 'public',
           table: 'jobs',
         },
         () => refresh()
       )
-      .subscribe();
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          refresh();
+        }
+      });
 
     return () => {
       channel.unsubscribe();
@@ -96,7 +131,11 @@ const JobsManagement = (props: Props) => {
         </div>
         <main className='jobs-management-content' id='main'>
           <div className='jobs-management-table'>
-            {jobs.length > 0 ? (
+            {loading ? (
+              <div className='jobs-management-loading'>
+                <Spinner />
+              </div>
+            ) : jobs.length > 0 ? (
               <JobsTable
                 jobs={jobs}
                 onDelete={onDelete}
