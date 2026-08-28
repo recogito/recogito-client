@@ -31,7 +31,7 @@ const JobsManagement = (props: Props) => {
       if (error) {
         setToast({
           title: t('Something went wrong', { ns: 'common' }),
-          description: t('Could not load the jobs.', { ns: 'jobs-management' }),
+          description: t('Could not load jobs.', { ns: 'jobs-management' }),
           type: 'error',
         });
       } else {
