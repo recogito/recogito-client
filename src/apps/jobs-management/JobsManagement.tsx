@@ -88,7 +88,6 @@ const JobsManagement = (props: Props) => {
           //   other statues trigger on page refresh or unmount so TIMED_OUT
           //   is the only one we can confidently display an error for
           if (status === 'TIMED_OUT') {
-            setLoading(false);
             setToast({
               title: t('Something went wrong', { ns: 'common' }),
               description: t('Could not fetch live updates from the server.', { ns: 'jobs-management' }),
