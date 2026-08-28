@@ -99,9 +99,8 @@ const JobsManagement = (props: Props) => {
 
     return () => {
       if (channel.current) {
-        supabase.removeChannel(channel.current).then(() => {
-          channel.current = null;
-        });
+        supabase.removeChannel(channel.current);
+        channel.current = null;
       }
     };
   }, [refresh]);
