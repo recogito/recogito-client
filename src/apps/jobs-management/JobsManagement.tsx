@@ -85,7 +85,7 @@ const JobsManagement = (props: Props) => {
           () => refresh()
         )
         .subscribe((status) => {
-          //   other statues trigger on page refresh or unmount so TIMED_OUT
+          //   other statuses trigger on page refresh or unmount so TIMED_OUT
           //   is the only one we can confidently display an error for
           if (status === 'TIMED_OUT') {
             setToast({
