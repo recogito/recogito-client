@@ -5,12 +5,13 @@ import { Spinner } from '@components/Spinner';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
 import { ArrowLeftIcon } from '@phosphor-icons/react';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import clientI18next from 'src/i18n/client';
 import type { Job, MyProfile } from 'src/Types';
 
 import './JobsManagement.css';
+import type { RealtimeChannel } from '@supabase/supabase-js';
 
 interface Props {
   me: MyProfile;
@@ -23,71 +24,86 @@ const JobsManagement = (props: Props) => {
 
   const { t, i18n } = useTranslation(['jobs-management', 'common']);
 
+  const channel = useRef<RealtimeChannel>(null);
+
+  const refresh = useCallback(() => {
+    getJobs(supabase).then(({ error, data }) => {
+      if (error) {
+        setToast({
+          title: t('Something went wrong', { ns: 'common' }),
+          description: t('Could not load the jobs.', { ns: 'jobs-management' }),
+          type: 'error',
+        });
+      } else {
+        setJobs(data);
+      }
+
+      setLoading(false);
+    })
+  }, [])
+
   useEffect(() => {
-    const refresh = () => (
-      getJobs(supabase).then(({ error, data }) => {
-        if (error) {
-          setToast({
-            title: t('Something went wrong', { ns: 'common' }),
-            description: t('Could not load the jobs.', { ns: 'jobs-management' }),
-            type: 'error',
-          });
-        } else {
-          setJobs(data);
-        }
+    if (!channel.current) {
+      refresh()
 
-        setLoading(false);
-      })
-    );
-
-    const channel = supabase
-      .channel('jobs-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'jobs',
-        },
-        ({ new: row }) => setJobs((prevJobs) => prevJobs.map((prevJob) => (
-          prevJob.id === row.id ? {
-            ...prevJob,
-            name: row.name,
-            job_status: row.job_status,
-            job_type: row.job_type,
-          } : prevJob
-        )))
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'DELETE',
-          schema: 'public',
-          table: 'jobs',
-        },
-        ({ old }) => setJobs((prevJobs) => prevJobs.filter(
-          (prevJob) => prevJob.id !== old.id)
+      channel.current = supabase
+        .channel('jobs-changes')
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'jobs',
+          },
+          ({ new: row }) => setJobs((prevJobs) => prevJobs.map((prevJob) => (
+            prevJob.id === row.id ? {
+              ...prevJob,
+              name: row.name,
+              job_status: row.job_status,
+              job_type: row.job_type,
+            } : prevJob
+          )))
         )
-      )
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'jobs',
-        },
-        () => refresh()
-      )
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') {
-          refresh();
-        }
-      });
+        .on(
+          'postgres_changes',
+          {
+            event: 'DELETE',
+            schema: 'public',
+            table: 'jobs',
+          },
+          ({ old }) => setJobs((prevJobs) => prevJobs.filter(
+            (prevJob) => prevJob.id !== old.id)
+          )
+        )
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'jobs',
+          },
+          () => refresh()
+        )
+        .subscribe((status) => {
+          //   other statues trigger on page refresh or unmount so TIMED_OUT
+          //   is the only one we can confidently display an error for
+          if (status === 'TIMED_OUT') {
+            setLoading(false);
+            setToast({
+              title: t('Something went wrong', { ns: 'common' }),
+              description: t('Could not fetch live updates from the server.', { ns: 'jobs-management' }),
+              type: 'error',
+            });
+          }
+        });
+    }
 
     return () => {
-      channel.unsubscribe();
+      if (channel.current) {
+        supabase.removeChannel(channel.current);
+      }
     };
-  }, []);
+  }, [refresh]);
 
   const onDelete = useCallback((job: Job) => (
     deleteJob(supabase, job.id).then(({ error }) => {

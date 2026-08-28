@@ -15,6 +15,7 @@
   "Something went wrong": "Something went wrong",
   "Could not delete the job.": "Could not delete the job.",
   "Could not load the jobs.": "Could not load the jobs.",
+  "Could not fetch live updates from the server.": "Could not fetch live updates from the server.",
   "INITIALIZING": "Initializing",
   "PROCESSING": "Processing",
   "COMPLETE": "Complete",

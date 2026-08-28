@@ -15,6 +15,7 @@
   "Something went wrong": "Etwas ist schiefgelaufen",
   "Could not delete the job.": "Der Job konnte nicht gelöscht werden.",
   "Could not load the jobs.": "Die Jobs konnten nicht geladen werden.",
+  "Could not fetch live updates from the server.": "Live-Updates konnten nicht vom Server abgerufen werden.",
   "INITIALIZING": "Initialisieren",
   "PROCESSING": "In Arbeit",
   "COMPLETE": "Abgeschlossen",
