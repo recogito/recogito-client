@@ -11,6 +11,8 @@ import {
   TriangleIcon 
 } from '@phosphor-icons/react';
 
+import './DrawingToolSelector.css';
+
 interface DrawingToolSelectorProps {
 
   active: boolean;
@@ -49,7 +51,7 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
 
   const current = TOOLS.find((t) => t.value === tool) ?? TOOLS[0];
 
-  console.log(current)
+  const CurrentIcon = current.icon;
 
   return (
     <Select.Root 
@@ -58,16 +60,18 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
       <div 
         role="group"
         aria-label="Drawing tool"
-        className={classNames('select-trigger', props.active && 'active')}>
+        className={classNames('drawing-tool-selector-trigger', props.active && 'active')}>
 
         <button
           type="button"
           onClick={onClick}>
-          <current.icon />
+          <CurrentIcon 
+            size={18} 
+            style={current.value === 'polygon' ? { transform: 'rotate(15deg)' } : undefined} />
           {current.label}
         </button>
 
-        <Select.Trigger>
+        <Select.Trigger className="drawing-tool-selector-more">
           <CaretDownIcon size={12} />
         </Select.Trigger>
       </div>

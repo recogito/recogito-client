@@ -1,0 +1,47 @@
+.drawing-tool-selector-trigger {
+  border-radius: var(--border-radius);
+  display: flex;
+  gap: 0.25rem;
+  padding: 0 0 0 0.625rem;
+  white-space: nowrap;
+}
+
+.drawing-tool-selector-trigger.active {
+  background-color: var(--bright-blue);
+}
+
+.drawing-tool-selector-trigger:hover {
+  box-shadow: inset 0 0 0 150px rgba(0, 0, 0, 0.06);
+}
+
+.drawing-tool-selector-trigger button {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.4rem;  
+  width: auto;
+}
+
+.drawing-tool-selector-trigger button:hover {
+  box-shadow: none;
+}
+
+.drawing-tool-selector-trigger.active button {
+  color: #fff;
+}
+
+.drawing-tool-selector-trigger.active svg {
+  color: #fff;
+}
+
+.drawing-tool-selector-trigger .drawing-tool-selector-more {
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+  padding: 0 0.35rem 0 0.25rem;
+}
+
+.drawing-tool-selector-trigger .drawing-tool-selector-more:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.drawing-tool-selector-trigger.active .drawing-tool-selector-more:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
