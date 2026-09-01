@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import classNames from 'classnames';
 import * as Select from '@radix-ui/react-select';
 import { 
@@ -23,13 +23,25 @@ interface DrawingToolSelectorProps {
 
 }
 
-const TOOLS = [
+interface ToolConfig {
+
+  value: string;
+
+  label: string;
+
+  icon: React.ComponentType<{ size?: number; style?: CSSProperties }>;
+
+  style?: CSSProperties;
+
+}
+
+const TOOLS: ToolConfig[] = [
   { value: 'rectangle', label: 'Box', icon: SquareIcon },
-  { value: 'polygon', label: 'Polygon', icon: TriangleIcon },
+  { value: 'polygon', label: 'Polygon', icon: TriangleIcon, style: { transform: 'rotate(15deg)' }},
   { value: 'ellipse', label: 'Ellipse', icon: CircleIcon },
   { value: 'path', label: 'Path', icon: LineSegmentsIcon },
   { value: 'intelligent-scissors', label: 'Smart scissors', icon: ScissorsIcon },
-] as const;
+];
 
 export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
 
@@ -51,10 +63,8 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
 
   const current = TOOLS.find((t) => t.value === tool) ?? TOOLS[0];
 
-  const CurrentIcon = current.icon;
-
   return (
-    <Select.Root 
+    <Select.Root
       value={tool}
       onValueChange={onChange}>
       <div 
@@ -65,9 +75,9 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
         <button
           type="button"
           onClick={onClick}>
-          <CurrentIcon 
+          <current.icon 
             size={18} 
-            style={current.value === 'polygon' ? { transform: 'rotate(15deg)' } : undefined} />
+            style={current.style} />
           {current.label}
         </button>
 
@@ -83,17 +93,17 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
           alignOffset={-14}
           className="select-content">
           <Select.Viewport className="select-viewport">
-            {TOOLS.map(({ value, label, icon: Icon }) => (
+            {TOOLS.map(({ value, label, icon: Icon, style }) => (
               <Select.Item 
                 key={value} 
                 value={value}
-                className="select-item">
+                className="select-item drawing-tool-selector-item">
                 <Select.ItemIndicator className="select-item-indicator">
                   <CheckIcon />
                 </Select.ItemIndicator>
 
                 <Select.ItemText>
-                  <Icon size={18} style={value === 'polygon' ? { transform: 'rotate(15deg)' } : undefined} />
+                  <Icon size={18} style={style} />
                   {label}
                 </Select.ItemText>
               </Select.Item>
