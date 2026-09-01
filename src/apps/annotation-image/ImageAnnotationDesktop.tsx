@@ -8,11 +8,11 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import {
-  clearSelectionURLHash,
   DocumentNotes,
   useAnnotationsViewUIState,
   useLayerNames,
 } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -24,8 +24,8 @@ import {
   useIIIF,
   useMultiPagePresence,
   ManifestErrorDialog,
-  type IIIFImage,
 } from './IIIF';
+import type { IIIFImage } from '@recogito/studio-sdk/iiif';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { Document, DocumentLayer } from 'src/Types';
 import type {

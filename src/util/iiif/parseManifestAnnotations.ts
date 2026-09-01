@@ -1,9 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import Quill from 'quill';
-import type { Manifest } from '@allmaps/iiif-parser';
 import { parseW3CImageAnnotation, type AnnotationBody, type ImageAnnotation } from '@annotorious/annotorious';
 import type { EmbeddedLayer } from 'src/Types';
-import { getResourceLabel } from './getResourceLabel';
+import { getResourceLabel, type Manifest } from '@recogito/studio-sdk/iiif';
 
 const crosswalkBodies = (bodies: AnnotationBody[]): AnnotationBody[] => {
   const keepPurposes = new Set(['commenting', 'replying', 'describing']);

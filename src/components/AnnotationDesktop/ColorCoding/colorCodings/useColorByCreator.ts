@@ -1,7 +1,8 @@
 import { useCallback, useMemo } from 'react';
 import { useAnnotations } from '@annotorious/react';
 import type { Color, PresentUser } from '@annotorious/react';
-import { enumerateCreators, getDisplayName, useAuthorColors } from '@components/AnnotationDesktop';
+import { enumerateCreators, getDisplayName } from '@components/AnnotationDesktop';
+import { useAuthorColors } from '@recogito/studio-sdk/components';
 import type { ColorCoding } from '../ColorCoding';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 

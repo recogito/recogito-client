@@ -17,6 +17,9 @@ export default defineConfig({
   integrations: [react(), ...plugins],
   output: 'server',
   vite: {
+    resolve: {
+      dedupe: ['@allmaps/iiif-parser'],
+    },
     ssr: {
       noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*'],
     },
