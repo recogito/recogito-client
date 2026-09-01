@@ -20,10 +20,11 @@ import {
 } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@recogito/studio-sdk/components';
-import { Polygon, Rectangle } from './Icons';
+import { Ellipse, Polygon, Rectangle, Spline } from './Icons';
 import { MoreTools } from './MoreTools';
 import {
   ChatsIcon,
+  CircleIcon,
   CursorIcon,
   FunnelSimpleIcon,
   GraduationCapIcon,
@@ -181,6 +182,31 @@ export const Toolbar = (props: ToolbarProps) => {
               onClick={() => props.onChangeTool('polygon')}
             >
               <Polygon />
+            </button>
+
+            <button
+              className={props.tool === 'ellipse' ? 'active' : undefined}
+              aria-label={t('Create circle and ellipse annotations', { ns: 'annotation-image' })}
+              onClick={() => props.onChangeTool('ellipse')}
+            >
+              <Ellipse />
+            </button>
+
+            <button
+              className={props.tool === 'path' ? 'active' : undefined}
+              aria-label={t('Create path annotations', { ns: 'annotation-image' })}
+              onClick={() => props.onChangeTool('path')}
+            >
+              <Spline />
+            </button>
+
+
+            <button
+              className={props.tool === 'intelligent-scissors' ? 'active' : undefined}
+              aria-label={t('Create path annotations', { ns: 'annotation-image' })}
+              onClick={() => props.onChangeTool('intelligent-scissors')}
+            >
+              Magnetic
             </button>
 
             <div className='anno-toolbar-divider' />

@@ -1,5 +1,7 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
+import { mountPlugin as ToolsPlugin } from '@annotorious/plugin-tools';
+import { mountPlugin as MagneticOutlinePlugin } from '@annotorious/plugin-magnetic-outline';
 import { AnnotationPopup, SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
@@ -21,8 +23,12 @@ import {
   OpenSeadragonAnnotationPopup,
   OpenSeadragonViewer,
   UserSelectAction,
-  useAnnotator
+  useAnnotator,
+  AnnotoriousPlugin
 } from '@annotorious/react';
+
+import '@annotorious/plugin-tools/annotorious-plugin-tools.css';
+import '@annotorious/plugin-magnetic-outline/plugin-magnetic-outline.css';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -210,6 +216,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
 
       <UndoStack
         undoEmpty={true} />
+
+      <AnnotoriousPlugin<AnnotoriousOpenSeadragonAnnotator>
+        plugin={ToolsPlugin} />
+
+      <AnnotoriousPlugin<AnnotoriousOpenSeadragonAnnotator>
+        plugin={MagneticOutlinePlugin} />
 
       {props.layers &&
         <SupabasePlugin
