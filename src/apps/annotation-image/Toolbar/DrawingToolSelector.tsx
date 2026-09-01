@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from 'react';
+import { useTranslation } from 'react-i18next';
 import classNames from 'classnames';
 import * as Select from '@radix-ui/react-select';
 import { 
@@ -29,21 +30,24 @@ interface ToolConfig {
 
   label: string;
 
+  hint: string;
+
   icon: React.ComponentType<{ size?: number; style?: CSSProperties }>;
 
   style?: CSSProperties;
 
 }
 
-const TOOLS: ToolConfig[] = [
-  { value: 'rectangle', label: 'Box', icon: SquareIcon },
-  { value: 'polygon', label: 'Polygon', icon: TriangleIcon, style: { transform: 'rotate(15deg)' }},
-  { value: 'ellipse', label: 'Ellipse', icon: CircleIcon },
-  { value: 'path', label: 'Path', icon: LineSegmentsIcon },
-  { value: 'intelligent-scissors', label: 'Smart scissors', icon: ScissorsIcon },
-];
-
 export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
+  const { t } = useTranslation('annotation-image');
+
+  const TOOLS: ToolConfig[] = [
+    { value: 'rectangle', label: t('Box'), hint: t('Create rectangle annotations'), icon: SquareIcon },
+    { value: 'polygon', label: t('Polygon'), hint: t('Create polygon annotations'), icon: TriangleIcon, style: { transform: 'rotate(15deg)' }},
+    { value: 'ellipse', label: t('Ellipse'), hint: t('Create circle and ellipse annotations'), icon: CircleIcon },
+    { value: 'path', label: t('Path'), hint: t('Create polyline path annotations'), icon: LineSegmentsIcon },
+    { value: 'intelligent-scissors', label: t('Smart scissors'), hint: t('Trace objects with smart scissors'), icon: ScissorsIcon },
+  ];
 
   const [tool, setTool] = useState<string>(props.tool || 'rectangle');
 
@@ -69,12 +73,13 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
       onValueChange={onChange}>
       <div 
         role="group"
-        aria-label="Drawing tool"
+        aria-label={t('Drawing tool')}
         className={classNames('drawing-tool-selector-trigger', props.active && 'active')}>
 
         <button
           type="button"
-          onClick={onClick}>
+          onClick={onClick}
+          aria-label={current.hint}>
           <current.icon 
             size={18} 
             style={current.style} />
