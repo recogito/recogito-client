@@ -20,7 +20,6 @@ import {
 } from '@components/AnnotationDesktop';
 import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
 import { useFilter } from '@recogito/studio-sdk/components';
-import { Ellipse, Polygon, Rectangle, Spline } from './Icons';
 import { MoreTools } from './MoreTools';
 import {
   ChatsIcon,
@@ -28,10 +27,15 @@ import {
   CursorIcon,
   FunnelSimpleIcon,
   GraduationCapIcon,
+  LineSegmentsIcon,
   MagnifyingGlassMinusIcon,
   MagnifyingGlassPlusIcon,
+  ScissorsIcon,
+  SquareIcon,
+  TriangleIcon,
 } from '@phosphor-icons/react';
 import { useTranslation } from 'react-i18next';
+
 import '@components/Presence/PresenceStack.css';
 
 interface ToolbarProps {
@@ -173,7 +177,7 @@ export const Toolbar = (props: ToolbarProps) => {
               aria-label={t('Create rectangle annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('rectangle')}
             >
-              <Rectangle />
+              <SquareIcon size={18} />
             </button>
 
             <button
@@ -181,7 +185,7 @@ export const Toolbar = (props: ToolbarProps) => {
               aria-label={t('Create polygon annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('polygon')}
             >
-              <Polygon />
+              <TriangleIcon size={18} style={{ transform: 'rotate(15deg)' }} />
             </button>
 
             <button
@@ -189,7 +193,7 @@ export const Toolbar = (props: ToolbarProps) => {
               aria-label={t('Create circle and ellipse annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('ellipse')}
             >
-              <Ellipse />
+              <CircleIcon size={18} />
             </button>
 
             <button
@@ -197,16 +201,15 @@ export const Toolbar = (props: ToolbarProps) => {
               aria-label={t('Create path annotations', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('path')}
             >
-              <Spline />
+              <LineSegmentsIcon size={18} />
             </button>
-
 
             <button
               className={props.tool === 'intelligent-scissors' ? 'active' : undefined}
-              aria-label={t('Create path annotations', { ns: 'annotation-image' })}
+              aria-label={t('Trace shapes with smart scissors', { ns: 'annotation-image' })}
               onClick={() => props.onChangeTool('intelligent-scissors')}
             >
-              Magnetic
+              <ScissorsIcon size={18} />
             </button>
 
             <div className='anno-toolbar-divider' />
