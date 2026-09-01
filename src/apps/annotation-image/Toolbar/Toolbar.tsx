@@ -1,15 +1,19 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Color, PresentUser } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
+import { PresenceStack, useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
-import { PresenceStack } from '@recogito/studio-sdk/components';
-import type {
-  DocumentLayer,
-  DocumentWithContext,
-  Policies,
-  VocabularyTerm,
-} from 'src/Types';
+import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
+import {
+  ChatsIcon,
+  CursorIcon,
+  FunnelSimpleIcon,
+  GraduationCapIcon,
+  MagnifyingGlassMinusIcon,
+  MagnifyingGlassPlusIcon
+} from '@phosphor-icons/react';
 import {
   ColorCodingSelector,
   ColorLegend,
@@ -18,23 +22,14 @@ import {
   useCollapsibleToolbar,
   useColorCoding,
 } from '@components/AnnotationDesktop';
-import { PrivacySelector, type PrivacyMode } from '@components/PrivacySelector';
-import { useFilter } from '@recogito/studio-sdk/components';
+import type {
+  DocumentLayer,
+  DocumentWithContext,
+  Policies,
+  VocabularyTerm,
+} from 'src/Types';
+import { DrawingToolSelector } from './DrawingToolSelector';
 import { MoreTools } from './MoreTools';
-import {
-  ChatsIcon,
-  CircleIcon,
-  CursorIcon,
-  FunnelSimpleIcon,
-  GraduationCapIcon,
-  LineSegmentsIcon,
-  MagnifyingGlassMinusIcon,
-  MagnifyingGlassPlusIcon,
-  ScissorsIcon,
-  SquareIcon,
-  TriangleIcon,
-} from '@phosphor-icons/react';
-import { useTranslation } from 'react-i18next';
 
 import '@components/Presence/PresenceStack.css';
 
@@ -172,45 +167,10 @@ export const Toolbar = (props: ToolbarProps) => {
               <CursorIcon size={18} />
             </button>
 
-            <button
-              className={props.tool === 'rectangle' ? 'active' : undefined}
-              aria-label={t('Create rectangle annotations', { ns: 'annotation-image' })}
-              onClick={() => props.onChangeTool('rectangle')}
-            >
-              <SquareIcon size={18} />
-            </button>
-
-            <button
-              className={props.tool === 'polygon' ? 'active' : undefined}
-              aria-label={t('Create polygon annotations', { ns: 'annotation-image' })}
-              onClick={() => props.onChangeTool('polygon')}
-            >
-              <TriangleIcon size={18} style={{ transform: 'rotate(15deg)' }} />
-            </button>
-
-            <button
-              className={props.tool === 'ellipse' ? 'active' : undefined}
-              aria-label={t('Create circle and ellipse annotations', { ns: 'annotation-image' })}
-              onClick={() => props.onChangeTool('ellipse')}
-            >
-              <CircleIcon size={18} />
-            </button>
-
-            <button
-              className={props.tool === 'path' ? 'active' : undefined}
-              aria-label={t('Create path annotations', { ns: 'annotation-image' })}
-              onClick={() => props.onChangeTool('path')}
-            >
-              <LineSegmentsIcon size={18} />
-            </button>
-
-            <button
-              className={props.tool === 'intelligent-scissors' ? 'active' : undefined}
-              aria-label={t('Trace shapes with smart scissors', { ns: 'annotation-image' })}
-              onClick={() => props.onChangeTool('intelligent-scissors')}
-            >
-              <ScissorsIcon size={18} />
-            </button>
+            <DrawingToolSelector 
+              active={Boolean(props.tool)} 
+              tool={props.tool}
+              onChangetool={props.onChangeTool} />
 
             <div className='anno-toolbar-divider' />
           </>
