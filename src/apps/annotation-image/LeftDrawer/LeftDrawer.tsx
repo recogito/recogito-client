@@ -1,11 +1,11 @@
 import { DocumentMetadata } from '@components/AnnotationDesktop/DocumentMetadata';
 import { useEffect, useState } from 'react';
 import { Faders, Files, ListBullets } from '@phosphor-icons/react';
-import type { Canvas } from '@allmaps/iiif-parser';
+import type { Canvas, IIIFImage } from '@recogito/studio-sdk/iiif';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';
 import { FilterPanel } from '@components/AnnotationDesktop';
-import { IIIFThumbnailStrip, type IIIFImage } from '../IIIF';
+import { IIIFThumbnailStrip } from '../IIIF';
 import type { ActiveUsers } from '../IIIF/useMultiPagePresence';
 import type {
   DocumentWithContext,
