@@ -1,4 +1,4 @@
-import type { Canvas } from '@allmaps/iiif-parser';
+import type { Canvas } from '@recogito/studio-sdk/iiif';
 import type { PresentUser } from '@annotorious/react';
 import { useTranslation } from 'react-i18next';
 

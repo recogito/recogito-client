@@ -4,7 +4,8 @@ import { type PluginInstallationConfig, PluginProvider } from '@recogito/studio-
 import { FilterState } from '@recogito/studio-sdk/components';
 import { TextAnnotationDesktop } from './TextAnnotationDesktop';
 import type { DocumentWithContext, MyProfile } from 'src/Types';
-import { AuthorColorProvider, ColorState, FatalError } from '@components/AnnotationDesktop';
+import { ColorState, FatalError } from '@components/AnnotationDesktop';
+import { AuthorColorProvider } from '@recogito/studio-sdk/components';
 import { I18nextProvider } from 'react-i18next';
 import clientI18next from 'src/i18n/client';
 

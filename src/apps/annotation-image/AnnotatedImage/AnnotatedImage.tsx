@@ -1,13 +1,14 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { AnnotationPopup, SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
+import { AnnotationPopup } from '@components/AnnotationDesktop';
+import { SelectionURLState, UndoStack } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
-import { getImageURL, type IIIFImage } from '../IIIF';
+import { getImageURL, type IIIFImage } from '@recogito/studio-sdk/iiif';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,

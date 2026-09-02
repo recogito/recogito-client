@@ -1,9 +1,8 @@
-import type { Canvas } from '@allmaps/iiif-parser';
+import type { Canvas, IIIFImage } from '@recogito/studio-sdk/iiif';
 import { List, type RowComponentProps } from 'react-window';
 import { IIIFThumbnail } from './IIIFThumbnail';
-import type { IIIFImage } from './useIIIF';
 import type { ActiveUsers } from './useMultiPagePresence';
-import { getResourceLabel } from 'src/util';
+import { getResourceLabel } from '@recogito/studio-sdk/iiif';
 import { useTranslation } from 'react-i18next';
 
 import './IIIFThumbnailStrip.css';
