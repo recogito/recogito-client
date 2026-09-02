@@ -20,7 +20,7 @@ interface DrawingToolSelectorProps {
 
   tool?: string;
 
-  onChangetool(tool: string): void;
+  onChangeTool(tool: string): void;
 
 }
 
@@ -53,7 +53,7 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
 
   const onChange = (value: string) => {
     setTool(value); // Keep local state, even if prop is set to `undefined`
-    props.onChangetool(value);
+    props.onChangeTool(value);
   }
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export const DrawingToolSelector = (props: DrawingToolSelectorProps) => {
 
   const onClick = () => {
     if (!props.active)
-      props.onChangetool(tool);
+      props.onChangeTool(tool);
   }
 
   const current = TOOLS.find((t) => t.value === tool) ?? TOOLS[0];

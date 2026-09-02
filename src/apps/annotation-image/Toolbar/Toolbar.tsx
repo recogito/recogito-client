@@ -170,7 +170,7 @@ export const Toolbar = (props: ToolbarProps) => {
             <DrawingToolSelector 
               active={Boolean(props.tool)} 
               tool={props.tool}
-              onChangetool={props.onChangeTool} 
+              onChangeTool={props.onChangeTool} 
             />
 
             <div className='anno-toolbar-divider' />
