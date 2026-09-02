@@ -28,8 +28,7 @@ const isPDFAnnotation = (a: SupabaseAnnotation) => {
 }
 
 const isImageAnnotation = (a: SupabaseAnnotation) =>
-  (a.target.selector as any)?.type === 'RECTANGLE' ||
-  (a.target.selector as any)?.type === 'POLYGON';
+  'type' in a.target.selector && 'geometry' in a.target.selector;
 
 /**
  * Applies a few clenup tweaks on the annotation:
