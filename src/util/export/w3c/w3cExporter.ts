@@ -28,7 +28,7 @@ const isPDFAnnotation = (a: SupabaseAnnotation) => {
 }
 
 const isImageAnnotation = (a: SupabaseAnnotation) =>
-  'type' in a.target.selector && 'geometry' in a.target.selector;
+  a.target.selector && 'type' in a.target.selector && 'geometry' in a.target.selector;
 
 /**
  * Applies a few clenup tweaks on the annotation:
