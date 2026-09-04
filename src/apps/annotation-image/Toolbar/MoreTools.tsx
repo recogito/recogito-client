@@ -1,4 +1,4 @@
-import { DotsThreeVertical } from '@phosphor-icons/react';
+import { DotsThreeVerticalIcon } from '@phosphor-icons/react';
 import type { PresentUser } from '@annotorious/react';
 import * as Popover from '@radix-ui/react-popover';
 import { ColorCodingSelector, ColorLegend } from '@components/AnnotationDesktop';
@@ -28,7 +28,7 @@ export const MoreTools = (props: MoreToolsProps) => {
   return (
     <Popover.Root>
       <Popover.Trigger>
-        <DotsThreeVertical size={18} weight="bold" />
+        <DotsThreeVerticalIcon size={18} weight="bold" />
       </Popover.Trigger>
 
       <Popover.Content 
