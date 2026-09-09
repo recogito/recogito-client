@@ -4,13 +4,14 @@ import { MetadataModal } from '@components/MetadataModal';
 import { PencilSimple } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Document, IIIFMetadata } from 'src/Types';
+import type { CozyMetadata } from 'cozy-iiif';
+import type { Document } from 'src/Types';
 import './DocumentMetadata.css';
 
 interface Props {
   allowEdit?: boolean;
   document: Document;
-  metadata?: IIIFMetadata[];
+  metadata?: CozyMetadata[];
   onError(error: string): void;
   onUpdated(document: Document): void;
 }
@@ -28,8 +29,8 @@ export const DocumentMetadata = (props: Props) => {
   const external = useMemo(
     () =>
       props.metadata?.map((i) => ({
-        label: Object.values(i.label).flat().at(0),
-        value: Object.values(i.value).flat().at(0),
+        label: i.label,
+        value: i.value,
       })),
     [props.metadata]
   );

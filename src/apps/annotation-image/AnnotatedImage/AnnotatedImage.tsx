@@ -10,7 +10,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
-import { getImageURL, type IIIFImage } from '@recogito/studio-sdk/iiif';
+import type { CozyCanvas, CozyImageResource } from 'cozy-iiif';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
@@ -47,7 +47,9 @@ interface AnnotatedImageProps {
 
   isLocked: boolean;
 
-  currentImage: IIIFImage;
+  currentImage: CozyImageResource;
+
+  currentCanvas?: CozyCanvas;
 
   isPresentationManifest?: boolean;
 
@@ -99,15 +101,18 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   } = props;
 
   const { source, tilesource } = useMemo(() => {
-    if (typeof props.currentImage === 'string') {
-      // Image API - use URL as both 'source' ID and for tilesource URL
-      return { source: props.currentImage, tilesource: props.currentImage }
-    } else {
-      const tilesource = getImageURL(props.currentImage);
-      const source = props.currentImage.uri;
-      return { source, tilesource };
-    }
-  }, [props.currentImage]);
+    const image = props.currentImage;
+
+    const tilesource = image
+      ? image.type === 'static' ? image.url : image.serviceUrl
+      : undefined;
+
+    // 'source' ID: use the canvas URI for a Presentation
+    // manifest, otherwise the image URL itself
+    const source = props.currentCanvas?.id ?? tilesource;
+
+    return { source, tilesource };
+  }, [props.currentImage, props.currentCanvas]);
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -204,7 +209,9 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     }
   }
 
-  const onSelectionChange = (user: PresentUser) => props.onPageActivity!({ source, user });
+  const onSelectionChange = (user: PresentUser) => {
+    if (source) props.onPageActivity!({ source, user });
+  };
 
   return (
     <OpenSeadragonAnnotator
@@ -232,7 +239,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           defaultLayer={props.activeLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={props.privacy === 'PRIVATE'} 
-          source={props.isPresentationManifest ? props.currentImage : undefined} 
+          source={props.isPresentationManifest ? props.currentCanvas?.id : undefined}
           onInitialLoad={onInitialLoad}
           onOffPageActivity={props.onPageActivity}
           onPresence={props.onChangePresent}

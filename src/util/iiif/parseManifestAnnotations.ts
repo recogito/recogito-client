@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Quill from 'quill';
 import { parseW3CImageAnnotation, type AnnotationBody, type ImageAnnotation } from '@annotorious/annotorious';
 import type { EmbeddedLayer } from 'src/Types';
-import { getResourceLabel, type Manifest } from '@recogito/studio-sdk/iiif';
+import type { CozyManifest } from 'cozy-iiif';
 
 const crosswalkBodies = (bodies: AnnotationBody[]): AnnotationBody[] => {
   const keepPurposes = new Set(['commenting', 'replying', 'describing']);
@@ -24,10 +24,10 @@ const crosswalkBodies = (bodies: AnnotationBody[]): AnnotationBody[] => {
   } as AnnotationBody));
 }
 
-export const parseManifestAnnotations = (manifest: Manifest) => {
+export const parseManifestAnnotations = (manifest: CozyManifest) => {
   const layer: EmbeddedLayer = {
-    id: manifest.uri,
-    name: getResourceLabel(manifest.label),
+    id: manifest.id,
+    name: manifest.getLabel(),
     is_active: false // Read-only
   }
 
@@ -37,7 +37,7 @@ export const parseManifestAnnotations = (manifest: Manifest) => {
       const items = ('items' in page ? page.items as any[] : []) || [];
 
       const crosswalked = items.map(item => ({
-          layer_id: manifest.uri,
+          layer_id: manifest.id,
           ...parseW3CImageAnnotation(item).parsed
       })).map(a => ({
         ...a,
@@ -48,7 +48,7 @@ export const parseManifestAnnotations = (manifest: Manifest) => {
     }, []);
 
     if (onThisCanvas.length > 0) {
-      agg[canvas.uri] = onThisCanvas;
+      agg[canvas.id] = onThisCanvas;
       return agg;
     } else {
       return agg;
