@@ -1,7 +1,7 @@
 import { EmptyMetadata } from '@components/AnnotationDesktop/DocumentMetadata/EmptyMetadata.tsx';
 import { MetadataList } from '@components/AnnotationDesktop/DocumentMetadata/MetadataList';
 import { MetadataModal } from '@components/MetadataModal';
-import { PencilSimple } from '@phosphor-icons/react';
+import { PencilSimpleIcon } from '@phosphor-icons/react';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { CozyMetadata } from 'cozy-iiif';
@@ -26,18 +26,11 @@ export const DocumentMetadata = (props: Props) => {
     [props.document]
   );
 
-  const external = useMemo(
-    () =>
-      props.metadata?.map((i) => ({
-        label: i.label,
-        value: i.value,
-      })),
-    [props.metadata]
-  );
-
   const hasMedata = useMemo(
-    () => internal && internal?.length > 0 || external && external?.length > 0,
-    [external, internal]
+    () =>
+      (internal && internal?.length > 0) ||
+      (props.metadata && props.metadata?.length > 0),
+    [props.metadata, internal]
   );
 
   if (!(hasMedata || props.allowEdit)) {
@@ -55,7 +48,7 @@ export const DocumentMetadata = (props: Props) => {
               onClick={() => setModal(true)}
               aria-label={t('edit document metadata', { ns: 'a11y' })}
             >
-              <PencilSimple />
+              <PencilSimpleIcon />
             </button>
           )}
         </div>
@@ -63,16 +56,14 @@ export const DocumentMetadata = (props: Props) => {
 
       {internal && internal?.length > 0 && <MetadataList items={internal} />}
 
-      {!(internal && internal.length > 0) && (
-        <EmptyMetadata />
-      )}
+      {!(internal && internal.length > 0) && <EmptyMetadata />}
 
-      {external && external?.length > 0 && (
+      {props.metadata && props.metadata?.length > 0 && (
         <>
           <div className='document-metadata-header'>
             <h2>{t('External', { ns: 'annotation-common' })}</h2>
           </div>
-          <MetadataList items={external} />
+          <MetadataList items={props.metadata} />
         </>
       )}
 
