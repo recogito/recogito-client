@@ -1,11 +1,20 @@
 import fs from 'fs';
+import path from 'path';
 
-console.log('Copying pdf.worker.min.mjs to /public');
+console.log('Copying PDF.js worker files to /public');
+
+const BASE = './node_modules/@recogito/react-pdf-annotator/dist';
+
+const FILES = [
+  `${BASE}/pdf.worker.min.mjs`,
+  `${BASE}/jbig2.wasm`,
+  `${BASE}/jbig2_nowasm_fallback.js`
+]
 
 try {
-  const path = './node_modules/@recogito/react-pdf-annotator/dist/pdf.worker.min.mjs';
-  fs.copyFileSync(path, './public/pdf.worker.min.mjs');
+  FILES.forEach(filepath =>
+    fs.copyFileSync(filepath, `./public/${path.basename(filepath)}`));
 } catch (error) {
-  console.error('Error copying pdf.worker.min.mjs');
+  console.error('Error copying PDF.js worker files');
   console.error(error);
 }
