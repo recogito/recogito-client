@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@1password/sdk": "^0.4.0",
-    "@allmaps/iiif-parser": "^1.0.0-beta.47",
     "@annotorious/annotorious": "^3.8.10",
     "@annotorious/plugin-magnetic-outline": "^0.3.1",
     "@annotorious/plugin-tools": "^1.6.0",
@@ -51,7 +50,7 @@
     "@recogito/pdf-annotator": "^4.3.1",
     "@recogito/react-pdf-annotator": "^4.3.1",
     "@recogito/react-text-annotator": "^4.3.1",
-    "@recogito/studio-sdk": "^0.10.0",
+    "@recogito/studio-sdk": "^0.11.0",
     "@recogito/text-annotator": "^4.3.1",
     "@recogito/text-annotator-plugin-awareness": "^1.1.1",
     "@recogito/text-annotator-tei": "^4.3.1",
