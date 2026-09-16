@@ -1,11 +1,11 @@
-import type { Canvas } from '@recogito/studio-sdk/iiif';
+import type { CozyCanvas } from 'cozy-iiif';
 import type { PresentUser } from '@annotorious/react';
 import { useTranslation } from 'react-i18next';
 
 interface IIIFThumnailProps {
   activeUsers?: PresentUser[];
 
-  canvas: Canvas;
+  canvas: CozyCanvas;
 }
 
 export const IIIFThumbnail = (props: IIIFThumnailProps) => {
@@ -14,9 +14,7 @@ export const IIIFThumbnail = (props: IIIFThumnailProps) => {
   // For now, just slice at 10
   const activeUsers = (props.activeUsers || []).slice(0, 10);
 
-  const { uri } = props.canvas.image;
-
-  const src = `${uri.endsWith('/') ? uri : `${uri}/`}full/240,/0/default.jpg`;
+  const src = props.canvas.getThumbnailURL(240);
 
   return (
     <div className='thumbnail-wrapper'>

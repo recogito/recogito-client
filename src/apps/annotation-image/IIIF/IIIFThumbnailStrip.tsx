@@ -1,8 +1,7 @@
-import type { Canvas, IIIFImage } from '@recogito/studio-sdk/iiif';
+import type { CozyCanvas } from 'cozy-iiif';
 import { List, type RowComponentProps } from 'react-window';
 import { IIIFThumbnail } from './IIIFThumbnail';
 import type { ActiveUsers } from './useMultiPagePresence';
-import { getResourceLabel } from '@recogito/studio-sdk/iiif';
 import { useTranslation } from 'react-i18next';
 
 import './IIIFThumbnailStrip.css';
@@ -11,40 +10,30 @@ interface IIIFThumbnailStripProps {
 
   activeUsers: ActiveUsers;
 
-  canvases: Canvas[];
+  canvases: CozyCanvas[];
 
-  currentImage?: IIIFImage;
+  currentCanvas?: CozyCanvas;
 
-  onSelect(image: IIIFImage): void;
+  onSelect(canvas: CozyCanvas): void;
 }
 
 export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
   const { i18n } = useTranslation([]);
 
-  const isSelected = (canvas: Canvas) => {
-    if (!props.currentImage) return false;
+  const isSelected = (canvas: CozyCanvas) =>
+    props.currentCanvas?.id === canvas.id;
 
-    // Shouldn't ever be the case, unless we want to start
-    // showing a thumbnail strip for a (single) Image API image
-    // at some point.
-    if (typeof props.currentImage === 'string') {
-      return props.currentImage?.startsWith(canvas.image.uri);
-    } else {
-      return props.currentImage.uri === canvas.uri;
-    }
-  }
-
-  const Row = (arg: RowComponentProps<{ canvases: Canvas[]}>) => {   
+  const Row = (arg: RowComponentProps<{ canvases: CozyCanvas[]}>) => {
     const canvas = props.canvases[arg.index];
-    const label = getResourceLabel(canvas.label, i18n.language);
-    
+    const label = canvas.getLabel(i18n.language);
+
     return (
-      <div 
-        className={`thumbnail-strip-item${isSelected(canvas) ? ' selected': ''}`} 
-        style={arg.style} 
+      <div
+        className={`thumbnail-strip-item${isSelected(canvas) ? ' selected': ''}`}
+        style={arg.style}
         onClick={() => props.onSelect(canvas)}>
         <IIIFThumbnail
-          activeUsers={props.activeUsers[canvas.uri]}
+          activeUsers={props.activeUsers[canvas.id]}
           canvas={canvas}
         />
         <span className="label">{label}</span>

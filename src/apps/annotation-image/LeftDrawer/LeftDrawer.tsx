@@ -1,7 +1,7 @@
 import { DocumentMetadata } from '@components/AnnotationDesktop/DocumentMetadata';
 import { useEffect, useState } from 'react';
 import { Faders, Files, ListBullets } from '@phosphor-icons/react';
-import type { Canvas, IIIFImage } from '@recogito/studio-sdk/iiif';
+import type { CozyCanvas, CozyMetadata } from 'cozy-iiif';
 import type { PresentUser } from '@annotorious/react';
 import { animated, useTransition, easings } from '@react-spring/web';
 import { FilterPanel } from '@components/AnnotationDesktop';
@@ -9,7 +9,6 @@ import { IIIFThumbnailStrip } from '../IIIF';
 import type { ActiveUsers } from '../IIIF/useMultiPagePresence';
 import type {
   DocumentWithContext,
-  IIIFMetadata,
   Layer,
   MyProfile,
 } from 'src/Types';
@@ -20,11 +19,11 @@ import './LeftDrawer.css';
 interface LeftDrawerProps {
   activeUsers: ActiveUsers;
 
-  currentImage?: IIIFImage;
+  currentCanvas?: CozyCanvas;
 
   document: DocumentWithContext;
 
-  iiifCanvases: Canvas[];
+  iiifCanvases: CozyCanvas[];
 
   layers?: Layer[];
 
@@ -32,13 +31,13 @@ interface LeftDrawerProps {
 
   me: MyProfile;
 
-  metadata?: IIIFMetadata[];
+  metadata?: CozyMetadata[];
 
   open: boolean;
 
   present: PresentUser[];
 
-  onChangeImage(image: IIIFImage): void;
+  onChangeImage(canvas: CozyCanvas): void;
 
   onError(error: string): void;
 
@@ -118,7 +117,7 @@ export const LeftDrawer = (props: LeftDrawerProps) => {
                 <IIIFThumbnailStrip
                   activeUsers={props.activeUsers}
                   canvases={props.iiifCanvases}
-                  currentImage={props.currentImage}
+                  currentCanvas={props.currentCanvas}
                   onSelect={props.onChangeImage}
                 />
               )}

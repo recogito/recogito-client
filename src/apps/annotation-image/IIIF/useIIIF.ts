@@ -41,16 +41,14 @@ export const useIIIF = (document: DocumentWithContext) => {
   const embeddedAnnotations = useMemo(() => {
     if (!embeddedAnnotationData) return;
 
-    const id = typeof iiif.currentImage === 'string'
-      ? iiif.currentImage
-      : iiif.currentImage?.uri;
+    const id = iiif.currentCanvas?.id;
     if (!id) return;
 
     const annotations = embeddedAnnotationData.annotations[id];
     const layer = embeddedAnnotationData.layer;
 
     return { annotations, layer };
-  }, [embeddedAnnotationData, iiif.currentImage]);
+  }, [embeddedAnnotationData, iiif.currentCanvas]);
 
   return { ...iiif, embeddedAnnotations };
 };

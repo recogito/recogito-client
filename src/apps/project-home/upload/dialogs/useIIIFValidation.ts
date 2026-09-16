@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IIIF } from '@allmaps/iiif-parser';
-import { getResourceLabel, sanitizeManifest } from '@recogito/studio-sdk/iiif';
+import { Cozy } from 'cozy-iiif';
 
 /**
  * Some basic sanity checking on the URL string
@@ -43,37 +42,43 @@ export const validateIIIF = (url: string, locale: string): Promise<ValidationRes
       .then((response) => response.json())
       .then(data => {
           try {
-            const parsed = IIIF.parse(sanitizeManifest(data));
+            const parsed = Cozy.parse(data, url);
 
-            if (parsed.type === 'image') {
+            if (parsed.type === 'iiif-image') {
               // Image API v1/2/3
               return {
                 isValid: true,
                 result: {
                   type: 'image',
-                  majorVersion: parsed.majorVersion
+                  majorVersion:
+                    'majorVersion' in parsed.resource ? parsed.resource.majorVersion : 0
                 }
               } as ValidationResult;
             } else if (parsed.type === 'manifest') {
               // Presentation API v1/2/3
-              const label = getResourceLabel(parsed.label, locale);
+              const label = parsed.resource.getLabel(locale);
               return {
                 isValid: true,
                 result: {
                   type: 'manifest',
-                  majorVersion: parsed.majorVersion, 
-                  label 
+                  majorVersion: parsed.resource.majorVersion,
+                  label
                 }
               } as ValidationResult;
-            } else {
-              // Probably collection manifest... unsupported!
+            } else if (parsed.type === 'collection') {
+              // Collection manifest... unsupported!
               return {
                 isValid: false,
                 result: {
-                  type: parsed.type,
-                  majorVersion: parsed.majorVersion
+                  type: 'collection',
+                  majorVersion: parsed.resource.majorVersion
                 },
                 error: 'unsupported_manifest_type'
+              } as ValidationResult;
+            } else {
+              return {
+                isValid: false,
+                error: 'invalid_manifest'
               } as ValidationResult;
             }
           } catch (error) {
