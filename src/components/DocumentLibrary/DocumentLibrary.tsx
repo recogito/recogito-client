@@ -686,7 +686,9 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                             key={c.id}
                           >
                             <FolderIcon />
-                            <span className='name'>{c.name}</span>
+                            <span className='name' title={c.name}>
+                              {c.name}
+                            </span>
                             <span
                               className={
                                 count === 0 ? 'badge disabled' : 'badge'
@@ -741,7 +743,6 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       hasMore={hasMore}
                       loadMoreItems={loadMoreItems}
                       isItemLoaded={isItemLoaded}
-                      containerWidth={900}
                       view={view}
                       onSort={onSort}
                       sort={sort}
