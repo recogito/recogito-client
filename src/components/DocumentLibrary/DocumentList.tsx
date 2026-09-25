@@ -3,7 +3,7 @@ import { useInfiniteLoader } from 'react-window-infinite-loader';
 import type { LibraryDocument } from './DocumentLibrary';
 import classNames from 'classnames';
 import type { Column } from '@table-library/react-table-library/compact';
-import { useMemo } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import './DocumentList.css';
 import { CARD_WIDTH, GAP, getGridTemplate } from './helpers';
 import { DocumentListRow } from './DocumentListRow';
@@ -21,16 +21,33 @@ interface DocumentListProps {
   hasMore: boolean;
   loadMoreItems: () => Promise<void>;
   isItemLoaded: (index: number) => boolean;
-  containerWidth: number;
   view: 'mine' | 'all' | 'collection';
   sort: { key: string; direction: 'asc' | 'desc' };
   onSort: (key: string) => void;
 }
 
 export const DocumentList = (props: DocumentListProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(0);
+
+  // track the list's actual width, which depends on the collections sidebar
+  useLayoutEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    setContainerWidth(el.clientWidth);
+
+    const observer = new ResizeObserver(([entry]) =>
+      setContainerWidth(entry.contentRect.width)
+    );
+    observer.observe(el);
+
+    return () => observer.disconnect();
+  }, []);
+
   const columnCount =
     props.display === 'cards'
-      ? Math.floor(props.containerWidth / (CARD_WIDTH + GAP)) || 1
+      ? Math.floor(containerWidth / (CARD_WIDTH + GAP)) || 1
       : 1;
   const rowCount =
     Math.ceil(props.documents.length / columnCount) + (props.hasMore ? 1 : 0);
@@ -54,7 +71,7 @@ export const DocumentList = (props: DocumentListProps) => {
   });
 
   return (
-    <div className='document-list'>
+    <div className='document-list' ref={containerRef}>
       {props.display === 'rows' && (
         <div className='document-list-header' style={{ gridTemplateColumns }}>
           <div>{/* checkbox */}</div>
@@ -96,7 +113,7 @@ export const DocumentList = (props: DocumentListProps) => {
         rowHeight={rowHeight}
         rowProps={{
           columns: props.columns,
-          containerWidth: props.containerWidth,
+          containerWidth,
           disabledIds: props.disabledIds,
           display: props.display,
           documents: props.documents,
