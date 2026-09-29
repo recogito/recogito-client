@@ -4,7 +4,7 @@ import type { Annotation, Annotator, PresentUser, User } from '@annotorious/reac
 import { SupabasePlugin as Supabase } from '@recogito/annotorious-supabase';
 import type { SupabasePluginConfig, OffPageActivityEvent } from '@recogito/annotorious-supabase';
 import type { PostgrestError } from '@supabase/supabase-js';
-import { useAppearanceProvider } from '@components/Presence';
+import { useAppearanceProvider } from '@recogito/studio-sdk/components';
 
 // Re-export isMe utility
 export { isMe } from '@recogito/annotorious-supabase';

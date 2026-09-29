@@ -34,7 +34,7 @@ if (isAlreadyMember) {
 
 ---
 <HeaderLayout title='join'>
-  <JoinProjectApp client:load project={project.data} />
+  <JoinProjectApp client:only='react' project={project.data} />
 </HeaderLayout>
 
 <style>

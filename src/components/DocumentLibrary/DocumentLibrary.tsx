@@ -8,16 +8,24 @@ import type { Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
 import { supabase } from '@backend/supabaseBrowserClient';
 import type { Column } from '@table-library/react-table-library/compact';
+import classNames from 'classnames';
 import './DocumentLibrary.css';
 import { DocumentActions } from './DocumentActions';
 import { PublicWarningMessage } from './PublicWarningMessage';
 import { CollectionDocumentActions } from './CollectionDocumentActions';
-import { CheckCircle, Files, Folder, User } from '@phosphor-icons/react';
-import { LoadingOverlay } from '@components/LoadingOverlay';
+import {
+  CheckCircleIcon,
+  CloudArrowUpIcon,
+  FilesIcon,
+  FolderIcon,
+  UserIcon,
+} from '@phosphor-icons/react';
+import { Spinner } from '@components/Spinner';
 import { DialogContent } from '@components/DialogContent';
 import { useTranslation } from 'react-i18next';
 import { DocumentList } from './DocumentList';
 import { MissingBadge } from './MissingBadge';
+import { SUPPORTED_UPLOAD_FORMATS } from '@util/general';
 
 export type LibraryDocument = Pick<
   Document,
@@ -46,6 +54,10 @@ export interface DocumentLibraryProps {
   clearDirtyFlag(): void;
   onCancel(): void;
   UploadActions?: React.ReactNode;
+  dropzone?: {
+    getRootProps(): Record<string, any>;
+    isDragActive: boolean;
+  };
   onDocumentsSelected(documentIds: string[]): void;
   onUpdated(document: Document): void;
   onDeleteFromLibrary?(document: Document): void;
@@ -69,7 +81,15 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     'common',
     'collection-management',
   ]);
-  const { UploadActions } = props;
+  const { UploadActions, dropzone } = props;
+
+  const isDragActive = Boolean(dropzone?.isDragActive);
+
+  // prevent browser from opening dropped files if the user narrowly misses the dropzone
+  const onDropNearMiss = (evt: React.DragEvent) => {
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'none';
+  };
 
   const [view, setView] = useState<'mine' | 'all' | 'collection'>('mine');
   const [documentsView, setDocumentsView] =
@@ -94,6 +114,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     myDocs: 0,
     allDocs: 0,
   });
+  const [statsRefresh, setStatsRefresh] = useState(0);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   // see sortKey in columnsCollection
@@ -153,11 +174,34 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     };
 
     fetchStats();
-  }, [collections, props.user.id]);
+  }, [collections, props.user.id, statsRefresh]);
 
   const allowEditMetadata = useCallback(
     (item: any) => item.created_by === props.user.id && !props.readOnly,
     [props.user, props.readOnly]
+  );
+
+  // Update local document state to stay in sync with remote changes
+  const patchDocument = useCallback(
+    (id: string, changes: Partial<LibraryDocument>) =>
+      setDocuments((prev) => {
+        if (!prev) return prev;
+
+        return prev.map((d) => (d.id === id ? { ...d, ...changes } : d));
+      }),
+    []
+  );
+
+  const onUpdated = useCallback(
+    (document: Document) => {
+      patchDocument(document.id, {
+        name: document.name,
+        meta_data: document.meta_data,
+      });
+
+      props.onUpdated(document);
+    },
+    [patchDocument, props]
   );
 
   const handleTogglePrivate = (document: Document) => {
@@ -165,6 +209,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       setPublicToggleDoc(document);
       setPublicWarningOpen(true);
     } else {
+      patchDocument(document.id, { is_private: true });
       props.onTogglePrivate(document);
     }
   };
@@ -176,6 +221,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   const handleWarningConfirm = () => {
     if (publicToggleDoc) {
+      patchDocument(publicToggleDoc.id, { is_private: false });
       props.onTogglePrivate(publicToggleDoc);
     }
     setPublicWarningOpen(false);
@@ -242,6 +288,16 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     return () => clearTimeout(searchDebounce);
   }, [search]);
 
+  // Update state when a new file is uploaded
+  useEffect(() => {
+    if (!props.dataDirty || !props.open || loading) return;
+
+    props.clearDirtyFlag();
+
+    fetchDocs(true);
+    setStatsRefresh((n) => n + 1);
+  }, [props.dataDirty, props.open, loading]);
+
   const isItemLoaded = (index: number) => {
     // if we don't have documents yet, nothing is loaded
     if (!documents) return false;
@@ -303,11 +359,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           <DocumentActions
             allowEditMetadata={!props.readOnly && allowEditMetadata(item)}
-            onDelete={() =>
-              props.onDeleteFromLibrary
-                ? props.onDeleteFromLibrary(item as Document)
-                : {}
-            }
+            onDelete={() => handleDeleteFromLibrary(item as Document)}
             showPrivate={!props.readOnly}
             isPrivate={item.is_private}
             onOpenMetadata={() => {
@@ -347,11 +399,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         <>
           <DocumentActions
             allowEditMetadata={allowEditMetadata(item)}
-            onDelete={() =>
-              currentDocument && props.onDeleteFromLibrary
-                ? props.onDeleteFromLibrary(currentDocument)
-                : {}
-            }
+            onDelete={() => {
+              if (currentDocument) {
+                handleDeleteFromLibrary(currentDocument);
+              }
+            }}
             onOpenMetadata={() => {
               setCurrentDocument(item as Document);
               setMetaOpen(true);
@@ -410,11 +462,11 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
       renderCell: (item) =>
         props.disabledIds.includes(item.id as string) ? (
           <div className='revision-cell'>
-            <CheckCircle size={24} />
+            <CheckCircleIcon size={24} />
           </div>
         ) : (
           <div className='revision-cell'>
-            <CheckCircle size={24} color='green' />
+            <CheckCircleIcon size={24} color='green' />
           </div>
         ),
     },
@@ -498,6 +550,29 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     });
   }
 
+  function handleDeleteFromLibrary(document: Document) {
+    if (!props.onDeleteFromLibrary) return;
+
+    setSelectedIds((prevSelected) => {
+      const doc = documents?.find((d) => d.id === document.id);
+
+      const childIds = doc?.is_document_group
+        ? (documents || [])
+            .filter((d) => d.document_group_id === doc.id)
+            .map((d) => d.id)
+        : [];
+
+      return prevSelected.filter(
+        (id) =>
+          id !== document.id &&
+          id !== doc?.document_group_id &&
+          !childIds.includes(id)
+      );
+    });
+
+    props.onDeleteFromLibrary(document);
+  }
+
   const handleCancel = () => {
     setSelectedIds([]);
     props.onCancel();
@@ -517,11 +592,18 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
 
   return (
     <>
-      {loading && props.open && <LoadingOverlay />}
       <Dialog.Root open={props.open}>
         <Dialog.Portal>
-          <Dialog.Overlay className='dialog-overlay' />
-          <DialogContent className='dialog-content-doc-lib'>
+          <Dialog.Overlay
+            className='dialog-overlay'
+            onDragOver={onDropNearMiss}
+            onDrop={onDropNearMiss}
+          />
+          <DialogContent
+            className='dialog-content-doc-lib'
+            onDragOver={onDropNearMiss}
+            onDrop={onDropNearMiss}
+          >
             <section className='doc-lib-title'>
               <Dialog.Title className='dialog-title'>
                 {t('Add Document', { ns: 'project-home' })}
@@ -544,7 +626,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         setActiveCollection(0);
                       }}
                     >
-                      <Files />
+                      <FilesIcon />
                       <span className='name'>
                         {t('All Documents', { ns: 'project-home' })}
                       </span>
@@ -565,7 +647,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                         setActiveCollection(0);
                       }}
                     >
-                      <User />
+                      <UserIcon />
                       <span className='name'>
                         {t('My Documents', { ns: 'project-home' })}
                       </span>
@@ -603,8 +685,10 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                             }}
                             key={c.id}
                           >
-                            <Folder />
-                            <span className='name'>{c.name}</span>
+                            <FolderIcon />
+                            <span className='name' title={c.name}>
+                              {c.name}
+                            </span>
                             <span
                               className={
                                 count === 0 ? 'badge disabled' : 'badge'
@@ -642,7 +726,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                   </div>
                 </div>
 
-                <div style={{ height: 450 }}>
+                <div
+                  className={classNames('doc-lib-list', {
+                    'drag-active': isDragActive,
+                  })}
+                  {...(dropzone ? dropzone.getRootProps() : {})}
+                >
                   {documents && (
                     <DocumentList
                       documents={documents}
@@ -654,11 +743,33 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       hasMore={hasMore}
                       loadMoreItems={loadMoreItems}
                       isItemLoaded={isItemLoaded}
-                      containerWidth={900}
                       view={view}
                       onSort={onSort}
                       sort={sort}
                     />
+                  )}
+                  {loading && (
+                    <div className='doc-lib-list-loading'>
+                      <Spinner />
+                    </div>
+                  )}
+                  {isDragActive && (
+                    <div className='dropzone-hint-wrapper'>
+                      <div className='dropzone-hint'>
+                        <div className='dropzone-hint-popup'>
+                          <CloudArrowUpIcon size={32} />
+                          <h1>
+                            {t('drop_files_hint', { ns: 'project-home' })}
+                          </h1>
+                          <p>
+                            {t('supported_formats', {
+                              ns: 'project-home',
+                              formats: SUPPORTED_UPLOAD_FORMATS,
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
               </section>
@@ -691,7 +802,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
             setMetaOpen(false);
             setCurrentDocument(undefined);
           }}
-          onUpdated={props.onUpdated!}
+          onUpdated={onUpdated}
           onError={props.onError!}
           readOnly={!allowEditMetadata(currentDocument)}
         />

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { PresentUser, User } from '@annotorious/react';
 import { Detective } from '@phosphor-icons/react';
-import { useAuthorColors } from '@components/AnnotationDesktop';
+import { useAuthorColors } from '@recogito/studio-sdk/components';
 import { Avatar } from '@components/Avatar';
 import { getInitials } from '@components/AccountActions';
 

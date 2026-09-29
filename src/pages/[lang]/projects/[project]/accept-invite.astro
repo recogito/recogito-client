@@ -29,7 +29,7 @@ if (!invitation.data || invitation.error) {
 ---
 
 <HeaderLayout title='accept-invite'>
-  <AcceptInviteApp client:load invitation={invitation.data} />
+  <AcceptInviteApp client:only='react' invitation={invitation.data} />
 </HeaderLayout>
 
 <style>
