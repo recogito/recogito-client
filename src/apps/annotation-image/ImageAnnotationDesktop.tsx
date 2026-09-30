@@ -285,12 +285,16 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     // hash, otherwise we'll get looped right back.
     if (clearSelection) clearSelectionURLHash();
 
-    if (typeof source === 'string') {
-      const canvas = canvases.find((c) => c.id === source);
-      if (canvas) setCurrentCanvas(canvas);
-    } else {
-      setCurrentCanvas(source);
-    }
+    const canvas = typeof source === 'string'
+      ? canvases.find((c) => c.id === source)
+      : source;
+
+    if (!canvas || canvas.id === currentCanvas?.id) return;
+
+    // deselect annotations before canvas-switch remount
+    anno?.cancelSelected();
+
+    setCurrentCanvas(canvas);
   };
 
   const onError = (error: string) =>
