@@ -17,29 +17,41 @@ interface IIIFThumbnailStripProps {
   onSelect(canvas: CozyCanvas): void;
 }
 
+interface RowProps {
+
+  activeUsers: ActiveUsers;
+
+  canvases: CozyCanvas[];
+
+  currentCanvasId?: string;
+
+  language: string;
+
+  onSelect(canvas: CozyCanvas): void;
+
+}
+
+const Row = (props: RowComponentProps<RowProps>) => {
+  const canvas = props.canvases[props.index];
+  const label = canvas.getLabel(props.language);
+  const isSelected = props.currentCanvasId === canvas.id;
+
+  return (
+    <div
+      className={`thumbnail-strip-item${isSelected ? ' selected': ''}`}
+      style={props.style}
+      onClick={() => props.onSelect(canvas)}>
+      <IIIFThumbnail
+        activeUsers={props.activeUsers[canvas.id]}
+        canvas={canvas}
+      />
+      <span className="label">{label}</span>
+    </div>
+  )
+}
+
 export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
   const { i18n } = useTranslation([]);
-
-  const isSelected = (canvas: CozyCanvas) =>
-    props.currentCanvas?.id === canvas.id;
-
-  const Row = (arg: RowComponentProps<{ canvases: CozyCanvas[]}>) => {
-    const canvas = props.canvases[arg.index];
-    const label = canvas.getLabel(i18n.language);
-
-    return (
-      <div
-        className={`thumbnail-strip-item${isSelected(canvas) ? ' selected': ''}`}
-        style={arg.style}
-        onClick={() => props.onSelect(canvas)}>
-        <IIIFThumbnail
-          activeUsers={props.activeUsers[canvas.id]}
-          canvas={canvas}
-        />
-        <span className="label">{label}</span>
-      </div>
-    )
-  }
 
   return (
     <List
@@ -47,7 +59,13 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
       rowComponent={Row}
       rowCount={props.canvases.length}
       rowHeight={170}
-      rowProps={{ canvases: props.canvases }}
+      rowProps={{
+        activeUsers: props.activeUsers,
+        canvases: props.canvases,
+        currentCanvasId: props.currentCanvas?.id,
+        language: i18n.language,
+        onSelect: props.onSelect
+      }}
     />
   )
 
