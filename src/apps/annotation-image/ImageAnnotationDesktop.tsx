@@ -368,6 +368,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
             <div className='ia-annotated-image-container'>
               {policies && currentImage && activeLayer && (
                 <AnnotatedImage
+                  key={currentCanvas?.id}
                   ref={viewer}
                   activeLayer={activeLayer}
                   authToken={authToken}
