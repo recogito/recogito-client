@@ -250,6 +250,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       }
 
       <OpenSeadragonViewer
+        key={props.currentCanvas?.id}
         ref={ref}
         className="ia-osd-container"
         options={options} />
