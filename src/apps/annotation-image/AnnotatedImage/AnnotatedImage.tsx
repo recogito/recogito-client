@@ -227,9 +227,6 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       filter={filter}
       style={props.style}>
 
-      <UndoStack
-        undoEmpty={true} />
-
       <AnnotoriousPlugin<AnnotoriousOpenSeadragonAnnotator>
         plugin={ToolsPlugin} />
 
@@ -251,7 +248,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
           onSaveError={props.onSaveError} 
-          onSelectionChange={props.onPageActivity ? onSelectionChange : undefined} />
+          onSelectionChange={props.onPageActivity ? onSelectionChange : undefined}>
+         
+          {plugin => (
+            <UndoStack backend={plugin} undoEmpty={true} />
+          )}
+
+        </SupabasePlugin>
       }
 
       <OpenSeadragonViewer
