@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { type Annotation, type Annotator, type ChangeSet, useAnnotator } from '@annotorious/react';
+import { useEffect, useRef } from 'react';
+import { type Annotation, type Annotator, useAnnotator } from '@annotorious/react';
 import type { SupabasePlugin } from '@recogito/annotorious-supabase';
 
 export const isMac = (() => {
@@ -8,11 +8,29 @@ export const isMac = (() => {
   return navigator.userAgent.indexOf('Mac OS X') !== -1;
 })();
 
+const isEditable = (target: EventTarget | null) =>
+  target instanceof HTMLElement &&
+  (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+
 export const useKeyboardUndoRedo = (backend: ReturnType<typeof SupabasePlugin>) => {
   const anno = useAnnotator<Annotator>();
 
+  // Undo/redo queue
+  const queue = useRef<Promise<void>>(Promise.resolve());
+
   useEffect(() => {
     if (!anno) return;
+
+    const restore = (annotations: Annotation[]) => {
+      annotations.forEach(a => {
+        queue.current = queue.current
+          .then(() => backend.restoreAnnotation(a))
+          .catch(error => { 
+            console.error('Could not restore annotation', a);
+            console.error(error);
+          });
+      });
+    };
 
     // Note: undo/redo history capture local changes made by this
     // user ONLY. Changes are debounced and aggregated within 250ms, 
@@ -26,16 +44,20 @@ export const useKeyboardUndoRedo = (backend: ReturnType<typeof SupabasePlugin>) 
       const changes = anno.peekUndo();
       if (!changes) return;
       
-      const hasDeleted = (changes?.deleted ?? []).length > 0;
-      if (hasDeleted) {
+      const deleted = changes.deleted ?? [];
+      if (deleted.length > 0) {
         // Because Supabase soft-deletes annotations, a restore
         // would cause a "duplicate id" error in the backend.
          
-        // 1. Supress lifecycle events for this restore
+        // 1. Suppress lifecycle events for this restore
         anno.undo({ silent: true });
 
         // 2. Handle the actual backend restore op separately
-        restore(changes);
+        // Restore deleted via the safe un-archive method
+        restore(deleted);
+
+        // TODO we'd need to trigger separate create/update actions 
+        // on the backend here!
       } else {
         anno.undo();
       }
@@ -45,47 +67,39 @@ export const useKeyboardUndoRedo = (backend: ReturnType<typeof SupabasePlugin>) 
       const changes = anno.peekRedo();
       if (!changes) return;
 
-      const hasDelete = (changes?.deleted ?? []).length > 0;
-      if (hasDelete) {
+      const created = changes.created ?? [];
+      if (created.length > 0) {
         anno.redo({ silent: true });
-        restore(changes);
+        restore(created);
       } else {
         anno.redo();
       }
     }
-
-    const restore = (changes: ChangeSet<Annotation>) => {
-      const deleted = (changes?.deleted ?? []);
-        // Restore deleted via the safe un-archive method
-        deleted.reduce<Promise<void>>((p, annotation) => p.then(() => {
-          return backend.restoreAnnotation(annotation);
-        }), Promise.resolve());
-
-        // TODO we'd need to trigger separate create/update actions 
-        // on the backend here!
-    }
     
     const onWinKeyDown = (evt: Event) => {
       const event = evt as KeyboardEvent;
-      
-      if (event.key === 'z' && event.ctrlKey)
+      if (isEditable(event.target)) return;
+      if (!event.ctrlKey) return;
+
+      const key = event.key.toLowerCase();
+      if (key === 'z' && !event.shiftKey) {
+        event.preventDefault();
         undo();
-      else if (event.key === 'y' && event.ctrlKey)
-        redo()
+      } else if (key === 'y' || (key === 'z' && event.shiftKey)) {
+        event.preventDefault();
+        redo();
+      }
     };
 
     const onMacKeyDown = (evt: Event) => {
       const event = evt as KeyboardEvent;
+      if (isEditable(event.target)) return;
 
-      if (event.key === 'z' && event.metaKey) {
-        if (event.shiftKey)
-          redo()
-        else
-          undo();
+      if (event.key.toLowerCase() === 'z' && event.metaKey) {
+        event.preventDefault();
+        event.shiftKey ? redo() : undo();
       }
     }
-
-    // TODO before undo/redo, inspect the next action. Silence if needed
 
     if (isMac)
       document.addEventListener('keydown', onMacKeyDown);
