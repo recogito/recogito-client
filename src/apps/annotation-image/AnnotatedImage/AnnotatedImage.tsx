@@ -3,7 +3,7 @@ import type OpenSeadragon from 'openseadragon';
 import { mountPlugin as ToolsPlugin } from '@annotorious/plugin-tools';
 import { mountPlugin as MagneticOutlinePlugin } from '@annotorious/plugin-magnetic-outline';
 import { AnnotationPopup } from '@components/AnnotationDesktop';
-import { SelectionURLState, UndoStack } from '@recogito/studio-sdk/components';
+import { SelectionURLState } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -32,6 +32,8 @@ import './patchIIIFTileSource';
 
 import '@annotorious/plugin-tools/annotorious-plugin-tools.css';
 import '@annotorious/plugin-magnetic-outline/plugin-magnetic-outline.css';
+
+import { UndoStack } from '@components/AnnotationDesktop/UndoStack';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -218,14 +220,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   return (
     <OpenSeadragonAnnotator
       autoSave
+      disableUndoRedoKeys
       drawingEnabled={drawingEnabled && !isLocked}
       userSelectAction={selectAction}
       tool={props.tool || 'rectangle'}
       filter={filter}
       style={props.style}>
-
-      <UndoStack
-        undoEmpty={true} />
 
       <AnnotoriousPlugin<AnnotoriousOpenSeadragonAnnotator>
         plugin={ToolsPlugin} />
@@ -248,7 +248,13 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           onConnectError={props.onConnectionError}
           onInitialLoadError={props.onConnectionError}
           onSaveError={props.onSaveError} 
-          onSelectionChange={props.onPageActivity ? onSelectionChange : undefined} />
+          onSelectionChange={props.onPageActivity ? onSelectionChange : undefined}>
+         
+          {plugin => (
+            <UndoStack backend={plugin} undoEmpty={true} />
+          )}
+
+        </SupabasePlugin>
       }
 
       <OpenSeadragonViewer
