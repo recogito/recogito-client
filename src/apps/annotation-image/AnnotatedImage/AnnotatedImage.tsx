@@ -28,6 +28,8 @@ import {
   AnnotoriousPlugin
 } from '@annotorious/react';
 
+import './patchIIIFTileSource';
+
 import '@annotorious/plugin-tools/annotorious-plugin-tools.css';
 import '@annotorious/plugin-magnetic-outline/plugin-magnetic-outline.css';
 
