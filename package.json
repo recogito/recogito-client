@@ -14,10 +14,10 @@
   },
   "dependencies": {
     "@1password/sdk": "^0.4.0",
-    "@annotorious/annotorious": "^3.9.3",
+    "@annotorious/annotorious": "^3.9.4",
     "@annotorious/plugin-magnetic-outline": "^0.3.1",
     "@annotorious/plugin-tools": "^1.6.0",
-    "@annotorious/react": "^3.9.3",
+    "@annotorious/react": "^3.9.4",
     "@astrojs/netlify": "^8.0.0",
     "@astrojs/node": "^11.0.0",
     "@astrojs/react": "^6.0.0",
