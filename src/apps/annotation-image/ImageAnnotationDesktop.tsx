@@ -12,7 +12,7 @@ import {
   useAnnotationsViewUIState,
   useLayerNames,
 } from '@components/AnnotationDesktop';
-import { clearSelectionURLHash } from '@recogito/studio-sdk/components';
+import { clearSelectionURLHash, useUndoRedoKeys } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -74,6 +74,8 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
   const tagVocabulary = useTagVocabulary(document.context.project_id);
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
+
+  useUndoRedoKeys();
 
   const {
     authToken,
