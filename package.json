@@ -50,7 +50,7 @@
     "@recogito/pdf-annotator": "^4.3.6",
     "@recogito/react-pdf-annotator": "^4.3.6",
     "@recogito/react-text-annotator": "^4.3.6",
-    "@recogito/studio-sdk": "file:../recogito-studio-sdk",
+    "@recogito/studio-sdk": "^0.11.1",
     "@recogito/text-annotator": "^4.3.6",
     "@recogito/text-annotator-plugin-awareness": "^1.1.1",
     "@recogito/text-annotator-tei": "^4.3.6",
