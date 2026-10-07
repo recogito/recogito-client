@@ -2,7 +2,13 @@ import { MetadataModal } from '@components/MetadataModal';
 import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
 import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import type { Document, MyProfile, Collection } from 'src/Types';
 import { Button } from '@components/Button';
@@ -227,12 +233,19 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     setPublicWarningOpen(false);
   };
 
+  // counter bumped on every view/collection/sort/search change, so responses to
+  // stale requests (i.e. a race condition) are dropped
+  const fetchGeneration = useRef(0);
+
   const fetchDocs = useCallback(
     async (viewChanged = false) => {
-      if (loading) return;
       if (viewChanged) {
+        fetchGeneration.current += 1;
         setLoading(true);
+      } else if (loading) {
+        return;
       }
+      const generation = fetchGeneration.current;
       const currentPage = viewChanged ? 0 : page;
 
       const { data, error } = await supabase.rpc('get_library_documents_rpc', {
@@ -246,6 +259,8 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
         _sort_by: SORT_FIELDS[sort.key] || 'name',
         _sort_dir: sort.direction,
       });
+      if (generation !== fetchGeneration.current) return;
+
       if (!error && data) {
         setDocuments((prev) =>
           viewChanged ? data : [...(prev || []), ...data]
@@ -278,8 +293,13 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     fetchDocs(true);
   }, [view, activeCollection, sort]);
 
+  const lastSearch = useRef(search);
+
   useEffect(() => {
+    if (search === lastSearch.current) return;
+
     const searchDebounce = setTimeout(() => {
+      lastSearch.current = search;
       setPage(0);
       setDocuments(null);
       setHasMore(true);
