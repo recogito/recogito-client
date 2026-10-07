@@ -218,6 +218,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   return (
     <OpenSeadragonAnnotator
       autoSave
+      disableUndoRedoKeys
       drawingEnabled={drawingEnabled && !isLocked}
       userSelectAction={selectAction}
       tool={props.tool || 'rectangle'}
