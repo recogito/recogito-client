@@ -18,8 +18,11 @@ export const JobActions = (props: Props) => {
 
   const { t } = useTranslation(['jobs-management']);
 
+  // Imports: the uploaded zip is stored before the job runs
+  // Exports: the export zip is written once the job completes
   const canDownload =
-    props.job.job_type === 'EXPORT' && props.job.job_status === 'COMPLETE';
+    props.job.job_type === 'IMPORT' ||
+    (props.job.job_type === 'EXPORT' && props.job.job_status === 'COMPLETE');
 
   // Signed URLs expire in 60s, so create one only when the user clicks
   const onDownload = () =>
