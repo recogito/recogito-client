@@ -3,7 +3,7 @@ import { supabase } from '@backend/supabaseBrowserClient';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import { CloudArrowDownIcon, DotsThreeVerticalIcon, TrashIcon } from '@phosphor-icons/react';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Job } from 'src/Types';
 
@@ -14,27 +14,27 @@ interface Props {
 
 export const JobActions = (props: Props) => {
   const [confirming, setConfirming] = useState<boolean>(false);
-  const [downloadURL, setDownloadURL] = useState<string | undefined>();
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
   const { t } = useTranslation(['jobs-management']);
 
-  const onDownload = () => {
-    if (downloadURL) {
-      window.location.href = downloadURL;
-    }
-  };
+  // Imports: the uploaded zip is stored before the job runs
+  // Exports: the export zip is written once the job completes
+  const canDownload =
+    props.job.job_type === 'IMPORT' ||
+    (props.job.job_type === 'EXPORT' && props.job.job_status === 'COMPLETE');
+
+  // Signed URLs expire in 60s, so create one only when the user clicks
+  const onDownload = () =>
+    getDownloadURL(supabase, props.job.id, 'jobs')
+      .then((url) => window.location.href = url)
+      .catch((error) => console.error('Could not get download URL', error));
 
   const onSelectOption = (fn?: () => void) => () => {
     fn?.();
     setMenuOpen(false);
     setConfirming(false);
   };
-
-  useEffect(() => {
-    getDownloadURL(supabase, props.job.id, 'jobs')
-      .then(setDownloadURL);
-  }, [props.job.id]);
 
   return (
     <ConfirmedAction.Root open={confirming} onOpenChange={setConfirming}>
@@ -54,7 +54,7 @@ export const JobActions = (props: Props) => {
             className='dropdown-content no-icons'
             sideOffset={5}
           >
-            {downloadURL && (
+            {canDownload && (
               <Dropdown.Item
                 aria-label={t('Download', { ns: 'jobs-management' })}
                 className='dropdown-item'

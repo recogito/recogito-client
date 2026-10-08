@@ -87,9 +87,7 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
     'common',
     'collection-management',
   ]);
-  const { UploadActions, dropzone } = props;
-
-  const isDragActive = Boolean(dropzone?.isDragActive);
+  const { UploadActions } = props;
 
   // prevent browser from opening dropped files if the user narrowly misses the dropzone
   const onDropNearMiss = (evt: React.DragEvent) => {
@@ -98,6 +96,12 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   };
 
   const [view, setView] = useState<'mine' | 'all' | 'collection'>('mine');
+
+  // Uploaded documents only appear under 'My Documents', so only allow DnD there
+  const dropzone = view === 'mine' ? props.dropzone : undefined;
+
+  const isDragActive = Boolean(dropzone?.isDragActive);
+
   const [documentsView, setDocumentsView] =
     useState<ToggleDisplayValue>('rows');
   const [activeCollection, setActiveCollection] = useState(0);
