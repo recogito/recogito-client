@@ -1,5 +1,14 @@
 {
   "Pan and zoom the image, select annotations": "Pan and zoom the image, select annotations",
+  "Drawing tool": "Drawing tool",
+  "Box": "Box",
   "Create rectangle annotations": "Create rectangle annotations",
-  "Create polygon annotations": "Create polygon annotations"
+  "Polygon": "Polygon",
+  "Create polygon annotations": "Create polygon annotations",
+  "Ellipse": "Ellipse",
+  "Create circle and ellipse annotations": "Create circle and ellipse annotations",
+  "Path": "Path",
+  "Create polyline path annotations": "Create polyline path annotations",
+  "Smart scissors": "Smart scissors",
+  "Trace objects with smart scissors": "Trace objects with smart scissors"
 }

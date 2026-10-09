@@ -1,13 +1,16 @@
 import { forwardRef, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type OpenSeadragon from 'openseadragon';
-import { AnnotationPopup, SelectionURLState, UndoStack } from '@components/AnnotationDesktop';
+import { mountPlugin as ToolsPlugin } from '@annotorious/plugin-tools';
+import { mountPlugin as MagneticOutlinePlugin } from '@annotorious/plugin-magnetic-outline';
+import { AnnotationPopup } from '@components/AnnotationDesktop';
+import { SelectionURLState, UndoStack } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
-import { getImageURL, type IIIFImage } from '../IIIF';
+import type { CozyCanvas, CozyImageResource } from 'cozy-iiif';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
@@ -21,8 +24,14 @@ import {
   OpenSeadragonAnnotationPopup,
   OpenSeadragonViewer,
   UserSelectAction,
-  useAnnotator
+  useAnnotator,
+  AnnotoriousPlugin
 } from '@annotorious/react';
+
+import './patchIIIFTileSource';
+
+import '@annotorious/plugin-tools/annotorious-plugin-tools.css';
+import '@annotorious/plugin-magnetic-outline/plugin-magnetic-outline.css';
 
 const SUPABASE: string = import.meta.env.PUBLIC_SUPABASE;
 
@@ -40,7 +49,9 @@ interface AnnotatedImageProps {
 
   isLocked: boolean;
 
-  currentImage: IIIFImage;
+  currentImage: CozyImageResource;
+
+  currentCanvas?: CozyCanvas;
 
   isPresentationManifest?: boolean;
 
@@ -92,15 +103,18 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
   } = props;
 
   const { source, tilesource } = useMemo(() => {
-    if (typeof props.currentImage === 'string') {
-      // Image API - use URL as both 'source' ID and for tilesource URL
-      return { source: props.currentImage, tilesource: props.currentImage }
-    } else {
-      const tilesource = getImageURL(props.currentImage);
-      const source = props.currentImage.uri;
-      return { source, tilesource };
-    }
-  }, [props.currentImage]);
+    const image = props.currentImage;
+
+    const tilesource = image
+      ? image.type === 'static' ? image.url : image.serviceUrl
+      : undefined;
+
+    // 'source' ID: use the canvas URI for a Presentation
+    // manifest, otherwise the image URL itself
+    const source = props.currentCanvas?.id ?? tilesource;
+
+    return { source, tilesource };
+  }, [props.currentImage, props.currentCanvas]);
 
   const anno = useAnnotator<AnnotoriousOpenSeadragonAnnotator>();
 
@@ -197,11 +211,14 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
     }
   }
 
-  const onSelectionChange = (user: PresentUser) => props.onPageActivity!({ source, user });
+  const onSelectionChange = (user: PresentUser) => {
+    if (source) props.onPageActivity!({ source, user });
+  };
 
   return (
     <OpenSeadragonAnnotator
       autoSave
+      disableUndoRedoKeys
       drawingEnabled={drawingEnabled && !isLocked}
       userSelectAction={selectAction}
       tool={props.tool || 'rectangle'}
@@ -211,6 +228,12 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       <UndoStack
         undoEmpty={true} />
 
+      <AnnotoriousPlugin<AnnotoriousOpenSeadragonAnnotator>
+        plugin={ToolsPlugin} />
+
+      <AnnotoriousPlugin<AnnotoriousOpenSeadragonAnnotator>
+        plugin={MagneticOutlinePlugin} />
+
       {props.layers &&
         <SupabasePlugin
           supabaseUrl={SUPABASE}
@@ -219,7 +242,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
           defaultLayer={props.activeLayer?.id}
           layerIds={props.layers.map(layer => layer.id)}
           privacyMode={props.privacy === 'PRIVATE'} 
-          source={props.isPresentationManifest ? props.currentImage : undefined} 
+          source={props.isPresentationManifest ? props.currentCanvas?.id : undefined}
           onInitialLoad={onInitialLoad}
           onOffPageActivity={props.onPageActivity}
           onPresence={props.onChangePresent}
@@ -230,6 +253,7 @@ export const AnnotatedImage = forwardRef<OpenSeadragon.Viewer, AnnotatedImagePro
       }
 
       <OpenSeadragonViewer
+        key={props.currentCanvas?.id}
         ref={ref}
         className="ia-osd-container"
         options={options} />

@@ -47,6 +47,7 @@
   "Search Collections": "Search Collections",
   "Search Documents": "Search Documents",
   "Success": "Success",
+  "File is too large. The maximum file size is {{size}}.": "File is too large. The maximum file size is {{size}}.",
   "Unsupported file format.": "Unsupported file format.",
   "view this document's metadata": "view this document's metadata"
 }

@@ -5,15 +5,47 @@ import { initDocument } from '@backend/helpers';
 import type { Document } from 'src/Types';
 import type { Upload, UploadProgress, UploadStatus } from './Upload';
 
+const BUCKET_NAME = 'documents';
+
+// Supabase's default file size limit is 50MB
+const DEFAULT_FILE_SIZE_LIMIT = 50 * 1024 * 1024;
+
 let queue = Promise.resolve();
+
+const getErrorMessage = (error: unknown): string => {
+  if (typeof error === 'string') {
+    return error;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String((error as { message: unknown }).message);
+  }
+
+  return 'Upload failed';
+};
 
 export const useUpload = (onImport: (documents: Document[]) => void) => {
   const [uploads, setUploads] = useState<UploadProgress[]>([]);
   const [dataDirty, setDataDirty] = useState(false);
+  const [fileSizeLimit, setFileSizeLimit] = useState<number | undefined>();
 
   // Using useRef here because it is synchronous so we ensure that
   // onImport is called with all successful documents
   const completedDocs = useRef<Document[]>([]);
+
+  useEffect(() => {
+    supabase.storage.getBucket(BUCKET_NAME).then(({ data, error }) => {
+      if (error) {
+        console.error('Failed to fetch documents bucket', error);
+      } else {
+        setFileSizeLimit(data.file_size_limit ?? DEFAULT_FILE_SIZE_LIMIT);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     if (uploads.length > 0) {
@@ -105,7 +137,8 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
         })
       )
       .catch((error) => {
-        onError(id, error);
+        console.error('Upload failed', error);
+        onError(id, getErrorMessage(error));
       });
 
     return id;
@@ -122,6 +155,7 @@ export const useUpload = (onImport: (documents: Document[]) => void) => {
   return {
     addUpload,
     addUploads,
+    fileSizeLimit,
     isIdle,
     uploads,
     dataDirty,

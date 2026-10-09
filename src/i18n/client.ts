@@ -25,6 +25,7 @@ clientI18next
       order: ['path', 'navigator'],
       lookupFromPathIndex: 0,
     },
+    maxRetries: 1
   });
 
 export default clientI18next;
