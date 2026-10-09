@@ -47,8 +47,10 @@ export const parseManifestAnnotations = (manifest: CozyManifest) => {
       return [...all, ...crosswalked];
     }, []);
 
-    if (onThisCanvas.length > 0) {
-      agg[canvas.id] = onThisCanvas;
+    const withSelector = onThisCanvas.filter(a => a.target);
+
+    if (withSelector.length > 0) {
+      agg[canvas.id] = withSelector;
       return agg;
     } else {
       return agg;
