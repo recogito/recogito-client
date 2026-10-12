@@ -9,4 +9,4 @@ export const getEnvValue = (name: string): string | undefined => {
 
   return undefined;
 }
-export const isTestEnvironment = () => getEnvValue('PUBLIC_ENVIRONMENT') === 'test';
+export const isTestEnvironment = () => String(getEnvValue('PUBLIC_TEST_BANNER')).toLowerCase() === 'true';
