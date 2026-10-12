@@ -59,5 +59,6 @@
   "Page {{current}} of {{total}}": "Page {{current}} of {{total}}",
   "Previous": "Previous",
   "Next": "Next",
-  "Loading...": "Loading..."
+  "Loading...": "Loading...",
+  "test environment banner": "This is a test environment. All data entered here is temporary and may be deleted at any time."
 }

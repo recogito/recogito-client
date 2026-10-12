@@ -3,6 +3,7 @@ import { BrandHeader } from '@components/Branding';
 import '@themes/default/index.css';
 import config from 'src/config.json';
 import UsersnapButton from './components/UsersnapButton.astro';
+import TestEnvironmentBanner from './components/TestEnvironmentBanner.astro';
 
 export interface Props {
   title: string;
@@ -28,6 +29,7 @@ const favicon = `/${config.branding.favicon}` || '/favicon.svg';
     <title>{title}</title>
   </head>
   <body>
+    <TestEnvironmentBanner />
     <BrandHeader />
     <div class='slot-container'>
       <slot />
