@@ -8,11 +8,11 @@ import { useLayerPolicies, useTagVocabulary } from '@backend/hooks';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { LoadingOverlay } from '@components/LoadingOverlay';
 import {
-  clearSelectionURLHash,
   DocumentNotes,
   useAnnotationsViewUIState,
   useLayerNames,
 } from '@components/AnnotationDesktop';
+import { clearSelectionURLHash, useUndoRedoKeys } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
@@ -24,8 +24,8 @@ import {
   useIIIF,
   useMultiPagePresence,
   ManifestErrorDialog,
-  type IIIFImage,
 } from './IIIF';
+import type { CozyCanvas } from 'cozy-iiif';
 import { deduplicateLayers } from 'src/util/deduplicateLayers';
 import type { Document, DocumentLayer } from 'src/Types';
 import type {
@@ -75,15 +75,18 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const viewer = useRef<OpenSeadragon.Viewer>(null);
 
+  useUndoRedoKeys();
+
   const {
     authToken,
     canvases,
     isPresentationManifest,
-    manifestError,
-    metadata,
+    error: manifestError,
+    manifest,
     embeddedAnnotations,
     currentImage,
-    setCurrentImage,
+    currentCanvas,
+    setCurrentCanvas,
   } = useIIIF(document);
 
   const { activeUsers, onPageActivity } = useMultiPagePresence(present);
@@ -103,7 +106,13 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
 
   const layerNames = useLayerNames(document, embeddedLayers);
 
-  const { t } = useTranslation(['project-collaboration']);
+  const { t, i18n } = useTranslation(['project-collaboration']);
+
+  // Localized IIIF manifest metadata (label/value pairs)
+  const metadata = useMemo(
+    () => manifest?.getMetadata(i18n.language),
+    [manifest, i18n.language]
+  );
 
   const activeLayer = useMemo(() => {
     // Waiting for layers to load
@@ -273,17 +282,21 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
     }
   };
 
-  const onGoToImage = (source: IIIFImage | string, clearSelection = false) => {
+  const onGoToImage = (source: CozyCanvas | string, clearSelection = false) => {
     // When navigating via the thumbnail strip, clear the selection from the
     // hash, otherwise we'll get looped right back.
     if (clearSelection) clearSelectionURLHash();
 
-    if (typeof source === 'string') {
-      const canvas = canvases.find((c) => c.uri === source);
-      setCurrentImage(canvas || source);
-    } else {
-      setCurrentImage(source);
-    }
+    const canvas = typeof source === 'string'
+      ? canvases.find((c) => c.id === source)
+      : source;
+
+    if (!canvas || canvas.id === currentCanvas?.id) return;
+
+    // deselect annotations before canvas-switch remount
+    anno?.cancelSelected();
+
+    setCurrentCanvas(canvas);
   };
 
   const onError = (error: string) =>
@@ -344,7 +357,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
           <main id='main'>
             <LeftDrawer
               activeUsers={activeUsers}
-              currentImage={currentImage}
+              currentCanvas={currentCanvas}
               document={document}
               iiifCanvases={canvases}
               layers={layers}
@@ -367,6 +380,7 @@ export const ImageAnnotationDesktop = (props: ImageAnnotationProps) => {
                   channelId={props.channelId}
                   embeddedAnnotations={embeddedAnnotations?.annotations}
                   currentImage={currentImage}
+                  currentCanvas={currentCanvas}
                   isLocked={isLocked}
                   isPresentationManifest={isPresentationManifest}
                   layers={documentLayers}

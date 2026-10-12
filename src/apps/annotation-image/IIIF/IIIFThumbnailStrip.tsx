@@ -1,9 +1,7 @@
-import type { Canvas } from '@allmaps/iiif-parser';
+import type { CozyCanvas } from 'cozy-iiif';
 import { List, type RowComponentProps } from 'react-window';
 import { IIIFThumbnail } from './IIIFThumbnail';
-import type { IIIFImage } from './useIIIF';
 import type { ActiveUsers } from './useMultiPagePresence';
-import { getResourceLabel } from 'src/util';
 import { useTranslation } from 'react-i18next';
 
 import './IIIFThumbnailStrip.css';
@@ -12,46 +10,48 @@ interface IIIFThumbnailStripProps {
 
   activeUsers: ActiveUsers;
 
-  canvases: Canvas[];
+  canvases: CozyCanvas[];
 
-  currentImage?: IIIFImage;
+  currentCanvas?: CozyCanvas;
 
-  onSelect(image: IIIFImage): void;
+  onSelect(canvas: CozyCanvas): void;
+}
+
+interface RowProps {
+
+  activeUsers: ActiveUsers;
+
+  canvases: CozyCanvas[];
+
+  currentCanvasId?: string;
+
+  language: string;
+
+  onSelect(canvas: CozyCanvas): void;
+
+}
+
+const Row = (props: RowComponentProps<RowProps>) => {
+  const canvas = props.canvases[props.index];
+  const label = canvas.getLabel(props.language);
+  const isSelected = props.currentCanvasId === canvas.id;
+
+  return (
+    <div
+      className={`thumbnail-strip-item${isSelected ? ' selected': ''}`}
+      style={props.style}
+      onClick={() => props.onSelect(canvas)}>
+      <IIIFThumbnail
+        activeUsers={props.activeUsers[canvas.id]}
+        canvas={canvas}
+      />
+      <span className="label">{label}</span>
+    </div>
+  )
 }
 
 export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
   const { i18n } = useTranslation([]);
-
-  const isSelected = (canvas: Canvas) => {
-    if (!props.currentImage) return false;
-
-    // Shouldn't ever be the case, unless we want to start
-    // showing a thumbnail strip for a (single) Image API image
-    // at some point.
-    if (typeof props.currentImage === 'string') {
-      return props.currentImage?.startsWith(canvas.image.uri);
-    } else {
-      return props.currentImage.uri === canvas.uri;
-    }
-  }
-
-  const Row = (arg: RowComponentProps<{ canvases: Canvas[]}>) => {   
-    const canvas = props.canvases[arg.index];
-    const label = getResourceLabel(canvas.label, i18n.language);
-    
-    return (
-      <div 
-        className={`thumbnail-strip-item${isSelected(canvas) ? ' selected': ''}`} 
-        style={arg.style} 
-        onClick={() => props.onSelect(canvas)}>
-        <IIIFThumbnail
-          activeUsers={props.activeUsers[canvas.uri]}
-          canvas={canvas}
-        />
-        <span className="label">{label}</span>
-      </div>
-    )
-  }
 
   return (
     <List
@@ -59,7 +59,13 @@ export const IIIFThumbnailStrip = (props: IIIFThumbnailStripProps) => {
       rowComponent={Row}
       rowCount={props.canvases.length}
       rowHeight={170}
-      rowProps={{ canvases: props.canvases }}
+      rowProps={{
+        activeUsers: props.activeUsers,
+        canvases: props.canvases,
+        currentCanvasId: props.currentCanvas?.id,
+        language: i18n.language,
+        onSelect: props.onSelect
+      }}
     />
   )
 

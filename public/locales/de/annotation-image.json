@@ -1,5 +1,14 @@
 {
   "Pan and zoom the image, select annotations": "Bild bewegen und zoomen, Annotationen selektieren",
+  "Drawing tool": "Annotations-Werkzeug",
+  "Box": "Box",
   "Create rectangle annotations": "Rechteck-Annotationen erstellen",
-  "Create polygon annotations": "Polygon-Annotationen erstellen"
+  "Polygon": "Polygon",
+  "Create polygon annotations": "Polygon-Annotationen erstellen",
+  "Ellipse": "Ellipse",
+  "Create circle and ellipse annotations": "Kreis- oder Ellipsen-Annotationen erstellen",
+  "Path": "Pfad",
+  "Create polyline path annotations": "Pfad-Annotationen erstellen",
+  "Smart scissors": "Kontur-Schere",
+  "Trace objects with smart scissors": "Objektkonturen automatisch nachzeichnen"
 }

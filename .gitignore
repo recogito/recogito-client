@@ -16,6 +16,8 @@ pnpm-debug.log*
 src/components/Plugins/deployedPlugins.ts
 plugins/**
 public/pdf.worker.min.mjs
+public/jbig2_nowasm_fallback.js
+public/jbig2.wasm
 
 .DS_Store
 

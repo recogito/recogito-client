@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { type FileRejection, useDropzone } from 'react-dropzone';
 
-export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: FileRejection[]) => void) => {
+export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: FileRejection[]) => void, maxSize?: number) => {
 
   const [isDragActive, setIsDragActive] = useState(false);
 
@@ -22,15 +22,21 @@ export const useDragAndDrop = (onDrop: (accepted: File[] | string, rejected: Fil
       'image/bmp': ['.bmp'],
       'image/jp2': ['.jp2']
     },
+    maxSize,
     noClick: true, 
     noKeyboard: true,
+    noDragEventsBubbling: true,
     onDrop 
   });
+
+  const isUploadDrag = (evt: React.DragEvent) =>
+    evt.dataTransfer.types.includes('Files') ||
+    evt.dataTransfer.types.includes('text/uri-list');
 
   const handleDragOver = (evt: React.DragEvent) => { 
     evt.preventDefault();
 
-    if (!isDragActive)
+    if (!isDragActive && isUploadDrag(evt))
       setIsDragActive(true);
   }
 

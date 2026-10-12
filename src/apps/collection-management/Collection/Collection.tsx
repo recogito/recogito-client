@@ -23,7 +23,7 @@ import {
   useDragAndDrop,
   useUpload,
 } from '@apps/project-home/upload';
-import type { FileRejection } from 'react-dropzone';
+import { ErrorCode, type FileRejection } from 'react-dropzone';
 import { validateIIIF } from '@apps/project-home/upload/dialogs/useIIIFValidation';
 
 import './Collection.css';
@@ -31,6 +31,7 @@ import { DocumentLibrary } from '@components/DocumentLibrary';
 import { copyDocumentsToCollection } from '@backend/helpers/collectionHelpers';
 import { I18nextProvider, useTranslation } from 'react-i18next';
 import clientI18next from 'src/i18n/client';
+import { formatFileSize } from '@util/general';
 
 interface CollectionsTableProps {
   collection: CollectionType;
@@ -223,7 +224,7 @@ const Collection = (props: CollectionsTableProps) => {
     }
   };
 
-  const { addUploads, isIdle, uploads } = useUpload(async () => {
+  const { addUploads, fileSizeLimit, isIdle, uploads } = useUpload(async () => {
     await fetchDocuments(true);
     await fetchAllCollectionIds();
     setRevisionDocument(undefined);
@@ -231,11 +232,21 @@ const Collection = (props: CollectionsTableProps) => {
 
   const onDrop = (accepted: File[] | string, rejected: FileRejection[]) => {
     if (rejected.length > 0) {
+      const tooLarge = rejected.some((r) =>
+        r.errors.some((e) => e.code === ErrorCode.FileTooLarge)
+      );
+
       setToast({
         title: t('Something went wrong', { ns: 'project-home' }),
-        description: t('Unsupported file format.', {
-          ns: 'collection-management',
-        }),
+        description:
+          tooLarge && fileSizeLimit
+            ? t('File is too large. The maximum file size is {{size}}.', {
+                ns: 'collection-management',
+                size: formatFileSize(fileSizeLimit),
+              })
+            : t('Unsupported file format.', {
+                ns: 'collection-management',
+              }),
         type: 'error',
       });
     } else if (
@@ -334,7 +345,10 @@ const Collection = (props: CollectionsTableProps) => {
     });
   };
 
-  const { open: onUpload, getInputProps } = useDragAndDrop(onDrop);
+  const { open: onUpload, getInputProps } = useDragAndDrop(
+    onDrop,
+    fileSizeLimit
+  );
 
   const onUploadRevision = (document: Document) => {
     setRevisionDocument(document);
@@ -477,6 +491,7 @@ const Collection = (props: CollectionsTableProps) => {
                 onSave={handleUpdateCollection}
               />
               <UploadActions
+                fileSizeLimit={fileSizeLimit}
                 me={me}
                 onUpload={onUpload}
                 onImport={onImportRemote}

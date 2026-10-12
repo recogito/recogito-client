@@ -5,7 +5,8 @@ import { TextAnnotationPopup, TextAnnotator } from '@recogito/react-text-annotat
 import type { HighlightStyleExpression, RecogitoTextAnnotator } from '@recogito/react-text-annotator';
 import { mountPlugin as AwarenessPlugin } from '@recogito/text-annotator-plugin-awareness';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
-import { SelectionURLState, UndoStack, type DocumentNote } from '@components/AnnotationDesktop';
+import { type DocumentNote } from '@components/AnnotationDesktop';
+import { SelectionURLState, UndoStack } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
 import { SupabasePlugin } from '@components/SupabasePlugin';
 import { useContent } from '../useContent';

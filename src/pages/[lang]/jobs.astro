@@ -17,19 +17,10 @@ if (error) {
 if (!me.isOrgAdmin) {
   return Astro.redirect(`/${lang}/projects`);
 }
-
-const { error: jobsError, data: jobs } = await getJobs(supabase);
-
-if (jobsError) {
-  const { body, headers } = await fetch(`${Astro.url}/500`);
-  return new Response(body, { headers, status: 500 });
-}
-
 ---
 
 <BaseLayout title='Jobs Management'>
   <JobsManagementApp
-    jobs={jobs}
     me={me}
     client:only='react'
   />

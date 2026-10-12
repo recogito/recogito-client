@@ -17,7 +17,7 @@ if (error || !data) {
 ---
 
 <BaseLayout title={t('Account Preferences', { ns: 'dashboard-account' })}>
-  <AccountPreferencesApp client:load profile={data} />
+  <AccountPreferencesApp client:only='react' profile={data} />
 </BaseLayout>
 
 <style>

@@ -1,60 +1,89 @@
 import Uppy from '@uppy/core';
-import XHR from '@uppy/xhr-upload';
+import Tus from '@uppy/tus';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getAccessToken } from './accessToken';
 
 const DEFAULT_BUCKET_NAME = 'documents';
 
 const SUPABASE_URL = import.meta.env?.PUBLIC_SUPABASE || process.env?.PUBLIC_SUPABASE;
 
+// Supabase has a mandatory chunk size of 6MB
+const CHUNK_SIZE = 6 * 1024 * 1024;
+
 type Meta = {
 
-  type: string;
+  bucketName: string;
+
+  objectName: string;
+
+  contentType: string;
 
 }
 
 export const uploadFile = (
-  supabase: SupabaseClient, 
+  supabase: SupabaseClient,
   file: File,
   name: string,
   onProgress?: (progress: number) => void
 ): Promise<void> => new Promise((resolve, reject) => {
-  return supabase.auth.getSession().then(({ error, data }) => {
-    if (error) {
-      reject(error)
-    } else {
-      const token = data.session?.access_token;      
-      if (!token) {
-        // Shouldn't really happen at this point
-        reject('Not authorized');
-      } else {
-        const uppy = new Uppy<Meta, any>({ autoProceed: true });
+  return getAccessToken(supabase).then(initialToken => {
+    const uppy = new Uppy<Meta, any>({ autoProceed: true });
 
-        uppy.use(XHR, {
-          endpoint: `${SUPABASE_URL}/storage/v1/object/documents/${name}`,
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+    uppy.use(Tus, {
+      endpoint: `${SUPABASE_URL}/storage/v1/upload/resumable`,
 
-        uppy.addFile({
-          name,
-          data: file,
-          meta: { type: file.type }
-        });
+      chunkSize: CHUNK_SIZE,
 
-        uppy.on('progress', progress => onProgress?.(progress));
+      uploadDataDuringCreation: true,
 
-        uppy.on('error', error => {
-          reject(error);
-        });
+      removeFingerprintOnSuccess: true,
 
-        uppy.upload().then(() => {
-          resolve();
-        }).catch(error => {
-          reject(error);
-        })
+      allowedMetaFields: ['bucketName', 'objectName', 'contentType'],
+
+      retryDelays: [0, 3000, 5000, 10000, 20000],
+
+      onBeforeRequest: async (req) => {
+        let token = initialToken;
+
+        try {
+          token = await getAccessToken(supabase);
+        } catch (error) {
+          console.warn('Could not refresh access token before upload', error);
+        }
+
+        req.setHeader('Authorization', `Bearer ${token}`);
       }
-    }
+    });
+
+    uppy.addFile({
+      name,
+      data: file,
+      meta: {
+        bucketName: DEFAULT_BUCKET_NAME,
+        objectName: name,
+        contentType: file.type
+      }
+    });
+
+    uppy.on('progress', progress => onProgress?.(progress));
+
+    uppy.on('error', error => {
+      reject(error);
+    });
+
+    uppy.upload().then(result => {
+      const failed = result?.failed || [];
+
+      if (failed.length > 0) {
+        reject(new Error(failed[0].error || `Upload failed for ${name}`));
+      } else {
+        resolve();
+      }
+    }).catch(error => {
+      reject(error);
+    });
+  }).catch(error => {
+    reject(error);
   });
 });
 

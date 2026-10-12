@@ -1,6 +1,7 @@
 import Uppy from '@uppy/core';
 import XHR from '@uppy/xhr-upload';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { getAccessToken } from './accessToken';
 
 export interface IIIFResponse {
   
@@ -26,57 +27,63 @@ export const uploadImage = (
   name: string,
   onProgress?: (progress: number) => void
 ): Promise<IIIFResponse> => new Promise((resolve, reject) => {
-  supabase.auth.getSession().then(({ error, data }) => {
-    // Get Supabase session token first
-    if (error) {
-      // Shouldn't really happen at this point
-      reject(error);
-    } else {
-      const token = data.session?.access_token;      
-      if (!token) {
-        // Shouldn't really happen at this point
-        reject('Not authorized');
-      } else {
-        // User is properly logged in - upload image file
-        // to IIIF storage proxy
-        const uppy = new Uppy({ autoProceed: true });
+  return getAccessToken(supabase).then(initialToken => {
+    const uppy = new Uppy({ autoProceed: true });
 
-        uppy.use(XHR, {
-          endpoint: `/api/images`,
-          headers: {
-            // Storage proxy requires authentication 
-            'Authorization': `Bearer ${token}`
-          }
-        });
-      
-        uppy.addFile({
-          name,
-          data: file
-        });
-      
-        uppy.on('progress', progress => onProgress?.(progress));
-      
-        uppy.upload().then(result => {
-          if (result?.successful?.length === 1) {
-            const response = 
-              result.successful[0].response?.body?.resource as unknown as IIIFResponse;
+    uppy.use(XHR, {
+      endpoint: `/api/images`,
 
-            if (!response) {
-              reject(result);
-            } else {
-              // This is a bit of a hack... but the IIIF server doesn't
-              // currently return the info.json link explicitely
-              response.manifest_iiif_url = 
-                response.content_iiif_url.replace('full/max/0/default.jpg', 'info.json');
-              
-              resolve(response);
-            }
-          } else {
-            console.error(result);
-            reject(result);
-          }
-        });
+      onBeforeRequest: async (xhr) => {
+        let token = initialToken;
+
+        try {
+          token = await getAccessToken(supabase);
+        } catch (error) {
+          console.warn('Could not refresh access token before upload', error);
+        }
+
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
       }
-    }
+    });
+  
+    uppy.addFile({
+      name,
+      data: file
+    });
+  
+    uppy.on('progress', progress => onProgress?.(progress));
+
+    uppy.on('error', error => {
+      reject(error);
+    });
+  
+    uppy.upload().then(result => {
+      const failed = result?.failed || [];
+
+      if (failed.length > 0) {
+        reject(new Error(failed[0].error || `Upload failed for ${name}`));
+        return;
+      }
+
+      const response = 
+        result?.successful?.[0]?.response?.body?.resource as unknown as IIIFResponse;
+
+      if (!response) {
+        console.error(result);
+        reject(new Error(`Upload of ${name} did not return a IIIF resource`));
+        return;
+      }
+
+      // This is a bit of a hack... but the IIIF server doesn't
+      // currently return the info.json link explicitly
+      response.manifest_iiif_url = 
+        response.content_iiif_url.replace('full/max/0/default.jpg', 'info.json');
+      
+      resolve(response);
+    }).catch(error => {
+      reject(error);
+    });
+  }).catch(error => {
+    reject(error);
   });
 });

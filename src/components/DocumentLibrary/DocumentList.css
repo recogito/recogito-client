@@ -9,12 +9,13 @@
   align-items: center;
   font-weight: bold;
   border-bottom: 1px solid var(--gray-200);
-  height: 38.5px;
+  min-height: 38.5px;
 }
 .document-list-header > div {
   display: flex;
   align-items: center;
   padding: 6px 12px;
+  line-height: 1.2;
 }
 .document-table-row {
   display: grid;

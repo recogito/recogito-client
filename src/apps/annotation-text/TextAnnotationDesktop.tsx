@@ -4,6 +4,7 @@ import { useAnnotator } from '@annotorious/react';
 import type { TextAnnotationLike } from '@recogito/text-annotator';
 import type { PresentUser, AnnotationState, Color, Annotation } from '@annotorious/react';
 import type { PDFAnnotation } from '@recogito/react-pdf-annotator';
+import { useUndoRedoKeys } from '@recogito/studio-sdk/components';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { getAllDocumentLayersInProject } from '@backend/helpers';
@@ -47,6 +48,8 @@ export const TextAnnotationDesktop = (props: TextAnnotationProps) => {
   const contentType = document.content_type;
 
   const anno = useAnnotator<RecogitoTextAnnotator>();
+
+  useUndoRedoKeys();
 
   const [loading, setLoading] = useState(true);
 
