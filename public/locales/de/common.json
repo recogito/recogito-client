@@ -59,5 +59,6 @@
   "Page {{current}} of {{total}}": "Seite {{current}} von {{total}}",
   "Previous": "Zurück",
   "Next": "Weiter",
-  "Loading...": "Laden..."
+  "Loading...": "Laden...",
+  "test environment banner": "Dies ist eine Testumgebung. Alle hier eingegebenen Daten sind vorübergehend und können jederzeit gelöscht werden."
 }

@@ -1,0 +1,33 @@
+:root:has(.test-environment-banner) {
+  --test-environment-banner-height: 28px;
+}
+
+body:has(> .test-environment-banner) {
+  box-sizing: border-box;
+  padding-top: var(--test-environment-banner-height);
+}
+
+.test-environment-banner {
+  background-color: var(--orange);
+  box-sizing: border-box;
+  color: var(--gray-900);
+  font-size: var(--font-small);
+  font-weight: 600;
+  height: var(--test-environment-banner-height);
+  left: 0;
+  line-height: var(--test-environment-banner-height);
+  overflow: hidden;
+  padding: 0 16px;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  text-overflow: ellipsis;
+  top: 0;
+  white-space: nowrap;
+  z-index: 10000;
+}
+
+/* prevent the banner from being the only thing on the page during load */
+body:has(astro-island[client='only'][ssr]) > .test-environment-banner.wait-for-islands {
+  visibility: hidden;
+}
