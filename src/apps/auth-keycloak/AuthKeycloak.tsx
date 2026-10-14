@@ -25,7 +25,7 @@ const AuthKeycloak = () => {
         provider: 'keycloak',
         options: {
           scopes: 'openid',
-          redirectTo: `${callbackUrl}?next=${next}`,
+          redirectTo: `${callbackUrl}?next=${encodeURIComponent(next)}`,
         },
       })
       .then(({ data, error }) => {
