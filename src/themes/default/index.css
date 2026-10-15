@@ -114,6 +114,12 @@
   font-style: italic;
 }
 
+/* Override any third-party stylesheets that implement dark mode
+   because Recogito does not currently offer it. */
+html:root {
+  color-scheme: light;
+}
+
 :root {
   /** Colors **/
   --dark-blue: #07498a;

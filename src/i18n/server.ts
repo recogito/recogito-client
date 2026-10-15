@@ -1,4 +1,4 @@
-import { i18n } from 'astro:config/server';
+import { i18n } from 'src/i18n/config';
 import { createInstance, type Resource } from 'i18next';
 
 const localeFiles = import.meta.glob<Record<string, string>>(
