@@ -1,3 +1,0 @@
-[functions]
-  # ensures translation files are available to serverless functions
-  included_files = ["public/locales/**/*.json"]

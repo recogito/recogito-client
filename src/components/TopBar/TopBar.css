@@ -9,7 +9,7 @@
   width: 100%;
   z-index: 9999;
   position: fixed;
-  top: 0;
+  top: var(--test-environment-banner-height, 0px);
 }
 
 .top-bar-branding {

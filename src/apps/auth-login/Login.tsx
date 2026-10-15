@@ -42,6 +42,8 @@ const Login = (props: { methods: LoginMethod[] }) => {
     if (redirectUrl.includes('/sign-in')) {
       // don't allow loop back to sign-in from sign-in; go to projects instead
       redirectUrl = `/${i18n.language}/projects`;
+    } else if (window.location.hash && !redirectUrl.includes('#')) {
+      redirectUrl += window.location.hash;
     }
     localStorage.setItem('redirect-to', redirectUrl);
   } else {
@@ -108,7 +110,7 @@ const Login = (props: { methods: LoginMethod[] }) => {
   }, [t]);
 
   const signInWithSSO = (domain: string) => {
-    const redirectTo = `${window.location.origin}/auth/callback?next=${next}`;
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
     supabase.auth
       .signInWithSSO({
         domain: domain,
@@ -124,7 +126,7 @@ const Login = (props: { methods: LoginMethod[] }) => {
   };
 
   const signInWithKeycloak = () => {
-    window.location.href = `/${i18n.language}/keycloak?redirect-to=${next}`;
+    window.location.href = `/${i18n.language}/keycloak?redirect-to=${encodeURIComponent(next)}`;
   };
 
   const renderLoginButton = useCallback(

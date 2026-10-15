@@ -1,0 +1,24 @@
+---
+import { getFixedT } from 'src/i18n/server';
+import { isTestEnvironment } from '@util/environment';
+import './TestEnvironmentBanner.css';
+
+export interface Props {
+  // Hide the banner until the page's client:only islands have rendered
+  waitForIslands?: boolean;
+}
+
+const { waitForIslands = false } = Astro.props;
+
+const showBanner = isTestEnvironment();
+const t = showBanner ? await getFixedT(Astro.currentLocale, ['common']) : null;
+---
+
+{showBanner && t && (
+  <div
+    class:list={['test-environment-banner', { 'wait-for-islands': waitForIslands }]}
+    role="status"
+  >
+    {t('test environment banner', { ns: 'common' })}
+  </div>
+)}
