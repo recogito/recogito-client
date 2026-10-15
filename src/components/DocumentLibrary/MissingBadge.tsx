@@ -1,4 +1,3 @@
-import { Badge } from '@radix-ui/themes';
 import './MissingBadge.css';
 
 interface MissingBadgeProps {
@@ -6,9 +5,5 @@ interface MissingBadgeProps {
 }
 
 export const MissingBadge = (props: MissingBadgeProps) => {
-  return (
-    <Badge color='gray' variant='soft'>
-      {props.text}
-    </Badge>
-  );
+  return <span className='missing-badge'>{props.text}</span>;
 };
