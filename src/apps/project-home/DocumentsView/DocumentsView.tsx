@@ -47,6 +47,8 @@ import '../ProjectHome.css';
 interface DocumentsViewProps {
   isAdmin: boolean;
 
+  canAddDocuments: boolean;
+
   documents: Document[];
 
   project: ExtendedProjectData;
@@ -337,13 +339,15 @@ export const DocumentsView = (props: DocumentsViewProps) => {
               <DownloadSimple size={20} />
               <span>{t('Export Annotations', { ns: 'common' })}</span>
             </a>
-            <button
-              className='button primary project-home-add-document'
-              onClick={onAddDocument}
-              tabIndex={0}
-            >
-              <Plus size={20} /> <span>{t('Add Document', { ns: 'project-home' })}</span>
-            </button>
+            {props.canAddDocuments && (
+              <button
+                className='button primary project-home-add-document'
+                onClick={onAddDocument}
+                tabIndex={0}
+              >
+                <Plus size={20} /> <span>{t('Add Document', { ns: 'project-home' })}</span>
+              </button>
+            )}
           </div>
         )}
       </header>
