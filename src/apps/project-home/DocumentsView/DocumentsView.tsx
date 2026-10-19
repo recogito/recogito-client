@@ -47,7 +47,7 @@ import '../ProjectHome.css';
 interface DocumentsViewProps {
   isAdmin: boolean;
 
-  canAddDocuments: boolean;
+  canUpload: boolean;
 
   documents: Document[];
 
@@ -339,15 +339,13 @@ export const DocumentsView = (props: DocumentsViewProps) => {
               <DownloadSimple size={20} />
               <span>{t('Export Annotations', { ns: 'common' })}</span>
             </a>
-            {props.canAddDocuments && (
-              <button
-                className='button primary project-home-add-document'
-                onClick={onAddDocument}
-                tabIndex={0}
-              >
-                <Plus size={20} /> <span>{t('Add Document', { ns: 'project-home' })}</span>
-              </button>
-            )}
+            <button
+              className='button primary project-home-add-document'
+              onClick={onAddDocument}
+              tabIndex={0}
+            >
+              <Plus size={20} /> <span>{t('Add Document', { ns: 'project-home' })}</span>
+            </button>
           </div>
         )}
       </header>
@@ -409,15 +407,17 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           clearDirtyFlag();
           setDocumentUpdated(false);
         }}
-        dropzone={props.isAdmin ? { getRootProps, isDragActive } : undefined}
+        dropzone={props.canUpload ? { getRootProps, isDragActive } : undefined}
         UploadActions={
-          <UploadActions
-            fileSizeLimit={fileSizeLimit}
-            me={props.user}
-            onUpload={open}
-            onImport={onImportRemote}
-            onSetUser={props.onSetUser}
-          />
+          props.canUpload && (
+            <UploadActions
+              fileSizeLimit={fileSizeLimit}
+              me={props.user}
+              onUpload={open}
+              onImport={onImportRemote}
+              onSetUser={props.onSetUser}
+            />
+          )
         }
         onDocumentsSelected={onDocumentsSelected}
         disabledIds={documentIds}

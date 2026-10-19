@@ -57,8 +57,8 @@ const ProjectHome = (props: ProjectHomeProps) => {
 
   const orgPolicies = useOrganizationPolicies();
 
-  // Org Readers can be project admins, but can't upload documents
-  const canAddDocuments = Boolean(
+  // Org Readers can be project admins, but can't upload new documents
+  const canUpload = Boolean(
     isAdmin && orgPolicies?.get('documents').has('INSERT')
   );
 
@@ -219,7 +219,7 @@ const ProjectHome = (props: ProjectHomeProps) => {
           {tab === 'documents' ? (
             <DocumentsView
               isAdmin={isAdmin as boolean}
-              canAddDocuments={canAddDocuments}
+              canUpload={canUpload}
               documents={documents}
               project={props.project}
               setToast={setToast}
