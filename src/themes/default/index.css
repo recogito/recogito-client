@@ -145,6 +145,21 @@ html:root {
   --orange-500: #ffa929;
   --green-500: #0d870d;
 
+  /* Radix colors included for legacy reasons */
+  --black-a6: rgba(0, 0, 0, 0.4);
+  --black-a7: rgba(0, 0, 0, 0.5);
+  --black-a8: rgba(0, 0, 0, 0.6);
+  --black-a9: rgba(0, 0, 0, 0.7);
+
+  --mauve-10: #84828e;
+  --mauve-11: #65636d;
+  --mauve-12: #211f26;
+
+  --violet-3: #f4f0fe;
+  --violet-7: #c2b5f5;
+  --violet-8: #aa99ec;
+  --violet-11: #6550b9;
+
   /** Global constants **/
   --border-radius: 3px;
   --link-color: var(--brighter-blue);
