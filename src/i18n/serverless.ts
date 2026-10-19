@@ -1,5 +1,5 @@
 import i18next from 'i18next';
-import { i18n } from 'src/i18n/config';
+import { i18n } from 'astro:config/server';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 import enEmail from '../../public/locales/en/email.json';
 import deEmail from '../../public/locales/de/email.json';

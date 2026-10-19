@@ -1,4 +1,4 @@
-import { i18n } from 'src/i18n/config';
+import { i18n } from 'astro:config/client';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import HttpBackend from 'i18next-http-backend';
