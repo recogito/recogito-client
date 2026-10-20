@@ -1,7 +1,19 @@
-import i18next from 'i18next';
+import i18next, { type Resource } from 'i18next';
 import type { ApiPostInviteUserToProject } from 'src/Types';
 import { baseOptions, defaultLocale, supportedLocales } from './config';
-import { resources } from './resources';
+
+// NOTE: only the email namespace is bundled here, not the full set in ./resources
+const emailFiles = import.meta.glob<Record<string, string>>(
+  '/src/locales/*/email.json',
+  { eager: true, import: 'default' }
+);
+
+const resources: Resource = {};
+
+for (const [path, translations] of Object.entries(emailFiles)) {
+  const lng = path.split('/').slice(-2)[0];
+  resources[lng] = { email: translations };
+}
 
 export async function getTranslation(
   request: Request,
