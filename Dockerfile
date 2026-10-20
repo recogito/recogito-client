@@ -6,7 +6,7 @@ COPY . .
 
 RUN npm install
 
-# install any plugins in INSTALLED_PLUGINS env var via npm
+# install any plugins in INSTALLED_PLUGINS env var via npm (registry or GitHub)
 RUN if [ -f .env ]; then set -a && . ./.env && set +a; fi; \
     if [ -n "$INSTALLED_PLUGINS" ]; then \
       npm install $(echo "$INSTALLED_PLUGINS" | tr ',' ' '); \
