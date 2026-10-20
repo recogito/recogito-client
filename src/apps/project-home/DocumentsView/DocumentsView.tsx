@@ -47,6 +47,8 @@ import '../ProjectHome.css';
 interface DocumentsViewProps {
   isAdmin: boolean;
 
+  canUpload: boolean;
+
   documents: Document[];
 
   project: ExtendedProjectData;
@@ -405,15 +407,17 @@ export const DocumentsView = (props: DocumentsViewProps) => {
           clearDirtyFlag();
           setDocumentUpdated(false);
         }}
-        dropzone={props.isAdmin ? { getRootProps, isDragActive } : undefined}
+        dropzone={props.canUpload ? { getRootProps, isDragActive } : undefined}
         UploadActions={
-          <UploadActions
-            fileSizeLimit={fileSizeLimit}
-            me={props.user}
-            onUpload={open}
-            onImport={onImportRemote}
-            onSetUser={props.onSetUser}
-          />
+          props.canUpload && (
+            <UploadActions
+              fileSizeLimit={fileSizeLimit}
+              me={props.user}
+              onUpload={open}
+              onImport={onImportRemote}
+              onSetUser={props.onSetUser}
+            />
+          )
         }
         onDocumentsSelected={onDocumentsSelected}
         disabledIds={documentIds}
