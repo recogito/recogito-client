@@ -65,5 +65,9 @@
   "select users access level": "Berechtigungsstufe auswählen",
   "example of invite users spreadsheet": "Beispiel für eine Einladungs-Tabelle",
   "edit document metadata": "Dokument-Metadaten bearbeiten",
-  "collection management": "Sammlungsverwaltung"
+  "collection management": "Sammlungsverwaltung",
+  "select all users for this action": "alle Benutzer für diese Aktion auswählen",
+  "enter user email": "E-Mail-Adresse des Benutzers eingeben",
+  "Show notifications": "Benachrichtigungen anzeigen",
+  "edit document title": "Dokumenttitel bearbeiten"
 }
