@@ -3,7 +3,7 @@ import type { Resource } from 'i18next';
 // NOTE: locale JSON is bundled at build time, so this works in SSR and in
 // serverless functions without filesystem access
 const localeFiles = import.meta.glob<Record<string, string>>(
-  '/public/locales/*/*.json',
+  '/src/locales/*/*.json',
   { eager: true, import: 'default' }
 );
 
