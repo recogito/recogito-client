@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import type { Invitation } from 'src/Types';
 import { joinProject } from '@backend/helpers/invitationHelpers';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { I18nextProvider, useTranslation } from 'react-i18next';
-import clientI18next from 'src/i18n/client';
+import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/client';
 
 import './AcceptInvite.css';
 
@@ -63,8 +64,14 @@ const AcceptInvite = (props: AcceptInviteProps) => {
   );
 };
 
-export const AcceptInviteApp = (props: AcceptInviteProps) => (
-  <I18nextProvider i18n={clientI18next}>
-    <AcceptInvite {...props} />
-  </I18nextProvider>
-);
+export const AcceptInviteApp = (
+  { lng, resources, ...props }: AcceptInviteProps & PreloadedI18nProps
+) => {
+  const [i18n] = useState(() => createClientI18n(lng, resources));
+
+  return (
+    <I18nextProvider i18n={i18n}>
+      <AcceptInvite {...props} />
+    </I18nextProvider>
+  );
+};

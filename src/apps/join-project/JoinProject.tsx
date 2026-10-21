@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { joinProject } from '@backend/helpers';
 import type { ExtendedProjectData } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import clientI18next from 'src/i18n/client';
+import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/client';
 import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import './JoinProject.css';
@@ -55,8 +56,14 @@ const JoinProject = (props: JoinProjectProps) => {
   )
 }
 
-export const JoinProjectApp = (props: JoinProjectProps) => (
-  <I18nextProvider i18n={clientI18next}>
-    <JoinProject {...props} />
-  </I18nextProvider>
-);
+export const JoinProjectApp = (
+  { lng, resources, ...props }: JoinProjectProps & PreloadedI18nProps
+) => {
+  const [i18n] = useState(() => createClientI18n(lng, resources));
+
+  return (
+    <I18nextProvider i18n={i18n}>
+      <JoinProject {...props} />
+    </I18nextProvider>
+  );
+};

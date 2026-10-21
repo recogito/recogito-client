@@ -1,4 +1,5 @@
 import type { Resource } from 'i18next';
+import { defaultLocale } from './config';
 
 // NOTE: locale JSON is bundled at build time, so this works in SSR and in
 // serverless functions without filesystem access
@@ -15,3 +16,19 @@ for (const [path, translations] of Object.entries(localeFiles)) {
 
   resources[lng] = { ...resources[lng], [ns]: translations };
 }
+
+// the namespaces an SSR'd island renders, plus the fallback locale's copies, so
+// the first render (server and client) has every string without a load
+export const pickResources = (lng: string, namespaces: string[]): Resource => {
+  const picked: Resource = {};
+
+  for (const l of new Set([lng, defaultLocale])) {
+    picked[l] = Object.fromEntries(
+      namespaces
+        .filter((ns) => resources[l]?.[ns])
+        .map((ns) => [ns, resources[l][ns]])
+    );
+  }
+
+  return picked;
+};
