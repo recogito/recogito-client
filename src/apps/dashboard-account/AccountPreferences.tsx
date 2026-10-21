@@ -9,7 +9,7 @@ import { TopBar } from '@components/TopBar';
 import type { MyProfile } from 'src/Types';
 import { getGravatar } from './getGravatar';
 import { I18nextProvider, useTranslation } from 'react-i18next';
-import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/client';
+import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/preloaded';
 
 import './AccountPreferences.css';
 

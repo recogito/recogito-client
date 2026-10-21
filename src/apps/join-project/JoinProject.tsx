@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { joinProject } from '@backend/helpers';
 import type { ExtendedProjectData } from 'src/Types';
 import { supabase } from '@backend/supabaseBrowserClient';
-import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/client';
+import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/preloaded';
 import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import './JoinProject.css';

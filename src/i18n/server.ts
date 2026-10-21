@@ -11,5 +11,6 @@ export async function getFixedT(locale?: string, namespaces?: string[]) {
     lng: locale,
     ns: namespaces,
     resources,
+    interpolation: { escapeValue: true },
   });
 }
