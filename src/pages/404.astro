@@ -1,7 +1,7 @@
 ---
 import { getFixedT } from 'src/i18n/server';
 import BaseLayout from '@layouts/BaseLayout.astro';
-import { i18n } from 'astro:config/server';
+import { i18n } from 'astro:config/client';
 
 const supported = i18n?.locales || ['en', 'de'];
 const preferred = Astro.preferredLocale;
