@@ -4,9 +4,9 @@
   "Display Name": "Anzeigename",
   "Access Level": "Berechtigung",
   "You": "Du",
-  "User ID": "User ID",
+  "User ID": "Benutzer-ID",
   "User Management": "Benutzerverwaltung",
-  "Email": "Email",
+  "Email": "E-Mail",
   "Last Sign In": "Letzer Login",
   "Search Users": "Benutzer suchen",
   "Something went wrong": "Etwas ist schiefgelaufen",
@@ -22,5 +22,7 @@
   "Invite a user to join your organization. They will be sent an email that will allow them to confirm account details.": "Lade einen BenutzerIn ein. Die Person erhält eine E-Mail über die sie ihre Kontodetails bestätigen kann.",
   "Invite": "Einladen",
   "Never": "-",
-  "User has been invited.": "Einladung verschickt."
+  "User has been invited.": "Einladung verschickt.",
+  "removeName": "Bist Du sicher, dass Du <strong>{{name}}</strong> aus dem Projekt entfernen möchtest?",
+  "Anonymous team member": "Anonymes Teammitglied"
 }
