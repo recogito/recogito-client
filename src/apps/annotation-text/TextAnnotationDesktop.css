@@ -1,4 +1,4 @@
-html, body {
+html:has(.ta-desktop), body:has(.ta-desktop) {
   background-color: var(--gray-100);
   height: 100%;
   overscroll-behavior: none;
