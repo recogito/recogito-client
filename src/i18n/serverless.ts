@@ -1,38 +1,41 @@
-import i18next from 'i18next';
-import { i18n } from 'astro:config/server';
+import i18next, { type Resource } from 'i18next';
 import type { ApiPostInviteUserToProject } from 'src/Types';
-import enEmail from '../../public/locales/en/email.json';
-import deEmail from '../../public/locales/de/email.json';
-// NOTE: i18n JSON has to be bundled directly here, as this runs
-// in a serverless function and will not have access to the filesystem
+import { baseOptions, defaultLocale, supportedLocales } from './config';
+
+// NOTE: only the email namespace is bundled here, not the full set in ./resources
+const emailFiles = import.meta.glob<Record<string, string>>(
+  '/src/locales/*/email.json',
+  { eager: true, import: 'default' }
+);
+
+const resources: Resource = {};
+
+for (const [path, translations] of Object.entries(emailFiles)) {
+  const lng = path.split('/').slice(-2)[0];
+  resources[lng] = { email: translations };
+}
 
 export async function getTranslation(
   request: Request,
   body: ApiPostInviteUserToProject
 ) {
   // attempt to get lang from request headers or body; fallback to default en
-  const supportedLangs = (i18n?.locales as string[]) || ['en', 'de'];
-  const defaultLocale = i18n?.defaultLocale || 'en';
   const headerLang = request.headers
     .get('accept-language')
     ?.split(',')[0]
     .split('-')[0];
   const lang =
-    [body.lang, headerLang].find((l) => l && supportedLangs.includes(l)) ||
+    [body.lang, headerLang].find((l) => l && supportedLocales.includes(l)) ||
     defaultLocale;
 
   // create a minimal i18next instance for a single serverless function invocation
   const i18nextInstance = i18next.createInstance();
   await i18nextInstance.init({
+    ...baseOptions,
     lng: lang,
-    fallbackLng: 'en',
     ns: ['email'],
     defaultNS: 'email',
-    interpolation: { escapeValue: false },
-    resources: {
-      en: { email: enEmail },
-      de: { email: deEmail },
-    },
+    resources,
   });
 
   return {

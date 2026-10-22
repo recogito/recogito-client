@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useProjectPolicies } from '@backend/hooks/usePolicies';
+import {
+  useOrganizationPolicies,
+  useProjectPolicies,
+} from '@backend/hooks/usePolicies';
 import { Toast, ToastProvider } from '@components/Toast';
 import type { ToastContent } from '@components/Toast';
 import { ProjectHeader } from './ProjectHeader';
@@ -51,6 +54,13 @@ const ProjectHome = (props: ProjectHomeProps) => {
   const projectPolicies = useProjectPolicies(props.project.id);
 
   const isAdmin = projectPolicies?.get('projects').has('UPDATE');
+
+  const orgPolicies = useOrganizationPolicies();
+
+  // Org Readers can be project admins, but can't upload new documents
+  const canUpload = Boolean(
+    isAdmin && orgPolicies?.get('documents').has('INSERT')
+  );
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
@@ -209,6 +219,7 @@ const ProjectHome = (props: ProjectHomeProps) => {
           {tab === 'documents' ? (
             <DocumentsView
               isAdmin={isAdmin as boolean}
+              canUpload={canUpload}
               documents={documents}
               project={props.project}
               setToast={setToast}
