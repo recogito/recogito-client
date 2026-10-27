@@ -23,6 +23,6 @@
   "EXPORT": "Exportieren",
   "Download": "Herunterladen",
   "IMPORT": "Import",
-  "Menu actions for job": "Menu actions for job: {{name}}",
+  "Menu actions for job": "Menüaktionen für Job: {{name}}",
   "remove this job": "Job entfernen"
 }

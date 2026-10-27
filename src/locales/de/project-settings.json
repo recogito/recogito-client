@@ -10,7 +10,7 @@
   "Clear All": "Alle Löschen",
   "Save Changes": "Änderungen Speichern",
   "Add to Vocabulary": "Zum Vokabular Hinzufügen",
-  "VOCABULARY_PLACEHOLDER": "Lion\nBird\nDolphin, https://www.wikidata.org/wiki/Q7369\n...",
+  "VOCABULARY_PLACEHOLDER": "Löwe\nVogel\nDelfin, https://www.wikidata.org/wiki/Q7369\n...",
   "Error loading tag vocabulary.": "Fehler beim Laden des Tag-Vokabulars.",
   "Error saving tag vocabulary.": "Fehler beim Speichern des Tag-Vokabulars.",
   "Something went wrong": "Etwas ist schiefgelaufen",
@@ -34,5 +34,11 @@
   "Right panel will display annotations when opening a document": "Die rechte Seitenlesite zeigt beim Öffnen des Dokuments die Annotationsliste",
   "Right panel will display notes when opening a document": "Die rechte Seitenleiste zeigt beim Öffnen des Dokuments die Notizen-Liste",
   "Are you sure you want to lock this project?": "Bist Du sicher dass Du dieses Projekt sperren willst?",
-    "Available Plugins": "Verfügbare Plugins"
+    "Available Plugins": "Verfügbare Plugins",
+  "Open Join": "Offener Beitritt",
+  "Open Edit": "Offene Bearbeitung",
+  "open-join-info": "Wenn 'Offener Beitritt' aktiviert ist, kann jeder registrierte Benutzer Deinem Projekt ohne Einladung beitreten.",
+  "open-edit-info": "Wenn 'Offene Bearbeitung' aktiviert ist, kann jedes Mitglied Deines Projekts den Standard-Arbeitsauftrag bearbeiten.",
+  "Project Name": "Projektname",
+  "Project Description": "Projektbeschreibung"
 }

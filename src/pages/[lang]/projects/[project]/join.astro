@@ -1,11 +1,13 @@
 ---
+import { defaultLocale } from 'src/i18n/config';
+import { pickResources } from 'src/i18n/resources';
 import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { getProjectExtended } from '@backend/helpers';
 import { JoinProjectApp } from '@apps/join-project';
 
-const lang = Astro.currentLocale;
+const lang = Astro.currentLocale || defaultLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -34,7 +36,12 @@ if (isAlreadyMember) {
 
 ---
 <HeaderLayout title='join'>
-  <JoinProjectApp client:only='react' project={project.data} />
+  <JoinProjectApp
+    client:load
+    project={project.data}
+    lng={lang}
+    resources={pickResources(lang, ['dashboard-projects', 'common'])}
+  />
 </HeaderLayout>
 
 <style>

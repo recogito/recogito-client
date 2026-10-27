@@ -48,6 +48,7 @@
   "Join": "Beitreten",
   "Join Project": "Projekt Beitreten",
   "Join Project Message": "Diese Projekt ist für alle Benutzer öffentlich zugänglich. Möchtest Du beitreten?",
+  "You are not a member message": "Du bist noch kein Mitglied dieses Projekts. Möchtest Du beitreten?",
   "assignments": "Arbeitsaufträge",
   "assignment": "Arbeitsauftrag",
   "Public Projects": "Öffentliche Projekte",
@@ -101,6 +102,15 @@
   "Successfully updated projects in group": "Projekte in ${name} wurden aktualisiert",
   "Export project": "Projekt exportieren",
   "Import Project": "Projekt importieren",
-  "Failed to export project.": "Failed to export project.",
-  "Failed to import project.": "Failed to import project."
+  "Failed to export project.": "Projekt konnte nicht exportiert werden.",
+  "Failed to import project.": "Projekt konnte nicht importiert werden.",
+  "Users": "Benutzer",
+  "Site Administration": "Website-Administration",
+  "Open Join": "Offener Beitritt",
+  "Open Edit": "Offene Bearbeitung",
+  "open-join-info": "Wenn 'Offener Beitritt' aktiviert ist, kann jeder registrierte Benutzer Deinem Projekt ohne Einladung beitreten.",
+  "open-edit-info": "Wenn 'Offene Bearbeitung' aktiviert ist, kann jedes Mitglied Deines Projekts den Standard-Arbeitsauftrag bearbeiten",
+  "More": "Mehr",
+  "Select Groups": "Gruppen auswählen",
+  "Select Projects": "Projekte auswählen"
 }
