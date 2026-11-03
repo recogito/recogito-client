@@ -51,7 +51,7 @@ button.accordion-trigger {
 }
 
 button.accordion-trigger:hover {
-	background-color: var(--gray-2);
+	background-color: var(--gray-50);
 }
 
 .accordion-content {

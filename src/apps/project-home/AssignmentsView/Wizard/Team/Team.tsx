@@ -15,7 +15,6 @@ import type { ExtendedProjectData, Group, UserProfile } from 'src/Types';
 import type { AssignmentSpec } from '../AssignmentSpec';
 import { useSelectableRows } from '../useSelectableRows';
 import { RadioCards } from '@components/RadioCards';
-import { Theme } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
 
 import './Team.css';
@@ -144,7 +143,7 @@ export const Team = (props: TeamProps) => {
 
   return (
     <>
-      <Theme className='tab-team-theme'>
+      <div>
         <div className='row tab-team'>
           <section className='column'>
             <h2>{t('Step', { ns: 'project-assignments' })} 4</h2>
@@ -294,7 +293,7 @@ export const Team = (props: TeamProps) => {
             {t('Next', { ns: 'project-assignments' })}
           </button>
         </section>
-      </Theme>
+      </div>
     </>
   );
 };

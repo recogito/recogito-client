@@ -1,31 +1,31 @@
-import { i18n } from 'astro:config/client';
 import { createInstance } from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import HttpBackend from 'i18next-http-backend';
-import BrowserLanguageDetector from 'i18next-browser-languagedetector';
+import resourcesToBackend from 'i18next-resources-to-backend';
+import { baseOptions, defaultLocale, supportedLocales } from './config';
+import { loadNamespace } from './loaders';
 
-// render-time i18next instance
+// all routes are /[lang]/...; islands using this instance are client:only, so
+// window is available
+const getLanguage = () => {
+  const lng =
+    typeof window === 'undefined'
+      ? undefined
+      : window.location.pathname.split('/')[1];
+
+  return lng && supportedLocales.includes(lng) ? lng : defaultLocale;
+};
+
+// render-time i18next instance for client:only islands
 const clientI18next = createInstance();
 
 clientI18next
-  .use(HttpBackend)
-  .use(BrowserLanguageDetector)
+  .use(resourcesToBackend(loadNamespace))
   .use(initReactI18next)
   .init({
-    // NOTE: These are defined in astro.config.mjs; fallback values are just to make TS happy
-    fallbackLng: i18n?.defaultLocale || 'en',
-    supportedLngs: (i18n?.locales as Array<string>) || ['en'],
+    ...baseOptions,
+    lng: getLanguage(),
     ns: [],
-    defaultNS: 'common',
-    backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
-    },
-    interpolation: { escapeValue: false },
-    detection: {
-      order: ['path', 'navigator'],
-      lookupFromPathIndex: 0,
-    },
-    maxRetries: 1
+    maxRetries: 1,
   });
 
 export default clientI18next;

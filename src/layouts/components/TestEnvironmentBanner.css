@@ -4,7 +4,7 @@
 
 body:has(> .test-environment-banner) {
   box-sizing: border-box;
-  padding-top: var(--test-environment-banner-height);
+  padding-top: var(--test-environment-banner-height) !important;
 }
 
 .test-environment-banner {

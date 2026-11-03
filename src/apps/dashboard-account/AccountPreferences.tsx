@@ -9,7 +9,7 @@ import { TopBar } from '@components/TopBar';
 import type { MyProfile } from 'src/Types';
 import { getGravatar } from './getGravatar';
 import { I18nextProvider, useTranslation } from 'react-i18next';
-import clientI18next from 'src/i18n/client';
+import { createClientI18n, type PreloadedI18nProps } from 'src/i18n/preloaded';
 
 import './AccountPreferences.css';
 
@@ -175,8 +175,14 @@ const AccountPreferences = (props: AccountPreferencesProps) => {
 };
 
 
-export const AccountPreferencesApp = (props: AccountPreferencesProps) => (
-  <I18nextProvider i18n={clientI18next}>
-    <AccountPreferences {...props} />
-  </I18nextProvider>
-);
+export const AccountPreferencesApp = (
+  { lng, resources, ...props }: AccountPreferencesProps & PreloadedI18nProps
+) => {
+  const [i18n] = useState(() => createClientI18n(lng, resources));
+
+  return (
+    <I18nextProvider i18n={i18n}>
+      <AccountPreferences {...props} />
+    </I18nextProvider>
+  );
+};

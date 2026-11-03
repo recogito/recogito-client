@@ -1,12 +1,12 @@
 # Modified from https://docs.astro.build/en/recipes/docker/
-FROM node:22 AS runtime
+FROM node:26 AS runtime
 WORKDIR /app
 
 COPY . .
 
 RUN npm install
 
-# install any plugins in INSTALLED_PLUGINS env var via npm
+# install any plugins in INSTALLED_PLUGINS env var via npm (registry or GitHub)
 RUN if [ -f .env ]; then set -a && . ./.env && set +a; fi; \
     if [ -n "$INSTALLED_PLUGINS" ]; then \
       npm install $(echo "$INSTALLED_PLUGINS" | tr ',' ' '); \

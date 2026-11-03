@@ -1,10 +1,12 @@
 ---
+import { defaultLocale } from 'src/i18n/config';
+import { pickResources } from 'src/i18n/resources';
 import HeaderLayout from '@layouts/HeaderLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud';
 import { AcceptInviteApp } from '@apps/accept-invite';
 
-const lang = Astro.currentLocale;
+const lang = Astro.currentLocale || defaultLocale;
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
 
@@ -29,7 +31,12 @@ if (!invitation.data || invitation.error) {
 ---
 
 <HeaderLayout title='accept-invite'>
-  <AcceptInviteApp client:only='react' invitation={invitation.data} />
+  <AcceptInviteApp
+    client:load
+    invitation={invitation.data}
+    lng={lang}
+    resources={pickResources(lang, ['dashboard-projects', 'project-collaboration'])}
+  />
 </HeaderLayout>
 
 <style>

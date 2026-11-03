@@ -1,11 +1,13 @@
 ---
+import { defaultLocale } from 'src/i18n/config';
+import { pickResources } from 'src/i18n/resources';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { createSupabaseServerClient } from '@backend/supabaseServerClient';
 import { getMyProfile } from '@backend/crud/profiles';
 import { AccountPreferencesApp } from '@apps/dashboard-account/AccountPreferences';
 import { getFixedT } from 'src/i18n/server';
 
-const lang = Astro.currentLocale;
+const lang = Astro.currentLocale || defaultLocale;
 const t = await getFixedT(lang, ['dashboard-account']);
 
 const supabase = await createSupabaseServerClient(Astro.request, Astro.cookies);
@@ -17,7 +19,12 @@ if (error || !data) {
 ---
 
 <BaseLayout title={t('Account Preferences', { ns: 'dashboard-account' })}>
-  <AccountPreferencesApp client:only='react' profile={data} />
+  <AccountPreferencesApp
+    client:load
+    profile={data}
+    lng={lang}
+    resources={pickResources(lang, ['common', 'dashboard-account', 'a11y', 'account-menu', 'notifications'])}
+  />
 </BaseLayout>
 
 <style>

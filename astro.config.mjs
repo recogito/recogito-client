@@ -18,7 +18,12 @@ export default defineConfig({
   output: 'server',
   vite: {
     ssr: {
-      noExternal: ['clsx', '@phosphor-icons/*', '@radix-ui/*'],
+      noExternal: [
+        'clsx',
+        '@phosphor-icons/*',
+        '@radix-ui/*',
+        'timeago.js'
+      ]
     },
   },
 });
