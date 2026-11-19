@@ -1,5 +1,6 @@
 import { MetadataModal } from '@components/MetadataModal';
 import { SearchInput } from '@components/SearchInput/SearchInput.tsx';
+import { SortDropdown, type SortOption } from '@components/SortDropdown';
 import { ToggleDisplay } from '@components/ToggleDisplay';
 import type { ToggleDisplayValue } from '@components/ToggleDisplay';
 import React, {
@@ -32,6 +33,7 @@ import { useTranslation } from 'react-i18next';
 import { DocumentList } from './DocumentList';
 import { MissingBadge } from './MissingBadge';
 import { SUPPORTED_UPLOAD_FORMATS } from '@util/general';
+import { useLocalStorageBackedState } from '@util/hooks';
 
 export type LibraryDocument = Pick<
   Document,
@@ -81,6 +83,16 @@ const SORT_FIELDS: Record<string, string> = {
   AUTHOR: 'author',
 };
 
+type LibrarySort = { key: string; direction: 'asc' | 'desc' };
+
+const DEFAULT_SORT: LibrarySort = { key: 'TITLE', direction: 'asc' };
+
+const isValidSort = (sort: any): sort is LibrarySort =>
+  !!sort &&
+  typeof sort.key === 'string' &&
+  sort.key in SORT_FIELDS &&
+  (sort.direction === 'asc' || sort.direction === 'desc');
+
 export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const { t } = useTranslation([
     'project-home',
@@ -127,16 +139,54 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
   const [statsRefresh, setStatsRefresh] = useState(0);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
-  // see sortKey in columnsCollection
-  const [sort, setSort] = useState<{ key: string; direction: 'asc' | 'desc' }>({
-    key: 'TITLE',
-    direction: 'asc',
-  });
+  // The user's last sort choice, remembered across visits. see sortKey in columnsCollection
+  const [storedSort, setSort] = useLocalStorageBackedState<LibrarySort>(
+    'rs-document-library-sort',
+    DEFAULT_SORT
+  );
+
+  // Author is only a column in the collection view; elsewhere, sort by title
+  const sort = useMemo(() => {
+    if (!isValidSort(storedSort)) return DEFAULT_SORT;
+    if (storedSort.key === 'AUTHOR' && view !== 'collection')
+      return DEFAULT_SORT;
+    return storedSort;
+  }, [storedSort, view]);
+
   const onSort = (key: string) => {
-    setSort((prev) => ({
+    setSort({
       key,
-      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
-    }));
+      direction: sort.key === key && sort.direction === 'asc' ? 'desc' : 'asc',
+    });
+  };
+
+  // Sort dropdown for the grid view, which has no column headers
+  const sortOptions = useMemo(() => {
+    const options: SortOption[] = [
+      { value: 'TITLE:asc', label: t('Title (A–Z)', { ns: 'project-home' }) },
+      { value: 'TITLE:desc', label: t('Title (Z–A)', { ns: 'project-home' }) },
+    ];
+
+    // Author is only a column in the collection view
+    if (view === 'collection') {
+      options.push(
+        {
+          value: 'AUTHOR:asc',
+          label: t('Author/Artist (A–Z)', { ns: 'project-home' }),
+        },
+        {
+          value: 'AUTHOR:desc',
+          label: t('Author/Artist (Z–A)', { ns: 'project-home' }),
+        }
+      );
+    }
+
+    return options;
+  }, [view, t]);
+
+  const onSelectSort = (value: string) => {
+    const [key, direction] = value.split(':') as [string, 'asc' | 'desc'];
+    setSort({ key, direction });
   };
 
   const filterLabel = useMemo(() => {
@@ -740,6 +790,14 @@ export const DocumentLibrary = (props: DocumentLibraryProps) => {
                       placeholder={t('Search', { ns: 'common' })}
                       search={search}
                     />
+
+                    {documentsView === 'cards' && (
+                      <SortDropdown
+                        options={sortOptions}
+                        value={`${sort.key}:${sort.direction}`}
+                        onChange={onSelectSort}
+                      />
+                    )}
 
                     <ToggleDisplay
                       display={documentsView}
