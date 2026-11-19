@@ -81,3 +81,11 @@ export const formatFileSize = (bytes: number) => {
 };
 
 export const SUPPORTED_UPLOAD_FORMATS = '.txt .xml .jpg .png .tif .gif .jp2 .bmp .pdf';
+
+/**
+ * Whether a document is an image: an uploaded image file (`image/*`) or a
+ * IIIF resource, which has no content type. Everything else (plain text,
+ * TEI/XML, PDF) counts as text.
+ */
+export const isImageDocument = (document: { content_type?: string }) =>
+  !document.content_type || document.content_type.startsWith('image/');

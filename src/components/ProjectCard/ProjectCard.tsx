@@ -9,6 +9,7 @@ import {
 } from '@phosphor-icons/react';
 import { joinProject } from '@backend/helpers';
 import { Avatar } from '@components/Avatar';
+import { isImageDocument } from '@util/general';
 import type {
   ExtendedProjectData,
   MyProfile,
@@ -53,9 +54,9 @@ export const ProjectCard = (props: ProjectCardProps) => {
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
 
-  const images = documents.filter(({ content_type }) => !content_type);
+  const images = documents.filter(isImageDocument);
 
-  const texts = documents.filter(({ content_type }) => content_type);
+  const texts = documents.filter((d) => !isImageDocument(d));
 
   const { t, i18n } = useTranslation(['common', 'dashboard-projects']);
 
