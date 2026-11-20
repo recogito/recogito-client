@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import {
-  Article,
+  ArticleIcon,
   CheckIcon,
-  CheckSquare,
-  Image,
-  Square,
+  CheckSquareIcon,
+  ImageIcon,
+  SquareIcon,
   WarningIcon,
 } from '@phosphor-icons/react';
 import * as Checkbox from '@radix-ui/react-checkbox';
@@ -13,6 +13,7 @@ import {
   assignmentSpecToContext,
   type AssignmentSpec,
 } from '../AssignmentSpec';
+import { isImageDocument } from '@util/general';
 import { useSelectableRows } from '../useSelectableRows';
 import { Label } from '@radix-ui/react-label';
 import { useTranslation } from 'react-i18next';
@@ -77,7 +78,7 @@ export const Documents = (props: DocumentsProps) => {
                     onCheckedChange={toggleAll}
                   >
                     <Checkbox.Indicator>
-                      <CheckSquare size={20} weight='fill' />
+                      <CheckSquareIcon size={20} weight='fill' />
                     </Checkbox.Indicator>
 
                     {!isAllSelected && (
@@ -88,7 +89,7 @@ export const Documents = (props: DocumentsProps) => {
                             ns: 'a11y',
                           })}
                         >
-                          <Square size={20} id='all-documents' />
+                          <SquareIcon size={20} id='all-documents' />
                         </Label>
                       </span>
                     )}
@@ -115,7 +116,7 @@ export const Documents = (props: DocumentsProps) => {
                           htmlFor={`document-${document.id}`}
                           aria-label={`${t('remove document', { ns: 'a11y' })} ${document.name} ${t('from this assignment', { ns: 'a11y' })}`}
                         >
-                          <CheckSquare size={20} weight='fill' />
+                          <CheckSquareIcon size={20} weight='fill' />
                         </Label>
                       </Checkbox.Indicator>
 
@@ -125,7 +126,7 @@ export const Documents = (props: DocumentsProps) => {
                           aria-label={`${t('add document', { ns: 'a11y' })} ${document.name} ${t('to this assignment', { ns: 'a11y' })}`}
                         >
                           <span>
-                            <Square size={20} id={`document-${document.id}`} />
+                            <SquareIcon size={20} id={`document-${document.id}`} />
                           </span>
                         </Label>
                       )}
@@ -133,11 +134,10 @@ export const Documents = (props: DocumentsProps) => {
                   </td>
 
                   <td>
-                    {/* Temporary hack - for now, everything that has a content type is a text ! */}
-                    {document.content_type ? (
-                      <Article size={16} />
+                    {isImageDocument(document) ? (
+                      <ImageIcon size={16} />
                     ) : (
-                      <Image size={16} />
+                      <ArticleIcon size={16} />
                     )}
                   </td>
 
