@@ -170,6 +170,8 @@ export interface Document {
 
   collection_metadata?: CollectionMetadata;
 
+  added_at?: string;
+
   is_document_group?: boolean;
 
   document_group_id?: string | null;

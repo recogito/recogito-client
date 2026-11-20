@@ -85,3 +85,12 @@
 .document-card-container.dragging > .document-card > .document-drag-handle {
   cursor: grabbing;
 }
+
+/* drag-and-drop is off while the documents are sorted */
+.document-card-container > .document-card > .document-drag-handle.disabled {
+  cursor: not-allowed;
+}
+
+.document-card-container > .document-card > .document-drag-handle.disabled svg {
+  opacity: 0.3;
+}

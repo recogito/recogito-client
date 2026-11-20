@@ -42,6 +42,12 @@ body:has(.project-home) {
   cursor: pointer;
 }
 
+.project-home-document-header-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
 .project-home .admin-actions {
   display: flex;
 }

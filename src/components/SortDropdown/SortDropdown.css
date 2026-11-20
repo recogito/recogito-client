@@ -1,0 +1,26 @@
+.sort-dropdown-trigger {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.sort-dropdown-trigger svg {
+  flex: 0 0 auto;
+}
+
+.sort-dropdown-current {
+  color: var(--font-dark);
+  display: grid;
+  font-weight: 500;
+  text-align: left;
+}
+
+.sort-dropdown-label {
+  grid-area: 1 / 1;
+}
+
+.sort-dropdown-label.is-hidden {
+  visibility: hidden;
+}
