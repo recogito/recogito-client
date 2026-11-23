@@ -68,7 +68,7 @@
     "annotpdf": "^1.0.15",
     "astro": "^7.4.2",
     "classnames": "^2.5.1",
-    "cozy-iiif": "^0.13.0",
+    "cozy-iiif": "^1.0.0",
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "dotenv": "^17.4.2",

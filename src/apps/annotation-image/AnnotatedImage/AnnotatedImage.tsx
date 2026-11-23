@@ -10,7 +10,7 @@ import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
 import { useExtensions } from '@recogito/studio-sdk';
 import { useFilter } from '@recogito/studio-sdk/components';
 import { ExtensionMount } from '@components/Plugins';
-import type { CozyCanvas, CozyImageResource } from 'cozy-iiif';
+import type { CozyCanvas, CozyImageInfo, CozyImageResource } from 'cozy-iiif';
 import type { DocumentLayer, Policies, VocabularyTerm } from 'src/Types';
 import type {
   AnnotoriousOpenSeadragonAnnotator,
@@ -49,7 +49,7 @@ interface AnnotatedImageProps {
 
   isLocked: boolean;
 
-  currentImage: CozyImageResource;
+  currentImage: CozyImageResource | CozyImageInfo;
 
   currentCanvas?: CozyCanvas;
 
