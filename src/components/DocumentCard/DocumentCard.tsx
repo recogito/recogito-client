@@ -11,6 +11,7 @@ import { DocumentViewRight, type Context, type Document } from 'src/Types';
 import './DocumentCard.css';
 import { useTranslation } from 'react-i18next';
 import type { LibraryDocument } from '@components/DocumentLibrary';
+import { useExtensions } from '@recogito/studio-sdk';
 
 type DocumentCardViewProps =
   | { view: 'project'; context: Context }
@@ -66,6 +67,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
     }),
     [transform, transition]
   );
+
+  // const extensions = useExtensions('project:document-default-view');
+  // console.log(extensions);
 
   const onOpen = useCallback(
     (tab: boolean) => {
