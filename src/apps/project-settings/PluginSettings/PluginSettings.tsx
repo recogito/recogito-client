@@ -120,7 +120,9 @@ export const PluginSettings = (props: PluginSettingsProps) => {
         </div>
 
         <DocumentBehavior 
-          installedPlugins={installedPlugins} />
+          project={props.project}
+          installedPlugins={installedPlugins} 
+          onUpdateBehavior={setInstalledPlugins} />
       </div>
 
       <div className='installed-plugins'>
