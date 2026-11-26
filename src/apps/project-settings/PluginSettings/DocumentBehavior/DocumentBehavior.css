@@ -27,6 +27,7 @@
   margin: 0;
   padding: 0.4em 0 0 0;
   font-size: var(--font-small);
+  color: var(--font-light);
 }
 
 .document-behavior .select-trigger {

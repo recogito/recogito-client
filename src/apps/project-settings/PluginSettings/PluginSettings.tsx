@@ -106,7 +106,7 @@ export const PluginSettings = (props: PluginSettingsProps) => {
 
         <div className='browse-available-plugins'>
           <p className='hint'>
-            Add super-powers to your annotation project with Plugins.
+            Add super-powers to your annotation project with plugins.
           </p>
 
           <GetPlugins
