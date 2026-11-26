@@ -54,3 +54,21 @@ export const updatePluginSettings = (
       project_id,
       plugin_name
     });
+
+export const updateDefaultRouteProvider = (
+  supabase: SupabaseClient,
+  project_id: string,
+  from_plugin_name?: string,
+  to_plugin_name?: string 
+) => {
+  if (from_plugin_name === to_plugin_name) return Promise.resolve({});
+
+  if (!from_plugin_name && to_plugin_name) {
+    // SET from DEFAULT to plugin
+  } else if (from_plugin_name && !to_plugin_name) {
+    // RESET from plugin to und DEFAULT
+  } else {
+    // Change providing plugin - needs two steps due to uniqueness constraint
+  }
+
+}

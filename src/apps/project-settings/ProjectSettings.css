@@ -6,7 +6,7 @@
 
 .project-settings .tab-container {
   max-width: 65ch;
-  padding: 20px 0;
+  padding: 30px 30px 100px 30px;
   z-index: 100;
   overflow-y: auto;
 }
@@ -228,16 +228,25 @@
 
 .project-plugins {
   flex-grow: 1;
-  padding: 0 40px 80px 40px;
 }
 
-.project-plugins .browse-plugins {
+.project-plugins .project-plugins-header {
   margin-bottom: 3em;
 }
 
-.project-plugins .hint {
+.project-plugins .browse-available-plugins {
   font-size: var(--font-small);
-  padding-bottom: 0.2em;
+  max-width: 75ch;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem 0 0 0;
+  margin-bottom: 4em;
+}
+
+.project-plugins .hint {
+  padding: 0 0 0.2em 0;
+  margin-top: 0;
 }
 
 .project-plugins h2 {
@@ -250,8 +259,19 @@
   border: 1px solid var(--gray-200);
   font-size: var(--font-small);
   margin-top: 20px;
-  max-width: 75ch;
+  max-width: 680px;
   position: relative;
+}
+
+.project-plugins .plugin-admin-tile .default-view-badge {
+  font-weight: normal;
+  font-size: var(--font-tiny);
+  background-color: var(--background-light-blue);
+  color: var(--dark-blue);
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-left: 0.5em;
+  vertical-align: bottom;
 }
 
 .project-plugins .plugin-admin-tile .description {

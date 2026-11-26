@@ -4,7 +4,7 @@ import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { supabase } from '@backend/supabaseBrowserClient';
 import { deleteInstalledPlugin, insertInstalledPlugin } from '@backend/helpers';
 import { Button } from '@components/Button';
-import Thumbnails from '../../../plugins/generated/thumbnails';
+import Thumbnails from '../../../../plugins/generated/thumbnails';
 import type { Project } from 'src/Types';
 
 interface PluginGalleryItemProps {
@@ -37,7 +37,7 @@ export const PluginGalleryItem = (props: PluginGalleryItemProps) => {
       importThumbnail()
         .then(data => setImage(data.default.src));
     } else {
-      import('../../../plugins/default-thumbnail.png')
+      import('../../../../plugins/default-thumbnail.png')
         .then(data => setImage(data.default.src));
     }
   }, []);

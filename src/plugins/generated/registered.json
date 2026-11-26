@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "name": "Metaphor Annotation View",
+    "module_name": "@recogito/metaphor-annotation-plugin",
+    "description": "A plugin that adds the Metaphor Annotation View, a custom annotation view for TEI documents.",
+    "author": "Performant Software",
+    "homepage": "https://www.performantsoftware.com/",
+    "extensions": [
+      {
+        "name": "metaphor-annotation-default-route",
+        "extension_point": "project:document-default-view",
+        "route_pattern": "/{lang}/annotate-metaphor/{contextId}/{documentId}/",
+        "allowed": [
+          "text/xml",
+          "image/*",
+          null
+        ]
+      }
+    ]
+  }
+]
