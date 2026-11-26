@@ -63,8 +63,18 @@ export const updateDefaultRouteProvider = (
 ) => {
   if (from_plugin_name === to_plugin_name) return Promise.resolve({});
 
+    
   if (!from_plugin_name && to_plugin_name) {
     // SET from DEFAULT to plugin
+    supabase
+      .from('installed_plugins')
+      .update({
+        // plugin_settings
+      })
+      .match({
+        project_id,
+        plugin_name: to_plugin_name
+      });
   } else if (from_plugin_name && !to_plugin_name) {
     // RESET from plugin to und DEFAULT
   } else {

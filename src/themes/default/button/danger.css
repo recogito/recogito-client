@@ -7,7 +7,21 @@ a[href].button.danger:disabled {
   color: #fff;
 }
 
+button.danger.outline,
+button.danger.outline:disabled,
+a[href].button.danger.outline,
+a[href].button.danger.outline:disabled {
+  border-color: var(--red-500);
+  background-color: transparent;
+  color: var(--red-500);
+}
+
 button.danger svg,
 button.danger:disabled svg {
   color: #fff;
+}
+
+button.danger.outline svg,
+button.danger.outline:disabled svg {
+  color: var(--red-500);
 }

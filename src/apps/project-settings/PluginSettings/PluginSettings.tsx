@@ -140,7 +140,7 @@ export const PluginSettings = (props: PluginSettingsProps) => {
 
               <div className='uninstall'>
                 <button
-                  className='sm flat danger'
+                  className='sm flat danger outline'
                   onClick={onRemovePlugin(i)}
                 >
                   <TrashIcon size={16} /> <span>Uninstall</span>
