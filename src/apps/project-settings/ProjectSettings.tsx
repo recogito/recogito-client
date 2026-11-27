@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { LockIcon, } from '@phosphor-icons/react';
+import { LockIcon } from '@phosphor-icons/react';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
