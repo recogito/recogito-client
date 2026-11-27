@@ -40,5 +40,16 @@
   "Right panel will display annotations when opening a document": "Right panel will display annotations when opening a document",
   "Right panel will display notes when opening a document": "Right panel will display notes when opening a document",
   "Are you sure you want to lock this project?": "Are you sure you want to lock this project?",
-  "Available Plugins": "Available Plugins"
+  "Add super-powers to your annotation project": "Add super-powers to your annotation project with plugins.",
+  "Browse Available Plugins": "Browse Available Plugins",
+  "Available Plugins": "Available Plugins",
+  "Document Behavior": "Document Behavior",
+  "Open documents with": "Open documents with",
+  "Choose which view opens": "Choose which view opens when you click a document in this project.",
+  "Built-in annotation views": "Built-in annotation views",
+  "Plugin views replace the built-in views": "Plugin views replace the built-in views for the document types they support. Other documents still open in the built-in views.",
+  "Installed Plugins": "Installed Plugins",
+  "Default View": "Default View",
+  "Uninstall": "Uninstall",
+  "Author": "Author"
 }

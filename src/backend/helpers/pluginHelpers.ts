@@ -54,3 +54,53 @@ export const updatePluginSettings = (
       project_id,
       plugin_name
     });
+
+type UpdateDefaultRouteResult = { error: { message: string } | null };
+
+export const updateDefaultRouteProvider = async (
+  supabase: SupabaseClient,
+  project_id: string,
+  from_plugin_name?: string,
+  to_plugin_name?: string 
+): Promise<UpdateDefaultRouteResult> => {
+  const set = async (
+    plugin_name: string,
+    provides_default_route: boolean
+  ): Promise<UpdateDefaultRouteResult> => {
+    const { data, error } = await supabase
+      .from('installed_plugins')
+      .update({ provides_default_route })
+      .match({ project_id, plugin_name })
+      .select('plugin_name');
+
+    if (error) return { error };
+
+    if (!data || data.length === 0) {
+      return {
+        error: { message: `No installed plugin "${plugin_name}" was updated in project ${project_id}` }
+      };
+    }
+    return { error: null };
+  };
+
+  if (from_plugin_name === to_plugin_name)
+    return { error: null };
+
+  if (!from_plugin_name && to_plugin_name)
+    // built-in -> plugin
+    return set(to_plugin_name, true);
+
+  if (from_plugin_name && !to_plugin_name)
+    // plugin -> built-in
+    return set(from_plugin_name, false);
+    
+  if (from_plugin_name && to_plugin_name) {
+    // plugin -> plugin
+    const cleared = await set(from_plugin_name, false);
+    if (cleared.error) return cleared;
+
+    return await set(to_plugin_name, true);
+  }
+
+  return { error: null };
+}

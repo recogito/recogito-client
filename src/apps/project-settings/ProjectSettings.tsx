@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
-import { Lock, Trash } from '@phosphor-icons/react';
+import { useTranslation, I18nextProvider } from 'react-i18next';
+import { LockIcon } from '@phosphor-icons/react';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
-import { GetPlugins } from '@apps/project-settings/GetPlugins';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { lockProject, updateProject } from '@backend/helpers';
 import { BackButtonBar } from '@components/BackButtonBar';
 import {
   type SaveState,
@@ -12,25 +13,18 @@ import {
 } from '@components/TinySaveIndicator';
 import { Button } from '@components/Button';
 import { TopBar } from '@components/TopBar';
-import { ExtensionMount } from '@components/Plugins';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
-import { TagSettings } from './TagSettings';
-import { DocumentViewRight } from 'src/Types';
-import { SettingsHeader } from './SettingsHeader';
 import { LockWarningMessage } from './LockWarningMessage';
-import {
-  deleteInstalledPlugin,
-  lockProject,
-  updatePluginSettings,
-  updateProject,
-} from '@backend/helpers';
+import { PluginSettings } from './PluginSettings';
+import { SettingsHeader } from './SettingsHeader';
+import { TagSettings } from './TagSettings';
+import clientI18next from 'src/i18n/client';
+import { DocumentViewRight } from 'src/Types';
 import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
 } from 'src/Types';
-import clientI18next from 'src/i18n/client';
-import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import './ProjectSettings.css';
 
@@ -57,10 +51,6 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
 
   const [toast, setToast] = useState<ToastContent | null>(null);
 
-  const [installedPlugins, setInstalledPlugins] = useState(
-    props.installedPlugins
-  );
-
   const [state, setState] = useState<SaveState>('idle');
 
   const [openEdit, setOpenEdit] = useState(false);
@@ -86,64 +76,6 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
       setDocumentViewRight(props.project.document_view_right);
     }
   }, [props.project]);
-
-  const onPluginInstalled = (installed: PluginInstallationConfig) =>
-    setInstalledPlugins((all) => [...all, installed]);
-
-  const onPluginRemoved = (removed: PluginInstallationConfig) =>
-    setInstalledPlugins((all) => all.filter((i) => i !== removed));
-
-  const onChangeUserSettings =
-    (installed: PluginInstallationConfig) => (settings: any) => {
-      const before = [...installedPlugins];
-
-      // Optimistic update
-      const next: PluginInstallationConfig = {
-        ...installed,
-        settings: {
-          ...installed.settings,
-          plugin_settings: settings,
-        },
-      };
-
-      setInstalledPlugins((all) =>
-        all.map((i) => (i.plugin.name === installed.plugin.name ? next : i))
-      );
-
-      updatePluginSettings(
-        supabase,
-        props.project.id,
-        installed.plugin.name,
-        settings
-      ).then(({ error }) => {
-        if (error) {
-          onError(error.message);
-
-          // Rollback
-          setInstalledPlugins(before);
-        }
-      });
-    };
-
-  const onRemovePlugin = (installed: PluginInstallationConfig) => () => {
-    const before = [...installedPlugins];
-
-    // Optimistic update
-    onPluginRemoved(installed);
-
-    deleteInstalledPlugin(
-      supabase,
-      props.project.id,
-      installed.plugin.name
-    ).then(({ error }) => {
-      if (error) {
-        onError(error.message);
-
-        // Rollback
-        setInstalledPlugins(before);
-      }
-    });
-  };
 
   const saveProjectSettings = () => {
     setState('saving');
@@ -241,22 +173,6 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
 
   const visibility = openJoin ? 'public' : 'private';
   const type = openEdit ? 'single_team' : 'assignments';
-
-  const renderAdminExtension = (config: PluginInstallationConfig) => {
-    const e = (config.plugin.extensions || []).find(
-      (e) => e.extension_point === 'admin'
-    );
-
-    return e ? (
-      <div className='plugin-admin'>
-        <ExtensionMount
-          extension={e}
-          pluginConfig={config}
-          onChangeUserSettings={onChangeUserSettings(config)}
-        />
-      </div>
-    ) : null;
-  };
 
   return (
     <>
@@ -541,7 +457,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
                 >
                   {project?.is_locked ? (
                     <>
-                      <Lock size={16} />
+                      <LockIcon size={16} />
                       <div className='text-body-small'>{t('Locked', { ns: 'common' })}</div>
                     </>
                   ) : (
@@ -559,7 +475,7 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
                       : handleRequestLockProject
                   }
                 >
-                  <Lock size={16} />
+                  <LockIcon size={16} />
                   <span>
                     {project?.is_locked
                       ? t('Unlock Project', { ns: 'common' })
@@ -577,74 +493,11 @@ const ProjectSettings = (props: ProjectSettingsProps) => {
             />
           )}
           {tab === 'plugins' && (
-            <div className='project-plugins'>
-              <div className='browse-plugins'>
-                <h1>Plugins</h1>
-
-                <p className='hint'>
-                  Add super-powers to your annotation project with Plugins.
-                </p>
-
-                <GetPlugins
-                  project={props.project}
-                  availablePlugins={props.availablePlugins}
-                  installedPlugins={installedPlugins}
-                  onPluginInstalled={onPluginInstalled}
-                  onPluginRemoved={onPluginRemoved}
-                  onError={onError}
-                />
-              </div>
-
-              <div>
-                <h2>Installed Plugins ({installedPlugins.length})</h2>
-
-                {installedPlugins.map((i) => (
-                  <section key={i.plugin.name} className='plugin-admin-tile'>
-                    <div className='plugin-meta'>
-                      <h3>{i.plugin.name}</h3>
-
-                      <p className='description'>{i.plugin.description}</p>
-
-                      <div className='uninstall'>
-                        <button
-                          className='sm flat danger'
-                          onClick={onRemovePlugin(i)}
-                        >
-                          <Trash size={16} /> <span>Uninstall</span>
-                        </button>
-                      </div>
-
-                      {(i.plugin.author || i.plugin.homepage) && (
-                        <p className='author'>
-                          Author:{' '}
-                          {i.plugin.author && i.plugin.homepage ? (
-                            <a
-                              href={i.plugin.homepage}
-                              target='_blank'
-                              rel='noreferrer'
-                            >
-                              {i.plugin.author}
-                            </a>
-                          ) : i.plugin.homepage ? (
-                            <a
-                              href={i.plugin.homepage}
-                              target='_blank'
-                              rel='noreferrer'
-                            >
-                              {i.plugin.homepage}
-                            </a>
-                          ) : (
-                            <span>{i.plugin.author}</span>
-                          )}
-                        </p>
-                      )}
-                    </div>
-
-                    {renderAdminExtension(i)}
-                  </section>
-                ))}
-              </div>
-            </div>
+            <PluginSettings 
+              project={props.project} 
+              availablePlugins={props.availablePlugins} 
+              installedPlugins={props.installedPlugins}
+              onError={onError}/>
           )}
 
           <Toast

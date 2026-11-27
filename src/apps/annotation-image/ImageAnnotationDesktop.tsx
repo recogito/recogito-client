@@ -1,5 +1,5 @@
-import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type OpenSeadragon from 'openseadragon';
 import { useAnnotator } from '@annotorious/react';
 import type { SupabaseAnnotation } from '@recogito/annotorious-supabase';
@@ -14,6 +14,7 @@ import {
 } from '@components/AnnotationDesktop';
 import { clearSelectionURLHash, useUndoRedoKeys } from '@recogito/studio-sdk/components';
 import type { PrivacyMode } from '@components/PrivacySelector';
+import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
 import { TopBar } from '@components/TopBar';
 import { AnnotatedImage } from './AnnotatedImage';
 import type { ImageAnnotationProps } from './ImageAnnotation';
@@ -36,7 +37,6 @@ import type {
   ImageAnnotation,
   PresentUser,
 } from '@annotorious/react';
-import { useTranslation } from 'react-i18next';
 
 import './ImageAnnotationDesktop.css';
 
