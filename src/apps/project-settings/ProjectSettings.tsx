@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import { useTranslation, I18nextProvider } from 'react-i18next';
 import { LockIcon } from '@phosphor-icons/react';
 import * as Label from '@radix-ui/react-label';
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { supabase } from '@backend/supabaseBrowserClient';
+import { lockProject, updateProject } from '@backend/helpers';
 import { BackButtonBar } from '@components/BackButtonBar';
 import {
   type SaveState,
@@ -12,21 +14,19 @@ import {
 import { Button } from '@components/Button';
 import { TopBar } from '@components/TopBar';
 import { Toast, type ToastContent, ToastProvider } from '@components/Toast';
-import { TagSettings } from './TagSettings';
-import { DocumentViewRight } from 'src/Types';
-import { SettingsHeader } from './SettingsHeader';
 import { LockWarningMessage } from './LockWarningMessage';
-import { lockProject, updateProject } from '@backend/helpers';
+import { PluginSettings } from './PluginSettings';
+import { SettingsHeader } from './SettingsHeader';
+import { TagSettings } from './TagSettings';
+import clientI18next from 'src/i18n/client';
+import { DocumentViewRight } from 'src/Types';
 import type {
   ExtendedProjectData,
   Invitation,
   MyProfile,
 } from 'src/Types';
-import clientI18next from 'src/i18n/client';
-import { useTranslation, I18nextProvider } from 'react-i18next';
 
 import './ProjectSettings.css';
-import { PluginSettings } from './PluginSettings';
 
 interface ProjectSettingsProps {
   invitations: Invitation[];
