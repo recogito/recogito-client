@@ -30,9 +30,4 @@ export const preloadExtension = (name: string): Promise<ComponentType<any>> => {
 }
 
 export const getLazy = (name: string) => lazy(() => 
-  preloadExtension(name)
-    .then(component => ({ default: component }))
-    .catch(err => {
-      // lazyCache.delete(name); // next mount gets a fresh wrapper
-      throw err;
-    }));
+  preloadExtension(name).then(component => ({ default: component })));
