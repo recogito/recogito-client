@@ -1,23 +1,24 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as Dropdown from '@radix-ui/react-dropdown-menu';
-import { useExtensions } from '@recogito/studio-sdk';
+import type { ComponentExtension, Extension, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { ConfirmedAction } from '@components/ConfirmedAction';
 import { ExtensionMount } from '@components/Plugins';
 import type { Context, Document } from 'src/Types';
 import {
-  Browser,
-  Browsers,
-  CaretRight,
-  Code,
-  Detective,
-  DotsThreeVertical,
-  DownloadSimple,
-  FilePdf,
-  PencilSimple,
+  BrowserIcon,
+  BrowsersIcon,
+  CaretRightIcon,
+  CodeIcon,
+  DetectiveIcon,
+  DotsThreeVerticalIcon,
+  DownloadSimpleIcon,
+  FilePdfIcon,
+  PencilSimpleIcon,
   Trash,
-  UsersThree,
+  TrashIcon,
+  UsersThreeIcon,
 } from '@phosphor-icons/react';
-import { useTranslation } from 'react-i18next';
 
 const { Content, Item, Portal, Root, Separator, Sub, SubContent, SubTrigger, Trigger } = Dropdown;
 
@@ -29,6 +30,8 @@ interface DocumentCardActionsProps {
   context?: Context;
 
   document: Document;
+
+  extensions: { extension: Extension; config: PluginInstallationConfig; }[]
 
   onOpen(tab: boolean): void;
 
@@ -63,8 +66,6 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
     setMenuOpen(false);
   };
 
-  const extensions = useExtensions('project:document-actions');
-
   const onExport = (fn: ((includePrivate?: boolean) => void) | undefined, includePrivate: boolean) => () => {
     fn?.(includePrivate);
     setMenuOpen(false);
@@ -83,7 +84,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             className='unstyled icon-only'
             aria-label={`${t('Menu actions for document:', { ns: 'common' })} ${props.document.name}`}
           >
-            <DotsThreeVertical weight='bold' size={22} />
+            <DotsThreeVerticalIcon weight='bold' size={22} />
           </button>
         </Trigger>
 
@@ -98,7 +99,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               onSelect={onOpen(false)}
               aria-label={t('open this document in current window', { ns: 'a11y' })}
             >
-              <Browser size={16} /> <span>{t('Open document', { ns: 'common' })}</span>
+              <BrowserIcon size={16} /> <span>{t('Open document', { ns: 'common' })}</span>
             </Item>
 
             <Item
@@ -106,7 +107,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
               onSelect={onOpen(true)}
               aria-label={t('open this document in a new window', { ns: 'a11y' })}
             >
-              <Browsers size={16} />{' '}
+              <BrowsersIcon size={16} />{' '}
               <span>{t('Open document in new tab', { ns: 'common' })}</span>
             </Item>
 
@@ -116,7 +117,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 onSelect={onSelectOption(props.onOpenMetadata)}
                 aria-label={t('view this documents metadata', { ns: 'a11y' })}
               >
-                <PencilSimple size={16} />
+                <PencilSimpleIcon size={16} />
                 <span>
                   {props.allowEditMetadata
                     ? t('Edit document metadata', { ns: 'project-home' })
@@ -130,9 +131,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.onExportTEI && props.document.content_type === 'text/xml' && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
-                  <Code size={16} /> <span>{t('Export TEI file', { ns: 'common' })}</span>
+                  <CodeIcon size={16} /> <span>{t('Export TEI file', { ns: 'common' })}</span>
                   <div className='right-slot'>
-                    <CaretRight size={16} />
+                    <CaretRightIcon size={16} />
                   </div>
                 </SubTrigger>
 
@@ -145,7 +146,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                         t('export this document`s public annotations as a t e i file', { ns: 'a11y' })
                       }
                     >
-                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                      <UsersThreeIcon size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item
@@ -155,7 +156,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                         t('download this document`s public and your private annotations as a t e i file', { ns: 'a11y' })
                       }
                     >
-                      <Detective size={16} />{' '}
+                      <DetectiveIcon size={16} />{' '}
                       {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
@@ -166,9 +167,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.onExportPDF && props.document.content_type === 'application/pdf' && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
-                  <FilePdf size={16} /> <span>{t('Export PDF file', { ns: 'project-home' })}</span>
+                  <FilePdfIcon size={16} /> <span>{t('Export PDF file', { ns: 'project-home' })}</span>
                   <div className='right-slot'>
-                    <CaretRight size={16} />
+                    <CaretRightIcon size={16} />
                   </div>
                 </SubTrigger>
 
@@ -181,7 +182,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                         t('export this document`s public annotations as a p d f file', { ns: 'a11y' })
                       }
                     >
-                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                      <UsersThreeIcon size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item
@@ -191,7 +192,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                         t('download this document`s public and your private annotations as a p d f file', { ns: 'a11y' })
                       }
                     >
-                      <Detective size={16} />{' '}
+                      <DetectiveIcon size={16} />{' '}
                       {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
@@ -202,10 +203,10 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.onExportCSV && (
               <Sub>
                 <SubTrigger className='dropdown-subtrigger'>
-                  <DownloadSimple size={16} />{' '}
+                  <DownloadSimpleIcon size={16} />{' '}
                   <span>{t('Export annotations as CSV', { ns: 'project-assignments' })}</span>
                   <div className='right-slot'>
-                    <CaretRight size={16} />
+                    <CaretRightIcon size={16} />
                   </div>
                 </SubTrigger>
 
@@ -218,7 +219,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                         t('export this document`s public annotations as a c s v file', { ns: 'a11y' })
                       }
                     >
-                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                      <UsersThreeIcon size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item
@@ -228,7 +229,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                         t('download this document`s public and your private annotations as a c s v file', { ns: 'a11y' })
                       }
                     >
-                      <Detective size={16} />{' '}
+                      <DetectiveIcon size={16} />{' '}
                       {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
@@ -240,9 +241,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.onExportW3C && (
               <Sub>
                 <SubTrigger className="dropdown-subtrigger">
-                  <DownloadSimple size={16} /> <span>{t('Export Annotations as W3C/JSONLD', { ns: 'project-home' })}</span>
+                  <DownloadSimpleIcon size={16} /> <span>{t('Export Annotations as W3C/JSONLD', { ns: 'project-home' })}</span>
                   <div className="right-slot">
-                    <CaretRight size={14} />
+                    <CaretRightIcon size={14} />
                   </div>
                 </SubTrigger>
 
@@ -252,11 +253,11 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     alignOffset={-5}>
 
                     <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, false)}>
-                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                      <UsersThreeIcon size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item className="dropdown-item" onSelect={onExport(props.onExportW3C, true)}>
-                      <Detective size={16} /> {t('Include my private annotations', { ns: 'common' })}
+                      <DetectiveIcon size={16} /> {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
                 </Portal>
@@ -268,9 +269,9 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                 <SubTrigger 
                   className="dropdown-subtrigger"
                   disabled={props.document.meta_data.protocol !== 'IIIF_PRESENTATION'}>
-                  <DownloadSimple size={16} /> <span>{t('Export IIIF Manifest', { ns: 'project-home' })}</span>
+                  <DownloadSimpleIcon size={16} /> <span>{t('Export IIIF Manifest', { ns: 'project-home' })}</span>
                   <div className="right-slot">
-                    <CaretRight size={14} />
+                    <CaretRightIcon size={14} />
                   </div>
                 </SubTrigger>
 
@@ -280,25 +281,25 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     alignOffset={-5}>
                     
                     <Item className="dropdown-item" onSelect={onExport(props.onExportManifest, false)}>
-                      <UsersThree size={16} /> {t('Public annotations only', { ns: 'common' })}
+                      <UsersThreeIcon size={16} /> {t('Public annotations only', { ns: 'common' })}
                     </Item>
 
                     <Item className="dropdown-item" onSelect={onExport(props.onExportManifest, true)}>
-                      <Detective size={16} /> {t('Include my private annotations', { ns: 'common' })}
+                      <DetectiveIcon size={16} /> {t('Include my private annotations', { ns: 'common' })}
                     </Item>
                   </SubContent>
                 </Portal>
               </Sub>
             )}
 
-            {extensions.length > 0 && (
+            {props.extensions.length > 0 && (
               <Separator className="dropdown-separator" />
             )}
 
-            {extensions.map(({ extension, config }) => (
+            {props.extensions.map(({ extension, config }) => (
               <ExtensionMount
                 key={extension.name}
-                extension={extension}
+                extension={extension as ComponentExtension}
                 pluginConfig={config}
                 projectId={props.context?.project_id}
                 context={props.context}
@@ -316,7 +317,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
                     className='dropdown-item'
                     aria-label={t('remove this document from the project', { ns: 'a11y' })}
                   >
-                    <Trash size={16} className='destructive' />{' '}
+                    <TrashIcon size={16} className='destructive' />{' '}
                     <span>{t('Delete document', { ns: 'common' })}</span>
                   </Item>
                 </ConfirmedAction.Trigger>

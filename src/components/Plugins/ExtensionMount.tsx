@@ -1,21 +1,22 @@
-import { Component, lazy, Suspense, useMemo } from 'react';
-import type { Extension, PluginInstallationConfig } from '@recogito/studio-sdk';
+import { Component, Suspense, useMemo, type ReactNode } from 'react';
+import type { ComponentExtension, PluginInstallationConfig } from '@recogito/studio-sdk';
+import { getLazy, getResolvedExtension } from './extensionMountUtils';
 
 interface ExtensionMountProps {
 
-  extension: Extension;
+  extension: ComponentExtension;
 
   pluginConfig: PluginInstallationConfig;
   
-  fallback?: React.ReactNode;
+  fallback?: ReactNode;
 
 }
 
 class ExtensionErrorBoundary extends Component<
-  { children: React.ReactNode },
+  { children: ReactNode },
   { hasError: boolean }
 > {
-  constructor(props: { children: React.ReactNode }) {
+  constructor(props: { children: ReactNode }) {
     super(props);
     this.state = { hasError: false };
   }
@@ -38,17 +39,11 @@ class ExtensionErrorBoundary extends Component<
 }
 
 export const ExtensionMount = <T extends ExtensionMountProps = ExtensionMountProps>(props: T) => {
-
   const { extension, pluginConfig, fallback, ...rest } = props;
 
-  const Component = useMemo(() => {
-    // Note: although 'lazy' supports variables in the import path, variables
-    // CANNOT CONTAIN A '/' CHARACTER! Runtime loading will fail as soon as the 
-    // variable points to a sub-path!
-    // Cf: https://stackoverflow.com/questions/59051144/dynamic-imports-using-complicated-path-in-react-js
-    return lazy(() => import(`../../plugins/generated/${extension.component_name}.ts`));
-  }, [extension]);
-  
+  const name = extension.component_name;
+  const Component = useMemo(() => getResolvedExtension(name) ?? getLazy(name), [name]);
+
   return (
     <ExtensionErrorBoundary>
       <Suspense fallback={fallback}>

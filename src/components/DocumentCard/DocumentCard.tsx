@@ -6,6 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import classNames from 'classnames';
 import type { LibraryDocument } from '@components/DocumentLibrary';
 import { MetadataModal } from '@components/MetadataModal';
+import { usePreloadExtensions } from '@components/Plugins';
 import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
@@ -74,13 +75,19 @@ export const DocumentCard = (props: DocumentCardProps) => {
     [transform, transition]
   );
 
-  const extensions = useExtensions('project:document-default-view');
+  const defaultViewExtensions = useExtensions('project:document-default-view');
+
+  // Fetch and preload the menu extensions here - this prevents the jump
+  // we used to have when the menu opened, and the extension options took
+  // a moment to load
+  const menuExtensions = useExtensions('project:document-actions');
+  usePreloadExtensions(menuExtensions);
 
   const onOpen = useCallback(
     (tab: boolean) => {
       if (view === 'library') return;
 
-      const defaultViewExt = extensions.find(({ config }) => 
+      const defaultViewExt = defaultViewExtensions.find(({ config }) => 
         config.settings.provides_default_route)?.extension as ProjectDocumentDefaultViewExtension | undefined;
 
       const isAllowed = !defaultViewExt?.allowed 
@@ -106,7 +113,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
         window.location.href = url;
       }
     },
-    [view, context, document.id, document.content_type, i18n.language, props.rtab, extensions]
+    [view, context, document.id, document.content_type, i18n.language, props.rtab, defaultViewExtensions]
   );
 
   const onClick = (evt: React.MouseEvent) => {
@@ -192,6 +199,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
                 allowEditMetadata={props.isOwner}
                 context={context}
                 document={document}
+                extensions={menuExtensions}
                 onOpen={onOpen}
                 onDelete={props.onDelete}
                 onOpenMetadata={() => setOpenMetadata(true)}
