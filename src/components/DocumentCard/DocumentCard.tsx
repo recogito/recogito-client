@@ -12,7 +12,7 @@ import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { DocumentViewRight, type Context, type Document } from 'src/Types';
 import { 
   fillTemplateString, 
-  matchesContentTypes, 
+  matchesContentTypeList, 
   useExtensions, 
   type ProjectDocumentDefaultViewExtension 
 } from '@recogito/studio-sdk';
@@ -84,7 +84,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
         config.settings.provides_default_route)?.extension as ProjectDocumentDefaultViewExtension | undefined;
 
       const isAllowed = !defaultViewExt?.allowed 
-        || matchesContentTypes(document.content_type, defaultViewExt.allowed!)
+        || matchesContentTypeList(document.content_type, defaultViewExt.allowed!)
       
       const route = defaultViewExt && isAllowed ? 
         fillTemplateString(defaultViewExt.route_template, {
