@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TrashIcon } from '@phosphor-icons/react';
 import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { deleteInstalledPlugin, updatePluginSettings } from '@backend/helpers';
@@ -19,6 +20,7 @@ interface PluginSettingsProps {
 }
 
 export const PluginSettings = (props: PluginSettingsProps) => {
+  const { t } = useTranslation('project-settings');
 
   const [installedPlugins, setInstalledPlugins] = useState(
     props.installedPlugins
@@ -102,11 +104,11 @@ export const PluginSettings = (props: PluginSettingsProps) => {
   return (
     <div className='project-plugins tab-container'>
       <div className='project-plugins-header'>
-        <h2>Plugins</h2>
+        <h2>{t('Plugins')}</h2>
 
         <div className='browse-available-plugins'>
           <p className='hint'>
-            Add super-powers to your annotation project with plugins.
+            {t('Add super-powers to your annotation project')}
           </p>
 
           <GetPlugins
@@ -126,7 +128,7 @@ export const PluginSettings = (props: PluginSettingsProps) => {
       </div>
 
       <div className='installed-plugins'>
-        <h3>Installed Plugins ({installedPlugins.length})</h3>
+        <h3>{t('Installed Plugins')} ({installedPlugins.length})</h3>
 
         {installedPlugins.map((i) => (
           <section key={i.plugin.name} className='plugin-admin-tile'>
@@ -134,7 +136,7 @@ export const PluginSettings = (props: PluginSettingsProps) => {
               <h3>
                 {i.plugin.name}
                 {i.settings.provides_default_route && (
-                  <span className="default-view-badge">Default View</span>
+                  <span className="default-view-badge">{t('Default View')}</span>
                 )}
               </h3>
 
@@ -145,14 +147,13 @@ export const PluginSettings = (props: PluginSettingsProps) => {
                   className='sm flat danger outline'
                   onClick={onRemovePlugin(i)}
                 >
-                  <TrashIcon size={16} /> <span>Uninstall</span>
+                  <TrashIcon size={16} /> <span>{t('Uninstall')}</span>
                 </button>
               </div>
 
               {(i.plugin.author || i.plugin.homepage) && (
                 <p className='author'>
-                  Author:{' '}
-                  {i.plugin.author && i.plugin.homepage ? (
+                  {t('Author')}: {i.plugin.author && i.plugin.homepage ? (
                     <a
                       href={i.plugin.homepage}
                       target='_blank'

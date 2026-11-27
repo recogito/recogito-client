@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { Plugin, PluginInstallationConfig } from '@recogito/studio-sdk';
-import { PuzzlePiece } from '@phosphor-icons/react';
+import { PuzzlePieceIcon } from '@phosphor-icons/react';
 import { PluginGallery } from './PluginGallery';
 import type { Project } from 'src/Types';
 
@@ -22,14 +23,15 @@ interface GetPluginsProps {
 
 
 export const GetPlugins = (props: GetPluginsProps) => {
+  const { t } = useTranslation('project-settings');
 
   const [showGallery, setShowGallery] = useState(false);
 
   return (
     <>
       <button className="primary" onClick={() => setShowGallery(true)}>
-        <PuzzlePiece size={20} />
-        <span>Browse Available Plugins</span>
+        <PuzzlePieceIcon size={20} />
+        <span>{t('Browse Available Plugins')}</span>
       </button>
 
       {showGallery && (
