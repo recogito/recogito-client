@@ -1,10 +1,10 @@
 import { Component, Suspense, useMemo, type ReactNode } from 'react';
-import type { ComponentExtension, PluginInstallationConfig } from '@recogito/studio-sdk';
+import type { Extension, PluginInstallationConfig } from '@recogito/studio-sdk';
 import { getLazy, getResolvedExtension } from './extensionMountUtils';
 
 interface ExtensionMountProps {
 
-  extension: ComponentExtension;
+  extension: Extension;
 
   pluginConfig: PluginInstallationConfig;
   
@@ -42,9 +42,12 @@ export const ExtensionMount = <T extends ExtensionMountProps = ExtensionMountPro
   const { extension, pluginConfig, fallback, ...rest } = props;
 
   const name = extension.component_name;
-  const Component = useMemo(() => getResolvedExtension(name) ?? getLazy(name), [name]);
 
-  return (
+  const Component = useMemo(() => (
+    name ? getResolvedExtension(name) ?? getLazy(name) : undefined
+  ), [name]);
+
+  return Component ? (
     <ExtensionErrorBoundary>
       <Suspense fallback={fallback}>
         <Component 
@@ -54,6 +57,6 @@ export const ExtensionMount = <T extends ExtensionMountProps = ExtensionMountPro
           settings={pluginConfig.settings.plugin_settings} />
       </Suspense>
     </ExtensionErrorBoundary>
-  );
+  ) : null;
 
 }

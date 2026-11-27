@@ -299,7 +299,7 @@ export const DocumentCardActions = (props: DocumentCardActionsProps) => {
             {props.extensions.map(({ extension, config }) => (
               <ExtensionMount
                 key={extension.name}
-                extension={extension as ComponentExtension}
+                extension={extension}
                 pluginConfig={config}
                 projectId={props.context?.project_id}
                 context={props.context}
