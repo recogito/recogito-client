@@ -1,17 +1,23 @@
-import { MetadataModal } from '@components/MetadataModal';
-import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
+import { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { DotsSixIcon } from '@phosphor-icons/react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { DotsSixIcon } from '@phosphor-icons/react';
 import classNames from 'classnames';
-import { useCallback, useMemo, useState } from 'react';
+import type { LibraryDocument } from '@components/DocumentLibrary';
+import { MetadataModal } from '@components/MetadataModal';
+import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { DocumentCardActions } from './DocumentCardActions';
 import { DocumentCardThumbnail } from './DocumentCardThumbnail';
 import { DocumentViewRight, type Context, type Document } from 'src/Types';
+import { 
+  fillTemplateString, 
+  matchesContentTypes, 
+  useExtensions, 
+  type ProjectDocumentDefaultViewExtension 
+} from '@recogito/studio-sdk';
+
 import './DocumentCard.css';
-import { useTranslation } from 'react-i18next';
-import type { LibraryDocument } from '@components/DocumentLibrary';
-import { useExtensions } from '@recogito/studio-sdk';
 
 type DocumentCardViewProps =
   | { view: 'project'; context: Context }
@@ -68,23 +74,31 @@ export const DocumentCard = (props: DocumentCardProps) => {
     [transform, transition]
   );
 
-  // const extensions = useExtensions('project:document-default-view');
-  // console.log(extensions);
+  const extensions = useExtensions('project:document-default-view');
 
   const onOpen = useCallback(
     (tab: boolean) => {
       if (view === 'library') return;
+
+      const defaultViewExt = extensions.find(({ config }) => 
+        config.settings.provides_default_route)?.extension as ProjectDocumentDefaultViewExtension | undefined;
+
+      const isAllowed = !defaultViewExt?.allowed 
+        || matchesContentTypes(document.content_type, defaultViewExt.allowed!)
+      
+      const route = defaultViewExt && isAllowed ? 
+        fillTemplateString(defaultViewExt.route_template, {
+          lang: i18n.language,
+          contextId: context.id,
+          documentId: document.id
+        }) : `/${i18n.language}/annotate/${context.id}/${document.id}`;
 
       const search = getSearchParameters();
 
       const hash = getHashParameters();
       hash.set('rtab', props.rtab || DocumentViewRight.closed);
 
-      const url = buildURL(
-        `/${i18n.language}/annotate/${context.id}/${document.id}`,
-        search,
-        hash
-      );
+      const url = buildURL(route, search, hash);
 
       if (tab) {
         window.open(url, '_blank');
@@ -92,7 +106,7 @@ export const DocumentCard = (props: DocumentCardProps) => {
         window.location.href = url;
       }
     },
-    [view, context, document.id, i18n.language, props.rtab]
+    [view, context, document.id, document.content_type, i18n.language, props.rtab, extensions]
   );
 
   const onClick = (evt: React.MouseEvent) => {
