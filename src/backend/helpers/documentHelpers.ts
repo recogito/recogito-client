@@ -284,7 +284,10 @@ export const listDocumentsInProject = (
       if (error) {
         return { error, data: [] };
       } else {
-        const docs: Document[] = data.map((datum) => datum.document);
+        const docs: Document[] = data.map((datum) => ({
+          ...datum.document,
+          added_at: datum.created_at,
+        }));
         return { error, data: docs };
       }
     });
@@ -384,6 +387,26 @@ export const listAllDocuments = (
     .then(({ error, data }) => {
       return { error, data };
     });
+
+// Latest annotation activity (annotation, body or target created/updated) per
+// document in a project, as a map of document ID -> ISO timestamp. Documents
+// without annotations are missing from the map.
+export const getProjectDocumentsActivity = (
+  supabase: SupabaseClient,
+  projectId: string
+): Response<Record<string, string>> =>
+  supabase
+    .rpc('get_project_documents_activity_rpc', {
+      _project_id: projectId,
+    })
+    .then(({ error, data }) => ({
+      error,
+      data: Object.fromEntries(
+        ((data || []) as { document_id: string; last_activity: string }[]).map(
+          (row) => [row.document_id, row.last_activity]
+        )
+      ),
+    }));
 
 export const updateDocumentsSort = (
   supabase: SupabaseClient,

@@ -98,5 +98,17 @@
   "Could not copy documents into collection.": "Could not copy documents into collection.",
   "Loading revisions...": "Loading revisions...",
   "No title": "No title",
-  "No author/artist": "No author/artist"
+  "No author/artist": "No author/artist",
+  "Custom order": "Custom order",
+  "Name (A–Z)": "Name (A–Z)",
+  "Name (Z–A)": "Name (Z–A)",
+  "Date added (newest)": "Date added (newest)",
+  "Date added (oldest)": "Date added (oldest)",
+  "Title (A–Z)": "Title (A–Z)",
+  "Title (Z–A)": "Title (Z–A)",
+  "Author/Artist (A–Z)": "Author/Artist (A–Z)",
+  "Author/Artist (Z–A)": "Author/Artist (Z–A)",
+  "Last activity (newest)": "Last activity (newest)",
+  "Last activity (oldest)": "Last activity (oldest)",
+  "Switch to custom order to rearrange documents": "Switch to custom order to rearrange documents"
 }

@@ -2,7 +2,7 @@ import { MetadataModal } from '@components/MetadataModal';
 import { buildURL, getHashParameters, getSearchParameters } from '@util/url';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { DotsSix } from '@phosphor-icons/react';
+import { DotsSixIcon } from '@phosphor-icons/react';
 import classNames from 'classnames';
 import { useCallback, useMemo, useState } from 'react';
 import { DocumentCardActions } from './DocumentCardActions';
@@ -21,6 +21,8 @@ type DocumentCardProps = DocumentCardViewProps & {
   className?: string;
 
   isAdmin?: boolean;
+
+  disableDrag?: boolean;
 
   isOwner?: boolean;
 
@@ -49,9 +51,9 @@ export const DocumentCard = (props: DocumentCardProps) => {
   const sortableProps = useMemo(
     () => ({
       id: document.id,
-      disabled: !props.isAdmin,
+      disabled: !props.isAdmin || props.disableDrag,
     }),
-    [document, props.isAdmin]
+    [document, props.isAdmin, props.disableDrag]
   );
 
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -137,14 +139,25 @@ export const DocumentCard = (props: DocumentCardProps) => {
       <div className='document-card' onClick={onClick}>
         {props.isAdmin && (
           <div
-            className='document-drag-handle'
+            className={classNames('document-drag-handle', {
+              disabled: props.disableDrag,
+            })}
             {...attributes}
             {...listeners}
+            // Don't open the document when clicking a disabled handle
+            onClick={(evt) => props.disableDrag && evt.stopPropagation()}
             aria-label={t('rearrange this document by dragging', {
               ns: 'a11y',
             })}
+            title={
+              props.disableDrag
+                ? t('Switch to custom order to rearrange documents', {
+                    ns: 'project-home',
+                  })
+                : undefined
+            }
           >
-            <DotsSix />
+            <DotsSixIcon />
           </div>
         )}
 

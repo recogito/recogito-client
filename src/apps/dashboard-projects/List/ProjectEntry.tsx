@@ -7,6 +7,7 @@ import { LockedPill } from '@components/LockedPill';
 import { ProjectCardActions } from '@components/ProjectCard/ProjectCardActions';
 import { JoinProjectDialog } from '@components/ProjectCard/JoinProjectDialog';
 import { OpenJoin } from '@components/ProjectCard/OpenJoin';
+import { isImageDocument } from '@util/general';
 import type {
   ExtendedProjectData,
   MyProfile,
@@ -49,9 +50,9 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
 
   const [joinProjectOpen, setJoinProjectOpen] = useState(false);
 
-  const images = documents.filter(({ content_type }) => !content_type);
+  const images = documents.filter(isImageDocument);
 
-  const texts = documents.filter(({ content_type }) => content_type);
+  const texts = documents.filter((d) => !isImageDocument(d));
 
   const showDocs = props.orgPolicies
     ? props.orgPolicies.get('projects').has('INSERT')
@@ -105,13 +106,13 @@ export const ProjectsEntry = (props: ProjectsEntryProps) => {
 
       {showDocs && (
         <div className='project-entry-texts'>
-          <span className='count'>{images.length}</span>
+          <span className='count'>{texts.length}</span>
         </div>
       )}
 
       {showDocs && (
         <div className='project-entry-images'>
-          <span className='count'>{texts.length}</span>
+          <span className='count'>{images.length}</span>
         </div>
       )}
       <div className='project-entry-avatar-stack'>

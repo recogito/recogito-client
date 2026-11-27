@@ -99,5 +99,17 @@
   "Could not copy documents into collection.": "Dokumente konnten nicht in die Sammlung kopiert werden.",
   "Loading revisions...": "Versionen werden geladen...",
   "No title": "Ohne Titel",
-  "No author/artist": "Ohne Autor/Künstler"
+  "No author/artist": "Ohne Autor/Künstler",
+  "Custom order": "Benutzerdefinierte Reihenfolge",
+  "Name (A–Z)": "Name (A–Z)",
+  "Name (Z–A)": "Name (Z–A)",
+  "Date added (newest)": "Hinzugefügt (neueste zuerst)",
+  "Date added (oldest)": "Hinzugefügt (älteste zuerst)",
+  "Title (A–Z)": "Titel (A–Z)",
+  "Title (Z–A)": "Titel (Z–A)",
+  "Author/Artist (A–Z)": "Autor/Künstler (A–Z)",
+  "Author/Artist (Z–A)": "Autor/Künstler (Z–A)",
+  "Last activity (newest)": "Letzte Aktivität (neueste zuerst)",
+  "Last activity (oldest)": "Letzte Aktivität (älteste zuerst)",
+  "Switch to custom order to rearrange documents": "Zum Verschieben auf benutzerdefinierte Reihenfolge umstellen"
 }
